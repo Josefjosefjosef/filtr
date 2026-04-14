@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T06:24:44.035578Z",
+  "ingestedAt": "2026-04-14T07:19:04.496116Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "EU chce podpořit domácí produkci oceli, sníží dovoz a zvýší clo nad kvóty",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/eu-chce-podporit-domaci-produkci-oceli-snizi-dovoz-a-zvysi-clo-nad-kvoty-372352",
+      "dt": "2026-04-14T06:48:05Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chce",
+        "clo",
+        "domácí",
+        "dovoz",
+        "kvóty",
+        "oceli",
+        "podpořit",
+        "produkci",
+        "sníží",
+        "zvýší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -743,27 +770,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "sport",
       "contentType": "article",
-      "title": "Globální odbyt Škody Auto v prvním čtvrtletí vzrostl o čtrnáct procent",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/globalni-odbyt-skody-auto-v-prvnim-ctvrtleti-vzrostl-o-ctrnact-procent-372317",
-      "dt": "2026-04-13T10:27:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Sindarov: Uzbecká dvojka, která vládne Turnaji kandidátů",
+      "url": "https://sport.ceskatelevize.cz/clanek/ostatni/uzbecka-dvojka-ktera-vladne-turnaji-kandidatu-sindarov-nadchl-sachovy-svet-156267",
+      "dt": "2026-04-14T06:30:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "auto",
-        "globální",
-        "odbyt",
-        "procent",
-        "prvním",
-        "vzrostl",
-        "čtrnáct",
-        "čtvrtletí",
-        "škody"
+        "dvojka",
+        "kandidátů",
+        "sindarov",
+        "turnaji",
+        "uzbecká",
+        "vládne"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -771,19 +795,23 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off",
+      "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off, Nečas čeká na 100 bodů",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-vychytal-pro-philadelphii-vitezstvi-i-postup-do-play-off-156277",
       "dt": "2026-04-14T05:07:07Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "100",
+        "bodů",
+        "nečas",
         "off",
         "philadelphii",
         "play",
         "postup",
         "vladař",
         "vychytal",
-        "vítězství"
+        "vítězství",
+        "čeká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1510,32 +1538,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia hrála s Plzní bez branek, Sparta uspěla v Teplicích díky Haraslínovi",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/karvina-v-lize-poprve-na-jare-vyhrala-porazila-liberec-156247",
-      "dt": "2026-04-12T13:43:25Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "branek",
-        "díky",
-        "haraslínovi",
-        "hrála",
-        "plzní",
-        "slavia",
-        "sparta",
-        "teplicích",
-        "uspěla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1546,7 +1548,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42988,
+      "bytes": 42951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,12 +1608,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:48:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 28,
-          "other": 1,
-          "finance": 1
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1623,6 +1625,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EU chce podpořit domácí produkci oceli, sníží dovoz a zvýší clo nad kvóty",
+            "publishedAt": "2026-04-14T06:48:05Z"
+          },
           {
             "title": "Na Písecku testují drony k ochraně kritické infrastruktury či záchraně lidí",
             "publishedAt": "2026-04-14T05:30:00Z"
@@ -1650,10 +1656,6 @@
           {
             "title": "Vance: USA dosáhly v rozhovorech s Íránem pokroku, Teherán nyní musí jednat",
             "publishedAt": "2026-04-14T00:49:23Z"
-          },
-          {
-            "title": "Vance je smutný z Orbánovy porážky, s nástupcem ale USA chtějí spolupracovat",
-            "publishedAt": "2026-04-13T23:31:39Z"
           }
         ]
       }
@@ -1665,7 +1667,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39614,
+      "bytes": 39697,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1702,7 +1704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:07:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1718,7 +1720,11 @@
         },
         "sample_titles": [
           {
-            "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off",
+            "title": "Sindarov: Uzbecká dvojka, která vládne Turnaji kandidátů",
+            "publishedAt": "2026-04-14T06:30:00Z"
+          },
+          {
+            "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off, Nečas čeká na 100 bodů",
             "publishedAt": "2026-04-14T05:07:07Z"
           },
           {
@@ -1744,10 +1750,6 @@
           {
             "title": "Nitra po velkém obratu vyhrála v Přerově, Vysočina zůstává bez porážky",
             "publishedAt": "2026-04-13T12:43:42Z"
-          },
-          {
-            "title": "Ve výpravě na ME v Tbilisi je deset judistů včetně Krpálka a obhájkyně Zachové",
-            "publishedAt": "2026-04-13T12:01:26Z"
           }
         ]
       }
@@ -1759,7 +1761,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76990,
+      "bytes": 77081,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T06:24:44.035578Z",
+  "ingestedAt": "2026-04-14T07:19:04.496116Z",
   "items": [
     {
       "section": "aktualne",
@@ -74,6 +74,31 @@
         "saudek",
         "sousto",
         "uvrhlo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zmizela čtrnáctiletá Klára z Pelhřimovska. Odešla ze školy a nedorazila domů",
+      "url": "https://pelhrimovsky.denik.cz/zpravy_region/patrani-divka-pelhrimovsko-nevratila-skola-policie-rodina-pohresovana-senozaty.html",
+      "dt": "2026-04-14T04:56:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domů",
+        "klára",
+        "nedorazila",
+        "odešla",
+        "pelhřimovska",
+        "zmizela",
+        "čtrnáctiletá",
+        "školy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -160,7 +185,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Letošní přijímačky? Stres ano, zákeřné chytáky tam ale nebyly, říkají odborníci",
+      "title": "Letošní přijímací zkoušky? Stres ano, zákeřné chytáky ale nebyly, tvrdí experti",
       "url": "https://www.denik.cz/skolstvi-a-vzdelavani/prijimacky-na-stredni-skoly-2026-vysledky-hodnoceni-testu-matematika-cestina.html",
       "dt": "2026-04-14T03:30:00Z",
       "media_raw": "Deník",
@@ -169,14 +194,14 @@
         "ale",
         "ano",
         "chytáky",
+        "experti",
         "letošní",
         "nebyly",
-        "odborníci",
-        "přijímačky",
+        "přijímací",
         "stres",
-        "tam",
-        "zákeřné",
-        "říkají"
+        "tvrdí",
+        "zkoušky",
+        "zákeřné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -634,34 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trumpova blokáda Hormuzu: Propluje jen někdo, místo raket komanda, ropa zdraží",
-      "url": "https://www.denik.cz/ze_sveta/usa-blokada-hormuzsky-pruliv-donald-trump-varovani-iran-valka-ropa-zdrazi.html",
-      "dt": "2026-04-13T11:52:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blokáda",
-        "hormuzu",
-        "jen",
-        "komanda",
-        "místo",
-        "někdo",
-        "propluje",
-        "raket",
-        "ropa",
-        "trumpova",
-        "zdraží"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -672,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31713,
+      "bytes": 31522,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -739,6 +736,10 @@
             "publishedAt": "2026-04-14T05:00:00Z"
           },
           {
+            "title": "Zmizela čtrnáctiletá Klára z Pelhřimovska. Odešla ze školy a nedorazila domů",
+            "publishedAt": "2026-04-14T04:56:00Z"
+          },
+          {
             "title": "Ramagem zatčen v USA: Spojence Bolsonara z pokusu o převrat zadrželi agenti ICE",
             "publishedAt": "2026-04-14T04:44:00Z"
           },
@@ -751,12 +752,8 @@
             "publishedAt": "2026-04-14T04:05:00Z"
           },
           {
-            "title": "Letošní přijímačky? Stres ano, zákeřné chytáky tam ale nebyly, říkají odborníci",
+            "title": "Letošní přijímací zkoušky? Stres ano, zákeřné chytáky ale nebyly, tvrdí experti",
             "publishedAt": "2026-04-14T03:30:00Z"
-          },
-          {
-            "title": "Drogy na pláži? Ostrov São Miguel zaplavil kokain už před 25 lety. A zabíjel",
-            "publishedAt": "2026-04-14T03:00:00Z"
           }
         ]
       }

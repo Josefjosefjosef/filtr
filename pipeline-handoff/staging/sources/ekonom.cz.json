@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonom.cz",
-  "ingestedAt": "2026-04-14T06:24:44.035578Z",
+  "ingestedAt": "2026-04-14T07:19:04.496116Z",
   "items": [
     {
       "section": "finance",
@@ -30,36 +30,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "ekonom.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Už příští sezona může být bez demokracie, varuje prognostik, který před dvaceti lety předpověděl nástup miliardářů do čela Česka",
-      "url": "https://ekonom.cz/c1-67866210-uz-pristi-sezona-muze-byt-bez-demokracie-varuje-prognostik-ktery-pred-dvaceti-lety-predpovedel-nastup-miliardaru-do-cela-ceska",
-      "dt": "2026-04-07T08:22:00Z",
-      "media_raw": "Ekonom (HN)",
-      "media_norm": "Ekonom (HN)",
-      "tokens": [
-        "být",
-        "demokracie",
-        "dvaceti",
-        "lety",
-        "miliardářů",
-        "nástup",
-        "prognostik",
-        "předpověděl",
-        "příští",
-        "sezona",
-        "varuje",
-        "čela",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonom",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "ekonom.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -70,13 +40,13 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://ekonom.cz/?p=400000_rss",
-      "bytes": 3177,
+      "bytes": 1910,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 2,
-      "itemsKept": 2,
-      "accepted": 2,
+      "itemsParsed": 1,
+      "itemsKept": 1,
+      "accepted": 1,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_ekonom",
@@ -106,11 +76,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 2,
+        "raw_feed_new_item_count": 1,
         "raw_feed_latest_publishedAt": "2026-04-08T16:00:00Z",
-        "valid_publishedAt_count": 2,
+        "valid_publishedAt_count": 1,
         "mapped_to_section_count": {
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -125,10 +95,6 @@
           {
             "title": "Nejen o tom, jak se podniká na Blízkém východě a na co si dát pozor, s Gabrielou Teissing z Creative Docku",
             "publishedAt": "2026-04-08T16:00:00Z"
-          },
-          {
-            "title": "Už příští sezona může být bez demokracie, varuje prognostik, který před dvaceti lety předpověděl nástup miliardářů do čela Česka",
-            "publishedAt": "2026-04-07T08:22:00Z"
           }
         ]
       }
