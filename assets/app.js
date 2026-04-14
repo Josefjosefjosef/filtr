@@ -6510,6 +6510,21 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /**
+   * P0 homepage Silver cards: skip a refresh pass that would overwrite stable article titles with loading
+   * copy when pickLatest returns empty transiently (feed churn / observer / retention merge).
+   */
+  function iuTallPreviewHoldStableWhenTransientEmpty(card, elT1, hasLatest, hasLatestAttr, loadingPhrase) {
+    try {
+      if (hasLatest) return false;
+      if (!card || !elT1) return false;
+      if (String(card.getAttribute(hasLatestAttr) || "") !== "1") return false;
+      const cur = String(elT1.textContent || "").trim();
+      if (cur && cur !== loadingPhrase) return true;
+    } catch (_) {}
+    return false;
+  }
+
   function iuSportPreviewPickLatestTwoFromState(){
     try{
       const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
@@ -6767,6 +6782,9 @@ function buildVideoAsArticleCard(it) {
       var fromWebNavGateCest =
         gateWrapCestEarly && String(gateWrapCestEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
       try {
+        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateCest;
+      } catch (_) {}
+      try {
         if (typeof window !== "undefined" && typeof window.iuPersistNavState === "function") {
           window.iuPersistNavState({ section: "travel", mode: "media" });
         }
@@ -6840,6 +6858,9 @@ function buildVideoAsArticleCard(it) {
     var gateWrapHubEarly = document.getElementById("iuMobileGateWrap");
     var fromWebNavGateHub =
       gateWrapHubEarly && String(gateWrapHubEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
+    try {
+      if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateHub;
+    } catch (_) {}
     try {
       if (typeof window !== "undefined" && typeof window.iuApplySectionFromURL === "function") {
         window.iuApplySectionFromURL();
@@ -6994,6 +7015,18 @@ function buildVideoAsArticleCard(it) {
       const latestTitle = latest && latest.title ? String(latest.title) : "";
       const secondTitle = second && second.title ? String(second.title) : "";
       const hasLatest = !!latestTitle;
+
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-news-preview-has-latest",
+          "Zprávy se načítají",
+        )
+      ) {
+        return;
+      }
 
       // DATA GUARD markers (testable / proof hooks)
       if (hasLatest) {
@@ -7184,6 +7217,18 @@ function buildVideoAsArticleCard(it) {
       const latestTitle = latest && latest.title ? String(latest.title) : "";
       const secondTitle = second && second.title ? String(second.title) : "";
       const hasLatest = !!latestTitle;
+
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-sport-preview-has-latest",
+          "Sport se načítá",
+        )
+      ) {
+        return;
+      }
 
       if (hasLatest) {
         card.setAttribute("data-iu-sport-preview-has-latest", "1");
@@ -7890,6 +7935,18 @@ function buildVideoAsArticleCard(it) {
       }
       const hasLatest = !!latestTitle;
 
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-finance-preview-has-latest",
+          "Finance se načítají",
+        )
+      ) {
+        return;
+      }
+
       if (hasLatest) {
         card.setAttribute("data-iu-finance-preview-has-latest", "1");
         card.setAttribute("data-iu-finance-preview-latest-title", latestTitle);
@@ -8063,6 +8120,18 @@ function buildVideoAsArticleCard(it) {
       }
       const hasLatest = !!latestTitle;
 
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-health-preview-has-latest",
+          "Zdraví se načítá",
+        )
+      ) {
+        return;
+      }
+
       if (hasLatest) {
         card.setAttribute("data-iu-health-preview-has-latest", "1");
         card.setAttribute("data-iu-health-preview-latest-title", latestTitle);
@@ -8235,6 +8304,18 @@ function buildVideoAsArticleCard(it) {
         latestTitle = "";
       }
       const hasLatest = !!latestTitle;
+
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-travel-preview-has-latest",
+          "Cestování se načítá",
+        )
+      ) {
+        return;
+      }
 
       if (hasLatest) {
         card.setAttribute("data-iu-travel-preview-has-latest", "1");
@@ -8412,6 +8493,18 @@ function buildVideoAsArticleCard(it) {
       }
       const hasLatest = !!latestTitle;
 
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-games-preview-has-latest",
+          "Hry se načítají",
+        )
+      ) {
+        return;
+      }
+
       if (hasLatest) {
         card.setAttribute("data-iu-games-preview-has-latest", "1");
         card.setAttribute("data-iu-games-preview-latest-title", latestTitle);
@@ -8587,6 +8680,18 @@ function buildVideoAsArticleCard(it) {
         secondTitle = "";
       }
       const hasLatest = !!latestTitle;
+
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-culture-preview-has-latest",
+          "Kultura / Akce se načítá",
+        )
+      ) {
+        return;
+      }
 
       if (hasLatest) {
         card.setAttribute("data-iu-culture-preview-has-latest", "1");
@@ -8764,6 +8869,18 @@ function buildVideoAsArticleCard(it) {
       }
       const hasLatest = !!latestTitle;
 
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-science-history-preview-has-latest",
+          "Věda & Historie se načítá",
+        )
+      ) {
+        return;
+      }
+
       if (hasLatest) {
         card.setAttribute("data-iu-science-history-preview-has-latest", "1");
         card.setAttribute("data-iu-science-history-preview-latest-title", latestTitle);
@@ -8940,6 +9057,18 @@ function buildVideoAsArticleCard(it) {
       }
       const hasLatest = !!latestTitle;
 
+      if (
+        iuTallPreviewHoldStableWhenTransientEmpty(
+          card,
+          elT1,
+          hasLatest,
+          "data-iu-education-preview-has-latest",
+          "Vzdělávání se načítá",
+        )
+      ) {
+        return;
+      }
+
       if (hasLatest) {
         card.setAttribute("data-iu-education-preview-has-latest", "1");
         card.setAttribute("data-iu-education-preview-latest-title", latestTitle);
@@ -9036,7 +9165,12 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRegressionAudit = iuScienceHistoryPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuEducationPreviewRegressionAudit = iuEducationPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
-    try{ iuSilverTallMediaPreviewsRefresh(); }catch(_){}
+    /* P0: avoid painting placeholder titles before feed loadData() populates cache (late swap / flicker). */
+    try{
+      if (typeof state !== "undefined" && state && state.hasLoadedData) {
+        iuSilverTallMediaPreviewsRefresh();
+      }
+    }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
     try{
       const feed = document.getElementById("feed");
@@ -10531,6 +10665,9 @@ function buildVideoAsArticleCard(it) {
       }
       if (backBtn) {
         backBtn.addEventListener("click", function () {
+          try {
+            if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_) {}
           setTab("");
         });
       }
@@ -10551,11 +10688,20 @@ function buildVideoAsArticleCard(it) {
           } else {
             setTab("");
           }
+          try {
+            if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_) {}
         });
       }
       tabNav.addEventListener("click", function () {
         var cur = wrap.getAttribute("data-iu-mobile-gate");
-        setTab(cur === "nav" ? "" : "nav");
+        var next = cur === "nav" ? "" : "nav";
+        if (!next) {
+          try {
+            if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_) {}
+        }
+        setTab(next);
       });
       var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
@@ -24754,7 +24900,9 @@ function buildVideoAsArticleCard(it) {
           var mbVis = document.getElementById("iuMobileMainBackBar");
           if (mbVis) mbVis.hidden = false;
           try {
-            document.body.classList.remove("iu-webnavDetailFromGate");
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
           } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
@@ -24765,7 +24913,9 @@ function buildVideoAsArticleCard(it) {
              here re-showed #iuMobileGateWrap (body:not(.iu-mobileMainVisible) loses the gate-hide rule)
              and on ≤767px hid #leftContent again — taps looked dead or needed a second try. */
           try {
-            document.body.classList.remove("iu-webnavDetailFromGate");
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
           } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
@@ -24775,7 +24925,9 @@ function buildVideoAsArticleCard(it) {
           var mbHid = document.getElementById("iuMobileMainBackBar");
           if (mbHid) mbHid.hidden = true;
           try {
-            document.body.classList.remove("iu-webnavDetailFromGate");
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
           } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
@@ -25307,6 +25459,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
       var fromWebNavGateNav =
         gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
+      try {
+        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateNav;
+      } catch (_) {}
       applySectionFromURL();
       applyPanelFromUrl();
       try {
@@ -25343,6 +25498,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
       const rawHexKey = sectionAttr || sectionFromClass;
+      try {
+        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+      } catch (_) {}
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
       } else {
