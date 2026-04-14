@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-14T18:45:18.215058Z",
+  "ingestedAt": "2026-04-14T19:04:59.804881Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci jednají o regulaci cen nafty. Stát nemá nahrazovat trh, řekl Jakob",
+      "title": "Diskriminace není volební reforma. Slováci demonstrovali proti zrušení voleb poštou",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/slovensko-demonstrace-korespondencni-volba-zahranici-robert-fico.A260414_202255_zahranicni_kha",
+      "dt": "2026-04-14T18:42:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "demonstrovali",
+        "diskriminace",
+        "poštou",
+        "proti",
+        "reforma",
+        "slováci",
+        "voleb",
+        "volební",
+        "zrušení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci schvalují regulaci cen paliv. Stát nemá nahrazovat trh, řekl Jakob",
       "url": "https://www.idnes.cz/zpravy/domaci/zrychlene-projednani-moznost-vlady-regulovat-narizenim-ceny-nafty-a-benzinu.A260414_051836_domaci_kop",
-      "dt": "2026-04-14T18:39:16Z",
+      "dt": "2026-04-14T18:40:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
         "cen",
         "jakob",
-        "jednají",
-        "nafty",
         "nahrazovat",
         "nemá",
+        "paliv",
         "poslanci",
         "regulaci",
+        "schvalují",
         "stát",
         "trh",
         "řekl"
@@ -762,33 +788,6 @@
         "pohřešovanou",
         "pomohla",
         "čtrnáctiletou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Magyar závodí s časem, chce velkou dohodu s Bruselem. Kreml zatím uspokojil",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/madarsko-peter-magyar-brusel-evropska-komise-vztahy-fondy-eu.A260414_124055_zahranicni_kha",
-      "dt": "2026-04-14T13:08:13Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bruselem",
-        "chce",
-        "dohodu",
-        "kreml",
-        "magyar",
-        "uspokojil",
-        "velkou",
-        "zatím",
-        "závodí",
-        "časem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1593,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48375,
+      "bytes": 48173,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1630,7 +1629,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T18:39:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T18:42:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1649,8 +1648,12 @@
         },
         "sample_titles": [
           {
-            "title": "Poslanci jednají o regulaci cen nafty. Stát nemá nahrazovat trh, řekl Jakob",
-            "publishedAt": "2026-04-14T18:39:16Z"
+            "title": "Diskriminace není volební reforma. Slováci demonstrovali proti zrušení voleb poštou",
+            "publishedAt": "2026-04-14T18:42:00Z"
+          },
+          {
+            "title": "Poslanci schvalují regulaci cen paliv. Stát nemá nahrazovat trh, řekl Jakob",
+            "publishedAt": "2026-04-14T18:40:00Z"
           },
           {
             "title": "Nemůžeme být závislí na USA, řekl Pavel po setkání s argentinským prezidentem",
@@ -1675,10 +1678,6 @@
           {
             "title": "OBRAZEM: Když se ze špatného stane ještě horší. Ropná krize očima Kubánců",
             "publishedAt": "2026-04-14T18:00:00Z"
-          },
-          {
-            "title": "Posádka mise Artemis II na sobě při obletu Měsíce měla vlněné prádlo ze Sokolova",
-            "publishedAt": "2026-04-14T17:27:00Z"
           }
         ]
       }
