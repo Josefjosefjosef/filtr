@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T12:45:55.559763Z",
+  "ingestedAt": "2026-04-14T13:04:55.079529Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Skupina Agel posiluje na Slovensku. Ovládne nemocnici v Bratislavě",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/skupina-agel-posiluje-na-slovensku-ovladne-nemocnici-v-bratislave/",
+      "dt": "2026-04-14T12:51:06Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "agel",
+        "bratislavě",
+        "nemocnici",
+        "ovládne",
+        "posiluje",
+        "skupina",
+        "slovensku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,31 +263,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/v-nemocnici-na-frantisku-skoncil-audit-praha-1-popsala-zjistene-chyby/",
-      "dt": "2026-04-13T14:22:29Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "audit",
-        "chyby",
-        "františku",
-        "nemocnici",
-        "popsala",
-        "praha",
-        "skončil",
-        "zjištěné"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98889,
+      "bytes": 96944,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:51:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skupina Agel posiluje na Slovensku. Ovládne nemocnici v Bratislavě",
+            "publishedAt": "2026-04-14T12:51:06Z"
+          },
           {
             "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce ji ale vůbec někdo?",
             "publishedAt": "2026-04-14T12:00:00Z"
@@ -353,10 +356,6 @@
           {
             "title": "Špatné posudky ničí životy lékařů. Systém soudních znalců je katastrofa, míní Kubek",
             "publishedAt": "2026-04-14T06:00:00Z"
-          },
-          {
-            "title": "Kdo nejvíce investuje do nových léků: TOP 10 farmaceutických firem světa",
-            "publishedAt": "2026-04-14T05:00:00Z"
           }
         ]
       }

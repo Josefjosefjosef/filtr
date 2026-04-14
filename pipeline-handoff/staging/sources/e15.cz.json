@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-14T12:45:55.559763Z",
+  "ingestedAt": "2026-04-14T13:04:55.079529Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Družba se má vrátit do provozu do konce dubna, Zelenskyj čeká změnu i v Budapešti",
+      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/druzba-se-ma-vratit-do-provozu-do-konce-dubna-zelenskyj-ceka-zmenu-i-v-budapesti-1432131",
+      "dt": "2026-04-14T12:46:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "budapešti",
+        "družba",
+        "dubna",
+        "konce",
+        "provozu",
+        "vrátit",
+        "zelenskyj",
+        "změnu",
+        "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1067,32 +1093,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ropa po krachu jednání s Íránem skokově zdražuje, je o sedm procent výš",
-      "url": "https://www.e15.cz/ekonomika/ropa-po-krachu-jednani-s-iranem-skokove-zdrazuje-je-o-sedm-procent-vys-1432072",
-      "dt": "2026-04-13T06:19:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "jednání",
-        "krachu",
-        "procent",
-        "ropa",
-        "sedm",
-        "skokově",
-        "výš",
-        "zdražuje",
-        "íránem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,7 +1103,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53160,
+      "bytes": 53082,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1140,7 +1140,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:46:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 39,
@@ -1156,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Družba se má vrátit do provozu do konce dubna, Zelenskyj čeká změnu i v Budapešti",
+            "publishedAt": "2026-04-14T12:46:00Z"
+          },
           {
             "title": "Apollo financuje expanzi Crestylu v Polsku. Do Spravie pošle 165 milionů eur",
             "publishedAt": "2026-04-14T12:13:00Z"
@@ -1183,10 +1187,6 @@
           {
             "title": "Továrnám dochází plast, Volkswagenu čas. Rýsuje se dražší scénář než za pandemie",
             "publishedAt": "2026-04-14T09:48:00Z"
-          },
-          {
-            "title": "Historický šok na trhu s ropou. IEA kvůli válce v Íránu zcela přepsala letošní prognózu",
-            "publishedAt": "2026-04-14T09:25:00Z"
           }
         ]
       }

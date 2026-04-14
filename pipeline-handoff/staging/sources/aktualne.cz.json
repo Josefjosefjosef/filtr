@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T12:45:55.559763Z",
+  "ingestedAt": "2026-04-14T13:04:55.079529Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poplatky končí. Českou televizi i rozhlas zafinancuje stát, oznámil Klempíř",
+      "url": "https://zpravy.aktualne.cz/domaci/konec-poplatku-ceska-televize-i-rozhlas-dostanou-miliardy-od-statu-oznamil-klempir/r~aaa29c79b37b1e1076f37fa27c54f49d/",
+      "dt": "2026-04-14T12:53:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "klempíř",
+        "končí",
+        "oznámil",
+        "poplatky",
+        "rozhlas",
+        "stát",
+        "televizi",
+        "zafinancuje",
+        "českou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -31,23 +57,24 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "VIDEO: Takhle jste Titanic ještě neviděli. Z podívané na plující loď duchů se tají dech",
+      "title": "Co viděla hlídka těsně před zkázou Titanicu? Loď duchů vyplula znovu, takhle ji spatřil málokdo",
       "url": "https://magazin.aktualne.cz/video-takhle-jste-titanic-jeste-nevideli-z-podivane-na-plujici-lod-duchu-se-taji-dech/r~aaa29f0feb404d901180ffa391039bc0/",
       "dt": "2026-04-14T12:34:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "dech",
         "duchů",
-        "ještě",
-        "jste",
+        "hlídka",
         "loď",
-        "neviděli",
-        "plující",
-        "podívané",
-        "tají",
+        "málokdo",
+        "spatřil",
         "takhle",
-        "titanic"
+        "titanicu",
+        "těsně",
+        "viděla",
+        "vyplula",
+        "zkázou",
+        "znovu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -290,19 +317,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Vysílání je „prozatím“ odloženo. Zůna kvůli videu s Pavlem vyjel na Řehku",
+      "title": "Zůna kvůli nezveřejněnému videu s Pavlem vyjel na Řehku. Nepříjemnost zkusil vysvětlit",
       "url": "https://zpravy.aktualne.cz/domaci/vysilani-je-prozatim-odlozeno-zuna-kvuli-videu-s-pavlem-vyjel-na-rehku/r~aaa292dadea2b41415934e8bcd70b4e0/",
       "dt": "2026-04-14T10:38:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "kvůli",
-        "odloženo",
+        "nepříjemnost",
+        "nezveřejněnému",
         "pavlem",
-        "prozatím",
         "videu",
         "vyjel",
-        "vysílání",
+        "vysvětlit",
+        "zkusil",
         "zůna",
         "řehku"
       ],
@@ -498,32 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Záznam neustále zpochybňovaného „já“. Jiří Petrbok vystaví v DOX své autoportréty",
-      "url": "https://magazin.aktualne.cz/kultura/umeni/zaznam-neustale-zpochybnovaneho-ja-jiri-petrbok-vystavi-v-doxu-sve-autoportrety/r~aaa290565ec07b0f12d4a3b65ac79420/",
-      "dt": "2026-04-14T08:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "autoportréty",
-        "dox",
-        "jiří",
-        "neustále",
-        "petrbok",
-        "své",
-        "vystaví",
-        "zpochybňovaného",
-        "záznam"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22354,
+      "bytes": 22287,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,13 +573,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:53:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 11,
           "finance": 5,
-          "zpravy": 10,
           "sport": 3,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -590,11 +592,15 @@
         },
         "sample_titles": [
           {
+            "title": "Poplatky končí. Českou televizi i rozhlas zafinancuje stát, oznámil Klempíř",
+            "publishedAt": "2026-04-14T12:53:00Z"
+          },
+          {
             "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
             "publishedAt": "2026-04-14T12:37:00Z"
           },
           {
-            "title": "VIDEO: Takhle jste Titanic ještě neviděli. Z podívané na plující loď duchů se tají dech",
+            "title": "Co viděla hlídka těsně před zkázou Titanicu? Loď duchů vyplula znovu, takhle ji spatřil málokdo",
             "publishedAt": "2026-04-14T12:34:00Z"
           },
           {
@@ -616,10 +622,6 @@
           {
             "title": "Ukrajinci oblékli zajatce do neutrálních uniforem a poslali je k Rusům. Ti neváhali",
             "publishedAt": "2026-04-14T11:53:00Z"
-          },
-          {
-            "title": "Lackova dvojitá směna. V tahači se vrátí do Mostu a čeká ho i premiéra v terénu",
-            "publishedAt": "2026-04-01T12:10:00Z"
           }
         ]
       }

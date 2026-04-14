@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-14T12:45:55.559763Z",
+  "ingestedAt": "2026-04-14T13:04:55.079529Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na HBO nejvíc sledují",
+      "url": "https://avmania.zive.cz/nejoblibenejsi-filmy-a-serialy-na-hbo-max",
+      "dt": "2026-04-14T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "2026",
+        "dubnu",
+        "filmů",
+        "hbo",
+        "max",
+        "nejoblíbenějších",
+        "nejvíc",
+        "seriálů",
+        "sledují",
+        "tohle",
+        "češi"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -945,34 +973,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Dubnový akční tarif T-Mobilu nabídne 150 minut, 150 SMS a 5 GB dat za 335 Kč měsíčně",
-      "url": "https://mobilmania.zive.cz/clanky/akcni-tarif-t-mobile-akvizicni-nabidka-za-zvyhodnenou-cenu-202604/sc-3-a-1364549/default.aspx",
-      "dt": "2026-04-10T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "150",
-        "335",
-        "akční",
-        "dat",
-        "dubnový",
-        "minut",
-        "mobilu",
-        "měsíčně",
-        "nabídne",
-        "sms",
-        "tarif"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22778,
+      "bytes": 22949,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1035,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na HBO nejvíc sledují",
+            "publishedAt": "2026-04-14T12:45:00Z"
+          },
           {
             "title": "Šušká se, že Nvidia chce koupit HP nebo Dell a otřást světem. Firma to však popírá",
             "publishedAt": "2026-04-14T11:45:00Z"
@@ -1062,10 +1066,6 @@
           {
             "title": "Ovládací panely skončí, slibuje Microsoft. Tvrdil to už před 10 lety, brzdí ho ale ovladače",
             "publishedAt": "2026-04-13T10:45:00Z"
-          },
-          {
-            "title": "Recenze hry Pragmata. Sci-fi boj proti umělé inteligenci bezchybně míchá akci s taktikou",
-            "publishedAt": "2026-04-13T17:45:00Z"
           }
         ]
       }

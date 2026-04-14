@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-14T12:45:55.559763Z",
+  "ingestedAt": "2026-04-14T13:04:55.079529Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sebevražda v Polabí? Dramatická situace zkomplikuje vztahy, policistka Petra uvažuje o odchodu",
+      "url": "https://www.kinobox.cz/clanky/serialy/52701-sebevrazda-v-polabi-dramaticka-situace-zkomplikuje-vztahy-policistka-petra-uvazuje-o-odchodu",
+      "dt": "2026-04-14T13:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dramatická",
+        "odchodu",
+        "petra",
+        "polabí",
+        "policistka",
+        "sebevražda",
+        "situace",
+        "uvažuje",
+        "vztahy",
+        "zkomplikuje"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -525,33 +552,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "10 filmových pecek, které v dubnu opustí Netflix: Shrek, legendární sci-fi i český animák",
-      "url": "https://www.kinobox.cz/clanky/vod/52507-10-filmovych-pecek-ktere-v-dubnu-opousti-netflix-shrek-legendarni-sci-fi-i-cesky-animak",
-      "dt": "2026-04-11T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "animák",
-        "dubnu",
-        "filmových",
-        "legendární",
-        "netflix",
-        "opustí",
-        "pecek",
-        "sci",
-        "shrek",
-        "český"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -562,7 +562,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28247,
+      "bytes": 28134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,7 +599,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -614,6 +614,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sebevražda v Polabí? Dramatická situace zkomplikuje vztahy, policistka Petra uvažuje o odchodu",
+            "publishedAt": "2026-04-14T13:00:00Z"
+          },
           {
             "title": "Kdy uvidíme druhého Wonku? Pohádkový Chalamet se v kinech utká s legendární fantasy",
             "publishedAt": "2026-04-14T12:00:00Z"
@@ -641,10 +645,6 @@
           {
             "title": "Top kina ČR: Druhý Mario vládne, první díl ale nepřekoná. Spasitel i Zendaya překvapují",
             "publishedAt": "2026-04-13T15:00:00Z"
-          },
-          {
-            "title": "TV sledovanost: Odznak Vysočina sbírá nové diváky. Hit Novy se vrátil na vrchol",
-            "publishedAt": "2026-04-13T12:00:00Z"
           }
         ]
       }
