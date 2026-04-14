@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T20:10:01.888710Z",
+  "ingestedAt": "2026-04-14T20:29:30.422662Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Lookman snižuje proti Barceloně,  PSG hájí dvoubrankový náskok",
-      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-ctvrtfinale-atletico-barcelona-psg-liverpool.A260414_124400_fot_pohary_tals",
-      "dt": "2026-04-14T19:32:46Z",
+      "title": "Hamzová letí do Ameriky s triple doublem, Žabiny poslala do ligového finále",
+      "url": "https://www.idnes.cz/sport/basket/souperkami-basketbalistek-usk-ve-finale-budou-popate-za-sebou-zabiny.A260414_211526_sport-basket_ten",
+      "dt": "2026-04-14T20:25:56Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "barceloně",
-        "dvoubrankový",
-        "hájí",
-        "lookman",
+        "ameriky",
+        "doublem",
+        "finále",
+        "hamzová",
+        "letí",
+        "ligového",
+        "poslala",
+        "triple",
+        "žabiny"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Gól Barcelony kvůli ofsajdu neplatí, PSG drží náskok z prvního duelu",
+      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-ctvrtfinale-atletico-barcelona-psg-liverpool.A260414_124400_fot_pohary_tals",
+      "dt": "2026-04-14T20:22:56Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "barcelony",
+        "drží",
+        "duelu",
+        "gól",
+        "kvůli",
+        "neplatí",
         "náskok",
-        "proti",
-        "psg",
-        "snižuje"
+        "ofsajdu",
+        "prvního",
+        "psg"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -46,32 +74,6 @@
         "superfinále",
         "vyzvou",
         "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hamzová letí do Ameriky s triple doublem, Žabiny poslala do ligového finále",
-      "url": "https://www.idnes.cz/sport/basket/souperkami-basketbalistek-usk-ve-finale-budou-popate-za-sebou-zabiny.A260414_211526_sport-basket_ten",
-      "dt": "2026-04-14T19:23:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ameriky",
-        "doublem",
-        "finále",
-        "hamzová",
-        "letí",
-        "ligového",
-        "poslala",
-        "triple",
-        "žabiny"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -803,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46736,
+      "bytes": 46985,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T19:32:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:25:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,16 +858,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Lookman snižuje proti Barceloně,  PSG hájí dvoubrankový náskok",
-            "publishedAt": "2026-04-14T19:32:46Z"
+            "title": "Hamzová letí do Ameriky s triple doublem, Žabiny poslala do ligového finále",
+            "publishedAt": "2026-04-14T20:25:56Z"
+          },
+          {
+            "title": "ONLINE: Gól Barcelony kvůli ofsajdu neplatí, PSG drží náskok z prvního duelu",
+            "publishedAt": "2026-04-14T20:22:56Z"
           },
           {
             "title": "Florbalisté Střešovic prošli popáté za sebou do superfinále, znovu vyzvou Boleslav",
             "publishedAt": "2026-04-14T19:27:00Z"
-          },
-          {
-            "title": "Hamzová letí do Ameriky s triple doublem, Žabiny poslala do ligového finále",
-            "publishedAt": "2026-04-14T19:23:00Z"
           },
           {
             "title": "Děčín Randa propustil, Ústí ho bere. Pomůže nám dojít daleko, věří šéf Slunety",

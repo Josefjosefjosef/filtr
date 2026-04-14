@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-14T20:10:01.888710Z",
+  "ingestedAt": "2026-04-14T20:29:30.422662Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Poslanci schvalují zákon k regulaci cen. Opozice vládě připomíná komunismus",
       "url": "https://www.idnes.cz/zpravy/domaci/zrychlene-projednani-moznost-vlady-regulovat-narizenim-ceny-nafty-a-benzinu.A260414_051836_domaci_kop",
-      "dt": "2026-04-14T19:40:00Z",
+      "dt": "2026-04-14T20:15:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -21,6 +21,32 @@
         "schvalují",
         "vládě",
         "zákon"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Milei ukázal Pavlovi slavnou „rozpočtovou“ pilu, prezident si ji potěžkat nechtěl",
+      "url": "https://www.idnes.cz/zpravy/domaci/petr-pavel-javier-milei-prezident-argentina-motorova-pila.A260414_214930_domaci_syko",
+      "dt": "2026-04-14T20:11:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "milei",
+        "nechtěl",
+        "pavlovi",
+        "pilu",
+        "potěžkat",
+        "prezident",
+        "rozpočtovou",
+        "slavnou",
+        "ukázal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -761,31 +787,6 @@
         "vztahů",
         "čínský",
         "šéfkou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pohřešovanou čtrnáctiletou dívku našli v lese, pomohla informace od místních",
-      "url": "https://www.idnes.cz/jihlava/zpravy/pohresovani-patrani-divka-policie-pelhrimovsko.A260413_210505_jihlava-zpravy_sahu",
-      "dt": "2026-04-14T13:16:48Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dívku",
-        "informace",
-        "lese",
-        "místních",
-        "našli",
-        "pohřešovanou",
-        "pomohla",
-        "čtrnáctiletou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48184,
+      "bytes": 48544,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,7 +1628,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T19:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1647,7 +1648,11 @@
         "sample_titles": [
           {
             "title": "Poslanci schvalují zákon k regulaci cen. Opozice vládě připomíná komunismus",
-            "publishedAt": "2026-04-14T19:40:00Z"
+            "publishedAt": "2026-04-14T20:15:00Z"
+          },
+          {
+            "title": "Milei ukázal Pavlovi slavnou „rozpočtovou“ pilu, prezident si ji potěžkat nechtěl",
+            "publishedAt": "2026-04-14T20:11:00Z"
           },
           {
             "title": "Diskriminace není volební reforma. Slováci demonstrovali proti zrušení voleb poštou",
@@ -1671,10 +1676,6 @@
           },
           {
             "title": "Čeští polárníci prodávají svou plachetnici. Ani po milionové slevě ji nikdo nechce",
-            "publishedAt": "2026-04-14T18:00:00Z"
-          },
-          {
-            "title": "OBRAZEM: Když se ze špatného stane ještě horší. Ropná krize očima Kubánců",
             "publishedAt": "2026-04-14T18:00:00Z"
           }
         ]

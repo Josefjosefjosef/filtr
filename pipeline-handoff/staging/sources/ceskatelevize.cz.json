@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T20:10:01.888710Z",
+  "ingestedAt": "2026-04-14T20:29:30.422662Z",
   "items": [
     {
       "section": "aktualne",
@@ -772,6 +772,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Lvi porazili českobudějovické volejbalisty 3:0 a jsou krok od finále",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/lvi-porazili-ceskobudejovicke-volejbalisty-30-a-jsou-krok-od-finale-156285",
+      "dt": "2026-04-14T20:25:56Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "finále",
+        "krok",
+        "lvi",
+        "porazili",
+        "volejbalisty",
+        "českobudějovické"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Jihlava zvládla sedmý duel se Zlínem. Vyhrála první ligu a zahraje si baráž",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/jihlava-zvladla-sedmy-duel-se-zlinem-vyhrala-prvni-ligu-a-zahraje-si-baraz-156284",
       "dt": "2026-04-14T18:00:15Z",
@@ -1524,29 +1547,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Betis už je sedm zápasů bez výhry, v Pamploně remizoval 1:1",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/betis-uz-je-sedm-zapasu-bez-vyhry-v-pamplone-remizoval-11-156255",
-      "dt": "2026-04-12T16:59:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "betis",
-        "pamploně",
-        "remizoval",
-        "sedm",
-        "výhry",
-        "zápasů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1676,7 +1676,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39712,
+      "bytes": 39884,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1713,7 +1713,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T18:00:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:25:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1728,6 +1728,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lvi porazili českobudějovické volejbalisty 3:0 a jsou krok od finále",
+            "publishedAt": "2026-04-14T20:25:56Z"
+          },
           {
             "title": "Jihlava zvládla sedmý duel se Zlínem. Vyhrála první ligu a zahraje si baráž",
             "publishedAt": "2026-04-14T18:00:15Z"
@@ -1755,10 +1759,6 @@
           {
             "title": "Cyklistická Czech Tour zamíří poprvé na Ještěd. Start bude opět v Praze",
             "publishedAt": "2026-04-14T11:46:57Z"
-          },
-          {
-            "title": "Sindarov: Uzbecká dvojka, která vládne Turnaji kandidátů",
-            "publishedAt": "2026-04-14T06:30:00Z"
           }
         ]
       }
