@@ -6909,6 +6909,48 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /** P0 desktop-only (≥1025px + /projects/ hub): body.iu-desktop-home-grid — 2-column section tiles; mobile/tablet unchanged. */
+  function iuDesktopHomeSectionGridGuardApply(){
+    try{
+      const body = document.body;
+      if (!body) return;
+      const vp = document.getElementById("iuSilverTallScrollViewport");
+      if (!vp) {
+        body.classList.remove("iu-desktop-home-grid");
+        return;
+      }
+      const p = typeof location !== "undefined" && location && location.pathname ? String(location.pathname) : "";
+      const hub =
+        p === "/projects/" ||
+        p === "/projects" ||
+        p.indexOf("/projects/") === 0 ||
+        p === "/filtr/projects" ||
+        p === "/filtr/projects/";
+      const mq = typeof window.matchMedia === "function" ? window.matchMedia("(min-width: 1025px)") : null;
+      const ok = !!(hub && mq && mq.matches);
+      if (ok) body.classList.add("iu-desktop-home-grid");
+      else body.classList.remove("iu-desktop-home-grid");
+    }catch(_){}
+  }
+  function iuDesktopHomeSectionGridGuardInit(){
+    try{
+      if (window.__iuDesktopHomeSectionGridGuardInit) return;
+      window.__iuDesktopHomeSectionGridGuardInit = 1;
+    }catch{}
+    try{
+      window.iuDesktopHomeSectionGridGuardApply = iuDesktopHomeSectionGridGuardApply;
+    }catch{}
+    iuDesktopHomeSectionGridGuardApply();
+    try{
+      const mq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+      if (mq && mq.addEventListener) mq.addEventListener("change", iuDesktopHomeSectionGridGuardApply);
+      else if (mq && mq.addListener) mq.addListener(iuDesktopHomeSectionGridGuardApply);
+    }catch{}
+    try{
+      window.addEventListener("resize", iuDesktopHomeSectionGridGuardApply, { passive: true });
+    }catch{}
+  }
+
   function iuNewsPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -17375,6 +17417,7 @@ function buildVideoAsArticleCard(it) {
 
     try{ iuUserAddressInit(); }catch{}
     try{ iuSilverWelcomeInit(); }catch{}
+    try{ iuDesktopHomeSectionGridGuardInit(); }catch{}
     /* P0: measure slot max-h once welcome DOM settled — before listeners-only init reduces first paint vs late reflow (CLS). */
     try{ iuSilverMobileStackFitApply(); }catch{}
     try{ iuSilverMobileStackFitInit(); }catch{}
@@ -25515,6 +25558,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       iuHideAllOverlaysNow();
       applySectionFromURL();
       applyPanelFromUrl();
+      try{
+        if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
+      }catch(_){}
     }
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
