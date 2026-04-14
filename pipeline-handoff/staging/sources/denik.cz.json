@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T08:54:55.798485Z",
+  "ingestedAt": "2026-04-14T09:14:33.230808Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Klíšťata mají oblíbenou krevní skupinu. Někteří lidé jsou proto jako magnet",
+      "url": "https://www.denik.cz/zdravotnictvi/klistata-maji-oblibenou-krevni-skupinu.html",
+      "dt": "2026-04-14T08:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jako",
+        "klíšťata",
+        "krevní",
+        "lidé",
+        "magnet",
+        "mají",
+        "někteří",
+        "oblíbenou",
+        "proto",
+        "skupinu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -631,33 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš: Co by prezident na summitu NATO dělal? Určitě tam pojede vládní delegace",
-      "url": "https://www.denik.cz/z_domova/summit-nato-vladni-delegace-andrej-babis-petr-pavel.html",
-      "dt": "2026-04-13T12:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "delegace",
-        "dělal",
-        "nato",
-        "pojede",
-        "prezident",
-        "summitu",
-        "tam",
-        "určitě",
-        "vládní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31278,
+      "bytes": 31087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,11 +705,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:43:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "zdravi": 2,
+          "zdravi": 3,
+          "zpravy": 21,
           "finance": 1
         },
         "drop_counts": {
@@ -722,6 +722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klíšťata mají oblíbenou krevní skupinu. Někteří lidé jsou proto jako magnet",
+            "publishedAt": "2026-04-14T08:43:00Z"
+          },
           {
             "title": "Drama v plzeňské věznici: Jeden z vězňů zabodl pedofilovi nůž do hlavy",
             "publishedAt": "2026-04-14T08:11:00Z"
@@ -749,10 +753,6 @@
           {
             "title": "Král komiksu Saudek: osudné sousto ho před 20 lety uvrhlo do kómatu",
             "publishedAt": "2026-04-14T05:00:00Z"
-          },
-          {
-            "title": "Zmizela čtrnáctiletá Klára z Pelhřimovska. Odešla ze školy a nedorazila domů",
-            "publishedAt": "2026-04-14T04:56:00Z"
           }
         ]
       }
