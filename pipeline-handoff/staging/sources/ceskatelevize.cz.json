@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T21:29:59.411181Z",
+  "ingestedAt": "2026-04-14T21:50:03.707810Z",
   "items": [
     {
       "section": "aktualne",
@@ -772,6 +772,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Atlético přes domácí porážku vyřadilo Barcelonu, v semifinále jsou i obhájci z PSG",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/atletico-pres-domaci-porazku-vyradilo-barcelonu-v-semifinale-jsou-i-obhajci-z-psg-156288",
+      "dt": "2026-04-14T21:32:14Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "atlético",
+        "barcelonu",
+        "domácí",
+        "obhájci",
+        "porážku",
+        "psg",
+        "semifinále",
+        "vyřadilo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Žabiny budou znovu hrát o titul s USK, ve finále jim ale asi bude chybět Hamzová",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/zabiny-budou-znovu-hrat-o-titul-s-usk-ve-finale-jim-ale-asi-bude-chybet-hamzova-156286",
       "dt": "2026-04-14T20:56:14Z",
@@ -1526,29 +1551,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stuttgart vyprovodil nováčka z Hamburku čtyřmi brankami",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/stuttgart-vyprovodil-novacka-z-hamburku-ctyrmi-brankami-156257",
-      "dt": "2026-04-12T17:51:09Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brankami",
-        "hamburku",
-        "nováčka",
-        "stuttgart",
-        "vyprovodil",
-        "čtyřmi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1678,7 +1680,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39986,
+      "bytes": 39957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1715,7 +1717,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:56:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T21:32:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1730,6 +1732,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Atlético přes domácí porážku vyřadilo Barcelonu, v semifinále jsou i obhájci z PSG",
+            "publishedAt": "2026-04-14T21:32:14Z"
+          },
           {
             "title": "Žabiny budou znovu hrát o titul s USK, ve finále jim ale asi bude chybět Hamzová",
             "publishedAt": "2026-04-14T20:56:14Z"
@@ -1757,10 +1763,6 @@
           {
             "title": "Sparta podněcovala fanoušky k urážení Dědka, míní Pardubice",
             "publishedAt": "2026-04-14T14:12:39Z"
-          },
-          {
-            "title": "Šelmy touží po volejbalovém titulu před rekordní návštěvou. Zápas za odměnu, zní z Dukly",
-            "publishedAt": "2026-04-14T11:54:32Z"
           }
         ]
       }
@@ -1772,7 +1774,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77083,
+      "bytes": 77079,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
