@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T05:29:22.435784Z",
+  "ingestedAt": "2026-04-14T05:45:01.057218Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec „kokainových hrochů“. Kolumbie po letech marných bojů nařídila odstřel",
+      "url": "https://magazin.aktualne.cz/konec-kokainovych-hrochu-kolumbie-po-letech-marnych-boju-naridila-odstrel/r~aaa29d6d7df2713ec3a9493e61d25d36/",
+      "dt": "2026-04-14T05:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bojů",
+        "hrochů",
+        "kokainových",
+        "kolumbie",
+        "konec",
+        "letech",
+        "marných",
+        "nařídila",
+        "odstřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,31 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Magyar přislíbil Tuskovi vydat dva stíhané opoziční politiky",
-      "url": "https://zpravy.aktualne.cz/zahranici/magyar-prislibil-polsku-vydat-dva-stihane-opozicni-politiky/r~aaa29c49339dd8833035aacb7967b30d/",
-      "dt": "2026-04-13T14:15:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dva",
-        "magyar",
-        "opoziční",
-        "politiky",
-        "přislíbil",
-        "stíhané",
-        "tuskovi",
-        "vydat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21593,
+      "bytes": 21550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,7 +576,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T04:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:37:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -593,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec „kokainových hrochů“. Kolumbie po letech marných bojů nařídila odstřel",
+            "publishedAt": "2026-04-14T05:37:00Z"
+          },
           {
             "title": "Míč je na íránské straně hřiště, řekl Vance. Promluvil o „značném pokroku“ v rozhovorech s Íránem",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -619,10 +624,6 @@
           },
           {
             "title": "Magyar není žádný liberál. Jeho vztah k Ukrajině je jiný, než se může zdát",
-            "publishedAt": "2026-04-14T03:30:00Z"
-          },
-          {
-            "title": "Víc než polovina Čechů se bojí zvýšení nájmu či hypotéky. Expertka popisuje řešení",
             "publishedAt": "2026-04-14T03:30:00Z"
           }
         ]

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T05:29:22.435784Z",
+  "ingestedAt": "2026-04-14T05:45:01.057218Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "S českým kamarádem debutoval v NHL, teď je slovenský talent první ohlášenou posilou pro MS",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-s-ceskym-kamaradem-debutoval-v-nhl-ted-je-slovensky-talent-prvni-ohlasenou-posilou-pro-ms-5436437",
+      "dt": "2026-04-14T05:38:28Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "debutoval",
+        "kamarádem",
+        "nhl",
+        "ohlášenou",
+        "posilou",
+        "první",
+        "slovenský",
+        "talent",
+        "českým"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -21,6 +47,31 @@
         "podmanil",
         "stanley",
         "vladař"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Byli jsme v šoku, nikdo to nečekal, zní z Procházkova týmu",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-byli-jsme-v-soku-nikdo-to-necekal-zni-z-prochazkova-tymu-5436535",
+      "dt": "2026-04-14T05:28:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "byli",
+        "jsme",
+        "nečekal",
+        "nikdo",
+        "procházkova",
+        "týmu",
+        "zní",
+        "šoku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -728,58 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ECHO BUNDESLIGY: Německem hýbe žena na střídačce. Risk, praktické věci drhnou",
-      "url": "https://www.sport.cz/clanek/nazory-komentare-echo-bundesligy-nemeckem-hybe-zena-na-stridacce-risk-prakticke-veci-drhnou-5436422",
-      "dt": "2026-04-13T14:53:30Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bundesligy",
-        "drhnou",
-        "echo",
-        "hýbe",
-        "německem",
-        "praktické",
-        "risk",
-        "střídačce",
-        "věci",
-        "žena"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Bláznivý incident v Karviné. Fanoušek napadl nejlepšího hráče soupeře",
-      "url": "https://www.sport.cz/clanek/hazena-blaznivy-incident-v-karvine-fanousek-napadl-nejlepsiho-hrace-soupere-5436428",
-      "dt": "2026-04-13T14:18:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bláznivý",
-        "fanoušek",
-        "hráče",
-        "incident",
-        "karviné",
-        "napadl",
-        "nejlepšího",
-        "soupeře"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44328,
+      "bytes": 44890,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,12 +826,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:17:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:38:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 26,
+          "sport": 27,
           "finance": 1,
-          "zpravy": 2,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -846,8 +845,16 @@
         },
         "sample_titles": [
           {
+            "title": "S českým kamarádem debutoval v NHL, teď je slovenský talent první ohlášenou posilou pro MS",
+            "publishedAt": "2026-04-14T05:38:28Z"
+          },
+          {
             "title": "Famózní Vladař. Podmanil si nájezdy a dotáhl Flyers do bojů o Stanley Cup",
             "publishedAt": "2026-04-14T03:59:25Z"
+          },
+          {
+            "title": "Byli jsme v šoku, nikdo to nečekal, zní z Procházkova týmu",
+            "publishedAt": "2026-04-14T05:28:12Z"
           },
           {
             "title": "Se Spartou tušil divočinu, proto vypnul sítě. Rozhodčích se ale pardubický Kaut zastává",
@@ -868,14 +875,6 @@
           {
             "title": "Kousková obhájila prvenství v novinářské anketě Golfista roku",
             "publishedAt": "2026-04-13T20:49:07Z"
-          },
-          {
-            "title": "Kluci pobláznili celou Prahu a věřím, že i republiku, říká Nedvěd. Spartě prý fandí i v Brně",
-            "publishedAt": "2026-04-13T20:35:10Z"
-          },
-          {
-            "title": "Hrdina Sparty zařídil obrat, ale už dávno mohl být ve sprše: Nebál jsem se, asi mi najel do hokejky",
-            "publishedAt": "2026-04-13T20:40:30Z"
           }
         ]
       }

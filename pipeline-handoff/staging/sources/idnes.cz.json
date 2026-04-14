@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-14T05:29:22.435784Z",
+  "ingestedAt": "2026-04-14T05:45:01.057218Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Míč je na íránské straně hřiště, USA dosáhly pokroku, míní viceprezident Vance",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/jd-vance-usa-iran-jednani-rozhovory-pokrok.A260414_070516_zahranicni_herp",
+      "dt": "2026-04-14T05:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dosáhly",
+        "hřiště",
+        "míní",
+        "míč",
+        "pokroku",
+        "straně",
+        "usa",
+        "vance",
+        "viceprezident",
+        "íránské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,32 +785,6 @@
         "své",
         "vítězstvím",
         "zmínila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bůh šašek v paruce. Tentokrát ho viní z urážení sociálních pracovnic i soudkyně",
-      "url": "https://www.idnes.cz/plzen/zpravy/plasy-buh-sasek-stancik-sekta-vyhrozovani-soudkyne-domaci-porod-nadavky.A260413_151502_plzen-zpravy_vb",
-      "dt": "2026-04-13T14:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bůh",
-        "paruce",
-        "pracovnic",
-        "sociálních",
-        "soudkyně",
-        "tentokrát",
-        "urážení",
-        "viní",
-        "šašek"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49964,
+      "bytes": 50157,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1621,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1637,6 +1638,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Míč je na íránské straně hřiště, USA dosáhly pokroku, míní viceprezident Vance",
+            "publishedAt": "2026-04-14T05:17:00Z"
+          },
           {
             "title": "V New Yorku zatkli desítky demonstrantů proti válce v Íránu a proti podpoře Izraele",
             "publishedAt": "2026-04-14T05:14:00Z"
@@ -1664,10 +1669,6 @@
           {
             "title": "Poslanci zrychleně projednají možnost vlády regulovat nařízením ceny paliv",
             "publishedAt": "2026-04-14T03:55:00Z"
-          },
-          {
-            "title": "OBRAZEM: Lány narcisů lákají na samosběr, za pár korun máte plnou náruč jara",
-            "publishedAt": "2026-04-14T03:02:00Z"
           }
         ]
       }

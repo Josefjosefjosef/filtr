@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T05:29:22.435784Z",
+  "ingestedAt": "2026-04-14T05:45:01.057218Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař vychytal Philadelphii postup, Nečas v NHL zůstává na 99 bodech",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-necas-faksa-vladar.A260414_071229_nhl_mkr",
+      "dt": "2026-04-14T05:35:12Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bodech",
+        "nečas",
+        "nhl",
+        "philadelphii",
+        "postup",
+        "vladař",
+        "vychytal",
+        "zůstává"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pracovité naděje, které by mohly být i drzejší. Ptáčková o Hamzové a Čechové",
+      "url": "https://www.idnes.cz/sport/basket/cechova-hamzova-wnba-minnesota-lynx-jake-jsou-ptackova.A260413_192946_sport-basket_czo",
+      "dt": "2026-04-14T05:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "být",
+        "drzejší",
+        "hamzové",
+        "mohly",
+        "naděje",
+        "pracovité",
+        "ptáčková",
+        "čechové"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,61 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorý v průšvihu. Červená karta udělena správně, řekla komise. Jaký dostane trest?",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/komise-rozhodcich-tomas-chory-vylouceni-cervena-karta-disciplinarni-komise.A260413_121553_fotbal_min",
-      "dt": "2026-04-13T11:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chorý",
-        "dostane",
-        "jaký",
-        "karta",
-        "komise",
-        "průšvihu",
-        "správně",
-        "trest",
-        "udělena",
-        "červená",
-        "řekla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další prvoligový hráč v korupční kauze. Zapleten je i olomoucký Elbel, tvrdí policie",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/dalsi-prvoligovy-hrac-v-korupcni-kauze-zapleten-je-i-olomoucky-elbel-tvrdi-policie.A260413_124605_fotbal_duff",
-      "dt": "2026-04-13T11:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "elbel",
-        "hráč",
-        "kauze",
-        "korupční",
-        "olomoucký",
-        "policie",
-        "prvoligový",
-        "tvrdí",
-        "zapleten"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47954,
+      "bytes": 47866,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:35:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -859,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař vychytal Philadelphii postup, Nečas v NHL zůstává na 99 bodech",
+            "publishedAt": "2026-04-14T05:35:12Z"
+          },
+          {
+            "title": "Pracovité naděje, které by mohly být i drzejší. Ptáčková o Hamzové a Čechové",
+            "publishedAt": "2026-04-14T05:27:00Z"
+          },
           {
             "title": "Cíl splněn. Že je to málo? Ambice byly střízlivé, zní z Olomoucka",
             "publishedAt": "2026-04-14T05:00:00Z"
@@ -882,14 +885,6 @@
           {
             "title": "Sparta - Pardubice 3:2. Série pokračuje, výhru zařídili Špaček s Chlapíkem",
             "publishedAt": "2026-04-13T19:31:57Z"
-          },
-          {
-            "title": "Play off hokejové extraligy 2026: program, systém, dvojice v semifinále, kde sledovat",
-            "publishedAt": "2026-04-13T19:27:00Z"
-          },
-          {
-            "title": "Choreo na Dědka i další ostrá hesla. Emoce mezi Spartou a Pardubicemi neutichají",
-            "publishedAt": "2026-04-13T18:55:00Z"
           }
         ]
       }
