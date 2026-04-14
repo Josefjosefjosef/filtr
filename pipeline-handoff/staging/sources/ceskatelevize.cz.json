@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T12:25:00.064062Z",
+  "ingestedAt": "2026-04-14T12:45:55.559763Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Klempíř představuje zákony ke změnám rozhlasových a televizních poplatků",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/klempir-predstavuje-zakony-ke-zmenam-rozhlasovych-a-televiznich-poplatku-372365",
+      "dt": "2026-04-14T12:31:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "klempíř",
+        "poplatků",
+        "představuje",
+        "rozhlasových",
+        "televizních",
+        "změnám",
+        "zákony"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,20 +55,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Na zastupitelstvo Brna dorazili odpůrci i podporovatelé sjezdu sudetských Němců",
+      "title": "Ke konání sudetoněmeckého sjezdu se Brno postavilo neutrálně",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihomoravsky-kraj/na-zastupitelstvo-brna-dorazili-odpurci-i-podporovatele-sjezdu-sudetskych-nemcu-372364",
       "dt": "2026-04-14T11:22:46Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "brna",
-        "dorazili",
-        "němců",
-        "odpůrci",
-        "podporovatelé",
+        "brno",
+        "konání",
+        "neutrálně",
+        "postavilo",
         "sjezdu",
-        "sudetských",
-        "zastupitelstvo"
+        "sudetoněmeckého"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -738,28 +760,6 @@
         "světa",
         "vidění",
         "vondráček"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "SOUHRN: Zásadní události pondělí 13. dubna",
-      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-pondeli-13-dubna-372334",
-      "dt": "2026-04-13T16:29:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dubna",
-        "pondělí",
-        "souhrn",
-        "události",
-        "zásadní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1551,7 +1551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42342,
+      "bytes": 43028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1611,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:46:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:31:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1629,11 +1629,15 @@
         },
         "sample_titles": [
           {
+            "title": "Klempíř představuje zákony ke změnám rozhlasových a televizních poplatků",
+            "publishedAt": "2026-04-14T12:31:53Z"
+          },
+          {
             "title": "ÚS vyhověl stížnosti Knížáka, justice musí znovu rozhodovat o rehabilitaci",
             "publishedAt": "2026-04-14T11:46:19Z"
           },
           {
-            "title": "Na zastupitelstvo Brna dorazili odpůrci i podporovatelé sjezdu sudetských Němců",
+            "title": "Ke konání sudetoněmeckého sjezdu se Brno postavilo neutrálně",
             "publishedAt": "2026-04-14T11:22:46Z"
           },
           {
@@ -1655,10 +1659,6 @@
           {
             "title": "Pravěké ženy jedly mnohem méně masa než muži. Vědci zkoumají proč",
             "publishedAt": "2026-04-14T10:02:00Z"
-          },
-          {
-            "title": "První kroky k zestátnění ČEZu udělá stát na valné hromadě firmy v červnu, řekl Babiš",
-            "publishedAt": "2026-04-14T09:49:58Z"
           }
         ]
       }
@@ -1764,7 +1764,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76986,
+      "bytes": 76976,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

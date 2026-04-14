@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T12:25:00.064062Z",
+  "ingestedAt": "2026-04-14T12:45:55.559763Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
+      "url": "https://www.denik.cz/ekonomika/maximalni-ceny-paliv-15-duben.html",
+      "dt": "2026-04-14T12:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ceny",
+        "desítky",
+        "haléřů",
+        "hmot",
+        "maximální",
+        "pohonných",
+        "středu",
+        "vzrostou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -453,20 +478,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zmizela čtrnáctiletá Klára z Pelhřimovska. Odešla ze školy a nedorazila domů",
-      "url": "https://pelhrimovsky.denik.cz/zpravy_region/patrani-divka-pelhrimovsko-nevratila-skola-policie-rodina-pohresovana-senozaty.html",
+      "title": "Pohřešovanou dívku z Pelhřimova vypátrali v lese. Skončila v péči lékařů",
+      "url": "https://www.denik.cz/regiony/patrani-divka-pelhrimovsko-nevratila-skola-policie-rodina-pohresovana-senozaty.html",
       "dt": "2026-04-14T04:56:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "domů",
-        "klára",
-        "nedorazila",
-        "odešla",
-        "pelhřimovska",
-        "zmizela",
-        "čtrnáctiletá",
-        "školy"
+        "dívku",
+        "lese",
+        "lékařů",
+        "pelhřimova",
+        "pohřešovanou",
+        "péči",
+        "skončila",
+        "vypátrali"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -630,31 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čapímu párečku se v Brodku daří. Hnízdo si bedlivě střeží, podívejte se",
-      "url": "https://prerovsky.denik.cz/ctenar-reporter/capimu-parecku-se-v-brodku-dari-hnizdo-si-bedlive-strezi-podivejte-se-50260413.html",
-      "dt": "2026-04-14T02:24:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bedlivě",
-        "brodku",
-        "daří",
-        "hnízdo",
-        "podívejte",
-        "párečku",
-        "střeží",
-        "čapímu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30307,
+      "bytes": 30570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,10 +702,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "finance": 1,
+          "zpravy": 22,
           "zdravi": 2
         },
         "drop_counts": {
@@ -718,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
+            "publishedAt": "2026-04-14T12:20:00Z"
+          },
           {
             "title": "U Chorvatska se objevila nebezpečná ryba chirurg. Může způsobit zranění",
             "publishedAt": "2026-04-14T11:35:00Z"
@@ -745,10 +750,6 @@
           {
             "title": "Letadlo EasyJet odletělo z Itálie bez 100 cestujících. Kvůli novému systému EU",
             "publishedAt": "2026-04-14T09:53:00Z"
-          },
-          {
-            "title": "První kroky k zestátnění ČEZ udělá stát na valné hromadě v červnu, řekl Babiš",
-            "publishedAt": "2026-04-14T09:49:00Z"
           }
         ]
       }

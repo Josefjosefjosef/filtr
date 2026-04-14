@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T12:25:00.064062Z",
+  "ingestedAt": "2026-04-14T12:45:55.559763Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kometu opouští slovenský obránce Ďaloga. Čas na nový impulz, říká po 5 letech v Brně",
+      "url": "https://www.idnes.cz/hokej/extraliga/slovensky-hokejovy-obrance-daloga-po-peti-letech-odchazi-z-komety-brno.A260414_142232_hokej_kazdt",
+      "dt": "2026-04-14T12:28:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brně",
+        "impulz",
+        "kometu",
+        "letech",
+        "nový",
+        "obránce",
+        "opouští",
+        "slovenský",
+        "čas",
+        "ďaloga",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -774,33 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Play off hokejové extraligy 2026: program, systém, dvojice v semifinále, kde sledovat",
-      "url": "https://www.idnes.cz/hokej/extraliga/play-off-tipsport-extraliga-2026-program-zapasu-kde-sledovat.A260305_093915_hokej_hrj",
-      "dt": "2026-04-13T19:27:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "dvojice",
-        "extraligy",
-        "hokejové",
-        "off",
-        "play",
-        "program",
-        "semifinále",
-        "sledovat",
-        "systém"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49073,
+      "bytes": 48860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -863,6 +864,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kometu opouští slovenský obránce Ďaloga. Čas na nový impulz, říká po 5 letech v Brně",
+            "publishedAt": "2026-04-14T12:28:00Z"
+          },
           {
             "title": "Slavia má novou kolekci pro děti i mazlíčky. Navrhla ji dcera kapitána Bořila",
             "publishedAt": "2026-04-14T12:08:00Z"
@@ -890,10 +895,6 @@
           {
             "title": "Kdo je v F1 nejblíž Měsíci? Lindblad dojel na oběžnou dráhu, Alonso je ve třetině",
             "publishedAt": "2026-04-14T11:00:00Z"
-          },
-          {
-            "title": "Neobvyklá svačinka. Frustrovaný tenista během tréninku okusoval listí z plotu",
-            "publishedAt": "2026-04-14T10:37:00Z"
           }
         ]
       }

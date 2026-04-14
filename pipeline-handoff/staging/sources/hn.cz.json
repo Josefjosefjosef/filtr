@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T12:25:00.064062Z",
+  "ingestedAt": "2026-04-14T12:45:55.559763Z",
   "items": [
     {
       "section": "finance",
@@ -53,6 +53,34 @@
         "ropovodu",
         "ukrajinu",
         "zelenskyj"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jak získat peníze z unie a vyhnout se jejím podmínkám? Návod hledá vláda Andreje Babiše",
+      "url": "https://archiv.hn.cz/c1-67866560-jak-ziskat-penize-z-unie-a-vyhnout-se-jejim-podminkam-navod-hleda-vlada-andreje-babise",
+      "dt": "2026-04-14T11:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "andreje",
+        "babiše",
+        "hledá",
+        "jejím",
+        "návod",
+        "peníze",
+        "podmínkám",
+        "unie",
+        "vláda",
+        "vyhnout",
+        "získat"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1137,39 +1165,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "&bdquo;Těžký večer v Průhonicích.&ldquo; Andreje Babiše z prohry Viktora Orbána bolí hlava a není to jen kvůli ztrátě spojence",
-      "url": "https://archiv.hn.cz/c1-67865650-bdquo-tezky-vecer-v-pruhonicich-ldquo-andreje-babise-z-prohry-viktora-orbana-boli-hlava-a-neni-to-jen-kvuli-ztrate-spojence",
-      "dt": "2026-04-13T07:10:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "andreje",
-        "babiše",
-        "bdquo",
-        "bolí",
-        "hlava",
-        "jen",
-        "kvůli",
-        "ldquo",
-        "orbána",
-        "prohry",
-        "průhonicích",
-        "spojence",
-        "těžký",
-        "večer",
-        "viktora",
-        "ztrátě"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1180,7 +1175,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186165,
+      "bytes": 186118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1242,6 +1237,10 @@
             "publishedAt": "2026-04-14T11:34:00Z"
           },
           {
+            "title": "Jak získat peníze z unie a vyhnout se jejím podmínkám? Návod hledá vláda Andreje Babiše",
+            "publishedAt": "2026-04-14T11:25:00Z"
+          },
+          {
             "title": "Zestátňování ČEZ začne v červnu. První kroky udělá stát na valné hromadě firmy, oznámil Babiš",
             "publishedAt": "2026-04-14T10:50:00Z"
           },
@@ -1260,10 +1259,6 @@
           {
             "title": "Jakou hodnotu generují investorům private equity fondy a proč se celá hra v příštích letech změní",
             "publishedAt": "2026-04-14T08:27:00Z"
-          },
-          {
-            "title": "Neúspěch u přijímaček není žádná tragédie. Jaké jsou nejčastější chyby v komunikaci s dítětem, které se nedostalo na vysněnou školu?",
-            "publishedAt": "2026-04-14T07:18:00Z"
           }
         ]
       }
