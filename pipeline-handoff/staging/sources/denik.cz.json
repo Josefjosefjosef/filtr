@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T13:45:14.157572Z",
+  "ingestedAt": "2026-04-14T14:09:33.629745Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Macinka navštvíl Jeruzalém. Česko je velký přítel Izraele, řekli hostitelé",
+      "url": "https://www.denik.cz/ze_sveta/petr-macinka-navsteva-izrael-gideon-saar.html",
+      "dt": "2026-04-14T13:47:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hostitelé",
+        "izraele",
+        "jeruzalém",
+        "macinka",
+        "navštvíl",
+        "přítel",
+        "velký",
+        "česko",
+        "řekli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Česko může zrychlít růst. MMF nastavil odhad výš než ministerstvo",
+      "title": "Česko může zrychlit růst. MMF nastavil odhad výš než ministerstvo",
       "url": "https://www.denik.cz/ekonomika/mmf-hospodarsky-rust-prognoza-zrychleni.html",
       "dt": "2026-04-14T13:12:00Z",
       "media_raw": "Deník",
@@ -19,7 +45,7 @@
         "odhad",
         "růst",
         "výš",
-        "zrychlít",
+        "zrychlit",
         "česko"
       ],
       "feedCategory": "zpravy",
@@ -622,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vracejí lidi do života. V Praze se sejdou zdravotníci z následné intenzivní péče",
-      "url": "https://www.denik.cz/zdravotnictvi/vraci-lidi-do-zivota-v-praze-se-sejdou-zdravotnici-z-nasledne-intenzivni-pece-20.html",
-      "dt": "2026-04-14T04:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "intenzivní",
-        "lidi",
-        "následné",
-        "praze",
-        "péče",
-        "sejdou",
-        "vracejí",
-        "zdravotníci",
-        "života"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30240,
+      "bytes": 30308,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,12 +695,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:47:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zpravy": 22,
           "finance": 2,
-          "zpravy": 21,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -713,7 +713,11 @@
         },
         "sample_titles": [
           {
-            "title": "Česko může zrychlít růst. MMF nastavil odhad výš než ministerstvo",
+            "title": "Macinka navštvíl Jeruzalém. Česko je velký přítel Izraele, řekli hostitelé",
+            "publishedAt": "2026-04-14T13:47:00Z"
+          },
+          {
+            "title": "Česko může zrychlit růst. MMF nastavil odhad výš než ministerstvo",
             "publishedAt": "2026-04-14T13:12:00Z"
           },
           {
@@ -739,10 +743,6 @@
           {
             "title": "Konec Orbánova režimu, začátek nové éry. Magyar ohlásil v Maďarsku tvrdé změny",
             "publishedAt": "2026-04-14T11:00:00Z"
-          },
-          {
-            "title": "Turisté u Dvora Králové objevili poklad. Rozdělí si odměnu téměř 12 milionů",
-            "publishedAt": "2026-04-14T10:19:00Z"
           }
         ]
       }

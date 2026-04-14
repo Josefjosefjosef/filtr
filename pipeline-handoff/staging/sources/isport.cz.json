@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-14T13:45:14.157572Z",
+  "ingestedAt": "2026-04-14T14:09:33.629745Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cyklistická Czech Tour povýšila. Ředitel König chce už letos nalákat opravdu velké hvězdy",
+      "url": "https://isport.blesk.cz/clanek/ostatni-cyklistika/474411/cyklisticka-czech-tour-povysila-reditel-konig-chce-uz-letos-nalakat-opravdu-velke-hvezdy.html",
+      "dt": "2026-04-14T13:30:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "chce",
+        "cyklistická",
+        "czech",
+        "hvězdy",
+        "könig",
+        "letos",
+        "nalákat",
+        "opravdu",
+        "povýšila",
+        "tour",
+        "velké",
+        "ředitel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1043,31 +1072,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ukázalo se, jak byl Procházkův titul blízko. Soupeř přiznal, co by se stalo po 1. kole",
-      "url": "https://isport.blesk.cz/clanek/ostatni-mma-ufc/474377/ukazalo-se-jak-byl-prochazkuv-titul-blizko-souper-priznal-co-by-se-stalo-po-1-kole.html",
-      "dt": "2026-04-13T13:39:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "blízko",
-        "kole",
-        "procházkův",
-        "přiznal",
-        "soupeř",
-        "stalo",
-        "titul",
-        "ukázalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1078,11 +1082,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 57911,
+      "bytes": 59161,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 47,
+      "itemsParsed": 48,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1115,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1130,6 +1134,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cyklistická Czech Tour povýšila. Ředitel König chce už letos nalákat opravdu velké hvězdy",
+            "publishedAt": "2026-04-14T13:30:00Z"
+          },
           {
             "title": "Je rychlejší než Bolt! Australský mladík překonal juniorský světový rekord. Kam cílí?",
             "publishedAt": "2026-04-14T13:10:00Z"
@@ -1157,10 +1165,6 @@
           {
             "title": "Chorého červená? Ve hře byl i jiný přísný trest. Až čas ukáže, jak precedens ovlivní ligu",
             "publishedAt": "2026-04-14T10:30:00Z"
-          },
-          {
-            "title": "Názor mentálního kouče na další »blikanec« Chorého: Emoce špatným směrem",
-            "publishedAt": "2026-04-14T10:12:00Z"
           }
         ]
       }

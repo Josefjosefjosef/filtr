@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T13:45:14.157572Z",
+  "ingestedAt": "2026-04-14T14:09:33.629745Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš: Plán na zestátnění ČEZ platí. Vlček: Nedává to ekonomický smysl",
+      "url": "https://ekonomickydenik.cz/babis-plan-zestatneni-cez-plati/",
+      "dt": "2026-04-14T13:51:47Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "ekonomický",
+        "nedává",
+        "platí",
+        "plán",
+        "smysl",
+        "vlček",
+        "zestátnění",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,31 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Orbán uznal porážku. Příštímu premiérovi Magyarovi gratuloval k vítězství",
-      "url": "https://ekonomickydenik.cz/orban-uznal-porazku-magyarovi-gratuloval/",
-      "dt": "2026-04-12T19:41:27Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "gratuloval",
-        "magyarovi",
-        "orbán",
-        "porážku",
-        "premiérovi",
-        "příštímu",
-        "uznal",
-        "vítězství"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72163,
+      "bytes": 72239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:26:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:51:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -859,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš: Plán na zestátnění ČEZ platí. Vlček: Nedává to ekonomický smysl",
+            "publishedAt": "2026-04-14T13:51:47Z"
+          },
           {
             "title": "Inflace mění rychlost. Tyto dvě položky vám letos vyluxují konto",
             "publishedAt": "2026-04-14T13:26:36Z"
@@ -886,10 +891,6 @@
           {
             "title": "Unie zařízla ocel z Asie i Turecka. Chce zachránit vlastní krachující hutě",
             "publishedAt": "2026-04-14T08:01:45Z"
-          },
-          {
-            "title": "Vrecionová: Naše suroviny, cizí zisky. Je čas vrátit mlýny a jatka do regionů",
-            "publishedAt": "2026-04-14T07:28:10Z"
           }
         ]
       }
