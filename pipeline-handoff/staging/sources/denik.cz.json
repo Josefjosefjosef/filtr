@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T08:34:58.170735Z",
+  "ingestedAt": "2026-04-14T08:54:55.798485Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Drama v plzeňské věznici: Jeden z vězňů zabodl pedofilovi nůž do hlavy",
+      "url": "https://www.denik.cz/krimi/plzen-veznice-bory-vezen-utok-nuz-bodnuti-pokus-o-vrazdu.html",
+      "dt": "2026-04-14T08:11:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "drama",
+        "hlavy",
+        "jeden",
+        "nůž",
+        "pedofilovi",
+        "plzeňské",
+        "věznici",
+        "vězňů",
+        "zabodl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -632,33 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Cizinec v pražském bytě ukryl kokain, peníze i zbraně. Drogy objevil elektrikář",
-      "url": "https://www.denik.cz/krimi/elektrikar-sel-resit-chybu-ve-vedeni-vypadl-na-nej-kilogram-kokainu-20260413.html",
-      "dt": "2026-04-13T12:56:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bytě",
-        "cizinec",
-        "drogy",
-        "elektrikář",
-        "kokain",
-        "objevil",
-        "peníze",
-        "pražském",
-        "ukryl",
-        "zbraně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31395,
+      "bytes": 31278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:11:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -723,6 +722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drama v plzeňské věznici: Jeden z vězňů zabodl pedofilovi nůž do hlavy",
+            "publishedAt": "2026-04-14T08:11:00Z"
+          },
           {
             "title": "Speed Marathon v ČR: Měřit se bude na stovkách míst, za antiradar tučné pokuty",
             "publishedAt": "2026-04-14T08:00:00Z"
@@ -750,10 +753,6 @@
           {
             "title": "Zmizela čtrnáctiletá Klára z Pelhřimovska. Odešla ze školy a nedorazila domů",
             "publishedAt": "2026-04-14T04:56:00Z"
-          },
-          {
-            "title": "Ramagem zatčen v USA: Spojence Bolsonara z pokusu o převrat zadrželi agenti ICE",
-            "publishedAt": "2026-04-14T04:44:00Z"
           }
         ]
       }

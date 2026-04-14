@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T08:34:58.170735Z",
+  "ingestedAt": "2026-04-14T08:54:55.798485Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z prokleté destinace je gólmanská tvrz. Senzační Vladař oživil vzpomínky na českou legendu",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-z-proklete-destinace-je-golmanska-tvrz-senzacni-vladar-ozivil-vzpominky-na-ceskou-legendu-5436604",
+      "dt": "2026-04-14T08:49:59Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "destinace",
+        "gólmanská",
+        "legendu",
+        "oživil",
+        "prokleté",
+        "senzační",
+        "tvrz",
+        "vladař",
+        "vzpomínky",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,31 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hvězdami týdne v NHL byli švédští brankáři Forsberg a Ullmark",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-hvezdami-tydne-v-nhl-byli-svedsti-brankari-forsberg-a-ullmark-5436487",
-      "dt": "2026-04-13T17:31:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brankáři",
-        "byli",
-        "forsberg",
-        "hvězdami",
-        "nhl",
-        "týdne",
-        "ullmark",
-        "švédští"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46162,
+      "bytes": 46344,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:25:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:49:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z prokleté destinace je gólmanská tvrz. Senzační Vladař oživil vzpomínky na českou legendu",
+            "publishedAt": "2026-04-14T08:49:59Z"
+          },
           {
             "title": "Procházka? Pozér a plný strachu, pálí šampion Ulberg",
             "publishedAt": "2026-04-14T08:25:35Z"
@@ -870,10 +876,6 @@
           {
             "title": "Pořádný malér německých tenistek. Jsme v depresi, hlesl zničený kapitán",
             "publishedAt": "2026-04-14T07:14:08Z"
-          },
-          {
-            "title": "MADE IN ENGLAND: Zákrok na Kinského byl nepochopitelný a bezohledný, o Tottenham se bojím",
-            "publishedAt": "2026-04-14T06:59:50Z"
           }
         ]
       }
