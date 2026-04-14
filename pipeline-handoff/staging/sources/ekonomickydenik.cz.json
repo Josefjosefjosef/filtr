@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T13:24:54.543052Z",
+  "ingestedAt": "2026-04-14T13:45:14.157572Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Inflace mění rychlost. Tyto dvě položky vám letos vyluxují konto",
+      "url": "https://ekonomickydenik.cz/inflace-meni-rychlost-tyto-dve-polozky-vam-vyluxuji-konto/",
+      "dt": "2026-04-14T13:26:36Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dvě",
+        "inflace",
+        "konto",
+        "letos",
+        "mění",
+        "položky",
+        "rychlost",
+        "tyto",
+        "vyluxují",
+        "vám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,30 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Estonci našli na pláži kus dronu. Zřejmě ukrajinského",
-      "url": "https://ekonomickydenik.cz/estonci-nasli-kus-dronu-ukrajinskeho/",
-      "dt": "2026-04-12T17:55:12Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dronu",
-        "estonci",
-        "kus",
-        "našli",
-        "pláži",
-        "ukrajinského",
-        "zřejmě"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72261,
+      "bytes": 72163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:26:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:26:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -856,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inflace mění rychlost. Tyto dvě položky vám letos vyluxují konto",
+            "publishedAt": "2026-04-14T13:26:36Z"
+          },
           {
             "title": "Ukrajina chce po pádu Orbána od Evropy biliony. Vítěz voleb Magyar ale brzdí euforii",
             "publishedAt": "2026-04-14T12:26:16Z"
@@ -883,10 +890,6 @@
           {
             "title": "Vrecionová: Naše suroviny, cizí zisky. Je čas vrátit mlýny a jatka do regionů",
             "publishedAt": "2026-04-14T07:28:10Z"
-          },
-          {
-            "title": "Vodík je extrémně drahý, bez biopaliv cíle nesplníme, říká Iwanowski z Orlen Unipetrolu",
-            "publishedAt": "2026-04-14T04:05:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-14T13:24:54.543052Z",
+  "ingestedAt": "2026-04-14T13:45:14.157572Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Domácí porody. Jsou vůbec legální? A kdy se stáváme člověkem?",
+      "url": "https://hlidacipes.org/domaci-porody-jsou-vubec-legalni-a-kdy-se-stavame-clovekem/",
+      "dt": "2026-04-14T13:30:10Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "domácí",
+        "legální",
+        "porody",
+        "stáváme",
+        "vůbec",
+        "člověkem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,32 +264,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Psychologie kolapsu: proč je hybridní válka proti demokracii tak úspěšná",
-      "url": "https://hlidacipes.org/psychologie-kolapsu-proc-je-hybridni-valka-proti-demokracii-tak-uspesna/",
-      "dt": "2026-04-10T13:30:37Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "demokracii",
-        "hybridní",
-        "kolapsu",
-        "proti",
-        "proč",
-        "psychologie",
-        "tak",
-        "válka",
-        "úspěšná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,9 +272,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17520,
+      "bytes": 17397,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:30:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:30:10Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Domácí porody. Jsou vůbec legální? A kdy se stáváme člověkem?",
+            "publishedAt": "2026-04-14T13:30:10Z"
+          },
           {
             "title": "Vietnamský novinář pod policejní ochranou. Nebezpečí mu prý hrozí i z Česka",
             "publishedAt": "2026-04-14T09:30:46Z"
@@ -356,10 +357,6 @@
           {
             "title": "„Těšíme se, až se Tünde vrátí.“ Maďarský Agrofert dál počítá s Babišovou pravou rukou",
             "publishedAt": "2026-04-11T10:21:05Z"
-          },
-          {
-            "title": "„Svazačky nás nutily tančit,“ vzpomíná řeholník na internaci roku 1950",
-            "publishedAt": "2026-04-11T06:00:13Z"
           }
         ]
       }

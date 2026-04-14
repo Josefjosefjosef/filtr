@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T13:24:54.543052Z",
+  "ingestedAt": "2026-04-14T13:45:14.157572Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko může zrychlít růst. MMF nastavil odhad výš než ministerstvo",
+      "url": "https://www.denik.cz/ekonomika/mmf-hospodarsky-rust-prognoza-zrychleni.html",
+      "dt": "2026-04-14T13:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ministerstvo",
+        "mmf",
+        "nastavil",
+        "než",
+        "odhad",
+        "růst",
+        "výš",
+        "zrychlít",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poplatky se ruší. Ministr Klempíř představil, jak chce financovat ČT a rozhlas",
+      "url": "https://www.denik.cz/z_domova/koncesionarske-poplatky-ceska-televize-rozhlas-rozpocet-klempir.html",
+      "dt": "2026-04-14T13:01:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chce",
+        "financovat",
+        "klempíř",
+        "ministr",
+        "poplatky",
+        "představil",
+        "rozhlas",
+        "ruší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -597,60 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Letošní přijímací zkoušky? Stres ano, zákeřné chytáky ale nebyly, tvrdí experti",
-      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/prijimacky-na-stredni-skoly-2026-vysledky-hodnoceni-testu-matematika-cestina.html",
-      "dt": "2026-04-14T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "ano",
-        "chytáky",
-        "experti",
-        "letošní",
-        "nebyly",
-        "přijímací",
-        "stres",
-        "tvrdí",
-        "zkoušky",
-        "zákeřné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Drogy na pláži? Ostrov São Miguel zaplavil kokain už před 25 lety. A zabíjel",
-      "url": "https://www.denik.cz/historie/ostrov-rhodos-hasis-ostrov-sao-miguel-kokain-drogy-paseracka-jachta-azorske-more.html",
-      "dt": "2026-04-14T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "drogy",
-        "kokain",
-        "lety",
-        "miguel",
-        "ostrov",
-        "pláži",
-        "são",
-        "zabíjel",
-        "zaplavil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30377,
+      "bytes": 30240,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 21,
           "zdravi": 2
         },
         "drop_counts": {
@@ -715,6 +712,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko může zrychlít růst. MMF nastavil odhad výš než ministerstvo",
+            "publishedAt": "2026-04-14T13:12:00Z"
+          },
+          {
+            "title": "Poplatky se ruší. Ministr Klempíř představil, jak chce financovat ČT a rozhlas",
+            "publishedAt": "2026-04-14T13:01:00Z"
+          },
           {
             "title": "Lukostřelci poměřili síly v kulisách hradu Šternberk",
             "publishedAt": "2026-04-14T13:00:00Z"
@@ -738,14 +743,6 @@
           {
             "title": "Turisté u Dvora Králové objevili poklad. Rozdělí si odměnu téměř 12 milionů",
             "publishedAt": "2026-04-14T10:19:00Z"
-          },
-          {
-            "title": "Střelba na střední škole v Turecku: Nejméně 16 lidí utrpělo zranění",
-            "publishedAt": "2026-04-14T10:19:00Z"
-          },
-          {
-            "title": "Obrana nesmí umlčovat prezidenta. Ministr Zůna musí skončit, řekl šéf TOP 09",
-            "publishedAt": "2026-04-14T09:59:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T13:24:54.543052Z",
+  "ingestedAt": "2026-04-14T13:45:14.157572Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejhorší sezona v historii fotbalu. Klub zažívá sportovní krach",
+      "url": "https://www.sport.cz/clanek/fotbal-nejhorsi-sezona-v-historii-fotbalu-byvaly-klub-obrance-sparty-zaziva-sportovni-krach-5436615",
+      "dt": "2026-04-14T13:31:57Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalu",
+        "historii",
+        "klub",
+        "krach",
+        "nejhorší",
+        "sezona",
+        "sportovní",
+        "zažívá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,31 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Byli jsme v šoku, nikdo to nečekal, zní z Procházkova týmu",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-byli-jsme-v-soku-nikdo-to-necekal-zni-z-prochazkova-tymu-5436535",
-      "dt": "2026-04-14T05:28:12Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "byli",
-        "jsme",
-        "nečekal",
-        "nikdo",
-        "procházkova",
-        "týmu",
-        "zní",
-        "šoku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43990,
+      "bytes": 43506,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:34:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:31:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -826,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejhorší sezona v historii fotbalu. Klub zažívá sportovní krach",
+            "publishedAt": "2026-04-14T13:31:57Z"
+          },
           {
             "title": "Stavjaňu střídá u hokejistů Zvolena další český kouč Zadina",
             "publishedAt": "2026-04-14T12:34:22Z"
@@ -853,10 +857,6 @@
           {
             "title": "ZAOSTŘENO NA PLAY OFF: Rozhodčí těžce poškodili Pardubice. Předvedli úplný nesmysl, čílí se Antoš",
             "publishedAt": "2026-04-14T11:37:05Z"
-          },
-          {
-            "title": "Opora Motoru Slovensku na MS nepomůže",
-            "publishedAt": "2026-04-14T11:14:50Z"
           }
         ]
       }

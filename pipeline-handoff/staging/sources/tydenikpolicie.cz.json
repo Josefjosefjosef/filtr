@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-14T13:24:54.543052Z",
+  "ingestedAt": "2026-04-14T13:45:14.157572Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Majitelé přijeli na Jablonecku na svou chatu. V posteli našli spát cizího muže",
+      "url": "https://tydenikpolicie.cz/majitele-prijeli-na-jablonecku-na-svou-chatu-v-posteli-nasli-spat-ciziho-muze/",
+      "dt": "2026-04-14T13:33:35Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chatu",
+        "cizího",
+        "jablonecku",
+        "majitelé",
+        "muže",
+        "našli",
+        "posteli",
+        "přijeli",
+        "spát",
+        "svou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,33 +268,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ze zaparkované škodovky odcizil sto tisíc korun v mincích. Po podezřelém pátrá policie",
-      "url": "https://tydenikpolicie.cz/ze-zaparkovane-skodovky-odcizil-sto-tisic-korun-v-mincich-po-podezrelem-patra-policie/",
-      "dt": "2026-04-14T10:13:54Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "korun",
-        "mincích",
-        "odcizil",
-        "podezřelém",
-        "policie",
-        "pátrá",
-        "sto",
-        "tisíc",
-        "zaparkované",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16613,
+      "bytes": 16534,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:19:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:33:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Majitelé přijeli na Jablonecku na svou chatu. V posteli našli spát cizího muže",
+            "publishedAt": "2026-04-14T13:33:35Z"
+          },
           {
             "title": "Policistům v Brně ujížděl řidič audi se zákazem řízení. Cestou naboural do čtyř aut",
             "publishedAt": "2026-04-14T13:19:09Z"
@@ -357,10 +361,6 @@
           {
             "title": "Policisté pátrají po neznámém pachateli, který vylil do kanalizace v Českých Budějovicích beton",
             "publishedAt": "2026-04-14T10:30:52Z"
-          },
-          {
-            "title": "Policisté z pražských Vokovic zabránili podvodu. Falešný bankéř chtěl obrat muže o 700 tisíc korun",
-            "publishedAt": "2026-04-14T10:25:51Z"
           }
         ]
       }
