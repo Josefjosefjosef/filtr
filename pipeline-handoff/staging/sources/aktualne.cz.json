@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T22:09:21.489854Z",
+  "ingestedAt": "2026-04-14T22:25:31.781943Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se dnes měří",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/cesko-plne-policejnich-radaru-prohlednete-si-vice-nez-tisic-mist-kde-se-zitra-meri/r~aaa29c438673518abdfd1b41b4098807/",
+      "dt": "2026-04-14T03:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "míst",
+        "měří",
+        "než",
+        "plné",
+        "policejních",
+        "prohlédněte",
+        "radarů",
+        "tisíc",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -493,31 +519,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
-      "url": "https://zpravy.aktualne.cz/ekonomika/maximalni-ceny-pohonnych-hmot-ve-stredu-vzrostou-o-desitky-haleru/r~aaa29565a7bc512d0b13e38ca457a0a7/",
-      "dt": "2026-04-14T12:37:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ceny",
-        "desítky",
-        "haléřů",
-        "hmot",
-        "maximální",
-        "pohonných",
-        "středu",
-        "vzrostou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22131,
+      "bytes": 22093,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,9 +569,9 @@
         "raw_feed_latest_publishedAt": "2026-04-14T21:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 4,
           "zpravy": 11,
           "sport": 4,
-          "finance": 4,
           "zdravi": 1
         },
         "drop_counts": {
@@ -583,6 +584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se dnes měří",
+            "publishedAt": "2026-04-14T03:45:00Z"
+          },
           {
             "title": "Macinkův nečekaný úder, zveřejnil rozhovor s Pavlem. Zmínil „odpudivou cenzuru“",
             "publishedAt": "2026-04-14T21:50:00Z"
@@ -610,10 +615,6 @@
           {
             "title": "Trump má kuriózní vysvětlení, proč se vydával za Ježíše. Bylo to úplně jinak, tvrdí",
             "publishedAt": "2026-04-14T17:24:00Z"
-          },
-          {
-            "title": "\"Vyprovokoval jste mě.\" Okamura s Klempířem slíbili, že nezničí ČT, Malá se čílila",
-            "publishedAt": "2026-04-14T17:08:00Z"
           }
         ]
       }

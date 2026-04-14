@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-04-14T22:09:21.489854Z",
+  "ingestedAt": "2026-04-14T22:25:31.781943Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velký bratr útočí na soukromí: Ceny odhalily slídily roku 2025",
+      "url": "https://www.kverulant.org/article/velky-bratr-utoci-na-soukromi-ceny-odhalily-slidily-roku-2025/",
+      "dt": "2026-04-14T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "2025",
+        "bratr",
+        "ceny",
+        "odhalily",
+        "roku",
+        "slídily",
+        "soukromí",
+        "velký",
+        "útočí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -204,29 +230,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministerstvo obrany nalévá miliony do rizikových eseroček",
-      "url": "https://www.kverulant.org/article/ministerstvo-obrany-naleva-miliony-do-rizikovych-eserocek/",
-      "dt": "2026-03-30T05:59:48Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "eseroček",
-        "miliony",
-        "ministerstvo",
-        "nalévá",
-        "obrany",
-        "rizikových"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -237,7 +240,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 102400,
+      "bytes": 94192,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -274,7 +277,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -289,6 +292,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velký bratr útočí na soukromí: Ceny odhalily slídily roku 2025",
+            "publishedAt": "2026-04-14T22:07:00Z"
+          },
           {
             "title": "I ples se počítá do českého závazku vůči NATO",
             "publishedAt": "2026-04-13T22:07:00Z"
@@ -316,10 +323,6 @@
           {
             "title": "Uplynulo 20 let od karlovarské losovačky",
             "publishedAt": "2026-04-05T22:07:00Z"
-          },
-          {
-            "title": "Kverulant pokračuje v boji s nelegálním autobazarem na Praze 15",
-            "publishedAt": "2026-04-01T22:07:00Z"
           }
         ]
       }
