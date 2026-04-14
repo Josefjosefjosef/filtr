@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-14T11:24:49.671227Z",
+  "ingestedAt": "2026-04-14T11:45:25.982608Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Amalfské pobřeží z Vídně v dubnu. Letenky od 732 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/amalfske-pobrezi-z-vidne-v-dubnu",
+      "dt": "2026-04-14T11:25:18Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "732",
+        "amalfské",
+        "dubnu",
+        "letenky",
+        "pobřeží",
+        "vídně"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,30 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Paříž z Prahy s Transavií v září a říjnu. Letenky od 1 693 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/pariz-z-prahy-s-transavii-v-zari-a-rijnu",
-      "dt": "2026-04-07T13:31:39Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "693",
-        "letenky",
-        "paříž",
-        "prahy",
-        "transavií",
-        "září",
-        "říjnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44584,
+      "bytes": 45194,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:48:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:25:18Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -566,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Amalfské pobřeží z Vídně v dubnu. Letenky od 732 Kč",
+            "publishedAt": "2026-04-14T11:25:18Z"
+          },
           {
             "title": "Marsa Matrouh na týden z Českých Budějovic s all-inclusive soft. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-14T09:48:03Z"
@@ -593,10 +596,6 @@
           {
             "title": "Z Vídně na Sardinii v dubnu. Letenky od 732 Kč",
             "publishedAt": "2026-04-10T13:20:15Z"
-          },
-          {
-            "title": "Na slunný Kypr z Prahy během května a června. Letenky od 2 075 Kč",
-            "publishedAt": "2026-04-10T09:43:22Z"
           }
         ]
       }

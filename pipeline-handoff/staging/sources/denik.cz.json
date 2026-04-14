@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T11:24:49.671227Z",
+  "ingestedAt": "2026-04-14T11:45:25.982608Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U Chorvatska se objevila nebezpečná ryba chirurg. Může způsobit zranění",
+      "url": "https://www.denik.cz/staty-eu/ryba-chirurg-bodlok-oranzovoskvrnny-chorvatsko.html",
+      "dt": "2026-04-14T11:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chirurg",
+        "chorvatska",
+        "nebezpečná",
+        "objevila",
+        "ryba",
+        "způsobit",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zámek u Loun čeká na nové majitele, památka je k mání za cenu většího domu",
+      "url": "https://www.denik.cz/regiony/zamek-prodej-nabidka-louny-vrsovice-cena-zila-slechta-vlastnik-20260414.html",
+      "dt": "2026-04-14T11:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cenu",
+        "domu",
+        "loun",
+        "majitele",
+        "mání",
+        "nové",
+        "památka",
+        "většího",
+        "zámek",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -604,60 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Program v ČR měl původně odhalovat rakovinu plic. Našel ale i jiného zabijáka",
-      "url": "https://www.denik.cz/zdravotnictvi/cesko-zdravi-screeningovy-program-karcinom-plic-plicni-fibroza.html",
-      "dt": "2026-04-14T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "jiného",
-        "měl",
-        "našel",
-        "odhalovat",
-        "plic",
-        "program",
-        "původně",
-        "rakovinu",
-        "zabijáka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump kritizoval papeže. Pak sdílel obrázek, na němž byl vyobrazen jako spasitel",
-      "url": "https://www.denik.cz/ze_sveta/donald-trump-papez-obrazek-ai-spasitel.html",
-      "dt": "2026-04-13T17:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jako",
-        "kritizoval",
-        "němž",
-        "obrázek",
-        "pak",
-        "papeže",
-        "sdílel",
-        "spasitel",
-        "trump",
-        "vyobrazen"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30985,
+      "bytes": 30307,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,11 +702,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "zdravi": 3
+          "zpravy": 23,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -721,6 +718,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U Chorvatska se objevila nebezpečná ryba chirurg. Může způsobit zranění",
+            "publishedAt": "2026-04-14T11:35:00Z"
+          },
+          {
+            "title": "Zámek u Loun čeká na nové majitele, památka je k mání za cenu většího domu",
+            "publishedAt": "2026-04-14T11:10:00Z"
+          },
           {
             "title": "Konec Orbánova režimu, začátek nové éry. Magyar ohlásil v Maďarsku tvrdé změny",
             "publishedAt": "2026-04-14T11:00:00Z"
@@ -744,14 +749,6 @@
           {
             "title": "První kroky k zestátnění ČEZ udělá stát na valné hromadě v červnu, řekl Babiš",
             "publishedAt": "2026-04-14T09:49:00Z"
-          },
-          {
-            "title": "MAPA: Do Česka dorazí déšť. Sledujte na radaru, kde zaprší. Bude se i oteplovat",
-            "publishedAt": "2026-04-14T09:32:00Z"
-          },
-          {
-            "title": "Klíšťata mají oblíbenou krevní skupinu. Někteří lidé jsou proto jako magnet",
-            "publishedAt": "2026-04-14T08:43:00Z"
           }
         ]
       }

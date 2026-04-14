@@ -1,26 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T11:24:49.671227Z",
+  "ingestedAt": "2026-04-14T11:45:25.982608Z",
   "items": [
     {
-      "section": "sport",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
-      "dt": "2026-04-01T12:10:00Z",
+      "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "lacka",
-        "mostu",
-        "nabitá",
-        "premiéra",
-        "sezona",
-        "tahači",
-        "terénu",
-        "vrátí",
-        "čeká"
+        "civilní",
+        "loď",
+        "oblasti",
+        "oděské",
+        "přístav",
+        "rusové",
+        "zasáhli",
+        "útočili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -45,6 +44,32 @@
         "obětí",
         "památku",
         "uctil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
+      "dt": "2026-04-01T12:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "lacka",
+        "mostu",
+        "nabitá",
+        "premiéra",
+        "sezona",
+        "tahači",
+        "terénu",
+        "vrátí",
+        "čeká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -96,31 +121,6 @@
         "vysílání",
         "zůna",
         "řehku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "civilní",
-        "loď",
-        "oblasti",
-        "oděské",
-        "přístav",
-        "rusové",
-        "zasáhli",
-        "útočili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -369,7 +369,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "\"Hokejový bůh nám to oplatil.\" Vladař vychytal Flyers na poslední chvíli postup do play off",
+      "title": "„Hokejový bůh nám to oplatil.\" Vladař vychytal Flyers na poslední chvíli postup do play off",
       "url": "https://sport.aktualne.cz/hokej/hokejovy-buh-nam-to-oplatil-vladar-ocenil-uspesny-hon-flyers-za-postupem-do-play-off/r~aaa2944fa437d127889b134c31c7559f/",
       "dt": "2026-04-14T08:08:00Z",
       "media_raw": "Aktuálně",
@@ -528,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22239,
+      "bytes": 22236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,8 +568,8 @@
         "raw_feed_latest_publishedAt": "2026-04-14T10:54:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 10,
+          "sport": 4,
           "finance": 4,
           "other": 2
         },
@@ -584,12 +584,16 @@
         },
         "sample_titles": [
           {
-            "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
-            "publishedAt": "2026-04-01T12:10:00Z"
+            "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
+            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Macinka navštívil Izrael a uctil památku obětí holokaustu",
             "publishedAt": "2026-04-14T10:54:00Z"
+          },
+          {
+            "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+            "publishedAt": "2026-04-01T12:10:00Z"
           },
           {
             "title": "„Trump blábolí. Je to šílenství.\" Demokraté zpochybňují prezidentovo duševní zdraví",
@@ -598,10 +602,6 @@
           {
             "title": "Vysílání je „prozatím“ odloženo. Zůna kvůli videu s Pavlem vyjel na Řehku",
             "publishedAt": "2026-04-14T10:38:00Z"
-          },
-          {
-            "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
-            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Čínský tanker proplul Hormuzským průlivem navzdory americké blokádě",
