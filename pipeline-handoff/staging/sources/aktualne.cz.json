@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T03:39:47.846644Z",
+  "ingestedAt": "2026-04-14T03:59:23.644178Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se zítra měří",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/cesko-plne-policejnich-radaru-prohlednete-si-vice-nez-tisic-mist-kde-se-zitra-meri/r~aaa29c438673518abdfd1b41b4098807/",
+      "dt": "2026-04-14T03:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "míst",
+        "měří",
+        "než",
+        "plné",
+        "policejních",
+        "prohlédněte",
+        "radarů",
+        "tisíc",
+        "zítra",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -497,30 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulíkovi se začínají scházet omluvenky na MS. Jsou mezi nimi i mistři světa",
-      "url": "https://sport.aktualne.cz/hokej/ms-v-hokeji/rulikovi-se-zacinaji-schazet-omluvenky-na-ms-jsou-mezi-nimi-i-sampioni-z-prahy/r~aaa29bee6df25fc69217779f40170f07/",
-      "dt": "2026-04-13T17:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "mistři",
-        "nimi",
-        "omluvenky",
-        "rulíkovi",
-        "scházet",
-        "světa",
-        "začínají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21752,
+      "bytes": 21582,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,11 +571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 14,
-          "sport": 6
+          "sport": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -584,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se zítra měří",
+            "publishedAt": "2026-04-14T03:45:00Z"
+          },
           {
             "title": "Průzkum průzkumů: Na pravici se schyluje k převratu. Zopakuje se historie?",
             "publishedAt": "2026-04-14T03:30:00Z"
@@ -611,10 +619,6 @@
           {
             "title": "Špaček se proměnil z viníka na hrdinu. Spartě vystřelil naději",
             "publishedAt": "2026-04-13T20:44:00Z"
-          },
-          {
-            "title": "Vítěz voleb Magyar odmítá rychlý vstup Ukrajiny do EU, prosazuje referendum",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }
