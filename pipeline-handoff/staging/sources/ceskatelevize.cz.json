@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T20:49:58.582079Z",
+  "ingestedAt": "2026-04-14T21:09:51.485511Z",
   "items": [
     {
       "section": "aktualne",
@@ -772,6 +772,34 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Žabiny budou znovu hrát o titul s USK, ve finále jim ale asi bude chybět Hamzová",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/zabiny-budou-znovu-hrat-o-titul-s-usk-ve-finale-jim-ale-asi-bude-chybet-hamzova-156286",
+      "dt": "2026-04-14T20:56:14Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "ale",
+        "asi",
+        "chybět",
+        "finále",
+        "hamzová",
+        "hrát",
+        "jim",
+        "titul",
+        "usk",
+        "znovu",
+        "žabiny"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Lvi porazili českobudějovické volejbalisty 3:0 a jsou krok od finále",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/lvi-porazili-ceskobudejovicke-volejbalisty-30-a-jsou-krok-od-finale-156285",
       "dt": "2026-04-14T20:25:56Z",
@@ -1521,32 +1549,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Inter Milán otočil zápas v Comu, Neapol v Parmě jen remizovala",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/neapol-v-parme-jen-remizovala-janov-zdolal-sassuolo-156256",
-      "dt": "2026-04-12T17:20:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "comu",
-        "inter",
-        "jen",
-        "milán",
-        "neapol",
-        "otočil",
-        "parmě",
-        "remizovala",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1676,7 +1678,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39884,
+      "bytes": 39986,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1713,7 +1715,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:25:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:56:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1728,6 +1730,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žabiny budou znovu hrát o titul s USK, ve finále jim ale asi bude chybět Hamzová",
+            "publishedAt": "2026-04-14T20:56:14Z"
+          },
           {
             "title": "Lvi porazili českobudějovické volejbalisty 3:0 a jsou krok od finále",
             "publishedAt": "2026-04-14T20:25:56Z"
@@ -1755,10 +1761,6 @@
           {
             "title": "Šelmy touží po volejbalovém titulu před rekordní návštěvou. Zápas za odměnu, zní z Dukly",
             "publishedAt": "2026-04-14T11:54:32Z"
-          },
-          {
-            "title": "Cyklistická Czech Tour zamíří poprvé na Ještěd. Start bude opět v Praze",
-            "publishedAt": "2026-04-14T11:46:57Z"
           }
         ]
       }
