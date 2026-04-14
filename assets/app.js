@@ -24759,6 +24759,17 @@ function buildVideoAsArticleCard(it) {
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
           } catch (_) {}
+        } else if (iuArticleHubSectionP(sec)) {
+          /* P0: Do not remove iu-mobileMainVisible on the post-applySection rAF for feed/Média hub.
+             Left-rail / Silver preview handlers add this class before applySectionFromURL(); stripping it
+             here re-showed #iuMobileGateWrap (body:not(.iu-mobileMainVisible) loses the gate-hide rule)
+             and on ≤767px hid #leftContent again — taps looked dead or needed a second try. */
+          try {
+            document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
         } else {
           try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
           var mbHid = document.getElementById("iuMobileMainBackBar");
