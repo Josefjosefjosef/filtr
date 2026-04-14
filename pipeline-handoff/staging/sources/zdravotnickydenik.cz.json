@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T07:45:16.397142Z",
+  "ingestedAt": "2026-04-14T08:04:29.261353Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pro léky přes půl republiky. Sdílený výdej má ukončit absurdní cestování",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/vzacna-onemocneni-sdileny-vydej-igor-pies/",
+      "dt": "2026-04-14T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "absurdní",
+        "cestování",
+        "léky",
+        "půl",
+        "republiky",
+        "sdílený",
+        "ukončit",
+        "výdej"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,31 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Flash disky s „odměnami“ i fingované e-maily: Jak v Motole testují zaměstnance",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/jak-v-motole-testuji-zamestnance/",
-      "dt": "2026-04-13T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "disky",
-        "fingované",
-        "flash",
-        "maily",
-        "motole",
-        "odměnami",
-        "testují",
-        "zaměstnance"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 93988,
+      "bytes": 97841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -327,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pro léky přes půl republiky. Sdílený výdej má ukončit absurdní cestování",
+            "publishedAt": "2026-04-14T08:00:00Z"
+          },
           {
             "title": "Bitva o 573 miliard startuje, zřejmě naposledy ve stávající podobě. Co budou poskytovatelé žádat?",
             "publishedAt": "2026-04-14T07:00:00Z"
@@ -354,10 +358,6 @@
           {
             "title": "Potravinový doplněk obsahuje sildenafil na léčbu erektilní dysfunkce. Inspekce upozorňuje na riziko",
             "publishedAt": "2026-04-13T10:34:39Z"
-          },
-          {
-            "title": "Olomoucký kraj spojuje síly s Agelem: Společný podnik má nově zahrnout další nemocnici",
-            "publishedAt": "2026-04-13T10:02:57Z"
           }
         ]
       }

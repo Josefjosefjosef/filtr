@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T07:45:16.397142Z",
+  "ingestedAt": "2026-04-14T08:04:29.261353Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "POHLED: Plivnutí, nebo prsknutí? A není to vedlejší? Chorý ukázal, že je nepoučitelný",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/tomas-chory-plivnuti-disciplinarni-komise-pohled.A260413_180215_fotbal_czo",
+      "dt": "2026-04-14T07:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chorý",
+        "nebo",
+        "nepoučitelný",
+        "plivnutí",
+        "pohled",
+        "prsknutí",
+        "ukázal",
+        "vedlejší"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trenér Švýcarska před OH v Pekingu zfalšoval potvrzení o očkování na covid",
+      "url": "https://www.idnes.cz/hokej/reprezentace/patrick-fischer-covid.A260414_091220_reprezentace_kazdt",
+      "dt": "2026-04-14T07:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "covid",
+        "očkování",
+        "pekingu",
+        "potvrzení",
+        "trenér",
+        "zfalšoval",
+        "švýcarska"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,57 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Z Nymburka do Euroligy, díl druhý. Dubaj před bojem o postup angažovala Sekuliče",
-      "url": "https://www.idnes.cz/sport/basket/dubaj-bc-kouc-alexander-sekulic.A260413_143449_sport-basket_ten",
-      "dt": "2026-04-13T12:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "angažovala",
-        "bojem",
-        "druhý",
-        "dubaj",
-        "díl",
-        "euroligy",
-        "nymburka",
-        "postup",
-        "sekuliče"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "El Nordico ve čtvrtfinále nebude. Sluneta ale může Válečníky poslat do předkola",
-      "url": "https://www.idnes.cz/sport/basket/bsketbal-el-nordico-ctvrtfinale-decin-usti-maxa-liga-ctvrfinale.A260412_233802_sport-basket_pbi",
-      "dt": "2026-04-13T12:38:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "nebude",
-        "nordico",
-        "poslat",
-        "předkola",
-        "sluneta",
-        "válečníky",
-        "čtvrtfinále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48688,
+      "bytes": 48552,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T07:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POHLED: Plivnutí, nebo prsknutí? A není to vedlejší? Chorý ukázal, že je nepoučitelný",
+            "publishedAt": "2026-04-14T07:18:00Z"
+          },
+          {
+            "title": "Trenér Švýcarska před OH v Pekingu zfalšoval potvrzení o očkování na covid",
+            "publishedAt": "2026-04-14T07:16:00Z"
+          },
           {
             "title": "Hvězdy F1 v pauze obcházejí velké sportovní akce. Kde se jezdci ukázali?",
             "publishedAt": "2026-04-14T07:00:00Z"
@@ -879,14 +885,6 @@
           {
             "title": "Cíl splněn. Že je to málo? Ambice byly střízlivé, zní z Olomoucka",
             "publishedAt": "2026-04-14T05:00:00Z"
-          },
-          {
-            "title": "Dozvuky Pekla severu: proč Van der Poel odmítl kolo a kdy křičel Pogačar",
-            "publishedAt": "2026-04-14T04:45:00Z"
-          },
-          {
-            "title": "Bůh mě chce v Česku. Američan z NBL líčí útěk před válkou gangů: Okolo se střílelo!",
-            "publishedAt": "2026-04-13T22:00:00Z"
           }
         ]
       }

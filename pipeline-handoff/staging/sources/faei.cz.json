@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-14T07:45:16.397142Z",
+  "ingestedAt": "2026-04-14T08:04:29.261353Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Apple a umělá inteligence: Tichý návrat krále?",
+      "url": "https://profitonline.cz/apple-a-umela-inteligence-tichy-navrat-krale/",
+      "dt": "2026-04-14T08:00:09Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "apple",
+        "inteligence",
+        "krále",
+        "návrat",
+        "tichý",
+        "umělá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,27 +279,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trhy věří v Orbánovu porážku",
-      "url": "https://profitonline.cz/trhy-veri-v-orbanovu-porazku/",
-      "dt": "2026-04-12T16:00:41Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "orbánovu",
-        "porážku",
-        "trhy",
-        "věří"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18044,
+      "bytes": 18002,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,7 +326,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-14T06:00:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:00:09Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -340,6 +342,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Apple a umělá inteligence: Tichý návrat krále?",
+            "publishedAt": "2026-04-14T08:00:09Z"
+          },
           {
             "title": "Bitcoin na třítýdenním maximu",
             "publishedAt": "2026-04-14T06:00:17Z"
@@ -367,10 +373,6 @@
           {
             "title": "Čeho chce Trump docílit blokádou Hormuzského průlivu",
             "publishedAt": "2026-04-13T08:00:47Z"
-          },
-          {
-            "title": "Forint citelně posiluje. Co čekat od vítěze voleb?",
-            "publishedAt": "2026-04-13T07:30:48Z"
           }
         ]
       }
