@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-14T15:24:44.809502Z",
+  "ingestedAt": "2026-04-14T15:40:21.251136Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Agent 007 Pierce Brosnan provází dokumentem o největších loupežích historie",
+      "url": "https://www.vtelce.cz/agent-007-pierce-brosnan-provazi-dokumentem-o-nejvetsich-loupezich-historie/",
+      "dt": "2026-04-14T15:28:54Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "007",
+        "agent",
+        "brosnan",
+        "dokumentem",
+        "historie",
+        "loupežích",
+        "největších",
+        "pierce",
+        "provází"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -266,34 +292,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Yes Man: Jim Carrey až jako poslední možnost, scény bez kaskadérů a odmítnutí honoráře",
-      "url": "https://www.vtelce.cz/yes-man-jim-carrey-az-jako-posledni-moznost-sceny-bez-kaskaderu-a-odmitnuti-honorare/",
-      "dt": "2026-04-13T15:29:34Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "carrey",
-        "honoráře",
-        "jako",
-        "jim",
-        "kaskadérů",
-        "man",
-        "možnost",
-        "odmítnutí",
-        "poslední",
-        "scény",
-        "yes"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,8 +302,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 77069,
-      "reason": "",
+      "bytes": 75709,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -341,7 +339,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:28:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:28:54Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -357,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Agent 007 Pierce Brosnan provází dokumentem o největších loupežích historie",
+            "publishedAt": "2026-04-14T15:28:54Z"
+          },
           {
             "title": "Sudá a lichá: Bud Spencer porazil i Supermana, padesát Italů v drahém exilu a pocta legendám grotesky",
             "publishedAt": "2026-04-14T13:28:15Z"
@@ -384,10 +386,6 @@
           {
             "title": "Pád Třetí říše: Skuteční neonacisté v komparzu, psychické kolapsy hvězd i historické chyby ve filmu",
             "publishedAt": "2026-04-13T17:12:09Z"
-          },
-          {
-            "title": "Dvanáctá řada seriálu Specialisté přinese delší epizody a mnohem více prostoru pro postavy",
-            "publishedAt": "2026-04-13T16:28:32Z"
           }
         ]
       }

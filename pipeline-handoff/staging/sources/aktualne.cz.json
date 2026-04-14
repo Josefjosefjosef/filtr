@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T15:24:44.809502Z",
+  "ingestedAt": "2026-04-14T15:40:21.251136Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
+      "url": "https://zpravy.aktualne.cz/ekonomika/pokouseji-se-politicky-ovladnout-media-varuje-sef-cro-ostre-odmita-zruseni-poplatku/r~aaa294cc963413fc1801904a62edb22d/",
+      "dt": "2026-04-14T15:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "média",
+        "odmítá",
+        "ostře",
+        "ovládnout",
+        "pokoušejí",
+        "politicky",
+        "poplatků",
+        "varuje",
+        "zrušení",
+        "čro",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -500,31 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Tohle mluví za vše.“ Česká hvězda je v NHL zpátky na dně",
-      "url": "https://sport.aktualne.cz/hokej/tohle-mluvi-za-vse-ceska-hvezda-je-v-nhl-zpatky-na-dne/r~aaa293a54e705b6fb9660a0a8a737897/",
-      "dt": "2026-04-14T10:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dně",
-        "hvězda",
-        "mluví",
-        "nhl",
-        "tohle",
-        "vše",
-        "zpátky",
-        "česká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22394,
+      "bytes": 22520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,12 +575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T14:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 4,
           "zpravy": 13,
-          "sport": 4,
-          "finance": 3
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -589,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
+            "publishedAt": "2026-04-14T15:31:00Z"
+          },
           {
             "title": "Hustý dým nad Prahou. Hoří střecha ubytovny, hasiči zachraňují lidi pomocí žebříků",
             "publishedAt": "2026-04-14T14:00:00Z"
@@ -616,10 +623,6 @@
           {
             "title": "Atmosféra v extralize houstne. Pardubice obvinily Spartu z podněcování urážek jejich šéfa",
             "publishedAt": "2026-04-14T14:07:00Z"
-          },
-          {
-            "title": "Totální převrat ve financování ČT a rozhlasu, Klempíř ukázal detaily. Opozice chystá obstrukce",
-            "publishedAt": "2026-04-14T12:53:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T15:24:44.809502Z",
+  "ingestedAt": "2026-04-14T15:40:21.251136Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropské Guantánamo. Dokument varuje před věznicí pro migranty v Sarajevu",
+      "url": "https://ekonomickydenik.cz/evropske-guantanamo-veznice-migranti-bosna/",
+      "dt": "2026-04-14T15:35:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dokument",
+        "evropské",
+        "guantánamo",
+        "migranty",
+        "sarajevu",
+        "varuje",
+        "věznicí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -768,32 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Havlíček: Nesázejme na dovoz levné elektřiny ze Švédska či Francie. Co je doma, to se počítá",
-      "url": "https://ekonomickydenik.cz/havlicek-dovoz-levne-elektriny/",
-      "dt": "2026-04-13T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "doma",
-        "dovoz",
-        "elektřiny",
-        "francie",
-        "havlíček",
-        "levné",
-        "nesázejme",
-        "počítá",
-        "švédska"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72691,
+      "bytes": 72653,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,13 +839,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:03:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "zpravy": 3,
           "cestovani": 1,
-          "zdravi": 3
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -859,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropské Guantánamo. Dokument varuje před věznicí pro migranty v Sarajevu",
+            "publishedAt": "2026-04-14T15:35:00Z"
+          },
           {
             "title": "Zbrojní šachy: Česko v kleštích politické váhavosti a surovinové pasti",
             "publishedAt": "2026-04-14T15:03:59Z"
@@ -886,10 +888,6 @@
           {
             "title": "Ministr obrany Zůna musí skončit, volá TOP 09. Vadí jí zakázaný podcast s prezidentem",
             "publishedAt": "2026-04-14T10:44:06Z"
-          },
-          {
-            "title": "7 tisíc kubíků betonu pro Šmejkalku. Přestavba mostu vstoupila do další fáze",
-            "publishedAt": "2026-04-14T08:37:07Z"
           }
         ]
       }
