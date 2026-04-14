@@ -1,26 +1,82 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T12:05:31.338285Z",
+  "ingestedAt": "2026-04-14T12:25:00.064062Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Šalková v Rouen jako náhradnice zvládla první kolo, Fruhvirtová vypadla",
+      "title": "Muchová začala na antuce rázně. Šalková jako náhradnice zvládla první kolo, Fruhvirtová vypadla",
       "url": "https://www.sport.cz/clanek/tenis-salkova-v-rouen-jako-nahradnice-zvladla-prvni-kolo-fruhvirtova-vypadla-5436621",
       "dt": "2026-04-14T11:39:22Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "antuce",
         "fruhvirtová",
         "jako",
         "kolo",
+        "muchová",
         "náhradnice",
         "první",
-        "rouen",
+        "rázně",
         "vypadla",
+        "začala",
         "zvládla",
         "šalková"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Írán musí hrát své zápasy v USA. Šanci na MS větří fotbalová velmoc",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-iran-musi-hrat-sve-zapasy-v-usa-sanci-na-ms-vetri-fotbalova-velmoc-5436600",
+      "dt": "2026-04-14T12:12:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalová",
+        "hrát",
+        "musí",
+        "své",
+        "usa",
+        "velmoc",
+        "větří",
+        "zápasy",
+        "írán",
+        "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České Budějovice chtějí koupit Dynamo a pak jej nabídnout k prodeji",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-2-liga-ceske-budejovice-chteji-koupit-dynamo-a-pak-jej-nabidnout-k-prodeji-5436625",
+      "dt": "2026-04-14T12:10:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "budějovice",
+        "chtějí",
+        "dynamo",
+        "jej",
+        "koupit",
+        "nabídnout",
+        "pak",
+        "prodeji",
+        "české"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -709,56 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Prostějov rok po zisku titulu vybojoval páté místo v lize volejbalistek",
-      "url": "https://www.sport.cz/clanek/volejbal-prostejov-rok-po-zisku-titulu-vybojoval-pate-misto-v-lize-volejbalistek-5436532",
-      "dt": "2026-04-13T18:41:56Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "lize",
-        "místo",
-        "prostějov",
-        "páté",
-        "rok",
-        "titulu",
-        "volejbalistek",
-        "vybojoval",
-        "zisku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kousková obhájila prvenství v novinářské anketě Golfista roku",
-      "url": "https://www.sport.cz/clanek/golf-kouskova-obhajila-prvenstvi-v-novinarske-ankete-golfista-roku-5436579",
-      "dt": "2026-04-13T20:49:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anketě",
-        "golfista",
-        "kousková",
-        "novinářské",
-        "obhájila",
-        "prvenství",
-        "roku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -769,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44449,
+      "bytes": 44895,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -806,12 +812,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:39:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:12:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zdravi": 1,
-          "finance": 1
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -824,8 +829,16 @@
         },
         "sample_titles": [
           {
-            "title": "Šalková v Rouen jako náhradnice zvládla první kolo, Fruhvirtová vypadla",
+            "title": "Muchová začala na antuce rázně. Šalková jako náhradnice zvládla první kolo, Fruhvirtová vypadla",
             "publishedAt": "2026-04-14T11:39:22Z"
+          },
+          {
+            "title": "Írán musí hrát své zápasy v USA. Šanci na MS větří fotbalová velmoc",
+            "publishedAt": "2026-04-14T12:12:38Z"
+          },
+          {
+            "title": "České Budějovice chtějí koupit Dynamo a pak jej nabídnout k prodeji",
+            "publishedAt": "2026-04-14T12:10:27Z"
           },
           {
             "title": "ZAOSTŘENO NA PLAY OFF: Rozhodčí těžce poškodili Pardubice. Předvedli úplný nesmysl, čílí se Antoš",
@@ -846,14 +859,6 @@
           {
             "title": "Divočina v Brazílii. Faulovaný hráč si sáhl do rozkroku",
             "publishedAt": "2026-04-14T10:40:41Z"
-          },
-          {
-            "title": "Barcelona a Liverpool se v Lize mistrů pokusí o velké obraty",
-            "publishedAt": "2026-04-14T10:18:39Z"
-          },
-          {
-            "title": "Reprezentant Havran mění dres",
-            "publishedAt": "2026-04-14T10:16:29Z"
           }
         ]
       }

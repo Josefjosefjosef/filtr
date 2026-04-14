@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-14T12:05:31.338285Z",
+  "ingestedAt": "2026-04-14T12:25:00.064062Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Apollo financuje expanzi Crestylu v Polsku. Do Spravie pošle 165 milionů eur",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/apollo-financuje-expanzi-crestylu-v-polsku-do-spravie-posle-165-milionu-eur-1432130",
+      "dt": "2026-04-14T12:13:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "165",
+        "apollo",
+        "crestylu",
+        "eur",
+        "expanzi",
+        "financuje",
+        "milionů",
+        "polsku",
+        "pošle",
+        "spravie"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1066,36 +1093,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa není připravená. Chybí jí dostupná obrana proti levným dronům, říká partner fondu Tech Horizons",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/evropa-neni-pripravena-chybi-ji-dostupna-obrana-proti-levnym-dronum-rika-partner-fondu-tech-horizons-1431934",
-      "dt": "2026-04-13T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "chybí",
-        "dostupná",
-        "dronům",
-        "evropa",
-        "fondu",
-        "horizons",
-        "levným",
-        "obrana",
-        "partner",
-        "proti",
-        "připravená",
-        "tech",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1103,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53329,
+      "bytes": 53160,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,7 +1140,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:13:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 39,
@@ -1159,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Apollo financuje expanzi Crestylu v Polsku. Do Spravie pošle 165 milionů eur",
+            "publishedAt": "2026-04-14T12:13:00Z"
+          },
           {
             "title": "Svátky 1. a 8. května 2026: Otevírací doba obchodů a co vlastně slavíme?",
             "publishedAt": "2026-04-14T11:00:00Z"
@@ -1186,10 +1187,6 @@
           {
             "title": "Historický šok na trhu s ropou. IEA kvůli válce v Íránu zcela přepsala letošní prognózu",
             "publishedAt": "2026-04-14T09:25:00Z"
-          },
-          {
-            "title": "Přelom v léčbě rakoviny slinivky. Preparát od RevMed zdvojnásobil dobu přežití",
-            "publishedAt": "2026-04-14T09:15:00Z"
           }
         ]
       }
