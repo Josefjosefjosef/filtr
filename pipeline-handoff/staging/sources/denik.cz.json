@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T20:29:30.422662Z",
+  "ingestedAt": "2026-04-14T20:49:58.582079Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zpěvák Patrick Bruel čelí vyšetřování. Je obviněný ze sexuálního útoku",
+      "url": "https://www.denik.cz/staty-eu/francie-policie-vysetrovani-policie-zpevak-herec-patrick-bruel-pokus-znasilneni.html",
+      "dt": "2026-04-14T20:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bruel",
+        "obviněný",
+        "patrick",
+        "sexuálního",
+        "vyšetřování",
+        "zpěvák",
+        "útoku",
+        "čelí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -339,7 +364,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V Praze na Žižkově hořela ubytovna, budovu muselo opustit víc než 40 lidí",
+      "title": "V Praze na Žižkově hořela ubytovna. Budovu muselo opustit přes 40 lidí",
       "url": "https://www.denik.cz/pozary/pozar-ubytovny-zahalil-zelivskeho-do-dymu-hasici-evakuovali-i-zachranovali-20260.html",
       "dt": "2026-04-14T14:14:00Z",
       "media_raw": "Deník",
@@ -349,11 +374,9 @@
         "hořela",
         "lidí",
         "muselo",
-        "než",
         "opustit",
         "praze",
         "ubytovna",
-        "víc",
         "žižkově"
       ],
       "feedCategory": "zpravy",
@@ -617,34 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obrana nesmí umlčovat prezidenta. Ministr Zůna musí skončit, řekl šéf TOP 09",
-      "url": "https://www.denik.cz/z_domova/rozhovor-s-petrem-pavlem-armada-ministerstvo-obrany-zakaz-top09.html",
-      "dt": "2026-04-14T09:59:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ministr",
-        "musí",
-        "nesmí",
-        "obrana",
-        "prezidenta",
-        "skončit",
-        "top",
-        "umlčovat",
-        "zůna",
-        "řekl",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30127,
+      "bytes": 29809,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +687,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T19:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:06:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -708,6 +703,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zpěvák Patrick Bruel čelí vyšetřování. Je obviněný ze sexuálního útoku",
+            "publishedAt": "2026-04-14T20:06:00Z"
+          },
           {
             "title": "Lufthansa dál nelétá. Kvůli stávce jsou zrušené i středeční spojení s Prahou",
             "publishedAt": "2026-04-14T19:41:00Z"
@@ -735,10 +734,6 @@
           {
             "title": "Požár ubytovny na pražském Žižkově: Málokdo tušil, kde bude spát",
             "publishedAt": "2026-04-14T16:48:00Z"
-          },
-          {
-            "title": "Netanjahu ocenil přátelství Česka. Za podporu děkoval Babišovi a Macinkovi",
-            "publishedAt": "2026-04-14T16:30:00Z"
           }
         ]
       }

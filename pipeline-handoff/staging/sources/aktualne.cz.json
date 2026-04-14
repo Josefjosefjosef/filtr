@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T20:29:30.422662Z",
+  "ingestedAt": "2026-04-14T20:49:58.582079Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chcete si ji potěžkat? Milei ukázal Pavlovi svou legendární rozpočtovou pilu",
+      "url": "https://zpravy.aktualne.cz/zahranici/chcete-si-ji-potezkat-milei-ukazal-pavlovi-svou-legendarni-rozpoctovou-pilu/r~aaa29d8c3796836f19c601b6a6cd24df/",
+      "dt": "2026-04-14T20:42:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chcete",
+        "legendární",
+        "milei",
+        "pavlovi",
+        "pilu",
+        "potěžkat",
+        "rozpočtovou",
+        "svou",
+        "ukázal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,35 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nikdo jiný by neměl odvahu. Kabriolet Rolls-Royce má hvězdné nebe a slyšíte v něm slavíky",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/elektromobilita/nikdo-jiny-by-nemel-odvahu-kabriolet-rolls-royce-ma-hvezdne-nebe-a-slysite-v-nem-slaviky/r~aaa29e4037f124276981ce7855a16f2e/",
-      "dt": "2026-04-14T12:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hvězdné",
-        "jiný",
-        "kabriolet",
-        "nebe",
-        "neměl",
-        "nikdo",
-        "něm",
-        "odvahu",
-        "rolls",
-        "royce",
-        "slavíky",
-        "slyšíte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22380,
+      "bytes": 22116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,12 +575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T18:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:42:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
+          "zpravy": 12,
           "sport": 3,
-          "finance": 5,
+          "finance": 4,
           "zdravi": 1
         },
         "drop_counts": {
@@ -596,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chcete si ji potěžkat? Milei ukázal Pavlovi svou legendární rozpočtovou pilu",
+            "publishedAt": "2026-04-14T20:42:00Z"
+          },
           {
             "title": "Za první den blokády íránských přístavů neproplula jediná loď, oznámili Američané",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -623,10 +624,6 @@
           {
             "title": "Totální převrat ve financování ČT a rozhlasu, Klempíř ukázal detaily. Opozice chystá obstrukce",
             "publishedAt": "2026-04-14T12:53:00Z"
-          },
-          {
-            "title": "\"Ty nahrávky s Rusy byly pro Maďary příliš.\" Vondra popisuje, kdy se s Orbánem rozešel",
-            "publishedAt": "2026-04-14T14:17:00Z"
           }
         ]
       }

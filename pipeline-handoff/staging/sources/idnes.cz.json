@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-14T20:29:30.422662Z",
+  "ingestedAt": "2026-04-14T20:49:58.582079Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Žižkově hořela ubytovna, část střechy se propadla. Evakuovalo se přes 40 lidí",
+      "url": "https://www.idnes.cz/praha/zpravy/pozar-praha-zizkov-ubytovna-hasici.A260414_154509_praha-zpravy_epkbn",
+      "dt": "2026-04-14T20:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "evakuovalo",
+        "hořela",
+        "lidí",
+        "propadla",
+        "střechy",
+        "ubytovna",
+        "část",
+        "žižkově"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -161,22 +186,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Na Žižkově hořela ubytovna, část střechy se propadla. Evakuovalo se přes 40 lidí",
-      "url": "https://www.idnes.cz/praha/zpravy/pozar-praha-zizkov-ubytovna-hasici.A260414_154509_praha-zpravy_epkbn",
-      "dt": "2026-04-14T18:01:00Z",
+      "title": "OBRAZEM: Když se ze špatného stane ještě horší. Ropná krize očima Kubánců",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/obrazem-kdyz-se-ze-spatneho-stane-jeste-horsi-ropna-krize-ocima-kubancu.A260414_131620_eko-zahranicni_jadv/foto",
+      "dt": "2026-04-14T18:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "evakuovalo",
-        "hořela",
-        "lidí",
-        "propadla",
-        "střechy",
-        "ubytovna",
-        "část",
-        "žižkově"
+        "horší",
+        "ještě",
+        "když",
+        "krize",
+        "kubánců",
+        "obrazem",
+        "očima",
+        "ropná",
+        "stane",
+        "špatného"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -203,33 +230,6 @@
         "slevě",
         "svou",
         "čeští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "OBRAZEM: Když se ze špatného stane ještě horší. Ropná krize očima Kubánců",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/obrazem-kdyz-se-ze-spatneho-stane-jeste-horsi-ropna-krize-ocima-kubancu.A260414_131620_eko-zahranicni_jadv/foto",
-      "dt": "2026-04-14T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "horší",
-        "ještě",
-        "když",
-        "krize",
-        "kubánců",
-        "obrazem",
-        "očima",
-        "ropná",
-        "stane",
-        "špatného"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1591,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48544,
+      "bytes": 48570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,7 +1628,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1646,6 +1646,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Žižkově hořela ubytovna, část střechy se propadla. Evakuovalo se přes 40 lidí",
+            "publishedAt": "2026-04-14T20:34:00Z"
+          },
           {
             "title": "Poslanci schvalují zákon k regulaci cen. Opozice vládě připomíná komunismus",
             "publishedAt": "2026-04-14T20:15:00Z"
@@ -1671,11 +1675,7 @@
             "publishedAt": "2026-04-14T18:15:00Z"
           },
           {
-            "title": "Na Žižkově hořela ubytovna, část střechy se propadla. Evakuovalo se přes 40 lidí",
-            "publishedAt": "2026-04-14T18:01:00Z"
-          },
-          {
-            "title": "Čeští polárníci prodávají svou plachetnici. Ani po milionové slevě ji nikdo nechce",
+            "title": "OBRAZEM: Když se ze špatného stane ještě horší. Ropná krize očima Kubánců",
             "publishedAt": "2026-04-14T18:00:00Z"
           }
         ]
