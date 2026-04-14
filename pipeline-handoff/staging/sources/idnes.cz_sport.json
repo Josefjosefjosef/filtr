@@ -1,26 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T19:04:59.804881Z",
+  "ingestedAt": "2026-04-14T19:24:36.793584Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Odvety čtvrtfinále Ligy mistrů, dvoubrankový náskok hájí Atlético a PSG",
+      "title": "ONLINE: Yamal trestá hned na úvod chybu Atlética, dvoubrankový náskok hájí i PSG",
       "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-ctvrtfinale-atletico-barcelona-psg-liverpool.A260414_124400_fot_pohary_tals",
-      "dt": "2026-04-14T18:30:00Z",
+      "dt": "2026-04-14T19:06:41Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "atlético",
+        "atlética",
+        "chybu",
         "dvoubrankový",
+        "hned",
         "hájí",
-        "ligy",
-        "mistrů",
         "náskok",
-        "odvety",
         "psg",
-        "čtvrtfinále"
+        "trestá",
+        "yamal",
+        "úvod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Děčín Randa propustil, Ústí ho bere. Pomůže nám dojít daleko, věří šéf Slunety",
+      "url": "https://www.idnes.cz/sport/basket/decin-usti-nad-labem-prestup-ahmad-rand-nbl-maxa.A260414_210027_sport-basket_ten",
+      "dt": "2026-04-14T19:04:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bere",
+        "daleko",
+        "dojít",
+        "děčín",
+        "nám",
+        "pomůže",
+        "propustil",
+        "randa",
+        "slunety",
+        "věří",
+        "ústí",
+        "šéf"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -769,34 +799,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Výroky Sparty byly zbytečné, říká Tomášek. Zmiňovat finance? To jsem jinde neviděl",
-      "url": "https://www.idnes.cz/hokej/extraliga/david-tomasek-pardubice-sparta-reakce.A260414_083202_hokej_drev",
-      "dt": "2026-04-14T09:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "byly",
-        "finance",
-        "jinde",
-        "jsem",
-        "neviděl",
-        "sparty",
-        "tomášek",
-        "výroky",
-        "zbytečné",
-        "zmiňovat",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48004,
+      "bytes": 47643,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T18:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T19:06:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -860,8 +862,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Odvety čtvrtfinále Ligy mistrů, dvoubrankový náskok hájí Atlético a PSG",
-            "publishedAt": "2026-04-14T18:30:00Z"
+            "title": "ONLINE: Yamal trestá hned na úvod chybu Atlética, dvoubrankový náskok hájí i PSG",
+            "publishedAt": "2026-04-14T19:06:41Z"
+          },
+          {
+            "title": "Děčín Randa propustil, Ústí ho bere. Pomůže nám dojít daleko, věří šéf Slunety",
+            "publishedAt": "2026-04-14T19:04:00Z"
           },
           {
             "title": "Do baráže jde znovu po roce Dukla Jihlava, rozhodlo sedmé finále",
@@ -886,10 +892,6 @@
           {
             "title": "Dynamo vám neprodám, i když přijdeme o stadion, odmítla majitelka nabídku Budějovic",
             "publishedAt": "2026-04-14T15:43:00Z"
-          },
-          {
-            "title": "Muchová zvládla vstup do antukové sezony, dařilo se i Macháčovi či Kopřivovi",
-            "publishedAt": "2026-04-14T15:36:10Z"
           }
         ]
       }
