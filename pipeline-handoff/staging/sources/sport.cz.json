@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T11:05:03.879417Z",
+  "ingestedAt": "2026-04-14T11:24:49.671227Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Opora Motoru Slovensku na MS nepomůže",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-opora-motoru-slovensku-na-ms-nepomuze-5436617",
+      "dt": "2026-04-14T11:14:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "motoru",
+        "nepomůže",
+        "opora",
+        "slovensku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,28 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalisty Ghany povede na MS zkušený Portugalec",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-fotbalisty-ghany-povede-na-ms-zkuseny-portugalec-5436569",
-      "dt": "2026-04-13T20:08:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalisty",
-        "ghany",
-        "portugalec",
-        "povede",
-        "zkušený"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45255,
+      "bytes": 45309,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:55:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:14:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -828,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opora Motoru Slovensku na MS nepomůže",
+            "publishedAt": "2026-04-14T11:14:50Z"
+          },
           {
             "title": "Nejtěžší ročník v historii Czech Tour. Ve hře je i start velké hvězdy",
             "publishedAt": "2026-04-14T10:55:13Z"
@@ -855,10 +858,6 @@
           {
             "title": "Bývalý fotbalista Opavy Rataj se sám přihlásil FAČR, chce očistit své jméno",
             "publishedAt": "2026-04-14T09:14:17Z"
-          },
-          {
-            "title": "Sparta mu chtěla dát ranec, když odmítl, vše zveřejnila. Takový klub to nemusel dělat, říká Tomášek",
-            "publishedAt": "2026-04-14T08:53:52Z"
           }
         ]
       }

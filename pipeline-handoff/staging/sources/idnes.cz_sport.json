@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T11:05:03.879417Z",
+  "ingestedAt": "2026-04-14T11:24:49.671227Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kdo je v F1 nejblíž Měsíci? Lindblad dojel na oběžnou dráhu, Alonso je ve třetině",
+      "url": "https://www.idnes.cz/sport/trendy/kdo-je-v-f1-nejbliz-mesici-lindblad-dojel-na-obeznou-drahu-alonso-je-ve-tretine.A260414_093851_trendy_blah/foto",
+      "dt": "2026-04-14T11:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alonso",
+        "dojel",
+        "dráhu",
+        "lindblad",
+        "měsíci",
+        "nejblíž",
+        "oběžnou",
+        "třetině"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -776,35 +801,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ovečkin proti Crosbymu, posté v NHL! A možná naposled. Zvážím ještě rok, říká Rus",
-      "url": "https://www.idnes.cz/hokej/nhl/alecandr-ovecin-crosby-nhl-100-zapas-louceni-washington-pittsburgh.A260413_094949_nhl_huda",
-      "dt": "2026-04-13T15:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "crosbymu",
-        "ještě",
-        "možná",
-        "naposled",
-        "nhl",
-        "ovečkin",
-        "posté",
-        "proti",
-        "rok",
-        "rus",
-        "zvážím",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -815,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48969,
+      "bytes": 48839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -852,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -867,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo je v F1 nejblíž Měsíci? Lindblad dojel na oběžnou dráhu, Alonso je ve třetině",
+            "publishedAt": "2026-04-14T11:00:00Z"
+          },
           {
             "title": "Neobvyklá svačinka. Frustrovaný tenista během tréninku okusoval listí z plotu",
             "publishedAt": "2026-04-14T10:37:00Z"
@@ -894,10 +894,6 @@
           {
             "title": "Nemůžeme najít cestu ven, říká Kričfaluši. Na tréninku ale vypadáme dobře, diví se",
             "publishedAt": "2026-04-14T08:30:00Z"
-          },
-          {
-            "title": "Padla rekordní suma za pohár. Becker na aukci své trofeje z US Open ale nevydělal",
-            "publishedAt": "2026-04-14T08:23:00Z"
           }
         ]
       }

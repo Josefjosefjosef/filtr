@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T11:05:03.879417Z",
+  "ingestedAt": "2026-04-14T11:24:49.671227Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
+      "dt": "2026-04-01T12:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "lacka",
+        "mostu",
+        "nabitá",
+        "premiéra",
+        "sezona",
+        "tahači",
+        "terénu",
+        "vrátí",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -185,22 +211,21 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "„Nestihli jsme nasednout.“ Letiště napříč EU čelí chaosu kvůli digitálním kontrolám",
+      "title": "Šílená situace u letištní novinky, někteří cestující nestihli let. Jak je to v Praze?",
       "url": "https://zpravy.aktualne.cz/ekonomika/nestihli-jsme-nasednout-letiste-napric-eu-celi-chaosu-kvuli-digitalnim-kontrolam/r~aaa291aa99249e7d625656ac06311475/",
       "dt": "2026-04-14T09:02:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "chaosu",
-        "digitálním",
-        "jsme",
-        "kontrolám",
-        "kvůli",
-        "letiště",
-        "napříč",
-        "nasednout",
+        "cestující",
+        "let",
+        "letištní",
         "nestihli",
-        "čelí"
+        "novinky",
+        "někteří",
+        "praze",
+        "situace",
+        "šílená"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -493,32 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec „kokainových hrochů“. Kolumbie po letech marných bojů nařídila odstřel",
-      "url": "https://magazin.aktualne.cz/konec-kokainovych-hrochu-kolumbie-po-letech-marnych-boju-naridila-odstrel/r~aaa29d6d7df2713ec3a9493e61d25d36/",
-      "dt": "2026-04-14T05:37:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bojů",
-        "hrochů",
-        "kokainových",
-        "kolumbie",
-        "konec",
-        "letech",
-        "marných",
-        "nařídila",
-        "odstřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22006,
+      "bytes": 22239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,8 +568,8 @@
         "raw_feed_latest_publishedAt": "2026-04-14T10:54:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 3,
+          "sport": 4,
+          "zpravy": 10,
           "finance": 4,
           "other": 2
         },
@@ -584,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+            "publishedAt": "2026-04-01T12:10:00Z"
+          },
           {
             "title": "Macinka navštívil Izrael a uctil památku obětí holokaustu",
             "publishedAt": "2026-04-14T10:54:00Z"
@@ -611,10 +614,6 @@
           {
             "title": "Možná celý život řešíte vysoký tlak špatně. Nový výzkum ukazuje nečekanou souvislost",
             "publishedAt": "2026-04-14T09:21:00Z"
-          },
-          {
-            "title": "„Nestihli jsme nasednout.“ Letiště napříč EU čelí chaosu kvůli digitálním kontrolám",
-            "publishedAt": "2026-04-14T09:02:00Z"
           }
         ]
       }

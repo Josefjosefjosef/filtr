@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T11:05:03.879417Z",
+  "ingestedAt": "2026-04-14T11:24:49.671227Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zestátňování ČEZ začne v červnu. První kroky udělá stát na valné hromadě firmy, oznámil Babiš",
+      "url": "https://byznys.hn.cz/c1-67866490-zestatnovani-cez-zacne-v-cervnu-prvni-kroky-udela-stat-na-valne-hromade-firmy-oznamil-babis",
+      "dt": "2026-04-14T10:50:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiš",
+        "firmy",
+        "hromadě",
+        "kroky",
+        "oznámil",
+        "první",
+        "stát",
+        "udělá",
+        "valné",
+        "začne",
+        "zestátňování",
+        "červnu",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1133,36 +1163,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Genesis kupuje podíl v POS Media, která vládne reklamě v hypermarketech. Podpoří akviziční ambice jejího zakladatele",
-      "url": "https://archiv.hn.cz/c1-67865340-genesis-kupuje-podil-v-pos-media-ktera-vladne-reklame-v-hypermarketech-podpori-akvizicni-ambice-jejiho-zakladatele",
-      "dt": "2026-04-13T06:35:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "akviziční",
-        "ambice",
-        "genesis",
-        "hypermarketech",
-        "jejího",
-        "kupuje",
-        "media",
-        "podpoří",
-        "podíl",
-        "pos",
-        "reklamě",
-        "vládne",
-        "zakladatele"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1173,7 +1173,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186303,
+      "bytes": 186159,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1210,7 +1210,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1226,6 +1226,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zestátňování ČEZ začne v červnu. První kroky udělá stát na valné hromadě firmy, oznámil Babiš",
+            "publishedAt": "2026-04-14T10:50:00Z"
+          },
           {
             "title": "Nařízení EU způsobilo administrativní zemětřesení. Lze zjednodušit byrokracii, aniž by bylo nutné opouštět ušlechtilé cíle?",
             "publishedAt": "2026-04-14T09:47:00Z"
@@ -1253,10 +1257,6 @@
           {
             "title": "V Budapešti se v autobuse zpívalo a V4 se bude stavět na trochu jiných základech, než si Babiš představoval",
             "publishedAt": "2026-04-14T04:46:00Z"
-          },
-          {
-            "title": "Nejlepší umělá inteligence pro všechny případy: OpenAI, Google a Anthropic nejsou jediní, někdy se sami sabotují",
-            "publishedAt": "2026-04-13T23:40:00Z"
           }
         ]
       }

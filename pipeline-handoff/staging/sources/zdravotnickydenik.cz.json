@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T11:05:03.879417Z",
+  "ingestedAt": "2026-04-14T11:24:49.671227Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/spalovna-zdravotnickeho-odpadu-lod-melnik/",
+      "dt": "2026-04-14T11:04:49Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ekologové",
+        "firma",
+        "kritiku",
+        "lodi",
+        "odmítá",
+        "odpadu",
+        "spalovnou",
+        "varují",
+        "zdravotnického"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,33 +263,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Potravinový doplněk obsahuje sildenafil na léčbu erektilní dysfunkce. Inspekce upozorňuje na riziko",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/potravinovy-doplnek-obsahuje-sildenafil-na-lecbu-erektilni-dysfunkce/",
-      "dt": "2026-04-13T10:34:39Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "doplněk",
-        "dysfunkce",
-        "erektilní",
-        "inspekce",
-        "léčbu",
-        "obsahuje",
-        "potravinový",
-        "riziko",
-        "sildenafil",
-        "upozorňuje"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96856,
+      "bytes": 98036,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:55:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:04:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
+            "publishedAt": "2026-04-14T11:04:49Z"
+          },
           {
             "title": "Na severní Moravě stále řádí žloutenka. Hygienici řekli, které místo je zasažené nejvíce",
             "publishedAt": "2026-04-14T09:55:40Z"
@@ -353,10 +356,6 @@
           {
             "title": "Operace některých nádorů čeká zásadní omezení. Ministerstvo oznámilo, kde se budou dělat",
             "publishedAt": "2026-04-13T14:51:54Z"
-          },
-          {
-            "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
-            "publishedAt": "2026-04-13T14:22:29Z"
           }
         ]
       }
