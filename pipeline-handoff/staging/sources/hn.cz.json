@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T07:19:04.496116Z",
+  "ingestedAt": "2026-04-14T07:45:16.397142Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Neúspěch u přijímaček není žádná tragédie. Jaké jsou nejčastější chyby v komunikaci s dítětem, které se nedostalo na vysněnou školu?",
+      "url": "https://domaci.hn.cz/c1-67861850-neuspech-u-prijimacek-neni-zadna-tragedie-jake-jsou-nejcastejsi-chyby-v-komunikaci-s-ditetem-ktere-se-nedostalo-na-vysnenou-skolu",
+      "dt": "2026-04-14T07:18:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chyby",
+        "dítětem",
+        "jaké",
+        "komunikaci",
+        "nedostalo",
+        "nejčastější",
+        "neúspěch",
+        "přijímaček",
+        "tragédie",
+        "vysněnou",
+        "školu",
+        "žádná"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1125,35 +1154,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Oheň mizí a mladí to zvládnou lépe než my. Ondřej Bartoš o předávání žezla v Credo Ventures",
-      "url": "https://archiv.hn.cz/c1-67865230-ohen-mizi-a-mladi-to-zvladnou-lepe-nez-my-ondrej-bartos-o-predavani-zezla-v-credo-ventures",
-      "dt": "2026-04-12T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bartoš",
-        "credo",
-        "lépe",
-        "mizí",
-        "mladí",
-        "než",
-        "oheň",
-        "ondřej",
-        "předávání",
-        "ventures",
-        "zvládnou",
-        "žezla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1164,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186411,
+      "bytes": 186454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1201,7 +1201,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T07:18:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1217,6 +1217,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neúspěch u přijímaček není žádná tragédie. Jaké jsou nejčastější chyby v komunikaci s dítětem, které se nedostalo na vysněnou školu?",
+            "publishedAt": "2026-04-14T07:18:00Z"
+          },
           {
             "title": "Zákony ke zrušení poplatků za veřejnoprávní média představí vláda tento týden, řekl Okamura",
             "publishedAt": "2026-04-14T05:08:00Z"
@@ -1243,10 +1247,6 @@
           },
           {
             "title": "Jezte to, co právě roste, radí mladá farmářka ze Semic",
-            "publishedAt": "2026-04-13T22:00:00Z"
-          },
-          {
-            "title": "Zemědělská politika EU je moloch, její zachování je ale v&nbsp;bytostném zájmu Česka",
             "publishedAt": "2026-04-13T22:00:00Z"
           }
         ]
