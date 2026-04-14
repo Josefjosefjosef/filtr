@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T10:10:21.274770Z",
+  "ingestedAt": "2026-04-14T10:30:06.085016Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Aerolinky žádají EU o pomoc s dopady války na Blízkém východě",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/aerolinky-zadaji-eu-o-pomoc-s-dopady-valky-na-blizkem-vychode-372358",
+      "dt": "2026-04-14T10:03:37Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aerolinky",
+        "blízkém",
+        "dopady",
+        "pomoc",
+        "války",
+        "východě",
+        "žádají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -33,7 +57,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "První kroky k zestátnění ČEZ udělá stát na valné hromadě firmy v červnu, řekl Babiš",
+      "title": "První kroky k zestátnění ČEZu udělá stát na valné hromadě firmy v červnu, řekl Babiš",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/prvni-kroky-k-zestatneni-cez-udela-stat-na-valne-hromade-firmy-v-cervnu-rekl-babis-372357",
       "dt": "2026-04-14T09:49:58Z",
       "media_raw": "ČT24 / Domácí",
@@ -49,7 +73,7 @@
         "valné",
         "zestátnění",
         "červnu",
-        "čez",
+        "čezu",
         "řekl"
       ],
       "feedCategory": "zpravy",
@@ -746,32 +770,6 @@
         "rozhovor",
         "vysílat",
         "zakázala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Čína se potýká s virem, který útočí na zrak. Na lidi se přenáší od mořských tvorů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/cina-se-potyka-s-virem-ktery-utoci-na-zrak-na-lidi-se-prenasi-od-morskych-tvoru-372323",
-      "dt": "2026-04-13T12:48:48Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "lidi",
-        "mořských",
-        "potýká",
-        "přenáší",
-        "tvorů",
-        "virem",
-        "zrak",
-        "útočí",
-        "čína"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1559,7 +1557,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42300,
+      "bytes": 42566,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,12 +1617,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:03:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
-          "zpravy": 26,
-          "finance": 1
+          "finance": 2,
+          "other": 2,
+          "zpravy": 26
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1637,11 +1635,15 @@
         },
         "sample_titles": [
           {
+            "title": "Aerolinky žádají EU o pomoc s dopady války na Blízkém východě",
+            "publishedAt": "2026-04-14T10:03:37Z"
+          },
+          {
             "title": "Pravěké ženy jedly mnohem méně masa než muži. Vědci zkoumají proč",
             "publishedAt": "2026-04-14T10:02:00Z"
           },
           {
-            "title": "První kroky k zestátnění ČEZ udělá stát na valné hromadě firmy v červnu, řekl Babiš",
+            "title": "První kroky k zestátnění ČEZu udělá stát na valné hromadě firmy v červnu, řekl Babiš",
             "publishedAt": "2026-04-14T09:49:58Z"
           },
           {
@@ -1663,10 +1665,6 @@
           {
             "title": "Sankcionovaný čínský tanker i přes blokádu USA proplul Hormuzským průlivem",
             "publishedAt": "2026-04-14T08:37:49Z"
-          },
-          {
-            "title": "Úmyslně přeříznutý kabel na západě Německa omezil železniční dopravu",
-            "publishedAt": "2026-04-14T08:15:40Z"
           }
         ]
       }
@@ -1772,7 +1770,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77085,
+      "bytes": 76986,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
