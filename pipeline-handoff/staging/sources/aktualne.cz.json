@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T14:24:30.378676Z",
+  "ingestedAt": "2026-04-14T14:40:43.567818Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "\"Cesta do orbánovského Maďarska.\" Opozice slibuje vládě peklo, varuje před likvidací ČT",
+      "url": "https://zpravy.aktualne.cz/ekonomika/cesta-do-orbanovskeho-madarska-opozice-slibuje-vlade-peklo-varuje-pred-likvidaci-ct/r~aaa29e0a51367f26edcf79366222d4a3/",
+      "dt": "2026-04-14T14:23:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cesta",
+        "likvidací",
+        "maďarska",
+        "opozice",
+        "orbánovského",
+        "peklo",
+        "slibuje",
+        "varuje",
+        "vládě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -498,35 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Možná celý život řešíte vysoký tlak špatně. Nový výzkum ukazuje nečekanou souvislost",
-      "url": "https://magazin.aktualne.cz/mozna-cely-zivot-resite-vysoky-tlak-spatne-novy-vyzkum-ukazuje-necekanou-souvislost/r~aaa29bb5f79a31f468b269ce266a3dfe/",
-      "dt": "2026-04-14T09:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "celý",
-        "možná",
-        "nečekanou",
-        "nový",
-        "souvislost",
-        "tlak",
-        "ukazuje",
-        "vysoký",
-        "výzkum",
-        "řešíte",
-        "špatně",
-        "život"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22399,
+      "bytes": 22223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,12 +571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T14:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T14:23:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 3,
           "sport": 4,
-          "zpravy": 14,
-          "finance": 2
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -591,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "\"Cesta do orbánovského Maďarska.\" Opozice slibuje vládě peklo, varuje před likvidací ČT",
+            "publishedAt": "2026-04-14T14:23:00Z"
+          },
           {
             "title": "Muchová na úvod zdolala outsiderku, dál jdou náhradnice Šalková i Kopřiva",
             "publishedAt": "2026-04-14T12:07:00Z"
@@ -618,10 +619,6 @@
           {
             "title": "Totální převrat ve financování ČT a rozhlasu, Klempíř ukázal detaily. Opozice chystá obstrukce",
             "publishedAt": "2026-04-14T12:53:00Z"
-          },
-          {
-            "title": "Sirény, ticho a silná slova: Macinka navštívil Izrael během Dne holokaustu",
-            "publishedAt": "2026-04-14T13:42:00Z"
           }
         ]
       }

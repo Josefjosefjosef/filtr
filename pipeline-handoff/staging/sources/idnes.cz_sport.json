@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T14:24:30.378676Z",
+  "ingestedAt": "2026-04-14T14:40:43.567818Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejsem vítěz, jsem bojovník. Netflix ukázal trailer k dokumentu o Nadalovi",
+      "url": "https://www.idnes.cz/sport/trendy/nejsem-vitez-jsem-bojovnik-netflix-ukazal-trailer-k-dokumentu-o-nadalovi.A260414_130003_trendy_subt",
+      "dt": "2026-04-14T14:25:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bojovník",
+        "dokumentu",
+        "jsem",
+        "nadalovi",
+        "nejsem",
+        "netflix",
+        "trailer",
+        "ukázal",
+        "vítěz"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -774,33 +800,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kaut si odhlásil sociální sítě: Občas se to přehání. A sedmý zápas? Co víc si přát",
-      "url": "https://www.idnes.cz/hokej/extraliga/martin-kaut-sparta-pardubice-rozhovor-ctvrtfinale-play-off.A260413_213751_hokej_ivt",
-      "dt": "2026-04-14T06:08:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "kaut",
-        "občas",
-        "odhlásil",
-        "přehání",
-        "přát",
-        "sedmý",
-        "sociální",
-        "sítě",
-        "víc",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +810,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48674,
+      "bytes": 48498,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +847,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T14:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T14:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -863,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejsem vítěz, jsem bojovník. Netflix ukázal trailer k dokumentu o Nadalovi",
+            "publishedAt": "2026-04-14T14:25:00Z"
+          },
           {
             "title": "Dědek se omluvil, Pardubice obviňují Spartu. Oba kluby vyzývají k uklidnění",
             "publishedAt": "2026-04-14T14:18:00Z"
@@ -890,10 +893,6 @@
           {
             "title": "Muchová zvládla vstup do antukové sezony, zadařilo se i Kopřivovi a Šalkové",
             "publishedAt": "2026-04-14T12:43:37Z"
-          },
-          {
-            "title": "Jsem rád, že se zlepšuje, chválil Alcaraz Sinnera. Znovu ho může předstihnout",
-            "publishedAt": "2026-04-14T12:33:00Z"
           }
         ]
       }
