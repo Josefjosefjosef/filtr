@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T06:04:52.155513Z",
+  "ingestedAt": "2026-04-14T06:24:44.035578Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vesmír jako nové bojiště",
+      "url": "https://video.aktualne.cz/aktualne-pro-byznys/vesmir-jako-nove-bojiste/r~aaa291b1c2e59fbbc94c7cbad8ba1acd/",
+      "dt": "2026-04-14T06:09:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bojiště",
+        "jako",
+        "nové",
+        "vesmír"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -192,22 +213,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Tuto trasu Rusové nezvolili dobře. Dodávku s municí doslova naservírovali nepříteli",
+      "title": "Šest ruských vojáků vůbec netušilo, kde se ocitlo. Ukrajincům vjeli rovnou do rány",
       "url": "https://zpravy.aktualne.cz/zahranici/tuto-trasu-rusove-nezvolili-dobre-dodavku-s-munici-doslova-naservirovali-nepriteli/r~aaa2999b932b6472459c48fe47f8a353/",
       "dt": "2026-04-14T03:30:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "dobře",
-        "dodávku",
-        "doslova",
-        "municí",
-        "naservírovali",
-        "nepříteli",
-        "nezvolili",
-        "rusové",
-        "trasu",
-        "tuto"
+        "netušilo",
+        "ocitlo",
+        "rovnou",
+        "ruských",
+        "rány",
+        "ukrajincům",
+        "vjeli",
+        "vojáků",
+        "vůbec",
+        "šest"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -502,33 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud zamítl Trumpovu žalobu žádající od WSJ miliardy kvůli článku o Epsteinovi",
-      "url": "https://zpravy.aktualne.cz/zahranici/soud-zamitl-trumpovu-zalobu-zadajici-od-wsj-miliardy-kvuli-clanku-o-epsteinovi/r~aaa2936dc4ca518a9bb1129cc24201b8/",
-      "dt": "2026-04-13T14:28:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "epsteinovi",
-        "kvůli",
-        "miliardy",
-        "soud",
-        "trumpovu",
-        "wsj",
-        "zamítl",
-        "článku",
-        "žalobu",
-        "žádající"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21550,
+      "bytes": 21416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +570,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:09:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -594,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vesmír jako nové bojiště",
+            "publishedAt": "2026-04-14T06:09:00Z"
+          },
           {
             "title": "Vítěz voleb Magyar odmítá rychlý vstup Ukrajiny do EU, prosazuje referendum",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -620,10 +618,6 @@
           },
           {
             "title": "Průzkum průzkumů: Na pravici se schyluje k převratu. Zopakuje se historie?",
-            "publishedAt": "2026-04-14T03:30:00Z"
-          },
-          {
-            "title": "Tuto trasu Rusové nezvolili dobře. Dodávku s municí doslova naservírovali nepříteli",
             "publishedAt": "2026-04-14T03:30:00Z"
           }
         ]

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-14T06:04:52.155513Z",
+  "ingestedAt": "2026-04-14T06:24:44.035578Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejistota kvůli rušení soudů sílí. Zaměstnanci odcházejí, varují šéfky krajských soudů",
+      "url": "https://www.ceska-justice.cz/2026/04/nejistota-kolem-ruseni-soudu-predsedkyne/",
+      "dt": "2026-04-14T06:01:23Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "krajských",
+        "kvůli",
+        "nejistota",
+        "odcházejí",
+        "rušení",
+        "soudů",
+        "sílí",
+        "varují",
+        "zaměstnanci",
+        "šéfky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,32 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Milionová dotace pro firmu z Agrofertu znovu u soudu. Kvůli střetu zájmů",
-      "url": "https://www.ceska-justice.cz/2026/04/milionova-dotace-agrofert-stret-zajmu/",
-      "dt": "2026-04-10T11:34:20Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "agrofertu",
-        "dotace",
-        "firmu",
-        "kvůli",
-        "milionová",
-        "soudu",
-        "střetu",
-        "znovu",
-        "zájmů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 109680,
+      "bytes": 110237,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:01:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejistota kvůli rušení soudů sílí. Zaměstnanci odcházejí, varují šéfky krajských soudů",
+            "publishedAt": "2026-04-14T06:01:23Z"
+          },
           {
             "title": "Bez více biopaliva se neobejdeme. Vodík je extrémně drahý, říká šéf Orlen Unipetrolu",
             "publishedAt": "2026-04-14T04:30:00Z"
@@ -354,10 +359,6 @@
           {
             "title": "Justiční databáze nefungují v nové verzi prohlížeče. Ministerstvo problém řeší",
             "publishedAt": "2026-04-11T09:25:18Z"
-          },
-          {
-            "title": "Děti odstěhovala 200 kilometrů a nepředávala je. Česko zaplatí otci statisíce",
-            "publishedAt": "2026-04-11T04:15:00Z"
           }
         ]
       }
