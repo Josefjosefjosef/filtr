@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-14T16:54:38.002917Z",
+  "ingestedAt": "2026-04-14T17:10:09.054350Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Poskládali jsme sestavu pro zpracování videa. Intel míchá kartami, je levnější a výkonnější než AMD",
+      "url": "https://www.zive.cz/clanky/poskladali-jsme-sestavu-pro-zpracovani-videa-intel-micha-kartami-je-levnejsi-a-vykonnejsi-nez-amd/sc-3-a-240672/default.aspx",
+      "dt": "2026-04-14T16:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "amd",
+        "intel",
+        "jsme",
+        "kartami",
+        "levnější",
+        "míchá",
+        "než",
+        "poskládali",
+        "sestavu",
+        "videa",
+        "výkonnější",
+        "zpracování"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -938,30 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Toto je 50 nejstahovanějších a nejoblíbenějších aplikací pro iPhone a Android v Česku",
-      "url": "https://mobilmania.zive.cz/clanky/nejoblibenejsi-aplikace-v-cesku-nejstahovanejsi-aplikace-v-cr-pro-android-ios-iphone-04-2026/sc-3-a-1364542/default.aspx",
-      "dt": "2026-04-11T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "android",
-        "aplikací",
-        "iphone",
-        "nejoblíbenějších",
-        "nejstahovanějších",
-        "toto",
-        "česku"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -972,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23089,
+      "bytes": 23332,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1009,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T16:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1024,6 +1029,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poskládali jsme sestavu pro zpracování videa. Intel míchá kartami, je levnější a výkonnější než AMD",
+            "publishedAt": "2026-04-14T16:45:00Z"
+          },
           {
             "title": "Za řadou nejlepších funkcí v Androidu stojí komunita. Google je „jen“ podstatně vylepšil",
             "publishedAt": "2026-04-14T15:45:00Z"
@@ -1051,10 +1060,6 @@
           {
             "title": "HBO Max a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na HBO nejvíc sledují",
             "publishedAt": "2026-04-14T12:45:00Z"
-          },
-          {
-            "title": "Magnetická klávesnice zlevnila na minimum. Alzácká Rapture je tichá, přesná a stojí zlomek konkurence",
-            "publishedAt": "2026-04-14T08:45:00Z"
           }
         ]
       }

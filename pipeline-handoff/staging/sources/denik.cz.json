@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T16:54:38.002917Z",
+  "ingestedAt": "2026-04-14T17:10:09.054350Z",
   "items": [
     {
       "section": "aktualne",
@@ -22,6 +22,31 @@
         "transplantaci",
         "vyléčil",
         "výhra"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Netanjahu ocenil přátelství Česka. Za podporu děkoval Babišovi a Macinkovi",
+      "url": "https://www.denik.cz/ze_sveta/cesko-izrael-netanjahu-babis-macinka.html",
+      "dt": "2026-04-14T16:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babišovi",
+        "děkoval",
+        "macinkovi",
+        "netanjahu",
+        "ocenil",
+        "podporu",
+        "přátelství",
+        "česka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Brně plánují sjezd sudetští Němci. Magistrát obsadil dav protestujících",
-      "url": "https://www.denik.cz/regiony/magistrat-brno-dav-lidi-protest-sjezd-sudetskych-nemcu.html",
-      "dt": "2026-04-14T06:53:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brně",
-        "dav",
-        "magistrát",
-        "němci",
-        "obsadil",
-        "plánují",
-        "protestujících",
-        "sjezd",
-        "sudetští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30253,
+      "bytes": 30154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -718,6 +717,10 @@
             "publishedAt": "2026-04-14T16:30:00Z"
           },
           {
+            "title": "Netanjahu ocenil přátelství Česka. Za podporu děkoval Babišovi a Macinkovi",
+            "publishedAt": "2026-04-14T16:30:00Z"
+          },
+          {
             "title": "Konec poplatků za ČT a rozhlas: Co to znamená pro lidi, jak budou média fungovat",
             "publishedAt": "2026-04-14T15:53:00Z"
           },
@@ -740,10 +743,6 @@
           {
             "title": "Macinka navštívil Jeruzalém. Česko jedním z největších přátel Izraele, slyšel",
             "publishedAt": "2026-04-14T13:47:00Z"
-          },
-          {
-            "title": "Česko může zrychlit růst. MMF nastavil odhad výš než ministerstvo",
-            "publishedAt": "2026-04-14T13:12:00Z"
           }
         ]
       }
