@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T16:35:19.530493Z",
+  "ingestedAt": "2026-04-14T16:54:38.002917Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dvojí výhra v loterii. Nor díky transplantaci přežil rakovinu a vyléčil se z HIV",
+      "url": "https://www.denik.cz/staty-mimo-eu/pacient-z-osla-hiv-rakovina-kostni-drene-lecba-remise.html",
+      "dt": "2026-04-14T16:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvojí",
+        "díky",
+        "hiv",
+        "loterii",
+        "nor",
+        "přežil",
+        "rakovinu",
+        "transplantaci",
+        "vyléčil",
+        "výhra"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -622,35 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "David Stypka? Ještě pořád mám v očích slzy, říká Svátek o natáčení jeho portrétu",
-      "url": "https://www.denik.cz/film-a-televize/rozhovor-david-stypka-dan-svatek-dokument.html",
-      "dt": "2026-04-14T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "david",
-        "jeho",
-        "ještě",
-        "mám",
-        "natáčení",
-        "očích",
-        "portrétu",
-        "pořád",
-        "slzy",
-        "stypka",
-        "svátek",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30484,
+      "bytes": 30253,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,11 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T16:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 21,
+          "finance": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -715,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvojí výhra v loterii. Nor díky transplantaci přežil rakovinu a vyléčil se z HIV",
+            "publishedAt": "2026-04-14T16:30:00Z"
+          },
           {
             "title": "Konec poplatků za ČT a rozhlas: Co to znamená pro lidi, jak budou média fungovat",
             "publishedAt": "2026-04-14T15:53:00Z"
@@ -742,10 +744,6 @@
           {
             "title": "Česko může zrychlit růst. MMF nastavil odhad výš než ministerstvo",
             "publishedAt": "2026-04-14T13:12:00Z"
-          },
-          {
-            "title": "Poplatky se ruší. Ministr Klempíř představil, jak chce financovat ČT a rozhlas",
-            "publishedAt": "2026-04-14T13:01:00Z"
           }
         ]
       }

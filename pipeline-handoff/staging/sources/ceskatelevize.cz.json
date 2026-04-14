@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T16:35:19.530493Z",
+  "ingestedAt": "2026-04-14T16:54:38.002917Z",
   "items": [
     {
       "section": "aktualne",
@@ -767,6 +767,33 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Majitelka českobudějovického Dynama odmítá klub prodat, město hrozí výpovědí ze stadionu",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/majitelka-ceskobudejovickeho-dynama-odmita-klub-prodat-mesto-hrozi-vypovedi-ze-stadionu-156283",
+      "dt": "2026-04-14T16:46:39Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dynama",
+        "hrozí",
+        "klub",
+        "majitelka",
+        "město",
+        "odmítá",
+        "prodat",
+        "stadionu",
+        "výpovědí",
+        "českobudějovického"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Kvalifikace MS fotbalistek Česko – Černá Hora",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kvalifikace-ms-fotbalistek-cesko-cerna-hora-156281",
       "dt": "2026-04-14T15:10:00Z",
@@ -1509,31 +1536,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bulldogs míří poprvé do superfinále, úřadující šampionky odvrátily vyřazení",
-      "url": "https://sport.ceskatelevize.cz/clanek/florbal/bulldogs-miri-poprve-do-superfinale-uradujici-sampionky-odvratily-vyrazeni-156253",
-      "dt": "2026-04-12T15:47:19Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bulldogs",
-        "míří",
-        "odvrátily",
-        "poprvé",
-        "superfinále",
-        "vyřazení",
-        "úřadující",
-        "šampionky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1663,7 +1665,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39666,
+      "bytes": 39497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1700,7 +1702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T16:46:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1715,6 +1717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Majitelka českobudějovického Dynama odmítá klub prodat, město hrozí výpovědí ze stadionu",
+            "publishedAt": "2026-04-14T16:46:39Z"
+          },
           {
             "title": "Kvalifikace MS fotbalistek Česko – Černá Hora",
             "publishedAt": "2026-04-14T15:10:00Z"
@@ -1742,10 +1748,6 @@
           {
             "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off, Nečas čeká na 100 bodů",
             "publishedAt": "2026-04-14T05:07:07Z"
-          },
-          {
-            "title": "Když jsem viděl ten pád, chtělo se mi brečet, vzpomíná Salač",
-            "publishedAt": "2026-04-14T05:00:00Z"
           }
         ]
       }
