@@ -30,6 +30,92 @@ function iuIsProdHost() {
 }
 try { if (typeof window !== "undefined") window.iuIsProdHost = iuIsProdHost; } catch (e) {}
 
+/** ?iuPerfProbe=1 — zero overhead when off; times are performance.now() from navigation time origin. */
+function iuPerfProbeEnabled() {
+  try {
+    if (typeof window !== "undefined" && window.__iuPerfProbeActive === true) return true;
+    return String(location.search || "").indexOf("iuPerfProbe=1") !== -1;
+  } catch (_) {
+    return false;
+  }
+}
+function iuHomePerfMark(name, extra) {
+  if (!iuPerfProbeEnabled()) return;
+  try {
+    const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+    const arr = (window.__iuHomePerfMarks = window.__iuHomePerfMarks || []);
+    const o = { name: String(name || ""), t };
+    if (extra && typeof extra === "object") {
+      for (const k in extra) {
+        if (Object.prototype.hasOwnProperty.call(extra, k)) o[k] = extra[k];
+      }
+    }
+    arr.push(o);
+  } catch (_) {}
+}
+function iuHomePerfSnapshotTopCardsIfProbe(reason) {
+  if (!iuPerfProbeEnabled()) return;
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      try {
+        const v = document.getElementById("iuSilverTallScrollViewport");
+        if (!v) return;
+        const sel =
+          '[data-iu-news-preview-card="1"],[data-iu-sport-preview-card="1"],[data-iu-finance-preview-card="1"]';
+        const cards = v.querySelectorAll(sel);
+        const titles = [];
+        for (let i = 0; i < Math.min(3, cards.length); i++) {
+          const c = cards[i];
+          const t1 = c.querySelector(
+            "[data-iu-news-preview-title-1],[data-iu-sport-preview-title-1],[data-iu-finance-preview-title-1]",
+          );
+          titles.push(t1 ? String(t1.textContent || "").trim() : "");
+        }
+        function loadingLike(tx) {
+          const s = String(tx || "").trim();
+          return !s || /se načít/i.test(s);
+        }
+        const arr = (window.__iuHomePerfMarks = window.__iuHomePerfMarks || []);
+        const tNow = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+        let firstIdx = -1;
+        for (let i = 0; i < titles.length; i++) {
+          if (titles[i] && !loadingLike(titles[i])) {
+            firstIdx = i;
+            break;
+          }
+        }
+        if (firstIdx >= 0 && !window.__iuPerfFirstTitleDone) {
+          window.__iuPerfFirstTitleDone = true;
+          arr.push({
+            name: "firstTopCardTitleNodeVisible",
+            t: tNow,
+            reason: String(reason || ""),
+            idx: firstIdx,
+          });
+        }
+        const firstStable = titles.length > 0 && titles[0] && !loadingLike(titles[0]);
+        if (firstStable && !window.__iuPerfFirstStableDone) {
+          window.__iuPerfFirstStableDone = true;
+          arr.push({
+            name: "firstStableHeadlinePaint",
+            t: tNow,
+            reason: String(reason || ""),
+          });
+        }
+        const all3 =
+          titles.length >= 3 &&
+          titles.every(function (x) {
+            return x && !loadingLike(x);
+          });
+        if (all3 && !window.__iuPerfAll3Done) {
+          window.__iuPerfAll3Done = true;
+          arr.push({ name: "allTop3Stable", t: tNow, reason: String(reason || "") });
+        }
+      } catch (_) {}
+    });
+  });
+}
+
 /** Debounce duplicate skipWaiting reloads in one burst — must NOT block a later new waiting worker in the same tab session (10 min sessionStorage was too aggressive). */
 var __iuSilentSwReloadLastMs = 0;
 
@@ -4942,8 +5028,21 @@ try {
   }
 
   function renderItems(items) {
-    const target = getFeedTarget();
-    renderFeed(target, items);
+    if (iuPerfProbeEnabled()) {
+      try {
+        iuHomePerfMark("renderItemsStart");
+      } catch (_) {}
+    }
+    try {
+      const target = getFeedTarget();
+      renderFeed(target, items);
+    } finally {
+      if (iuPerfProbeEnabled()) {
+        try {
+          iuHomePerfMark("renderItemsEnd");
+        } catch (_) {}
+      }
+    }
   }
 
   function renderFeedItemHtml(item) {
@@ -12831,17 +12930,38 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      try {
+        iuHomePerfMark("cachedItemsReady");
+      } catch (_) {}
       iuPreviewFeedProbeTick("combinedFeedReady", {
         cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
         sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
       });
       /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
       try {
+        iuHomePerfMark("firstPreviewRefreshCall");
+      } catch (_) {}
+      try {
         iuSilverTallMediaPreviewsRefresh();
+      } catch (_) {}
+      try {
+        iuHomePerfMark("afterEarlyPreviewRefresh");
+      } catch (_) {}
+      try {
+        iuHomePerfSnapshotTopCardsIfProbe("afterEarlyPreviewOnly");
       } catch (_) {}
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
       iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
+      /* One animation frame so preview headline paints before heavy renderFeed (same items; no pipeline change). */
+      await new Promise(function (resolve) {
+        requestAnimationFrame(function () {
+          resolve();
+        });
+      });
       renderItems(state.filteredItems);
+      try {
+        iuHomePerfSnapshotTopCardsIfProbe("afterLoadDataFirstRender");
+      } catch (_) {}
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (isDebugLogging) {
@@ -13004,6 +13124,9 @@ function buildVideoAsArticleCard(it) {
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
         iuSilverTallMediaPreviewsRefresh();
+      } catch (_) {}
+      try {
+        iuHomePerfSnapshotTopCardsIfProbe("afterApplyFilterPreviewRefresh");
       } catch (_) {}
       const countArticles = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
       const countVideos = state.cachedItems.filter((entry) => entry?.contentType === "video").length;

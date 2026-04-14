@@ -2962,6 +2962,30 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script defer src="/assets/iu-parcel-tracking-engine.js?v=1"></script>
     <script defer src="/assets/iu-home-load-audit.js?v=home-audit-1"></script>
+    <!-- Opt-in homepage perf (?iuPerfProbe=1): marks from real navigation start (before module app.js). -->
+    <script>
+      (function () {
+        try {
+          if (String(location.search || "").indexOf("iuPerfProbe=1") === -1) return;
+          window.__iuPerfProbeActive = true;
+          window.__iuHomePerfMarks = window.__iuHomePerfMarks || [];
+          var t0 = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+          window.__iuHomePerfMarks.push({ name: "navStart", t: t0 });
+          document.addEventListener("DOMContentLoaded", function () {
+            try {
+              var t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              window.__iuHomePerfMarks.push({ name: "domContentLoaded", t: t });
+            } catch (_) {}
+          });
+          window.addEventListener("load", function () {
+            try {
+              var t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              window.__iuHomePerfMarks.push({ name: "load", t: t });
+            } catch (_) {}
+          });
+        } catch (_) {}
+      })();
+    </script>
     <script type="module" src="/assets/app.js?v=silver-address-slot-class-no-empty"></script>
     <script>
     (function(){
