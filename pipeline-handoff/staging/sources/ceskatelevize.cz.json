@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T10:49:29.664732Z",
+  "ingestedAt": "2026-04-14T11:05:03.879417Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Letošní březen je nejhorší měsíc v historii z hlediska kybernetické kriminality",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/brezen-je-nejhorsi-mesic-v-historii-z-hlediska-kyberneticke-kriminality-uvedla-policie-372362",
+      "dt": "2026-04-14T10:51:37Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "březen",
+        "historii",
+        "hlediska",
+        "kriminality",
+        "kybernetické",
+        "letošní",
+        "měsíc",
+        "nejhorší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -743,33 +768,6 @@
         "údery",
         "útočí",
         "šest"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Aktuálně: Obrana zakázala armádě vysílat rozhovor s Pavlem, Hrad mluví o cenzuře",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-zakazalo-armade-odvysilat-rozhovor-s-pavlem-pise-aktualnecz-372326",
-      "dt": "2026-04-13T13:25:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "aktuálně",
-        "armádě",
-        "cenzuře",
-        "hrad",
-        "mluví",
-        "obrana",
-        "pavlem",
-        "rozhovor",
-        "vysílat",
-        "zakázala"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1557,7 +1555,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42566,
+      "bytes": 42509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,12 +1615,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:03:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:51:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 26,
           "finance": 2,
-          "other": 2,
-          "zpravy": 26
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1634,6 +1632,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letošní březen je nejhorší měsíc v historii z hlediska kybernetické kriminality",
+            "publishedAt": "2026-04-14T10:51:37Z"
+          },
           {
             "title": "Aerolinky žádají EU o pomoc s dopady války na Blízkém východě",
             "publishedAt": "2026-04-14T10:03:37Z"
@@ -1661,10 +1663,6 @@
           {
             "title": "Při několika vlnách veder už padaly podle vědců hranice smrtelného horka",
             "publishedAt": "2026-04-14T08:42:06Z"
-          },
-          {
-            "title": "Sankcionovaný čínský tanker i přes blokádu USA proplul Hormuzským průlivem",
-            "publishedAt": "2026-04-14T08:37:49Z"
           }
         ]
       }
@@ -1770,7 +1768,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76847,
+      "bytes": 76864,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

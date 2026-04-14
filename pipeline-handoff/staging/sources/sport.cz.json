@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T10:49:29.664732Z",
+  "ingestedAt": "2026-04-14T11:05:03.879417Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejtěžší ročník v historii Czech Tour. Ve hře je i start velké hvězdy",
+      "url": "https://www.sport.cz/clanek/cyklistika-nejtezsi-rocnik-v-historii-czech-tour-ve-hre-je-i-start-velke-hvezdy-5436602",
+      "dt": "2026-04-14T10:55:13Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "czech",
+        "historii",
+        "hvězdy",
+        "hře",
+        "nejtěžší",
+        "ročník",
+        "start",
+        "tour",
+        "velké"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,34 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-dynamo-je-krok-od-finale-potrebuje-udolat-spartu-na-jejim-lede-5436382",
-      "dt": "2026-04-13T12:00:12Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "další",
-        "druhém",
-        "duel",
-        "finalistovi",
-        "propastí",
-        "rozhodne",
-        "sedmý",
-        "sestřih",
-        "sparta",
-        "zvládla",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45736,
+      "bytes": 45255,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +811,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:43:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:55:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -830,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejtěžší ročník v historii Czech Tour. Ve hře je i start velké hvězdy",
+            "publishedAt": "2026-04-14T10:55:13Z"
+          },
           {
             "title": "Mistryně světa Jepchirchirová vynechá Londýnský maraton",
             "publishedAt": "2026-04-14T10:43:18Z"
@@ -857,10 +859,6 @@
           {
             "title": "Sparta mu chtěla dát ranec, když odmítl, vše zveřejnila. Takový klub to nemusel dělat, říká Tomášek",
             "publishedAt": "2026-04-14T08:53:52Z"
-          },
-          {
-            "title": "Z prokleté destinace je gólmanská tvrz. Senzační Vladař oživil vzpomínky na českou legendu",
-            "publishedAt": "2026-04-14T08:49:59Z"
           }
         ]
       }

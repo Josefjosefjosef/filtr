@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T10:49:29.664732Z",
+  "ingestedAt": "2026-04-14T11:05:03.879417Z",
   "items": [
     {
       "section": "finance",
@@ -196,6 +196,36 @@
         "trochu",
         "zpívalo",
         "základech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejlepší umělá inteligence pro všechny případy: OpenAI, Google a Anthropic nejsou jediní, někdy se sami sabotují",
+      "url": "https://tech.hn.cz/c1-67866180-nejlepsi-umela-inteligence-pro-vsechny-pripady-openai-google-a-anthropic-nejsou-jedini-nekdy-se-sami-sabotuji",
+      "dt": "2026-04-13T23:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "anthropic",
+        "google",
+        "inteligence",
+        "jediní",
+        "nejlepší",
+        "nejsou",
+        "někdy",
+        "openai",
+        "případy",
+        "sabotují",
+        "sami",
+        "umělá",
+        "všechny"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1133,30 +1163,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Práce do vysokého věku bude realitou bez ohledu na to, co dnes politici slibují",
-      "url": "https://archiv.hn.cz/c1-67865640-prace-do-vysokeho-veku-bude-realitou-bez-ohledu-na-to-co-dnes-politici-slibuji",
-      "dt": "2026-04-13T06:14:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ohledu",
-        "politici",
-        "práce",
-        "realitou",
-        "slibují",
-        "vysokého",
-        "věku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1167,7 +1173,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186403,
+      "bytes": 186303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1207,8 +1213,8 @@
         "raw_feed_latest_publishedAt": "2026-04-14T09:47:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 3
+          "finance": 36,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1249,8 +1255,8 @@
             "publishedAt": "2026-04-14T04:46:00Z"
           },
           {
-            "title": "Evropskému zemědělství chybí mladá krev, Česko je výjimkou",
-            "publishedAt": "2026-04-13T22:00:00Z"
+            "title": "Nejlepší umělá inteligence pro všechny případy: OpenAI, Google a Anthropic nejsou jediní, někdy se sami sabotují",
+            "publishedAt": "2026-04-13T23:40:00Z"
           }
         ]
       }
