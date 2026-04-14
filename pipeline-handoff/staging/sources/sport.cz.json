@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T14:40:43.567818Z",
+  "ingestedAt": "2026-04-14T15:02:41.222273Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trenér Iraola po třech sezonách skončí na lavičce Bournemouthu",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-trener-iraola-po-trech-sezonach-skonci-na-lavicce-bournemouthu-5436641",
+      "dt": "2026-04-14T14:46:08Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bournemouthu",
+        "iraola",
+        "lavičce",
+        "sezonách",
+        "skončí",
+        "trenér",
+        "třech"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -732,30 +756,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "GLOSA: Český basketbal se v zámoří hlásí o slovo, má co nabídnout",
-      "url": "https://www.sport.cz/clanek/nazory-komentare-glosa-cesky-basketbal-se-v-zamori-hlasi-o-slovo-ma-co-nabidnout-5436430",
-      "dt": "2026-04-14T06:30:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbal",
-        "glosa",
-        "hlásí",
-        "nabídnout",
-        "slovo",
-        "zámoří",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43685,
+      "bytes": 43581,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,7 +803,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T14:35:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T14:46:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -819,6 +819,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trenér Iraola po třech sezonách skončí na lavičce Bournemouthu",
+            "publishedAt": "2026-04-14T14:46:08Z"
+          },
           {
             "title": "Týmový kolega Otruby zůstává po nehodě v kritickém stavu",
             "publishedAt": "2026-04-14T14:35:53Z"
@@ -846,10 +850,6 @@
           {
             "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko čekají první přípravné zápasy",
             "publishedAt": "2026-04-14T12:23:50Z"
-          },
-          {
-            "title": "Írán musí hrát své zápasy v USA. Šanci na MS větří fotbalová velmoc",
-            "publishedAt": "2026-04-14T12:12:38Z"
           }
         ]
       }

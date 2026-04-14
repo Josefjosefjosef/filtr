@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T14:40:43.567818Z",
+  "ingestedAt": "2026-04-14T15:02:41.222273Z",
   "items": [
     {
       "section": "finance",
@@ -115,6 +115,38 @@
         "škoda",
         "škrty",
         "šéfů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Televizní a rozhlasové poplatky skončí, nahradí je příspěvky od státu, navrhuje Klempíř. Veřejnoprávní média mají dostat míň peněz",
+      "url": "https://domaci.hn.cz/c1-67866650-televizni-a-rozhlasove-poplatky-by-mely-skoncit-uz-letos-vlada-je-chce-nahradit-prispevky-ze-statniho-rozpoctu",
+      "dt": "2026-04-14T12:58:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dostat",
+        "klempíř",
+        "mají",
+        "média",
+        "míň",
+        "nahradí",
+        "navrhuje",
+        "peněz",
+        "poplatky",
+        "příspěvky",
+        "rozhlasové",
+        "skončí",
+        "státu",
+        "televizní",
+        "veřejnoprávní"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1120,35 +1152,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Pokaždé pípám na letišti, prý jsem podvodník a hledá mě Interpol. Jak českému podnikateli ukradli identitu",
-      "url": "https://archiv.hn.cz/c1-67866000-pokazde-pipam-na-letisti-pry-jsem-podvodnik-a-hleda-me-interpol-jak-ceskemu-podnikateli-ukradli-identitu",
-      "dt": "2026-04-13T13:18:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "hledá",
-        "identitu",
-        "interpol",
-        "jsem",
-        "letišti",
-        "podnikateli",
-        "podvodník",
-        "pokaždé",
-        "prý",
-        "pípám",
-        "ukradli",
-        "českému"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1162,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185945,
+      "bytes": 186139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1199,9 +1202,9 @@
         "raw_feed_latest_publishedAt": "2026-04-14T14:27:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "finance": 36,
           "zdravi": 1,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1230,6 +1233,10 @@
             "publishedAt": "2026-04-14T12:59:00Z"
           },
           {
+            "title": "Televizní a rozhlasové poplatky skončí, nahradí je příspěvky od státu, navrhuje Klempíř. Veřejnoprávní média mají dostat míň peněz",
+            "publishedAt": "2026-04-14T12:58:00Z"
+          },
+          {
             "title": "I přes pětiprocentní nezaměstnanost není důvod k panice. Ale obezřetnost je namístě",
             "publishedAt": "2026-04-14T12:42:00Z"
           },
@@ -1240,10 +1247,6 @@
           {
             "title": "Družba bude do konce dubna funkční, oznámil Zelenskyj. Orbán kvůli ropovodu blokoval půjčku pro Ukrajinu",
             "publishedAt": "2026-04-14T11:34:00Z"
-          },
-          {
-            "title": "Jak získat peníze z unie a vyhnout se jejím podmínkám? Návod hledá vláda Andreje Babiše",
-            "publishedAt": "2026-04-14T11:25:00Z"
           }
         ]
       }
