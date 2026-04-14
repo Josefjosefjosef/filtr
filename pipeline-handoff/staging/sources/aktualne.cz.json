@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T15:40:21.251136Z",
+  "ingestedAt": "2026-04-14T15:59:31.234348Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "I nevinná online hra přiměje dítě k násilí. Znalec odhaluje zrůdnosti kyberprostoru",
+      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/i-nevinna-online-hra-primeje-dite-k-nasili-znalec-odhaluje-zrudnosti-kyberprostoru/r~aaa295f805bf464e107cdae394dce736/",
+      "dt": "2026-04-14T15:34:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dítě",
+        "hra",
+        "kyberprostoru",
+        "nevinná",
+        "násilí",
+        "odhaluje",
+        "online",
+        "přiměje",
+        "znalec",
+        "zrůdnosti"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -350,21 +377,24 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kde na Měsíci hledat vodu? Nová studie zužuje pátrání po ledových zásobách",
+      "title": "Miliardy let starý mrazák. Na dně měsíčních kráterů leží klíč k dalšímu kroku do vesmíru",
       "url": "https://magazin.aktualne.cz/kde-na-mesici-hledat-vodu-nova-studie-zuzuje-patrani-po-ledovych-zasobach/r~aaa290204aeb18b006659a718258e342/",
       "dt": "2026-04-14T12:00:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "hledat",
-        "ledových",
-        "měsíci",
-        "nová",
-        "pátrání",
-        "studie",
-        "vodu",
-        "zužuje",
-        "zásobách"
+        "dalšímu",
+        "dně",
+        "klíč",
+        "kroku",
+        "kráterů",
+        "let",
+        "leží",
+        "miliardy",
+        "mrazák",
+        "měsíčních",
+        "starý",
+        "vesmíru"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -501,33 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zůna kvůli nezveřejněnému videu s Pavlem vyjel na Řehku. Nepříjemnost zkusil vysvětlit",
-      "url": "https://zpravy.aktualne.cz/domaci/vysilani-je-prozatim-odlozeno-zuna-kvuli-videu-s-pavlem-vyjel-na-rehku/r~aaa292dadea2b41415934e8bcd70b4e0/",
-      "dt": "2026-04-14T10:38:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kvůli",
-        "nepříjemnost",
-        "nezveřejněnému",
-        "pavlem",
-        "videu",
-        "vyjel",
-        "vysvětlit",
-        "zkusil",
-        "zůna",
-        "řehku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22520,
+      "bytes": 22700,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +578,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:34:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "finance": 4,
-          "zpravy": 13,
+          "zpravy": 12,
           "sport": 3
         },
         "drop_counts": {
@@ -592,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I nevinná online hra přiměje dítě k násilí. Znalec odhaluje zrůdnosti kyberprostoru",
+            "publishedAt": "2026-04-14T15:34:00Z"
+          },
           {
             "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
             "publishedAt": "2026-04-14T15:31:00Z"
@@ -619,10 +627,6 @@
           {
             "title": "Pavel je v Argentině. Přivítal ho prezident Milei, řešili podporu Ukrajině",
             "publishedAt": "2026-04-14T14:10:00Z"
-          },
-          {
-            "title": "Atmosféra v extralize houstne. Pardubice obvinily Spartu z podněcování urážek jejich šéfa",
-            "publishedAt": "2026-04-14T14:07:00Z"
           }
         ]
       }

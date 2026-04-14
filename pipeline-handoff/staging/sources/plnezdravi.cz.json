@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-14T15:40:21.251136Z",
+  "ingestedAt": "2026-04-14T15:59:31.234348Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zelené kiwi získalo první zdravotní tvrzení pro čerstvé ovoce v EU",
+      "url": "https://www.plnezdravi.cz/zelene-kiwi-ziskalo-prvni-zdravotni-tvrzeni-pro-cerstve-ovoce-v-eu/",
+      "dt": "2026-04-14T15:44:06Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "kiwi",
+        "ovoce",
+        "první",
+        "tvrzení",
+        "zdravotní",
+        "zelené",
+        "získalo",
+        "čerstvé"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -475,31 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pociťujete úzkost nebo stres? Pomůže vám dechové cvičení 4-7-8",
-      "url": "https://www.plnezdravi.cz/pocitujete-uzkost-nebo-stres-pomuze-vam-dechove-cviceni-4-7-8/",
-      "dt": "2026-03-27T23:00:01Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "cvičení",
-        "dechové",
-        "nebo",
-        "pociťujete",
-        "pomůže",
-        "stres",
-        "vám",
-        "úzkost"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 125752,
+      "bytes": 126330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +547,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T07:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:44:06Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -562,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelené kiwi získalo první zdravotní tvrzení pro čerstvé ovoce v EU",
+            "publishedAt": "2026-04-14T15:44:06Z"
+          },
           {
             "title": "Nevěra? Kdepak! Aneb 5 nejčastějších mýtů o viru HPV",
             "publishedAt": "2026-04-14T07:00:52Z"
@@ -589,10 +593,6 @@
           {
             "title": "Cukr v nápojích: Každý druhý dětský kaz souvisí s pitím limonád nebo ovocných džusů",
             "publishedAt": "2026-04-08T07:00:52Z"
-          },
-          {
-            "title": "Světloplachost trápí miliony lidí. Může bolet i omezovat běžné aktivity",
-            "publishedAt": "2026-04-07T06:51:52Z"
           }
         ]
       }

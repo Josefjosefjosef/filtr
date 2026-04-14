@@ -1,37 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T15:40:21.251136Z",
+  "ingestedAt": "2026-04-14T15:59:31.234348Z",
   "items": [
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "HOKEJ ONLINE: Rozhodující finále Maxa ligy rozehráno. Litvínov čeká. Jihlava, nebo Zlín",
-      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-litvinov-se-dozvi-soupere-pro-baraz-hraje-se-rozhodujici-finale-maxa-ligy-5436590",
-      "dt": "2026-04-14T06:48:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "finále",
-        "hokej",
-        "jihlava",
-        "ligy",
-        "litvínov",
-        "maxa",
-        "nebo",
-        "online",
-        "rozehráno",
-        "rozhodující",
-        "zlín",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "sport",
       "contentType": "article",
@@ -51,6 +22,54 @@
         "také",
         "začátek",
         "zvládla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Italové koupili práva na turnaj v Bruselu, přesunou ho na trávu",
+      "url": "https://www.sport.cz/clanek/tenis-italove-koupili-prava-na-turnaj-v-bruselu-presunou-ho-na-travu-5436662",
+      "dt": "2026-04-14T15:53:33Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bruselu",
+        "italové",
+        "koupili",
+        "práva",
+        "přesunou",
+        "trávu",
+        "turnaj"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "HOKEJ ONLINE: Jihlava v šoku! Zlín jde do vedení",
+      "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-litvinov-se-dozvi-soupere-pro-baraz-hraje-se-rozhodujici-finale-maxa-ligy-5436590",
+      "dt": "2026-04-14T06:48:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hokej",
+        "jde",
+        "jihlava",
+        "online",
+        "vedení",
+        "zlín",
+        "šoku"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -732,31 +751,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Podváděl jsem s očkováním před ZOH, přiznal trenér švýcarských hokejistů",
-      "url": "https://www.sport.cz/clanek/olympiada-zoh-2022-peking-hokej-podvadel-jsem-s-ockovanim-pred-zoh-priznal-trener-svycarskych-hokejistu-5436597",
-      "dt": "2026-04-14T07:28:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hokejistů",
-        "jsem",
-        "očkováním",
-        "podváděl",
-        "přiznal",
-        "trenér",
-        "zoh",
-        "švýcarských"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +761,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43432,
+      "bytes": 43276,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,11 +798,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:27:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:53:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -821,12 +814,16 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Rozhodující finále Maxa ligy rozehráno. Litvínov čeká. Jihlava, nebo Zlín",
-            "publishedAt": "2026-04-14T06:48:24Z"
-          },
-          {
             "title": "Kopřiva postupuje v Mnichově, Macháč v Barceloně. Také Muchová začátek na antuce zvládla",
             "publishedAt": "2026-04-14T11:39:22Z"
+          },
+          {
+            "title": "Italové koupili práva na turnaj v Bruselu, přesunou ho na trávu",
+            "publishedAt": "2026-04-14T15:53:33Z"
+          },
+          {
+            "title": "HOKEJ ONLINE: Jihlava v šoku! Zlín jde do vedení",
+            "publishedAt": "2026-04-14T06:48:24Z"
           },
           {
             "title": "Reprezentant Červ prodloužil smlouvu v Plzni",
@@ -847,10 +844,6 @@
           {
             "title": "Dědek se omlouvá. Pardubice obviňují Spartu, že vyhrocuje situaci",
             "publishedAt": "2026-04-14T13:42:32Z"
-          },
-          {
-            "title": "Nejhorší sezona v historii fotbalu. Klub zažívá sportovní krach",
-            "publishedAt": "2026-04-14T13:31:57Z"
           }
         ]
       }

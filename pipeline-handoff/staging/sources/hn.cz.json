@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T15:40:21.251136Z",
+  "ingestedAt": "2026-04-14T15:59:31.234348Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lidl chystá další skok. Chce být virtuálním mobilním operátorem, který vstoupí až do 30 zemí",
+      "url": "https://archiv.hn.cz/c1-67866670-lidl-chysta-dalsi-skok-chce-byt-virtualnim-mobilnim-operatorem-ktery-vstoupi-az-do-30-zemi",
+      "dt": "2026-04-14T15:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "být",
+        "chce",
+        "chystá",
+        "další",
+        "lidl",
+        "mobilním",
+        "operátorem",
+        "skok",
+        "virtuálním",
+        "vstoupí",
+        "zemí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1114,42 +1142,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kabátek byl konzervativní, já chci mít z VZP &bdquo;sexy banku&ldquo;. Nový šéf největší zdravotní pojišťovny o svých plánech na příští čtyři roky",
-      "url": "https://archiv.hn.cz/c1-67864940-kabatek-byl-konzervativni-ja-chci-mit-z-vzp-bdquo-sexy-banku-ldquo-novy-sef-nejvetsi-zdravotni-pojistovny-o-svych-planech-na-pristi-ctyri-roky",
-      "dt": "2026-04-13T13:31:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "banku",
-        "bdquo",
-        "chci",
-        "kabátek",
-        "konzervativní",
-        "ldquo",
-        "mít",
-        "největší",
-        "nový",
-        "plánech",
-        "pojišťovny",
-        "příští",
-        "roky",
-        "sexy",
-        "svých",
-        "vzp",
-        "zdravotní",
-        "čtyři",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1152,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186027,
+      "bytes": 186061,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,7 +1189,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1214,6 +1206,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidl chystá další skok. Chce být virtuálním mobilním operátorem, který vstoupí až do 30 zemí",
+            "publishedAt": "2026-04-14T15:45:00Z"
+          },
           {
             "title": "Moment v životě krasobruslařské legendy. Co chybí dalšímu filmu o Nepelovi?",
             "publishedAt": "2026-04-14T15:10:00Z"
@@ -1241,10 +1237,6 @@
           {
             "title": "Televizní a rozhlasové poplatky skončí, nahradí je příspěvky od státu, navrhuje Klempíř. Veřejnoprávní média mají dostat míň peněz",
             "publishedAt": "2026-04-14T12:58:00Z"
-          },
-          {
-            "title": "I přes pětiprocentní nezaměstnanost není důvod k panice. Ale obezřetnost je namístě",
-            "publishedAt": "2026-04-14T12:42:00Z"
           }
         ]
       }
