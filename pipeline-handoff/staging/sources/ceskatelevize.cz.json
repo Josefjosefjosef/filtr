@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T05:09:42.353237Z",
+  "ingestedAt": "2026-04-14T05:29:22.435784Z",
   "items": [
     {
       "section": "aktualne",
@@ -772,6 +772,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-vychytal-pro-philadelphii-vitezstvi-i-postup-do-play-off-156277",
+      "dt": "2026-04-14T05:07:07Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "off",
+        "philadelphii",
+        "play",
+        "postup",
+        "vladař",
+        "vychytal",
+        "vítězství"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Když jsem viděl ten pád, chtělo se mi brečet, vzpomíná Salač",
       "url": "https://sport.ceskatelevize.cz/clanek/motorsport/kdyz-jsem-videl-ten-pad-tak-se-mi-chtelo-brecet-vzpomina-salac-156271",
       "dt": "2026-04-14T05:00:00Z",
@@ -1513,32 +1537,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorvatskou rallye vyhrál po nehodě Neuvillea Kacuta a má druhý triumf v MS za sebou",
-      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/chorvatskou-rallye-vyhral-po-nehode-neuvillea-kacuta-a-ma-druhy-triumf-v-ms-za-sebou-156246",
-      "dt": "2026-04-12T13:38:20Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chorvatskou",
-        "druhý",
-        "kacuta",
-        "nehodě",
-        "neuvillea",
-        "rallye",
-        "sebou",
-        "triumf",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1668,7 +1666,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40053,
+      "bytes": 39614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1705,7 +1703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:07:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1720,6 +1718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off",
+            "publishedAt": "2026-04-14T05:07:07Z"
+          },
           {
             "title": "Když jsem viděl ten pád, chtělo se mi brečet, vzpomíná Salač",
             "publishedAt": "2026-04-14T05:00:00Z"
@@ -1747,10 +1749,6 @@
           {
             "title": "Ve výpravě na ME v Tbilisi je deset judistů včetně Krpálka a obhájkyně Zachové",
             "publishedAt": "2026-04-13T12:01:26Z"
-          },
-          {
-            "title": "Chorý byl podle komise rozhodčích vyloučen správně, plivnutí se dopustil",
-            "publishedAt": "2026-04-13T11:59:11Z"
           }
         ]
       }
