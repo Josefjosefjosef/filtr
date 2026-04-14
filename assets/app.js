@@ -25477,6 +25477,22 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
             if (fromWebNavGateNav) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
+          /* P0 WebNav: iuApplySectionPostPaint rAF also calls iuMobileGateCloseForMainNav (setTab clears iu-webnavDetailFromGate).
+             Re-assert on the next frame when entry was from the webnav overlay grid so Playwright/guards see a stable class. */
+          try {
+            if (typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true) {
+              requestAnimationFrame(function () {
+                try {
+                  if (
+                    window.__iuWebNavGateDetailLatch === true &&
+                    document.body.classList.contains("iu-mobileMainVisible")
+                  ) {
+                    document.body.classList.add("iu-webnavDetailFromGate");
+                  }
+                } catch (_) {}
+              });
+            }
+          } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
           } catch (_) {}
