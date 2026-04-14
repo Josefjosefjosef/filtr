@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T21:09:51.485511Z",
+  "ingestedAt": "2026-04-14T21:29:59.411181Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šestaosmdesátiletá Francouzka se přestěhovala do USA za láskou, zadržela ji ICE",
+      "url": "https://www.denik.cz/ze_sveta/usa-agenti-ice-zadrzena-francouzka.html",
+      "dt": "2026-04-14T20:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "francouzka",
+        "ice",
+        "láskou",
+        "přestěhovala",
+        "usa",
+        "zadržela",
+        "šestaosmdesátiletá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -615,31 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Střelba na střední škole v Turecku: Nejméně 16 lidí utrpělo zranění",
-      "url": "https://www.denik.cz/staty-mimo-eu/strelba-na-stredni-skole-v-turecku-nejmene-16-lidi-utrpelo-zraneni.html",
-      "dt": "2026-04-14T10:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "lidí",
-        "nejméně",
-        "střední",
-        "střelba",
-        "turecku",
-        "utrpělo",
-        "zranění",
-        "škole"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -650,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29809,
+      "bytes": 29951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -687,7 +686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:53:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -703,6 +702,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šestaosmdesátiletá Francouzka se přestěhovala do USA za láskou, zadržela ji ICE",
+            "publishedAt": "2026-04-14T20:53:00Z"
+          },
           {
             "title": "Zpěvák Patrick Bruel čelí vyšetřování. Je obviněný ze sexuálního útoku",
             "publishedAt": "2026-04-14T20:06:00Z"
@@ -730,10 +733,6 @@
           {
             "title": "Pavel: Důležitější než forma financování ČT a rozhlasu bude garance nezasahování",
             "publishedAt": "2026-04-14T17:01:00Z"
-          },
-          {
-            "title": "Požár ubytovny na pražském Žižkově: Málokdo tušil, kde bude spát",
-            "publishedAt": "2026-04-14T16:48:00Z"
           }
         ]
       }

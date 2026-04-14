@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T21:09:51.485511Z",
+  "ingestedAt": "2026-04-14T21:29:59.411181Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Atlético je v semifinále LM. Barcelona dohrávala v deseti",
+      "url": "https://sport.aktualne.cz/fotbal/atletico-je-v-semifinale-lm-barcelonu-srazila-v-zaveru-cervena-karta/r~aaa299bc53eb2c2824f77dceac3f9b09/",
+      "dt": "2026-04-14T21:06:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "atlético",
+        "barcelona",
+        "deseti",
+        "dohrávala",
+        "semifinále"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -499,35 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Miliardy let starý mrazák. Na dně měsíčních kráterů leží klíč k dalšímu kroku do vesmíru",
-      "url": "https://magazin.aktualne.cz/kde-na-mesici-hledat-vodu-nova-studie-zuzuje-patrani-po-ledovych-zasobach/r~aaa290204aeb18b006659a718258e342/",
-      "dt": "2026-04-14T12:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dalšímu",
-        "dně",
-        "klíč",
-        "kroku",
-        "kráterů",
-        "let",
-        "leží",
-        "miliardy",
-        "mrazák",
-        "měsíčních",
-        "starý",
-        "vesmíru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22116,
+      "bytes": 22080,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T21:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 3,
+          "sport": 4,
+          "zpravy": 11,
           "finance": 4,
           "zdravi": 1
         },
@@ -593,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Atlético je v semifinále LM. Barcelona dohrávala v deseti",
+            "publishedAt": "2026-04-14T21:06:00Z"
+          },
           {
             "title": "Chcete si ji potěžkat? Milei ukázal Pavlovi svou legendární rozpočtovou pilu",
             "publishedAt": "2026-04-14T20:42:00Z"
@@ -620,10 +617,6 @@
           {
             "title": "Omezíme tvorbu a začneme propouštět. Šéf ČT nastínil dopady změn financování",
             "publishedAt": "2026-04-14T17:42:00Z"
-          },
-          {
-            "title": "Totální převrat ve financování ČT a rozhlasu, Klempíř ukázal detaily. Opozice chystá obstrukce",
-            "publishedAt": "2026-04-14T12:53:00Z"
           }
         ]
       }
