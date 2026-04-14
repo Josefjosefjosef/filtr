@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-14T04:34:23.272443Z",
+  "ingestedAt": "2026-04-14T04:49:33.249056Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Už se vám stalo, že jste si v autě poseděli, abyste se usebrali?",
+      "url": "https://www.zdravezpravy.cz/2026/04/14/uz-se-vam-stalo-ze-jste-si-v-aute-posedeli-abyste-se-usebrali/",
+      "dt": "2026-04-14T04:40:25Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "abyste",
+        "autě",
+        "jste",
+        "poseděli",
+        "stalo",
+        "usebrali",
+        "vám"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,30 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Sasanky, bledule a sněženky jsou nejen krásné, ale i jedovaté",
-      "url": "https://www.zdravezpravy.cz/2026/04/02/sasanky-ale-i-bledule-a-snezenky-zpusobuji-i-vaznou-otravu/",
-      "dt": "2026-04-02T11:16:14Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ale",
-        "bledule",
-        "jedovaté",
-        "krásné",
-        "nejen",
-        "sasanky",
-        "sněženky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 226561,
+      "bytes": 225275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T14:55:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:40:25Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -560,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už se vám stalo, že jste si v autě poseděli, abyste se usebrali?",
+            "publishedAt": "2026-04-14T04:40:25Z"
+          },
           {
             "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
             "publishedAt": "2026-04-13T14:55:08Z"
@@ -587,10 +591,6 @@
           {
             "title": "Andrej Babiš se pustil do léku na Alzheimera. Vadí mu, že ještě není v úhradách",
             "publishedAt": "2026-04-10T09:55:18Z"
-          },
-          {
-            "title": "Operace žaludku vede ke zhubnutí. Lidé po ní totiž méně jedí",
-            "publishedAt": "2026-04-09T14:52:47Z"
           }
         ]
       }
