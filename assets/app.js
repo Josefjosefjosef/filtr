@@ -12479,20 +12479,21 @@ function buildVideoAsArticleCard(it) {
       const probePromise = fetch(withTs(probeUrl), {
         cache: "no-store",
         headers: { "cache-control": "no-cache" },
-      }).then((res) => {
-        if (!res.ok) throw new Error(`PROBE_HTTP_${res.status}`);
-        return res.text();
-      });
-
-      const probeText = await probePromise.catch(() => null);
-      state.lastProbe = probeText;
-      iuPreviewFeedProbeTick("probeDone");
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`PROBE_HTTP_${res.status}`);
+          return res.text();
+        })
+        .catch(() => null);
 
       iuPreviewFeedProbeTick("fetchStart", { articlesUrl, videosUrl });
-      const [articlesData, videosData] = await Promise.all([
-        fetchDiag(articlesUrl, "articles"),
-        fetchDiag(videosUrl, "videos"),
+      /* Perf: probe + articles + videos in parallel — was sequential probe then fetch (extra RTT on critical path). */
+      const [[articlesData, videosData], probeText] = await Promise.all([
+        Promise.all([fetchDiag(articlesUrl, "articles"), fetchDiag(videosUrl, "videos")]),
+        probePromise,
       ]);
+      state.lastProbe = probeText;
+      iuPreviewFeedProbeTick("probeDone");
       iuPreviewFeedProbeTick("fetchDone", {
         articlesOk: Boolean(articlesData),
         videosOk: Boolean(videosData),
