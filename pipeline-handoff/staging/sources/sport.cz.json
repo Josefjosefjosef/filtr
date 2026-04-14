@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T04:49:33.249056Z",
+  "ingestedAt": "2026-04-14T05:09:42.353237Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z Chlapíka je hlavní tvář Sparty. Právě díky takovým momentům",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-z-chlapika-je-hlavni-tvar-sparty-prave-diky-takovym-momentum-5436583",
+      "dt": "2026-04-14T05:02:19Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chlapíka",
+        "díky",
+        "hlavní",
+        "momentům",
+        "právě",
+        "sparty",
+        "takovým",
+        "tvář"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,32 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zásadní rozhodnutí. Rusové a Bělorusové budou v plaveckých sportech závodit pod svou vlajkou",
-      "url": "https://www.sport.cz/clanek/vodni-sporty-zasadni-rozhodnuti-rusove-a-belorusove-budou-v-plaveckych-sportech-zavodit-pod-svou-vlajkou-5436408",
-      "dt": "2026-04-13T13:00:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bělorusové",
-        "plaveckých",
-        "rozhodnutí",
-        "rusové",
-        "sportech",
-        "svou",
-        "vlajkou",
-        "zásadní",
-        "závodit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42687,
+      "bytes": 43227,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:59:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:02:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 26,
@@ -842,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Chlapíka je hlavní tvář Sparty. Právě díky takovým momentům",
+            "publishedAt": "2026-04-14T05:02:19Z"
+          },
           {
             "title": "Famózní Vladař. Podmanil si nájezdy a dotáhl Flyers do bojů o Stanley Cup",
             "publishedAt": "2026-04-14T03:59:25Z"
@@ -869,10 +872,6 @@
           {
             "title": "Fotbalisty Ghany povede na MS zkušený Portugalec",
             "publishedAt": "2026-04-13T20:08:45Z"
-          },
-          {
-            "title": "SESTŘIH: Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
-            "publishedAt": "2026-04-13T12:00:12Z"
           }
         ]
       }

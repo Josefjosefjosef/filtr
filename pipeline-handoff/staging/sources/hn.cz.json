@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T04:49:33.249056Z",
+  "ingestedAt": "2026-04-14T05:09:42.353237Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "V Budapešti se v autobuse zpívalo a V4 se bude stavět na trochu jiných základech, než si Babiš představoval",
+      "url": "https://podcasty.hn.cz/c1-67866170-v-budapesti-se-v-autobuse-zpivalo-a-v4-se-bude-stavet-na-trochu-jinych-zakladech-nez-si-babis-predstavoval",
+      "dt": "2026-04-14T04:46:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "autobuse",
+        "babiš",
+        "budapešti",
+        "jiných",
+        "než",
+        "představoval",
+        "stavět",
+        "trochu",
+        "zpívalo",
+        "základech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1117,36 +1144,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vojtěch chystá další injekci pro zdravotnictví. Chce u Schillerové vyjednat desítky miliard navíc přes státní pojištěnce",
-      "url": "https://archiv.hn.cz/c1-67865220-vojtech-chysta-injekci-pro-zdravotnictvi-pres-statni-pojistence-chce-do-systemu-pristi-rok-pridat-miliardy",
-      "dt": "2026-04-12T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chce",
-        "chystá",
-        "další",
-        "desítky",
-        "injekci",
-        "miliard",
-        "navíc",
-        "pojištěnce",
-        "schillerové",
-        "státní",
-        "vojtěch",
-        "vyjednat",
-        "zdravotnictví"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1154,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186242,
+      "bytes": 186187,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1194,11 +1191,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:46:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 36,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1211,6 +1208,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Budapešti se v autobuse zpívalo a V4 se bude stavět na trochu jiných základech, než si Babiš představoval",
+            "publishedAt": "2026-04-14T04:46:00Z"
+          },
           {
             "title": "Boutique",
             "publishedAt": "2026-04-13T22:00:00Z"
@@ -1237,10 +1238,6 @@
           },
           {
             "title": "Zemědělská politika EU je moloch, její zachování je ale v&nbsp;bytostném zájmu Česka",
-            "publishedAt": "2026-04-13T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (14. 4. 2026)",
             "publishedAt": "2026-04-13T22:00:00Z"
           }
         ]
