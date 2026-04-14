@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T15:02:41.222273Z",
+  "ingestedAt": "2026-04-14T15:24:44.809502Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zbrojní šachy: Česko v kleštích politické váhavosti a surovinové pasti",
+      "url": "https://ekonomickydenik.cz/cesko-politicka-vahavost-surovinova-past/",
+      "dt": "2026-04-14T15:03:59Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "kleštích",
+        "pasti",
+        "politické",
+        "surovinové",
+        "váhavosti",
+        "zbrojní",
+        "česko",
+        "šachy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,32 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Těžký večer v Průhonicích: Fiala po pádu Orbána zesměšňuje Babiše videem",
-      "url": "https://ekonomickydenik.cz/tezky-vecer-v-pruhonicich-fiala-orban-babis/",
-      "dt": "2026-04-12T20:34:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiše",
-        "fiala",
-        "orbána",
-        "průhonicích",
-        "pádu",
-        "těžký",
-        "večer",
-        "videem",
-        "zesměšňuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72239,
+      "bytes": 72691,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:51:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T15:03:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -860,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zbrojní šachy: Česko v kleštích politické váhavosti a surovinové pasti",
+            "publishedAt": "2026-04-14T15:03:59Z"
+          },
           {
             "title": "Babiš: Plán na zestátnění ČEZ platí. Vlček: Nedává to ekonomický smysl",
             "publishedAt": "2026-04-14T13:51:47Z"
@@ -887,10 +890,6 @@
           {
             "title": "7 tisíc kubíků betonu pro Šmejkalku. Přestavba mostu vstoupila do další fáze",
             "publishedAt": "2026-04-14T08:37:07Z"
-          },
-          {
-            "title": "Unie zařízla ocel z Asie i Turecka. Chce zachránit vlastní krachující hutě",
-            "publishedAt": "2026-04-14T08:01:45Z"
           }
         ]
       }
