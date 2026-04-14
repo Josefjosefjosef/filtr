@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T02:34:30.879894Z",
+  "ingestedAt": "2026-04-14T02:49:30.348697Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nová maďarská vláda slibuje 5 % na obranu a přezkum vazeb na ruské tajné služby",
+      "url": "https://www.denik.cz/staty-eu/nova-madarska-vlada-slibuje-5-na-obranu-a-prezkum-vazeb-na-ruske-tajne-sluzby-20.html",
+      "dt": "2026-04-14T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "maďarská",
+        "nová",
+        "obranu",
+        "přezkum",
+        "ruské",
+        "slibuje",
+        "služby",
+        "tajné",
+        "vazeb",
+        "vláda"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,32 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zkontrolujte dětem pokoj. Hračka z obchodu v ČR má v sobě příliš mnoho olova",
-      "url": "https://www.denik.cz/z_domova/cesko-obchod-varovani-coi-zavadna-hracka-sykorka-prilis-mnoho-olovo.html",
-      "dt": "2026-04-13T10:04:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětem",
-        "hračka",
-        "mnoho",
-        "obchodu",
-        "olova",
-        "pokoj",
-        "příliš",
-        "sobě",
-        "zkontrolujte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30095,
+      "bytes": 30278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T02:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -724,6 +725,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová maďarská vláda slibuje 5 % na obranu a přezkum vazeb na ruské tajné služby",
+            "publishedAt": "2026-04-14T02:30:00Z"
+          },
           {
             "title": "Čapímu párečku se v Brodku daří. Hnízdo si bedlivě střeží, podívejte se",
             "publishedAt": "2026-04-14T02:24:00Z"
@@ -751,10 +756,6 @@
           {
             "title": "Vláda chce moc nad cenami paliv v době krize: Co nového zákon přinese",
             "publishedAt": "2026-04-13T14:28:00Z"
-          },
-          {
-            "title": "Nechtěla jsem být holka s kily navíc, říká finalistka Miss Eliška Kukačová",
-            "publishedAt": "2026-04-13T13:45:00Z"
           }
         ]
       }
