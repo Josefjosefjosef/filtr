@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T17:50:28.263810Z",
+  "ingestedAt": "2026-04-14T18:45:18.215058Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odchod USA z NATO dle expertů nenastane. Trumpovy výroky ale alianci oslabují",
+      "url": "https://www.denik.cz/ze_sveta/odchod-usa-z-nato-donald-trump-vyhruzky-valka-s-iranem-severoatlanticka-aliance.html",
+      "dt": "2026-04-14T18:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "alianci",
+        "dle",
+        "expertů",
+        "nato",
+        "nenastane",
+        "odchod",
+        "oslabují",
+        "trumpovy",
+        "usa",
+        "výroky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,33 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Klíšťata mají oblíbenou krevní skupinu. Někteří lidé jsou proto jako magnet",
-      "url": "https://www.denik.cz/zdravotnictvi/klistata-maji-oblibenou-krevni-skupinu.html",
-      "dt": "2026-04-14T08:43:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jako",
-        "klíšťata",
-        "krevní",
-        "lidé",
-        "magnet",
-        "mají",
-        "někteří",
-        "oblíbenou",
-        "proto",
-        "skupinu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29928,
+      "bytes": 29886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,12 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T17:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T18:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 3,
-          "zdravi": 1
+          "zpravy": 22,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -711,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odchod USA z NATO dle expertů nenastane. Trumpovy výroky ale alianci oslabují",
+            "publishedAt": "2026-04-14T18:00:00Z"
+          },
           {
             "title": "Evropě hrozí nedostatek leteckého paliva. Chybí dodávky z Blízkého východu",
             "publishedAt": "2026-04-14T17:20:00Z"
@@ -738,10 +742,6 @@
           {
             "title": "Záhadný let a ústup do pozadí. Maďarský šéf diplomacie po prohře Fideszu mlčí",
             "publishedAt": "2026-04-14T15:10:00Z"
-          },
-          {
-            "title": "Supertajfun Sinlaku děsí i experty. Monstrum páté kategorie může přinést pohromu",
-            "publishedAt": "2026-04-14T14:41:00Z"
           }
         ]
       }

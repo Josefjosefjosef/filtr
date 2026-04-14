@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-14T17:50:28.263810Z",
+  "ingestedAt": "2026-04-14T18:45:18.215058Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Známe největší slídily. Své páníčky šmírují i auta známé značky",
+      "url": "https://www.penize.cz/spotrebitel/488282-zname-nejvetsi-slidily-sve-panicky-smiruji-i-auta-zname-znacky",
+      "dt": "2026-04-14T20:33:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "auta",
+        "největší",
+        "páníčky",
+        "slídily",
+        "své",
+        "značky",
+        "známe",
+        "známé",
+        "šmírují"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -488,32 +514,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dražší být nesmí. Maximální ceny benzinu a nafty na pátek 10. dubna",
-      "url": "https://www.penize.cz/nakupy/488098-drazsi-byt-nesmi-maximalni-ceny-benzinu-a-nafty-na-patek-10-dubna",
-      "dt": "2026-04-09T13:58:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "být",
-        "ceny",
-        "dražší",
-        "dubna",
-        "maximální",
-        "nafty",
-        "nesmí",
-        "pátek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18508,
+      "bytes": 18446,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,7 +561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T20:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -577,6 +577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Známe největší slídily. Své páníčky šmírují i auta známé značky",
+            "publishedAt": "2026-04-14T20:33:00Z"
+          },
           {
             "title": "Kde je v Česku dostupnější bydlení? Mapa ukazuje velké rozdíly",
             "publishedAt": "2026-04-14T15:00:00Z"
@@ -604,10 +608,6 @@
           {
             "title": "Podílové fondy smazaly letošní zisky. Ty nejlepší ale vyrostly o víc než 20 %",
             "publishedAt": "2026-04-13T17:30:00Z"
-          },
-          {
-            "title": "Zvýšení životního minima se znovu odkládá, potvrdila vláda",
-            "publishedAt": "2026-04-13T14:00:00Z"
           }
         ]
       }
