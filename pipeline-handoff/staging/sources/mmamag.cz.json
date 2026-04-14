@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-14T03:04:13.205332Z",
+  "ingestedAt": "2026-04-14T03:22:28.902410Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boxerský šampion z pekla. Aby pobavil dozorce, bojoval v Osvětimi o život",
+      "url": "https://www.mmamag.cz/boxerky-sampion-osvetim-tadeusz-pietrzykowski/",
+      "dt": "2026-04-14T03:15:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojoval",
+        "boxerský",
+        "dozorce",
+        "osvětimi",
+        "pekla",
+        "pobavil",
+        "šampion",
+        "život"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "video",
@@ -1046,32 +1071,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Žhavá narozeninová oslava. Paige VanZant rozpálila fanoušky fotkami v plavkách",
-      "url": "https://www.mmamag.cz/vanzant-narozeniny-plavky/",
-      "dt": "2026-04-05T03:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "fanoušky",
-        "fotkami",
-        "narozeninová",
-        "oslava",
-        "paige",
-        "plavkách",
-        "rozpálila",
-        "vanzant",
-        "žhavá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1082,7 +1081,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79461,
+      "bytes": 79463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1119,7 +1118,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1134,6 +1133,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boxerský šampion z pekla. Aby pobavil dozorce, bojoval v Osvětimi o život",
+            "publishedAt": "2026-04-14T03:15:00Z"
+          },
           {
             "title": "Kimbo Slice tvrdě narazil. Vémolův soupeř ho umlčel po 14 sekundách",
             "publishedAt": "2026-04-14T03:01:00Z"
@@ -1161,10 +1164,6 @@
           {
             "title": "Procházka projevil lítost a draze za ni zaplatil. Soucit ho stál titul UFC",
             "publishedAt": "2026-04-13T08:00:56Z"
-          },
-          {
-            "title": "Vémola zvažuje návrat. Do klece by šel jen kvůli jednomu jménu",
-            "publishedAt": "2026-04-13T07:55:37Z"
           }
         ]
       }

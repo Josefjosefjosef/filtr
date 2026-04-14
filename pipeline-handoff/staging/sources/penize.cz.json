@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-14T03:04:13.205332Z",
+  "ingestedAt": "2026-04-14T03:22:28.902410Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Penzijko vám má vydělat víc. Tady jsou návrhy",
+      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488227-penzijko-vam-ma-vydelat-vic-tady-jsou-navrhy",
+      "dt": "2026-04-14T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "návrhy",
+        "penzijko",
+        "tady",
+        "vydělat",
+        "vám",
+        "víc"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Zrušený let? Aerolinky musí vrátit i provizi pro zprostředkovatele",
+      "url": "https://www.penize.cz/doprava/488195-zruseny-let-aerolinky-musi-vratit-i-provizi-pro-zprostredkovatele",
+      "dt": "2026-04-14T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "aerolinky",
+        "let",
+        "musí",
+        "provizi",
+        "vrátit",
+        "zprostředkovatele",
+        "zrušený"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -473,57 +520,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Neomezené vstupy do salonků Mastercard končí. V Praze změní provozovatele",
-      "url": "https://www.penize.cz/osobni-ucty/482443-neomezene-vstupy-do-salonku-mastercard-konci-v-praze-zmeni-provozovatele",
-      "dt": "2026-04-09T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "končí",
-        "mastercard",
-        "neomezené",
-        "praze",
-        "provozovatele",
-        "salonků",
-        "vstupy",
-        "změní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hypotéky zdražily nejvíc od léta 2022, potvrzují čerstvá čísla z bank",
-      "url": "https://www.penize.cz/hypoteky/484144-hypoteky-zdrazily-nejvic-od-leta-2022-potvrzuji-cerstva-cisla-z-bank",
-      "dt": "2026-04-09T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "2022",
-        "bank",
-        "hypotéky",
-        "léta",
-        "nejvíc",
-        "potvrzují",
-        "zdražily",
-        "čerstvá",
-        "čísla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18253,
+      "bytes": 18353,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,11 +567,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 5
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -587,6 +583,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Penzijko vám má vydělat víc. Tady jsou návrhy",
+            "publishedAt": "2026-04-14T05:05:00Z"
+          },
+          {
+            "title": "Zrušený let? Aerolinky musí vrátit i provizi pro zprostředkovatele",
+            "publishedAt": "2026-04-14T05:00:00Z"
+          },
           {
             "title": "Exotika přímo z Prahy a Švýcarsko po kolejích: Jak se mění dovolená u největšího hráče na trhu",
             "publishedAt": "2026-04-14T02:00:00Z"
@@ -610,14 +614,6 @@
           {
             "title": "Krypto a investice v apce jako další krok. Šéf Partners banky Borkovec o plánech na letošek",
             "publishedAt": "2026-04-13T05:05:00Z"
-          },
-          {
-            "title": "Snazší vyzvednutí občanky, pas po 15 i bez souhlasu rodičů. Změny schválila vláda",
-            "publishedAt": "2026-04-13T04:55:00Z"
-          },
-          {
-            "title": "Pronajímání bytu jako podnikání: Na co si dát pozor v roce 2026",
-            "publishedAt": "2026-04-13T00:00:00Z"
           }
         ]
       }
