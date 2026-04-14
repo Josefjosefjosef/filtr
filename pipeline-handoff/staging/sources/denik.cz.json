@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T13:04:55.079529Z",
+  "ingestedAt": "2026-04-14T13:24:54.543052Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lukostřelci poměřili síly v kulisách hradu Šternberk",
+      "url": "https://olomoucky.denik.cz/ctenar-reporter/lukostrelba-olomouc-zavody-sternberk.html",
+      "dt": "2026-04-14T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hradu",
+        "kulisách",
+        "lukostřelci",
+        "poměřili",
+        "síly",
+        "šternberk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -110,7 +133,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Turisté u Dvora Králové objevili poklad, rozdělí si odměnu téměř 12 milionů",
+      "title": "Turisté u Dvora Králové objevili poklad. Rozdělí si odměnu téměř 12 milionů",
       "url": "https://www.denik.cz/regiony/odmena-pro-nalezce-zlateho-pokladu-na-zvicine-kraj-jim-vyplati-11-7-milionu-2026.html",
       "dt": "2026-04-14T10:19:00Z",
       "media_raw": "Deník",
@@ -628,33 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nová maďarská vláda slibuje 5 % na obranu a přezkum vazeb na ruské tajné služby",
-      "url": "https://www.denik.cz/staty-eu/nova-madarska-vlada-slibuje-5-na-obranu-a-prezkum-vazeb-na-ruske-tajne-sluzby-20.html",
-      "dt": "2026-04-14T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "maďarská",
-        "nová",
-        "obranu",
-        "přezkum",
-        "ruské",
-        "slibuje",
-        "služby",
-        "tajné",
-        "vazeb",
-        "vláda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30570,
+      "bytes": 30377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T12:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T13:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 22,
+          "finance": 1,
           "zdravi": 2
         },
         "drop_counts": {
@@ -719,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lukostřelci poměřili síly v kulisách hradu Šternberk",
+            "publishedAt": "2026-04-14T13:00:00Z"
+          },
           {
             "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
             "publishedAt": "2026-04-14T12:20:00Z"
@@ -736,7 +736,7 @@
             "publishedAt": "2026-04-14T11:00:00Z"
           },
           {
-            "title": "Turisté u Dvora Králové objevili poklad, rozdělí si odměnu téměř 12 milionů",
+            "title": "Turisté u Dvora Králové objevili poklad. Rozdělí si odměnu téměř 12 milionů",
             "publishedAt": "2026-04-14T10:19:00Z"
           },
           {
@@ -746,10 +746,6 @@
           {
             "title": "Obrana nesmí umlčovat prezidenta. Ministr Zůna musí skončit, řekl šéf TOP 09",
             "publishedAt": "2026-04-14T09:59:00Z"
-          },
-          {
-            "title": "Letadlo EasyJet odletělo z Itálie bez 100 cestujících. Kvůli novému systému EU",
-            "publishedAt": "2026-04-14T09:53:00Z"
           }
         ]
       }
