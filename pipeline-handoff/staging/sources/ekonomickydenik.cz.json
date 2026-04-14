@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T11:45:25.982608Z",
+  "ingestedAt": "2026-04-14T12:05:31.338285Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejhorší měsíc v historii: Falešní policisté a bankéři drancují účty Čechů. Jak nenaletět?",
+      "url": "https://ekonomickydenik.cz/falesni-policiste-a-bankeri-drancuji-ucty-cechu/",
+      "dt": "2026-04-14T11:50:44Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bankéři",
+        "drancují",
+        "falešní",
+        "historii",
+        "měsíc",
+        "nejhorší",
+        "nenaletět",
+        "policisté",
+        "účty",
+        "čechů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,34 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Žádné čínské auto za vojenskou závorou. Poláci vysvětlují tvrdý zákaz kvůli špionáži",
-      "url": "https://ekonomickydenik.cz/zadne-cinske-auto-polaci-zakaz-spionaz/",
-      "dt": "2026-04-12T13:37:36Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "auto",
-        "kvůli",
-        "poláci",
-        "tvrdý",
-        "vojenskou",
-        "vysvětlují",
-        "zákaz",
-        "závorou",
-        "čínské",
-        "špionáži",
-        "žádné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72803,
+      "bytes": 72362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:45:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:50:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 23,
@@ -852,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejhorší měsíc v historii: Falešní policisté a bankéři drancují účty Čechů. Jak nenaletět?",
+            "publishedAt": "2026-04-14T11:50:44Z"
+          },
           {
             "title": "Munice, radary, tatrovky. Z výhodných půjček těží i čeští výrobci, nejvíce nejbohatší Čech",
             "publishedAt": "2026-04-14T10:45:17Z"
@@ -879,10 +882,6 @@
           {
             "title": "Letenky zdražují o stokoruny až jednotky tisíc. Zájezdy se zatím neruší",
             "publishedAt": "2026-04-13T17:53:58Z"
-          },
-          {
-            "title": "Drtivý dopad války s Íránem. Evropanům vytáhla z peněženek už přes půl bilionu",
-            "publishedAt": "2026-04-13T17:05:00Z"
           }
         ]
       }

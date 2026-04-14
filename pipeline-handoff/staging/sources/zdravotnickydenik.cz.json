@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T11:45:25.982608Z",
+  "ingestedAt": "2026-04-14T12:05:31.338285Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce jí ale vůbec někdo?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/evropa-chysta-jednu-vakcinu-na-chripku-i-covid/",
+      "dt": "2026-04-14T12:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "chce",
+        "chystá",
+        "chřipku",
+        "covid",
+        "evropa",
+        "jednu",
+        "někdo",
+        "vakcínu",
+        "vůbec"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,32 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tančící ortoped, který chce překopat maďarské zdravotnictví. Kdo je pravděpodobný příští ministr?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/tancici-ortoped-kdo-je-pristi-madarsky-ministr/",
-      "dt": "2026-04-13T11:30:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chce",
-        "maďarské",
-        "ministr",
-        "ortoped",
-        "pravděpodobný",
-        "překopat",
-        "příští",
-        "tančící",
-        "zdravotnictví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98036,
+      "bytes": 98890,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:04:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -325,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce jí ale vůbec někdo?",
+            "publishedAt": "2026-04-14T12:00:00Z"
+          },
           {
             "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
             "publishedAt": "2026-04-14T11:04:49Z"
@@ -352,10 +357,6 @@
           {
             "title": "Kdo nejvíce investuje do nových léků: TOP 10 farmaceutických firem světa",
             "publishedAt": "2026-04-14T05:00:00Z"
-          },
-          {
-            "title": "Operace některých nádorů čeká zásadní omezení. Ministerstvo oznámilo, kde se budou dělat",
-            "publishedAt": "2026-04-13T14:51:54Z"
           }
         ]
       }

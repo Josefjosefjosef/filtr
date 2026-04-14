@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T11:45:25.982608Z",
+  "ingestedAt": "2026-04-14T12:05:31.338285Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruští vojáci šli ověřit příměří. Zasáhly je vlastní drony",
+      "url": "https://zpravy.aktualne.cz/zahranici/rusti-vojaci-sli-overit-primeri-zasahly-je-vlastni-drony/r~aaa2988a162888d530be515079ac010d/",
+      "dt": "2026-04-14T11:53:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "drony",
+        "ověřit",
+        "příměří",
+        "ruští",
+        "vlastní",
+        "vojáci",
+        "zasáhly",
+        "šli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lackova dvojitá směna. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
+      "dt": "2026-04-01T12:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dvojitá",
+        "lackova",
+        "mostu",
+        "premiéra",
+        "směna",
+        "tahači",
+        "terénu",
+        "vrátí",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -44,32 +95,6 @@
         "obětí",
         "památku",
         "uctil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
-      "dt": "2026-04-01T12:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "lacka",
-        "mostu",
-        "nabitá",
-        "premiéra",
-        "sezona",
-        "tahači",
-        "terénu",
-        "vrátí",
-        "čeká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -497,27 +522,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vesmír jako nové bojiště",
-      "url": "https://video.aktualne.cz/aktualne-pro-byznys/vesmir-jako-nove-bojiste/r~aaa291b1c2e59fbbc94c7cbad8ba1acd/",
-      "dt": "2026-04-14T06:09:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bojiště",
-        "jako",
-        "nové",
-        "vesmír"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +532,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22236,
+      "bytes": 22172,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,7 +569,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:53:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 10,
@@ -584,16 +588,20 @@
         },
         "sample_titles": [
           {
+            "title": "Ruští vojáci šli ověřit příměří. Zasáhly je vlastní drony",
+            "publishedAt": "2026-04-14T11:53:00Z"
+          },
+          {
+            "title": "Lackova dvojitá směna. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
+            "publishedAt": "2026-04-01T12:10:00Z"
+          },
+          {
             "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Macinka navštívil Izrael a uctil památku obětí holokaustu",
             "publishedAt": "2026-04-14T10:54:00Z"
-          },
-          {
-            "title": "Lacka čeká nabitá sezona. V tahači se vrátí do Mostu a čeká ho premiéra v terénu",
-            "publishedAt": "2026-04-01T12:10:00Z"
           },
           {
             "title": "„Trump blábolí. Je to šílenství.\" Demokraté zpochybňují prezidentovo duševní zdraví",
@@ -610,10 +618,6 @@
           {
             "title": "„Tohle mluví za vše.“ Česká hvězda je v NHL zpátky na dně",
             "publishedAt": "2026-04-14T10:00:00Z"
-          },
-          {
-            "title": "Možná celý život řešíte vysoký tlak špatně. Nový výzkum ukazuje nečekanou souvislost",
-            "publishedAt": "2026-04-14T09:21:00Z"
           }
         ]
       }

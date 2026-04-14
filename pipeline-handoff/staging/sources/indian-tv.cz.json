@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-14T11:45:25.982608Z",
+  "ingestedAt": "2026-04-14T12:05:31.338285Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na internet unikly detaily o příběhu 007: First Light - INDIAN",
+      "url": "https://indian-tv.cz/clanek/na-internet-unikly-detaily-o-pribehu-007-first-light-863ez0",
+      "dt": "2026-04-14T12:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "007",
+        "detaily",
+        "first",
+        "indian",
+        "internet",
+        "light",
+        "příběhu",
+        "unikly"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1042,33 +1067,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "World of Tanks: HEAT vstupuje do uzavřené bety. Máte možnost se přihlásit - INDIAN",
-      "url": "https://indian-tv.cz/clanek/world-of-tanks-heat-vstupuje-do-uzavrene-bety-ryx8un",
-      "dt": "2026-04-10T06:09:41Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "bety",
-        "heat",
-        "indian",
-        "možnost",
-        "máte",
-        "přihlásit",
-        "tanks",
-        "uzavřené",
-        "vstupuje",
-        "world"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1079,7 +1077,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 206558,
+      "bytes": 206375,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1116,7 +1114,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1131,6 +1129,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na internet unikly detaily o příběhu 007: First Light - INDIAN",
+            "publishedAt": "2026-04-14T12:00:00Z"
+          },
           {
             "title": "Capcom se opět trefil do černého. Pragmata sbírá vysoké známky - INDIAN",
             "publishedAt": "2026-04-14T10:00:00Z"
@@ -1158,10 +1160,6 @@
           {
             "title": "Assassin’s Creed Black Flag Resynced nabídne nové postavy i příběhy - INDIAN",
             "publishedAt": "2026-04-14T04:30:56Z"
-          },
-          {
-            "title": "Metro 2039 má přinést temný příběh o návratu do moskevského metra - INDIAN",
-            "publishedAt": "2026-04-13T21:23:00Z"
           }
         ]
       }

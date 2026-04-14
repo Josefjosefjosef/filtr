@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-14T11:45:25.982608Z",
+  "ingestedAt": "2026-04-14T12:05:31.338285Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Šušká se, že Nvidia chce koupit HP nebo Dell a otřást světem. Firma to však popírá",
+      "url": "https://www.zive.cz/clanky/suska-se-ze-nvidia-chce-koupit-hp-nebo-dell-a-otrast-svetem-firma-to-vsak-popira/sc-3-a-240670/default.aspx",
+      "dt": "2026-04-14T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chce",
+        "dell",
+        "firma",
+        "koupit",
+        "nebo",
+        "nvidia",
+        "otřást",
+        "popírá",
+        "světem",
+        "však",
+        "šušká"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -945,33 +973,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Těmto starým Kindlům za měsíc skončí podpora. Čtečky však vyhazovat nemusíte",
-      "url": "https://www.zive.cz/clanky/temto-starym-kindlum-za-mesic-skonci-podpora-ctecky-vsak-vyhazovat-nemusite/sc-3-a-240620/default.aspx",
-      "dt": "2026-04-10T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "kindlům",
-        "měsíc",
-        "nemusíte",
-        "podpora",
-        "skončí",
-        "starým",
-        "těmto",
-        "vyhazovat",
-        "však",
-        "čtečky"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +983,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22760,
+      "bytes": 22778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,7 +1020,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šušká se, že Nvidia chce koupit HP nebo Dell a otřást světem. Firma to však popírá",
+            "publishedAt": "2026-04-14T11:45:00Z"
+          },
           {
             "title": "Z Lidlu se stává virtuální operátor. V Evropě chce nabízet volání i datové služby",
             "publishedAt": "2026-04-13T17:45:00Z"
@@ -1061,10 +1066,6 @@
           {
             "title": "Recenze hry Pragmata. Sci-fi boj proti umělé inteligenci bezchybně míchá akci s taktikou",
             "publishedAt": "2026-04-13T17:45:00Z"
-          },
-          {
-            "title": "Recenze filmu Krvavá nevěsta. Satira mocných, která balancuje mezi chaosem a zábavou",
-            "publishedAt": "2026-04-13T12:45:00Z"
           }
         ]
       }
