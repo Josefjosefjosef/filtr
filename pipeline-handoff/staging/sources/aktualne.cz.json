@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T17:10:09.054350Z",
+  "ingestedAt": "2026-04-14T17:29:58.537963Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vy jste mě vyprovokoval. Jak Klempíř, Malá či Okamura ujišťovali, že nezničí ČT a rozhlas",
+      "url": "https://zpravy.aktualne.cz/domaci/vy-jste-me-vyprovokoval-jak-klempir-mala-ci-okamura-ujistovali-ze-neznici-ct-a-rozhlas/r~aaa291726ba02d86b02e133178cf9013/",
+      "dt": "2026-04-14T17:08:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jste",
+        "klempíř",
+        "malá",
+        "nezničí",
+        "okamura",
+        "rozhlas",
+        "ujišťovali",
+        "vyprovokoval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -506,31 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Trump blábolí. Je to šílenství.\" Demokraté zpochybňují prezidentovo duševní zdraví",
-      "url": "https://zpravy.aktualne.cz/zahranici/trump-blaboli-je-to-silenstvi-demokrate-zpochybnuji-prezidentovo-dusevni-zdravi/r~aaa2965938412f19ba9e141f9846d299/",
-      "dt": "2026-04-14T10:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "blábolí",
-        "demokraté",
-        "duševní",
-        "prezidentovo",
-        "trump",
-        "zdraví",
-        "zpochybňují",
-        "šílenství"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22579,
+      "bytes": 22541,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,7 +578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T17:08:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 12,
@@ -596,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vy jste mě vyprovokoval. Jak Klempíř, Malá či Okamura ujišťovali, že nezničí ČT a rozhlas",
+            "publishedAt": "2026-04-14T17:08:00Z"
+          },
           {
             "title": "Hustý dým nad Prahou. Hoří střecha ubytovny, hasiči s žebříky evakuovali přes 40 lidí",
             "publishedAt": "2026-04-14T14:00:00Z"
@@ -623,10 +627,6 @@
           {
             "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
             "publishedAt": "2026-04-14T15:31:00Z"
-          },
-          {
-            "title": "\"Cesta do orbánovského Maďarska.\" Opozice slibuje vládě peklo, varuje před likvidací ČT",
-            "publishedAt": "2026-04-14T14:23:00Z"
           }
         ]
       }

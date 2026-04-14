@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-14T17:10:09.054350Z",
+  "ingestedAt": "2026-04-14T17:29:58.537963Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rušení poplatků psané přes víkend? Klempíř pod tlakem &bdquo;žehlí&ldquo;  mediální novelou vztahy v koalici",
+      "url": "https://domaci.hn.cz/c1-67866760-ruseni-poplatku-psane-pres-vikend-klempir-pod-tlakem-bdquo-zehli-ldquo-medialni-novelou-vztahy-v-koalici",
+      "dt": "2026-04-14T17:21:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "klempíř",
+        "koalici",
+        "ldquo",
+        "mediální",
+        "novelou",
+        "poplatků",
+        "psané",
+        "rušení",
+        "tlakem",
+        "vztahy",
+        "víkend",
+        "žehlí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1110,36 +1140,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Obnovu šluknovského ghetta nezaplatíme, cukla vláda. Na přelomový projekt předchozího kabinetu shání evropské peníze",
-      "url": "https://archiv.hn.cz/c1-67865870-obnovu-sluknovskeho-ghetta-nezaplatime-cukla-vlada-na-prelomovy-projekt-predchoziho-kabinetu-shani-evropske-penize",
-      "dt": "2026-04-13T14:43:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "cukla",
-        "evropské",
-        "ghetta",
-        "kabinetu",
-        "nezaplatíme",
-        "obnovu",
-        "peníze",
-        "projekt",
-        "předchozího",
-        "přelomový",
-        "shání",
-        "vláda",
-        "šluknovského"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1150,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 186122,
+      "bytes": 186491,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1187,7 +1187,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T16:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T17:21:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1204,6 +1204,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rušení poplatků psané přes víkend? Klempíř pod tlakem &bdquo;žehlí&ldquo;  mediální novelou vztahy v koalici",
+            "publishedAt": "2026-04-14T17:21:00Z"
+          },
           {
             "title": "Kdo povede inspekci životního prostředí? Ve finále je i kandidát a významný sponzor Motoristů",
             "publishedAt": "2026-04-14T16:05:00Z"
@@ -1231,10 +1235,6 @@
           {
             "title": "První politická s.r.o.: Strany, jak jsme je znali, jsou mrtvé. Vítejte v éře politické reality show",
             "publishedAt": "2026-04-14T13:25:00Z"
-          },
-          {
-            "title": "Bude Babiš porcovat ČEZ? Rozpočtu by se ulevilo, ale slibované ovládnutí výroby elektřiny to odsune",
-            "publishedAt": "2026-04-14T13:18:00Z"
           }
         ]
       }
