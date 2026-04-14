@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-14T04:14:28.822348Z",
+  "ingestedAt": "2026-04-14T04:34:23.272443Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Assassin’s Creed Black Flag Resynced nabídne nové postavy i příběhy - INDIAN",
+      "url": "https://indian-tv.cz/clanek/assassins-creed-black-flag-resynced-nove-postavy-i-pribehy-t1dzr5",
+      "dt": "2026-04-14T04:30:56Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "assassin",
+        "black",
+        "creed",
+        "flag",
+        "indian",
+        "nabídne",
+        "nové",
+        "postavy",
+        "příběhy",
+        "resynced"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1035,34 +1062,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Samson pod palbou kritiky. Tvůrci přiznávají nepřijatelné chyby a slibují rychlou opravu - INDIAN",
-      "url": "https://indian-tv.cz/clanek/samson-pod-palbou-kritiky-tvurci-priznavaji-chyby-kaaqy7",
-      "dt": "2026-04-09T08:30:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "chyby",
-        "indian",
-        "kritiky",
-        "nepřijatelné",
-        "opravu",
-        "palbou",
-        "přiznávají",
-        "rychlou",
-        "samson",
-        "slibují",
-        "tvůrci"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1073,11 +1072,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 197633,
+      "bytes": 200054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 58,
+      "itemsParsed": 59,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1110,7 +1109,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-13T21:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:30:56Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1125,6 +1124,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Assassin’s Creed Black Flag Resynced nabídne nové postavy i příběhy - INDIAN",
+            "publishedAt": "2026-04-14T04:30:56Z"
+          },
           {
             "title": "Metro 2039 má přinést temný příběh o návratu do moskevského metra - INDIAN",
             "publishedAt": "2026-04-13T21:23:00Z"
@@ -1152,10 +1155,6 @@
           {
             "title": "DiRT Rally 2.0 přijde o klíčovou online funkci - INDIAN",
             "publishedAt": "2026-04-13T13:00:00Z"
-          },
-          {
-            "title": "Rozpočet hry Marathon měl činit zhruba 250 milionů dolarů - INDIAN",
-            "publishedAt": "2026-04-13T11:39:48Z"
           }
         ]
       }

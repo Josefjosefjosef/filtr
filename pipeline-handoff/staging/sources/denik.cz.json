@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T04:14:28.822348Z",
+  "ingestedAt": "2026-04-14T04:34:23.272443Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vracejí lidi do života. V Praze se sejdou zdravotníci z následné intenzivní péče",
+      "url": "https://www.denik.cz/zdravotnictvi/vraci-lidi-do-zivota-v-praze-se-sejdou-zdravotnici-z-nasledne-intenzivni-pece-20.html",
+      "dt": "2026-04-14T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "intenzivní",
+        "lidi",
+        "následné",
+        "praze",
+        "péče",
+        "sejdou",
+        "vracejí",
+        "zdravotníci",
+        "života"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -637,31 +663,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Cizinci v Praze odpálili bankomaty a zmizeli i s penězi. Obvinění jsou ve vazbě",
-      "url": "https://www.denik.cz/krimi/v-kauze-odpaleni-bankomatu-soud-poslal-tri-podezrele-cizince-do-vazby-20260413.html",
-      "dt": "2026-04-13T10:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bankomaty",
-        "cizinci",
-        "obvinění",
-        "odpálili",
-        "penězi",
-        "praze",
-        "vazbě",
-        "zmizeli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -672,7 +673,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30857,
+      "bytes": 31148,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -709,11 +710,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "zdravi": 1,
+          "zdravi": 2,
+          "zpravy": 20,
           "finance": 3
         },
         "drop_counts": {
@@ -726,6 +727,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vracejí lidi do života. V Praze se sejdou zdravotníci z následné intenzivní péče",
+            "publishedAt": "2026-04-14T04:05:00Z"
+          },
           {
             "title": "Letošní přijímačky? Stres ano, zákeřné chytáky tam ale nebyly, říkají odborníci",
             "publishedAt": "2026-04-14T03:30:00Z"
@@ -753,10 +758,6 @@
           {
             "title": "Magyar chce pozastavit zprávy veřejnoprávních médií, dokud nebudou nestranné",
             "publishedAt": "2026-04-13T15:34:00Z"
-          },
-          {
-            "title": "Letadlo Smartwings při odletu z Madeiry škrtlo o ranvej a pokračovalo do Prahy",
-            "publishedAt": "2026-04-13T15:09:00Z"
           }
         ]
       }
