@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T08:19:33.305377Z",
+  "ingestedAt": "2026-04-14T08:34:58.170735Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Speed Marathon v ČR: Měřit se bude na stovkách míst, za antiradar tučné pokuty",
+      "url": "https://www.denik.cz/doprava/speed-marathon-2026-cesko-kraje-mereni-seznam-mist-policie-pokuty-antiradar.html",
+      "dt": "2026-04-14T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "antiradar",
+        "marathon",
+        "míst",
+        "měřit",
+        "pokuty",
+        "speed",
+        "stovkách",
+        "tučné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,32 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pro Babiše není summit NATO téma dne. Složení delegace zatím neřekl",
-      "url": "https://www.denik.cz/z_domova/summit-nato-babis-macinka-prezident-pavel.html",
-      "dt": "2026-04-13T12:34:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiše",
-        "delegace",
-        "dne",
-        "nato",
-        "neřekl",
-        "složení",
-        "summit",
-        "téma",
-        "zatím"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31196,
+      "bytes": 31395,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T07:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -724,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Speed Marathon v ČR: Měřit se bude na stovkách míst, za antiradar tučné pokuty",
+            "publishedAt": "2026-04-14T08:00:00Z"
+          },
           {
             "title": "Zubař vytrhal muži všechny zuby. Pacient stav nezvládl a spáchal sebevraždu",
             "publishedAt": "2026-04-14T07:40:00Z"
@@ -751,10 +754,6 @@
           {
             "title": "Ramagem zatčen v USA: Spojence Bolsonara z pokusu o převrat zadrželi agenti ICE",
             "publishedAt": "2026-04-14T04:44:00Z"
-          },
-          {
-            "title": "Kanadští liberálové získali v parlamentu většinu",
-            "publishedAt": "2026-04-14T04:39:00Z"
           }
         ]
       }
