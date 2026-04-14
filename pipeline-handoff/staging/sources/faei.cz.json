@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-14T09:14:33.230808Z",
+  "ingestedAt": "2026-04-14T10:10:21.274770Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Raritní desetikoruna se prodala za 134 tisíc. Cenný je malý detail",
+      "url": "https://profitonline.cz/raritni-desetikoruna-se-prodala-za-134-tisic-cenny-je-maly-detail/",
+      "dt": "2026-04-14T10:00:33Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "134",
+        "cenný",
+        "desetikoruna",
+        "detail",
+        "malý",
+        "prodala",
+        "raritní",
+        "tisíc"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -256,29 +281,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rafinační marže Orlenu a MOL se citelně propadají",
-      "url": "https://profitonline.cz/rafinacni-marze-orlenu-a-mol-se-citelne-propadaji/",
-      "dt": "2026-04-12T17:00:52Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "citelně",
-        "marže",
-        "mol",
-        "orlenu",
-        "propadají",
-        "rafinační"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -289,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18002,
+      "bytes": 18069,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -326,7 +328,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:00:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:00:33Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -342,6 +344,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Raritní desetikoruna se prodala za 134 tisíc. Cenný je malý detail",
+            "publishedAt": "2026-04-14T10:00:33Z"
+          },
           {
             "title": "Apple a umělá inteligence: Tichý návrat krále?",
             "publishedAt": "2026-04-14T08:00:09Z"
@@ -369,10 +375,6 @@
           {
             "title": "Jak Trump stvořil novou velmoc, která cvičí s celým světem",
             "publishedAt": "2026-04-13T10:00:18Z"
-          },
-          {
-            "title": "Čeho chce Trump docílit blokádou Hormuzského průlivu",
-            "publishedAt": "2026-04-13T08:00:47Z"
           }
         ]
       }

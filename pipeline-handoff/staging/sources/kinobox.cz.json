@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-14T09:14:33.230808Z",
+  "ingestedAt": "2026-04-14T10:10:21.274770Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Nechte se zavřít do kufru s kšeftařem Tonym a kochejte se",
+      "url": "https://www.kinobox.cz/clanky/daily/52667-kinobox-daily-nechte-se-zavrit-do-kufru-s-kseftarem-tonym-a-kochejte-se",
+      "dt": "2026-04-14T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "kinobox",
+        "kochejte",
+        "kufru",
+        "kšeftařem",
+        "nechte",
+        "tonym",
+        "zavřít"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -529,35 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Tajuplný snímek Falcon Lake vyniká obrazem. V čem tkví jeho tajemství?",
-      "url": "https://www.kinobox.cz/clanky/daily/52566-kinobox-daily-tajuplny-snimek-falcon-lake-vynika-obrazem-v-cem-tkvi-jeho-tajemstvi",
-      "dt": "2026-04-11T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "daily",
-        "falcon",
-        "jeho",
-        "kinobox",
-        "lake",
-        "obrazem",
-        "snímek",
-        "tajemství",
-        "tajuplný",
-        "tkví",
-        "vyniká",
-        "čem"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -568,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29111,
+      "bytes": 29078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -605,7 +601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -620,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Nechte se zavřít do kufru s kšeftařem Tonym a kochejte se",
+            "publishedAt": "2026-04-14T10:00:00Z"
+          },
           {
             "title": "Teenagerská dystopie Hunger Games na Úsvitu sklizně. Trailer plný hvězd láká na zimní hit",
             "publishedAt": "2026-04-14T09:00:00Z"
@@ -647,10 +647,6 @@
           {
             "title": "Zachránil Spielberg Interstellar? Nejlepší sci-fi století přenechal Nolanovi a psala se historie",
             "publishedAt": "2026-04-13T09:00:00Z"
-          },
-          {
-            "title": "TV program: Vítěz letošních Českých lvů, přehlížená After Party i legendární Homolkovi",
-            "publishedAt": "2026-04-13T08:00:00Z"
           }
         ]
       }

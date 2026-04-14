@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T09:14:33.230808Z",
+  "ingestedAt": "2026-04-14T10:10:21.274770Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na severní Moravě stále řádí žloutenka. Hygienici řekli, které místo je zasažené nejvíce",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/severni-morava-zloutenka-hygienici/",
+      "dt": "2026-04-14T09:55:40Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hygienici",
+        "moravě",
+        "místo",
+        "nejvíce",
+        "severní",
+        "stále",
+        "zasažené",
+        "řekli",
+        "řádí",
+        "žloutenka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,34 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Olomoucký kraj spojuje síly s Agelem: Společný podnik má nově zahrnout další nemocnici",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/olomoucky-kraj-spojuje-sily-s-agelem/",
-      "dt": "2026-04-13T10:02:57Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "agelem",
-        "další",
-        "kraj",
-        "nemocnici",
-        "nově",
-        "olomoucký",
-        "podnik",
-        "spojuje",
-        "společný",
-        "síly",
-        "zahrnout"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97798,
+      "bytes": 96856,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T09:55:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -327,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na severní Moravě stále řádí žloutenka. Hygienici řekli, které místo je zasažené nejvíce",
+            "publishedAt": "2026-04-14T09:55:40Z"
+          },
           {
             "title": "Konec nelegálních poplatků u gynekologa? Nový systém mění financování péče",
             "publishedAt": "2026-04-14T09:00:00Z"
@@ -354,10 +357,6 @@
           {
             "title": "V Nemocnici Na Františku skončil audit. Praha 1 popsala zjištěné chyby",
             "publishedAt": "2026-04-13T14:22:29Z"
-          },
-          {
-            "title": "Tančící ortoped, který chce překopat maďarské zdravotnictví. Kdo je pravděpodobný příští ministr?",
-            "publishedAt": "2026-04-13T11:30:00Z"
           }
         ]
       }

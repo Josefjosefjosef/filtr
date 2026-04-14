@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-14T09:14:33.230808Z",
+  "ingestedAt": "2026-04-14T10:10:21.274770Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vietnamský novinář pod policejní ochranou. Nebezpečí mu prý hrozí i z Česka",
+      "url": "https://hlidacipes.org/vietnamsky-novinar-pod-policejni-ochranou-nebezpeci-mu-pry-hrozi-i-z-ceska/",
+      "dt": "2026-04-14T09:30:46Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "hrozí",
+        "nebezpečí",
+        "novinář",
+        "ochranou",
+        "policejní",
+        "prý",
+        "vietnamský",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,32 +267,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ivan Gabal: Jak přežít současnost? Klíčové otázky, na něž si dlužíme odpověď",
-      "url": "https://hlidacipes.org/ivan-gabal-jak-prezit-soucasnost-klicove-otazky-na-nez-si-dluzime-odpoved/",
-      "dt": "2026-04-10T09:30:58Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "dlužíme",
-        "gabal",
-        "ivan",
-        "klíčové",
-        "něž",
-        "odpověď",
-        "otázky",
-        "přežít",
-        "současnost"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17495,
+      "bytes": 17520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T04:30:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T09:30:46Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vietnamský novinář pod policejní ochranou. Nebezpečí mu prý hrozí i z Česka",
+            "publishedAt": "2026-04-14T09:30:46Z"
+          },
           {
             "title": "Orbánův státem placený příběh o „poslední baště Západu“ končí. Co přijde místo něj?",
             "publishedAt": "2026-04-14T04:30:56Z"
@@ -357,10 +360,6 @@
           {
             "title": "„Svazačky nás nutily tančit,“ vzpomíná řeholník na internaci roku 1950",
             "publishedAt": "2026-04-11T06:00:13Z"
-          },
-          {
-            "title": "Kolik bral Moravec? Do takových detailů při kontrole nepůjdeme, říká šéf NKÚ",
-            "publishedAt": "2026-04-11T05:30:19Z"
           }
         ]
       }

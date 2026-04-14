@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T09:14:33.230808Z",
+  "ingestedAt": "2026-04-14T10:10:21.274770Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Výroky Sparty byly zbytečné, říká Tomášek. Zmiňovat finance? To jsem jinde neviděl",
+      "url": "https://www.idnes.cz/hokej/extraliga/david-tomasek-pardubice-sparta-reakce.A260414_083202_hokej_drev",
+      "dt": "2026-04-14T09:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "byly",
+        "finance",
+        "jinde",
+        "jsem",
+        "neviděl",
+        "sparty",
+        "tomášek",
+        "výroky",
+        "zbytečné",
+        "zmiňovat",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -770,33 +798,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hanzlík přidá další sezonu ve Španělsku, Gipuzkoa ho podepsala ještě před play off",
-      "url": "https://www.idnes.cz/sport/basket/ondrej-hanzlik-nova-slmouva-gipuzkoy-spanelsko.A260413_155412_sport-basket_czo",
-      "dt": "2026-04-13T13:58:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "gipuzkoa",
-        "hanzlík",
-        "ještě",
-        "off",
-        "play",
-        "podepsala",
-        "přidá",
-        "sezonu",
-        "španělsku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48420,
+      "bytes": 48953,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +845,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T09:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -859,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výroky Sparty byly zbytečné, říká Tomášek. Zmiňovat finance? To jsem jinde neviděl",
+            "publishedAt": "2026-04-14T09:17:00Z"
+          },
           {
             "title": "Můžeme se v klidu koukat, říká Kovařčík. Sparta, nebo Pardubice? Je to jedno",
             "publishedAt": "2026-04-14T09:00:00Z"
@@ -886,10 +891,6 @@
           {
             "title": "Hvězdy F1 v pauze obcházejí velké sportovní akce. Kde se jezdci ukázali?",
             "publishedAt": "2026-04-14T07:00:00Z"
-          },
-          {
-            "title": "Vladař vychytal Philadelphii postup, Nečas v NHL zůstává na 99 bodech",
-            "publishedAt": "2026-04-14T06:40:12Z"
           }
         ]
       }
