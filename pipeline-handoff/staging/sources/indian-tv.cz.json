@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-14T05:45:01.057218Z",
+  "ingestedAt": "2026-04-14T06:04:52.155513Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass je pro hráče příliš drahý, myslí si šéfka Microsoftu a chystá změny - INDIAN",
+      "url": "https://indian-tv.cz/clanek/game-pass-je-pro-hrace-prilis-drahy-mysli-si-sefka-79y7dk",
+      "dt": "2026-04-14T05:58:50Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chystá",
+        "drahý",
+        "game",
+        "hráče",
+        "indian",
+        "microsoftu",
+        "myslí",
+        "pass",
+        "příliš",
+        "změny",
+        "šéfka"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1038,30 +1066,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Euro Truck Simulator 2 se tentokrát rozšíří o Turecko - INDIAN",
-      "url": "https://indian-tv.cz/clanek/euro-truck-simulator-2-se-tentokrat-rozsiri-o-turecko-omx6vi",
-      "dt": "2026-04-09T11:02:36Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "euro",
-        "indian",
-        "rozšíří",
-        "simulator",
-        "tentokrát",
-        "truck",
-        "turecko"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1072,11 +1076,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 200054,
+      "bytes": 205033,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 59,
+      "itemsParsed": 60,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1109,7 +1113,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T04:30:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:58:50Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1124,6 +1128,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass je pro hráče příliš drahý, myslí si šéfka Microsoftu a chystá změny - INDIAN",
+            "publishedAt": "2026-04-14T05:58:50Z"
+          },
           {
             "title": "Assassin’s Creed Black Flag Resynced nabídne nové postavy i příběhy - INDIAN",
             "publishedAt": "2026-04-14T04:30:56Z"
@@ -1151,10 +1159,6 @@
           {
             "title": "Je to oficiálně venku. Ve čtvrtek uvidíme Metro 2039 - INDIAN",
             "publishedAt": "2026-04-13T13:37:06Z"
-          },
-          {
-            "title": "DiRT Rally 2.0 přijde o klíčovou online funkci - INDIAN",
-            "publishedAt": "2026-04-13T13:00:00Z"
           }
         ]
       }

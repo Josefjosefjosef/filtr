@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-14T05:45:01.057218Z",
+  "ingestedAt": "2026-04-14T06:04:52.155513Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Survivor 22. díl: Kones starých pořádků, dopisy z domova a skrývání zásob",
+      "url": "https://www.vtelce.cz/survivor-22-dil-kones-starych-poradku-dopisy-z-domova-a-skryvani-zasob/",
+      "dt": "2026-04-14T05:54:01Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "domova",
+        "dopisy",
+        "díl",
+        "kones",
+        "pořádků",
+        "skrývání",
+        "starých",
+        "survivor",
+        "zásob"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -254,38 +280,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Pondělní díl Ulice: Vanda žárlí, Lumír konfrontuje Soňu, zvrat v Žofčině případu a velký návrat, který zamíchá kartami",
-      "url": "https://www.vtelce.cz/pondelni-dil-ulice-vanda-zarli-lumir-konfrontuje-sonu-zvrat-v-zofcine-pripadu-a-velky-navrat-ktery-zamicha-kartami/",
-      "dt": "2026-04-13T07:59:01Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "díl",
-        "kartami",
-        "konfrontuje",
-        "lumír",
-        "návrat",
-        "pondělní",
-        "případu",
-        "soňu",
-        "ulice",
-        "vanda",
-        "velký",
-        "zamíchá",
-        "zvrat",
-        "žofčině",
-        "žárlí"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +290,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 75922,
+      "bytes": 70951,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -333,11 +327,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:28:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T05:54:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "other": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -349,6 +343,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Survivor 22. díl: Kones starých pořádků, dopisy z domova a skrývání zásob",
+            "publishedAt": "2026-04-14T05:54:01Z"
+          },
           {
             "title": "Šimon a Matouš: Soud o ukradené jméno, indický slon v Africe a triky vychytralé produkce na diváky",
             "publishedAt": "2026-04-13T17:28:06Z"
@@ -376,10 +374,6 @@
           {
             "title": "Diváky čekají skutečné kriminální kauzy a televizní případy, které odhalí ty nejznámější české kauzy",
             "publishedAt": "2026-04-13T09:29:29Z"
-          },
-          {
-            "title": "Karel: Snímek zachycuje intimní zpověď hudební legendy, boj s vážnou nemocí i lítost nad podpisem Anticharty",
-            "publishedAt": "2026-04-13T08:58:32Z"
           }
         ]
       }

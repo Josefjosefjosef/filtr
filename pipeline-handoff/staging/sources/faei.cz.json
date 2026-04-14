@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-14T05:45:01.057218Z",
+  "ingestedAt": "2026-04-14T06:04:52.155513Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bitcoin na třítýdenním maximu",
+      "url": "https://profitonline.cz/bitcoin-na-tritydennim-maximu/",
+      "dt": "2026-04-14T06:00:17Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bitcoin",
+        "maximu",
+        "třítýdenním"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -257,29 +277,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny potravin porostou, budou totiž chybět hnojiva",
-      "url": "https://profitonline.cz/ceny-potravin-porostou-budou-totiz-chybet-hnojiva/",
-      "dt": "2026-04-12T14:00:45Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ceny",
-        "chybět",
-        "hnojiva",
-        "porostou",
-        "potravin",
-        "totiž"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -290,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18283,
+      "bytes": 18044,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -327,7 +324,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-14T04:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:00:17Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -343,6 +340,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitcoin na třítýdenním maximu",
+            "publishedAt": "2026-04-14T06:00:17Z"
+          },
           {
             "title": "Už si Orbán balí kufry do Moskvy? Putin ho přivítá s otevřenou náručí",
             "publishedAt": "2026-04-14T04:00:34Z"
@@ -370,10 +371,6 @@
           {
             "title": "Forint citelně posiluje. Co čekat od vítěze voleb?",
             "publishedAt": "2026-04-13T07:30:48Z"
-          },
-          {
-            "title": "Otec zaplatil výživné dvakrát, úřady za to potrestaly matku",
-            "publishedAt": "2026-04-13T04:00:34Z"
           }
         ]
       }

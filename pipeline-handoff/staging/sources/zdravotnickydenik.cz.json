@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-14T05:45:01.057218Z",
+  "ingestedAt": "2026-04-14T06:04:52.155513Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Špatné posudky ničí životy lékařů. Systém soudních znalců je katastrofa, míní Kubek",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soudni-znalci-system-nefunguje-rika-milan-kubek/",
+      "dt": "2026-04-14T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "katastrofa",
+        "kubek",
+        "lékařů",
+        "míní",
+        "ničí",
+        "posudky",
+        "soudních",
+        "systém",
+        "znalců",
+        "špatné",
+        "životy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,33 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V Polsku levně, v Německu za 24 tisíc. Podívejte se, kde se loni Češi léčili nejčastěji a za kolik",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/kde-se-loni-cesi-lecili-nejcasteji-a-za-kolik/",
-      "dt": "2026-04-13T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kolik",
-        "levně",
-        "loni",
-        "léčili",
-        "nejčastěji",
-        "německu",
-        "podívejte",
-        "polsku",
-        "tisíc",
-        "češi"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104404,
+      "bytes": 106633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Špatné posudky ničí životy lékařů. Systém soudních znalců je katastrofa, míní Kubek",
+            "publishedAt": "2026-04-14T06:00:00Z"
+          },
           {
             "title": "Kdo nejvíce investuje do nových léků: TOP 10 farmaceutických firem světa",
             "publishedAt": "2026-04-14T05:00:00Z"
@@ -355,10 +360,6 @@
           {
             "title": "Znásilnil pacientku po anestezii, vinu popíral. Část kolegů ho hájila peticí",
             "publishedAt": "2026-04-13T08:26:19Z"
-          },
-          {
-            "title": "Flash disky s „odměnami“ i fingované e-maily: Jak v Motole testují zaměstnance",
-            "publishedAt": "2026-04-13T08:00:00Z"
           }
         ]
       }
