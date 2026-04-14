@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-14T15:59:31.234348Z",
+  "ingestedAt": "2026-04-14T16:14:58.319097Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Novinky na Kinoboxu: Hodnocení seriálů po sezónách",
+      "url": "https://www.kinobox.cz/clanky/tema/52673-novinky-na-kinoboxu-hodnoceni-po-sezonach",
+      "dt": "2026-04-14T16:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "hodnocení",
+        "kinoboxu",
+        "novinky",
+        "seriálů",
+        "sezónách"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -523,32 +545,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "„Hvězda může být loutka režimu,\" říká Jakub Červenka, režisér Šampióna",
-      "url": "https://www.kinobox.cz/clanky/rozhovory/52504-hvezda-muze-byt-loutka-rezimu-rika-jakub-cervenka-reziser-sampiona",
-      "dt": "2026-04-12T09:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "být",
-        "hvězda",
-        "jakub",
-        "loutka",
-        "režimu",
-        "režisér",
-        "červenka",
-        "říká",
-        "šampióna"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,7 +555,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27819,
+      "bytes": 27944,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -596,7 +592,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -611,6 +607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Novinky na Kinoboxu: Hodnocení seriálů po sezónách",
+            "publishedAt": "2026-04-14T16:00:00Z"
+          },
           {
             "title": "Metal Gear Solid se proplíží na plátno. Režírovat ho budou tvůrci hororového hitu",
             "publishedAt": "2026-04-14T14:00:00Z"
@@ -638,10 +638,6 @@
           {
             "title": "Sebevražda v Polabí? Dramatická situace zkomplikuje vztahy, policistka Petra uvažuje o odchodu",
             "publishedAt": "2026-04-14T05:00:00Z"
-          },
-          {
-            "title": "Návrat na vrchol, nebo propadák roku? Nová Euforie je online, sklízí znepokojivé reakce",
-            "publishedAt": "2026-04-13T17:00:00Z"
           }
         ]
       }

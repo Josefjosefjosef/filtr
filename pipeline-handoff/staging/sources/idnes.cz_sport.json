@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T15:59:31.234348Z",
+  "ingestedAt": "2026-04-14T16:14:58.319097Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Dynamo vám neprodám, odmítla majitelka nabídku Budějovic. I když přijde o stadion",
+      "title": "Krasobruslařka Liuová září v hudebním klipu. Zahrála si po boku dalších hvězd",
+      "url": "https://www.idnes.cz/sport/trendy/krasobruslarka-liuova-zari-v-hudebnim-klipu-video-sbira-miliony-zhlednuti.A260414_140415_trendy_subt",
+      "dt": "2026-04-14T16:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boku",
+        "dalších",
+        "hudebním",
+        "hvězd",
+        "klipu",
+        "krasobruslařka",
+        "liuová",
+        "zahrála",
+        "září"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dynamo vám neprodám, i když přijdeme o stadion, odmítla majitelka nabídku Budějovic",
       "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-penize-kraj-mesto-vypoved-stadion.A260414_095917_budejovice-zpravy_pkr",
       "dt": "2026-04-14T15:43:00Z",
       "media_raw": "iDNES / Sport",
@@ -19,7 +45,7 @@
         "nabídku",
         "neprodám",
         "odmítla",
-        "přijde",
+        "přijdeme",
         "stadion",
         "vám"
       ],
@@ -779,30 +805,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trenér Švýcarska před OH v Pekingu zfalšoval potvrzení o očkování na covid",
-      "url": "https://www.idnes.cz/hokej/reprezentace/patrick-fischer-covid.A260414_091220_reprezentace_kazdt",
-      "dt": "2026-04-14T07:16:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "covid",
-        "očkování",
-        "pekingu",
-        "potvrzení",
-        "trenér",
-        "zfalšoval",
-        "švýcarska"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +815,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47710,
+      "bytes": 48211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +852,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T16:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -866,7 +868,11 @@
         },
         "sample_titles": [
           {
-            "title": "Dynamo vám neprodám, odmítla majitelka nabídku Budějovic. I když přijde o stadion",
+            "title": "Krasobruslařka Liuová září v hudebním klipu. Zahrála si po boku dalších hvězd",
+            "publishedAt": "2026-04-14T16:01:00Z"
+          },
+          {
+            "title": "Dynamo vám neprodám, i když přijdeme o stadion, odmítla majitelka nabídku Budějovic",
             "publishedAt": "2026-04-14T15:43:00Z"
           },
           {
@@ -892,10 +898,6 @@
           {
             "title": "Dědek se omluvil, Pardubice obviňují Spartu. Oba kluby vyzývají k uklidnění",
             "publishedAt": "2026-04-14T14:18:00Z"
-          },
-          {
-            "title": "Prodat byt je těžší než ustát souboj u mantinelu, říká bývalý hokejista Indrák",
-            "publishedAt": "2026-04-14T13:58:00Z"
           }
         ]
       }
