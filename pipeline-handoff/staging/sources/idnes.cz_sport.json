@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T14:09:33.629745Z",
+  "ingestedAt": "2026-04-14T14:24:30.378676Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dědek se omluvil, Pardubice obviňují Spartu. Oba kluby vyzývají k uklidnění",
+      "url": "https://www.idnes.cz/hokej/extraliga/pardubice-prohlaseni-urazky-sparty-fanousci.A260414_152105_hokej_hrj",
+      "dt": "2026-04-14T14:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dědek",
+        "kluby",
+        "oba",
+        "obviňují",
+        "omluvil",
+        "pardubice",
+        "spartu",
+        "uklidnění",
+        "vyzývají"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -775,31 +801,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pracovité naděje, které by mohly být i drzejší. Ptáčková o Hamzové a Čechové",
-      "url": "https://www.idnes.cz/sport/basket/cechova-hamzova-wnba-minnesota-lynx-jake-jsou-ptackova.A260413_192946_sport-basket_czo",
-      "dt": "2026-04-14T05:27:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "být",
-        "drzejší",
-        "hamzové",
-        "mohly",
-        "naděje",
-        "pracovité",
-        "ptáčková",
-        "čechové"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -810,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48781,
+      "bytes": 48674,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -847,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T13:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T14:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -862,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dědek se omluvil, Pardubice obviňují Spartu. Oba kluby vyzývají k uklidnění",
+            "publishedAt": "2026-04-14T14:18:00Z"
+          },
           {
             "title": "Prodat byt je těžší než ustát souboj u mantinelu, říká bývalý hokejista Indrák",
             "publishedAt": "2026-04-14T13:58:00Z"
@@ -889,10 +894,6 @@
           {
             "title": "Jsem rád, že se zlepšuje, chválil Alcaraz Sinnera. Znovu ho může předstihnout",
             "publishedAt": "2026-04-14T12:33:00Z"
-          },
-          {
-            "title": "Kometu opouští slovenský obránce Ďaloga. Čas na nový impulz, říká po 5 letech v Brně",
-            "publishedAt": "2026-04-14T12:28:00Z"
           }
         ]
       }
