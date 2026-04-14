@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T17:29:58.537963Z",
+  "ingestedAt": "2026-04-14T17:50:28.263810Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Omezíme tvorbu a začneme propouštět. Šéf ČT nastínil dopady změn financování",
+      "url": "https://zpravy.aktualne.cz/ekonomika/omezime-tvorbu-a-zacneme-propoustet-sef-ct-nastinil-dopady-zmen-financovani/r~aaa29f391043f63100aab5e4f3346fbc/",
+      "dt": "2026-04-14T17:42:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dopady",
+        "financování",
+        "nastínil",
+        "omezíme",
+        "propouštět",
+        "tvorbu",
+        "začneme",
+        "změn",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump se pokusil vysvětlit, proč se vyobrazil jako Ježíš. Bylo to úplně jinak, tvrdí",
+      "url": "https://zpravy.aktualne.cz/zahranici/trump-se-pokusil-vysvetlit-proc-se-vyobrazil-jako-jezis-bylo-to-uplne-jinak-tvrdi/r~aaa294544bdc9e3c7286ba9b8b3d1817/",
+      "dt": "2026-04-14T17:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jako",
+        "ježíš",
+        "jinak",
+        "pokusil",
+        "proč",
+        "trump",
+        "tvrdí",
+        "vyobrazil",
+        "vysvětlit",
+        "úplně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -481,56 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lackova dvojitá směna. V tahači se vrátí do Mostu a čeká ho i premiéra v terénu",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/nikdo-mi-do-toho-nekecal-lacko-si-pri-premiere-v-terenu-zvyka-na-navigatora/r~aaa29e7643c55159ed147d587b969104/",
-      "dt": "2026-04-01T12:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dvojitá",
-        "lackova",
-        "mostu",
-        "premiéra",
-        "směna",
-        "tahači",
-        "terénu",
-        "vrátí",
-        "čeká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Macinka navštívil Izrael a uctil památku obětí holokaustu",
-      "url": "https://zpravy.aktualne.cz/zahranici/macinka-navstivil-izrael-a-uctil-pamatku-obeti-holokaustu/r~aaa29efa21caaa82b26fb28d371da3f0/",
-      "dt": "2026-04-14T10:54:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "holokaustu",
-        "izrael",
-        "macinka",
-        "navštívil",
-        "obětí",
-        "památku",
-        "uctil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22541,
+      "bytes": 22198,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,13 +581,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T17:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T17:42:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 5,
           "zpravy": 12,
-          "sport": 3,
-          "zdravi": 1,
-          "finance": 4
+          "sport": 2,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -596,6 +599,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Omezíme tvorbu a začneme propouštět. Šéf ČT nastínil dopady změn financování",
+            "publishedAt": "2026-04-14T17:42:00Z"
+          },
+          {
+            "title": "Trump se pokusil vysvětlit, proč se vyobrazil jako Ježíš. Bylo to úplně jinak, tvrdí",
+            "publishedAt": "2026-04-14T17:24:00Z"
+          },
           {
             "title": "Vy jste mě vyprovokoval. Jak Klempíř, Malá či Okamura ujišťovali, že nezničí ČT a rozhlas",
             "publishedAt": "2026-04-14T17:08:00Z"
@@ -619,14 +630,6 @@
           {
             "title": "Macháč skvěle otočil zápas proti Báezovi, teď ho čeká superhvězda",
             "publishedAt": "2026-04-14T12:07:00Z"
-          },
-          {
-            "title": "I nevinná online hra přiměje dítě k násilí. Znalec odhaluje zrůdnosti kyberprostoru",
-            "publishedAt": "2026-04-14T15:34:00Z"
-          },
-          {
-            "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
-            "publishedAt": "2026-04-14T15:31:00Z"
           }
         ]
       }

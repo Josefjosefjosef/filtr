@@ -1,24 +1,46 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T17:29:58.537963Z",
+  "ingestedAt": "2026-04-14T17:50:28.263810Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Dukla ve třetí třetině bleskově udeřila",
+      "title": "HOKEJ ONLINE: Hotovo? Dukla zvyšuje",
       "url": "https://www.sport.cz/clanek/hokej-ceska-1-liga-litvinov-se-dozvi-soupere-pro-baraz-hraje-se-rozhodujici-finale-maxa-ligy-5436590",
       "dt": "2026-04-14T06:48:24Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bleskově",
         "dukla",
         "hokej",
+        "hotovo",
         "online",
-        "třetině",
-        "třetí",
-        "udeřila"
+        "zvyšuje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Krůček k vysněnému MS. Fotbalistky v kvalifikaci rozstřílely Černou Horu",
+      "url": "https://www.sport.cz/clanek/fotbal-krucek-k-vysnenemu-ms-fotbalistky-v-kvalifikaci-rozstrilely-cernou-horu-5436715",
+      "dt": "2026-04-14T17:29:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalistky",
+        "horu",
+        "krůček",
+        "kvalifikaci",
+        "rozstřílely",
+        "vysněnému",
+        "černou"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -732,31 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bizarní vyloučení za zatažení za vlasy. Trenér Manchesteru United zuřil",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-bizarni-vylouceni-za-zatazeni-za-vlasy-trener-manchesteru-united-zuril-5436598",
-      "dt": "2026-04-14T08:06:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bizarní",
-        "manchesteru",
-        "trenér",
-        "united",
-        "vlasy",
-        "vyloučení",
-        "zatažení",
-        "zuřil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -767,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42939,
+      "bytes": 42955,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -804,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T16:50:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T17:29:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -820,8 +817,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Dukla ve třetí třetině bleskově udeřila",
+            "title": "HOKEJ ONLINE: Hotovo? Dukla zvyšuje",
             "publishedAt": "2026-04-14T06:48:24Z"
+          },
+          {
+            "title": "Krůček k vysněnému MS. Fotbalistky v kvalifikaci rozstřílely Černou Horu",
+            "publishedAt": "2026-04-14T17:29:02Z"
           },
           {
             "title": "Kopřiva postupuje v Mnichově, Macháč v Barceloně. Také Muchová začátek na antuce zvládla",
@@ -846,10 +847,6 @@
           {
             "title": "Reprezentant Červ prodloužil smlouvu v Plzni",
             "publishedAt": "2026-04-14T15:27:43Z"
-          },
-          {
-            "title": "FIA od Miami zarazí kvalifikační trik Mercedesu a Red Bullu",
-            "publishedAt": "2026-04-14T15:05:45Z"
           }
         ]
       }
