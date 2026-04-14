@@ -1,26 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-14T03:22:28.902410Z",
+  "ingestedAt": "2026-04-14T03:39:47.846644Z",
   "items": [
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Trend přirozené chůze sílí. Známá barefootová značka mění majitele",
-      "url": "https://www.idnes.cz/ekonomika/domaci/trend-prirozene-chuze-sili-znama-barefootova-znacka-meni-majitele.A260410_133131_ekonomika_vebe",
-      "dt": "2026-04-13T22:00:00Z",
+      "title": "OBRAZEM: Lány narcisů lákají na samosběr, za pár korun máte plnou náruč jara",
+      "url": "https://www.idnes.cz/ostrava/zpravy/obrazem-samosber-narcisy-tulipany-pohorilky-fulnek.A260410_122109_ostrava-zpravy_pjen/foto",
+      "dt": "2026-04-14T03:02:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "barefootová",
-        "chůze",
-        "majitele",
-        "mění",
-        "přirozené",
-        "sílí",
-        "trend",
-        "značka",
-        "známá"
+        "jara",
+        "korun",
+        "lákají",
+        "lány",
+        "máte",
+        "narcisů",
+        "náruč",
+        "obrazem",
+        "plnou",
+        "pár",
+        "samosběr"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -47,6 +49,32 @@
         "smrtící",
         "vakcína",
         "virus"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trend přirozené chůze sílí. Známá barefootová značka mění majitele",
+      "url": "https://www.idnes.cz/ekonomika/domaci/trend-prirozene-chuze-sili-znama-barefootova-znacka-meni-majitele.A260410_133131_ekonomika_vebe",
+      "dt": "2026-04-13T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "barefootová",
+        "chůze",
+        "majitele",
+        "mění",
+        "přirozené",
+        "sílí",
+        "trend",
+        "značka",
+        "známá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -760,34 +788,6 @@
         "vzpomínají",
         "zelenková",
         "šporcl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sydney Sweeney a Zendaya sice dospěly, ale problémy mají dál. Startuje Euforie III",
-      "url": "https://www.idnes.cz/kultura/film-televize/hbo-euforie-iii.A260410_211021_filmvideo_spm",
-      "dt": "2026-04-13T13:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "dospěly",
-        "euforie",
-        "iii",
-        "mají",
-        "problémy",
-        "sice",
-        "startuje",
-        "sweeney",
-        "sydney",
-        "zendaya"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1587,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51227,
+      "bytes": 51351,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1624,12 +1624,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 25,
           "finance": 2,
-          "zpravy": 24,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1642,11 +1642,15 @@
         },
         "sample_titles": [
           {
-            "title": "Trend přirozené chůze sílí. Známá barefootová značka mění majitele",
-            "publishedAt": "2026-04-13T22:00:00Z"
+            "title": "OBRAZEM: Lány narcisů lákají na samosběr, za pár korun máte plnou náruč jara",
+            "publishedAt": "2026-04-14T03:02:00Z"
           },
           {
             "title": "Skok v boji s rakovinou i roztroušenou sklerózou. Vakcína na smrtící virus je blíž",
+            "publishedAt": "2026-04-13T22:00:00Z"
+          },
+          {
+            "title": "Trend přirozené chůze sílí. Známá barefootová značka mění majitele",
             "publishedAt": "2026-04-13T22:00:00Z"
           },
           {
@@ -1668,10 +1672,6 @@
           {
             "title": "Solidarita i obranná spolupráce. Macinka v Izraeli projedná technologie a Gazu",
             "publishedAt": "2026-04-13T18:28:00Z"
-          },
-          {
-            "title": "Ministerstvo obrany zakázalo publikovat rozhovor s Pavlem. Absurdní, reagoval Hrad",
-            "publishedAt": "2026-04-13T18:08:00Z"
           }
         ]
       }

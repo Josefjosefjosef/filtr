@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-14T03:22:28.902410Z",
+  "ingestedAt": "2026-04-14T03:39:47.846644Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Pouliční trénink se změnil v noční můru. Osmnáctiletý boxer zemřel po sparingu s těžším soupeřem",
+      "url": "https://www.mmamag.cz/boxer-smrt-ulice/",
+      "dt": "2026-04-14T03:30:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxer",
+        "můru",
+        "noční",
+        "osmnáctiletý",
+        "pouliční",
+        "soupeřem",
+        "sparingu",
+        "trénink",
+        "těžším",
+        "zemřel",
+        "změnil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1047,30 +1075,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Procházka nechce bezhlavý chaos. Na Ulberga vyrukuje jinak",
-      "url": "https://www.mmamag.cz/prochazka-ulberg-taktika-2/",
-      "dt": "2026-04-05T03:30:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bezhlavý",
-        "chaos",
-        "jinak",
-        "nechce",
-        "procházka",
-        "ulberga",
-        "vyrukuje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1081,7 +1085,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79463,
+      "bytes": 80056,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1118,7 +1122,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1133,6 +1137,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pouliční trénink se změnil v noční můru. Osmnáctiletý boxer zemřel po sparingu s těžším soupeřem",
+            "publishedAt": "2026-04-14T03:30:00Z"
+          },
           {
             "title": "Boxerský šampion z pekla. Aby pobavil dozorce, bojoval v Osvětimi o život",
             "publishedAt": "2026-04-14T03:15:00Z"
@@ -1160,10 +1168,6 @@
           {
             "title": "Muradov reaguje na Procházkovu prohru. Kritizoval ostré reakce fanoušků",
             "publishedAt": "2026-04-13T08:26:14Z"
-          },
-          {
-            "title": "Procházka projevil lítost a draze za ni zaplatil. Soucit ho stál titul UFC",
-            "publishedAt": "2026-04-13T08:00:56Z"
           }
         ]
       }
