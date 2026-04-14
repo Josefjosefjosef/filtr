@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-14T10:30:06.085016Z",
+  "ingestedAt": "2026-04-14T10:49:29.664732Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chorého červená? Ve hře byl i jiný přísný trest. Až čas ukáže, jak precedens ovlivní ligu",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474397/choreho-cervena-ve-hre-byl-i-jiny-prisny-trest-az-cas-ukaze-jak-precedens-ovlivni-ligu.html",
+      "dt": "2026-04-14T10:30:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "chorého",
+        "hře",
+        "jiný",
+        "ligu",
+        "ovlivní",
+        "precedens",
+        "přísný",
+        "trest",
+        "ukáže",
+        "čas",
+        "červená"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1042,34 +1070,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hapal: V hlavě jsem trénování neměl, je potřeba změnit klima. Ve hře i zahraniční kouč",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474368/hapal-v-hlave-jsem-trenovani-nemel-je-potreba-zmenit-klima-ve-hre-i-zahranicni-kouc.html",
-      "dt": "2026-04-13T11:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "hapal",
-        "hlavě",
-        "hře",
-        "jsem",
-        "klima",
-        "kouč",
-        "neměl",
-        "potřeba",
-        "trénování",
-        "zahraniční",
-        "změnit"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1080,7 +1080,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 57411,
+      "bytes": 57696,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1117,7 +1117,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1132,6 +1132,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorého červená? Ve hře byl i jiný přísný trest. Až čas ukáže, jak precedens ovlivní ligu",
+            "publishedAt": "2026-04-14T10:30:00Z"
+          },
           {
             "title": "Názor mentálního kouče na další »blikanec« Chorého: Emoce špatným směrem",
             "publishedAt": "2026-04-14T10:12:00Z"
@@ -1159,10 +1163,6 @@
           {
             "title": "SESTŘIHY: United doma padli s nováčkem. Boj o titul se zamotává, Tottenham v pásmu sestupu",
             "publishedAt": "2026-04-14T07:00:00Z"
-          },
-          {
-            "title": "Problémy pro Slavii: do Hradce bez stoperů a jen s Prekopem? Starost bude mít i Koubek",
-            "publishedAt": "2026-04-14T06:15:00Z"
           }
         ]
       }

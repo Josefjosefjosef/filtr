@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-14T10:30:06.085016Z",
+  "ingestedAt": "2026-04-14T10:49:29.664732Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neobvyklá svačinka. Frustrovaný tenista během tréninku okusoval listí z plotu",
+      "url": "https://www.idnes.cz/sport/trendy/jack-draper.A260414_114446_trendy_blah",
+      "dt": "2026-04-14T10:37:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "během",
+        "frustrovaný",
+        "listí",
+        "neobvyklá",
+        "okusoval",
+        "plotu",
+        "svačinka",
+        "tenista",
+        "tréninku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Překvapilo ho, když se viděl v korupční kauze. Chci své jméno očistit, řekl Rataj",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/tomas-rataj-jelgava-eticka-komise-korupcni-afera-uplatkarstvi.A260414_113411_fot_zahranici_min",
+      "dt": "2026-04-14T10:20:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chci",
+        "jméno",
+        "kauze",
+        "když",
+        "korupční",
+        "očistit",
+        "překvapilo",
+        "rataj",
+        "své",
+        "viděl",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,58 +805,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V lednu podržen, teď odvolán. Za Janotkův konec údajně nemohou jenom výsledky",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/tomas-janotka-konec-pavel-hapal-ondrej-navratil-trener-sigma.A260413_143505_fotbal_hava",
-      "dt": "2026-04-13T14:35:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "janotkův",
-        "jenom",
-        "konec",
-        "lednu",
-        "nemohou",
-        "odvolán",
-        "podržen",
-        "výsledky",
-        "údajně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL v obýváku. Malkin si na návštěvě zahrál hokej s další generací Ovečkinů",
-      "url": "https://www.idnes.cz/sport/trendy/derby-v-obyvaku-malkin-si-na-navsteve-zahral-hokej-s-dalsi-generaci-oveckinu.A260413_110529_trendy_subt",
-      "dt": "2026-04-13T14:22:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "generací",
-        "hokej",
-        "malkin",
-        "nhl",
-        "návštěvě",
-        "obýváku",
-        "ovečkinů",
-        "zahrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +815,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49622,
+      "bytes": 48969,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +852,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -865,6 +867,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neobvyklá svačinka. Frustrovaný tenista během tréninku okusoval listí z plotu",
+            "publishedAt": "2026-04-14T10:37:00Z"
+          },
+          {
+            "title": "Překvapilo ho, když se viděl v korupční kauze. Chci své jméno očistit, řekl Rataj",
+            "publishedAt": "2026-04-14T10:20:00Z"
+          },
           {
             "title": "Těsně mu unikla stovka. A tučná odměna. Zavinil to dřevák Džegr, žertuje Nedvěd",
             "publishedAt": "2026-04-14T10:00:00Z"
@@ -888,14 +898,6 @@
           {
             "title": "Padla rekordní suma za pohár. Becker na aukci své trofeje z US Open ale nevydělal",
             "publishedAt": "2026-04-14T08:23:00Z"
-          },
-          {
-            "title": "Finále mě baví, v nefér baráži nemá vítěz šanci, říká bývalý útočník Ondráček",
-            "publishedAt": "2026-04-14T08:00:00Z"
-          },
-          {
-            "title": "POHLED: Plivnutí, nebo prsknutí? A není to vedlejší? Chorý ukázal, že je nepoučitelný",
-            "publishedAt": "2026-04-14T07:18:00Z"
           }
         ]
       }

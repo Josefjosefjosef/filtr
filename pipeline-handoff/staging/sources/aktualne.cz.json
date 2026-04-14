@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T10:30:06.085016Z",
+  "ingestedAt": "2026-04-14T10:49:29.664732Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusové útočili v na přístav v Oděské oblasti, zasáhli i civilní loď",
+      "title": "Vysílání je „prozatím“ odloženo. Zůna kvůli videu s Pavlem vyjel na Řehku",
+      "url": "https://zpravy.aktualne.cz/domaci/vysilani-je-prozatim-odlozeno-zuna-kvuli-videu-s-pavlem-vyjel-na-rehku/r~aaa292dadea2b41415934e8bcd70b4e0/",
+      "dt": "2026-04-14T10:38:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kvůli",
+        "odloženo",
+        "pavlem",
+        "prozatím",
+        "videu",
+        "vyjel",
+        "vysílání",
+        "zůna",
+        "řehku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
       "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
       "dt": "2026-01-21T06:45:00Z",
       "media_raw": "Aktuálně",
@@ -499,33 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se zítra měří",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/cesko-plne-policejnich-radaru-prohlednete-si-vice-nez-tisic-mist-kde-se-zitra-meri/r~aaa29c438673518abdfd1b41b4098807/",
-      "dt": "2026-04-14T03:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "míst",
-        "měří",
-        "než",
-        "plné",
-        "policejních",
-        "prohlédněte",
-        "radarů",
-        "tisíc",
-        "zítra",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21926,
+      "bytes": 21951,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,12 +572,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T10:38:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 8,
+          "zpravy": 9,
           "sport": 4,
-          "finance": 5,
+          "finance": 4,
           "other": 3
         },
         "drop_counts": {
@@ -592,7 +591,11 @@
         },
         "sample_titles": [
           {
-            "title": "Rusové útočili v na přístav v Oděské oblasti, zasáhli i civilní loď",
+            "title": "Vysílání je „prozatím“ odloženo. Zůna kvůli videu s Pavlem vyjel na Řehku",
+            "publishedAt": "2026-04-14T10:38:00Z"
+          },
+          {
+            "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
@@ -618,10 +621,6 @@
           {
             "title": "Resort průmyslu se bude nově jmenovat ministerstvo hospodářství, oznámil Havlíček",
             "publishedAt": "2026-04-14T08:49:00Z"
-          },
-          {
-            "title": "„Evropská komise do všeho mluví,“ řekl Babiš. Chce snížit unijní regulace",
-            "publishedAt": "2026-04-14T08:26:00Z"
           }
         ]
       }
