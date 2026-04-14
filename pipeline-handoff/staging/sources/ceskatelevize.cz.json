@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-14T08:04:29.261353Z",
+  "ingestedAt": "2026-04-14T08:19:33.305377Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajinci poprvé dobyli ruské pozice bez nasazení vojáků, tvrdí Zelenskyj",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinci-poprve-dobyli-ruske-pozice-bez-nasazeni-vojaku-tvrdi-zelenskyj-372351",
+      "dt": "2026-04-14T08:11:45Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dobyli",
+        "nasazení",
+        "poprvé",
+        "pozice",
+        "ruské",
+        "tvrdí",
+        "ukrajinci",
+        "vojáků",
+        "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -734,33 +760,6 @@
         "přilákal",
         "thajský",
         "vodní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Porážkou Orbána ztratili spojence Putin, Trump i Fico, píše slovenský tisk",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/porazkou-orbana-ztratili-spojence-putin-trump-i-fico-pise-slovensky-tisk-372316",
-      "dt": "2026-04-13T10:39:43Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "fico",
-        "orbána",
-        "porážkou",
-        "putin",
-        "píše",
-        "slovenský",
-        "spojence",
-        "tisk",
-        "trump",
-        "ztratili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1548,7 +1547,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42951,
+      "bytes": 42857,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1608,11 +1607,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T06:48:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:11:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 28,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -1625,6 +1624,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajinci poprvé dobyli ruské pozice bez nasazení vojáků, tvrdí Zelenskyj",
+            "publishedAt": "2026-04-14T08:11:45Z"
+          },
           {
             "title": "EU chce podpořit domácí produkci oceli, sníží dovoz a zvýší clo nad kvóty",
             "publishedAt": "2026-04-14T06:48:05Z"
@@ -1652,10 +1655,6 @@
           {
             "title": "Sněmovna by mohla zrychleně projednat zákon k regulaci cen pohonných hmot",
             "publishedAt": "2026-04-14T02:17:36Z"
-          },
-          {
-            "title": "Vance: USA dosáhly v rozhovorech s Íránem pokroku, Teherán nyní musí jednat",
-            "publishedAt": "2026-04-14T00:49:23Z"
           }
         ]
       }
@@ -1761,7 +1760,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76948,
+      "bytes": 76985,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

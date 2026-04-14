@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T08:04:29.261353Z",
+  "ingestedAt": "2026-04-14T08:19:33.305377Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bizarní vyloučení za zatažení za vlasy. Trenér Manchesteru United zuřil",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-bizarni-vylouceni-za-zatazeni-za-vlasy-trener-manchesteru-united-zuril-5436598",
+      "dt": "2026-04-14T08:06:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bizarní",
+        "manchesteru",
+        "trenér",
+        "united",
+        "vlasy",
+        "vyloučení",
+        "zatažení",
+        "zuřil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,31 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slováci jednají o trenérovi reprezentace, v komisi je i bývalý Hapalův asistent",
-      "url": "https://www.sport.cz/clanek/fotbal-slovaci-jednaji-o-trenerovi-reprezentace-v-komisi-je-i-byvaly-hapaluv-asistent-5436453",
-      "dt": "2026-04-13T16:52:33Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "asistent",
-        "bývalý",
-        "hapalův",
-        "jednají",
-        "komisi",
-        "reprezentace",
-        "slováci",
-        "trenérovi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45639,
+      "bytes": 45607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T08:00:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T08:06:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 27,
@@ -844,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bizarní vyloučení za zatažení za vlasy. Trenér Manchesteru United zuřil",
+            "publishedAt": "2026-04-14T08:06:02Z"
+          },
           {
             "title": "Beckerův pohár za triumf na tenisovém US Open 1989 se prodal za rekordní sumu",
             "publishedAt": "2026-04-14T08:00:13Z"
@@ -871,10 +875,6 @@
           {
             "title": "Litvínov se dozví soupeře pro baráž. Hraje se rozhodující finále Maxa ligy",
             "publishedAt": "2026-04-14T06:48:24Z"
-          },
-          {
-            "title": "GLOSA: Český basketbal se v zámoří hlásí o slovo, má co nabídnout",
-            "publishedAt": "2026-04-14T06:30:54Z"
           }
         ]
       }

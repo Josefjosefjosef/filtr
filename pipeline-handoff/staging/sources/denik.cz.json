@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T08:04:29.261353Z",
+  "ingestedAt": "2026-04-14T08:19:33.305377Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zubař vytrhal muži všechny zuby. Pacient stav nezvládl a spáchal sebevraždu",
+      "url": "https://www.denik.cz/staty-mimo-eu/muz-spachal-sebevrazdu-po-zubarskem-zakroku-v-turecku.html",
+      "dt": "2026-04-14T07:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "muži",
+        "nezvládl",
+        "pacient",
+        "sebevraždu",
+        "spáchal",
+        "stav",
+        "vytrhal",
+        "všechny",
+        "zubař",
+        "zuby"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Brně plánují sjezd sudetští Němci. Magistrát obsadil dav protestujících",
+      "url": "https://www.denik.cz/regiony/magistrat-brno-dav-lidi-protest-sjezd-sudetskych-nemcu.html",
+      "dt": "2026-04-14T06:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brně",
+        "dav",
+        "magistrát",
+        "němci",
+        "obsadil",
+        "plánují",
+        "protestujících",
+        "sjezd",
+        "sudetští"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -607,58 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stát snížil palivové stropy. Nafta musí zlevnit o více než korunu padesát",
-      "url": "https://www.denik.cz/ekonomika/cesko-maximalni-ceny-paliv-ministerstvo-financi-rozhodnuti-utery-14-dubna.html",
-      "dt": "2026-04-13T12:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "korunu",
-        "musí",
-        "nafta",
-        "než",
-        "padesát",
-        "palivové",
-        "snížil",
-        "stropy",
-        "stát",
-        "zlevnit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nedovolili to. Ministerstvo obrany armádě zakázalo odvysílat rozhovor s Pavlem",
-      "url": "https://www.denik.cz/z_domova/armada-cr-rozhovor-s-petrem-pavlem-ministerstvo-obrany-zakaz.html",
-      "dt": "2026-04-13T12:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "armádě",
-        "ministerstvo",
-        "nedovolili",
-        "obrany",
-        "odvysílat",
-        "pavlem",
-        "rozhovor",
-        "zakázalo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31522,
+      "bytes": 31196,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,12 +707,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T07:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "zpravy": 22,
           "zdravi": 2,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -723,6 +724,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zubař vytrhal muži všechny zuby. Pacient stav nezvládl a spáchal sebevraždu",
+            "publishedAt": "2026-04-14T07:40:00Z"
+          },
+          {
+            "title": "V Brně plánují sjezd sudetští Němci. Magistrát obsadil dav protestujících",
+            "publishedAt": "2026-04-14T06:53:00Z"
+          },
           {
             "title": "David Stypka? Ještě pořád mám v očích slzy, říká Svátek o natáčení jeho portrétu",
             "publishedAt": "2026-04-14T06:00:00Z"
@@ -746,14 +755,6 @@
           {
             "title": "Kanadští liberálové získali v parlamentu většinu",
             "publishedAt": "2026-04-14T04:39:00Z"
-          },
-          {
-            "title": "Vracejí lidi do života. V Praze se sejdou zdravotníci z následné intenzivní péče",
-            "publishedAt": "2026-04-14T04:05:00Z"
-          },
-          {
-            "title": "Letošní přijímací zkoušky? Stres ano, zákeřné chytáky ale nebyly, tvrdí experti",
-            "publishedAt": "2026-04-14T03:30:00Z"
           }
         ]
       }
