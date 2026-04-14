@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-14T03:59:23.644178Z",
+  "ingestedAt": "2026-04-14T04:14:28.822348Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vodík je extrémně drahý, bez biopaliv cíle nesplníme, říká šéf Orlen Unipetrolu Iwanowski",
+      "url": "https://ekonomickydenik.cz/vodik-extremne-drahy-biopaliva-orlen-unipetrol/",
+      "dt": "2026-04-14T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "biopaliv",
+        "cíle",
+        "drahý",
+        "extrémně",
+        "iwanowski",
+        "nesplníme",
+        "orlen",
+        "unipetrolu",
+        "vodík",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -751,32 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Chladnější zima vyvolá průvan v peněžence. Náklady na vytápění rostou až o 20 procent",
-      "url": "https://ekonomickydenik.cz/naklady-na-vytapeni-rostou/",
-      "dt": "2026-04-12T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chladnější",
-        "náklady",
-        "peněžence",
-        "procent",
-        "průvan",
-        "rostou",
-        "vytápění",
-        "vyvolá",
-        "zima"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73794,
+      "bytes": 73832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,11 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T17:53:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "cestovani": 1,
           "finance": 24,
+          "cestovani": 1,
           "zpravy": 2,
           "zdravi": 3
         },
@@ -842,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vodík je extrémně drahý, bez biopaliv cíle nesplníme, říká šéf Orlen Unipetrolu Iwanowski",
+            "publishedAt": "2026-04-14T04:05:00Z"
+          },
           {
             "title": "Letenky zdražují o stokoruny až jednotky tisíc. Zájezdy se zatím neruší",
             "publishedAt": "2026-04-13T17:53:58Z"
@@ -869,10 +875,6 @@
           {
             "title": "Pavel: „V Maďarsku zvítězila demokracie.“ Co vzkázal vítězi a co poraženému?",
             "publishedAt": "2026-04-13T13:37:21Z"
-          },
-          {
-            "title": "Po maďarských volbách za mříže? Dva politiky budou řešit soudy",
-            "publishedAt": "2026-04-13T13:21:18Z"
           }
         ]
       }

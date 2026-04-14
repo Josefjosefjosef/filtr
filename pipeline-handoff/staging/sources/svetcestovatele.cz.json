@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-14T03:59:23.644178Z",
+  "ingestedAt": "2026-04-14T04:14:28.822348Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Tak tenhle pytlák mě dostal. Zdrhal tak rychle, že na břehu nechal i přítelkyni. To si tedy pomohl",
+      "url": "https://www.svetcestovatele.cz/tak-tenhle-pytlak-me-dostal-zdrhal-tak-rychle-ze-na-brehu-nechal-i-pritelkyni-to-si-tedy-pomohl/",
+      "dt": "2026-04-14T04:00:25Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "břehu",
+        "dostal",
+        "nechal",
+        "pomohl",
+        "pytlák",
+        "přítelkyni",
+        "rychle",
+        "tak",
+        "tedy",
+        "tenhle",
+        "zdrhal"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -503,32 +531,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Letní sezona začíná. Jaké novinky nabízí letiště Brno? A co Praha?",
-      "url": "https://www.svetcestovatele.cz/letni-sezona-zacina-jake-novinky-nabizi-letiste-brno-a-co-praha/",
-      "dt": "2026-04-05T11:00:38Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "brno",
-        "jaké",
-        "letiště",
-        "letní",
-        "nabízí",
-        "novinky",
-        "praha",
-        "sezona",
-        "začíná"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 144688,
+      "bytes": 144219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-13T11:00:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:00:25Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -591,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tak tenhle pytlák mě dostal. Zdrhal tak rychle, že na břehu nechal i přítelkyni. To si tedy pomohl",
+            "publishedAt": "2026-04-14T04:00:25Z"
+          },
           {
             "title": "Česká letiště si v loňském roce připsala rekord v počtu cestujících",
             "publishedAt": "2026-04-13T11:00:20Z"
@@ -618,10 +624,6 @@
           {
             "title": "Když v Albánii nechcete jen ležet na pláži, vydejte se do Gjirokastry",
             "publishedAt": "2026-04-10T11:00:43Z"
-          },
-          {
-            "title": "Kam na wellness o květnových svátcích? Záleží, co od něj opravdu čekáte",
-            "publishedAt": "2026-04-10T05:43:16Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-14T03:59:23.644178Z",
+  "ingestedAt": "2026-04-14T04:14:28.822348Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař si podmanil nájezdy a dotáhl Flyers do bojů o Stanley Cup",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-si-podmanil-najezdy-a-dotahl-flyers-do-boju-o-stanley-cup-5436584",
+      "dt": "2026-04-14T03:59:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bojů",
+        "cup",
+        "dotáhl",
+        "flyers",
+        "nájezdy",
+        "podmanil",
+        "stanley",
+        "vladař"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,29 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Procházka si po K. O. sype popel na hlavu, má rozdrcený zub",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-za-blbosti-se-plati-uvedomil-si-prochazka-souper-mu-rozdrtil-zub-5436426",
-      "dt": "2026-04-13T13:48:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hlavu",
-        "popel",
-        "procházka",
-        "rozdrcený",
-        "sype",
-        "zub"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43228,
+      "bytes": 42664,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-13T21:09:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:59:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 26,
@@ -839,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař si podmanil nájezdy a dotáhl Flyers do bojů o Stanley Cup",
+            "publishedAt": "2026-04-14T03:59:25Z"
+          },
           {
             "title": "Leeds slaví vítězství na půdě Manchesteru United, na Old Trafford vyhrál po 45 letech",
             "publishedAt": "2026-04-13T21:09:03Z"
@@ -866,10 +872,6 @@
           {
             "title": "SESTŘIH: Sparta zvládla i další zápas nad propastí! O druhém finalistovi rozhodne sedmý duel",
             "publishedAt": "2026-04-13T12:00:12Z"
-          },
-          {
-            "title": "Dukla má ze sedmého finále šrám, Zlín také cítí tlak. Favorit nejsme, zní z Jihlavy",
-            "publishedAt": "2026-04-13T19:23:56Z"
           }
         ]
       }

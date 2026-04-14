@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-14T03:59:23.644178Z",
+  "ingestedAt": "2026-04-14T04:14:28.822348Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Letošní přijímačky? Stres ano, zákeřné chytáky tam ale nebyly, říkají odborníci",
+      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/prijimacky-na-stredni-skoly-2026-vysledky-hodnoceni-testu-matematika-cestina.html",
+      "dt": "2026-04-14T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "ano",
+        "chytáky",
+        "letošní",
+        "nebyly",
+        "odborníci",
+        "přijímačky",
+        "stres",
+        "tam",
+        "zákeřné",
+        "říkají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -217,19 +245,20 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Vláda chce moc nad cenami paliv v době krize: Co nového zákon přinese",
+      "title": "Vláda chce moc nad cenou benzinu a nafty v době krize: Co nového zákon přinese",
       "url": "https://www.denik.cz/ekonomika/cesko-ekonmika-cena-paliv-vlada-zakon-zastropovani-benzin-nafta-cena.html",
       "dt": "2026-04-13T14:28:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "cenami",
+        "benzinu",
+        "cenou",
         "chce",
         "době",
         "krize",
         "moc",
+        "nafty",
         "nového",
-        "paliv",
         "přinese",
         "vláda",
         "zákon"
@@ -633,33 +662,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zemřel Václav Hybš: Dirigoval hvězdy, rozešel se s Matuškou a těsně unikl smrti",
-      "url": "https://www.denik.cz/hudba/zemrel-vaclav-hybs.html",
-      "dt": "2026-04-13T10:33:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dirigoval",
-        "hvězdy",
-        "hybš",
-        "matuškou",
-        "rozešel",
-        "smrti",
-        "těsně",
-        "unikl",
-        "václav",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +672,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30534,
+      "bytes": 30857,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +709,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -724,6 +726,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letošní přijímačky? Stres ano, zákeřné chytáky tam ale nebyly, říkají odborníci",
+            "publishedAt": "2026-04-14T03:30:00Z"
+          },
           {
             "title": "Drogy na pláži? Ostrov São Miguel zaplavil kokain už před 25 lety. A zabíjel",
             "publishedAt": "2026-04-14T03:00:00Z"
@@ -751,10 +757,6 @@
           {
             "title": "Letadlo Smartwings při odletu z Madeiry škrtlo o ranvej a pokračovalo do Prahy",
             "publishedAt": "2026-04-13T15:09:00Z"
-          },
-          {
-            "title": "Kauza odpálení bankomatů: Soud poslal podezřelé do vazby, v bytě měli výbušniny",
-            "publishedAt": "2026-04-13T14:29:00Z"
           }
         ]
       }

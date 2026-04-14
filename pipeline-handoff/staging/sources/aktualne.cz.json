@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-14T03:59:23.644178Z",
+  "ingestedAt": "2026-04-14T04:14:28.822348Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Švýcarce tekly nervy. Fantastická Nosková táhla tým i v nedůstojných kulisách, míní Lojda",
+      "url": "https://sport.aktualne.cz/tenis/svycarce-tekly-nervy-fantasticka-noskova-tahla-tym-i-v-nedustojnych-kulisach-mini-lojda/r~aaa293f16b10087ee8ed8fb1c6c50679/",
+      "dt": "2026-04-14T04:07:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "fantastická",
+        "kulisách",
+        "lojda",
+        "míní",
+        "nedůstojných",
+        "nervy",
+        "nosková",
+        "tekly",
+        "táhla",
+        "tým",
+        "švýcarce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jeden den v životě krasobruslařské legendy. Nový film o Nepelovi má své limity",
+      "url": "https://magazin.aktualne.cz/kultura/film/jeden-den-v-zivote-krasobruslarske-legendy-novy-film-o-nepelovi-ma-sve-limity/r~aaa29f56450932b5505669b957a0d9b5/",
+      "dt": "2026-04-14T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "den",
+        "film",
+        "jeden",
+        "krasobruslařské",
+        "legendy",
+        "limity",
+        "nepelovi",
+        "nový",
+        "své",
+        "životě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -471,59 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Z tichého talentu se stal ikonou Devils. Zprvu přitom Eliáše odepisovali",
-      "url": "https://sport.aktualne.cz/hokej/z-ticheho-talentu-se-stal-ikonou-devils-zprvu-pritom-eliase-odepisovali/r~aaa29db15087b64cb5b0d124409674cc/",
-      "dt": "2026-04-13T18:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "devils",
-        "eliáše",
-        "ikonou",
-        "odepisovali",
-        "přitom",
-        "stal",
-        "talentu",
-        "tichého",
-        "zprvu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "\"Rusové, domů!\" Orbána dohnala jeho minulost, takový vládce tu ještě nebyl",
-      "url": "https://zpravy.aktualne.cz/zahranici/rusove-domu-orbana-dohnala-jeho-minulost-takovy-vladce-tu-jeste-nebyl/r~aaa29aea46199457ae224d13cc5252b9/",
-      "dt": "2026-04-13T17:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dohnala",
-        "domů",
-        "jeho",
-        "ještě",
-        "minulost",
-        "nebyl",
-        "orbána",
-        "rusové",
-        "takový",
-        "vládce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21582,
+      "bytes": 21563,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,12 +573,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T03:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-14T04:07:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
+          "other": 1,
           "finance": 1,
-          "zpravy": 14,
-          "sport": 5
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -588,6 +591,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Švýcarce tekly nervy. Fantastická Nosková táhla tým i v nedůstojných kulisách, míní Lojda",
+            "publishedAt": "2026-04-14T04:07:00Z"
+          },
+          {
+            "title": "Jeden den v životě krasobruslařské legendy. Nový film o Nepelovi má své limity",
+            "publishedAt": "2026-04-14T04:00:00Z"
+          },
           {
             "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se zítra měří",
             "publishedAt": "2026-04-14T03:45:00Z"
@@ -611,14 +622,6 @@
           {
             "title": "Chorý udělal to nejodpornější, čeho se může někdo dopustit, nechápe Šenkeřík",
             "publishedAt": "2026-04-13T14:00:00Z"
-          },
-          {
-            "title": "Leeds bojující o záchranu šokoval Old Trafford. Senzaci zařídil Okafor",
-            "publishedAt": "2026-04-13T21:00:00Z"
-          },
-          {
-            "title": "Špaček se proměnil z viníka na hrdinu. Spartě vystřelil naději",
-            "publishedAt": "2026-04-13T20:44:00Z"
           }
         ]
       }
