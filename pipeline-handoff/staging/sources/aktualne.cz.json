@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T03:40:23.593997Z",
+  "ingestedAt": "2026-04-15T04:00:14.827143Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kdo dá víc? Automobilky se začaly předhánět se zárukami, ten nejodvážnější překvapil",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/zaruka-jakou-jine-auto-nema-cinska-znacka-se-vtira-do-prizne-cechu-rekordni-jistotou/r~aaa294b6f0de4812c26cd3ebe04b5edf/",
+      "dt": "2026-04-15T03:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "automobilky",
+        "nejodvážnější",
+        "předhánět",
+        "překvapil",
+        "ten",
+        "víc",
+        "začaly",
+        "zárukami"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -499,32 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "\"Cesta do orbánovského Maďarska.\" Opozice slibuje vládě peklo, varuje před likvidací ČT",
-      "url": "https://zpravy.aktualne.cz/ekonomika/cesta-do-orbanovskeho-madarska-opozice-slibuje-vlade-peklo-varuje-pred-likvidaci-ct/r~aaa29e0a51367f26edcf79366222d4a3/",
-      "dt": "2026-04-14T14:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cesta",
-        "likvidací",
-        "maďarska",
-        "opozice",
-        "orbánovského",
-        "peklo",
-        "slibuje",
-        "varuje",
-        "vládě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22208,
+      "bytes": 22410,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,11 +571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T03:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
           "finance": 4,
+          "zpravy": 12,
           "sport": 3,
           "zdravi": 1
         },
@@ -590,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo dá víc? Automobilky se začaly předhánět se zárukami, ten nejodvážnější překvapil",
+            "publishedAt": "2026-04-15T03:45:00Z"
+          },
           {
             "title": "„Je neuvěřitelný.“ 17letý syn mocného úředníka měl falšovat razítka advokáta. Už reagoval",
             "publishedAt": "2026-04-15T03:30:00Z"
@@ -617,10 +620,6 @@
           {
             "title": "Barceloně výhra nestačila, dál jde překvapivě Atlético. PSG vyřadilo Liverpool",
             "publishedAt": "2026-04-14T21:06:00Z"
-          },
-          {
-            "title": "Chcete si ji potěžkat? Milei ukázal Pavlovi svou legendární rozpočtovou pilu",
-            "publishedAt": "2026-04-14T20:42:00Z"
           }
         ]
       }
