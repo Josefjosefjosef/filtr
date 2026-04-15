@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T14:04:04.305902Z",
+  "ingestedAt": "2026-04-15T14:22:37.440874Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mistrovství ČR v rallye 2026: kalendář, program, výsledky závodů",
+      "url": "https://www.idnes.cz/sport/motorsport/mcr-v-rallye-2026.A260414_083729_motorsport_ald",
+      "dt": "2026-04-15T14:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "kalendář",
+        "mistrovství",
+        "program",
+        "rallye",
+        "výsledky",
+        "závodů"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kdysi vyřadil Haška, teď jde Reichel na Duklu zase: Na baráž jsme vše předělali",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-verva-litvinov-dukla-jihlava-baraz-robert-reichel-dominik-hasek.A260415_141334_hokej_pbi",
+      "dt": "2026-04-15T13:38:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráž",
+        "duklu",
+        "haška",
+        "jde",
+        "jsme",
+        "kdysi",
+        "předělali",
+        "reichel",
+        "vyřadil",
+        "vše",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -744,56 +796,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Atlético vybojovalo nad Barcelonou semifinále, postup PSG řídil Dembélé",
-      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-ctvrtfinale-atletico-barcelona-psg-liverpool.A260414_124400_fot_pohary_tals",
-      "dt": "2026-04-14T21:50:02Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "atlético",
-        "barcelonou",
-        "dembélé",
-        "postup",
-        "psg",
-        "semifinále",
-        "vybojovalo",
-        "řídil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Maradonova smrt před soudem. Lékařům hrozí až 25 let za nedostatečnou péči",
-      "url": "https://www.idnes.cz/fotbal/zahranici/maradonova-smrt-pred-soudem-lekarum-hrozi-az-25-let-vezeni.A260414_221301_fot_zahranici_mrg",
-      "dt": "2026-04-14T20:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hrozí",
-        "let",
-        "lékařům",
-        "maradonova",
-        "nedostatečnou",
-        "péči",
-        "smrt",
-        "soudem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46986,
+      "bytes": 46520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T14:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -857,6 +859,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mistrovství ČR v rallye 2026: kalendář, program, výsledky závodů",
+            "publishedAt": "2026-04-15T14:00:00Z"
+          },
+          {
+            "title": "Kdysi vyřadil Haška, teď jde Reichel na Duklu zase: Na baráž jsme vše předělali",
+            "publishedAt": "2026-04-15T13:38:00Z"
+          },
           {
             "title": "I Macron bojuje za národní diamant. Seixas prolomil kletbu a Francouzi jsou na nohou",
             "publishedAt": "2026-04-15T13:05:00Z"
@@ -880,14 +890,6 @@
           {
             "title": "Jak můžete takhle hrát? tepal trenér v NHL své hráče. Do médií zahlásil: Je jim to jedno",
             "publishedAt": "2026-04-15T11:14:00Z"
-          },
-          {
-            "title": "Badminton opouští legenda, olympijský šampion Axelsen ukončil kariéru",
-            "publishedAt": "2026-04-15T11:08:00Z"
-          },
-          {
-            "title": "Už brzdím i skáču! Gabriel se naučil snášet samotu, ve Španělsku o něj pečuje expert",
-            "publishedAt": "2026-04-15T11:00:00Z"
           }
         ]
       }
