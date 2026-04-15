@@ -25732,7 +25732,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           persistNavState({ section: normalizeSection(accent) });
         }
       }
-      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl(''); } catch {}
+      /* P0 webnav back-stack: persistNavState already push/replace — panel clear must replaceState, else pushState duplicates the URL and the first Back pops a no-op instead of the overlay. */
+      try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('', { replace: true }); } catch {}
       var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
       var fromWebNavGateNav =
         gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
