@@ -1,30 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T16:14:44.666704Z",
+  "ingestedAt": "2026-04-15T16:34:28.842153Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Rozhodující bitva o finále. Pardubice v úvodu podržela tyč, Pešán pozměnil sestavu",
+      "title": "HOKEJ ONLINE: Videomomenty. Dynamo se ujímá vedení po chybě Krejčíka",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-rozhodujici-bitva-o-finale-dynamo-hosti-spartu-v-sedmem-zapase-5436987",
       "dt": "2026-04-15T13:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bitva",
-        "finále",
+        "chybě",
+        "dynamo",
         "hokej",
+        "krejčíka",
         "online",
-        "pardubice",
-        "pešán",
-        "podržela",
-        "pozměnil",
-        "rozhodující",
-        "sestavu",
-        "tyč",
-        "videomomenty",
-        "úvodu"
+        "ujímá",
+        "vedení",
+        "videomomenty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Macháč se bitvy s Alcarazem nedočká. Španěl odstoupil",
+      "url": "https://www.sport.cz/clanek/tenis-bitva-s-machacem-visi-ve-vzduchu-alcaraz-bojuje-se-zranenim-5437033",
+      "dt": "2026-04-15T14:20:57Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "alcarazem",
+        "bitvy",
+        "macháč",
+        "nedočká",
+        "odstoupil",
+        "španěl"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -384,30 +402,6 @@
         "majitel",
         "postup",
         "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nad bitvou s Macháčem visí otazník. Alcaraz bojuje se zraněním",
-      "url": "https://www.sport.cz/clanek/tenis-bitva-s-machacem-visi-ve-vzduchu-alcaraz-bojuje-se-zranenim-5437033",
-      "dt": "2026-04-15T14:20:57Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "alcaraz",
-        "bitvou",
-        "bojuje",
-        "macháčem",
-        "otazník",
-        "visí",
-        "zraněním"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -792,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41349,
+      "bytes": 41261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,8 +839,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Rozhodující bitva o finále. Pardubice v úvodu podržela tyč, Pešán pozměnil sestavu",
+            "title": "HOKEJ ONLINE: Videomomenty. Dynamo se ujímá vedení po chybě Krejčíka",
             "publishedAt": "2026-04-15T13:00:00Z"
+          },
+          {
+            "title": "Macháč se bitvy s Alcarazem nedočká. Španěl odstoupil",
+            "publishedAt": "2026-04-15T14:20:57Z"
           },
           {
             "title": "Nosková úspěšně zahájila antukovou sezonu",
@@ -871,10 +869,6 @@
           {
             "title": "Legendy se vrátí na místo činu. Štvanice ožije turnajem i vzpomínkou na památný Fed Cup",
             "publishedAt": "2026-04-15T15:23:19Z"
-          },
-          {
-            "title": "Bínová je první českou juniorskou vicemistryní světa v taekwondu",
-            "publishedAt": "2026-04-15T15:14:48Z"
           }
         ]
       }

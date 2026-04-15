@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T16:14:44.666704Z",
+  "ingestedAt": "2026-04-15T16:34:28.842153Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Odmítá &bdquo;ultras&ldquo; i pražské Spolu. Šéfem lidovců ještě není, přesto už Grolich promlouvá do koalic v metropoli",
+      "url": "https://domaci.hn.cz/c1-67867350-odmita-bdquo-ultras-ldquo-i-prazske-spolu-sefem-lidovcu-jeste-neni-presto-uz-grolich-promlouva-do-koalic-v-metropoli",
+      "dt": "2026-04-15T16:22:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "grolich",
+        "ještě",
+        "koalic",
+        "ldquo",
+        "lidovců",
+        "metropoli",
+        "odmítá",
+        "pražské",
+        "promlouvá",
+        "přesto",
+        "spolu",
+        "ultras",
+        "šéfem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1125,28 +1156,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Greenpeace varuje před možným zřícením Černobylu",
-      "url": "https://archiv.hn.cz/c1-67867030-greenpeace-varuje-pred-moznym-zricenim-cernobylu",
-      "dt": "2026-04-14T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "greenpeace",
-        "možným",
-        "varuje",
-        "zřícením",
-        "černobylu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1166,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185784,
+      "bytes": 185801,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1194,11 +1203,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T16:22:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 37
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1210,6 +1219,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odmítá &bdquo;ultras&ldquo; i pražské Spolu. Šéfem lidovců ještě není, přesto už Grolich promlouvá do koalic v metropoli",
+            "publishedAt": "2026-04-15T16:22:00Z"
+          },
           {
             "title": "Hnutí MAGA je ve válce s papežem. Trump i Vance zaútočili na Lva XIV., katolíci se nestačí divit",
             "publishedAt": "2026-04-15T16:00:00Z"
@@ -1236,10 +1249,6 @@
           },
           {
             "title": "Poslanci znovu schválili zavedení Dne české vlajky. Podle Babiše posílí národní hrdost",
-            "publishedAt": "2026-04-15T14:45:00Z"
-          },
-          {
-            "title": "Prodej majetku zkrachovalého Bikera je v plném proudu. Kolem krouží zájemci z cyklo branže, prodávající tlačí čas",
             "publishedAt": "2026-04-15T14:45:00Z"
           }
         ]

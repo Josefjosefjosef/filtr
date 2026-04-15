@@ -1,26 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T16:14:44.666704Z",
+  "ingestedAt": "2026-04-15T16:34:28.842153Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci schválili významný Den české vlajky 30. března, který navrhl Babiš",
-      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-zavedeni-vyznamneho-dne-ceske-vlajky.A260415_041709_domaci_kop",
-      "dt": "2026-04-15T16:00:00Z",
+      "title": "Klempíř: Musí se umět šetřit, rušení poplatků není útokem na demokracii",
+      "url": "https://www.idnes.cz/zpravy/domaci/klempir-ct-cro-rozpocet-demokracie-verejnopravni-media.A260415_174321_domaci_sahu",
+      "dt": "2026-04-15T16:10:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "babiš",
-        "března",
-        "den",
-        "navrhl",
-        "poslanci",
-        "schválili",
-        "vlajky",
-        "významný",
-        "české"
+        "demokracii",
+        "klempíř",
+        "musí",
+        "poplatků",
+        "rušení",
+        "umět",
+        "útokem",
+        "šetřit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -45,6 +44,32 @@
         "návrhu",
         "odnést",
         "stardance"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci schválili významný Den české vlajky 30. března, který navrhl Babiš",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-zavedeni-vyznamneho-dne-ceske-vlajky.A260415_041709_domaci_kop",
+      "dt": "2026-04-15T16:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babiš",
+        "března",
+        "den",
+        "navrhl",
+        "poslanci",
+        "schválili",
+        "vlajky",
+        "významný",
+        "české"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -748,31 +773,6 @@
         "schillerová",
         "výdaje",
         "zvýšit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vystřílím vás, vyhrožovala žena personálu nemocnice. Došla si pro ni zásahovka",
-      "url": "https://www.idnes.cz/plzen/zpravy/policie-nebezpecne-vyhrozovani-fn-personal-zena-telefonat-vystrileni.A260415_141911_plzen-zpravy_vb",
-      "dt": "2026-04-15T13:04:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "došla",
-        "nemocnice",
-        "personálu",
-        "vyhrožovala",
-        "vystřílím",
-        "vás",
-        "zásahovka",
-        "žena"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48748,
+      "bytes": 49082,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T16:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1636,11 +1636,15 @@
         },
         "sample_titles": [
           {
-            "title": "Poslanci schválili významný Den české vlajky 30. března, který navrhl Babiš",
-            "publishedAt": "2026-04-15T16:00:00Z"
+            "title": "Klempíř: Musí se umět šetřit, rušení poplatků není útokem na demokracii",
+            "publishedAt": "2026-04-15T16:10:00Z"
           },
           {
             "title": "Hrozí autocenzura, odnést to může i StarDance. Expertka o Klempířově návrhu",
+            "publishedAt": "2026-04-15T16:00:00Z"
+          },
+          {
+            "title": "Poslanci schválili významný Den české vlajky 30. března, který navrhl Babiš",
             "publishedAt": "2026-04-15T16:00:00Z"
           },
           {
@@ -1662,10 +1666,6 @@
           {
             "title": "Z nádraží ujel pracovní vlak bez obsluhy. Poškodil výhybku, zastavil po mnoha kilometrech",
             "publishedAt": "2026-04-15T15:23:00Z"
-          },
-          {
-            "title": "Policie odložila prověřování ČAK v kauze obří zpronevěry advokátky Sukové",
-            "publishedAt": "2026-04-15T15:21:00Z"
           }
         ]
       }
