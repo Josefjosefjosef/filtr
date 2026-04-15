@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T13:20:17.831366Z",
+  "ingestedAt": "2026-04-15T13:41:20.991867Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Žena vyhrožovala vystřílením plzeňské nemocnice. Neřekli jí stav pacienta",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zena-vyhrozovala-vystrilenim-plzenske-nemocnice-nerekli-ji-stav-pacienta/",
+      "dt": "2026-04-15T13:36:04Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "nemocnice",
+        "neřekli",
+        "pacienta",
+        "plzeňské",
+        "stav",
+        "vyhrožovala",
+        "vystřílením",
+        "žena"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Peklo na kůži. Spor o následky léčby ekzému kortikosteroidy budí emoce",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/peklo-na-kuzi-nasledky-lecby-ekzemu/",
-      "dt": "2026-04-14T13:50:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "budí",
-        "ekzému",
-        "emoce",
-        "kortikosteroidy",
-        "kůži",
-        "léčby",
-        "následky",
-        "peklo",
-        "spor"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 113239,
+      "bytes": 101097,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:36:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -337,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žena vyhrožovala vystřílením plzeňské nemocnice. Neřekli jí stav pacienta",
+            "publishedAt": "2026-04-15T13:36:04Z"
+          },
           {
             "title": "Kolik šálků kávy denně prospívá psychice? Vědci našli překvapivě přesné číslo",
             "publishedAt": "2026-04-15T12:47:00Z"
@@ -364,10 +367,6 @@
           {
             "title": "Hazard se životy končí: Vojtěch chce udělat tečku za trofejními výkony na játrech či slinivce",
             "publishedAt": "2026-04-15T06:00:00Z"
-          },
-          {
-            "title": "Konec papírování? Evropská komise slibuje miliardové úspory pro zdravotnické firmy",
-            "publishedAt": "2026-04-15T05:00:00Z"
           }
         ]
       }

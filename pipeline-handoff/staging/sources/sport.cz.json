@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T13:20:17.831366Z",
+  "ingestedAt": "2026-04-15T13:41:20.991867Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zemřel legendární obránce Realu Madrid José Santamaría",
+      "url": "https://www.sport.cz/clanek/fotbal-la-liga-zemrel-legendarni-obrance-realu-madrid-jose-santamaria-5437008",
+      "dt": "2026-04-15T09:06:22Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "josé",
+        "legendární",
+        "madrid",
+        "obránce",
+        "realu",
+        "santamaría",
+        "zemřel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -483,30 +507,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel legendární obránce Realu Madrid José Santamaría",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-zemrel-legendarni-obrance-realu-madrid-jose-santamaria-5437008",
-      "dt": "2026-04-15T09:06:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "josé",
-        "legendární",
-        "madrid",
-        "obránce",
-        "realu",
-        "santamaría",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "doprava",
       "contentType": "article",
       "title": "Miliardář Staněk chce koupit Autodrom Most. Současného majitele informace zaskočily",
@@ -813,7 +813,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46030,
+      "bytes": 46566,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -867,6 +867,10 @@
         },
         "sample_titles": [
           {
+            "title": "Zemřel legendární obránce Realu Madrid José Santamaría",
+            "publishedAt": "2026-04-15T09:06:22Z"
+          },
+          {
             "title": "Sigma hledá trenéra, padají první jména. Mezi nimi je asistent osmifinalisty Ligy mistrů",
             "publishedAt": "2026-04-15T12:30:45Z"
           },
@@ -893,10 +897,6 @@
           {
             "title": "Šílený závěr zápasu. Po proměněném mečbolu skončili v turnaji oba tenisté",
             "publishedAt": "2026-04-15T11:13:51Z"
-          },
-          {
-            "title": "Dohra vypjatého derby. Fandové Slavie se složili na pokutu fyzioterapeutovi, který kopl do Kuchty",
-            "publishedAt": "2026-04-15T11:11:27Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T13:20:17.831366Z",
+  "ingestedAt": "2026-04-15T13:41:20.991867Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "I Macron bojuje za národní diamant. Seixas prolomil kletbu a Francouzi jsou na nohou",
+      "url": "https://www.idnes.cz/sport/cyklistika/paul-seixas-francouzska-cyklistika-tour-de-france-emmanuel-macron.A260415_094831_cyklistika_ipet",
+      "dt": "2026-04-15T13:05:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bojuje",
+        "diamant",
+        "francouzi",
+        "kletbu",
+        "macron",
+        "nohou",
+        "národní",
+        "prolomil",
+        "seixas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,31 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lvi hladce porazili českobudějovické volejbalisty a jsou jednu výhru od finále",
-      "url": "https://www.idnes.cz/sport/ostatni/volejbalova-extraliga-muzu-semifinale-play-off-3-zapas-lvi-praha-ceske-budejovice.A260414_222734_sporty_ten",
-      "dt": "2026-04-14T20:29:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finále",
-        "hladce",
-        "jednu",
-        "lvi",
-        "porazili",
-        "volejbalisty",
-        "výhru",
-        "českobudějovické"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46690,
+      "bytes": 46986,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I Macron bojuje za národní diamant. Seixas prolomil kletbu a Francouzi jsou na nohou",
+            "publishedAt": "2026-04-15T13:05:00Z"
+          },
           {
             "title": "Mimořádná suma za mimořádný dres. V aukci se prodal Pogačarův roztrhaný trikot",
             "publishedAt": "2026-04-15T12:58:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "Už brzdím i skáču! Gabriel se naučil snášet samotu, ve Španělsku o něj pečuje expert",
             "publishedAt": "2026-04-15T11:00:00Z"
-          },
-          {
-            "title": "Jako filmové hvězdy. Basketbalistky vyměnily dresy za večerní róby",
-            "publishedAt": "2026-04-15T10:45:00Z"
           }
         ]
       }

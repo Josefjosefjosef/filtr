@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-15T13:20:17.831366Z",
+  "ingestedAt": "2026-04-15T13:41:20.991867Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Škola získala humanoidního robota. Při uvedení předvedl Jacksona, Elvise i kung-fu",
+      "url": "https://www.idnes.cz/zlin/zpravy/skola-orbis-zlin-humanoidni-robot-programovani.A260415_121130_zlin-zpravy_stoj",
+      "dt": "2026-04-15T13:07:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "elvise",
+        "humanoidního",
+        "jacksona",
+        "kung",
+        "předvedl",
+        "při",
+        "robota",
+        "uvedení",
+        "získala",
+        "škola"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -741,31 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neuvěřitelné snímky z obletu Měsíce i zatmění, které nás vzaly za srdce",
-      "url": "https://www.idnes.cz/technet/vesmir/artemis-vesmir-mesic-posadka-sls-orion-oblet-start.A260407_174024_tec_vesmir_vse/foto",
-      "dt": "2026-04-07T18:45:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "měsíce",
-        "neuvěřitelné",
-        "nás",
-        "obletu",
-        "snímky",
-        "srdce",
-        "vzaly",
-        "zatmění"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 48980,
+      "bytes": 48425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,11 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T08:02:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:07:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 24,
-          "zpravy": 6
+          "other": 25,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -829,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Škola získala humanoidního robota. Při uvedení předvedl Jacksona, Elvise i kung-fu",
+            "publishedAt": "2026-04-15T13:07:00Z"
+          },
           {
             "title": "Lidi, přestaňte na webu sdílet screenshoty místo textu. Je to čisté zlo",
             "publishedAt": "2026-04-15T08:02:02Z"
@@ -856,10 +862,6 @@
           {
             "title": "Proleťte se kolem Měsíce s posádkou Artemis II, ale pozpátku",
             "publishedAt": "2026-04-13T22:00:00Z"
-          },
-          {
-            "title": "Úkoly a letadla podniku ČSA Agrolet. Nejen u Galanty to bylo jako na frontě",
-            "publishedAt": "2026-04-12T22:00:00Z"
           }
         ]
       }
