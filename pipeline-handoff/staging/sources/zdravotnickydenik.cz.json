@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T10:14:21.870612Z",
+  "ingestedAt": "2026-04-15T10:33:00.364407Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "AI bude objednávat testy i plánovat návštěvy lékaře. V Americe chystají velký experiment",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/ai-bude-objednavat-testy-i-planovat-navstevy-lekare/",
+      "dt": "2026-04-15T10:23:39Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "americe",
+        "chystají",
+        "experiment",
+        "lékaře",
+        "návštěvy",
+        "objednávat",
+        "plánovat",
+        "testy",
+        "velký"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/spalovna-zdravotnickeho-odpadu-lod-melnik/",
-      "dt": "2026-04-14T11:04:49Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ekologové",
-        "firma",
-        "kritiku",
-        "lodi",
-        "odmítá",
-        "odpadu",
-        "spalovnou",
-        "varují",
-        "zdravotnického"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 108680,
+      "bytes": 108859,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:11:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:23:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AI bude objednávat testy i plánovat návštěvy lékaře. V Americe chystají velký experiment",
+            "publishedAt": "2026-04-15T10:23:39Z"
+          },
           {
             "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
             "publishedAt": "2026-04-15T09:11:22Z"
@@ -359,10 +363,6 @@
           {
             "title": "Peklo na kůži. Spor o následky léčby ekzému kortikosteroidy budí emoce",
             "publishedAt": "2026-04-14T13:50:00Z"
-          },
-          {
-            "title": "Skupina Agel posiluje na Slovensku. Ovládne nemocnici v Bratislavě",
-            "publishedAt": "2026-04-14T12:51:06Z"
           }
         ]
       }

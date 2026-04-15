@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T10:14:21.870612Z",
+  "ingestedAt": "2026-04-15T10:33:00.364407Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Slovensku se protestovalo proti zrušení korespondenční volby",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/na-slovensku-se-protestovalo-proti-zruseni-korespondencni-volby-372402",
+      "dt": "2026-04-15T10:07:19Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "korespondenční",
+        "protestovalo",
+        "proti",
+        "slovensku",
+        "volby",
+        "zrušení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -467,19 +490,17 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Sněmovna projedná zpřísnění trestného činu neplacení výživného",
+      "title": "Sněmovna řeší zákon o veřejných rozpočtech",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-projedna-zprisneni-trestneho-cinu-neplaceni-vyzivneho-372388",
       "dt": "2026-04-15T01:50:29Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "neplacení",
-        "projedná",
+        "rozpočtech",
         "sněmovna",
-        "trestného",
-        "výživného",
-        "zpřísnění",
-        "činu"
+        "veřejných",
+        "zákon",
+        "řeší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -710,31 +731,6 @@
         "propagandu",
         "reportéři",
         "šíří"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Komorní scéna Aréna uvádí hru inspirovanou zakázaným románem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/komorni-scena-arena-uvadi-hru-inspirovanou-zakazanym-romanem-372371",
-      "dt": "2026-04-14T15:00:04Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "aréna",
-        "hru",
-        "inspirovanou",
-        "komorní",
-        "románem",
-        "scéna",
-        "uvádí",
-        "zakázaným"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41318,
+      "bytes": 41547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,11 +1583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:40:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:07:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "zpravy": 28,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1603,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Slovensku se protestovalo proti zrušení korespondenční volby",
+            "publishedAt": "2026-04-15T10:07:19Z"
+          },
           {
             "title": "Obnovíme nezávislost veřejnoprávních médií, slíbil Magyar",
             "publishedAt": "2026-04-15T09:40:10Z"
@@ -1630,10 +1630,6 @@
           {
             "title": "Případ týrání koček v oboře Březka míří k soudu",
             "publishedAt": "2026-04-15T08:51:01Z"
-          },
-          {
-            "title": "TV Barrandov ukončila reorganizaci a míří do konkurzu",
-            "publishedAt": "2026-04-15T08:47:32Z"
           }
         ]
       }
@@ -1739,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77047,
+      "bytes": 76844,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
