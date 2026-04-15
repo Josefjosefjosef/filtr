@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-15T05:35:08.809376Z",
+  "ingestedAt": "2026-04-15T06:30:02.408761Z",
   "items": [
     {
       "section": "finance",
@@ -19,6 +19,29 @@
         "vyhnala",
         "zemědělství",
         "černá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Revoluce v českém maloobchodě odstartovala. Bude mít úspěch?",
+      "url": "https://profitonline.cz/revoluce-v-ceskem-maloobchode-odstartovala-bude-mit-uspech/",
+      "dt": "2026-04-15T06:00:19Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "maloobchodě",
+        "mít",
+        "odstartovala",
+        "revoluce",
+        "úspěch",
+        "českém"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -260,30 +283,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čeho chce Trump docílit blokádou Hormuzského průlivu",
-      "url": "https://profitonline.cz/ceho-chce-trump-docilit-blokadou-hormuzskeho-prulivu/",
-      "dt": "2026-04-13T08:00:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "blokádou",
-        "chce",
-        "docílit",
-        "hormuzského",
-        "průlivu",
-        "trump",
-        "čeho"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18096,
+      "bytes": 18384,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T06:00:19Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -349,6 +348,10 @@
           {
             "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
             "publishedAt": "2026-04-15T04:00:45Z"
+          },
+          {
+            "title": "Revoluce v českém maloobchodě odstartovala. Bude mít úspěch?",
+            "publishedAt": "2026-04-15T06:00:19Z"
           },
           {
             "title": "Připravme se na celkové zdražování, ceny pohonných hmot porostou",
@@ -373,10 +376,6 @@
           {
             "title": "Už si Orbán balí kufry do Moskvy? Putin ho přivítá s otevřenou náručí",
             "publishedAt": "2026-04-14T04:00:34Z"
-          },
-          {
-            "title": "Moody’s vrací ČEZ rating na úroveň A3",
-            "publishedAt": "2026-04-13T20:00:33Z"
           }
         ]
       }
