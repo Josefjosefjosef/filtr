@@ -25830,8 +25830,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }
       } catch (_){}
     }
-    function onUrlChange(){
-      try { iuMobileWebNavSyncFromHistory(); } catch (_){}
+    function iuProjectsNavRouterRunHideApplySectionAndPanel(){
+      iuHideAllOverlaysNow();
+      applySectionFromURL();
+      applyPanelFromUrl();
+      try{
+        if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
+      }catch(_){}
+    }
+    /** True when URL/history says the mobile „Navigace po webu“ overlay must stay open (tiles grid). */
+    function iuProjectsNavRouterTryOverlayBranch(){
       try {
         var hNav = String(location.hash || "");
         if (hNav === "#iu-nav" || hNav === "#nav") {
@@ -25839,7 +25847,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           try{
             if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
           }catch(_){}
-          return;
+          return true;
         }
         /* P0 mobile/tablet web-nav: popstate/hashchange can run before location.hash catches up with the
            restored history entry, while history.state already matches the pushed overlay entry
@@ -25857,16 +25865,36 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
             try{
               if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
             }catch(_){}
-            return;
+            return true;
           }
         } catch (_){}
       } catch (_){}
-      iuHideAllOverlaysNow();
-      applySectionFromURL();
-      applyPanelFromUrl();
-      try{
-        if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
-      }catch(_){}
+      return false;
+    }
+    function onUrlChange(ev){
+      try { iuMobileWebNavSyncFromHistory(); } catch (_){}
+      if (iuProjectsNavRouterTryOverlayBranch()) return;
+      /* P0 mobile WebKit: first popstate tick can still expose stale location / null history.state; the real
+         overlay entry appears on the next frame. Defer hide+applySection once so we never run
+         applySectionFromURL with stale ?section= (iuMobileGateCloseForMainNav) after sync reopened nav. */
+      try {
+        if (
+          ev &&
+          ev.type === "popstate" &&
+          window.matchMedia &&
+          window.matchMedia("(max-width: 900px)").matches &&
+          typeof window.iuIsProjectsRoute === "function" &&
+          window.iuIsProjectsRoute()
+        ) {
+          requestAnimationFrame(function () {
+            try { iuMobileWebNavSyncFromHistory(); } catch (_){}
+            if (iuProjectsNavRouterTryOverlayBranch()) return;
+            iuProjectsNavRouterRunHideApplySectionAndPanel();
+          });
+          return;
+        }
+      } catch (_){}
+      iuProjectsNavRouterRunHideApplySectionAndPanel();
     }
     window.addEventListener("popstate", function () {
       try { iuMobileWebNavSyncFromHistory(); } catch (_){}
