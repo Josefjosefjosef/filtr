@@ -269,8 +269,64 @@ try {
         })
         .then(function () {
           if (navigator.serviceWorker.controller) return;
-          sessionStorage.setItem("iu_sw_reload_done", "1");
-          location.reload();
+          /** P0 smoke/Playwright: immediate reload() races page.goto (same URL) → "interrupted by another navigation".
+           *  sw.js runs skipWaiting + clients.claim() — controller often attaches without a hard reload; wait for that first. */
+          var tid = null;
+          function markSwSettled() {
+            try {
+              sessionStorage.setItem("iu_sw_reload_done", "1");
+            } catch (eM) {}
+          }
+          function hardReloadIfStillNoController() {
+            if (navigator.serviceWorker.controller) {
+              markSwSettled();
+              return;
+            }
+            markSwSettled();
+            location.reload();
+          }
+          try {
+            navigator.serviceWorker.addEventListener("controllerchange", function onCc() {
+              if (navigator.serviceWorker.controller) {
+                try {
+                  navigator.serviceWorker.removeEventListener("controllerchange", onCc);
+                } catch (eR) {}
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            });
+          } catch (eL) {}
+          try {
+            window.queueMicrotask(function () {
+              if (navigator.serviceWorker.controller) {
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC2) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            });
+          } catch (eQ) {
+            window.setTimeout(function () {
+              if (navigator.serviceWorker.controller) {
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC3) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            }, 0);
+          }
+          tid = window.setTimeout(hardReloadIfStillNoController, 600);
         })
         .catch(function () {});
     } catch (e) {}
