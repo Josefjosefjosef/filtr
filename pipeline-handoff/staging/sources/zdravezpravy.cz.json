@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-15T15:55:01.769993Z",
+  "ingestedAt": "2026-04-15T16:14:44.666704Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotní dotazník: Nejhorší je, když žadatel musí něco hledat, přemýšlet",
+      "url": "https://www.zdravezpravy.cz/2026/04/15/zdravotni-dotaznik-nejhorsi-je-kdyz-zadatel-musi-neco-hledat-premyslet/",
+      "dt": "2026-04-15T15:30:28Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dotazník",
+        "hledat",
+        "když",
+        "musí",
+        "nejhorší",
+        "něco",
+        "přemýšlet",
+        "zdravotní",
+        "žadatel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -467,30 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Následná intenzivní péče nabírá na významu. Proberou ji odborníci",
-      "url": "https://www.zdravezpravy.cz/2026/04/07/nasledna-intenzivni-pece-nabira-na-vyznamu-jeji-smer-proberou-odbornici/",
-      "dt": "2026-04-07T15:34:25Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "intenzivní",
-        "nabírá",
-        "následná",
-        "odborníci",
-        "proberou",
-        "péče",
-        "významu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -501,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 229369,
+      "bytes": 232290,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -538,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:20:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:30:28Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -554,6 +556,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotní dotazník: Nejhorší je, když žadatel musí něco hledat, přemýšlet",
+            "publishedAt": "2026-04-15T15:30:28Z"
+          },
           {
             "title": "Rezort zemědělství chce kupovat více českých potravin",
             "publishedAt": "2026-04-15T12:20:13Z"
@@ -581,10 +587,6 @@
           {
             "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
             "publishedAt": "2026-04-13T14:55:08Z"
-          },
-          {
-            "title": "Zubní kaz u dětí podporují slazené i kyselé nápoje narušující pH v ústech",
-            "publishedAt": "2026-04-13T11:30:09Z"
           }
         ]
       }

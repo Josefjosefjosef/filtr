@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T15:55:01.769993Z",
+  "ingestedAt": "2026-04-15T16:14:44.666704Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Pardubice - Sparta 0:0. Zápas o všechno. Kdo ve finále vyzve Třinec?",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-extraliga-play-off-semifinale-pardubice-sparta.A260415_123128_hokej_luji",
+      "dt": "2026-04-15T16:00:53Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finále",
+        "pardubice",
+        "sparta",
+        "třinec",
+        "vyzve",
+        "všechno",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Úspěšný přechod na antuku. Nosková ve Stuttgartu přetlačila čínskou veteránku",
+      "url": "https://www.idnes.cz/sport/tenis/noskova-po-uspesnem-billie-jean-king-cupu-zvladla-prechod-na-antuku.A260415_174755_tenis_ivt",
+      "dt": "2026-04-15T15:51:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "antuku",
+        "nosková",
+        "přechod",
+        "přetlačila",
+        "stuttgartu",
+        "veteránku",
+        "úspěšný",
+        "čínskou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,59 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pastrňák s Nečasem v NHL slavili 100. bod, v akci byli čtyři čeští gólmani",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-necas-zacha-hronek-vejmelka-rittich-dobes-dostal.A260415_070723_nhl_mkr",
-      "dt": "2026-04-15T06:46:07Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "100",
-        "akci",
-        "bod",
-        "byli",
-        "gólmani",
-        "nečasem",
-        "nhl",
-        "pastrňák",
-        "slavili",
-        "čeští",
-        "čtyři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčího Portland vyhrál v předkole, v play off narazí na Wembanyamu",
-      "url": "https://www.idnes.cz/sport/basket/portland-nba.A260415_075430_sport-basket_kazdt",
-      "dt": "2026-04-15T06:37:16Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "krejčího",
-        "narazí",
-        "off",
-        "play",
-        "portland",
-        "předkole",
-        "vyhrál",
-        "wembanyamu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46322,
+      "bytes": 46015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T16:00:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -858,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ONLINE: Pardubice - Sparta 0:0. Zápas o všechno. Kdo ve finále vyzve Třinec?",
+            "publishedAt": "2026-04-15T16:00:53Z"
+          },
+          {
+            "title": "Úspěšný přechod na antuku. Nosková ve Stuttgartu přetlačila čínskou veteránku",
+            "publishedAt": "2026-04-15T15:51:00Z"
+          },
           {
             "title": "Budějovice vypověděly Dynamu smlouvu ze stadionu, majitelka hledá oporu na severu",
             "publishedAt": "2026-04-15T15:10:00Z"
@@ -881,14 +885,6 @@
           {
             "title": "Mistrovství ČR v rallye 2026: kalendář, program, výsledky závodů",
             "publishedAt": "2026-04-15T14:00:00Z"
-          },
-          {
-            "title": "Kdysi vyřadil Haška, teď jde Reichel na Duklu zase: Na baráž jsme vše předělali",
-            "publishedAt": "2026-04-15T13:38:00Z"
-          },
-          {
-            "title": "I Macron bojuje za národní diamant. Seixas prolomil kletbu a Francouzi jsou na nohou",
-            "publishedAt": "2026-04-15T13:05:00Z"
           }
         ]
       }

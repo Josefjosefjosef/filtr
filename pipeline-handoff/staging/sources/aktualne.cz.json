@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T15:55:01.769993Z",
+  "ingestedAt": "2026-04-15T16:14:44.666704Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice - Sparta 0:0. Vrchol třaskavé série, rivalové v sedmém klání bojují o všechno",
+      "url": "https://sport.aktualne.cz/hokej/pardubice-sparta-vrchol-traskave-serie-rivalove-jdou-do-sedmeho-zapasu-o-vsechno/r~aaa29c94cb54e49832e40d396af03515/",
+      "dt": "2026-04-15T15:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bojují",
+        "klání",
+        "pardubice",
+        "rivalové",
+        "sedmém",
+        "sparta",
+        "série",
+        "třaskavé",
+        "vrchol",
+        "všechno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -154,33 +181,6 @@
         "vyplatí",
         "zahynulo",
         "ázerbájdžánu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice - Sparta. Vrchol třaskavé série, rivalové jdou do sedmého zápasu o všechno",
-      "url": "https://sport.aktualne.cz/hokej/pardubice-sparta-vrchol-traskave-serie-rivalove-jdou-do-sedmeho-zapasu-o-vsechno/r~aaa29c94cb54e49832e40d396af03515/",
-      "dt": "2026-04-15T15:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jdou",
-        "pardubice",
-        "rivalové",
-        "sedmého",
-        "sparta",
-        "série",
-        "třaskavé",
-        "vrchol",
-        "všechno",
-        "zápasu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -544,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22458,
+      "bytes": 22463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,8 +584,8 @@
         "raw_feed_latest_publishedAt": "2026-04-15T15:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 16,
           "sport": 3,
+          "zpravy": 16,
           "finance": 1
         },
         "drop_counts": {
@@ -598,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pardubice - Sparta 0:0. Vrchol třaskavé série, rivalové v sedmém klání bojují o všechno",
+            "publishedAt": "2026-04-15T15:10:00Z"
+          },
           {
             "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
             "publishedAt": "2026-04-15T14:46:00Z"
@@ -621,10 +625,6 @@
           {
             "title": "Rusové vyplatí Ázerbájdžánu odškodné za sestřelený letoun. Zahynulo přes 30 lidí",
             "publishedAt": "2026-04-15T15:15:00Z"
-          },
-          {
-            "title": "Pardubice - Sparta. Vrchol třaskavé série, rivalové jdou do sedmého zápasu o všechno",
-            "publishedAt": "2026-04-15T15:10:00Z"
           },
           {
             "title": "Krize v Budějovicích. Klub přijde o stadion, majitelka se brání",
