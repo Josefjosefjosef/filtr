@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T15:09:27.265900Z",
+  "ingestedAt": "2026-04-15T15:24:16.401931Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko vyplatí odškodné za sestřelení ázerbájdžánského letounu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-vyplati-odskodne-za-sestreleni-azerbajdzanskeho-letounu-372419",
+      "dt": "2026-04-15T15:07:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "letounu",
+        "odškodné",
+        "rusko",
+        "sestřelení",
+        "vyplatí",
+        "ázerbájdžánského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -716,26 +739,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Schránku s pokladem našli mezi kameny, teď si turisté rozdělí štědré nálezné",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/schranku-s-pokladem-nasli-mezi-kameny-ted-si-turiste-rozdeli-stedre-nalezne-372382",
-      "dt": "2026-04-15T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Měchura: Pozvánka mě vytrhla ze špatných myšlenek",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/mechura-pozvanka-me-vytrhla-ze-spatnych-myslenek-156302",
+      "dt": "2026-04-15T15:12:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "kameny",
-        "našli",
-        "nálezné",
-        "pokladem",
-        "rozdělí",
-        "schránku",
-        "turisté",
-        "štědré"
+        "myšlenek",
+        "měchura",
+        "pozvánka",
+        "vytrhla",
+        "špatných"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1488,31 +1508,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nitra po velkém obratu vyhrála v Přerově, Vysočina zůstává bez porážky",
-      "url": "https://sport.ceskatelevize.cz/clanek/americky-fotbal/nitra-po-velkem-obratu-vyhrala-v-prerove-vysocina-zustava-bez-porazky-156272",
-      "dt": "2026-04-13T12:43:42Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "nitra",
-        "obratu",
-        "porážky",
-        "přerově",
-        "velkém",
-        "vyhrála",
-        "vysočina",
-        "zůstává"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1523,7 +1518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42261,
+      "bytes": 41771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,7 +1578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T14:33:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:07:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1599,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko vyplatí odškodné za sestřelení ázerbájdžánského letounu",
+            "publishedAt": "2026-04-15T15:07:22Z"
+          },
           {
             "title": "Severní Mariany zasáhl supertajfun Sinlaku, přinesl záplavy a ničil",
             "publishedAt": "2026-04-15T14:33:57Z"
@@ -1626,10 +1625,6 @@
           {
             "title": "Teherán chce po arabských zemích válečné reparace",
             "publishedAt": "2026-04-15T12:21:11Z"
-          },
-          {
-            "title": "Maximální ceny paliv ve čtvrtek klesnou",
-            "publishedAt": "2026-04-15T12:16:31Z"
           }
         ]
       }
@@ -1641,7 +1636,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40564,
+      "bytes": 40356,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1678,7 +1673,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T14:31:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:12:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1693,6 +1688,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Měchura: Pozvánka mě vytrhla ze špatných myšlenek",
+            "publishedAt": "2026-04-15T15:12:16Z"
+          },
           {
             "title": "Litvínov baráž zvládne, nic jiného pro tenhle klub neexistuje, věří Reichel",
             "publishedAt": "2026-04-15T14:31:04Z"
@@ -1720,10 +1719,6 @@
           {
             "title": "Plzeň byla sekundu od porážky, přesto má první finálový bod",
             "publishedAt": "2026-04-15T08:48:45Z"
-          },
-          {
-            "title": "Tatran postoupil popáté za sebou do superfinále",
-            "publishedAt": "2026-04-15T08:43:58Z"
           }
         ]
       }
@@ -1735,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77275,
+      "bytes": 77382,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

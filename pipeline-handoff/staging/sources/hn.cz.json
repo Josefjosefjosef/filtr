@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T15:09:27.265900Z",
+  "ingestedAt": "2026-04-15T15:24:16.401931Z",
   "items": [
     {
       "section": "finance",
@@ -57,6 +57,35 @@
         "roky",
         "znamenal",
         "územních"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Poslanci znovu schválili zavedení Dne české vlajky. Podle Babiše posílí národní hrdost",
+      "url": "https://domaci.hn.cz/c1-67867570-poslanci-znovu-schvalili-zavedeni-dne-ceske-vlajky-podle-babise-posili-narodni-hrdost",
+      "dt": "2026-04-15T14:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiše",
+        "dne",
+        "hrdost",
+        "národní",
+        "podle",
+        "poslanci",
+        "posílí",
+        "schválili",
+        "vlajky",
+        "zavedení",
+        "znovu",
+        "české"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1098,29 +1127,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ERP přestává být nástrojem, stává se partnerem",
-      "url": "https://archiv.hn.cz/c1-67866390-erp-prestava-byt-nastrojem-stava-se-partnerem",
-      "dt": "2026-04-14T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "být",
-        "erp",
-        "nástrojem",
-        "partnerem",
-        "přestává",
-        "stává"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1131,7 +1137,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185034,
+      "bytes": 185134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,6 +1199,10 @@
             "publishedAt": "2026-04-15T14:55:00Z"
           },
           {
+            "title": "Poslanci znovu schválili zavedení Dne české vlajky. Podle Babiše posílí národní hrdost",
+            "publishedAt": "2026-04-15T14:45:00Z"
+          },
+          {
             "title": "Prodej majetku zkrachovalého Bikera je v plném proudu. Kolem krouží zájemci z cyklo branže, prodávající tlačí čas",
             "publishedAt": "2026-04-15T14:45:00Z"
           },
@@ -1211,10 +1221,6 @@
           {
             "title": "Méně peněz zemědělcům? Když to uděláme, na venkově dál poroste podpora populistů, varuje irský ministr",
             "publishedAt": "2026-04-15T12:55:00Z"
-          },
-          {
-            "title": "Důstojný život jako luxus aneb Realita českých mezd a chudoba veřejné politiky",
-            "publishedAt": "2026-04-15T12:44:00Z"
           }
         ]
       }

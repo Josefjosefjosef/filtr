@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T15:09:27.265900Z",
+  "ingestedAt": "2026-04-15T15:24:16.401931Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bínová je první českou juniorskou vicemistryní světa v taekwondu",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-binova-je-prvni-ceskou-juniorskou-vicemistryni-sveta-v-taekwondu-5437044",
+      "dt": "2026-04-15T15:14:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bínová",
+        "juniorskou",
+        "první",
+        "světa",
+        "taekwondu",
+        "vicemistryní",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,33 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třinec je znovu ve finále. Nevypadalo to růžově, postup je překvapením, říká bývalý Ocelář",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-trinec-je-znovu-ve-finale-nevypadalo-to-ruzove-postup-je-prekvapenim-rika-byvaly-ocelar-5436993",
-      "dt": "2026-04-15T09:18:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bývalý",
-        "finále",
-        "nevypadalo",
-        "ocelář",
-        "postup",
-        "překvapením",
-        "růžově",
-        "třinec",
-        "znovu",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41846,
+      "bytes": 41033,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:03:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:14:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -841,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bínová je první českou juniorskou vicemistryní světa v taekwondu",
+            "publishedAt": "2026-04-15T15:14:48Z"
+          },
           {
             "title": "Jistotu startu na French Open má třináct českých tenistů, mezi nimi jedna debutantka",
             "publishedAt": "2026-04-15T15:03:40Z"
@@ -868,10 +869,6 @@
           {
             "title": "Postup do extraligy? To by byla bomba, říká majitel Dukly",
             "publishedAt": "2026-04-15T14:25:30Z"
-          },
-          {
-            "title": "Nad bitvou s Macháčem visí otazník. Alcaraz bojuje se zraněním",
-            "publishedAt": "2026-04-15T14:20:57Z"
           }
         ]
       }
