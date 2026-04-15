@@ -6128,6 +6128,10 @@ function buildVideoAsArticleCard(it) {
           const slotEl = document.getElementById("silver-slot");
           if (slotEl) slotEl.setAttribute("data-iu-silver-welcome-variant", k);
         }catch{}
+        try{
+          const hostTop = document.getElementById("iuTopbarSilverComposerHost");
+          if (hostTop) hostTop.setAttribute("data-iu-silver-welcome-variant", k);
+        }catch{}
         cardEl.setAttribute("data-iu-silver-welcome-variant", k);
       }catch{}
     }
@@ -10343,9 +10347,81 @@ function buildVideoAsArticleCard(it) {
     try{ setInterval(() => { try{ iuSilverWeatherRefresh(); }catch{} }, 45000); }catch{}
   }
 
+  /** P0 Desktop (≥1025px viditelný topbar): před mobile přesunem #silver-slot vrátit .silver-shell z hostitele do #iuSilverWelcomeStack. */
+  function iuDesktopTopbarSilverComposerPreflightRestore(isMobileGate, isTopbarVisible) {
+    try {
+      var host = document.getElementById("iuTopbarSilverComposerHost");
+      var shell = document.getElementById("iuSilverHomeShell");
+      var mountPoint = document.getElementById("iuSilverHomeShellMountPoint");
+      if (!host || !shell || !mountPoint) return;
+      if (!host.contains(shell)) return;
+      if (isMobileGate || !isTopbarVisible) {
+        mountPoint.insertAdjacentElement("afterend", shell);
+        try {
+          host.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-desktop-silver-composer-topbar");
+        } catch (_) {}
+        try {
+          var tb0 = document.getElementById("topbarWrap");
+          if (tb0) tb0.classList.remove("iuTopbarHost--silverComposer");
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  /** P0 Desktop wide: jeden .silver-shell DOM do #iuTopbarSilverComposerHost (kompaktní composer v top baru). */
+  function iuDesktopTopbarSilverComposerMountWhenWideDesktop(isMobileGate, isTopbarVisible) {
+    try {
+      if (isMobileGate || !isTopbarVisible) {
+        try {
+          var hostH = document.getElementById("iuTopbarSilverComposerHost");
+          if (hostH) hostH.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-desktop-silver-composer-topbar");
+        } catch (_) {}
+        try {
+          var tbR = document.getElementById("topbarWrap");
+          if (tbR) tbR.classList.remove("iuTopbarHost--silverComposer");
+        } catch (_) {}
+        return;
+      }
+      var host = document.getElementById("iuTopbarSilverComposerHost");
+      var shell = document.getElementById("iuSilverHomeShell");
+      if (!host || !shell) return;
+      if (!host.contains(shell)) {
+        host.appendChild(shell);
+      }
+      try {
+        var slotForVar = document.getElementById("silver-slot");
+        if (slotForVar) {
+          var vAttr = slotForVar.getAttribute("data-iu-silver-welcome-variant");
+          if (vAttr) host.setAttribute("data-iu-silver-welcome-variant", vAttr);
+        }
+      } catch (_) {}
+      try {
+        host.setAttribute("aria-hidden", "false");
+      } catch (_) {}
+      try {
+        document.body.classList.add("iu-desktop-silver-composer-topbar");
+      } catch (_) {}
+      try {
+        var tb = document.getElementById("topbarWrap");
+        if (tb) tb.classList.add("iuTopbarHost--silverComposer");
+      } catch (_) {}
+    } catch (_) {}
+  }
+
   /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */
   function iuMobileGateReorder() {
     try {
+      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
+      var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+      var mqTopVis = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+      var topbarVisible = mqTopVis ? mqTopVis.matches : window.innerWidth >= 1025;
+      iuDesktopTopbarSilverComposerPreflightRestore(mobile, topbarVisible);
       var wrap = document.getElementById("iuMobileGateWrap");
       var silverSlot = document.getElementById("iuMobileSilverSlot");
       var panelNav = document.getElementById("iuMobileGatePanelNav");
@@ -10358,8 +10434,6 @@ function buildVideoAsArticleCard(it) {
       var feed = document.getElementById("feed");
       var accordion = document.querySelector(".layout > aside.accordionCol");
       if (!wrap || !silverSlot || !panelNav || !panelTools || !silver || !rail || !newsList || !feed) return;
-      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
-      var mobile = mq ? mq.matches : (window.innerWidth <= 900);
       var mqMind = window.matchMedia && window.matchMedia("(max-width: 1023px)");
       var mobileMind = mqMind ? mqMind.matches : (window.innerWidth < 1024);
       var flowHomeId = "iuMobileMindMenuFlowHome";
@@ -10990,6 +11064,9 @@ function buildVideoAsArticleCard(it) {
       iuMobileGateReorder();
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
+      var mqTopVis = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+      var topbarVisible = mqTopVis ? mqTopVis.matches : window.innerWidth >= 1025;
+      iuDesktopTopbarSilverComposerMountWhenWideDesktop(mobile, topbarVisible);
       if (mobile) return;
       var accordion = document.querySelector(".layout > aside.accordionCol");
       var mainCol = document.querySelector(".layout > .mainCol");
