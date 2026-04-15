@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T09:44:21.670005Z",
+  "ingestedAt": "2026-04-15T09:59:23.923828Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Televize Barrandov míří do konkurzu, vysílání ale nekončí",
+      "url": "https://www.idnes.cz/zpravy/mediahub/televize-barrandov-ukoncila-reorganizaci-a-miri-do-konkurzu.A260415_105245_mediahub_jpl",
+      "dt": "2026-04-15T09:41:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "barrandov",
+        "konkurzu",
+        "míří",
+        "nekončí",
+        "televize",
+        "vysílání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Osmnáct let za ubodání stařenky, znalkyně zpochybnily schizofrenii obžalovaného",
+      "url": "https://www.idnes.cz/praha/zpravy/vrazda-seniorka-kbely-soud.A260415_111452_praha-zpravy_Ichuc",
+      "dt": "2026-04-15T09:41:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "let",
+        "obžalovaného",
+        "osmnáct",
+        "schizofrenii",
+        "stařenky",
+        "ubodání",
+        "znalkyně",
+        "zpochybnily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -734,61 +783,6 @@
         "spojené",
         "státy",
         "výjimku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Koalice v noční bitvě prosadila zákon kvůli regulaci cen nafty a benzinu vládou",
-      "url": "https://www.idnes.cz/zpravy/domaci/zrychlene-projednani-moznost-vlady-regulovat-narizenim-ceny-nafty-a-benzinu.A260414_051836_domaci_kop",
-      "dt": "2026-04-14T22:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "benzinu",
-        "bitvě",
-        "cen",
-        "koalice",
-        "kvůli",
-        "nafty",
-        "noční",
-        "prosadila",
-        "regulaci",
-        "vládou",
-        "zákon"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Český export je na rekordu. Firmy však drtí důsledky válek i ceny energií",
-      "url": "https://www.idnes.cz/ekonomika/domaci/export-czechtrade-rudolf-klepacek-hospodarska-komora-svaz-prumyslu-a-dopravy-cr.A260414_152706_ekonomika_hyk",
-      "dt": "2026-04-14T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ceny",
-        "drtí",
-        "důsledky",
-        "energií",
-        "export",
-        "firmy",
-        "rekordu",
-        "válek",
-        "však",
-        "český"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1597,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48995,
+      "bytes": 48921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1634,11 +1628,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:41:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 4,
-          "zpravy": 23,
+          "zpravy": 24,
+          "finance": 3,
           "other": 2,
           "sport": 1
         },
@@ -1652,6 +1646,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Televize Barrandov míří do konkurzu, vysílání ale nekončí",
+            "publishedAt": "2026-04-15T09:41:00Z"
+          },
+          {
+            "title": "Osmnáct let za ubodání stařenky, znalkyně zpochybnily schizofrenii obžalovaného",
+            "publishedAt": "2026-04-15T09:41:00Z"
+          },
           {
             "title": "Potraviny, léky, auta... Základy evropské výroby se hroutí, je třeba rychlé řešení",
             "publishedAt": "2026-04-15T09:26:00Z"
@@ -1675,14 +1677,6 @@
           {
             "title": "Konec slušného profesora? Fiala v opozici přitvrdil a pálí do Babiše pomocí AI",
             "publishedAt": "2026-04-15T08:46:00Z"
-          },
-          {
-            "title": "Trestné má být úmyslné neplacení výživného po dobu delší než čtyři měsíce",
-            "publishedAt": "2026-04-15T08:45:00Z"
-          },
-          {
-            "title": "Návrh zákona o poplatcích nesmí být přijat, diskuze neproběhla, kritizuje šéf ČT",
-            "publishedAt": "2026-04-15T08:44:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-15T09:44:21.670005Z",
+  "ingestedAt": "2026-04-15T09:59:23.923828Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Nová linka easyJet z Prahy do Marrákeše. Letenky od 2 262 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/nova-linka-easyjet-z-prahy-do-marrakese",
+      "dt": "2026-04-15T09:52:56Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "262",
+        "easyjet",
+        "letenky",
+        "linka",
+        "marrákeše",
+        "nová",
+        "prahy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,31 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden v Tabarce s all-inclusive z Prahy v červnu. Zájezd od 12 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-v-tabarce-s-all-inclusive-z-prahy-v-cervnu",
-      "dt": "2026-04-08T11:56:24Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "inclusive",
-        "prahy",
-        "tabarce",
-        "týden",
-        "zájezd",
-        "červnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 45566,
+      "bytes": 44031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:15:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:52:56Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -565,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová linka easyJet z Prahy do Marrákeše. Letenky od 2 262 Kč",
+            "publishedAt": "2026-04-15T09:52:56Z"
+          },
           {
             "title": "Florencie z Prahy o letních prázdninách. Letenky od 1 402 Kč",
             "publishedAt": "2026-04-15T09:15:08Z"
@@ -592,10 +595,6 @@
           {
             "title": "Prodloužené víkendy v Lucembursku z Prahy i o letních prázdninách. Letenky od 3 682 Kč",
             "publishedAt": "2026-04-14T07:51:03Z"
-          },
-          {
-            "title": "Palau z Prahy přes Tchaj-pej s China Airlines. Letenky od 21 990 Kč",
-            "publishedAt": "2026-04-13T13:12:46Z"
           }
         ]
       }

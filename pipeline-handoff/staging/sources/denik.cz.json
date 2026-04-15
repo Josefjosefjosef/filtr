@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T09:44:21.670005Z",
+  "ingestedAt": "2026-04-15T09:59:23.923828Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U divočáka na Karlovarsku našli parazita svalovce, pro lidi může být nebezpečný",
+      "url": "https://www.denik.cz/regiony/veterinari-v-karlovarskem-kraji-odhalili-parazita-svalovce-u-divocaka-z-madarska.html",
+      "dt": "2026-04-15T09:26:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "být",
+        "divočáka",
+        "karlovarsku",
+        "lidi",
+        "našli",
+        "nebezpečný",
+        "parazita",
+        "svalovce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -623,31 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel: Důležitější než forma financování ČT a rozhlasu bude garance nezasahování",
-      "url": "https://www.denik.cz/z_domova/petr-pavel-ceska-televize-rozhlas-poplatky-financovani.html",
-      "dt": "2026-04-14T17:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "důležitější",
-        "financování",
-        "forma",
-        "garance",
-        "nezasahování",
-        "než",
-        "pavel",
-        "rozhlasu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31468,
+      "bytes": 31914,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T08:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:26:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U divočáka na Karlovarsku našli parazita svalovce, pro lidi může být nebezpečný",
+            "publishedAt": "2026-04-15T09:26:00Z"
+          },
           {
             "title": "Kuriózní loupež v Brně: Muži se převlékli za ochranku a v obchodě kradli alkohol",
             "publishedAt": "2026-04-15T08:24:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Extrémní proměny: Manželé Marie a Luděk se mají rádi. Ale zanedbali, co mohli",
             "publishedAt": "2026-04-15T06:00:00Z"
-          },
-          {
-            "title": "Cenzura je pohádka pražské kavárny. Macinka zveřejnil rozhovor s Petrem Pavlem",
-            "publishedAt": "2026-04-15T05:35:00Z"
           }
         ]
       }
