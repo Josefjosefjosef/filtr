@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-15T02:05:07.201189Z",
+  "ingestedAt": "2026-04-15T03:00:37.569182Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Co je ransomware a jak škodí. Devatero rad, jak se mu vyhnout",
+      "url": "https://www.idnes.cz/technet/software/co-je-ransomware-kyberbezpecnost-utok-nemocnice.A260407_103412_koktejl_vanky",
+      "dt": "2026-04-15T02:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "devatero",
+        "rad",
+        "ransomware",
+        "vyhnout",
+        "škodí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -744,32 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Microsoft uklízí největší současné problémy Windows, ale na toto zapomněl",
-      "url": "https://www.idnes.cz/technet/software/windows-11-zmeny-hlavni-panel-ai-inteligence-aktualizace-pruzkumnik-insider-telemetrie-prihlasovani.A260402_103822_software_dvr",
-      "dt": "2026-04-06T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "ale",
-        "microsoft",
-        "největší",
-        "problémy",
-        "současné",
-        "toto",
-        "uklízí",
-        "windows",
-        "zapomněl"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 49368,
+      "bytes": 49277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T22:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 24,
-          "zpravy": 6
+          "other": 25,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -833,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co je ransomware a jak škodí. Devatero rad, jak se mu vyhnout",
+            "publishedAt": "2026-04-15T02:00:00Z"
+          },
           {
             "title": "Malá rozměry. Velká výkonem. To jsou Mini PC BARBONE",
             "publishedAt": "2026-04-14T22:01:00Z"
@@ -860,10 +860,6 @@
           {
             "title": "Jurij Gagarin předběhl USA a stal se prvním kosmonautem. Odstartoval před 65 lety",
             "publishedAt": "2026-04-12T02:00:00Z"
-          },
-          {
-            "title": "Připomíná 35mm film pro analogové fotoaparáty, ale promění je na digitální",
-            "publishedAt": "2026-04-11T22:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T02:05:07.201189Z",
+  "ingestedAt": "2026-04-15T03:00:37.569182Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Speed Marathon v Česku: Tady dnes policie měří rychlost, seznam míst je veřejný",
+      "url": "https://www.denik.cz/doprava/speed-marathon-2026-cesko-kraje-seznam-mist-kde-bude-policie-merit-rychlost.html",
+      "dt": "2026-04-15T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "marathon",
+        "míst",
+        "měří",
+        "policie",
+        "rychlost",
+        "seznam",
+        "speed",
+        "tady",
+        "veřejný",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,32 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Turisté u Dvora Králové objevili poklad. Rozdělí si odměnu téměř 12 milionů",
-      "url": "https://www.denik.cz/regiony/odmena-pro-nalezce-zlateho-pokladu-na-zvicine-kraj-jim-vyplati-11-7-milionu-2026.html",
-      "dt": "2026-04-14T10:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvora",
-        "králové",
-        "milionů",
-        "objevili",
-        "odměnu",
-        "poklad",
-        "rozdělí",
-        "turisté",
-        "téměř"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29951,
+      "bytes": 30218,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,7 +687,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -702,6 +703,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Speed Marathon v Česku: Tady dnes policie měří rychlost, seznam míst je veřejný",
+            "publishedAt": "2026-04-15T02:00:00Z"
+          },
           {
             "title": "Šestaosmdesátiletá Francouzka se přestěhovala do USA za láskou, zadržela ji ICE",
             "publishedAt": "2026-04-14T20:53:00Z"
@@ -729,10 +734,6 @@
           {
             "title": "Smartwings odkládají obnovení letů do Tel Avivu. Návrat oddálily o týden",
             "publishedAt": "2026-04-14T17:03:00Z"
-          },
-          {
-            "title": "Pavel: Důležitější než forma financování ČT a rozhlasu bude garance nezasahování",
-            "publishedAt": "2026-04-14T17:01:00Z"
           }
         ]
       }

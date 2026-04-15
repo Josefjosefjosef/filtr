@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-15T02:05:07.201189Z",
+  "ingestedAt": "2026-04-15T03:00:37.569182Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Falešní policisté a podvodné investice na Rychnovsku. Poškození přišli o miliony",
+      "url": "https://tydenikpolicie.cz/falesni-policiste-a-podvodne-investice-na-rychnovsku-poskozeni-prisli-o-miliony/",
+      "dt": "2026-04-15T02:02:00Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "falešní",
+        "investice",
+        "miliony",
+        "podvodné",
+        "policisté",
+        "poškození",
+        "přišli",
+        "rychnovsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,32 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté pátrají po neznámém pachateli, který vylil do kanalizace v Českých Budějovicích beton",
-      "url": "https://tydenikpolicie.cz/policiste-patraji-po-neznamem-pachateli-ktery-vylil-do-kanalizace-v-ceskych-budejovicich-beton/",
-      "dt": "2026-04-14T10:30:52Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "beton",
-        "budějovicích",
-        "kanalizace",
-        "neznámém",
-        "pachateli",
-        "policisté",
-        "pátrají",
-        "vylil",
-        "českých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16355,
+      "bytes": 16301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T20:58:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T02:02:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Falešní policisté a podvodné investice na Rychnovsku. Poškození přišli o miliony",
+            "publishedAt": "2026-04-15T02:02:00Z"
+          },
           {
             "title": "Řidič felicie přehlédl na přechodu v České Lípě chodkyni",
             "publishedAt": "2026-04-14T20:58:58Z"
@@ -351,10 +354,6 @@
           {
             "title": "Policisté na Vysočině zaznamenali nárůst počtu krádeží pohonných hmot",
             "publishedAt": "2026-04-14T11:59:49Z"
-          },
-          {
-            "title": "Policisté dopadli podezřelého ze série vloupání na Chomutovsku",
-            "publishedAt": "2026-04-14T11:46:33Z"
           }
         ]
       }
