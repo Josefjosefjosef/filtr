@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T04:00:14.827143Z",
+  "ingestedAt": "2026-04-15T04:24:17.079580Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Schránku s pokladem našli mezi kameny, teď si turisté rozdělí štědré nálezné",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/schranku-s-pokladem-nasli-mezi-kameny-ted-si-turiste-rozdeli-stedre-nalezne-372382",
+      "dt": "2026-04-15T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kameny",
+        "našli",
+        "nálezné",
+        "pokladem",
+        "rozdělí",
+        "schránku",
+        "turisté",
+        "štědré"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -743,27 +768,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Pospíšil svědčil v kauze Dozimetr. Nebyl si prý vědom ničeho nezákonného",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pospisil-svedcil-v-kauze-dozimetr-nebyl-si-pry-vedom-niceho-nezakonneho-372356",
-      "dt": "2026-04-14T09:15:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Podle mě je tento systém neférový, řekl k baráži jihlavský kapitán Čachotský",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/podle-me-je-tento-system-neferovy-rekl-k-barazi-jihlavsky-kapitan-cachotsky-156287",
+      "dt": "2026-04-15T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dozimetr",
-        "kauze",
-        "nebyl",
-        "nezákonného",
-        "ničeho",
-        "pospíšil",
-        "prý",
-        "svědčil",
-        "vědom"
+        "baráži",
+        "jihlavský",
+        "kapitán",
+        "neférový",
+        "podle",
+        "systém",
+        "tento",
+        "čachotský",
+        "řekl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1525,31 +1550,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Karlovarsko porazilo Liberec i ve třetím utkání a po roce je opět ve finále",
-      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/karlovarsko-porazilo-liberec-i-ve-tretim-utkani-a-po-roce-je-opet-ve-finale-156258",
-      "dt": "2026-04-12T18:38:55Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "karlovarsko",
-        "liberec",
-        "opět",
-        "porazilo",
-        "roce",
-        "třetím",
-        "utkání"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1560,7 +1560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42859,
+      "bytes": 43027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T01:56:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1637,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schránku s pokladem našli mezi kameny, teď si turisté rozdělí štědré nálezné",
+            "publishedAt": "2026-04-15T04:00:00Z"
+          },
           {
             "title": "Reuters: USA neprodloužily výjimku ze sankcí na nákup ruské ropy",
             "publishedAt": "2026-04-15T01:56:34Z"
@@ -1664,10 +1668,6 @@
           {
             "title": "Nemá to určovat aparát za zdmi úřadu, řekl Kupka k návrhu vlády na regulaci cen paliv",
             "publishedAt": "2026-04-14T17:53:27Z"
-          },
-          {
-            "title": "Sorrentino má rád momenty zastavení, říká střihač jeho filmů",
-            "publishedAt": "2026-04-14T17:00:00Z"
           }
         ]
       }
@@ -1679,7 +1679,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39957,
+      "bytes": 40087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1716,7 +1716,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T21:32:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1731,6 +1731,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podle mě je tento systém neférový, řekl k baráži jihlavský kapitán Čachotský",
+            "publishedAt": "2026-04-15T04:00:00Z"
+          },
           {
             "title": "Atlético přes domácí porážku vyřadilo Barcelonu, v semifinále jsou i obhájci z PSG",
             "publishedAt": "2026-04-14T21:32:14Z"
@@ -1758,10 +1762,6 @@
           {
             "title": "Hokej bez červené: Jaké jsou důsledky sporu mezi Spartou a majitelem Pardubic Petrem Dědkem?",
             "publishedAt": "2026-04-14T15:00:00Z"
-          },
-          {
-            "title": "Sparta podněcovala fanoušky k urážení Dědka, míní Pardubice",
-            "publishedAt": "2026-04-14T14:12:39Z"
           }
         ]
       }
@@ -1773,7 +1773,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77114,
+      "bytes": 77048,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-15T04:00:14.827143Z",
+  "ingestedAt": "2026-04-15T04:24:17.079580Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Důchodci si přilepší. Juchelka má první balíček změn",
+      "url": "https://www.penize.cz/starobni-duchod/488285-zmeny-v-duchodech-vekova-valorizace-pracujici-duchodci",
+      "dt": "2026-04-15T05:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "balíček",
+        "důchodci",
+        "juchelka",
+        "první",
+        "přilepší",
+        "změn"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,33 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otec poslal výživné omylem dvakrát. Matka kvůli tomu přišla o dávky",
-      "url": "https://www.penize.cz/socialni-davky/488129-otec-poslal-vyzivne-omylem-dvakrat-v-jednom-mesici-matka-kvuli-tomu-prisla-o-davky",
-      "dt": "2026-04-10T10:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dvakrát",
-        "dávky",
-        "kvůli",
-        "matka",
-        "omylem",
-        "otec",
-        "poslal",
-        "přišla",
-        "tomu",
-        "výživné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18437,
+      "bytes": 18439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -572,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Důchodci si přilepší. Juchelka má první balíček změn",
+            "publishedAt": "2026-04-15T05:10:00Z"
+          },
           {
             "title": "Jak jsem chtěla utéct ze sociálních sítí. A skončila na Vinted",
             "publishedAt": "2026-04-15T05:05:00Z"
@@ -599,10 +599,6 @@
           {
             "title": "Penzijko vám má vydělat víc. Tady jsou návrhy",
             "publishedAt": "2026-04-14T05:05:00Z"
-          },
-          {
-            "title": "Zrušený let? Aerolinky musí vrátit i provizi pro zprostředkovatele",
-            "publishedAt": "2026-04-14T05:00:00Z"
           }
         ]
       }

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T04:00:14.827143Z",
+  "ingestedAt": "2026-04-15T04:24:17.079580Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kreslením proti vyhoření. Někdy stačí vybrat si pastelku a čmárat, říká malířka",
+      "url": "https://www.denik.cz/zdravotnictvi/zdravi-syndrom-vyhoreni-priznaky-lecba-jak-pomaha-malovani-martina-tothova.html",
+      "dt": "2026-04-15T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kreslením",
+        "malířka",
+        "někdy",
+        "pastelku",
+        "proti",
+        "stačí",
+        "vybrat",
+        "vyhoření",
+        "čmárat",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Magyar nebude blokovat pomoc EU Ukrajině, chlad ale trvá",
+      "url": "https://www.denik.cz/staty-eu/peter-magyar-valka-na-ukrajine-pomoc-eu-ukrajine.html",
+      "dt": "2026-04-15T04:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "blokovat",
+        "chlad",
+        "magyar",
+        "nebude",
+        "pomoc",
+        "trvá",
+        "ukrajině"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -590,54 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lukostřelci poměřili síly v kulisách hradu Šternberk",
-      "url": "https://olomoucky.denik.cz/ctenar-reporter/lukostrelba-olomouc-zavody-sternberk.html",
-      "dt": "2026-04-14T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hradu",
-        "kulisách",
-        "lukostřelci",
-        "poměřili",
-        "síly",
-        "šternberk"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Maximální ceny pohonných hmot ve středu vzrostou o desítky haléřů",
-      "url": "https://www.denik.cz/ekonomika/maximalni-ceny-paliv-15-duben.html",
-      "dt": "2026-04-14T12:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ceny",
-        "desítky",
-        "haléřů",
-        "hmot",
-        "maximální",
-        "pohonných",
-        "středu",
-        "vzrostou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -648,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30664,
+      "bytes": 31139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -685,11 +689,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "zpravy": 22,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -701,6 +706,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kreslením proti vyhoření. Někdy stačí vybrat si pastelku a čmárat, říká malířka",
+            "publishedAt": "2026-04-15T04:05:00Z"
+          },
+          {
+            "title": "Magyar nebude blokovat pomoc EU Ukrajině, chlad ale trvá",
+            "publishedAt": "2026-04-15T04:00:00Z"
+          },
           {
             "title": "Medvědi na Slovensku se blíží lidem: Objevili se u nemocnice i na dvoře domu",
             "publishedAt": "2026-04-15T03:30:00Z"
@@ -724,14 +737,6 @@
           {
             "title": "Zpěvák Patrick Bruel čelí vyšetřování. Je obviněný ze sexuálního útoku",
             "publishedAt": "2026-04-14T20:06:00Z"
-          },
-          {
-            "title": "Lufthansa dál nelétá. Kvůli stávce jsou zrušené i středeční spojení s Prahou",
-            "publishedAt": "2026-04-14T19:41:00Z"
-          },
-          {
-            "title": "Amazon koupil satelitní firmu. Chystá konkurenci Starlinku",
-            "publishedAt": "2026-04-14T18:56:00Z"
           }
         ]
       }

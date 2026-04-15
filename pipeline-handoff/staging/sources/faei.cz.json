@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-15T04:00:14.827143Z",
+  "ingestedAt": "2026-04-15T04:24:17.079580Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
+      "url": "https://profitonline.cz/koncim-farmare-vyhnala-z-pole-cerna-budoucnost-zemedelstvi/",
+      "dt": "2026-04-15T04:00:45Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "budoucnost",
+        "farmáře",
+        "končím",
+        "pole",
+        "vyhnala",
+        "zemědělství",
+        "černá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,29 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Forint citelně posiluje. Co čekat od vítěze voleb?",
-      "url": "https://profitonline.cz/forint-citelne-posiluje-co-cekat-od-viteze-voleb/",
-      "dt": "2026-04-13T07:30:48Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "citelně",
-        "forint",
-        "posiluje",
-        "voleb",
-        "vítěze",
-        "čekat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18007,
+      "bytes": 18096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-14T18:00:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:00:45Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -345,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
+            "publishedAt": "2026-04-15T04:00:45Z"
+          },
           {
             "title": "Připravme se na celkové zdražování, ceny pohonných hmot porostou",
             "publishedAt": "2026-04-14T18:00:54Z"
@@ -372,10 +377,6 @@
           {
             "title": "Moody’s vrací ČEZ rating na úroveň A3",
             "publishedAt": "2026-04-13T20:00:33Z"
-          },
-          {
-            "title": "V úterý zřejmě neotevře více čerpacích stanic než v pátek",
-            "publishedAt": "2026-04-13T14:30:26Z"
           }
         ]
       }

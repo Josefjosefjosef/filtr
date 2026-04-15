@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T04:00:14.827143Z",
+  "ingestedAt": "2026-04-15T04:24:17.079580Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Naivní Květuška i protřelá Marcela. Naďa Konvalinková slaví 75 let",
+      "url": "https://magazin.aktualne.cz/kultura/film/naivni-kvetuska-i-ofelie-v-hamletovi-nada-konvalinkova-slavi-75-let/r~aaa29ecb7ba2b2a0e316c68f934da4c5/",
+      "dt": "2026-04-15T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "konvalinková",
+        "květuška",
+        "let",
+        "marcela",
+        "naivní",
+        "naďa",
+        "protřelá",
+        "slaví"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -496,34 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pokoušejí se politicky ovládnout média, varuje šéf ČRo. Ostře odmítá zrušení poplatků",
-      "url": "https://zpravy.aktualne.cz/ekonomika/pokouseji-se-politicky-ovladnout-media-varuje-sef-cro-ostre-odmita-zruseni-poplatku/r~aaa294cc963413fc1801904a62edb22d/",
-      "dt": "2026-04-14T15:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "média",
-        "odmítá",
-        "ostře",
-        "ovládnout",
-        "pokoušejí",
-        "politicky",
-        "poplatků",
-        "varuje",
-        "zrušení",
-        "čro",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22410,
+      "bytes": 22261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,10 +568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T03:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 4,
+          "other": 1,
+          "finance": 3,
           "zpravy": 12,
           "sport": 3,
           "zdravi": 1
@@ -589,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naivní Květuška i protřelá Marcela. Naďa Konvalinková slaví 75 let",
+            "publishedAt": "2026-04-15T04:00:00Z"
+          },
           {
             "title": "Kdo dá víc? Automobilky se začaly předhánět se zárukami, ten nejodvážnější překvapil",
             "publishedAt": "2026-04-15T03:45:00Z"
@@ -616,10 +618,6 @@
           {
             "title": "Macinkův nečekaný úder, zveřejnil „cenzurovaný“ rozhovor s Pavlem. A rýpnul si do všech",
             "publishedAt": "2026-04-14T21:50:00Z"
-          },
-          {
-            "title": "Barceloně výhra nestačila, dál jde překvapivě Atlético. PSG vyřadilo Liverpool",
-            "publishedAt": "2026-04-14T21:06:00Z"
           }
         ]
       }
