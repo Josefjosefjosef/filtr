@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T07:50:03.991379Z",
+  "ingestedAt": "2026-04-15T08:12:29.267089Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nohu z plynu! Na piráty silnic dohlédnou stovky policistů",
+      "url": "https://ekonomickydenik.cz/rychlost-ridici-nehody-akce/",
+      "dt": "2026-04-15T07:51:35Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dohlédnou",
+        "nohu",
+        "piráty",
+        "plynu",
+        "policistů",
+        "silnic",
+        "stovky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -764,31 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Škodovka šlape na plyn, rekordní zájem je o elektroauta. V Číně se nedařilo",
-      "url": "https://ekonomickydenik.cz/skodovka-slape-na-plyn-zajem-o-elektroauta/",
-      "dt": "2026-04-13T11:19:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "elektroauta",
-        "nedařilo",
-        "plyn",
-        "rekordní",
-        "zájem",
-        "číně",
-        "škodovka",
-        "šlape"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73857,
+      "bytes": 73962,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,13 +835,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:37:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:51:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
+          "finance": 25,
           "zpravy": 4,
-          "cestovani": 1,
-          "zdravi": 1
+          "cestovani": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nohu z plynu! Na piráty silnic dohlédnou stovky policistů",
+            "publishedAt": "2026-04-15T07:51:35Z"
+          },
           {
             "title": "Macinka zveřejnil utajený rozhovor. Pavel v něm mluví o bojích v Izraeli",
             "publishedAt": "2026-04-15T07:37:13Z"
@@ -881,10 +883,6 @@
           {
             "title": "Evropské Guantánamo. Dokument varuje před věznicí pro migranty v Sarajevu",
             "publishedAt": "2026-04-14T15:35:00Z"
-          },
-          {
-            "title": "Zbrojní šachy: Česko v kleštích politické váhavosti a surovinové pasti",
-            "publishedAt": "2026-04-14T15:03:59Z"
           }
         ]
       }

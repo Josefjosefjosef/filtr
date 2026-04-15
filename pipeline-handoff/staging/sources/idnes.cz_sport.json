@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T07:50:03.991379Z",
+  "ingestedAt": "2026-04-15T08:12:29.267089Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cesta z krize? Česká liga je víc ragby než fotbal, samo to nepůjde, říká Mikloško",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/ludek-miklosko-banik-ostrava.A260415_094527_fotbal_kazdt",
+      "dt": "2026-04-15T08:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cesta",
+        "fotbal",
+        "krize",
+        "liga",
+        "mikloško",
+        "nepůjde",
+        "než",
+        "ragby",
+        "samo",
+        "víc",
+        "česká",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -765,31 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Adamczyková navštívila děti na onkologii. Má velké srdce, chválí ji fanoušci",
-      "url": "https://www.idnes.cz/sport/trendy/eva-adamczykova-onkologicti-pacienti.A260414_120454_trendy_blah",
-      "dt": "2026-04-14T13:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "adamczyková",
-        "chválí",
-        "děti",
-        "fanoušci",
-        "navštívila",
-        "onkologii",
-        "srdce",
-        "velké"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47552,
+      "bytes": 48062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,11 +841,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "sport": 29
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -853,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cesta z krize? Česká liga je víc ragby než fotbal, samo to nepůjde, říká Mikloško",
+            "publishedAt": "2026-04-15T08:00:00Z"
+          },
           {
             "title": "Autodrom Most chce miliardář Staněk, s ním i Autoklub. Majitel je překvapený",
             "publishedAt": "2026-04-15T07:31:00Z"
@@ -880,10 +888,6 @@
           {
             "title": "Vědí, jaká jsem. Čechová jde za americkým snem. Co ji potká před vstupem do WNBA?",
             "publishedAt": "2026-04-15T04:00:00Z"
-          },
-          {
-            "title": "Diplomacie podle FIFA. Infantino stále věří, že Írán na MS hrát bude, co na to Trump?",
-            "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]
       }

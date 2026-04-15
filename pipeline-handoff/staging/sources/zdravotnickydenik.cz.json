@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T07:50:03.991379Z",
+  "ingestedAt": "2026-04-15T08:12:29.267089Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jen 9 % pacientů umírá doma. Proč se většina lidí dostane k paliativní péči pozdě nebo vůbec?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/paliativni-pece-pozde-nebo-vubec/",
+      "dt": "2026-04-15T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doma",
+        "dostane",
+        "jen",
+        "lidí",
+        "nebo",
+        "pacientů",
+        "paliativní",
+        "pozdě",
+        "proč",
+        "péči",
+        "umírá",
+        "většina",
+        "vůbec"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec nelegálních poplatků u gynekologa? Nový systém mění financování péče",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/konec-nelegalnich-poplatku-u-gynekologa-novy-system/",
-      "dt": "2026-04-14T09:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "financování",
-        "gynekologa",
-        "konec",
-        "mění",
-        "nelegálních",
-        "nový",
-        "poplatků",
-        "péče",
-        "systém"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103027,
+      "bytes": 104945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jen 9 % pacientů umírá doma. Proč se většina lidí dostane k paliativní péči pozdě nebo vůbec?",
+            "publishedAt": "2026-04-15T08:00:00Z"
+          },
           {
             "title": "Umělá inteligence místo lékaře? V rukou nepoučených pacientů může škodit",
             "publishedAt": "2026-04-15T07:00:00Z"
@@ -355,10 +363,6 @@
           {
             "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce ji ale vůbec někdo?",
             "publishedAt": "2026-04-14T12:00:00Z"
-          },
-          {
-            "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
-            "publishedAt": "2026-04-14T11:04:49Z"
           }
         ]
       }
