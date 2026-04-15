@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T15:24:16.401931Z",
+  "ingestedAt": "2026-04-15T15:39:18.907750Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Soud zamítl žalobu po změně pohlaví. V případu figurují tři pražské nemocnice",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soud-zamitl-zalobu-po-zmene-pohlavi-v-pripadu-figuruji-tri-prazske-nemocnice/",
+      "dt": "2026-04-15T15:22:33Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "figurují",
+        "nemocnice",
+        "pohlaví",
+        "pražské",
+        "případu",
+        "soud",
+        "tři",
+        "zamítl",
+        "změně",
+        "žalobu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec papírování? Evropská komise slibuje miliardové úspory pro zdravotnické firmy",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/eu-zdravotnicke-prostredky/",
-      "dt": "2026-04-15T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "evropská",
-        "firmy",
-        "komise",
-        "konec",
-        "miliardové",
-        "papírování",
-        "slibuje",
-        "zdravotnické",
-        "úspory"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99290,
+      "bytes": 97500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T14:51:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:22:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud zamítl žalobu po změně pohlaví. V případu figurují tři pražské nemocnice",
+            "publishedAt": "2026-04-15T15:22:33Z"
+          },
           {
             "title": "Boj o správní radu VZP pokračuje: Stanjura to vzdal, Motoristé navrhují překvapivé jméno",
             "publishedAt": "2026-04-15T14:51:12Z"
@@ -362,10 +367,6 @@
           {
             "title": "Jen 9 % pacientů umírá doma. Proč se většina lidí dostane k paliativní péči pozdě nebo vůbec?",
             "publishedAt": "2026-04-15T08:00:00Z"
-          },
-          {
-            "title": "Umělá inteligence místo lékaře? V rukou nepoučených pacientů může škodit",
-            "publishedAt": "2026-04-15T07:00:00Z"
           }
         ]
       }
