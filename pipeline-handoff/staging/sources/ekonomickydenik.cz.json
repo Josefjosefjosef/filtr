@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T13:41:20.991867Z",
+  "ingestedAt": "2026-04-15T14:04:04.305902Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Finanční jackpot i pro Česko? První překážka pro biliony na rakety, čipy a dálnice padla",
+      "url": "https://ekonomickydenik.cz/jackpot-cesko-rakety-cipy-dalnice/",
+      "dt": "2026-04-15T13:45:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "biliony",
+        "dálnice",
+        "finanční",
+        "jackpot",
+        "padla",
+        "první",
+        "překážka",
+        "rakety",
+        "česko",
+        "čipy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,32 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bitva o biliony: Západní zbrojaři chtějí ovládnout rekordní balík dotací",
-      "url": "https://ekonomickydenik.cz/biliony-zbrojari-nemecko-francie-dotace/",
-      "dt": "2026-04-13T16:17:27Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "balík",
-        "biliony",
-        "bitva",
-        "chtějí",
-        "dotací",
-        "ovládnout",
-        "rekordní",
-        "zbrojaři",
-        "západní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72793,
+      "bytes": 73341,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,11 +834,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:10:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:45:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 3,
+          "zpravy": 4,
+          "finance": 25,
           "cestovani": 1
         },
         "drop_counts": {
@@ -850,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Finanční jackpot i pro Česko? První překážka pro biliony na rakety, čipy a dálnice padla",
+            "publishedAt": "2026-04-15T13:45:20Z"
+          },
           {
             "title": "Žít, nebo jen přežívat? Většina Čechů na důstojný standard nedosáhne",
             "publishedAt": "2026-04-15T13:10:34Z"
@@ -877,10 +882,6 @@
           {
             "title": "Šéf NATO Rutte míří do Česka. Vyřeší spor Babiše a Pavla o summit?",
             "publishedAt": "2026-04-15T09:40:20Z"
-          },
-          {
-            "title": "Kruté skóre 1:5: Ukrajina likviduje přesilu drony. Rusko už má problémy ve vnitrozemí",
-            "publishedAt": "2026-04-15T09:13:41Z"
           }
         ]
       }

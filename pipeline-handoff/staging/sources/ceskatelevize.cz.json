@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T13:41:20.991867Z",
+  "ingestedAt": "2026-04-15T14:04:04.305902Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud v poslední části kauzy Stoka zprostil dva podnikatele viny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-v-posledni-casti-kauzy-stoka-zprostil-dva-podnikatele-viny-372413",
+      "dt": "2026-04-15T13:53:56Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dva",
+        "kauzy",
+        "podnikatele",
+        "poslední",
+        "soud",
+        "stoka",
+        "viny",
+        "zprostil",
+        "části"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -702,32 +728,6 @@
         "zabila",
         "úderu",
         "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Elysejský palác odmítl vpustit vyšetřovatele, kteří přišli provést prohlídku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/elysejsky-palac-odmitl-vpustit-vysetrovatele-kteri-prisli-provest-prohlidku-372384",
-      "dt": "2026-04-14T20:01:56Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "elysejský",
-        "kteří",
-        "odmítl",
-        "palác",
-        "prohlídku",
-        "provést",
-        "přišli",
-        "vpustit",
-        "vyšetřovatele"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1519,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41455,
+      "bytes": 41467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,11 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:53:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
-          "zpravy": 27
+          "zpravy": 27,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1595,6 +1595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud v poslední části kauzy Stoka zprostil dva podnikatele viny",
+            "publishedAt": "2026-04-15T13:53:56Z"
+          },
           {
             "title": "AI skočily na falešné studie. Šířily varování před neexistující nemocí",
             "publishedAt": "2026-04-15T13:00:00Z"
@@ -1622,10 +1626,6 @@
           {
             "title": "První účinný lék na rakovinu slinivky prošel testy. Zdvojnásobuje délku přežití",
             "publishedAt": "2026-04-15T11:20:00Z"
-          },
-          {
-            "title": "Na Slovensku se protestovalo proti zrušení korespondenční volby",
-            "publishedAt": "2026-04-15T10:07:19Z"
           }
         ]
       }
@@ -1731,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77047,
+      "bytes": 77067,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
