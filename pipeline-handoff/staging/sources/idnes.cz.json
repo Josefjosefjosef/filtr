@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T20:24:56.336697Z",
+  "ingestedAt": "2026-04-15T20:44:28.207242Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Austrálii hoří jedna z jejích dvou rafinerií, země se obává většího nedostatku ropy",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/australie-geelong-rafinerie-pozar-ropa.A260415_221308_zahranicni_mikp",
+      "dt": "2026-04-15T20:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "austrálii",
+        "dvou",
+        "hoří",
+        "jedna",
+        "jejích",
+        "nedostatku",
+        "obává",
+        "rafinerií",
+        "ropy",
+        "většího",
+        "země"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,34 +773,6 @@
         "sporu",
         "trumpem",
         "zastávají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rutte míří za Babišem. Šéf NATO jezdí tam, kde cítí problém, míní Pavel",
-      "url": "https://www.idnes.cz/zpravy/domaci/nato-rutte-cesko-navsteva-babis.A260415_104938_domaci_aoc",
-      "dt": "2026-04-15T14:04:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babišem",
-        "cítí",
-        "jezdí",
-        "míní",
-        "míří",
-        "nato",
-        "pavel",
-        "problém",
-        "rutte",
-        "tam",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49912,
+      "bytes": 49617,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T20:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T20:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1634,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Austrálii hoří jedna z jejích dvou rafinerií, země se obává většího nedostatku ropy",
+            "publishedAt": "2026-04-15T20:30:00Z"
+          },
           {
             "title": "Pentagon v pohotovosti: Trump může každou chvíli nařídit zásah na Kubě",
             "publishedAt": "2026-04-15T20:02:00Z"
@@ -1661,10 +1665,6 @@
           {
             "title": "Usmíří si tím věřící? Trump zveřejnil nový obrázek, na kterém ho Ježíš Kristus objímá",
             "publishedAt": "2026-04-15T18:09:00Z"
-          },
-          {
-            "title": "Z Ukrajiny vyrůstá raketová velmoc. I díky proudovým motorům z Česka",
-            "publishedAt": "2026-04-15T18:00:00Z"
           }
         ]
       }
