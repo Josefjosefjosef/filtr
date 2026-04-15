@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T14:50:38.553310Z",
+  "ingestedAt": "2026-04-15T15:09:27.265900Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kluci jsou zdraví a natěšení, říká Ujčík před baráží. Na Litvínov teprve koukne",
+      "url": "https://www.idnes.cz/hokej/hokejova-1-liga/viktor-ujcik-dukla-jihlava-baraz.A260415_135918_hok_1liga_kazdt",
+      "dt": "2026-04-15T15:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráží",
+        "kluci",
+        "koukne",
+        "litvínov",
+        "natěšení",
+        "teprve",
+        "ujčík",
+        "zdraví",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vítkovice získaly Pavelku z Hradce, Boleslav posílí kanadský útočník Martel",
+      "url": "https://www.idnes.cz/hokej/extraliga/vitkovice-ziskaly-z-hradce-kralove-hokejoveho-obrance-a-odchovance-pavelku.A260415_164537_hokej_ivt",
+      "dt": "2026-04-15T14:51:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boleslav",
+        "hradce",
+        "kanadský",
+        "martel",
+        "pavelku",
+        "posílí",
+        "vítkovice",
+        "získaly",
+        "útočník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,60 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sedmé zápasy řečí čísel. Co je ovlivňuje, co se přeceňuje? A kdo v nich nejvíc strádá?",
-      "url": "https://www.idnes.cz/hokej/extraliga/7-zapas-play-off-historie-bilance-sparta-pardubice-statistiky.A260414_113727_hokej_ivt",
-      "dt": "2026-04-15T06:08:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "nejvíc",
-        "nich",
-        "ovlivňuje",
-        "přeceňuje",
-        "sedmé",
-        "strádá",
-        "zápasy",
-        "čísel",
-        "řečí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další český rodinný olympijský klan? Míša se nebojí, říká maminka Juřičková o dceři",
-      "url": "https://www.idnes.cz/sport/ostatni/matka-a-dcera-jurickovy-olympijske-hry.A260414_190104_sporty_tm2",
-      "dt": "2026-04-15T05:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "dceři",
-        "juřičková",
-        "klan",
-        "maminka",
-        "míša",
-        "nebojí",
-        "olympijský",
-        "rodinný",
-        "český",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46547,
+      "bytes": 46322,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T14:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -860,6 +858,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kluci jsou zdraví a natěšení, říká Ujčík před baráží. Na Litvínov teprve koukne",
+            "publishedAt": "2026-04-15T15:00:00Z"
+          },
+          {
+            "title": "Vítkovice získaly Pavelku z Hradce, Boleslav posílí kanadský útočník Martel",
+            "publishedAt": "2026-04-15T14:51:00Z"
+          },
           {
             "title": "Viděli jste, jak hrají? Simeone obdivně o Barceloně i dojetí z třetího semifinále",
             "publishedAt": "2026-04-15T14:26:00Z"
@@ -883,14 +889,6 @@
           {
             "title": "Mimořádná suma za mimořádný dres. V aukci se prodal Pogačarův roztrhaný trikot",
             "publishedAt": "2026-04-15T12:58:00Z"
-          },
-          {
-            "title": "Zařídil postup a věří: Ligu mistrů zase vyhrajeme! Dembélé o touze uspět",
-            "publishedAt": "2026-04-15T12:29:00Z"
-          },
-          {
-            "title": "Oremus a Köhler ve Zlíně pokračují. Kapitán Holík je zatím bez smlouvy",
-            "publishedAt": "2026-04-15T12:26:00Z"
           }
         ]
       }
