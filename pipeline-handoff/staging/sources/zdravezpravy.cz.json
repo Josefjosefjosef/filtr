@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-15T12:04:35.272139Z",
+  "ingestedAt": "2026-04-15T12:59:47.930876Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rezort zemědělství chce kupovat více českých potravin",
+      "url": "https://www.zdravezpravy.cz/2026/04/15/rezort-zemedelstvi-chce-kupovat-vice-ceskych-potravin/",
+      "dt": "2026-04-15T12:20:13Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "chce",
+        "kupovat",
+        "potravin",
+        "rezort",
+        "zemědělství",
+        "českých"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -468,31 +491,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ostrava zvažuje sociální zařízení pro pečující seniory, první v Česku",
-      "url": "https://www.zdravezpravy.cz/2026/04/07/ostrava-zvazuje-socialni-zarizeni-pro-pecujici-seniory-prvni-v-cesku/",
-      "dt": "2026-04-07T11:00:17Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ostrava",
-        "pečující",
-        "první",
-        "seniory",
-        "sociální",
-        "zařízení",
-        "zvažuje",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +501,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 230982,
+      "bytes": 229369,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,7 +538,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:50:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T12:20:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 19,
@@ -556,6 +554,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rezort zemědělství chce kupovat více českých potravin",
+            "publishedAt": "2026-04-15T12:20:13Z"
+          },
           {
             "title": "Divizi zdravotní péče Penta Hospitals CZ nově vede Martin Křížek",
             "publishedAt": "2026-04-15T07:50:31Z"
@@ -583,10 +585,6 @@
           {
             "title": "Zubní kaz u dětí podporují slazené i kyselé nápoje narušující pH v ústech",
             "publishedAt": "2026-04-13T11:30:09Z"
-          },
-          {
-            "title": "Interrupcí v ČR rok od roku ubývá. To díky osvětě i moderní antikoncepci",
-            "publishedAt": "2026-04-13T07:18:41Z"
           }
         ]
       }

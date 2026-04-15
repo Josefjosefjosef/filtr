@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T12:04:35.272139Z",
+  "ingestedAt": "2026-04-15T12:59:47.930876Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kolik šálků kávy denně prospívá psychice? Vědci našli překvapivě přesné číslo",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/kolik-kavy-denne-prospiva-psychice/",
+      "dt": "2026-04-15T12:47:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "denně",
+        "kolik",
+        "kávy",
+        "našli",
+        "prospívá",
+        "psychice",
+        "překvapivě",
+        "přesné",
+        "vědci",
+        "číslo",
+        "šálků"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -246,30 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Skupina Agel posiluje na Slovensku. Ovládne nemocnici v Bratislavě",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/skupina-agel-posiluje-na-slovensku-ovladne-nemocnici-v-bratislave/",
-      "dt": "2026-04-14T12:51:06Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "agel",
-        "bratislavě",
-        "nemocnici",
-        "ovládne",
-        "posiluje",
-        "skupina",
-        "slovensku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 110296,
+      "bytes": 113239,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,11 +321,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T11:36:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T12:47:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "finance": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -333,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolik šálků kávy denně prospívá psychice? Vědci našli překvapivě přesné číslo",
+            "publishedAt": "2026-04-15T12:47:00Z"
+          },
           {
             "title": "Babiš střet zájmů nevyřešil, zdůrazňuje Kupka. Mluví o investičním fondu ve zdravotnictví",
             "publishedAt": "2026-04-15T11:36:50Z"
@@ -360,10 +368,6 @@
           {
             "title": "Konec papírování? Evropská komise slibuje miliardové úspory pro zdravotnické firmy",
             "publishedAt": "2026-04-15T05:00:00Z"
-          },
-          {
-            "title": "Krutá daň za vyléčení: Proč úspěšná onkologická léčba u mladých zvyšuje riziko dalšího nádoru?",
-            "publishedAt": "2026-04-14T15:00:00Z"
           }
         ]
       }
