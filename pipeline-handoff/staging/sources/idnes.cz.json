@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T10:33:00.364407Z",
+  "ingestedAt": "2026-04-15T10:53:01.233153Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Z nádraží ujel pracovní vlak bez strojvedoucího, zastavil až po mnoha kilometrech",
+      "url": "https://www.idnes.cz/jihlava/zpravy/zeleznice-nadrazi-telc-dacice-policie-stroj-ujel-koleje-drazni-inspekce.A260415_121813_jihlava-zpravy_mv",
+      "dt": "2026-04-15T10:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kilometrech",
+        "mnoha",
+        "nádraží",
+        "pracovní",
+        "strojvedoucího",
+        "ujel",
+        "vlak",
+        "zastavil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šéf NATO navštíví Česko, přijme ho Babiš. Budeme řešit naše závazky, řekl premiér",
+      "url": "https://www.idnes.cz/zpravy/domaci/nato-rutte-cesko-navsteva-babis.A260415_104938_domaci_aoc",
+      "dt": "2026-04-15T10:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babiš",
+        "budeme",
+        "nato",
+        "navštíví",
+        "naše",
+        "premiér",
+        "přijme",
+        "závazky",
+        "česko",
+        "řekl",
+        "řešit",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -103,35 +157,6 @@
         "vyšší",
         "výdaje",
         "výdajů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šéf NATO navštíví Česko, přijme ho Babiš. Budeme řešit naše závazky, řekl premiér",
-      "url": "https://www.idnes.cz/zpravy/domaci/nato-rutte-cesko-navsteva-babis.A260415_104938_domaci_aoc",
-      "dt": "2026-04-15T10:03:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babiš",
-        "budeme",
-        "nato",
-        "navštíví",
-        "naše",
-        "premiér",
-        "přijme",
-        "závazky",
-        "česko",
-        "řekl",
-        "řešit",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -765,31 +790,6 @@
         "tradice",
         "zemřela",
         "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Macinka zveřejnil „zakázané video“ s Pavlem. Stačilo se zeptat, rýpl si",
-      "url": "https://www.idnes.cz/zpravy/domaci/macinka-zverejnil-rozhovor-petr-pavel-armada-cr-diskuze-o-cenzure.A260415_070557_domaci_jira",
-      "dt": "2026-04-15T05:22:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "macinka",
-        "pavlem",
-        "rýpl",
-        "stačilo",
-        "video",
-        "zakázané",
-        "zeptat",
-        "zveřejnil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1598,7 +1598,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49224,
+      "bytes": 49021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1635,7 +1635,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T10:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1654,6 +1654,14 @@
         },
         "sample_titles": [
           {
+            "title": "Z nádraží ujel pracovní vlak bez strojvedoucího, zastavil až po mnoha kilometrech",
+            "publishedAt": "2026-04-15T10:35:00Z"
+          },
+          {
+            "title": "Šéf NATO navštíví Česko, přijme ho Babiš. Budeme řešit naše závazky, řekl premiér",
+            "publishedAt": "2026-04-15T10:34:00Z"
+          },
+          {
             "title": "Trestné má být úmyslné neplacení výživného po dobu delší než čtyři měsíce",
             "publishedAt": "2026-04-15T10:20:00Z"
           },
@@ -1670,20 +1678,12 @@
             "publishedAt": "2026-04-15T10:10:00Z"
           },
           {
-            "title": "Šéf NATO navštíví Česko, přijme ho Babiš. Budeme řešit naše závazky, řekl premiér",
-            "publishedAt": "2026-04-15T10:03:00Z"
-          },
-          {
             "title": "OBRAZEM: Jako za starých časů. Malebná ulička uprostřed Prahy rozkvetla do krásy",
             "publishedAt": "2026-04-15T10:01:00Z"
           },
           {
             "title": "Miluje vás vaše kočka, nebo jste jí fuk? Vědecký pokus dopadl jednoznačně",
             "publishedAt": "2026-04-15T09:55:00Z"
-          },
-          {
-            "title": "Picasso za pár tisíc. Muž v tombole vyhrál obraz v hodnotě 25 milionů korun",
-            "publishedAt": "2026-04-15T09:43:00Z"
           }
         ]
       }

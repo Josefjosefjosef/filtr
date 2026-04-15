@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T10:33:00.364407Z",
+  "ingestedAt": "2026-04-15T10:53:01.233153Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec poplatků za ČT. Bývalý šéf jasně říká, co už diváci neuvidí",
+      "url": "https://zpravy.aktualne.cz/domaci/horsi-nez-armagedon-vyhozeny-sef-ct-popisuje-co-zpusobi-zruseni-poplatku/r~aaa298e24a5db7880646c57a6c97a7e0/",
+      "dt": "2026-04-15T10:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bývalý",
+        "diváci",
+        "jasně",
+        "konec",
+        "neuvidí",
+        "poplatků",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -396,7 +421,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "S tím nechceme mít nic společného. O předání „zakázaného\" videa Macinkovi armáda nevěděla",
+      "title": "S tím nechceme mít nic společného. O předání „zakázaného“ videa Macinkovi armáda nevěděla",
       "url": "https://zpravy.aktualne.cz/domaci/s-tim-nechceme-mit-nic-spolecneho-o-predani-zakazaneho-videa-macinkovi-armada-nevedela/r~aaa2911ee5530fd1b88fcd6752467f70/",
       "dt": "2026-04-15T06:41:00Z",
       "media_raw": "Aktuálně",
@@ -499,35 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sněmovna dala vládní regulaci cen benzinu zelenou. \"Socík, jak když vyšije\" kritizuje opozice",
-      "url": "https://zpravy.aktualne.cz/ekonomika/snemovna-dala-vladni-regulaci-cen-benzinu-zelenou-socik-jak-kdyz-vysije-kritizuje-opozice/r~aaa29aacfac09597455c0cf3a94e1f63/",
-      "dt": "2026-04-15T04:33:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "benzinu",
-        "cen",
-        "dala",
-        "když",
-        "kritizuje",
-        "opozice",
-        "regulaci",
-        "sněmovna",
-        "socík",
-        "vládní",
-        "vyšije",
-        "zelenou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21586,
+      "bytes": 21603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T10:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "finance": 2,
+          "zpravy": 15,
+          "finance": 1,
           "other": 1,
           "sport": 3
         },
@@ -593,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec poplatků za ČT. Bývalý šéf jasně říká, co už diváci neuvidí",
+            "publishedAt": "2026-04-15T10:30:00Z"
+          },
           {
             "title": "\"Staří přátelé.\" Lavrov jednal se Si Ťin-pchingem, chystá se návštěva Putina",
             "publishedAt": "2026-04-15T05:18:00Z"
@@ -620,10 +620,6 @@
           {
             "title": "Co by z nás zbylo bez paměti? Vychází Alchemised, nejočekávanější fantasy roku",
             "publishedAt": "2026-04-15T08:23:00Z"
-          },
-          {
-            "title": "Místo Čechů měla jet na MS Itálie, zní z Ameriky. Kinského tam propírají v talkshows",
-            "publishedAt": "2026-04-15T08:20:00Z"
           }
         ]
       }

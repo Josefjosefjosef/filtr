@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T10:33:00.364407Z",
+  "ingestedAt": "2026-04-15T10:53:01.233153Z",
   "items": [
     {
       "section": "finance",
@@ -246,6 +246,30 @@
         "také",
         "vláda",
         "základní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Umělou inteligenci máme za hubičku. Užijme si to, dokud to trvá",
+      "url": "https://archiv.hn.cz/c1-67867230-umelou-inteligenci-mame-za-hubicku-uzijme-si-to-dokud-to-trva",
+      "dt": "2026-04-15T08:37:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dokud",
+        "hubičku",
+        "inteligenci",
+        "máme",
+        "trvá",
+        "umělou",
+        "užijme"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1076,34 +1100,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Bude Babiš porcovat ČEZ? Rozpočtu by se ulevilo, ale slibované ovládnutí výroby elektřiny to odsune",
-      "url": "https://archiv.hn.cz/c1-67866660-bude-babis-porcovat-cez-rozpoctu-by-se-ulevilo-ale-slibovane-ovladnuti-vyroby-elektriny-to-odsune",
-      "dt": "2026-04-14T13:18:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "babiš",
-        "elektřiny",
-        "odsune",
-        "ovládnutí",
-        "porcovat",
-        "rozpočtu",
-        "slibované",
-        "ulevilo",
-        "výroby",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1114,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185330,
+      "bytes": 185211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1154,9 +1150,8 @@
         "raw_feed_latest_publishedAt": "2026-04-15T09:46:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 1,
-          "zdravi": 1
+          "finance": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,

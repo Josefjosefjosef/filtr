@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T10:33:00.364407Z",
+  "ingestedAt": "2026-04-15T10:53:01.233153Z",
   "items": [
     {
       "section": "aktualne",
@@ -735,6 +735,34 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tandem na nejvyšší úrovni. Naava povede florbalisty jako hlavní kouč spolu s Berkou",
+      "url": "https://sport.ceskatelevize.cz/clanek/florbal/tandem-na-nejvyssi-urovni-naava-povede-florbalisty-jako-hlavni-kouc-spolu-s-berkou-156296",
+      "dt": "2026-04-15T10:43:37Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "berkou",
+        "florbalisty",
+        "hlavní",
+        "jako",
+        "kouč",
+        "naava",
+        "nejvyšší",
+        "povede",
+        "spolu",
+        "tandem",
+        "úrovni"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,35 +1512,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbal fokus podcast: Debakl Zbrojovky, Artis mimo baráž? Konec Janotky, co (zase) Chorý?",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbal-fokus-podcast-debakl-zbrojovky-artis-mimo-baraz-konec-janotky-co-zase-chory-156264",
-      "dt": "2026-04-13T08:28:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "artis",
-        "baráž",
-        "chorý",
-        "debakl",
-        "fokus",
-        "fotbal",
-        "janotky",
-        "konec",
-        "mimo",
-        "podcast",
-        "zase",
-        "zbrojovky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1641,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40554,
+      "bytes": 40571,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1678,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:19:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:43:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1693,6 +1692,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tandem na nejvyšší úrovni. Naava povede florbalisty jako hlavní kouč spolu s Berkou",
+            "publishedAt": "2026-04-15T10:43:37Z"
+          },
           {
             "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
             "publishedAt": "2026-04-15T09:19:04Z"
@@ -1720,10 +1723,6 @@
           {
             "title": "Nečas získal stý bod v sezoně, na magickou hranici dosáhl znovu i Pastrňák",
             "publishedAt": "2026-04-15T05:23:00Z"
-          },
-          {
-            "title": "Podle mě je tento systém neférový, řekl k baráži jihlavský kapitán Čachotský",
-            "publishedAt": "2026-04-15T04:00:00Z"
           }
         ]
       }
@@ -1735,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76844,
+      "bytes": 76905,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
