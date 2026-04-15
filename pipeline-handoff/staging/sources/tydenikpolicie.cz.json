@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-15T12:59:47.930876Z",
+  "ingestedAt": "2026-04-15T13:20:17.831366Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na padesátce na Litoměřicku naměřili policisté řidičce audi rychlost 95 km/hod",
+      "url": "https://tydenikpolicie.cz/na-padesatce-na-litomericku-namerili-policiste-ridicce-audi-rychlost-95-km-hod/",
+      "dt": "2026-04-15T13:13:19Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "audi",
+        "hod",
+        "litoměřicku",
+        "naměřili",
+        "padesátce",
+        "policisté",
+        "rychlost",
+        "řidičce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -244,31 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Falešní policisté a podvodné investice na Rychnovsku. Poškození přišli o miliony",
-      "url": "https://tydenikpolicie.cz/falesni-policiste-a-podvodne-investice-na-rychnovsku-poskozeni-prisli-o-miliony/",
-      "dt": "2026-04-15T02:02:00Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "falešní",
-        "investice",
-        "miliony",
-        "podvodné",
-        "policisté",
-        "poškození",
-        "přišli",
-        "rychnovsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16206,
+      "bytes": 16164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:01:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:13:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na padesátce na Litoměřicku naměřili policisté řidičce audi rychlost 95 km/hod",
+            "publishedAt": "2026-04-15T13:13:19Z"
+          },
           {
             "title": "Kriminalisté odhalili rozsáhlý případ podvodů s humanitárními dávkami. Skupina cizinců měla fingovat invaliditu",
             "publishedAt": "2026-04-15T12:01:10Z"
@@ -358,10 +362,6 @@
           {
             "title": "Invalidní důchodce napadl na ubytovně na Znojemsku muže nožem. Zasadil mu desítky bodných ran",
             "publishedAt": "2026-04-15T10:19:03Z"
-          },
-          {
-            "title": "Manželé z Ukrajiny měli podvodně vylákat na humanitárních dávkách přes 300 tisíc korun",
-            "publishedAt": "2026-04-15T10:16:46Z"
           }
         ]
       }

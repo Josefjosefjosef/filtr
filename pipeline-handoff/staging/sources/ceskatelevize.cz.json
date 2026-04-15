@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T12:59:47.930876Z",
+  "ingestedAt": "2026-04-15T13:20:17.831366Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "AI skočily na falešné studie. Šířily varování před neexistující nemocí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/ai-skocily-na-falesne-studie-sirily-varovani-pred-neexistujici-nemoci-372404",
+      "dt": "2026-04-15T13:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "falešné",
+        "neexistující",
+        "nemocí",
+        "skočily",
+        "studie",
+        "varování",
+        "šířily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -638,20 +662,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zrychlit povolování pobytu cizinců má digitální systém, sněmovna to podpořila",
+      "title": "Poslanci znovu projednávají zavedení Dne české vlajky",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-projedna-zprisneni-trestneho-cinu-neplaceni-vyzivneho-372388",
       "dt": "2026-04-15T01:50:29Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "cizinců",
-        "digitální",
-        "pobytu",
-        "podpořila",
-        "povolování",
-        "sněmovna",
-        "systém",
-        "zrychlit"
+        "dne",
+        "poslanci",
+        "projednávají",
+        "vlajky",
+        "zavedení",
+        "znovu",
+        "české"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -705,32 +728,6 @@
         "přišli",
         "vpustit",
         "vyšetřovatele"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Úřad ukázal mapu akceleračních zón. Je jich méně, než se původně plánovalo",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ministerstvo-ukazalo-mapu-akceleracnich-zon-kraje-a-obce-ji-mohou-pripominkovat-372377",
-      "dt": "2026-04-14T18:38:55Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "akceleračních",
-        "jich",
-        "mapu",
-        "než",
-        "plánovalo",
-        "původně",
-        "ukázal",
-        "zón",
-        "úřad"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1522,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41683,
+      "bytes": 41428,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1582,11 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:24:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T13:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "other": 2
+          "other": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1598,6 +1595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AI skočily na falešné studie. Šířily varování před neexistující nemocí",
+            "publishedAt": "2026-04-15T13:00:00Z"
+          },
           {
             "title": "Trumpova administrativa žádá o zrušení rozsudků pro vůdce útoku na Kapitol",
             "publishedAt": "2026-04-15T12:24:53Z"
@@ -1625,10 +1626,6 @@
           {
             "title": "Na Slovensku se protestovalo proti zrušení korespondenční volby",
             "publishedAt": "2026-04-15T10:07:19Z"
-          },
-          {
-            "title": "Obnovíme nezávislost veřejnoprávních médií, slíbil Magyar",
-            "publishedAt": "2026-04-15T09:40:10Z"
           }
         ]
       }
@@ -1734,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77234,
+      "bytes": 77093,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
