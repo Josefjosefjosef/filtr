@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T11:49:22.593914Z",
+  "ingestedAt": "2026-04-15T12:04:35.272139Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Radní ČT chtějí jednat s ministrem Klempířem o mediálním zákoně a financování ČT",
+      "url": "https://zpravy.aktualne.cz/zahranici/radni-ct-chteji-jednat-s-ministrem-klempirem-o-medialnim-zakone-a-financovani-ct/r~aaa2981cc4802b788e67f21de5cc2f3b/",
+      "dt": "2026-04-15T11:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chtějí",
+        "financování",
+        "jednat",
+        "klempířem",
+        "mediálním",
+        "ministrem",
+        "radní",
+        "zákoně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -496,31 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Historický milník pro český hokej v zámoří. Pastrňák a Nečas to dokázali",
-      "url": "https://sport.aktualne.cz/hokej/nhl/uchvatna-ceska-parada-v-nhl-pastrnak-i-necas-shodne-ziskali-100-bod-v-sezone/r~aaa29d8a8333d449147de0d1e74327d7/",
-      "dt": "2026-04-15T04:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dokázali",
-        "historický",
-        "hokej",
-        "milník",
-        "nečas",
-        "pastrňák",
-        "zámoří",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21769,
+      "bytes": 21770,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,13 +568,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T11:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T11:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
+          "zpravy": 16,
           "finance": 1,
           "other": 1,
-          "sport": 3
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -586,6 +586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Radní ČT chtějí jednat s ministrem Klempířem o mediálním zákoně a financování ČT",
+            "publishedAt": "2026-04-15T11:52:00Z"
+          },
           {
             "title": "Rusové útočili na přístav v Oděské oblasti, zasáhli i civilní loď",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -613,10 +617,6 @@
           {
             "title": "\"Budujeme nejmodernější zdravotnictví.\" V Salvadoru bude léčit umělá inteligence",
             "publishedAt": "2026-04-15T10:59:00Z"
-          },
-          {
-            "title": "Konec poplatků za ČT. Bývalý šéf jasně říká, co už diváci neuvidí",
-            "publishedAt": "2026-04-15T10:30:00Z"
           }
         ]
       }
