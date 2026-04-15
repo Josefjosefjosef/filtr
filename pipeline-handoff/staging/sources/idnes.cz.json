@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T20:04:55.006811Z",
+  "ingestedAt": "2026-04-15T20:24:56.336697Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pentagon v pohotovosti: Trump může každou chvíli nařídit zásah na Kubě",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/pentagon-trump-kuba-utok-intervence-intervence-zasah.A260415_210102_zahranicni_sahu",
+      "dt": "2026-04-15T20:02:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chvíli",
+        "každou",
+        "kubě",
+        "nařídit",
+        "pentagon",
+        "pohotovosti",
+        "trump",
+        "zásah"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -748,31 +773,6 @@
         "rutte",
         "tam",
         "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidič jel po D5 sedm kilometrů v protisměru, policie po něm pátrá",
-      "url": "https://www.idnes.cz/plzen/zpravy/ridic-v-protismeru-plzensko-d5-nyrany-patrani-skoda-octavia.A260415_150230_plzen-zpravy_vb",
-      "dt": "2026-04-15T14:01:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jel",
-        "kilometrů",
-        "něm",
-        "policie",
-        "protisměru",
-        "pátrá",
-        "sedm",
-        "řidič"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49376,
+      "bytes": 49912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T19:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T20:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1634,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pentagon v pohotovosti: Trump může každou chvíli nařídit zásah na Kubě",
+            "publishedAt": "2026-04-15T20:02:00Z"
+          },
           {
             "title": "Je třeba chránit bezpečnost a práva Íránu, řekl čínský ministr. Příměří podporuje",
             "publishedAt": "2026-04-15T19:51:00Z"
@@ -1661,10 +1665,6 @@
           {
             "title": "Z Ukrajiny vyrůstá raketová velmoc. I díky proudovým motorům z Česka",
             "publishedAt": "2026-04-15T18:00:00Z"
-          },
-          {
-            "title": "Klempíř: Rušení poplatků není útok, musí se umět šetřit. Plníme program, říká Babiš",
-            "publishedAt": "2026-04-15T17:19:00Z"
           }
         ]
       }

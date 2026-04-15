@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T20:04:55.006811Z",
+  "ingestedAt": "2026-04-15T20:24:56.336697Z",
   "items": [
     {
       "section": "finance",
@@ -738,6 +738,28 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nedvěd Spartu dál nepovede. Trenérem bude Augusta",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/nedved-spartu-dal-nepovede-trenerem-bude-augusta-156305",
+      "dt": "2026-04-15T20:19:25Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "augusta",
+        "nedvěd",
+        "nepovede",
+        "spartu",
+        "trenérem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1482,33 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Spartu táhl za prodloužením série elitní útok, v Pardubicích se bude hrát sedmý zápas",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/spartu-tahl-za-prodlouzenim-serie-elitni-utok-v-pardubicich-se-bude-hrat-sedmy-zapas-156275",
-      "dt": "2026-04-13T19:15:28Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "elitní",
-        "hrát",
-        "pardubicích",
-        "prodloužením",
-        "sedmý",
-        "spartu",
-        "série",
-        "táhl",
-        "zápas",
-        "útok"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1638,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39938,
+      "bytes": 39699,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T18:45:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T20:19:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nedvěd Spartu dál nepovede. Trenérem bude Augusta",
+            "publishedAt": "2026-04-15T20:19:25Z"
+          },
           {
             "title": "Pardubický Mandát k postupu do finále – stačil jediný gól",
             "publishedAt": "2026-04-15T18:45:52Z"
@@ -1717,10 +1716,6 @@
           {
             "title": "Tandem na nejvyšší úrovni. Naava povede florbalisty jako hlavní kouč spolu s Berkou",
             "publishedAt": "2026-04-15T10:43:37Z"
-          },
-          {
-            "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
-            "publishedAt": "2026-04-15T09:19:04Z"
           }
         ]
       }
@@ -1732,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77404,
+      "bytes": 77408,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

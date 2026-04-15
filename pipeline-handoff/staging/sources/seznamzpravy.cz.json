@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-15T20:04:55.006811Z",
+  "ingestedAt": "2026-04-15T20:24:56.336697Z",
   "items": [
     {
       "section": "aktualne",
@@ -44,34 +44,6 @@
         "veřejnoprávních",
         "voleb",
         "vítěz"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-firmy-komarek-ziska-dalsi-akcie-vyrobce-jachet-ferretti-chtel-ale-mnohem-vic-304115",
-      "dt": "2026-04-15T15:45:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy / Domácí",
-      "tokens": [
-        "akcie",
-        "ale",
-        "chtěl",
-        "další",
-        "ferretti",
-        "jachet",
-        "komárek",
-        "mnohem",
-        "víc",
-        "výrobce",
-        "získá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -489,6 +461,34 @@
       "_dt_serialized": true
     },
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-firmy-komarek-ziska-dalsi-akcie-vyrobce-jachet-ferretti-chtel-ale-mnohem-vic-304115",
+      "dt": "2026-04-15T15:45:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy / Domácí",
+      "tokens": [
+        "akcie",
+        "ale",
+        "chtěl",
+        "další",
+        "ferretti",
+        "jachet",
+        "komárek",
+        "mnohem",
+        "víc",
+        "výrobce",
+        "získá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Recenze: Divadlo na evropské úrovni. V Praze opět režíruje Pařízek",
@@ -812,34 +812,6 @@
         "veřejnoprávních",
         "voleb",
         "vítěz"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_sz_byznys",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-firmy-komarek-ziska-dalsi-akcie-vyrobce-jachet-ferretti-chtel-ale-mnohem-vic-304115",
-      "dt": "2026-04-15T15:45:00Z",
-      "media_raw": "Seznam Zprávy / Byznys",
-      "media_norm": "Seznam Zprávy / Byznys",
-      "tokens": [
-        "akcie",
-        "ale",
-        "chtěl",
-        "další",
-        "ferretti",
-        "jachet",
-        "komárek",
-        "mnohem",
-        "víc",
-        "výrobce",
-        "získá"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -1248,6 +1220,34 @@
         "sto",
         "strachem",
         "stávkou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-firmy-komarek-ziska-dalsi-akcie-vyrobce-jachet-ferretti-chtel-ale-mnohem-vic-304115",
+      "dt": "2026-04-15T15:45:00Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy / Byznys",
+      "tokens": [
+        "akcie",
+        "ale",
+        "chtěl",
+        "další",
+        "ferretti",
+        "jachet",
+        "komárek",
+        "mnohem",
+        "víc",
+        "výrobce",
+        "získá"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -2316,7 +2316,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 35737,
+      "bytes": 35738,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2357,8 +2357,8 @@
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
-          "finance": 5,
-          "sport": 1
+          "sport": 1,
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2379,10 +2379,6 @@
             "publishedAt": "2026-04-15T19:55:47Z"
           },
           {
-            "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
-            "publishedAt": "2026-04-15T15:45:00Z"
-          },
-          {
             "title": "„Fotbal mě zabije, kamarádi.“ Měl být jako Brückner, ale zemřel příliš brzy",
             "publishedAt": "2026-04-15T06:00:00Z"
           },
@@ -2401,6 +2397,10 @@
           {
             "title": "Z Telče samovolně ujel drážní stroj, zastavil po 11 kilometrech a 15 přejezdech",
             "publishedAt": "2026-04-15T13:33:22Z"
+          },
+          {
+            "title": "BBC v rámci úsporného plánu propustí přes desetinu zaměstnanců",
+            "publishedAt": "2026-04-15T18:38:34Z"
           }
         ]
       }
@@ -2412,7 +2412,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
-      "bytes": 35737,
+      "bytes": 35738,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2453,8 +2453,8 @@
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
-          "finance": 7,
-          "sport": 2
+          "sport": 2,
+          "finance": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2475,10 +2475,6 @@
             "publishedAt": "2026-04-15T19:55:47Z"
           },
           {
-            "title": "Komárek získá další akcie výrobce jachet Ferretti, chtěl ale mnohem víc",
-            "publishedAt": "2026-04-15T15:45:00Z"
-          },
-          {
             "title": "„Fotbal mě zabije, kamarádi.“ Měl být jako Brückner, ale zemřel příliš brzy",
             "publishedAt": "2026-04-15T06:00:00Z"
           },
@@ -2497,6 +2493,10 @@
           {
             "title": "Z Telče samovolně ujel drážní stroj, zastavil po 11 kilometrech a 15 přejezdech",
             "publishedAt": "2026-04-15T13:33:22Z"
+          },
+          {
+            "title": "BBC v rámci úsporného plánu propustí přes desetinu zaměstnanců",
+            "publishedAt": "2026-04-15T18:38:34Z"
           }
         ]
       }
@@ -2508,7 +2508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/vzdelavani",
-      "bytes": 35737,
+      "bytes": 35738,
       "reason": "",
       "bozo": false,
       "bozoException": "",

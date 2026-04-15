@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T20:04:55.006811Z",
+  "ingestedAt": "2026-04-15T20:24:56.336697Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muž pro klíčové chvíle. Mandát uznal: Těžší sérii jsem nezažil. Třinci máme co vracet",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-extraliga-play-off-dynamo-pardubice-postup-dynamo.A260415_210405_hokej_mvo",
+      "dt": "2026-04-15T20:09:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chvíle",
+        "jsem",
+        "klíčové",
+        "mandát",
+        "muž",
+        "máme",
+        "nezažil",
+        "sérii",
+        "těžší",
+        "třinci",
+        "uznal",
+        "vracet"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,34 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Drsný pád Dynama. Potíže trvají roky, vše začalo odmítnutím smělého plánu",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/dynamo-ceske-budejovice-pad.A260415_084850_fot_dsouteze_kazdt",
-      "dt": "2026-04-15T09:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "drsný",
-        "dynama",
-        "odmítnutím",
-        "plánu",
-        "potíže",
-        "pád",
-        "roky",
-        "smělého",
-        "trvají",
-        "vše",
-        "začalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46662,
+      "bytes": 47000,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T19:45:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T20:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž pro klíčové chvíle. Mandát uznal: Těžší sérii jsem nezažil. Třinci máme co vracet",
+            "publishedAt": "2026-04-15T20:09:00Z"
+          },
           {
             "title": "ONLINE: Přestřelka na Bayernu pokračuje dalším gólem Realu, Arsenal hostí Sporting",
             "publishedAt": "2026-04-15T19:45:04Z"
@@ -882,10 +887,6 @@
           {
             "title": "Noskové vyšel přechod na antuku. Macháč je bez boje ve čtvrtfinále, Alcaraz odstoupil",
             "publishedAt": "2026-04-15T17:37:00Z"
-          },
-          {
-            "title": "Budějovice vypověděly Dynamu smlouvu ze stadionu, majitelka hledá oporu na severu",
-            "publishedAt": "2026-04-15T15:10:00Z"
           }
         ]
       }
