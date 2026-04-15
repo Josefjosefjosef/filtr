@@ -1,26 +1,74 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T20:44:28.207242Z",
+  "ingestedAt": "2026-04-15T21:05:04.018885Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Drama v Mnichově graduje! Arsenal drží postupovou remízu",
+      "title": "Bayern využil v závěru přesilovku a postupuje! Také Arsenal jde dál",
       "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-bitva-gigantu-vrcholi-bayern-haji-naskok-pred-realem-do-semifinale-ligy-mistru-ma-blize-i-arsenal-5437012",
       "dt": "2026-04-15T10:35:45Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "arsenal",
-        "drama",
-        "drží",
-        "fotbal",
-        "graduje",
-        "mnichově",
-        "online",
-        "postupovou",
-        "remízu"
+        "bayern",
+        "jde",
+        "postupuje",
+        "přesilovku",
+        "také",
+        "využil",
+        "závěru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalistka Voráčková postoupila se Zaragozou do semifinále Evropské ligy",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbalistka-vorackova-postoupila-se-zaragozou-do-semifinale-evropske-ligy-5437391",
+      "dt": "2026-04-15T20:46:39Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalistka",
+        "evropské",
+        "ligy",
+        "postoupila",
+        "semifinále",
+        "voráčková",
+        "zaragozou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nedvěd potvrdil svůj konec ve Spartě i jméno svého nástupce",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-nedved-potvrdil-svuj-konec-ve-sparte-i-jmeno-sveho-nastupce-5437374",
+      "dt": "2026-04-15T20:42:27Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jméno",
+        "konec",
+        "nedvěd",
+        "nástupce",
+        "potvrdil",
+        "spartě",
+        "svého",
+        "svůj"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -723,58 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zkrácení poločasu, žádné červené ani žluté karty. Šéf Neapole navrhuje revoluční změny",
-      "url": "https://www.sport.cz/clanek/fotbal-zkraceni-polocasu-zadne-cervene-ani-zlute-karty-sef-neapole-navrhuje-revolucni-zmeny-5436630",
-      "dt": "2026-04-15T14:14:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "karty",
-        "navrhuje",
-        "neapole",
-        "poločasu",
-        "revoluční",
-        "zkrácení",
-        "změny",
-        "červené",
-        "šéf",
-        "žluté",
-        "žádné"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obránce Pavelka se po konci v Hradci Králové vrací do Vítkovic",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-obrance-pavelka-se-po-konci-v-hradci-kralove-vraci-do-vitkovic-5437032",
-      "dt": "2026-04-15T13:53:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hradci",
-        "konci",
-        "králové",
-        "obránce",
-        "pavelka",
-        "vrací",
-        "vítkovic"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40771,
+      "bytes": 41214,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T20:28:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T20:46:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,8 +834,16 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Drama v Mnichově graduje! Arsenal drží postupovou remízu",
+            "title": "Bayern využil v závěru přesilovku a postupuje! Také Arsenal jde dál",
             "publishedAt": "2026-04-15T10:35:45Z"
+          },
+          {
+            "title": "Basketbalistka Voráčková postoupila se Zaragozou do semifinále Evropské ligy",
+            "publishedAt": "2026-04-15T20:46:39Z"
+          },
+          {
+            "title": "Nedvěd potvrdil svůj konec ve Spartě i jméno svého nástupce",
+            "publishedAt": "2026-04-15T20:42:27Z"
           },
           {
             "title": "Volejbalové Lvice Praha jsou blízko bronzu ve své první extraligové sezoně",
@@ -860,14 +864,6 @@
           {
             "title": "Pešánova rošáda. Pardubickému trenérovi vyšel odvážný tah",
             "publishedAt": "2026-04-15T19:50:33Z"
-          },
-          {
-            "title": "Loučka po další prohře: Nebudu říkat, že jsme v pohodě. Sestup si ale nepřipouštíme",
-            "publishedAt": "2026-04-15T19:28:02Z"
-          },
-          {
-            "title": "Nosková úspěšně zahájila antukovou sezonu. Kopřivovi se povedl obrat, Macháč má volno",
-            "publishedAt": "2026-04-15T15:47:50Z"
           }
         ]
       }
