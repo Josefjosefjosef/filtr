@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-15T15:39:18.907750Z",
+  "ingestedAt": "2026-04-15T15:55:01.769993Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Muži v letu: Bolek Polívka, Pavel Zedníček a Miroslav Donutil řeší dávné spory i nečekané životní události",
+      "url": "https://www.vtelce.cz/muzi-v-letu-bolek-polivka-pavel-zednicek-a-miroslav-donutil-resi-davne-spory-i-necekane-zivotni-udalosti/",
+      "dt": "2026-04-15T15:44:43Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "bolek",
+        "donutil",
+        "dávné",
+        "letu",
+        "miroslav",
+        "muži",
+        "nečekané",
+        "pavel",
+        "polívka",
+        "spory",
+        "události",
+        "zedníček",
+        "řeší",
+        "životní"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -260,40 +291,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Bratři a sestry: Měl to být nejšťastnější den jeho života. Pravda o nevěstě ale zničí vše, čemu Venca dosud věřil",
-      "url": "https://www.vtelce.cz/bratri-a-sestry-mel-to-byt-nejstastnejsi-den-jeho-zivota-pravda-o-neveste-ale-znici-vse-cemu-venca-dosud-veril/",
-      "dt": "2026-04-14T08:31:13Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "ale",
-        "bratři",
-        "být",
-        "den",
-        "dosud",
-        "jeho",
-        "měl",
-        "nejšťastnější",
-        "nevěstě",
-        "pravda",
-        "sestry",
-        "venca",
-        "věřil",
-        "vše",
-        "zničí",
-        "čemu",
-        "života"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,8 +301,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 79382,
-      "reason": "",
+      "bytes": 80109,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -341,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T12:45:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T15:44:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -356,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muži v letu: Bolek Polívka, Pavel Zedníček a Miroslav Donutil řeší dávné spory i nečekané životní události",
+            "publishedAt": "2026-04-15T15:44:43Z"
+          },
           {
             "title": "Ulice: Soňa vyzraje na Koníčka. Ten jí uvěří s příslibem, že nemá ve zvyku lhát",
             "publishedAt": "2026-04-15T12:45:58Z"
@@ -383,10 +384,6 @@
           {
             "title": "Agent 007 Pierce Brosnan provází dokumentem o největších loupežích historie",
             "publishedAt": "2026-04-14T15:28:54Z"
-          },
-          {
-            "title": "Sudá a lichá: Bud Spencer porazil i Supermana, padesát Italů v drahém exilu a pocta legendám grotesky",
-            "publishedAt": "2026-04-14T13:28:15Z"
           }
         ]
       }
