@@ -25841,6 +25841,25 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           }catch(_){}
           return;
         }
+        /* P0 mobile/tablet web-nav: popstate/hashchange can run before location.hash catches up with the
+           restored history entry, while history.state already matches the pushed overlay entry
+           ({ iu_nav_overlay: true }). If we fall through, applySectionFromURL still sees stale ?section=
+           and iuMobileGateCloseForMainNav() clears the gate right after iuMobileWebNavSyncFromHistory()
+           reopened it — overlay flashes closed. Same short-circuit as #iu-nav. */
+        try {
+          if (
+            window.matchMedia &&
+            window.matchMedia("(max-width: 900px)").matches &&
+            history.state &&
+            history.state.iu_nav_overlay === true
+          ) {
+            try { applyPanelFromUrl(); } catch (_){}
+            try{
+              if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
+            }catch(_){}
+            return;
+          }
+        } catch (_){}
       } catch (_){}
       iuHideAllOverlaysNow();
       applySectionFromURL();
