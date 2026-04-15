@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T05:15:24.558938Z",
+  "ingestedAt": "2026-04-15T05:35:08.809376Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Úpravy rozptylové loučky v Brně vyvolaly odpor pozůstalých",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihomoravsky-kraj/upravy-rozptylove-loucky-v-brne-vyvolaly-odpor-pozustalych-372341",
+      "dt": "2026-04-15T05:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brně",
+        "loučky",
+        "odpor",
+        "pozůstalých",
+        "rozptylové",
+        "vyvolaly",
+        "úpravy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -29,7 +53,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trump uvedl, že ho porážka Orbána netrápí, Magyara označil za dobrého člověka",
+      "title": "Trumpa prý porážka Orbána netrápí. Magyara označil za dobrého člověka",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-uvedl-ze-ho-porazka-orbana-netrapi-magyara-oznacil-za-dobreho-cloveka-372390",
       "dt": "2026-04-15T04:55:22Z",
       "media_raw": "ČT24 / Domácí",
@@ -41,8 +65,8 @@
         "orbána",
         "označil",
         "porážka",
-        "trump",
-        "uvedl",
+        "prý",
+        "trumpa",
         "člověka"
       ],
       "feedCategory": "zpravy",
@@ -731,25 +755,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "sport",
       "contentType": "article",
-      "title": "Aerolinky žádají EU o pomoc s dopady války na Blízkém východě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/aerolinky-zadaji-eu-o-pomoc-s-dopady-valky-na-blizkem-vychode-372358",
-      "dt": "2026-04-14T10:03:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Nečas získal stý bod v sezoně, na magickou hranici dosáhl znovu i Pastrňák",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/necas-ziskal-sty-bod-v-sezone-na-magickou-hranici-dosahl-znovu-i-pastrnak-156289",
+      "dt": "2026-04-15T05:23:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "aerolinky",
-        "blízkém",
-        "dopady",
-        "pomoc",
-        "války",
-        "východě",
-        "žádají"
+        "bod",
+        "dosáhl",
+        "hranici",
+        "magickou",
+        "nečas",
+        "pastrňák",
+        "sezoně",
+        "stý",
+        "znovu",
+        "získal"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1506,37 +1533,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Když na někoho křičíte a máte v sobě emoce, tak ty sliny vám z pusy stříkají, popírá plivnutí Chorý",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kdyz-na-nekoho-kricite-a-mate-v-sobe-emoce-tak-ty-sliny-vam-z-pusy-strikaji-popira-plivnuti-chory-156259",
-      "dt": "2026-04-12T20:18:30Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chorý",
-        "emoce",
-        "když",
-        "křičíte",
-        "máte",
-        "někoho",
-        "plivnutí",
-        "popírá",
-        "pusy",
-        "sliny",
-        "sobě",
-        "stříkají",
-        "tak",
-        "vám"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1547,7 +1543,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42553,
+      "bytes": 42452,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1607,12 +1603,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T05:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
-          "finance": 1
+          "zpravy": 26,
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1625,11 +1620,15 @@
         },
         "sample_titles": [
           {
+            "title": "Úpravy rozptylové loučky v Brně vyvolaly odpor pozůstalých",
+            "publishedAt": "2026-04-15T05:29:00Z"
+          },
+          {
             "title": "Úzkost z nejisté doby sílí, potvrzují terapeuti",
             "publishedAt": "2026-04-15T05:03:00Z"
           },
           {
-            "title": "Trump uvedl, že ho porážka Orbána netrápí, Magyara označil za dobrého člověka",
+            "title": "Trumpa prý porážka Orbána netrápí. Magyara označil za dobrého člověka",
             "publishedAt": "2026-04-15T04:55:22Z"
           },
           {
@@ -1651,10 +1650,6 @@
           {
             "title": "Sněmovna projedná zpřísnění trestného činu neplacení výživného",
             "publishedAt": "2026-04-15T01:50:29Z"
-          },
-          {
-            "title": "Americká armáda zabila čtyři muže při úderu na loď ve východním Tichomoří",
-            "publishedAt": "2026-04-15T00:08:59Z"
           }
         ]
       }
@@ -1666,7 +1661,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40087,
+      "bytes": 39876,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1703,7 +1698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1718,6 +1713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nečas získal stý bod v sezoně, na magickou hranici dosáhl znovu i Pastrňák",
+            "publishedAt": "2026-04-15T05:23:00Z"
+          },
           {
             "title": "Podle mě je tento systém neférový, řekl k baráži jihlavský kapitán Čachotský",
             "publishedAt": "2026-04-15T04:00:00Z"
@@ -1745,10 +1744,6 @@
           {
             "title": "Češky nasázely Černé Hoře pět branek a kvalifikací MS pokračují bez porážky",
             "publishedAt": "2026-04-14T15:10:00Z"
-          },
-          {
-            "title": "Hokej bez červené: Jaké jsou důsledky sporu mezi Spartou a majitelem Pardubic Petrem Dědkem?",
-            "publishedAt": "2026-04-14T15:00:00Z"
           }
         ]
       }
@@ -1760,7 +1755,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77103,
+      "bytes": 77099,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

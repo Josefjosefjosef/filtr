@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T05:15:24.558938Z",
+  "ingestedAt": "2026-04-15T05:35:08.809376Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák s Nečasem slavili 100. bod, v akci byli čtyři čeští gólmani",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl.A260415_070723_nhl_mkr",
+      "dt": "2026-04-15T05:28:46Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "100",
+        "akci",
+        "bod",
+        "byli",
+        "gólmani",
+        "nečasem",
+        "pastrňák",
+        "slavili",
+        "čeští",
+        "čtyři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Další český rodinný olympijský klan? Míša se nebojí, říká maminka Juřičková o dceři",
+      "url": "https://www.idnes.cz/sport/ostatni/matka-a-dcera-jurickovy-olympijske-hry.A260414_190104_sporty_tm2",
+      "dt": "2026-04-15T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "další",
+        "dceři",
+        "juřičková",
+        "klan",
+        "maminka",
+        "míša",
+        "nebojí",
+        "olympijský",
+        "rodinný",
+        "český",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,61 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Naplno i v tréninku! radí poslední Češka v WNBA. Hamzová na cestu za moře vyspěla",
-      "url": "https://www.idnes.cz/sport/basket/jana-vesela-eliska-hamzova-emma-cechova-wnba.A260414_075321_sport-basket_kazdt",
-      "dt": "2026-04-14T12:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cestu",
-        "hamzová",
-        "moře",
-        "naplno",
-        "poslední",
-        "radí",
-        "tréninku",
-        "vyspěla",
-        "wnba",
-        "češka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Yamal žádal kouče Atlética. Když se ti to nelíbí, běž hrát tenis, reagoval Simeone",
-      "url": "https://www.idnes.cz/fotbal/pohary/trener-hansi-flick-lamine-yamal-barcelona-atletico-ctvrtfinale-ligy-mistru.A260414_125326_fot_pohary_min",
-      "dt": "2026-04-14T11:31:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "atlética",
-        "běž",
-        "hrát",
-        "když",
-        "kouče",
-        "nelíbí",
-        "reagoval",
-        "simeone",
-        "tenis",
-        "yamal",
-        "žádal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47810,
+      "bytes": 47217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:28:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +853,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák s Nečasem slavili 100. bod, v akci byli čtyři čeští gólmani",
+            "publishedAt": "2026-04-15T05:28:46Z"
+          },
+          {
+            "title": "Další český rodinný olympijský klan? Míša se nebojí, říká maminka Juřičková o dceři",
+            "publishedAt": "2026-04-15T05:00:00Z"
+          },
           {
             "title": "Vědí, jaká jsem. Čechová jde za americkým snem. Co ji potká před vstupem do WNBA?",
             "publishedAt": "2026-04-15T04:00:00Z"
@@ -876,14 +884,6 @@
           {
             "title": "Hamzová letí do Ameriky s triple doublem, Žabiny poslala do ligového finále",
             "publishedAt": "2026-04-14T20:25:56Z"
-          },
-          {
-            "title": "Florbalisté Střešovic prošli popáté za sebou do superfinále, znovu vyzvou Boleslav",
-            "publishedAt": "2026-04-14T19:27:00Z"
-          },
-          {
-            "title": "Děčín Randa propustil, Ústí ho bere. Pomůže nám dojít daleko, věří šéf Slunety",
-            "publishedAt": "2026-04-14T19:04:00Z"
           }
         ]
       }

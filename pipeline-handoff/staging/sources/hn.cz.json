@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T05:15:24.558938Z",
+  "ingestedAt": "2026-04-15T05:35:08.809376Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "&bdquo;Stačilo se jen zeptat.&ldquo; Macinka zveřejnil diskutovaný rozhovor armády s prezidentem Pavlem",
+      "url": "https://domaci.hn.cz/c1-67867070-bdquo-stacilo-se-jen-zeptat-ldquo-macinka-zverejnil-diskutovany-rozhovor-armady-s-prezidentem-pavlem",
+      "dt": "2026-04-15T05:14:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "armády",
+        "bdquo",
+        "diskutovaný",
+        "jen",
+        "ldquo",
+        "macinka",
+        "pavlem",
+        "prezidentem",
+        "rozhovor",
+        "stačilo",
+        "zeptat",
+        "zveřejnil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1083,30 +1112,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zemědělci stárnou. Unie má plán pro generaci, která možná nepřijde",
-      "url": "https://archiv.hn.cz/c1-67865930-zemedelci-starnou-unie-ma-plan-pro-generaci-ktera-mozna-neprijde",
-      "dt": "2026-04-13T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "generaci",
-        "možná",
-        "nepřijde",
-        "plán",
-        "stárnou",
-        "unie",
-        "zemědělci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1117,7 +1122,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185845,
+      "bytes": 185754,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1154,7 +1159,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:14:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1172,6 +1177,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "&bdquo;Stačilo se jen zeptat.&ldquo; Macinka zveřejnil diskutovaný rozhovor armády s prezidentem Pavlem",
+            "publishedAt": "2026-04-15T05:14:00Z"
+          },
           {
             "title": "Na rekonstrukci válkou zničené Ukrajiny by nestačil ani Marshallův plán. Obnova si vyžádá třikrát více peněz, i tak existuje řešení",
             "publishedAt": "2026-04-15T05:00:00Z"
@@ -1198,10 +1207,6 @@
           },
           {
             "title": "AI je opice, která dostala klíče od knihovny",
-            "publishedAt": "2026-04-14T22:00:00Z"
-          },
-          {
-            "title": "ERP přestává být nástrojem, stává se partnerem",
             "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]

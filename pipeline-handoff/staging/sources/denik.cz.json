@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T05:15:24.558938Z",
+  "ingestedAt": "2026-04-15T05:35:08.809376Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump uvedl, že ho porážka Orbána netrápí. Magyara označil za dobrého člověka",
+      "url": "https://www.denik.cz/ze_sveta/porazka-viktora-orbana-madarsko-donald-trump-reakce.html",
+      "dt": "2026-04-15T05:03:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dobrého",
+        "magyara",
+        "netrápí",
+        "orbána",
+        "označil",
+        "porážka",
+        "trump",
+        "uvedl",
+        "člověka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Exvelvyslanec v Česku György Varga: Maďaři chudli a lidé Fideszu kupovali zámky",
+      "url": "https://www.denik.cz/evropa-pro-cechy/madarsko-volby-fidesz-magyar-varga-evropa-pro-cechy.html",
+      "dt": "2026-04-15T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chudli",
+        "exvelvyslanec",
+        "fideszu",
+        "györgy",
+        "kupovali",
+        "lidé",
+        "maďaři",
+        "varga",
+        "zámky",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -591,57 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko může zrychlit růst. MMF nastavil odhad výš než ministerstvo",
-      "url": "https://www.denik.cz/ekonomika/mmf-hospodarsky-rust-prognoza-zrychleni.html",
-      "dt": "2026-04-14T13:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ministerstvo",
-        "mmf",
-        "nastavil",
-        "než",
-        "odhad",
-        "růst",
-        "výš",
-        "zrychlit",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poplatky se ruší. Ministr Klempíř představil, jak chce financovat ČT a rozhlas",
-      "url": "https://www.denik.cz/z_domova/koncesionarske-poplatky-ceska-televize-rozhlas-rozpocet-klempir.html",
-      "dt": "2026-04-14T13:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chce",
-        "financovat",
-        "klempíř",
-        "ministr",
-        "poplatky",
-        "představil",
-        "rozhlas",
-        "ruší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31139,
+      "bytes": 30554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,12 +691,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:03:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "zdravi": 1,
-          "zpravy": 22,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -706,6 +708,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump uvedl, že ho porážka Orbána netrápí. Magyara označil za dobrého člověka",
+            "publishedAt": "2026-04-15T05:03:00Z"
+          },
+          {
+            "title": "Exvelvyslanec v Česku György Varga: Maďaři chudli a lidé Fideszu kupovali zámky",
+            "publishedAt": "2026-04-15T05:00:00Z"
+          },
           {
             "title": "Kreslením proti vyhoření. Někdy stačí vybrat si pastelku a čmárat, říká malířka",
             "publishedAt": "2026-04-15T04:05:00Z"
@@ -729,14 +739,6 @@
           {
             "title": "Speed Marathon v Česku: Tady dnes policie měří rychlost, seznam míst je veřejný",
             "publishedAt": "2026-04-15T02:00:00Z"
-          },
-          {
-            "title": "Šestaosmdesátiletá Francouzka se přestěhovala do USA za láskou, zadržela ji ICE",
-            "publishedAt": "2026-04-14T20:53:00Z"
-          },
-          {
-            "title": "Zpěvák Patrick Bruel čelí vyšetřování. Je obviněný ze sexuálního útoku",
-            "publishedAt": "2026-04-14T20:06:00Z"
           }
         ]
       }
