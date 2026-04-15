@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T18:09:42.019563Z",
+  "ingestedAt": "2026-04-15T18:29:55.414816Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Usmíří si tím věřící? Trump zveřejnil nový obrázek, na kterém ho Ježíš Kristus objímá",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-jezis-ai-obrazek-objeti-papez-kritika-truth-social-sit-media-dezinformace.A260415_192010_zahranicni_fohl",
+      "dt": "2026-04-15T18:09:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ježíš",
+        "kristus",
+        "kterém",
+        "nový",
+        "objímá",
+        "obrázek",
+        "trump",
+        "tím",
+        "usmíří",
+        "věřící",
+        "zveřejnil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -748,32 +776,6 @@
         "ubodal",
         "ubytovně",
         "vražedné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Symbol sporu o D3 šel k zemi, ŘSD zbouralo motocentrum Bratránkových u Tábora",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/dalnice-d3-bratrankovi-motocentrum-vyvlastneni-dostavba-omezeni.A260415_145218_budejovice-zpravy_khr",
-      "dt": "2026-04-15T13:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bratránkových",
-        "motocentrum",
-        "sporu",
-        "symbol",
-        "tábora",
-        "zbouralo",
-        "zemi",
-        "řsd",
-        "šel"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50380,
+      "bytes": 50699,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T18:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1635,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Usmíří si tím věřící? Trump zveřejnil nový obrázek, na kterém ho Ježíš Kristus objímá",
+            "publishedAt": "2026-04-15T18:09:00Z"
+          },
           {
             "title": "Z Ukrajiny vyrůstá raketová velmoc. I díky proudovým motorům z Česka",
             "publishedAt": "2026-04-15T18:00:00Z"
@@ -1662,10 +1668,6 @@
           {
             "title": "Druhá střelba za týden. Bývalý student zabil na škole v Turecku devět lidí",
             "publishedAt": "2026-04-15T16:31:21Z"
-          },
-          {
-            "title": "Hrozí autocenzura, odnést to může i StarDance. Expertka o Klempířově návrhu",
-            "publishedAt": "2026-04-15T16:00:00Z"
           }
         ]
       }

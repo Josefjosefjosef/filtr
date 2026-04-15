@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T18:09:42.019563Z",
+  "ingestedAt": "2026-04-15T18:29:55.414816Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
+      "url": "https://zpravy.aktualne.cz/domaci/ivana-tykac-odpovedela-zda-se-pokusi-stat-prezidentkou-rekla-o-co-nejvic-usiluje/r~aaa2915d6c0fe1d901617de50eff48d0/",
+      "dt": "2026-04-15T14:46:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ivana",
+        "nejvíc",
+        "odpověděla",
+        "pokusí",
+        "prezidentkou",
+        "stát",
+        "tykač",
+        "usiluje",
+        "zda",
+        "řekla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump opět provokuje: Tentokrát se nechal zobrazit v objetí Krista",
+      "url": "https://zpravy.aktualne.cz/zahranici/trump-sdilel-dalsi-ai-obrazek-s-nabozenskou-tematikou-tentokrat-ho-jezis-objima/r~aaa299c442ca6a5ae309e2d908381db9/",
+      "dt": "2026-04-15T17:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "krista",
+        "nechal",
+        "objetí",
+        "opět",
+        "provokuje",
+        "tentokrát",
+        "trump",
+        "zobrazit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -21,32 +73,6 @@
         "tyč",
         "vrcholí",
         "vypjaté"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump sdílel další AI obrázek s náboženskou tematikou. Tentokrát ho Ježíš objímá",
-      "url": "https://zpravy.aktualne.cz/zahranici/trump-sdilel-dalsi-ai-obrazek-s-nabozenskou-tematikou-tentokrat-ho-jezis-objima/r~aaa299c442ca6a5ae309e2d908381db9/",
-      "dt": "2026-04-15T17:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "další",
-        "ježíš",
-        "náboženskou",
-        "objímá",
-        "obrázek",
-        "sdílel",
-        "tematikou",
-        "tentokrát",
-        "trump"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -319,33 +345,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
-      "url": "https://zpravy.aktualne.cz/domaci/ivana-tykac-odpovedela-zda-se-pokusi-stat-prezidentkou-rekla-o-co-nejvic-usiluje/r~aaa2915d6c0fe1d901617de50eff48d0/",
-      "dt": "2026-04-15T14:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ivana",
-        "nejvíc",
-        "odpověděla",
-        "pokusí",
-        "prezidentkou",
-        "stát",
-        "tykač",
-        "usiluje",
-        "zda",
-        "řekla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Že přijede šéf NATO do Prahy, není jen tak. Prezident tuší problém",
       "url": "https://zpravy.aktualne.cz/zahranici/ze-prijede-sef-nato-do-prahy-neni-jen-tak-prezident-tusi-problem/r~aaa2989dfcb5fe275ae315a60b7311d5/",
       "dt": "2026-04-15T15:28:00Z",
@@ -529,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22124,
+      "bytes": 22101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,8 +568,8 @@
         "raw_feed_latest_publishedAt": "2026-04-15T17:56:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 15,
+          "sport": 4,
           "other": 1
         },
         "drop_counts": {
@@ -584,12 +583,16 @@
         },
         "sample_titles": [
           {
-            "title": "Pardubice - Sparta 1:0. Vypjaté drama vrcholí, Dynamu už dvakrát pomohla tyč",
-            "publishedAt": "2026-04-15T15:10:00Z"
+            "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
+            "publishedAt": "2026-04-15T14:46:00Z"
           },
           {
-            "title": "Trump sdílel další AI obrázek s náboženskou tematikou. Tentokrát ho Ježíš objímá",
+            "title": "Trump opět provokuje: Tentokrát se nechal zobrazit v objetí Krista",
             "publishedAt": "2026-04-15T17:56:00Z"
+          },
+          {
+            "title": "Pardubice - Sparta 1:0. Vypjaté drama vrcholí, Dynamu už dvakrát pomohla tyč",
+            "publishedAt": "2026-04-15T15:10:00Z"
           },
           {
             "title": "„Boží srdce není se zlými a pyšnými.“ Papež si dál posílá s Trumpem ostrá slova",
@@ -610,10 +613,6 @@
           {
             "title": "„Můžou rozmetat celou Itálii.“ Trump vrátil Meloniové úder, znovu si rýpl do papeže",
             "publishedAt": "2026-04-15T17:05:00Z"
-          },
-          {
-            "title": "Čekají vás úžasné dva dny, napíná Trump kvůli Íránu. Ceny ropy i tak rostou",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }

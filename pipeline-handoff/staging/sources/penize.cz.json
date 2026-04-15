@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-15T18:09:42.019563Z",
+  "ingestedAt": "2026-04-15T18:29:55.414816Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Oneplay se připojí k programu výhod Unity s Air Bank a O2",
+      "url": "https://www.penize.cz/slevy/488358-oneplay-se-pripoji-k-programu-vyhod-unity-s-air-bank-a-o2",
+      "dt": "2026-04-15T18:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "air",
+        "bank",
+        "oneplay",
+        "programu",
+        "připojí",
+        "unity",
+        "výhod"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -484,31 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pronajímání bytu jako podnikání: Na co si dát pozor v roce 2026",
-      "url": "https://www.penize.cz/pronajem-bytu/488205-pronajimani-bytu-jako-podnikani-na-co-si-dat-pozor-v-roce-2026",
-      "dt": "2026-04-13T00:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "2026",
-        "bytu",
-        "dát",
-        "jako",
-        "podnikání",
-        "pozor",
-        "pronajímání",
-        "roce"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18587,
+      "bytes": 18429,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,11 +555,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T14:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T18:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 14
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -572,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oneplay se připojí k programu výhod Unity s Air Bank a O2",
+            "publishedAt": "2026-04-15T18:30:00Z"
+          },
           {
             "title": "Tentokrát levněji. Maximální ceny benzinu a nafty na čtvrtek 16. dubna",
             "publishedAt": "2026-04-15T14:40:00Z"
@@ -599,10 +602,6 @@
           {
             "title": "Známe největší slídily. Své páníčky šmírují i auta známé značky",
             "publishedAt": "2026-04-14T20:33:00Z"
-          },
-          {
-            "title": "Kde je v Česku dostupnější bydlení? Mapa ukazuje velké rozdíly",
-            "publishedAt": "2026-04-14T15:00:00Z"
           }
         ]
       }
