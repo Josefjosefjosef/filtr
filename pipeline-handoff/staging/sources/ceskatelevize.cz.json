@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T18:49:37.821036Z",
+  "ingestedAt": "2026-04-15T19:44:50.366104Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Colt CZ vstoupil na burzu v Amsterdamu, následuje tak další tuzemské firmy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/colt-cz-vstoupil-na-burzu-v-amsterdamu-nasleduje-tak-dalsi-tuzemske-firmy-372425",
+      "dt": "2026-04-15T19:21:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "amsterdamu",
+        "burzu",
+        "colt",
+        "další",
+        "firmy",
+        "následuje",
+        "tak",
+        "tuzemské",
+        "vstoupil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -643,21 +669,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Jednodenní dálniční známka by měla podle Senátu nově platit 24 hodin",
+      "title": "Senát projedná zákon o vládní regulaci pohonných hmot příští týden",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senat-projedna-platnost-dalnicni-znamky-ci-pravo-na-zivot-off-line-372392",
       "dt": "2026-04-15T08:06:24Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dálniční",
-        "hodin",
-        "jednodenní",
-        "měla",
-        "nově",
-        "platit",
-        "podle",
-        "senátu",
-        "známka"
+        "hmot",
+        "pohonných",
+        "projedná",
+        "příští",
+        "regulaci",
+        "senát",
+        "týden",
+        "vládní",
+        "zákon"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -717,24 +743,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Macinka zveřejnil rozhovor armády s prezidentem Pavlem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/macinka-zverejnil-rozhovor-armady-s-prezidentem-pavlem-372391",
-      "dt": "2026-04-15T05:34:27Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Pardubický Mandát k postupu do finále – stačil jediný gól",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubicky-mandat-k-postupu-do-finale-stacil-jediny-gol-156304",
+      "dt": "2026-04-15T18:45:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "armády",
-        "macinka",
-        "pavlem",
-        "prezidentem",
-        "rozhovor",
-        "zveřejnil"
+        "finále",
+        "gól",
+        "jediný",
+        "mandát",
+        "pardubický",
+        "postupu",
+        "stačil"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1482,35 +1509,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík měl ve Varech k dispozici již Kubalíka, Tomáška i Měchuru. Omluvili se naopak Kämpf či Palát",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rulik-mel-ve-varech-k-dispozici-jiz-kubalika-tomaska-i-mechuru-omluvili-se-naopak-kampf-ci-palat-156274",
-      "dt": "2026-04-13T18:21:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dispozici",
-        "již",
-        "kubalíka",
-        "kämpf",
-        "měchuru",
-        "měl",
-        "naopak",
-        "omluvili",
-        "palát",
-        "rulík",
-        "tomáška",
-        "varech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1521,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41273,
+      "bytes": 41340,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,10 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:59:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T19:21:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "finance": 1,
+          "zpravy": 25,
           "other": 4
         },
         "drop_counts": {
@@ -1597,6 +1596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Colt CZ vstoupil na burzu v Amsterdamu, následuje tak další tuzemské firmy",
+            "publishedAt": "2026-04-15T19:21:14Z"
+          },
           {
             "title": "Pavel jednal s Mileiem. Shodneme se v otázce Ukrajiny i Izraele, ocenil",
             "publishedAt": "2026-04-15T17:59:29Z"
@@ -1624,10 +1627,6 @@
           {
             "title": "Severní Mariany zasáhl supertajfun Sinlaku, přinesl záplavy a ničil",
             "publishedAt": "2026-04-15T14:33:57Z"
-          },
-          {
-            "title": "Magyar řekl, že ho prezident pověří sestavením vlády. Čas ale hlavu státu netlačí",
-            "publishedAt": "2026-04-15T14:16:47Z"
           }
         ]
       }
@@ -1639,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40207,
+      "bytes": 39938,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:48:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T18:45:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1691,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pardubický Mandát k postupu do finále – stačil jediný gól",
+            "publishedAt": "2026-04-15T18:45:52Z"
+          },
           {
             "title": "Sparta B se ode dna tabulky neodlepila, Zbrojovka porazila Žižkov",
             "publishedAt": "2026-04-15T17:48:56Z"
@@ -1718,10 +1721,6 @@
           {
             "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
             "publishedAt": "2026-04-15T09:19:04Z"
-          },
-          {
-            "title": "Program MS v hokeji: Kdy hrají Češi, tabulky skupin",
-            "publishedAt": "2026-04-15T09:09:04Z"
           }
         ]
       }
@@ -1733,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77424,
+      "bytes": 77341,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

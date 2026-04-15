@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T18:49:37.821036Z",
+  "ingestedAt": "2026-04-15T19:44:50.366104Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nechal si změnit pohlaví, pak si to rozmyslel. S nárokem na bolestné neuspěl",
+      "url": "https://www.idnes.cz/zpravy/domaci/soud-zmena-pohlavi-diana-polyakova-transexualita-gay.A260415_202449_domaci_svm",
+      "dt": "2026-04-15T18:45:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bolestné",
+        "nechal",
+        "neuspěl",
+        "nárokem",
+        "pak",
+        "pohlaví",
+        "rozmyslel",
+        "změnit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -749,33 +774,6 @@
         "zasedačku",
         "šatnu",
         "šrotu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odbory ČT tepou Klempíře. Hrozí masivní propouštění, zruší se spousta pořadů, tvrdí",
-      "url": "https://www.idnes.cz/zpravy/mediahub/ceska-televize-cesky-rozhlas-koncesionarske-poplatky-odbory-oto-klempir-ministr-kultury.A260415_150653_mediahub_svm",
-      "dt": "2026-04-15T13:46:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "hrozí",
-        "klempíře",
-        "masivní",
-        "odbory",
-        "pořadů",
-        "propouštění",
-        "spousta",
-        "tepou",
-        "tvrdí",
-        "zruší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50816,
+      "bytes": 50238,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T18:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T18:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1637,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nechal si změnit pohlaví, pak si to rozmyslel. S nárokem na bolestné neuspěl",
+            "publishedAt": "2026-04-15T18:45:00Z"
+          },
           {
             "title": "Do Gazy opět míří flotila s aktivisty a zdravotníky. Shromáždili přes 70 lodí",
             "publishedAt": "2026-04-15T18:40:00Z"
@@ -1664,10 +1666,6 @@
           {
             "title": "Země, kde chcete žít a pracovat. Rusko spustilo portál pro zájemce o přistěhování",
             "publishedAt": "2026-04-15T16:43:00Z"
-          },
-          {
-            "title": "Ocelové stěny v Hustopečích zachytily téměř všechen benzen, odčerpána je polovina",
-            "publishedAt": "2026-04-15T16:36:00Z"
           }
         ]
       }
