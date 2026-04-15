@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T03:00:37.569182Z",
+  "ingestedAt": "2026-04-15T03:20:50.425087Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spojené státy neprodloužily výjimku ze sankcí na nákup ruské ropy",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/spojene-staty-neprodlouzily-vyjimku-ze-sankci-na-nakup-ruske-ropy.A260415_042747_zahranicni_kop",
+      "dt": "2026-04-15T02:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "neprodloužily",
+        "nákup",
+        "ropy",
+        "ruské",
+        "sankcí",
+        "spojené",
+        "státy",
+        "výjimku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -763,33 +788,6 @@
         "potrubí",
         "vylil",
         "zničil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bez oběda se děti hůř učí i začleňují. Výzkum ukázal dopady na tisíce z nich",
-      "url": "https://www.idnes.cz/zpravy/domaci/nedostupne-obedy-skoly-problemy-deti-vyloucene-z-kolektivu.A260414_145523_domaci_jira",
-      "dt": "2026-04-14T13:52:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dopady",
-        "děti",
-        "hůř",
-        "nich",
-        "oběda",
-        "tisíce",
-        "ukázal",
-        "učí",
-        "výzkum",
-        "začleňují"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1595,7 +1593,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48683,
+      "bytes": 48734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,7 +1630,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-14T22:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T02:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1650,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spojené státy neprodloužily výjimku ze sankcí na nákup ruské ropy",
+            "publishedAt": "2026-04-15T02:34:00Z"
+          },
           {
             "title": "Koalice v noční bitvě prosadila zákon kvůli regulaci cen nafty a benzinu vládou",
             "publishedAt": "2026-04-14T22:30:00Z"
@@ -1677,10 +1679,6 @@
           {
             "title": "Milei ukázal Pavlovi slavnou „rozpočtovou“ pilu, prezident si ji potěžkat nechtěl",
             "publishedAt": "2026-04-14T20:11:00Z"
-          },
-          {
-            "title": "Diskriminace není volební reforma. Slováci demonstrovali proti zrušení voleb poštou",
-            "publishedAt": "2026-04-14T18:42:00Z"
           }
         ]
       }
