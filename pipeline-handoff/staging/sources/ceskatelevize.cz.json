@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kdo platí, rozkazuje, míní o financování ČT a ČRo Havel. Politizace není cíl, říká Šťastný",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kdo-plati-rozkazuje-mini-o-financovani-ct-a-cro-havel-politizace-neni-cil-rika-stastny-372387",
+      "dt": "2026-04-15T07:26:36Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "cíl",
+        "financování",
+        "havel",
+        "míní",
+        "platí",
+        "politizace",
+        "rozkazuje",
+        "čro",
+        "říká",
+        "šťastný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -728,26 +755,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
+      "section": "sport",
       "contentType": "article",
-      "title": "Méně filmů i práce, kritizují Thompsonová či Bardem fúzi hollywoodských studií",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/mene-filmu-i-prace-kritizuji-thompsonova-ci-bardem-fuzi-hollywoodskych-studii-372361",
-      "dt": "2026-04-14T11:09:50Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Dynamo přišlo o stadion, České Budějovice vypověděly klubu smlouvu",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/dynamo-prislo-o-stadion-ceske-budejovice-vypovedely-klubu-smlouvu-156291",
+      "dt": "2026-04-15T07:24:05Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "bardem",
-        "filmů",
-        "fúzi",
-        "hollywoodských",
-        "kritizují",
-        "práce",
-        "studií",
-        "thompsonová"
+        "budějovice",
+        "dynamo",
+        "klubu",
+        "přišlo",
+        "smlouvu",
+        "stadion",
+        "vypověděly",
+        "české"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1505,31 +1532,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "McIlroy obhájil titul na Masters, vyhrál o jednu ránu před Schefflerem",
-      "url": "https://sport.ceskatelevize.cz/clanek/golf/mcilroy-obhajil-titul-na-masters-vyhral-o-jednu-ranu-pred-schefflerem-156262",
-      "dt": "2026-04-13T05:42:04Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "jednu",
-        "masters",
-        "mcilroy",
-        "obhájil",
-        "ránu",
-        "schefflerem",
-        "titul",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1540,7 +1542,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42044,
+      "bytes": 42195,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1600,11 +1602,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:41:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:26:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 4
+          "zpravy": 27,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1616,6 +1618,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo platí, rozkazuje, míní o financování ČT a ČRo Havel. Politizace není cíl, říká Šťastný",
+            "publishedAt": "2026-04-15T07:26:36Z"
+          },
           {
             "title": "USA vymáhají blokádu. Vrátily čínský tanker do Hormuzského průlivu",
             "publishedAt": "2026-04-15T06:41:57Z"
@@ -1643,10 +1649,6 @@
           {
             "title": "Xia, Kryšpína nebo Regulus. Odborníci posuzují neobvyklá jména pro děti",
             "publishedAt": "2026-04-15T04:30:00Z"
-          },
-          {
-            "title": "Schránku s pokladem našli mezi kameny, teď si turisté rozdělí štědré nálezné",
-            "publishedAt": "2026-04-15T04:00:00Z"
           }
         ]
       }
@@ -1658,7 +1660,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40161,
+      "bytes": 40448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1695,7 +1697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:09:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:24:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1710,6 +1712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dynamo přišlo o stadion, České Budějovice vypověděly klubu smlouvu",
+            "publishedAt": "2026-04-15T07:24:05Z"
+          },
           {
             "title": "Portland uspěl v Phoenixu, Krejčí si poprvé zahraje play-off NBA",
             "publishedAt": "2026-04-15T07:09:29Z"
@@ -1737,10 +1743,6 @@
           {
             "title": "Jihlava zvládla sedmý duel se Zlínem. Vyhrála první ligu a zahraje si baráž",
             "publishedAt": "2026-04-14T18:00:15Z"
-          },
-          {
-            "title": "Majitelka českobudějovického Dynama odmítá klub prodat, město hrozí výpovědí ze stadionu",
-            "publishedAt": "2026-04-14T16:46:39Z"
           }
         ]
       }
@@ -1752,7 +1754,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77060,
+      "bytes": 77056,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

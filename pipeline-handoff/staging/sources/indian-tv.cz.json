@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Bloober Team nechce spoléhat na jeden titul. Proto chystá hned sedm hororových her - INDIAN",
+      "url": "https://indian-tv.cz/clanek/bloober-team-nechce-spolehat-na-jeden-titul-proto-chysta-dezmlf",
+      "dt": "2026-04-15T07:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "bloober",
+        "chystá",
+        "her",
+        "hned",
+        "hororových",
+        "indian",
+        "jeden",
+        "nechce",
+        "proto",
+        "sedm",
+        "spoléhat",
+        "team",
+        "titul"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1026,38 +1056,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Volba obtížnosti, více druhů mazlíčků nebo nové oblečky. Pearl Abyss chystá velké změny v Crimson Desert - INDIAN",
-      "url": "https://indian-tv.cz/clanek/pearl-abyss-chysta-velke-zmeny-v-crimson-desert-3fqnxs",
-      "dt": "2026-04-10T13:46:23Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "abyss",
-        "chystá",
-        "crimson",
-        "desert",
-        "druhů",
-        "indian",
-        "mazlíčků",
-        "nebo",
-        "nové",
-        "oblečky",
-        "obtížnosti",
-        "pearl",
-        "velké",
-        "volba",
-        "změny"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1068,7 +1066,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 208182,
+      "bytes": 207883,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1105,7 +1103,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:49:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1120,6 +1118,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bloober Team nechce spoléhat na jeden titul. Proto chystá hned sedm hororových her - INDIAN",
+            "publishedAt": "2026-04-15T07:30:00Z"
+          },
           {
             "title": "Vyšla kyberpunková pixel art akce Replaced. Dostupná je i v Game Passu - INDIAN",
             "publishedAt": "2026-04-15T06:49:40Z"
@@ -1147,10 +1149,6 @@
           {
             "title": "Na internet unikly detaily o příběhu 007: First Light - INDIAN",
             "publishedAt": "2026-04-14T12:00:00Z"
-          },
-          {
-            "title": "Capcom se opět trefil do černého. Pragmata sbírá vysoké známky - INDIAN",
-            "publishedAt": "2026-04-14T10:00:00Z"
           }
         ]
       }

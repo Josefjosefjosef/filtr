@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Naked Attraction: Temperamentní Aneta z Brna už nechce kupovat zajíce v pytli. Muže v boxech prověřila pomocí jízdy na koni",
+      "url": "https://www.vtelce.cz/naked-attraction-temperamentni-aneta-z-brna-uz-nechce-kupovat-zajice-v-pytli-muze-v-boxech-proverila-pomoci-jizdy-na-koni/",
+      "dt": "2026-04-15T07:43:55Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "aneta",
+        "attraction",
+        "boxech",
+        "brna",
+        "jízdy",
+        "koni",
+        "kupovat",
+        "muže",
+        "naked",
+        "nechce",
+        "pomocí",
+        "prověřila",
+        "pytli",
+        "temperamentní",
+        "zajíce"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -264,35 +296,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šimon a Matouš: Soud o ukradené jméno, indický slon v Africe a triky vychytralé produkce na diváky",
-      "url": "https://www.vtelce.cz/simon-a-matous-soud-o-ukradene-jmeno-indicky-slon-v-africe-a-triky-vychytrale-produkce-na-divaky/",
-      "dt": "2026-04-13T17:28:06Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "africe",
-        "diváky",
-        "indický",
-        "jméno",
-        "matouš",
-        "produkce",
-        "slon",
-        "soud",
-        "triky",
-        "ukradené",
-        "vychytralé",
-        "šimon"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,8 +306,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 80571,
-      "reason": "",
+      "bytes": 78949,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -340,11 +343,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:09:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:43:55Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "other": 9,
-          "zpravy": 1
+          "other": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naked Attraction: Temperamentní Aneta z Brna už nechce kupovat zajíce v pytli. Muže v boxech prověřila pomocí jízdy na koni",
+            "publishedAt": "2026-04-15T07:43:55Z"
+          },
           {
             "title": "Survivor 23. díl: Promíchání kmenů přineslo nové aliance a zkoušku důvěry",
             "publishedAt": "2026-04-15T07:09:55Z"
@@ -383,10 +389,6 @@
           {
             "title": "Bratři a sestry: Měl to být nejšťastnější den jeho života. Pravda o nevěstě ale zničí vše, čemu Venca dosud věřil",
             "publishedAt": "2026-04-14T08:31:13Z"
-          },
-          {
-            "title": "Show Jana Krause: Moderátorův starší bratr, hvězda nekonečného seriálu a populární praktik ze sociálních sítí",
-            "publishedAt": "2026-04-14T06:58:53Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Macinka zveřejnil utajený rozhovor. Pavel v něm mluví o bojích v Izraeli",
+      "url": "https://ekonomickydenik.cz/macinka-zverejnil-utajeny-rozhovor/",
+      "dt": "2026-04-15T07:37:13Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bojích",
+        "izraeli",
+        "macinka",
+        "mluví",
+        "něm",
+        "pavel",
+        "rozhovor",
+        "utajený",
+        "zveřejnil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,32 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V sevření elektronického boje: Armáda testuje scénáře přežití v moderní válce",
-      "url": "https://ekonomickydenik.cz/v-sevreni-elektronickeho-boje-armada-valka-spojeni/",
-      "dt": "2026-04-13T09:32:42Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armáda",
-        "boje",
-        "elektronického",
-        "moderní",
-        "přežití",
-        "scénáře",
-        "sevření",
-        "testuje",
-        "válce"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74035,
+      "bytes": 73857,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,13 +836,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T05:50:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:37:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "zpravy": 4,
           "cestovani": 1,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -854,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Macinka zveřejnil utajený rozhovor. Pavel v něm mluví o bojích v Izraeli",
+            "publishedAt": "2026-04-15T07:37:13Z"
+          },
           {
             "title": "Jak odvrátit kolaps o prázdninách? Letecké společnosti chtějí výjimku pro americké palivo",
             "publishedAt": "2026-04-15T05:50:57Z"
@@ -881,10 +885,6 @@
           {
             "title": "Zbrojní šachy: Česko v kleštích politické váhavosti a surovinové pasti",
             "publishedAt": "2026-04-14T15:03:59Z"
-          },
-          {
-            "title": "Babiš: Plán na zestátnění ČEZ platí. Vlček: Nedává to ekonomický smysl",
-            "publishedAt": "2026-04-14T13:51:47Z"
           }
         ]
       }

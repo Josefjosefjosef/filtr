@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Supertajfun Sinlaku udeřil plnou silou: Obří záplavy, vítr rval z domů střechy",
+      "url": "https://www.denik.cz/ze_sveta/supertajfun-sinlaku-nasledky-ostrovy-tichy-ocean.html",
+      "dt": "2026-04-15T07:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domů",
+        "obří",
+        "plnou",
+        "rval",
+        "silou",
+        "sinlaku",
+        "střechy",
+        "supertajfun",
+        "udeřil",
+        "vítr",
+        "záplavy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,33 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dvojí výhra v loterii. Nor díky transplantaci přežil rakovinu a vyléčil se z HIV",
-      "url": "https://www.denik.cz/staty-mimo-eu/pacient-z-osla-hiv-rakovina-kostni-drene-lecba-remise.html",
-      "dt": "2026-04-14T16:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dvojí",
-        "díky",
-        "hiv",
-        "loterii",
-        "nor",
-        "přežil",
-        "rakovinu",
-        "transplantaci",
-        "vyléčil",
-        "výhra"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30897,
+      "bytes": 31212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -709,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Supertajfun Sinlaku udeřil plnou silou: Obří záplavy, vítr rval z domů střechy",
+            "publishedAt": "2026-04-15T07:25:00Z"
+          },
           {
             "title": "Požár ubytovny na pražském Žižkově: 38 evakuovaných, zásah hasičů pokračuje",
             "publishedAt": "2026-04-15T06:45:00Z"
@@ -736,10 +741,6 @@
           {
             "title": "Trump uvedl, že ho porážka Orbána netrápí. Magyara označil za dobrého člověka",
             "publishedAt": "2026-04-15T05:03:00Z"
-          },
-          {
-            "title": "Exvelvyslanec v Česku György Varga: Maďaři chudli a lidé Fideszu kupovali zámky",
-            "publishedAt": "2026-04-15T05:00:00Z"
           }
         ]
       }

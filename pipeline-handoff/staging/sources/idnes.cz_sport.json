@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T07:29:32.551167Z",
+  "ingestedAt": "2026-04-15T07:50:03.991379Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Autodrom Most chce miliardář Staněk, s ním i Autoklub. Majitel je překvapený",
+      "url": "https://www.idnes.cz/sport/motorsport/autodrom-most-prodej-roman-stanek-stovicek-zajicek.A260415_074835_motorsport_pbi",
+      "dt": "2026-04-15T07:31:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "autodrom",
+        "autoklub",
+        "chce",
+        "majitel",
+        "miliardář",
+        "most",
+        "ním",
+        "překvapený",
+        "staněk"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,31 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jsem rád, že se zlepšuje, chválil Alcaraz Sinnera. Znovu ho může předstihnout",
-      "url": "https://www.idnes.cz/sport/tenis/jsem-rad-ze-se-zlepsuje-chvalil-alcaraz-sinnera-znovu-ho-muze-predstihnout.A260414_095923_tenis_pls",
-      "dt": "2026-04-14T12:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alcaraz",
-        "chválil",
-        "jsem",
-        "předstihnout",
-        "rád",
-        "sinnera",
-        "zlepšuje",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47515,
+      "bytes": 47552,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,10 +837,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:20:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:31:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zpravy": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -851,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Autodrom Most chce miliardář Staněk, s ním i Autoklub. Majitel je překvapený",
+            "publishedAt": "2026-04-15T07:31:00Z"
+          },
           {
             "title": "Tribuna Sever vybírala peníze na pokutu za nakopnutí Kuchty. Byla absurdní, píše",
             "publishedAt": "2026-04-15T07:20:27Z"
@@ -878,10 +884,6 @@
           {
             "title": "Diplomacie podle FIFA. Infantino stále věří, že Írán na MS hrát bude, co na to Trump?",
             "publishedAt": "2026-04-14T22:00:00Z"
-          },
-          {
-            "title": "Atlético vybojovalo nad Barcelonou semifinále, postup PSG řídil Dembélé",
-            "publishedAt": "2026-04-14T21:50:02Z"
           }
         ]
       }
