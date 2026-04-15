@@ -1862,7 +1862,12 @@ try {
     }
   }
 
-  async function evaluatePreferredPair() {
+  /**
+   * Feed-critical path: localStorage + TTL only.
+   * Do NOT await HEAD preflight here — loadData() always fetches from iuDataUrl("articles.json"|"videos.json");
+   * the old async evaluatePreferredPair() blocked first card paint ~2.8s (parallel HEAD timeouts) before any GET.
+   */
+  function getPreferredPairForLoadData() {
     const entry = loadPreferredPair();
     if (!entry) {
       return { articlesUrl: null, videosUrl: null, status: "missing" };
@@ -1870,17 +1875,7 @@ try {
     if (!entry.preferredAt || Date.now() - entry.preferredAt > PREFERRED_TTL_MS) {
       return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "expired" };
     }
-    const [articlesOk, videosOk] = await Promise.all([
-      quickCheckUrl(entry.articlesUrl),
-      quickCheckUrl(entry.videosUrl),
-    ]);
-    if (articlesOk && videosOk) {
-      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "ok" };
-    }
-    if (!articlesOk) {
-      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "articles-unreachable" };
-    }
-    return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "videos-unreachable" };
+    return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "ok" };
   }
 
   function buildCandidateListFromPair(preferredEntry, type, baseSequence) {
@@ -12601,7 +12596,7 @@ function buildVideoAsArticleCard(it) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const preferredEntry = await evaluatePreferredPair();
+    const preferredEntry = getPreferredPairForLoadData();
     const baseArticleUrls = [iuDataUrl("articles.json")];
     const baseVideoUrls = [iuDataUrl("videos.json")];
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
