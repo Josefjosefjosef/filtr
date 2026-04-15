@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T06:53:01.088320Z",
+  "ingestedAt": "2026-04-15T07:09:56.345370Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Růžové jaro v Poděbradech. Kolonádu zdobí rozkvétající magnolie",
+      "url": "https://www.denik.cz/regiony/jaro-magnolie-kvet-podebrady-kolonada-lazensky-park.html",
+      "dt": "2026-04-15T06:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jaro",
+        "kolonádu",
+        "magnolie",
+        "poděbradech",
+        "rozkvétající",
+        "růžové",
+        "zdobí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -22,6 +46,31 @@
         "zemí",
         "úkor",
         "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Do žižkovské ubytovny zničené požárem se v noci na středu zakousl bagr",
+      "url": "https://www.denik.cz/pozary/do-zizkovske-ubytovny-znicene-pozarem-se-v-noci-na-stredu-zakousl-bagr-20260415.html",
+      "dt": "2026-04-15T06:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bagr",
+        "noci",
+        "požárem",
+        "středu",
+        "ubytovny",
+        "zakousl",
+        "zničené",
+        "žižkovské"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -596,57 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec poplatků za ČT a rozhlas: Co to znamená pro lidi, jak budou média fungovat",
-      "url": "https://www.denik.cz/ekonomika/koncesionarske-poplatky-konec-televize-rozhlas-zakon-zmena-oto-klempir.html",
-      "dt": "2026-04-14T15:53:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fungovat",
-        "konec",
-        "lidi",
-        "média",
-        "poplatků",
-        "rozhlas",
-        "znamená"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záhadný let a ústup do pozadí. Maďarský šéf diplomacie po prohře Fideszu mlčí",
-      "url": "https://www.denik.cz/staty-eu/madarsky-ministr-zahranici-a-obchodu-peter-szijjarto-viktor-orban-fidesz-tisza.html",
-      "dt": "2026-04-14T15:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "diplomacie",
-        "fideszu",
-        "let",
-        "maďarský",
-        "mlčí",
-        "pozadí",
-        "prohře",
-        "záhadný",
-        "ústup",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30644,
+      "bytes": 30457,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,11 +692,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T06:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
+          "zpravy": 23,
+          "finance": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -712,8 +710,16 @@
         },
         "sample_titles": [
           {
+            "title": "Růžové jaro v Poděbradech. Kolonádu zdobí rozkvétající magnolie",
+            "publishedAt": "2026-04-15T06:40:00Z"
+          },
+          {
             "title": "Bezpečnost Izraele nemůže být uplatňována na úkor jiných zemí, řekl Pavel",
             "publishedAt": "2026-04-15T06:33:00Z"
+          },
+          {
+            "title": "Do žižkovské ubytovny zničené požárem se v noci na středu zakousl bagr",
+            "publishedAt": "2026-04-15T06:15:00Z"
           },
           {
             "title": "Extrémní proměny: Manželé Marie a Luděk se mají rádi. Ale zanedbali, co mohli",
@@ -734,14 +740,6 @@
           {
             "title": "Exvelvyslanec v Česku György Varga: Maďaři chudli a lidé Fideszu kupovali zámky",
             "publishedAt": "2026-04-15T05:00:00Z"
-          },
-          {
-            "title": "Kreslením proti vyhoření. Někdy stačí vybrat si pastelku a čmárat, říká malířka",
-            "publishedAt": "2026-04-15T04:05:00Z"
-          },
-          {
-            "title": "Magyar nebude blokovat pomoc EU Ukrajině, chlad ale trvá",
-            "publishedAt": "2026-04-15T04:00:00Z"
           }
         ]
       }

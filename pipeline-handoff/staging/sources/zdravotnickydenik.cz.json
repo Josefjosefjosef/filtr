@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T06:53:01.088320Z",
+  "ingestedAt": "2026-04-15T07:09:56.345370Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Umělá inteligence místo lékaře? V rukou nepoučených pacientů může škodit",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/umela-inteligence-misto-lekare-muze-skodit-adam-grundel/",
+      "dt": "2026-04-15T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "inteligence",
+        "lékaře",
+        "místo",
+        "nepoučených",
+        "pacientů",
+        "rukou",
+        "umělá",
+        "škodit"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,31 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pro léky přes půl republiky. Sdílený výdej má ukončit absurdní cestování",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vzacna-onemocneni-sdileny-vydej-igor-pies/",
-      "dt": "2026-04-14T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "absurdní",
-        "cestování",
-        "léky",
-        "půl",
-        "republiky",
-        "sdílený",
-        "ukončit",
-        "výdej"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101217,
+      "bytes": 103027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umělá inteligence místo lékaře? V rukou nepoučených pacientů může škodit",
+            "publishedAt": "2026-04-15T07:00:00Z"
+          },
           {
             "title": "Hazard se životy končí: Vojtěch chce udělat tečku za trofejními výkony na játrech či slinivce",
             "publishedAt": "2026-04-15T06:00:00Z"
@@ -355,10 +359,6 @@
           {
             "title": "Ekologové varují před spalovnou zdravotnického odpadu na lodi. Firma kritiku odmítá",
             "publishedAt": "2026-04-14T11:04:49Z"
-          },
-          {
-            "title": "Na severní Moravě stále řádí žloutenka. Hygienici řekli, které místo je zasažené nejvíce",
-            "publishedAt": "2026-04-14T09:55:40Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T06:53:01.088320Z",
+  "ingestedAt": "2026-04-15T07:09:56.345370Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výjimka na nákup ruské ropy skončila, USA ji neprodloužily. Putin se chystá do Číny",
+      "url": "https://zahranicni.hn.cz/c1-67867110-vyjimka-na-nakup-ruske-ropy-skoncila-usa-ji-neprodlouzily-putin-se-chysta-do-ciny",
+      "dt": "2026-04-15T06:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chystá",
+        "neprodloužily",
+        "nákup",
+        "putin",
+        "ropy",
+        "ruské",
+        "skončila",
+        "usa",
+        "výjimka",
+        "číny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1081,37 +1108,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vesmír jako nové bojiště. Česko má potenciál spolupracovat na&nbsp;kosmických projektech, musí do&nbsp;nich ale investovat",
-      "url": "https://archiv.hn.cz/c1-67865960-vesmir-jako-nove-bojiste-cesko-ma-potencial-spolupracovat-na-kosmickych-projektech-musi-do-nich-ale-investovat",
-      "dt": "2026-04-13T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bojiště",
-        "investovat",
-        "jako",
-        "kosmických",
-        "musí",
-        "nbsp",
-        "nich",
-        "nové",
-        "potenciál",
-        "projektech",
-        "spolupracovat",
-        "vesmír",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1122,7 +1118,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185753,
+      "bytes": 185789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1159,7 +1155,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T05:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T06:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1177,6 +1173,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výjimka na nákup ruské ropy skončila, USA ji neprodloužily. Putin se chystá do Číny",
+            "publishedAt": "2026-04-15T06:40:00Z"
+          },
           {
             "title": "&bdquo;Stačilo se jen zeptat.&ldquo; Macinka zveřejnil diskutovaný rozhovor armády s prezidentem Pavlem",
             "publishedAt": "2026-04-15T05:14:00Z"
@@ -1203,10 +1203,6 @@
           },
           {
             "title": "Když programy píše umělá inteligence",
-            "publishedAt": "2026-04-14T22:00:00Z"
-          },
-          {
-            "title": "AI je opice, která dostala klíče od knihovny",
             "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]

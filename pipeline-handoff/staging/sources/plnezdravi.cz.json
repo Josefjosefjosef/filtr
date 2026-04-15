@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-15T06:53:01.088320Z",
+  "ingestedAt": "2026-04-15T07:09:56.345370Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Sacharidy nejsou špatné. Jen je třeba rozlišovat ty zdravé",
+      "url": "https://www.plnezdravi.cz/sacharidy-nejsou-spatne-jen-je-treba-rozlisovat-ty-zdrave/",
+      "dt": "2026-04-15T07:00:45Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "jen",
+        "nejsou",
+        "rozlišovat",
+        "sacharidy",
+        "třeba",
+        "zdravé",
+        "špatné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -476,30 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pijete jarní detoxové čaje? Zaděláváte si na problémy se střevy",
-      "url": "https://www.plnezdravi.cz/pijete-jarni-detoxove-caje-zadelavate-si-na-problemy-se-strevy/",
-      "dt": "2026-03-28T23:00:24Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "detoxové",
-        "jarní",
-        "pijete",
-        "problémy",
-        "střevy",
-        "zaděláváte",
-        "čaje"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 126330,
+      "bytes": 127444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +547,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-14T15:44:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:00:45Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -562,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sacharidy nejsou špatné. Jen je třeba rozlišovat ty zdravé",
+            "publishedAt": "2026-04-15T07:00:45Z"
+          },
           {
             "title": "Zelené kiwi získalo první zdravotní tvrzení pro čerstvé ovoce v EU",
             "publishedAt": "2026-04-14T15:44:06Z"
@@ -589,10 +593,6 @@
           {
             "title": "Špinavé brýle unavují oči víc, než si myslíte. Většina lidí je čistí špatně",
             "publishedAt": "2026-04-08T10:00:21Z"
-          },
-          {
-            "title": "Cukr v nápojích: Každý druhý dětský kaz souvisí s pitím limonád nebo ovocných džusů",
-            "publishedAt": "2026-04-08T07:00:52Z"
           }
         ]
       }
