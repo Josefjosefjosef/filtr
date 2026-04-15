@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T08:12:29.267089Z",
+  "ingestedAt": "2026-04-15T08:30:48.664356Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rodina může slavit titul ve fotbale i volejbale. S Ondrou se špičkujeme, přiznává Kolářová před finále",
+      "url": "https://www.sport.cz/clanek/volejbal-rodina-muze-slavit-titul-ve-fotbale-i-volejbale-s-ondrou-se-spickujeme-priznava-kolarova-pred-finale-5436632",
+      "dt": "2026-04-15T08:14:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "finále",
+        "fotbale",
+        "kolářová",
+        "ondrou",
+        "přiznává",
+        "rodina",
+        "slavit",
+        "titul",
+        "volejbale",
+        "špičkujeme"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,31 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejhorší sezona v historii fotbalu. Klub zažívá sportovní krach",
-      "url": "https://www.sport.cz/clanek/fotbal-nejhorsi-sezona-v-historii-fotbalu-byvaly-klub-obrance-sparty-zaziva-sportovni-krach-5436615",
-      "dt": "2026-04-14T13:31:57Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalu",
-        "historii",
-        "klub",
-        "krach",
-        "nejhorší",
-        "sezona",
-        "sportovní",
-        "zažívá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44930,
+      "bytes": 45037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:32:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:14:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -839,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rodina může slavit titul ve fotbale i volejbale. S Ondrou se špičkujeme, přiznává Kolářová před finále",
+            "publishedAt": "2026-04-15T08:14:37Z"
+          },
           {
             "title": "Dynamo dostalo výpověď ze stadionu. Hrozí mu pád na úplné dno",
             "publishedAt": "2026-04-15T06:57:17Z"
@@ -866,10 +872,6 @@
           {
             "title": "Majitel Dukly slíbil hráčům za postup čtyři miliony! Baráž je ale naprosto neférová, říká legenda",
             "publishedAt": "2026-04-15T06:23:45Z"
-          },
-          {
-            "title": "Náplast na porážku. Procházka v Miami vydělal balík",
-            "publishedAt": "2026-04-15T04:51:29Z"
           }
         ]
       }

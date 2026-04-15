@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T08:12:29.267089Z",
+  "ingestedAt": "2026-04-15T08:30:48.664356Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zvýšení životního minima se odkládá. Stát šetří, domácnosti tratí",
+      "url": "https://www.denik.cz/ekonomika/superdavka-zivotni-minimum-odklad.html",
+      "dt": "2026-04-15T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domácnosti",
+        "minima",
+        "odkládá",
+        "stát",
+        "tratí",
+        "zvýšení",
+        "šetří",
+        "životního"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -621,31 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Netanjahu ocenil přátelství Česka. Za podporu děkoval Babišovi a Macinkovi",
-      "url": "https://www.denik.cz/ze_sveta/cesko-izrael-netanjahu-babis-macinka.html",
-      "dt": "2026-04-14T16:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babišovi",
-        "děkoval",
-        "macinkovi",
-        "netanjahu",
-        "ocenil",
-        "podporu",
-        "přátelství",
-        "česka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31212,
+      "bytes": 31285,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +693,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -710,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zvýšení životního minima se odkládá. Stát šetří, domácnosti tratí",
+            "publishedAt": "2026-04-15T08:00:00Z"
+          },
           {
             "title": "Supertajfun Sinlaku udeřil plnou silou: Obří záplavy, vítr rval z domů střechy",
             "publishedAt": "2026-04-15T07:25:00Z"
@@ -737,10 +741,6 @@
           {
             "title": "Vláda bude zřejmě moci regulovat ceny benzinu a nafty, schválila to Sněmovna",
             "publishedAt": "2026-04-15T05:27:00Z"
-          },
-          {
-            "title": "Trump uvedl, že ho porážka Orbána netrápí. Magyara označil za dobrého člověka",
-            "publishedAt": "2026-04-15T05:03:00Z"
           }
         ]
       }
