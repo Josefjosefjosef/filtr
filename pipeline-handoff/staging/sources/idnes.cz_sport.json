@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T06:30:02.408761Z",
+  "ingestedAt": "2026-04-15T06:53:01.088320Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Pastrňák s Nečasem v NHL slavili 100. bod, v akci byli čtyři čeští gólmani",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-necas-zacha-hronek-vejmelka-rittich-dobes-dostal.A260415_070723_nhl_mkr",
-      "dt": "2026-04-15T06:10:59Z",
+      "dt": "2026-04-15T06:46:07Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -23,6 +23,31 @@
         "slavili",
         "čeští",
         "čtyři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Krejčího Portland vyhrál v předkole, v play off narazí na Wembanyamu",
+      "url": "https://www.idnes.cz/sport/basket/portland-nba.A260415_075430_sport-basket_kazdt",
+      "dt": "2026-04-15T06:37:16Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "krejčího",
+        "narazí",
+        "off",
+        "play",
+        "portland",
+        "předkole",
+        "vyhrál",
+        "wembanyamu"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -49,31 +74,6 @@
         "zápasy",
         "čísel",
         "řečí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krejčího Portland vyhrál v předkole, v play off narazí na Wembanyamu",
-      "url": "https://www.idnes.cz/sport/basket/portland-nba.A260415_075430_sport-basket_kazdt",
-      "dt": "2026-04-15T06:07:34Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "krejčího",
-        "narazí",
-        "off",
-        "play",
-        "portland",
-        "předkole",
-        "vyhrál",
-        "wembanyamu"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -799,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47421,
+      "bytes": 47510,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:10:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T06:46:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,15 +853,15 @@
         "sample_titles": [
           {
             "title": "Pastrňák s Nečasem v NHL slavili 100. bod, v akci byli čtyři čeští gólmani",
-            "publishedAt": "2026-04-15T06:10:59Z"
+            "publishedAt": "2026-04-15T06:46:07Z"
+          },
+          {
+            "title": "Krejčího Portland vyhrál v předkole, v play off narazí na Wembanyamu",
+            "publishedAt": "2026-04-15T06:37:16Z"
           },
           {
             "title": "Sedmé zápasy řečí čísel. Co je ovlivňuje, co se přeceňuje? A kdo v nich nejvíc strádá?",
             "publishedAt": "2026-04-15T06:08:00Z"
-          },
-          {
-            "title": "Krejčího Portland vyhrál v předkole, v play off narazí na Wembanyamu",
-            "publishedAt": "2026-04-15T06:07:34Z"
           },
           {
             "title": "Další český rodinný olympijský klan? Míša se nebojí, říká maminka Juřičková o dceři",

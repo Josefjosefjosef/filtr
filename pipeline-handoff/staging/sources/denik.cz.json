@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T06:30:02.408761Z",
+  "ingestedAt": "2026-04-15T06:53:01.088320Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bezpečnost Izraele nemůže být uplatňována na úkor jiných zemí, řekl Pavel",
+      "url": "https://www.denik.cz/z_domova/petr-pavel-bezpecnost-izraele-rozhovor-armada-cr.html",
+      "dt": "2026-04-15T06:33:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bezpečnost",
+        "být",
+        "izraele",
+        "jiných",
+        "nemůže",
+        "pavel",
+        "uplatňována",
+        "zemí",
+        "úkor",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,32 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Supertajfun Sinlaku děsí i experty. Monstrum páté kategorie může přinést pohromu",
-      "url": "https://www.denik.cz/pocasi/pocasi-supertajfun-sinlaku-monstrum-pate-kategorie-zaplavy-obri-vlny.html",
-      "dt": "2026-04-14T14:41:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "děsí",
-        "experty",
-        "kategorie",
-        "monstrum",
-        "pohromu",
-        "páté",
-        "přinést",
-        "sinlaku",
-        "supertajfun"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30590,
+      "bytes": 30644,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T06:33:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -710,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezpečnost Izraele nemůže být uplatňována na úkor jiných zemí, řekl Pavel",
+            "publishedAt": "2026-04-15T06:33:00Z"
+          },
           {
             "title": "Extrémní proměny: Manželé Marie a Luděk se mají rádi. Ale zanedbali, co mohli",
             "publishedAt": "2026-04-15T06:00:00Z"
@@ -737,10 +742,6 @@
           {
             "title": "Magyar nebude blokovat pomoc EU Ukrajině, chlad ale trvá",
             "publishedAt": "2026-04-15T04:00:00Z"
-          },
-          {
-            "title": "Medvědi na Slovensku se blíží k lidem: Objevili se u nemocnice i na dvoře domu",
-            "publishedAt": "2026-04-15T03:30:00Z"
           }
         ]
       }
