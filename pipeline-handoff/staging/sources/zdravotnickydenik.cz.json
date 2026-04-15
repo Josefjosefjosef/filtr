@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T11:29:43.359660Z",
+  "ingestedAt": "2026-04-15T11:49:22.593914Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš střet zájmů nevyřešil, zdůrazňuje Kupka. Mluví o investičním fondu ve zdravotnictví",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/babis-stret-zajmu-nevyresil-kupka/",
+      "dt": "2026-04-15T11:36:50Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babiš",
+        "fondu",
+        "investičním",
+        "kupka",
+        "mluví",
+        "nevyřešil",
+        "střet",
+        "zdravotnictví",
+        "zdůrazňuje",
+        "zájmů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce ji ale vůbec někdo?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/evropa-chysta-jednu-vakcinu-na-chripku-i-covid/",
-      "dt": "2026-04-14T12:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "chce",
-        "chystá",
-        "chřipku",
-        "covid",
-        "evropa",
-        "jednu",
-        "někdo",
-        "vakcínu",
-        "vůbec"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 108859,
+      "bytes": 110296,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,10 +317,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T10:23:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T11:36:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "finance": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš střet zájmů nevyřešil, zdůrazňuje Kupka. Mluví o investičním fondu ve zdravotnictví",
+            "publishedAt": "2026-04-15T11:36:50Z"
+          },
           {
             "title": "AI bude objednávat testy i plánovat návštěvy lékaře. V Americe chystají velký experiment",
             "publishedAt": "2026-04-15T10:23:39Z"
@@ -359,10 +364,6 @@
           {
             "title": "Krutá daň za vyléčení: Proč úspěšná onkologická léčba u mladých zvyšuje riziko dalšího nádoru?",
             "publishedAt": "2026-04-14T15:00:00Z"
-          },
-          {
-            "title": "Peklo na kůži. Spor o následky léčby ekzému kortikosteroidy budí emoce",
-            "publishedAt": "2026-04-14T13:50:00Z"
           }
         ]
       }
