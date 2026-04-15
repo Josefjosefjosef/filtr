@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T10:53:01.233153Z",
+  "ingestedAt": "2026-04-15T11:10:06.272263Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Griezmann před loučením s Atléticem sní o triumfu v Lize mistrů",
+      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-griezmann-pred-loucenim-s-atleticem-sni-o-triumfu-v-lize-mistru-5437018",
+      "dt": "2026-04-15T10:52:21Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "atléticem",
+        "griezmann",
+        "lize",
+        "loučením",
+        "mistrů",
+        "sní",
+        "triumfu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,32 +791,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparťanský zázrak zaujal. A Kuchta? Neumím si představit, že zůstane, říká expert",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-spartansky-zazrak-zaujal-a-kuchta-neumim-si-predstavit-ze-zustane-rika-expert-5436611",
-      "dt": "2026-04-14T18:12:14Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "expert",
-        "kuchta",
-        "neumím",
-        "představit",
-        "sparťanský",
-        "zaujal",
-        "zázrak",
-        "zůstane",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45895,
+      "bytes": 45235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T10:35:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:52:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -856,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Griezmann před loučením s Atléticem sní o triumfu v Lize mistrů",
+            "publishedAt": "2026-04-15T10:52:21Z"
+          },
           {
             "title": "Bitva gigantů vrcholí, Bayern hájí náskok před Realem. Do semifinále Ligy mistrů má blíže i Arsenal",
             "publishedAt": "2026-04-15T10:35:45Z"
@@ -883,10 +885,6 @@
           {
             "title": "Nečekaná soupeřka předjíždí! Rozverná Ledecká po oznámení rozchodu opět v akci",
             "publishedAt": "2026-04-15T09:23:12Z"
-          },
-          {
-            "title": "Třinec je znovu ve finále. Nevypadalo to růžově, postup je překvapením, říká bývalý Ocelář",
-            "publishedAt": "2026-04-15T09:18:08Z"
           }
         ]
       }
