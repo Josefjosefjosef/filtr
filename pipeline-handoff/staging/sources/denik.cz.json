@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T09:59:23.923828Z",
+  "ingestedAt": "2026-04-15T10:14:21.870612Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šéf NATO Rutte míří za Babišem. Do Česka přijede kvůli roztržce o summitu",
+      "url": "https://www.denik.cz/ze_sveta/nato-mar-rutte-cesko-andrej-babis.html",
+      "dt": "2026-04-15T09:35:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babišem",
+        "kvůli",
+        "míří",
+        "nato",
+        "přijede",
+        "roztržce",
+        "rutte",
+        "summitu",
+        "česka",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,32 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Smartwings odkládají obnovení letů do Tel Avivu. Návrat oddálily o týden",
-      "url": "https://www.denik.cz/ze_sveta/smartwings-lety-izrael-tel-aviv-odlozeni.html",
-      "dt": "2026-04-14T17:03:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "avivu",
-        "letů",
-        "návrat",
-        "obnovení",
-        "oddálily",
-        "odkládají",
-        "smartwings",
-        "tel",
-        "týden"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31914,
+      "bytes": 31882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:35:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -712,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf NATO Rutte míří za Babišem. Do Česka přijede kvůli roztržce o summitu",
+            "publishedAt": "2026-04-15T09:35:00Z"
+          },
           {
             "title": "U divočáka na Karlovarsku našli parazita svalovce, pro lidi může být nebezpečný",
             "publishedAt": "2026-04-15T09:26:00Z"
@@ -739,10 +744,6 @@
           {
             "title": "Bezpečnost Izraele nemůže být uplatňována na úkor jiných zemí, řekl Pavel",
             "publishedAt": "2026-04-15T06:33:00Z"
-          },
-          {
-            "title": "Extrémní proměny: Manželé Marie a Luděk se mají rádi. Ale zanedbali, co mohli",
-            "publishedAt": "2026-04-15T06:00:00Z"
           }
         ]
       }

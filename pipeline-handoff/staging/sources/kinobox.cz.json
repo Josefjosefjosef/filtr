@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-15T09:59:23.923828Z",
+  "ingestedAt": "2026-04-15T10:14:21.870612Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: „Kam nás žene pokrok?“ ptá se Ondřej Vavrečka filmovou esejí 1+1+1",
+      "url": "https://www.kinobox.cz/clanky/daily/52702-kinobox-daily-kam-nas-zene-pokrok-pta-se-ondrej-vavrecka-svym-filmovym-esejem-111",
+      "dt": "2026-04-15T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "esejí",
+        "filmovou",
+        "kam",
+        "kinobox",
+        "nás",
+        "ondřej",
+        "pokrok",
+        "ptá",
+        "vavrečka",
+        "žene"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -520,33 +548,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Přednosta stanice slaví 85 let. Natáčení navštívilo gestapo, režiséra zlynčoval dav",
-      "url": "https://www.kinobox.cz/clanky/filmy/52570-prednosta-stanice-s-burianem-slavi-85-let-nataceni-navstivilo-gestapo-rezisera-zlyncoval-dav",
-      "dt": "2026-04-12T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dav",
-        "gestapo",
-        "let",
-        "natáčení",
-        "navštívilo",
-        "přednosta",
-        "režiséra",
-        "slaví",
-        "stanice",
-        "zlynčoval"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +558,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27916,
+      "bytes": 27700,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,7 +595,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -609,6 +610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: „Kam nás žene pokrok?“ ptá se Ondřej Vavrečka filmovou esejí 1+1+1",
+            "publishedAt": "2026-04-15T10:00:00Z"
+          },
           {
             "title": "Farma zvířat, jak ji neznáte. Nový trailer mění mrazivou předlohu v roztomilou podívanou",
             "publishedAt": "2026-04-15T09:00:00Z"
@@ -636,10 +641,6 @@
           {
             "title": "Kinobox Daily: Nechte se zavřít do kufru s kšeftařem Tonym a kochejte se",
             "publishedAt": "2026-04-14T10:00:00Z"
-          },
-          {
-            "title": "Teenagerská dystopie Hunger Games na Úsvitu sklizně. Trailer plný hvězd láká na zimní hit",
-            "publishedAt": "2026-04-14T09:00:00Z"
           }
         ]
       }

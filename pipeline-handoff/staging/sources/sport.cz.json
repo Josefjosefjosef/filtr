@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-15T09:59:23.923828Z",
+  "ingestedAt": "2026-04-15T10:14:21.870612Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hezká meta, ale to podstatné přijde až teď. Pastrňák s Nečasem stovku slavit nemůžou",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-hezka-meta-ale-to-podstatne-prijde-az-ted-pastrnak-s-necasem-stovku-slavit-nemuzou-5437011",
+      "dt": "2026-04-15T09:59:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "hezká",
+        "meta",
+        "nemůžou",
+        "nečasem",
+        "pastrňák",
+        "podstatné",
+        "přijde",
+        "slavit",
+        "stovku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,31 +792,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Neprodám. Majitelka Dynama reaguje rázně na nabídku českobudějovického magistrátu",
-      "url": "https://www.sport.cz/clanek/fotbal-neprodam-majitelka-dynama-reaguje-razne-na-nabidku-ceskobudejovickeho-magistratu-5436666",
-      "dt": "2026-04-14T16:02:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dynama",
-        "magistrátu",
-        "majitelka",
-        "nabídku",
-        "neprodám",
-        "reaguje",
-        "rázně",
-        "českobudějovického"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45335,
+      "bytes": 45274,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:39:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:59:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -853,6 +855,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hezká meta, ale to podstatné přijde až teď. Pastrňák s Nečasem stovku slavit nemůžou",
+            "publishedAt": "2026-04-15T09:59:02Z"
+          },
           {
             "title": "Je jim jedno, že prohrávají! Nejstarší kouč NHL se pustil do svých svěřenců",
             "publishedAt": "2026-04-15T09:39:41Z"
@@ -880,10 +886,6 @@
           {
             "title": "Miliardář Staněk chce koupit Autodrom Most. Současného majitele informace zaskočily",
             "publishedAt": "2026-04-15T08:37:14Z"
-          },
-          {
-            "title": "Rodina může slavit titul ve fotbale i volejbale. S Ondrou se špičkujeme, přiznává Kolářová před finále",
-            "publishedAt": "2026-04-15T08:14:37Z"
           }
         ]
       }
