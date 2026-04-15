@@ -6951,6 +6951,17 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** P0 CLS: desktop grid ukazuje jen 1 headline — neplnit druhý řádek textem (jinak layout 2 titulků → skrytí sníží výšku dlaždice a naměří se CLS). */
+  function iuDesktopHomeGridOmitSecondaryHeadline(){
+    try{
+      if (typeof document === "undefined" || !document.body) return false;
+      if (!document.body.classList.contains("iu-desktop-home-grid")) return false;
+      return !!(typeof window.matchMedia === "function" && window.matchMedia("(min-width: 1025px)").matches);
+    }catch(_){
+      return false;
+    }
+  }
+
   function iuNewsPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -7078,7 +7089,7 @@ function buildVideoAsArticleCard(it) {
         card.setAttribute("data-iu-news-preview-has-latest", "0");
         card.removeAttribute("data-iu-news-preview-latest-title");
       }
-      if (secondTitle) card.setAttribute("data-iu-news-preview-second-title", secondTitle);
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) card.setAttribute("data-iu-news-preview-second-title", secondTitle);
       else card.removeAttribute("data-iu-news-preview-second-title");
 
       if (!hasLatest) {
@@ -7102,7 +7113,10 @@ function buildVideoAsArticleCard(it) {
 
       // Titles
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -7118,7 +7132,9 @@ function buildVideoAsArticleCard(it) {
         ) {
           window.__iuPreviewFeedProbe = window.__iuPreviewFeedProbe || {};
           window.__iuPreviewFeedProbe._zpravyDomLogged = true;
-          iuPreviewFeedProbeTick("zpravyPreviewDomPatched", { second: Boolean(secondTitle) });
+          iuPreviewFeedProbeTick("zpravyPreviewDomPatched", {
+            second: Boolean(secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()),
+          });
         }
       } catch (_) {}
 
@@ -7279,7 +7295,7 @@ function buildVideoAsArticleCard(it) {
         card.setAttribute("data-iu-sport-preview-has-latest", "0");
         card.removeAttribute("data-iu-sport-preview-latest-title");
       }
-      if (secondTitle) card.setAttribute("data-iu-sport-preview-second-title", secondTitle);
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) card.setAttribute("data-iu-sport-preview-second-title", secondTitle);
       else card.removeAttribute("data-iu-sport-preview-second-title");
 
       if (!hasLatest) {
@@ -7297,7 +7313,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -7998,7 +8017,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-finance-preview-latest-title");
         card.removeAttribute("data-iu-finance-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-finance-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-finance-preview-second-title");
@@ -8020,7 +8039,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -8183,7 +8205,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-health-preview-latest-title");
         card.removeAttribute("data-iu-health-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-health-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-health-preview-second-title");
@@ -8205,7 +8227,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -8368,7 +8393,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-travel-preview-latest-title");
         card.removeAttribute("data-iu-travel-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-travel-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-travel-preview-second-title");
@@ -8390,7 +8415,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -8556,7 +8584,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-games-preview-latest-title");
         card.removeAttribute("data-iu-games-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-games-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-games-preview-second-title");
@@ -8578,7 +8606,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -8744,7 +8775,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-culture-preview-latest-title");
         card.removeAttribute("data-iu-culture-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-culture-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-culture-preview-second-title");
@@ -8766,7 +8797,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -8932,7 +8966,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-science-history-preview-latest-title");
         card.removeAttribute("data-iu-science-history-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-science-history-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-science-history-preview-second-title");
@@ -8954,7 +8988,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
@@ -9120,7 +9157,7 @@ function buildVideoAsArticleCard(it) {
         card.removeAttribute("data-iu-education-preview-latest-title");
         card.removeAttribute("data-iu-education-preview-guard-topic");
       }
-      if (secondTitle) {
+      if (secondTitle && !iuDesktopHomeGridOmitSecondaryHeadline()) {
         card.setAttribute("data-iu-education-preview-second-title", secondTitle);
       } else {
         card.removeAttribute("data-iu-education-preview-second-title");
@@ -9142,7 +9179,10 @@ function buildVideoAsArticleCard(it) {
       }
 
       elT1.textContent = latestTitle;
-      if (secondTitle) {
+      if (iuDesktopHomeGridOmitSecondaryHeadline()) {
+        elT2.textContent = "";
+        try { elT2.classList.add("iuNewsPreviewHeadline2--empty"); } catch (_) {}
+      } else if (secondTitle) {
         elT2.textContent = secondTitle;
         try { elT2.classList.remove("iuNewsPreviewHeadline2--empty"); } catch (_) {}
       } else {
