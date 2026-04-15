@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T21:05:04.018885Z",
+  "ingestedAt": "2026-04-15T21:25:42.755799Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velkolepá bitva gigantů přinesla sedm gólů. Real v Lize mistrů končil plný vzteku",
+      "url": "https://sport.aktualne.cz/fotbal/liga-mistru/strhujici-bitva-gigantu-prinesla-sedm-golu-real-v-lize-mistru-koncil-plny-vzteku/r~aaa29e025b8c29e60c768d49c7b379d3/",
+      "dt": "2026-04-15T21:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bitva",
+        "gigantů",
+        "gólů",
+        "končil",
+        "lize",
+        "mistrů",
+        "plný",
+        "přinesla",
+        "real",
+        "sedm",
+        "velkolepá",
+        "vzteku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -494,31 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusové vyplatí Ázerbájdžánu odškodné za sestřelený letoun. Zahynulo přes 30 lidí",
-      "url": "https://zpravy.aktualne.cz/zahranici/rusove-vyplati-azerbajdzanu-odskodne-za-sestreleny-letoun-zahynulo-pres-30-lidi/r~aaa29ed3365ef0f94f560292f84a4641/",
-      "dt": "2026-04-15T15:15:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "letoun",
-        "lidí",
-        "odškodné",
-        "rusové",
-        "sestřelený",
-        "vyplatí",
-        "zahynulo",
-        "ázerbájdžánu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22209,
+      "bytes": 22178,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,11 +570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T19:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T21:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "sport": 5,
+          "sport": 6,
+          "zpravy": 13,
           "other": 1
         },
         "drop_counts": {
@@ -583,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velkolepá bitva gigantů přinesla sedm gólů. Real v Lize mistrů končil plný vzteku",
+            "publishedAt": "2026-04-15T21:00:00Z"
+          },
           {
             "title": "Čekají vás úžasné dva dny, napíná Trump kvůli Íránu. Ceny ropy i tak rostou",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -610,10 +618,6 @@
           {
             "title": "Otřes ve Slovinsku. Chceme referendum o členství v NATO, oznámil šéf parlamentu",
             "publishedAt": "2026-04-15T18:32:00Z"
-          },
-          {
-            "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
-            "publishedAt": "2026-04-15T14:46:00Z"
           }
         ]
       }
