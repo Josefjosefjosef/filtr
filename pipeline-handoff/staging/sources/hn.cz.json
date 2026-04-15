@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T14:22:37.440874Z",
+  "ingestedAt": "2026-04-15T14:50:38.553310Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "AI mění práci programátorů a požírá byznys softwarových firem. Panika na trzích může být i tak přehnaná",
+      "url": "https://byznys.hn.cz/c1-67866120-ai-meni-praci-programatoru-a-pozira-byznys-softwarovych-firem-panika-na-trzich-muze-byt-i-tak-prehnana",
+      "dt": "2026-04-15T14:44:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "byznys",
+        "být",
+        "firem",
+        "mění",
+        "panika",
+        "požírá",
+        "programátorů",
+        "práci",
+        "přehnaná",
+        "softwarových",
+        "tak",
+        "trzích"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1076,36 +1105,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rušení poplatků psané přes víkend? Klempíř pod tlakem &bdquo;žehlí&ldquo;  mediální novelou vztahy v koalici",
-      "url": "https://archiv.hn.cz/c1-67866760-ruseni-poplatku-psane-pres-vikend-klempir-pod-tlakem-bdquo-zehli-ldquo-medialni-novelou-vztahy-v-koalici",
-      "dt": "2026-04-14T17:21:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "klempíř",
-        "koalici",
-        "ldquo",
-        "mediální",
-        "novelou",
-        "poplatků",
-        "psané",
-        "rušení",
-        "tlakem",
-        "vztahy",
-        "víkend",
-        "žehlí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1116,7 +1115,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185126,
+      "bytes": 185132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1153,7 +1152,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T14:44:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 39,
@@ -1169,6 +1168,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AI mění práci programátorů a požírá byznys softwarových firem. Panika na trzích může být i tak přehnaná",
+            "publishedAt": "2026-04-15T14:44:00Z"
+          },
           {
             "title": "Američané pošlou další vojáky na Blízký východ. Už nyní jich je v regionu 50 tisíc",
             "publishedAt": "2026-04-15T13:06:00Z"
@@ -1196,10 +1199,6 @@
           {
             "title": "Další šance pro věřitele Key Investments.&nbsp;Nejvyšší soud chce prověřit, zda jejich peníze nedostala Praha 13",
             "publishedAt": "2026-04-15T10:50:00Z"
-          },
-          {
-            "title": "Kdo chce vydělávat na nemovitostech, míří na konferenci Top realitní fondy",
-            "publishedAt": "2026-04-15T09:46:00Z"
           }
         ]
       }
