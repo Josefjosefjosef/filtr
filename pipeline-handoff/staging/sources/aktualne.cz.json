@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T19:44:50.366104Z",
+  "ingestedAt": "2026-04-15T20:04:55.006811Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Magyar si volal s Netanjahuem. Pozval ho na návštěvu do Budapešti",
+      "url": "https://zpravy.aktualne.cz/zahranici/magyar-si-volal-s-netanjahuem-pozval-ho-na-navstevu-do-budapesti/r~aaa291f72a4cabafc1253854870379d5/",
+      "dt": "2026-04-15T19:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "budapešti",
+        "magyar",
+        "netanjahuem",
+        "návštěvu",
+        "pozval",
+        "volal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -496,30 +519,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krize v Budějovicích. Klub přijde o stadion, majitelka se brání",
-      "url": "https://sport.aktualne.cz/krize-v-budejovicich-nigerijska-majitelka-prodej-odmita-klub-prijde-o-stadion/r~aaa29f7c1bbf64d2af8ee59e5709c5da/",
-      "dt": "2026-04-15T07:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brání",
-        "budějovicích",
-        "klub",
-        "krize",
-        "majitelka",
-        "přijde",
-        "stadion"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21955,
+      "bytes": 22209,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,11 +566,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T19:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T19:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 6,
+          "zpravy": 14,
+          "sport": 5,
           "other": 1
         },
         "drop_counts": {
@@ -584,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Magyar si volal s Netanjahuem. Pozval ho na návštěvu do Budapešti",
+            "publishedAt": "2026-04-15T19:52:00Z"
+          },
           {
             "title": "Trump nabízí další náboženský motiv: nechal se zobrazit v objetí Krista",
             "publishedAt": "2026-04-15T17:56:00Z"
@@ -611,10 +614,6 @@
           {
             "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
             "publishedAt": "2026-04-15T14:46:00Z"
-          },
-          {
-            "title": "Pardubice - Sparta 1:0. Dynamo to dokázalo, vydřelo sedmý zápas a je ve finále",
-            "publishedAt": "2026-04-15T15:10:00Z"
           }
         ]
       }
