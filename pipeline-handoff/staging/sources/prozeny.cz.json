@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-15T11:10:06.272263Z",
+  "ingestedAt": "2026-04-15T11:29:43.359660Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Patricie Solaříková v sexy topu bere dech: Fanoušci ji zasypali chválou, ozval se i Playboy",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-patricie-solarikova-v-sexy-topu-bere-dech-fanousci-ji-zasypali-chvalou-ozval-se-i-playboy-103112",
+      "dt": "2026-04-15T11:23:27Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "bere",
+        "chválou",
+        "dech",
+        "fanoušci",
+        "ozval",
+        "patricie",
+        "playboy",
+        "sexy",
+        "solaříková",
+        "topu",
+        "zasypali"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -814,31 +842,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Domácí prádelna pro každou situaci. Jak ji zařídit v koupelně i samostatné místnosti",
-      "url": "https://www.prozeny.cz/clanek/bydleni-tipy-pro-interier-domaci-pradelna-pro-kazdou-situaci-jak-ji-zaridit-v-koupelne-i-samostatne-mistnosti-103058",
-      "dt": "2026-04-13T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "domácí",
-        "každou",
-        "koupelně",
-        "místnosti",
-        "prádelna",
-        "samostatné",
-        "situaci",
-        "zařídit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -849,7 +852,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39992,
+      "bytes": 39897,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -886,11 +889,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:35:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T11:23:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 29,
-          "zpravy": 1
+          "zdravi": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -902,6 +904,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Patricie Solaříková v sexy topu bere dech: Fanoušci ji zasypali chválou, ozval se i Playboy",
+            "publishedAt": "2026-04-15T11:23:27Z"
+          },
           {
             "title": "Hana Gregorová v super šatech od Číňana. Stály jen čtyři sta! A ohromuje i v saku z výprodeje",
             "publishedAt": "2026-04-15T07:35:36Z"
@@ -928,10 +934,6 @@
           },
           {
             "title": "Štíhlé za každou cenu: Tyhle slavné ženy skoro nic nejedí a jsou jako proutek. Ale stojí to za to?",
-            "publishedAt": "2026-04-15T03:00:00Z"
-          },
-          {
-            "title": "Těmhle kalhotám se už nikdo nesměje: Harémky jsou hitem sezony, ale nesluší všem",
             "publishedAt": "2026-04-15T03:00:00Z"
           }
         ]

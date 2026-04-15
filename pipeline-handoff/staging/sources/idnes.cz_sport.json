@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T11:10:06.272263Z",
+  "ingestedAt": "2026-04-15T11:29:43.359660Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Už brzdím i skáču! Gabriel se naučil snášet samotu, ve Španělsku o něj pečuje expert",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/simon-gabriel-zraneni-koleno-marbella.A260415_102149_fotbal_kazdt",
+      "dt": "2026-04-15T11:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brzdím",
+        "expert",
+        "gabriel",
+        "naučil",
+        "něj",
+        "pečuje",
+        "samotu",
+        "skáču",
+        "snášet",
+        "španělsku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -110,7 +137,7 @@
       "section": "sport",
       "contentType": "article",
       "title": "Paní průkopnice. Fotbalisté Unionu Berlín mají trenérku, kdy dojde i na Česko?",
-      "url": "https://www.idnes.cz/fotbal/zahranici/pani-prukopnice-kdy-bude-i-u-nas-marie-louise-etaova-je-novou-trenerkou-fotbalistu-unionu-berlin.A260414_173946_fot_zahranici_ten",
+      "url": "https://www.idnes.cz/fotbal/zahranici/marie-louise-etaova-trenerka-fotbalistu-unionu-berlin.A260414_173946_fot_zahranici_ten",
       "dt": "2026-04-15T10:00:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
@@ -761,33 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Reprezentant Červ podepsal v Plzni nový kontrakt. Věřím v další úspěchy, říká",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/lukas-cerv-smlouva-viktoria-plzen.A260414_174114_fotbal_min",
-      "dt": "2026-04-14T16:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "kontrakt",
-        "nový",
-        "plzni",
-        "podepsal",
-        "reprezentant",
-        "věřím",
-        "úspěchy",
-        "červ",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46898,
+      "bytes": 46700,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T11:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už brzdím i skáču! Gabriel se naučil snášet samotu, ve Španělsku o něj pečuje expert",
+            "publishedAt": "2026-04-15T11:00:00Z"
+          },
           {
             "title": "Jako filmové hvězdy. Basketbalistky vyměnily dresy za večerní róby",
             "publishedAt": "2026-04-15T10:45:00Z"
@@ -878,10 +882,6 @@
           {
             "title": "Potřebuje operaci, píší o Liverpoolu po vyřazení. Slota v Anglii kritizují i za sestavu",
             "publishedAt": "2026-04-15T09:15:00Z"
-          },
-          {
-            "title": "Drsný pád Dynama. Potíže trvají roky, vše začalo odmítnutím smělého plánu",
-            "publishedAt": "2026-04-15T09:00:00Z"
           }
         ]
       }
