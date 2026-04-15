@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-15T09:24:43.881928Z",
+  "ingestedAt": "2026-04-15T09:44:21.670005Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Potřebuje operaci, píší o Liverpoolu po vyřazení. Slota v Anglii kritizují i za sestavu",
+      "url": "https://www.idnes.cz/fotbal/pohary/liverpool-kritika-slot-liga-mistru.A260415_094133_fot_pohary_duff",
+      "dt": "2026-04-15T09:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "anglii",
+        "kritizují",
+        "liverpoolu",
+        "operaci",
+        "potřebuje",
+        "píší",
+        "sestavu",
+        "slota",
+        "vyřazení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,32 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dědek se omluvil, Pardubice obviňují Spartu. Oba kluby vyzývají k uklidnění",
-      "url": "https://www.idnes.cz/hokej/extraliga/pardubice-prohlaseni-urazky-sparty-fanousci.A260414_152105_hokej_hrj",
-      "dt": "2026-04-14T14:18:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dědek",
-        "kluby",
-        "oba",
-        "obviňují",
-        "omluvil",
-        "pardubice",
-        "spartu",
-        "uklidnění",
-        "vyzývají"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47271,
+      "bytes": 47004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -853,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Potřebuje operaci, píší o Liverpoolu po vyřazení. Slota v Anglii kritizují i za sestavu",
+            "publishedAt": "2026-04-15T09:15:00Z"
+          },
           {
             "title": "Drsný pád Dynama. Potíže trvají roky, vše začalo odmítnutím smělého plánu",
             "publishedAt": "2026-04-15T09:00:00Z"
@@ -880,10 +884,6 @@
           {
             "title": "Budějovice vypověděly Dynamu smlouvu ze stadionu, majitelka hledá oporu na severu",
             "publishedAt": "2026-04-15T07:10:00Z"
-          },
-          {
-            "title": "Pastrňák s Nečasem v NHL slavili 100. bod, v akci byli čtyři čeští gólmani",
-            "publishedAt": "2026-04-15T06:46:07Z"
           }
         ]
       }

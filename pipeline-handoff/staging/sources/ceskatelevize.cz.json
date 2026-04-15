@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T09:24:43.881928Z",
+  "ingestedAt": "2026-04-15T09:44:21.670005Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael bombardoval desítky obcí v Libanonu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-bombardoval-desitky-obci-v-libanonu-372400",
+      "dt": "2026-04-15T09:22:05Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bombardoval",
+        "desítky",
+        "izrael",
+        "libanonu",
+        "obcí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -724,30 +746,30 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Do roku 2050 budou mít metabolické onemocnění jater téměř dvě miliardy lidí, uvádí studie",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/do-roku-2050-budou-mit-metabolicke-onemocneni-jater-temer-dve-miliardy-lidi-uvadi-studie-372368",
-      "dt": "2026-04-14T14:39:29Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/muzeme-znovu-vyhrat-ligu-mistru-veri-dembele-porad-mame-touhu-ziskavat-trofeje-156295",
+      "dt": "2026-04-15T09:19:04Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "2050",
-        "dvě",
-        "jater",
-        "lidí",
-        "metabolické",
-        "miliardy",
-        "mít",
-        "onemocnění",
-        "roku",
-        "studie",
-        "téměř",
-        "uvádí"
+        "dembélé",
+        "ligu",
+        "mistrů",
+        "máme",
+        "můžeme",
+        "pořád",
+        "touhu",
+        "trofeje",
+        "vyhrát",
+        "věří",
+        "znovu",
+        "získávat"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1497,30 +1519,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čechová a Hamzová zabojují na kempu Minnesoty o angažmá ve WNBA",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/cechova-a-hamzova-zabojuji-na-kempu-minnesoty-o-angazma-ve-wnba-156266",
-      "dt": "2026-04-13T08:02:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "angažmá",
-        "hamzová",
-        "kempu",
-        "minnesoty",
-        "wnba",
-        "zabojují",
-        "čechová"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1531,7 +1529,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41278,
+      "bytes": 41340,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1591,11 +1589,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:19:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:22:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 4
+          "zpravy": 27,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1607,6 +1605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izrael bombardoval desítky obcí v Libanonu",
+            "publishedAt": "2026-04-15T09:22:05Z"
+          },
           {
             "title": "Ruský Memorial chce pokračovat v práci z exilu, podporovatelům hrozí nebezpečí",
             "publishedAt": "2026-04-15T09:19:07Z"
@@ -1634,10 +1636,6 @@
           {
             "title": "Senát projedná platnost dálniční známky či právo na život off-line",
             "publishedAt": "2026-04-15T08:06:24Z"
-          },
-          {
-            "title": "Kdo platí, rozkazuje, míní o financování ČT a ČRo Havel. Politizace není cíl, říká Šťastný",
-            "publishedAt": "2026-04-15T07:26:36Z"
           }
         ]
       }
@@ -1649,7 +1647,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40487,
+      "bytes": 40554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1686,7 +1684,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:09:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:19:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1701,6 +1699,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
+            "publishedAt": "2026-04-15T09:19:04Z"
+          },
           {
             "title": "Program MS v hokeji: Kdy hrají Češi, tabulky skupin",
             "publishedAt": "2026-04-15T09:09:04Z"
@@ -1728,10 +1730,6 @@
           {
             "title": "Podle mě je tento systém neférový, řekl k baráži jihlavský kapitán Čachotský",
             "publishedAt": "2026-04-15T04:00:00Z"
-          },
-          {
-            "title": "Atlético přes domácí porážku vyřadilo Barcelonu, v semifinále jsou i obhájci z PSG",
-            "publishedAt": "2026-04-14T21:32:14Z"
           }
         ]
       }
@@ -1743,7 +1741,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77082,
+      "bytes": 77244,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

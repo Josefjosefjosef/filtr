@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T09:24:43.881928Z",
+  "ingestedAt": "2026-04-15T09:44:21.670005Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Šéf NATO Rutte míří do Česka. Bude se řešit spor o summit?",
+      "url": "https://ekonomickydenik.cz/sef-nato-rutte-miri-do-ceska-bude-se-resit-spor-o-summit/",
+      "dt": "2026-04-15T09:40:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "míří",
+        "nato",
+        "rutte",
+        "spor",
+        "summit",
+        "česka",
+        "řešit",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,34 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny nafty a benzinu v rukou vlády? Babiš k tomu chce protlačit nový zákon",
-      "url": "https://ekonomickydenik.cz/ceny-nafty-benzinu-babis-vlada/",
-      "dt": "2026-04-13T12:01:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "benzinu",
-        "ceny",
-        "chce",
-        "nafty",
-        "nový",
-        "protlačit",
-        "rukou",
-        "tomu",
-        "vlády",
-        "zákon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73776,
+      "bytes": 73826,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T09:13:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:40:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -850,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf NATO Rutte míří do Česka. Bude se řešit spor o summit?",
+            "publishedAt": "2026-04-15T09:40:20Z"
+          },
           {
             "title": "Kruté skóre 1:5: Ukrajina likviduje přesilu drony. Rusko už má problémy ve vnitrozemí",
             "publishedAt": "2026-04-15T09:13:41Z"
@@ -877,10 +878,6 @@
           {
             "title": "Havlíček změní název ministerstva průmyslu a obchodu",
             "publishedAt": "2026-04-14T18:31:21Z"
-          },
-          {
-            "title": "„Frontální útok“ na veřejnoprávnost. Prezident chce garance nezasahování",
-            "publishedAt": "2026-04-14T17:49:55Z"
           }
         ]
       }
