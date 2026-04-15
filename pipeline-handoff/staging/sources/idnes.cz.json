@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T17:52:36.185417Z",
+  "ingestedAt": "2026-04-15T18:09:42.019563Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Z Ukrajiny vyrůstá raketová velmoc. I díky proudovým motorům z Česka",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/ukrajina-rakety-paljanica-pbs-velka-bites.A260415_090338_zahranicni_aha",
+      "dt": "2026-04-15T18:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "díky",
+        "motorům",
+        "proudovým",
+        "raketová",
+        "ukrajiny",
+        "velmoc",
+        "vyrůstá",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -749,32 +774,6 @@
         "zemi",
         "řsd",
         "šel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Seděli vedle sebe a opisovali. Žáci si stěžují na podvody u přijímacích zkoušek",
-      "url": "https://www.idnes.cz/zpravy/domaci/prijimaci-zkousky-podvod-cermat-kolin-opisovani-kontrola.A260415_132633_domaci_dyn",
-      "dt": "2026-04-15T13:14:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "opisovali",
-        "podvody",
-        "přijímacích",
-        "sebe",
-        "seděli",
-        "stěžují",
-        "vedle",
-        "zkoušek",
-        "žáci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1582,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50337,
+      "bytes": 50380,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T18:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1636,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Ukrajiny vyrůstá raketová velmoc. I díky proudovým motorům z Česka",
+            "publishedAt": "2026-04-15T18:00:00Z"
+          },
           {
             "title": "Klempíř: Rušení poplatků není útok, musí se umět šetřit. Plníme program, říká Babiš",
             "publishedAt": "2026-04-15T17:19:00Z"
@@ -1662,10 +1665,6 @@
           },
           {
             "title": "Hrozí autocenzura, odnést to může i StarDance. Expertka o Klempířově návrhu",
-            "publishedAt": "2026-04-15T16:00:00Z"
-          },
-          {
-            "title": "Poslanci schválili významný Den české vlajky 30. března, který navrhl Babiš",
             "publishedAt": "2026-04-15T16:00:00Z"
           }
         ]

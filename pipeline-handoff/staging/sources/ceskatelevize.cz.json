@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T17:52:36.185417Z",
+  "ingestedAt": "2026-04-15T18:09:42.019563Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel jednal s Mileiem. Shodneme se v otázce Ukrajiny i Izraele, ocenil",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pavel-jednal-s-mileiem-shodneme-se-v-otazce-ukrajiny-i-izraele-ocenil-372421",
+      "dt": "2026-04-15T17:59:29Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "izraele",
+        "jednal",
+        "mileiem",
+        "ocenil",
+        "otázce",
+        "pavel",
+        "shodneme",
+        "ukrajiny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -715,25 +740,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Úpravy rozptylové loučky v Brně vyvolaly odpor pozůstalých",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihomoravsky-kraj/upravy-rozptylove-loucky-v-brne-vyvolaly-odpor-pozustalych-372341",
-      "dt": "2026-04-15T05:29:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Sparta B se ode dna tabulky neodlepila, podlehla Artisu 1:3",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sparta-b-se-ode-dna-tabulky-neodlepila-podlehla-artisu-13-156303",
+      "dt": "2026-04-15T17:48:56Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "brně",
-        "loučky",
-        "odpor",
-        "pozůstalých",
-        "rozptylové",
-        "vyvolaly",
-        "úpravy"
+        "artisu",
+        "dna",
+        "neodlepila",
+        "ode",
+        "podlehla",
+        "sparta",
+        "tabulky"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1485,29 +1510,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plavání vrací ruské a běloruské sportovce na scénu",
-      "url": "https://sport.ceskatelevize.cz/clanek/plavani/plavani-vraci-ruske-a-beloruske-sportovce-na-scenu-156273",
-      "dt": "2026-04-13T14:05:26Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "běloruské",
-        "plavání",
-        "ruské",
-        "scénu",
-        "sportovce",
-        "vrací"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1518,7 +1520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41503,
+      "bytes": 41250,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1578,7 +1580,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:33:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:59:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1594,6 +1596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel jednal s Mileiem. Shodneme se v otázce Ukrajiny i Izraele, ocenil",
+            "publishedAt": "2026-04-15T17:59:29Z"
+          },
           {
             "title": "Výbor europarlamentu podpořil návrh Nerudové na vynětí obytných budov z ETS 2",
             "publishedAt": "2026-04-15T17:33:22Z"
@@ -1621,10 +1627,6 @@
           {
             "title": "Magyar řekl, že ho prezident pověří sestavením vlády. Čas ale hlavu státu netlačí",
             "publishedAt": "2026-04-15T14:16:47Z"
-          },
-          {
-            "title": "Slovenští herci odříkají spolupráci s veřejnoprávní stanicí. Ta mluví o polarizaci",
-            "publishedAt": "2026-04-15T14:03:12Z"
           }
         ]
       }
@@ -1636,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40356,
+      "bytes": 40186,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1673,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:12:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:48:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1688,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sparta B se ode dna tabulky neodlepila, podlehla Artisu 1:3",
+            "publishedAt": "2026-04-15T17:48:56Z"
+          },
           {
             "title": "Měchura: Pozvánka mě vytrhla ze špatných myšlenek",
             "publishedAt": "2026-04-15T15:12:16Z"
@@ -1715,10 +1721,6 @@
           {
             "title": "Program MS v hokeji: Kdy hrají Češi, tabulky skupin",
             "publishedAt": "2026-04-15T09:09:04Z"
-          },
-          {
-            "title": "Plzeň byla sekundu od porážky, přesto má první finálový bod",
-            "publishedAt": "2026-04-15T08:48:45Z"
           }
         ]
       }
@@ -1730,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77379,
+      "bytes": 77424,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
