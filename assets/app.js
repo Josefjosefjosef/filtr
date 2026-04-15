@@ -10951,7 +10951,19 @@ function buildVideoAsArticleCard(it) {
             if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
               var uNav = new URL(window.location.href);
               uNav.hash = "iu-nav";
-              history.pushState({ iu_nav_overlay: true }, "", uNav.toString());
+              history.pushState(
+                { iu_nav_overlay: true, iu_nav_origin: "homepage" },
+                "",
+                uNav.toString()
+              );
+              try {
+                sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+                sessionStorage.removeItem("iuMobileWebNavLastTarget");
+              } catch (_){}
+              try {
+                window.__iuMobileWebNavReturnArmed = false;
+                delete window.__iuMobileWebNavLastTile;
+              } catch (_){}
             }
           } catch (_) {}
         }
@@ -11142,6 +11154,9 @@ function buildVideoAsArticleCard(it) {
   function iuMobileGateCloseForMainNav() {
     try {
       if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
+    } catch (_){}
+    try {
+      if (typeof window !== "undefined" && window.__iuMobileWebNavReturnSuppress === true) return;
     } catch (_){}
     try {
       var w = document.getElementById("iuMobileGateWrap");
@@ -24693,6 +24708,43 @@ function buildVideoAsArticleCard(it) {
     window.iuGlobalArticleHubFromNav = iuGlobalArticleHubFromNav;
   } catch (_) {}
 
+  /**
+   * P0 mobile/tablet „Navigace po webu“: deterministický návratový stav — odděleno od obecného routeru.
+   * Ozbrojí další pushState (?section=) metadaty iu_webnav_* + sessionStorage (WebKit/bfcache).
+   */
+  function iuMobileWebNavReturnArmForTile(tileKey) {
+    try {
+      if (typeof window.matchMedia !== "function" || !window.matchMedia("(max-width: 900px)").matches) return;
+      var wrapArm = document.getElementById("iuMobileGateWrap");
+      if (
+        !wrapArm ||
+        String(wrapArm.getAttribute("data-iu-mobile-gate") || "") !== "nav"
+      ) {
+        return;
+      }
+      var tk = String(tileKey || "").trim();
+      try {
+        window.__iuMobileWebNavReturnArmed = true;
+        window.__iuMobileWebNavOrigin = "overlay";
+        window.__iuMobileWebNavLastTile = tk;
+      } catch (_){}
+      try {
+        sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+        sessionStorage.setItem("iuMobileWebNavLastTarget", tk);
+      } catch (_){}
+      try {
+        window.__iuWebNavReturnStateForNextPush = {
+          iu_webnav_return_armed: true,
+          iu_webnav_source: "overlay",
+          iu_webnav_tile: tk,
+        };
+      } catch (_){}
+    } catch (_){}
+  }
+  try {
+    window.iuMobileWebNavReturnArmForTile = iuMobileWebNavReturnArmForTile;
+  } catch (_) {}
+
   function persistNavState(o){
     try{
       const u = new URL(window.location.href);
@@ -24726,11 +24778,19 @@ function buildVideoAsArticleCard(it) {
           window.matchMedia("(max-width: 900px)").matches;
       } catch (_){}
       if (usePush) {
-        history.pushState(null, "", u);
+        var pushSt = null;
+        try {
+          pushSt = window.__iuWebNavReturnStateForNextPush || null;
+          window.__iuWebNavReturnStateForNextPush = null;
+        } catch (_){}
+        history.pushState(pushSt, "", u);
         try {
           window.__iuWebNavSectionPush = true;
         } catch (_){}
       } else {
+        try {
+          window.__iuWebNavReturnStateForNextPush = null;
+        } catch (_){}
         history.replaceState(null, "", u);
         try {
           window.__iuWebNavSectionPush = false;
@@ -25062,6 +25122,10 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(accentOverride){
     void accentOverride;
+    /* P0 web-nav return controller: jeden tick bez obecného section apply při řízeném návratu do overlaye. */
+    try {
+      if (window.__iuMobileWebNavReturnSuppress === true) return;
+    } catch (_e) {}
     const nav = readUrlNavState();
     const section = nav.section;
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
@@ -25738,6 +25802,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (isInternal) e.preventDefault();
       }catch{}
       const mediaTopic = (item.getAttribute("data-media-topic") || "").trim().toLowerCase();
+      const accentEarly = (item.getAttribute("data-accent") || item.dataset?.accent || "").trim().toLowerCase();
+      var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
+      var fromWebNavGateNav =
+        gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
+      if (fromWebNavGateNav) {
+        try {
+          var armKeyNav = mediaTopic || accentEarly || "";
+          if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
+            window.iuMobileWebNavReturnArmForTile(armKeyNav);
+          }
+        } catch (_){}
+      }
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
       } else {
@@ -25746,7 +25822,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       if (mediaTopic !== "") {
         persistNavState({ section: IU_ARTICLE_HUB_SECTION, topic: mediaTopic });
       } else {
-        const accent = (item.getAttribute("data-accent") || item.dataset?.accent || "").trim().toLowerCase();
+        const accent = accentEarly;
         if (accent === "travel") {
           persistNavState({ section: "travel", mode: "guide" });
         } else {
@@ -25755,9 +25831,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       }
       /* P0 webnav back-stack: persistNavState already push/replace — panel clear must replaceState, else pushState duplicates the URL and the first Back pops a no-op instead of the overlay. */
       try { if (typeof window.iuSetPanelInUrl === 'function') window.iuSetPanelInUrl('', { replace: true }); } catch {}
-      var gateWrapNavEarly = document.getElementById("iuMobileGateWrap");
-      var fromWebNavGateNav =
-        gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
       try {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateNav;
       } catch (_) {}
@@ -25810,6 +25883,13 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       try {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateHex;
       } catch (_) {}
+      if (fromWebNavGateHex) {
+        try {
+          if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
+            window.iuMobileWebNavReturnArmForTile(rawHexKey);
+          }
+        } catch (_){}
+      }
       persistNavStateFromHexKey(rawHexKey);
       /* P0 webnav back-stack: same as left-rail — panel clear must replaceState, else duplicate Back entry. */
       try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("", { replace: true }); } catch (_) {}
@@ -25864,6 +25944,77 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         }
       } catch (_){}
     }
+    /**
+     * P0: první Zpět z detailu dlaždice (web-nav overlay) — deterministicky obnovit mřížku, ne obecný router.
+     * Vrací true = zbytek onUrlChange / sync přeskočit pro tento popstate.
+     */
+    function iuMobileWebNavReturnControllerTryPop(ev) {
+      try {
+        if (!ev || ev.type !== "popstate") return false;
+        if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return false;
+        if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return false;
+      } catch (_e) {
+        return false;
+      }
+      var armed = false;
+      try {
+        armed = sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1";
+      } catch (_e2) {}
+      if (!armed) return false;
+      var stEv = ev.state;
+      var stHist = null;
+      try {
+        stHist = history.state;
+      } catch (_e3) {}
+      var st = stEv != null ? stEv : stHist;
+      var h = String(location.hash || "");
+      var onOverlay =
+        h === "#iu-nav" ||
+        h === "#nav" ||
+        (st && st.iu_nav_overlay === true);
+      if (!onOverlay) return false;
+      var wrapR = document.getElementById("iuMobileGateWrap");
+      if (!wrapR || typeof wrapR.__iuMobileGateSetTab !== "function") return false;
+      try {
+        window.__iuMobileWebNavReturnSuppress = true;
+        iuMobileWebNavApplyRestoredOverlay(wrapR);
+        var u = new URL(location.href);
+        if (u.searchParams.has("section") || u.searchParams.has("topic") || u.searchParams.has("mode")) {
+          u.searchParams.delete("section");
+          u.searchParams.delete("topic");
+          u.searchParams.delete("mode");
+          if (!u.hash || u.hash === "#") u.hash = "iu-nav";
+          history.replaceState(
+            { iu_nav_overlay: true, iu_nav_origin: "homepage" },
+            "",
+            u.toString()
+          );
+        }
+        try {
+          sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+          sessionStorage.removeItem("iuMobileWebNavLastTarget");
+        } catch (_e4) {}
+        try {
+          window.__iuMobileWebNavReturnArmed = false;
+          delete window.__iuMobileWebNavLastTile;
+        } catch (_e5) {}
+      } catch (_e6) {}
+      try {
+        requestAnimationFrame(function () {
+          try {
+            window.__iuMobileWebNavReturnSuppress = false;
+          } catch (_e7) {}
+        });
+      } catch (_e8) {
+        try {
+          window.__iuMobileWebNavReturnSuppress = false;
+        } catch (_e9) {}
+      }
+      return true;
+    }
+    try {
+      window.__iuMobileWebNavReturnControllerTryPop = iuMobileWebNavReturnControllerTryPop;
+    } catch (_e10) {}
     function iuMobileWebNavSyncFromHistory(){
       try {
         if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
@@ -25882,6 +26033,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       } catch (_){}
     }
     function iuProjectsNavRouterRunHideApplySectionAndPanel(){
+      try {
+        if (window.__iuMobileWebNavReturnSuppress === true) return;
+      } catch (_){}
       iuHideAllOverlaysNow();
       applySectionFromURL();
       applyPanelFromUrl();
@@ -25923,6 +26077,14 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       return false;
     }
     function onUrlChange(ev){
+      try {
+        if (
+          typeof window.__iuMobileWebNavReturnControllerTryPop === "function" &&
+          window.__iuMobileWebNavReturnControllerTryPop(ev)
+        ) {
+          return;
+        }
+      } catch (_){}
       try { iuMobileWebNavSyncFromHistory(); } catch (_){}
       if (iuProjectsNavRouterTryOverlayBranch()) return;
       /* P0 mobile WebKit: first popstate tick can still expose stale location / null history.state; the real
@@ -25947,7 +26109,15 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       } catch (_){}
       iuProjectsNavRouterRunHideApplySectionAndPanel();
     }
-    window.addEventListener("popstate", function () {
+    window.addEventListener("popstate", function (ev) {
+      try {
+        if (
+          typeof window.__iuMobileWebNavReturnControllerTryPop === "function" &&
+          window.__iuMobileWebNavReturnControllerTryPop(ev)
+        ) {
+          return;
+        }
+      } catch (_){}
       try { iuMobileWebNavSyncFromHistory(); } catch (_){}
     });
     window.addEventListener('popstate', onUrlChange);
