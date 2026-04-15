@@ -10819,7 +10819,12 @@ function buildVideoAsArticleCard(it) {
         wrap.setAttribute("data-iu-mobile-gate", value || "");
         if (!value) {
           try {
-            document.body.classList.remove("iu-webnavDetailFromGate");
+            /* P0 web-nav: non–article-hub tiles call iuMobileGateCloseForMainNav() from applySectionFromURL;
+               setTab("") must not strip iu-webnavDetailFromGate while __iuWebNavGateDetailLatch is true,
+               else #iuMobileMainBackBar routes to setTab("") instead of restoring the nav tile grid (PASS = hub path never hit this strip). */
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
           } catch (_) {}
         }
         var bar = document.getElementById("iuMobileGateBackBar");
