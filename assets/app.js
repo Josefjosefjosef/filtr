@@ -25971,8 +25971,41 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       var onOverlay =
         h === "#iu-nav" ||
         h === "#nav" ||
-        (st && st.iu_nav_overlay === true);
-      if (!onOverlay) return false;
+        (st && st.iu_nav_overlay === true) ||
+        (stHist && stHist.iu_nav_overlay === true) ||
+        (stEv && stEv.iu_nav_overlay === true);
+      if (!onOverlay) {
+        /* WebKit: hash/state často dojedou až v dalším frame — jeden odložený pokus, první tick blokuje sync destruktivní větev. */
+        try {
+          var att = typeof window.__iuWebNavReturnPopAttempt === "number" ? window.__iuWebNavReturnPopAttempt : 0;
+          if (att < 1) {
+            window.__iuWebNavReturnPopAttempt = att + 1;
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                try {
+                  if (sessionStorage.getItem("iuMobileWebNavReturnArmed") !== "1") return;
+                  if (
+                    typeof window.__iuMobileWebNavReturnControllerTryPop === "function"
+                  ) {
+                    window.__iuMobileWebNavReturnControllerTryPop({
+                      type: "popstate",
+                      state: history.state,
+                    });
+                  }
+                } catch (_rb) {}
+              });
+            });
+            return true;
+          }
+          try {
+            window.__iuWebNavReturnPopAttempt = 0;
+          } catch (_rc) {}
+        } catch (_rd) {}
+        return false;
+      }
+      try {
+        window.__iuWebNavReturnPopAttempt = 0;
+      } catch (_re) {}
       var wrapR = document.getElementById("iuMobileGateWrap");
       if (!wrapR || typeof wrapR.__iuMobileGateSetTab !== "function") return false;
       try {
@@ -26026,6 +26059,11 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           iuMobileWebNavApplyRestoredOverlay(wrapH);
           return;
         }
+        /* P0 web-nav return: první tick popstate může mít ještě špatný hash/state — nesahej na gate (setTab ""),
+           jinak se přepíše overlay dřív než return controller / odložený tryPop. */
+        try {
+          if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") return;
+        } catch (_){}
         var gateH = String(wrapH.getAttribute("data-iu-mobile-gate") || "");
         if (gateH === "nav") {
           wrapH.__iuMobileGateSetTab("");
