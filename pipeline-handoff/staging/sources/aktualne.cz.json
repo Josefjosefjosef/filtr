@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T04:24:17.079580Z",
+  "ingestedAt": "2026-04-15T04:40:13.011855Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Úchvatná česká paráda v NHL. Pastrňák i Nečas shodně získali 100. bod v sezoně",
+      "url": "https://sport.aktualne.cz/hokej/nhl/uchvatna-ceska-parada-v-nhl-pastrnak-i-necas-shodne-ziskali-100-bod-v-sezone/r~aaa29d8a8333d449147de0d1e74327d7/",
+      "dt": "2026-04-15T04:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "100",
+        "bod",
+        "nečas",
+        "nhl",
+        "paráda",
+        "pastrňák",
+        "sezoně",
+        "shodně",
+        "získali",
+        "úchvatná",
+        "česká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -494,33 +522,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "I nevinná online hra přiměje dítě k násilí. Znalec odhaluje zrůdnosti kyberprostoru",
-      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/i-nevinna-online-hra-primeje-dite-k-nasili-znalec-odhaluje-zrudnosti-kyberprostoru/r~aaa295f805bf464e107cdae394dce736/",
-      "dt": "2026-04-14T15:34:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dítě",
-        "hra",
-        "kyberprostoru",
-        "nevinná",
-        "násilí",
-        "odhaluje",
-        "online",
-        "přiměje",
-        "znalec",
-        "zrůdnosti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +532,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22261,
+      "bytes": 22077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,14 +569,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 4,
           "other": 1,
           "finance": 3,
-          "zpravy": 12,
-          "sport": 3,
-          "zdravi": 1
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -587,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úchvatná česká paráda v NHL. Pastrňák i Nečas shodně získali 100. bod v sezoně",
+            "publishedAt": "2026-04-15T04:31:00Z"
+          },
           {
             "title": "Naivní Květuška i protřelá Marcela. Naďa Konvalinková slaví 75 let",
             "publishedAt": "2026-04-15T04:00:00Z"
@@ -614,10 +618,6 @@
           {
             "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se dnes měří",
             "publishedAt": "2026-04-14T03:45:00Z"
-          },
-          {
-            "title": "Macinkův nečekaný úder, zveřejnil „cenzurovaný“ rozhovor s Pavlem. A rýpnul si do všech",
-            "publishedAt": "2026-04-14T21:50:00Z"
           }
         ]
       }
