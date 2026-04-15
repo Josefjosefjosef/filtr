@@ -11141,6 +11141,12 @@ function buildVideoAsArticleCard(it) {
   /** Close mobile gate overlay + tabs state (call before iu-mobileMainVisible so fixed layer never stacks over feed). */
   function iuMobileGateCloseForMainNav() {
     try {
+      var hCloseGate = String(location.hash || "");
+      var isOverlayHashClose = hCloseGate === "#iu-nav" || hCloseGate === "#nav";
+      var isOverlayStateClose = history.state && history.state.iu_nav_overlay === true;
+      if (isOverlayHashClose || isOverlayStateClose) return;
+    } catch (_e) {}
+    try {
       if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
     } catch (_){}
     try {
@@ -21496,6 +21502,11 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
     } catch (_){}
+    try {
+      var hFc = String(location.hash || "");
+      if (hFc === "#iu-nav" || hFc === "#nav") return;
+      if (history.state && history.state.iu_nav_overlay === true) return;
+    } catch (_e) {}
     iuActiveOverlay = null;
     try { window.__iuLastQuickfeedKey = null; } catch (_) {}
     try { window.__iuLastMojeSluzbyKind = null; } catch (_) {}
@@ -24877,6 +24888,11 @@ function buildVideoAsArticleCard(it) {
       if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
     } catch (_){}
     try {
+      var hHideAll = String(location.hash || "");
+      if (hHideAll === "#iu-nav" || hHideAll === "#nav") return;
+      if (history.state && history.state.iu_nav_overlay === true) return;
+    } catch (_e) {}
+    try {
       if (typeof window.iuForceCloseAllOverlays === "function") {
         window.iuForceCloseAllOverlays();
         return;
@@ -25062,6 +25078,19 @@ function buildVideoAsArticleCard(it) {
 
   function applySectionFromURL(accentOverride){
     void accentOverride;
+    /* P0 mobile web-nav: overlay URL/state has absolute precedence — never re-apply section chrome while
+       the user is in „Navigace po webu“ overlay (avoids gate close / apply race after popstate). */
+    try {
+      if (typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
+        var isMobileApply = window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+        var hApply = String(location.hash || "");
+        var isOverlayHashApply = hApply === "#iu-nav" || hApply === "#nav";
+        var isOverlayStateApply = history.state && history.state.iu_nav_overlay === true;
+        if (isMobileApply && (isOverlayHashApply || isOverlayStateApply)) {
+          return;
+        }
+      }
+    } catch (_e) {}
     const nav = readUrlNavState();
     const section = nav.section;
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
@@ -25923,6 +25952,20 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       return false;
     }
     function onUrlChange(ev){
+      try {
+        var isMobileUc = window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+        var isProjectsUc = typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute();
+        var hUc = String(location.hash || "");
+        var isOverlayHashUc = hUc === "#iu-nav" || hUc === "#nav";
+        var isOverlayStateUc = history.state && history.state.iu_nav_overlay === true;
+        if (isMobileUc && isProjectsUc && (isOverlayHashUc || isOverlayStateUc)) {
+          var wUc = document.getElementById("iuMobileGateWrap");
+          if (wUc && typeof wUc.__iuMobileGateSetTab === "function") {
+            wUc.__iuMobileGateSetTab("nav");
+          }
+          return;
+        }
+      } catch (_e) {}
       try { iuMobileWebNavSyncFromHistory(); } catch (_){}
       if (iuProjectsNavRouterTryOverlayBranch()) return;
       /* P0 mobile WebKit: first popstate tick can still expose stale location / null history.state; the real
