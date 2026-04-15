@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T16:49:59.820302Z",
+  "ingestedAt": "2026-04-15T17:09:56.320384Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Místo mantinelů legalizace? Úprava švarcsystému naráží, stát podle kritiků nedrží krok s moderním trhem práce",
+      "url": "https://domaci.hn.cz/c1-67867300-misto-mantinelu-legalizace-uprava-svarcsystemu-narazi-stat-podle-kritiku-nedrzi-krok-s-modernim-trhem-prace",
+      "dt": "2026-04-15T16:47:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "kritiků",
+        "krok",
+        "legalizace",
+        "mantinelů",
+        "moderním",
+        "místo",
+        "naráží",
+        "nedrží",
+        "podle",
+        "práce",
+        "stát",
+        "trhem",
+        "úprava",
+        "švarcsystému"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1129,37 +1160,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na rekonstrukci válkou zničené Ukrajiny by nestačil ani Marshallův plán. Obnova si vyžádá třikrát více peněz, i tak existuje řešení",
-      "url": "https://byznys.hn.cz/c1-67866820-na-rekonstrukci-valkou-znicene-ukrajiny-by-nestacil-ani-marshalluv-plan-obnova-si-vyzada-trikrat-vice-penez-i-tak-existuje-reseni",
-      "dt": "2026-04-15T05:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "existuje",
-        "marshallův",
-        "nestačil",
-        "obnova",
-        "peněz",
-        "plán",
-        "rekonstrukci",
-        "tak",
-        "třikrát",
-        "ukrajiny",
-        "vyžádá",
-        "válkou",
-        "zničené",
-        "řešení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1170,7 +1170,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185917,
+      "bytes": 185961,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1207,11 +1207,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T16:47:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 37
+          "finance": 37,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1223,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo mantinelů legalizace? Úprava švarcsystému naráží, stát podle kritiků nedrží krok s moderním trhem práce",
+            "publishedAt": "2026-04-15T16:47:00Z"
+          },
           {
             "title": "Odmítá &bdquo;ultras&ldquo; i pražské Spolu. Šéfem lidovců ještě není, přesto už Grolich promlouvá do koalic v metropoli",
             "publishedAt": "2026-04-15T16:22:00Z"
@@ -1250,10 +1254,6 @@
           {
             "title": "Poslanci musí na poslední chvíli hasit problém, o kterém se ví dva roky. Nefunkční geoportál by znamenal kolaps územních plánů",
             "publishedAt": "2026-04-15T14:55:00Z"
-          },
-          {
-            "title": "Poslanci znovu schválili zavedení Dne české vlajky. Podle Babiše posílí národní hrdost",
-            "publishedAt": "2026-04-15T14:45:00Z"
           }
         ]
       }

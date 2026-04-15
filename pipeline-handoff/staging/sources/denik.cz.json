@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T16:49:59.820302Z",
+  "ingestedAt": "2026-04-15T17:09:56.320384Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zmatek v Hormuzském průlivu. Amerika blokuje, Írán podvádí, Evropa plánuje",
+      "url": "https://www.denik.cz/ze_sveta/hormuzsky-pruliv-usa-iran-situace-blokada-plany-evropa-ropa.html",
+      "dt": "2026-04-15T16:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "amerika",
+        "blokuje",
+        "evropa",
+        "hormuzském",
+        "plánuje",
+        "podvádí",
+        "průlivu",
+        "zmatek",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,31 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zvýšení životního minima se odkládá. Stát šetří, domácnosti tratí",
-      "url": "https://www.denik.cz/ekonomika/superdavka-zivotni-minimum-odklad.html",
-      "dt": "2026-04-15T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domácnosti",
-        "minima",
-        "odkládá",
-        "stát",
-        "tratí",
-        "zvýšení",
-        "šetří",
-        "životního"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30393,
+      "bytes": 30323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T16:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -714,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zmatek v Hormuzském průlivu. Amerika blokuje, Írán podvádí, Evropa plánuje",
+            "publishedAt": "2026-04-15T16:30:00Z"
+          },
           {
             "title": "Ozbrojený muž vtrhl do školy, masakru zabránil ředitel. Záběry obletěly svět",
             "publishedAt": "2026-04-15T15:08:00Z"
@@ -741,10 +746,6 @@
           {
             "title": "Kuriozita na Chrudimsku: Slepice poškodily novostavbu, případ řešily soudy",
             "publishedAt": "2026-04-15T12:56:00Z"
-          },
-          {
-            "title": "K-9 v akci. Pes bravurně zneškodnil muže, který napadl obsluhu obchodu",
-            "publishedAt": "2026-04-15T12:24:00Z"
           }
         ]
       }
