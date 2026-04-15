@@ -16174,6 +16174,63 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverWelcomeCard #iuNamedayCta .iu-nameday-flowers{
     flex: 0 1 auto;
   }
+
+  /* P0 desktop-only: sekční dlaždice 2 sloupce (bez scroll feedu); guard body.iu-desktop-home-grid z app.js */
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 8px;
+    row-gap: 8px;
+    align-items: start;
+    align-content: start;
+    /* P0 CLS (1366×768): rezervovat výšku hostitele — přechod scroll box (max-height) → volný grid jinak skočí ~0.18 CLS. */
+    min-height: min(78vh, 820px);
+    overflow-y: visible !important;
+    overflow-x: hidden;
+    max-height: none !important;
+    min-width: 0;
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior: auto;
+    box-sizing: border-box;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-placeholder],
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-probe],
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-spacer]{
+    display: none !important;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"]{
+    margin-top: 0 !important;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
+    margin-top: 0 !important;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"] > *{
+    flex: 0 0 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+    margin: 0 !important;
+    min-height: 0;
+    height: auto;
+    align-self: start;
+    box-sizing: border-box;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewText{
+    grid-template-rows: auto !important;
+    gap: 0 !important;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2{
+    display: none !important;
+  }
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline{
+    min-height: 0;
+  }
 }
 
 @media (max-width: 1024px){

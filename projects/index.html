@@ -104,6 +104,24 @@ style-src 'self' 'unsafe-inline' https:;
 
   <body class="iuTopbarFlushRight">
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
+    <!-- P0 CLS: desktop sekční grid — stejný guard jako iuDesktopHomeSectionGridGuardApply v assets/app.js; modul app.js je defer → bez tohoto by první paint tall viewportu byl scroll stack, pak přepnutí na grid. -->
+    <script>
+    (function(){
+      try {
+        if (typeof window.matchMedia !== "function") return;
+        if (!window.matchMedia("(min-width: 1025px)").matches) return;
+        var p = String(location.pathname || "").replace(/\\/g, "/");
+        var hub =
+          p === "/projects/" ||
+          p === "/projects" ||
+          p.indexOf("/projects/") === 0 ||
+          p === "/filtr/projects" ||
+          p === "/filtr/projects/";
+        if (!hub) return;
+        document.body.classList.add("iu-desktop-home-grid");
+      } catch (e) {}
+    })();
+    </script>
     <script>
     (function(){
       try {
@@ -2962,6 +2980,30 @@ style-src 'self' 'unsafe-inline' https:;
     </script>
     <script defer src="/assets/iu-parcel-tracking-engine.js?v=1"></script>
     <script defer src="/assets/iu-home-load-audit.js?v=home-audit-1"></script>
+    <!-- Opt-in homepage perf (?iuPerfProbe=1): marks from real navigation start (before module app.js). -->
+    <script>
+      (function () {
+        try {
+          if (String(location.search || "").indexOf("iuPerfProbe=1") === -1) return;
+          window.__iuPerfProbeActive = true;
+          window.__iuHomePerfMarks = window.__iuHomePerfMarks || [];
+          var t0 = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+          window.__iuHomePerfMarks.push({ name: "navStart", t: t0 });
+          document.addEventListener("DOMContentLoaded", function () {
+            try {
+              var t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              window.__iuHomePerfMarks.push({ name: "domContentLoaded", t: t });
+            } catch (_) {}
+          });
+          window.addEventListener("load", function () {
+            try {
+              var t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              window.__iuHomePerfMarks.push({ name: "load", t: t });
+            } catch (_) {}
+          });
+        } catch (_) {}
+      })();
+    </script>
     <script type="module" src="/assets/app.js?v=silver-address-slot-class-no-empty"></script>
     <script>
     (function(){
