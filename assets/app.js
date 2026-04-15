@@ -10875,6 +10875,15 @@ function buildVideoAsArticleCard(it) {
           try {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
           } catch (_) {}
+          try {
+            if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+              var stBb = history.state && history.state.iu_nav_overlay === true;
+              if (stBb) {
+                history.back();
+                return;
+              }
+            }
+          } catch (_) {}
           setTab("");
         });
       }
@@ -10891,6 +10900,21 @@ function buildVideoAsArticleCard(it) {
             document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
           if (returnToWebNavGrid) {
+            try {
+              if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+                var didPushSec = false;
+                try {
+                  didPushSec = window.__iuWebNavSectionPush === true;
+                } catch (_){}
+                if (didPushSec) {
+                  try {
+                    window.__iuWebNavSectionPush = false;
+                  } catch (_){}
+                  history.back();
+                  return;
+                }
+              }
+            } catch (_) {}
             setTab("nav");
           } else {
             setTab("");
@@ -10906,6 +10930,23 @@ function buildVideoAsArticleCard(it) {
         if (!next) {
           try {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_) {}
+          try {
+            if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+              var stClose = history.state && history.state.iu_nav_overlay === true;
+              if (stClose) {
+                history.back();
+                return;
+              }
+            }
+          } catch (_) {}
+        } else {
+          try {
+            if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+              var uNav = new URL(window.location.href);
+              uNav.hash = "iu-nav";
+              history.pushState({ iu_nav_overlay: true }, "", uNav.toString());
+            }
           } catch (_) {}
         }
         setTab(next);
@@ -24643,6 +24684,11 @@ function buildVideoAsArticleCard(it) {
   function persistNavState(o){
     try{
       const u = new URL(window.location.href);
+      /* P0 mobile/tablet webnav: strip overlay hash before writing ?section= (tile must push a new history entry, not replace). */
+      try {
+        var h0 = String(u.hash || "").replace(/^#/, "");
+        if (h0 === "iu-nav" || h0 === "nav") u.hash = "";
+      } catch (_){}
       let sec = String(o.section || IU_ARTICLE_HUB_SECTION).toLowerCase();
       if (sec === "media") sec = IU_ARTICLE_HUB_SECTION;
       u.searchParams.set("section", sec);
@@ -24658,7 +24704,26 @@ function buildVideoAsArticleCard(it) {
         u.searchParams.delete("topic");
         u.searchParams.delete("mode");
       }
-      history.replaceState(null, "", u);
+      var usePush = false;
+      try {
+        var wrapPn = document.getElementById("iuMobileGateWrap");
+        usePush =
+          !!wrapPn &&
+          String(wrapPn.getAttribute("data-iu-mobile-gate") || "") === "nav" &&
+          window.matchMedia &&
+          window.matchMedia("(max-width: 900px)").matches;
+      } catch (_){}
+      if (usePush) {
+        history.pushState(null, "", u);
+        try {
+          window.__iuWebNavSectionPush = true;
+        } catch (_){}
+      } else {
+        history.replaceState(null, "", u);
+        try {
+          window.__iuWebNavSectionPush = false;
+        } catch (_){}
+      }
     }catch{}
   }
 
@@ -25722,7 +25787,37 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       applySectionFromURL();
       try{ requestAnimationFrame(() => { try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{}
     }, true);
+    /** P0 mobile/tablet: keep browser history aligned with „Navigace po webu“ overlay (popstate → reopen overlay, no skip-to-external). */
+    function iuMobileWebNavSyncFromHistory(){
+      try {
+        if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+        var wrapH = document.getElementById("iuMobileGateWrap");
+        if (!wrapH || typeof wrapH.__iuMobileGateSetTab !== "function") return;
+        var st = history.state && history.state.iu_nav_overlay === true;
+        var hRaw = String(window.location.hash || "");
+        var overlayActive = st === true || hRaw === "#iu-nav" || hRaw === "#nav";
+        if (overlayActive) {
+          wrapH.__iuMobileGateSetTab("nav");
+          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_){}
+          var mbH = document.getElementById("iuMobileMainBackBar");
+          if (mbH) mbH.hidden = true;
+          try { document.body.classList.remove("iu-webnavDetailFromGate"); } catch (_){}
+          try {
+            if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_){}
+          try {
+            window.__iuWebNavSectionPush = false;
+          } catch (_){}
+          return;
+        }
+        var gateH = String(wrapH.getAttribute("data-iu-mobile-gate") || "");
+        if (gateH === "nav") {
+          wrapH.__iuMobileGateSetTab("");
+        }
+      } catch (_){}
+    }
     function onUrlChange(){
+      try { iuMobileWebNavSyncFromHistory(); } catch (_){}
       iuHideAllOverlaysNow();
       applySectionFromURL();
       applyPanelFromUrl();
@@ -25766,6 +25861,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     try{ iuMyUzelApplyRailState(); }catch{}
 
     // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
+    try { iuMobileWebNavSyncFromHistory(); } catch (_){}
     applySectionFromURL();
     applyPanelFromUrl();
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
