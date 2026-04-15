@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-15T04:59:44.978869Z",
+  "ingestedAt": "2026-04-15T05:15:24.558938Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na rekonstrukci válkou zničené Ukrajiny by nestačil ani Marshallův plán. Obnova si vyžádá třikrát více peněz, i tak existuje řešení",
+      "url": "https://byznys.hn.cz/c1-67866820-na-rekonstrukci-valkou-znicene-ukrajiny-by-nestacil-ani-marshalluv-plan-obnova-si-vyzada-trikrat-vice-penez-i-tak-existuje-reseni",
+      "dt": "2026-04-15T05:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "existuje",
+        "marshallův",
+        "nestačil",
+        "obnova",
+        "peněz",
+        "plán",
+        "rekonstrukci",
+        "tak",
+        "třikrát",
+        "ukrajiny",
+        "vyžádá",
+        "válkou",
+        "zničené",
+        "řešení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1076,30 +1107,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nová pravidla mají posílit pozici evropských zemědělců",
-      "url": "https://archiv.hn.cz/c1-67865910-nova-pravidla-maji-posilit-pozici-evropskych-zemedelcu",
-      "dt": "2026-04-13T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "evropských",
-        "mají",
-        "nová",
-        "posílit",
-        "pozici",
-        "pravidla",
-        "zemědělců"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1117,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185921,
+      "bytes": 185845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,7 +1154,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T05:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1165,6 +1172,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na rekonstrukci válkou zničené Ukrajiny by nestačil ani Marshallův plán. Obnova si vyžádá třikrát více peněz, i tak existuje řešení",
+            "publishedAt": "2026-04-15T05:00:00Z"
+          },
           {
             "title": "Zlomový okamžik pro jadernou energetiku? V Evropě vzniknou první malé modulární reaktory",
             "publishedAt": "2026-04-15T04:48:00Z"
@@ -1191,10 +1202,6 @@
           },
           {
             "title": "ERP přestává být nástrojem, stává se partnerem",
-            "publishedAt": "2026-04-14T22:00:00Z"
-          },
-          {
-            "title": "Firmy si víc věří. Poptávka po pronájmech průmyslových hal loni po opatrných letech oživila",
             "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]

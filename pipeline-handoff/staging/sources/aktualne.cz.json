@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T04:59:44.978869Z",
+  "ingestedAt": "2026-04-15T05:15:24.558938Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muskův otec jedná o přesídlení desítek bělošských rodin z JAR do Ruska",
+      "url": "https://zpravy.aktualne.cz/zahranici/muskuv-otec-jedna-o-presidleni-desitek-belosskych-rodin-z-jar-do-ruska/r~aaa2914b2e6faab43bb40119a22de1a6/",
+      "dt": "2026-04-15T04:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bělošských",
+        "desítek",
+        "jar",
+        "jedná",
+        "muskův",
+        "otec",
+        "přesídlení",
+        "rodin",
+        "ruska"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,21 +296,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Barceloně výhra nestačila, dál jde překvapivě Atlético. PSG vyřadilo Liverpool",
+      "title": "Španělské drama v Lize mistrů a šok pro Barcelonu. Liverpool si ani neškrtnul",
       "url": "https://sport.aktualne.cz/fotbal/atletico-je-v-semifinale-lm-barcelonu-srazila-v-zaveru-cervena-karta/r~aaa299bc53eb2c2824f77dceac3f9b09/",
       "dt": "2026-04-14T21:06:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "atlético",
-        "barceloně",
-        "jde",
+        "barcelonu",
+        "drama",
         "liverpool",
-        "nestačila",
-        "psg",
-        "překvapivě",
-        "vyřadilo",
-        "výhra"
+        "lize",
+        "mistrů",
+        "neškrtnul",
+        "šok",
+        "španělské"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -499,32 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "\"Ty nahrávky s Rusy byly pro Maďary příliš.\" Vondra popisuje, kdy se s Orbánem rozešel",
-      "url": "https://zpravy.aktualne.cz/spotlight/spotlight-news/vondra-o-orbanovi-rozesli-jsme-se-kdyz-zacal-hrat-roli-ruskeho-poskoka/r~aaa297e9b6f122ec1c7286b0b20cc997/",
-      "dt": "2026-04-14T14:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "byly",
-        "maďary",
-        "nahrávky",
-        "orbánem",
-        "popisuje",
-        "příliš",
-        "rozešel",
-        "rusy",
-        "vondra"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22175,
+      "bytes": 21886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,13 +571,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:56:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 12,
           "finance": 4,
           "sport": 3,
-          "other": 1,
-          "zpravy": 12
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -590,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muskův otec jedná o přesídlení desítek bělošských rodin z JAR do Ruska",
+            "publishedAt": "2026-04-15T04:56:00Z"
+          },
           {
             "title": "Sněmovna dala vládní regulaci cen benzinu zelenou. \"Socík, jak když vyšije\" kritizuje opozice",
             "publishedAt": "2026-04-15T04:33:00Z"
@@ -616,10 +619,6 @@
           },
           {
             "title": "Když kanibal potká kosmonauta a cestují do vesmíru. Český projekt zaujal v Benátkách",
-            "publishedAt": "2026-04-15T03:30:00Z"
-          },
-          {
-            "title": "Běžný zlozvyk, který se nevyplácí: Chroupání ledu může mít nebezpečné následky",
             "publishedAt": "2026-04-15T03:30:00Z"
           }
         ]
