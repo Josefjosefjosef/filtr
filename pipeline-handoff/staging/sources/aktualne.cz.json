@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T17:29:56.046916Z",
+  "ingestedAt": "2026-04-15T17:52:36.185417Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "BBC chystá hromadné škrty, o práci přijdou tisíce zaměstnanců",
+      "url": "https://zpravy.aktualne.cz/zahranici/bbc-chysta-hromadne-skrty-o-praci-prijde-pres-desetinu-zamestnancu/r~aaa29f53ce642a75f60002532edea4a2/",
+      "dt": "2026-04-15T17:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bbc",
+        "chystá",
+        "hromadné",
+        "práci",
+        "přijdou",
+        "tisíce",
+        "zaměstnanců",
+        "škrty"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -501,34 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Už jako junior věděl, v čem je budoucnost. ATP dává Menšíka za vzor ostatním hráčům",
-      "url": "https://sport.aktualne.cz/tenis/uz-jako-junior-vedel-v-cem-je-budoucnost-atp-dava-mensika-za-vzor-ostatnim-hracum/r~aaa297d82c5ac09e2d0e2110b70d7846/",
-      "dt": "2026-04-15T12:41:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "atp",
-        "budoucnost",
-        "dává",
-        "hráčům",
-        "jako",
-        "junior",
-        "menšíka",
-        "ostatním",
-        "vzor",
-        "věděl",
-        "čem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22137,
+      "bytes": 22174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,11 +573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:32:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 5,
+          "zpravy": 14,
+          "sport": 4,
           "other": 1,
           "finance": 1
         },
@@ -594,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "BBC chystá hromadné škrty, o práci přijdou tisíce zaměstnanců",
+            "publishedAt": "2026-04-15T17:32:00Z"
+          },
           {
             "title": "Neposílejte drony Ukrajině, vtahujete se do války, varuje Moskva Evropu",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -621,10 +622,6 @@
           {
             "title": "Skvělá Nosková pokračuje v krasojízdě. Alcaraz nechal postoupit Macháče",
             "publishedAt": "2026-04-15T16:11:00Z"
-          },
-          {
-            "title": "„Všechna zvířata jsou si rovna, ale…“ Do kin se chystá Orwellův bestseller",
-            "publishedAt": "2026-04-15T16:08:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T17:29:56.046916Z",
+  "ingestedAt": "2026-04-15T17:52:36.185417Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nerudová zabodovala. Uspěla s návrhem odsunout povolenky na vytápění",
+      "url": "https://ekonomickydenik.cz/nerudova-uspela-navrh-odsunout-povolenky/",
+      "dt": "2026-04-15T17:40:50Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "nerudová",
+        "návrhem",
+        "odsunout",
+        "povolenky",
+        "uspěla",
+        "vytápění",
+        "zabodovala"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vrecionová: Naše suroviny, cizí zisky. Je čas vrátit mlýny a jatka do regionů",
-      "url": "https://ekonomickydenik.cz/vrecionova-cesko-vyvazi-suroviny/",
-      "dt": "2026-04-14T07:28:10Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cizí",
-        "jatka",
-        "mlýny",
-        "naše",
-        "regionů",
-        "suroviny",
-        "vrecionová",
-        "vrátit",
-        "zisky",
-        "čas"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72455,
+      "bytes": 72555,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:20:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:40:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -848,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nerudová zabodovala. Uspěla s návrhem odsunout povolenky na vytápění",
+            "publishedAt": "2026-04-15T17:40:50Z"
+          },
           {
             "title": "Miliardy pro drony i satelity: Z „klimatické“ banky je motor zbrojního průmyslu",
             "publishedAt": "2026-04-15T17:20:59Z"
@@ -875,10 +876,6 @@
           {
             "title": "Král vodní energetiky Tesař expanduje. Rozjel už i stavbu fotovoltaik v Bulharsku",
             "publishedAt": "2026-04-15T12:22:35Z"
-          },
-          {
-            "title": "Nejrychleji rostoucí dopravce na pražském letišti ohlásil novou destinaci",
-            "publishedAt": "2026-04-15T12:09:36Z"
           }
         ]
       }
