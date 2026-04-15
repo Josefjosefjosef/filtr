@@ -25786,7 +25786,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
     });
-    // Hex grid (Rychlé odkazy on home): switch view without changing URL – no redirect, no persistSection
+    // Hex grid (home quick links + „Navigace po webu“ tiles): persist + apply — must mirror left-rail path so
+    // mobile back-stack + iu-webnavDetailFromGate match; hex previously cleared latch and skipped post-apply
+    // mobile chrome, breaking first Back / main Zpět for non–hub sections and tools tiles.
     document.addEventListener('click', (e) => {
       const hex = e.target && e.target.closest ? e.target.closest('.iuHex') : null;
       if (!hex) return;
@@ -25797,17 +25799,44 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
       const cls = Array.from(hex.classList).find(c => c.startsWith('iuHex--'));
       const sectionFromClass = cls ? cls.slice('iuHex--'.length).toLowerCase() : '';
       const rawHexKey = sectionAttr || sectionFromClass;
-      try {
-        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
-      } catch (_) {}
       if (typeof window.iuNavRailHideOverlaysFast === "function") {
         window.iuNavRailHideOverlaysFast();
       } else {
         iuHideAllOverlaysNow();
       }
+      var gateWrapHexEarly = document.getElementById("iuMobileGateWrap");
+      var fromWebNavGateHex =
+        gateWrapHexEarly && String(gateWrapHexEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
+      try {
+        if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateHex;
+      } catch (_) {}
       persistNavStateFromHexKey(rawHexKey);
+      /* P0 webnav back-stack: same as left-rail — panel clear must replaceState, else duplicate Back entry. */
+      try { if (typeof window.iuSetPanelInUrl === "function") window.iuSetPanelInUrl("", { replace: true }); } catch (_) {}
       applySectionFromURL();
-      try{ requestAnimationFrame(() => { try{ iuScrollMainToTopSmooth(); }catch{} }); }catch{}
+      applyPanelFromUrl();
+      try {
+        if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+          try {
+            if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+          } catch (_) {}
+          document.body.classList.add("iu-mobileMainVisible");
+          var mbHexNav = document.getElementById("iuMobileMainBackBar");
+          if (mbHexNav) mbHexNav.hidden = false;
+          try {
+            if (fromWebNavGateHex) document.body.classList.add("iu-webnavDetailFromGate");
+            else document.body.classList.remove("iu-webnavDetailFromGate");
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+        }
+      } catch (_) {}
+      try{
+        requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
+      }catch{
+        try{ iuScrollMainToTopSmooth(); }catch{}
+      }
     }, true);
     /** P0 mobile/tablet: keep browser history aligned with „Navigace po webu“ overlay (popstate → reopen overlay, no skip-to-external). */
     function iuMobileWebNavApplyRestoredOverlay(wrapH){
