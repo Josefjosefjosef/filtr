@@ -16038,6 +16038,105 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     display: none !important;
   }
 
+  /* P0 desktop-only (≥1025px): jeden Silver composer v top baru — host + kompaktní integrovaný řádek (bez :has()) */
+  #iuTopbarSilverComposerHost.iuTopbarSilverComposerHost{
+    display: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    align-self: center;
+    box-sizing: border-box;
+    padding: 0 6px 0 10px;
+  }
+  #topbarWrap.iuTopbarHost--silverComposer #iuTopbarSilverComposerHost.iuTopbarSilverComposerHost{
+    display: flex !important;
+    align-items: center;
+  }
+  #topbarWrap.iuTopbarHost--silverComposer .iuTopbarSpacer{
+    display: none !important;
+  }
+  #iuTopbarSilverComposerHost .silver-shell.silver-shell--stackConnected{
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    align-self: center;
+  }
+  #iuTopbarSilverComposerHost .silver-compose{
+    flex: 0 0 auto;
+    min-height: 0;
+    width: 100%;
+    min-width: 0;
+  }
+  #iuTopbarSilverComposerHost .silver-output{
+    display: none !important;
+  }
+  #iuTopbarSilverComposerHost .silver-inputWrap.iuSilverHomeInputWrap{
+    margin-top: 0 !important;
+    padding: 2px !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  #iuTopbarSilverComposerHost .iuSilverHomeInputRow.iuSilverHomeComposerShell{
+    gap: 0 !important;
+    align-items: stretch !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  #iuTopbarSilverComposerHost .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding-left: 10px !important;
+    padding-right: 8px !important;
+    font-size: max(14px, 0.95rem) !important;
+  }
+  #iuTopbarSilverComposerHost .iuSilverHomeComposerShell .iuSilverHomeSend{
+    flex: 0 0 auto !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: auto !important;
+    min-height: 34px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    box-shadow: none !important;
+  }
+  #iuTopbarSilverComposerHost[data-iu-silver-welcome-variant="morning"] .iuSilverHomeSend{
+    box-shadow: 0 2px 10px color-mix(in srgb, rgba(23, 138, 74, 0.28) 78%, rgba(234, 88, 12, 0.2) 22%) !important;
+  }
+  #iuTopbarSilverComposerHost[data-iu-silver-welcome-variant="lateMorning"] .iuSilverHomeSend{
+    box-shadow: 0 2px 10px color-mix(in srgb, rgba(23, 138, 74, 0.3) 88%, rgba(37, 99, 235, 0.12) 12%) !important;
+  }
+  #iuTopbarSilverComposerHost[data-iu-silver-welcome-variant="afternoon"] .iuSilverHomeSend{
+    box-shadow: 0 2px 10px color-mix(in srgb, rgba(23, 138, 74, 0.28) 72%, rgba(234, 88, 12, 0.22) 28%) !important;
+  }
+  #iuTopbarSilverComposerHost[data-iu-silver-welcome-variant="evening"] .iuSilverHomeSend{
+    box-shadow: 0 2px 10px color-mix(in srgb, rgba(23, 138, 74, 0.22) 52%, rgba(20, 45, 72, 0.34) 48%) !important;
+  }
+  #iuTopbarSilverComposerHost[data-iu-silver-welcome-variant="evening"] .iuSilverHomeSend:focus{
+    outline-color: rgba(165, 210, 245, 0.95) !important;
+  }
+
   /* P0 desktop-only: prémiový brand gradient + meta řádek — pouze paint pod .iuTopbarPaint, čitelný fallback, bez layout dopadu */
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
     color: #0b1f33 !important;
@@ -16158,6 +16257,17 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver{
     grid-column: 1 / -1;
     grid-row: 8;
+  }
+  #silver-slot #iuSilverHomeShellMountPoint.iuSilverHomeShellMountPoint{
+    grid-column: 1 / -1;
+    grid-row: 9;
+    min-height: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     grid-column: 1 / -1;
