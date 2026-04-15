@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T17:09:56.320384Z",
+  "ingestedAt": "2026-04-15T17:29:56.046916Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Klempíř: Rušení poplatků není útok, musí se umět šetřit. Plníme program, říká Babiš",
+      "url": "https://www.idnes.cz/zpravy/domaci/klempir-ct-cro-rozpocet-demokracie-verejnopravni-media.A260415_174321_domaci_sahu",
+      "dt": "2026-04-15T17:19:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babiš",
+        "klempíř",
+        "musí",
+        "plníme",
+        "poplatků",
+        "program",
+        "rušení",
+        "umět",
+        "útok",
+        "říká",
+        "šetřit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -128,31 +156,6 @@
         "týden",
         "zabil",
         "škole"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Klempíř: Musí se umět šetřit, rušení poplatků není útokem na demokracii",
-      "url": "https://www.idnes.cz/zpravy/domaci/klempir-ct-cro-rozpocet-demokracie-verejnopravni-media.A260415_174321_domaci_sahu",
-      "dt": "2026-04-15T16:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "demokracii",
-        "klempíř",
-        "musí",
-        "poplatků",
-        "rušení",
-        "umět",
-        "útokem",
-        "šetřit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50317,
+      "bytes": 50337,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1633,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klempíř: Rušení poplatků není útok, musí se umět šetřit. Plníme program, říká Babiš",
+            "publishedAt": "2026-04-15T17:19:00Z"
+          },
           {
             "title": "Víc peněz na přístroje a pojištěnce. Babiš vidí zdravotnictví jako prioritu rozpočtu",
             "publishedAt": "2026-04-15T16:51:00Z"
@@ -1652,10 +1659,6 @@
           {
             "title": "Druhá střelba za týden. Bývalý student zabil na škole v Turecku devět lidí",
             "publishedAt": "2026-04-15T16:31:21Z"
-          },
-          {
-            "title": "Klempíř: Musí se umět šetřit, rušení poplatků není útokem na demokracii",
-            "publishedAt": "2026-04-15T16:10:00Z"
           },
           {
             "title": "Hrozí autocenzura, odnést to může i StarDance. Expertka o Klempířově návrhu",

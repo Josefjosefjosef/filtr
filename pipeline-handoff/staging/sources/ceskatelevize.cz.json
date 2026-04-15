@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T17:09:56.320384Z",
+  "ingestedAt": "2026-04-15T17:29:56.046916Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "BBC propustí přes desetinu zaměstnanců, zruší až dva tisíce míst",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/bbc-propusti-pres-desetinu-zamestnancu-zrusi-az-dva-tisice-mist-372422",
+      "dt": "2026-04-15T17:12:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bbc",
+        "desetinu",
+        "dva",
+        "míst",
+        "propustí",
+        "tisíce",
+        "zaměstnanců",
+        "zruší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -702,32 +727,6 @@
         "sílí",
         "terapeuti",
         "úzkost"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trumpa prý porážka Orbána netrápí. Magyara označil za dobrého člověka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-uvedl-ze-ho-porazka-orbana-netrapi-magyara-oznacil-za-dobreho-cloveka-372390",
-      "dt": "2026-04-15T04:55:22Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dobrého",
-        "magyara",
-        "netrápí",
-        "orbána",
-        "označil",
-        "porážka",
-        "prý",
-        "trumpa",
-        "člověka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1516,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41368,
+      "bytes": 41494,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,7 +1575,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:46:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:12:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1592,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "BBC propustí přes desetinu zaměstnanců, zruší až dva tisíce míst",
+            "publishedAt": "2026-04-15T17:12:53Z"
+          },
           {
             "title": "Dominanta nad Plzní má prvního kastelána a novou expozici",
             "publishedAt": "2026-04-15T16:46:19Z"
@@ -1619,10 +1622,6 @@
           {
             "title": "Soud v poslední části kauzy Stoka zprostil dva podnikatele viny",
             "publishedAt": "2026-04-15T13:53:56Z"
-          },
-          {
-            "title": "AI skočily na falešné studie. Šířily varování před neexistující nemocí",
-            "publishedAt": "2026-04-15T13:00:00Z"
           }
         ]
       }
@@ -1728,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77377,
+      "bytes": 77371,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

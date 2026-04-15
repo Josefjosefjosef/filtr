@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-15T17:09:56.320384Z",
+  "ingestedAt": "2026-04-15T17:29:56.046916Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Miliardy pro drony i satelity: Z „klimatické“ banky je motor zbrojního průmyslu",
+      "url": "https://ekonomickydenik.cz/miliardy-drony-satelity-eib-zbrojeni/",
+      "dt": "2026-04-15T17:20:59Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "banky",
+        "drony",
+        "klimatické",
+        "miliardy",
+        "motor",
+        "průmyslu",
+        "satelity",
+        "zbrojního"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,33 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vodík je extrémně drahý, bez biopaliv cíle nesplníme, říká Iwanowski z Orlen Unipetrolu",
-      "url": "https://ekonomickydenik.cz/vodik-extremne-drahy-biopaliva-orlen-unipetrol/",
-      "dt": "2026-04-14T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biopaliv",
-        "cíle",
-        "drahý",
-        "extrémně",
-        "iwanowski",
-        "nesplníme",
-        "orlen",
-        "unipetrolu",
-        "vodík",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72896,
+      "bytes": 72455,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:10:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T17:20:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -850,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliardy pro drony i satelity: Z „klimatické“ banky je motor zbrojního průmyslu",
+            "publishedAt": "2026-04-15T17:20:59Z"
+          },
           {
             "title": "Šéf NATO v Praze značí problém. Před summitem jezdívá za potížisty",
             "publishedAt": "2026-04-15T16:10:44Z"
@@ -877,10 +879,6 @@
           {
             "title": "Nejrychleji rostoucí dopravce na pražském letišti ohlásil novou destinaci",
             "publishedAt": "2026-04-15T12:09:36Z"
-          },
-          {
-            "title": "Mrazivá čísla pro Evropu: Čína ovládá 81 procent trhu s bateriemi, starý kontinent je v pasti",
-            "publishedAt": "2026-04-15T11:46:29Z"
           }
         ]
       }
