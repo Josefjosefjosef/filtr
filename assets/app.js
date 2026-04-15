@@ -25794,14 +25794,27 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
         var wrapH = document.getElementById("iuMobileGateWrap");
         if (!wrapH || typeof wrapH.__iuMobileGateSetTab !== "function") return;
-        var st = history.state && history.state.iu_nav_overlay === true;
-        var hRaw = String(window.location.hash || "");
-        var overlayActive = st === true || hRaw === "#iu-nav" || hRaw === "#nav";
-        if (overlayActive) {
+        var hash = String(window.location.hash || "").replace("#", "");
+        if (hash === "iu-nav" || hash === "nav") {
           wrapH.__iuMobileGateSetTab("nav");
           try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_){}
           var mbH = document.getElementById("iuMobileMainBackBar");
           if (mbH) mbH.hidden = true;
+          try { document.body.classList.remove("iu-webnavDetailFromGate"); } catch (_){}
+          try {
+            if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+          } catch (_){}
+          try {
+            window.__iuWebNavSectionPush = false;
+          } catch (_){}
+          return;
+        }
+        var st = history.state && history.state.iu_nav_overlay === true;
+        if (st === true) {
+          wrapH.__iuMobileGateSetTab("nav");
+          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_){}
+          var mbH2 = document.getElementById("iuMobileMainBackBar");
+          if (mbH2) mbH2.hidden = true;
           try { document.body.classList.remove("iu-webnavDetailFromGate"); } catch (_){}
           try {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
@@ -25819,6 +25832,16 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     }
     function onUrlChange(){
       try { iuMobileWebNavSyncFromHistory(); } catch (_){}
+      try {
+        var hNav = String(location.hash || "");
+        if (hNav === "#iu-nav" || hNav === "#nav") {
+          try { applyPanelFromUrl(); } catch (_){}
+          try{
+            if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
+          }catch(_){}
+          return;
+        }
+      } catch (_){}
       iuHideAllOverlaysNow();
       applySectionFromURL();
       applyPanelFromUrl();
@@ -25826,6 +25849,9 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
         if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
       }catch(_){}
     }
+    window.addEventListener("popstate", function () {
+      try { iuMobileWebNavSyncFromHistory(); } catch (_){}
+    });
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
 
@@ -25863,8 +25889,18 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
     try { iuMobileWebNavSyncFromHistory(); } catch (_){}
-    applySectionFromURL();
-    applyPanelFromUrl();
+    try {
+      var hInit = String(location.hash || "");
+      if (hInit === "#iu-nav" || hInit === "#nav") {
+        try { applyPanelFromUrl(); } catch (_){}
+      } else {
+        applySectionFromURL();
+        applyPanelFromUrl();
+      }
+    } catch (_){
+      applySectionFromURL();
+      applyPanelFromUrl();
+    }
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
     // PRELOAD overlay styles on page load (keep active URL panel open)
     try {
