@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-15T07:09:56.345370Z",
+  "ingestedAt": "2026-04-15T07:29:32.551167Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zestátnění ČEZ startuje už v červnu. Jak může vypadat a kolik dostanou menšinoví akcionáři?",
+      "url": "https://www.e15.cz/nazory-a-analyzy/zestatneni-cez-startuje-uz-v-cervnu-jak-muze-vypadat-a-kolik-dostanou-mensinovi-akcionari-1432148",
+      "dt": "2026-04-15T07:15:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "akcionáři",
+        "dostanou",
+        "kolik",
+        "menšinoví",
+        "startuje",
+        "vypadat",
+        "zestátnění",
+        "červnu",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1074,32 +1100,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kabinet schválil návrh zákona, který má usnadnit zásahy do cen benzinu a nafty",
-      "url": "https://www.e15.cz/ekonomika/kabinet-schvalil-navrh-zakona-ktery-ma-usnadnit-zasahy-do-cen-benzinu-a-nafty-1432090",
-      "dt": "2026-04-13T10:45:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "benzinu",
-        "cen",
-        "kabinet",
-        "nafty",
-        "návrh",
-        "schválil",
-        "usnadnit",
-        "zákona",
-        "zásahy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52340,
+      "bytes": 52527,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,7 +1147,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T07:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 39,
@@ -1163,6 +1163,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zestátnění ČEZ startuje už v červnu. Jak může vypadat a kolik dostanou menšinoví akcionáři?",
+            "publishedAt": "2026-04-15T07:15:00Z"
+          },
           {
             "title": "Byty místo drátů. Penta i PSN chystají bydlení v telefonní ústředně",
             "publishedAt": "2026-04-15T06:00:00Z"
@@ -1190,10 +1194,6 @@
           {
             "title": "Nová pracovní skupina řeší falešné slevy či snížení cen potravin",
             "publishedAt": "2026-04-14T14:28:00Z"
-          },
-          {
-            "title": "Megatrest pro brokera oblíbeného v Česku. Poláci pokutovali XTB, jeho akcie jsou mezitím hitem",
-            "publishedAt": "2026-04-14T14:15:00Z"
           }
         ]
       }
