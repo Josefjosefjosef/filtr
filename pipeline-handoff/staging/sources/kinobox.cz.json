@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-15T09:04:48.453034Z",
+  "ingestedAt": "2026-04-15T09:24:43.881928Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Farma zvířat, jak ji neznáte. Nový trailer mění mrazivou předlohu v roztomilou podívanou",
+      "url": "https://www.kinobox.cz/clanky/filmy/52674-farma-zvirat-tvrdi-muziku-novy-trailer-ukazuje-utrpeni-roztomilych-tvoru",
+      "dt": "2026-04-15T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "farma",
+        "mrazivou",
+        "mění",
+        "neznáte",
+        "nový",
+        "podívanou",
+        "předlohu",
+        "roztomilou",
+        "trailer",
+        "zvířat"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -520,33 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Nejděsivější říkanky, jaké jste kdy slyšeli. Druhý Kaštánek útočí se znepokojivým trailerem",
-      "url": "https://www.kinobox.cz/clanky/serialy/52539-nejdesivejsi-rikanky-jake-jste-kdy-slyseli-druhy-kastanek-utoci-se-znepokojivym-trailerem",
-      "dt": "2026-04-12T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "druhý",
-        "jaké",
-        "jste",
-        "kaštánek",
-        "nejděsivější",
-        "slyšeli",
-        "trailerem",
-        "znepokojivým",
-        "útočí",
-        "říkanky"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28090,
+      "bytes": 27916,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,7 +594,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -609,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Farma zvířat, jak ji neznáte. Nový trailer mění mrazivou předlohu v roztomilou podívanou",
+            "publishedAt": "2026-04-15T09:00:00Z"
+          },
           {
             "title": "Insidious v šestém filmu otevírá brány pekla. Trailer přivádí démony či teror zubařského křesla",
             "publishedAt": "2026-04-15T07:00:00Z"
@@ -636,10 +640,6 @@
           {
             "title": "Teenagerská dystopie Hunger Games na Úsvitu sklizně. Trailer plný hvězd láká na zimní hit",
             "publishedAt": "2026-04-14T09:00:00Z"
-          },
-          {
-            "title": "Ridley Scott přiznal, jaký horor jej k smrti vyděsil. Která klasika ovlivnila legendárního Vetřelce?",
-            "publishedAt": "2026-04-14T07:00:00Z"
           }
         ]
       }

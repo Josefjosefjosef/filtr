@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-15T09:04:48.453034Z",
+  "ingestedAt": "2026-04-15T09:24:43.881928Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/poplatky-na-gynekologii-na-co-mate-narok/",
+      "dt": "2026-04-15T09:11:22Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chtějí",
+        "gynekologa",
+        "když",
+        "máte",
+        "nárok",
+        "peníze",
+        "poplatky",
+        "postupovat",
+        "přehledně",
+        "vás"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Na severní Moravě stále řádí žloutenka. Hygienici řekli, které místo je zasažené nejvíce",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/severni-morava-zloutenka-hygienici/",
-      "dt": "2026-04-14T09:55:40Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hygienici",
-        "moravě",
-        "místo",
-        "nejvíce",
-        "severní",
-        "stále",
-        "zasažené",
-        "řekli",
-        "řádí",
-        "žloutenka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104945,
+      "bytes": 108680,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:11:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
+            "publishedAt": "2026-04-15T09:11:22Z"
+          },
           {
             "title": "Jen 9 % pacientů umírá doma. Proč se většina lidí dostane k paliativní péči pozdě nebo vůbec?",
             "publishedAt": "2026-04-15T08:00:00Z"
@@ -359,10 +363,6 @@
           {
             "title": "Skupina Agel posiluje na Slovensku. Ovládne nemocnici v Bratislavě",
             "publishedAt": "2026-04-14T12:51:06Z"
-          },
-          {
-            "title": "Evropa chystá jednu vakcínu na chřipku i covid. Chce ji ale vůbec někdo?",
-            "publishedAt": "2026-04-14T12:00:00Z"
           }
         ]
       }

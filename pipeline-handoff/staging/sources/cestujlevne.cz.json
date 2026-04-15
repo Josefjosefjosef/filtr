@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-15T09:04:48.453034Z",
+  "ingestedAt": "2026-04-15T09:24:43.881928Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Florencie z Prahy o letních prázdninách. Letenky od 1 402 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/florencie-z-prahy-o-letnich-prazdninach",
+      "dt": "2026-04-15T09:15:08Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "402",
+        "florencie",
+        "letenky",
+        "letních",
+        "prahy",
+        "prázdninách"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,31 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Baleárské ostrovy z Vídně: Mallorca a Ibiza na jaře. Letenky od 905 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/balearske-ostrovy-z-vidne-mallorca-a-ibiza-na-jare",
-      "dt": "2026-04-08T10:10:12Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "905",
-        "baleárské",
-        "ibiza",
-        "jaře",
-        "letenky",
-        "mallorca",
-        "ostrovy",
-        "vídně"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46320,
+      "bytes": 45566,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:43:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T09:15:08Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Florencie z Prahy o letních prázdninách. Letenky od 1 402 Kč",
+            "publishedAt": "2026-04-15T09:15:08Z"
+          },
           {
             "title": "Mallorca na týden z Prahy s polopenzí – až 2 děti za polovinu. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-15T07:43:21Z"
@@ -594,10 +596,6 @@
           {
             "title": "Palau z Prahy přes Tchaj-pej s China Airlines. Letenky od 21 990 Kč",
             "publishedAt": "2026-04-13T13:12:46Z"
-          },
-          {
-            "title": "Týden na Sardinii s all-inclusive a přímým letem z Prahy na přelomu května a června. Zájezd od 16 890 Kč",
-            "publishedAt": "2026-04-13T11:38:51Z"
           }
         ]
       }
