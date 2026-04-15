@@ -1,28 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T04:40:13.011855Z",
+  "ingestedAt": "2026-04-15T04:59:44.978869Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sněmovna dala vládní regulaci cen benzinu zelenou. \"Socík, jak když vyšije\" kritizuje opozice",
+      "url": "https://zpravy.aktualne.cz/ekonomika/snemovna-dala-vladni-regulaci-cen-benzinu-zelenou-socik-jak-kdyz-vysije-kritizuje-opozice/r~aaa29aacfac09597455c0cf3a94e1f63/",
+      "dt": "2026-04-15T04:33:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "benzinu",
+        "cen",
+        "dala",
+        "když",
+        "kritizuje",
+        "opozice",
+        "regulaci",
+        "sněmovna",
+        "socík",
+        "vládní",
+        "vyšije",
+        "zelenou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Úchvatná česká paráda v NHL. Pastrňák i Nečas shodně získali 100. bod v sezoně",
+      "title": "Památný večer českého hokeje. Pastrňák i Nečas shodně zlomili magický milník",
       "url": "https://sport.aktualne.cz/hokej/nhl/uchvatna-ceska-parada-v-nhl-pastrnak-i-necas-shodne-ziskali-100-bod-v-sezone/r~aaa29d8a8333d449147de0d1e74327d7/",
       "dt": "2026-04-15T04:31:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "100",
-        "bod",
+        "hokeje",
+        "magický",
+        "milník",
         "nečas",
-        "nhl",
-        "paráda",
+        "památný",
         "pastrňák",
-        "sezoně",
         "shodně",
-        "získali",
-        "úchvatná",
-        "česká"
+        "večer",
+        "zlomili",
+        "českého"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -497,31 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Macháč skvěle otočil zápas proti Báezovi, teď ho čeká superhvězda",
-      "url": "https://sport.aktualne.cz/tenis/muchova-zacala-ve-stuttagrtu-jasnou-vyhrou-nad-outsiderkou/r~aaa2921666b6860f7f2dcccfe709173e/",
-      "dt": "2026-04-14T12:07:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "báezovi",
-        "macháč",
-        "otočil",
-        "proti",
-        "skvěle",
-        "superhvězda",
-        "zápas",
-        "čeká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22077,
+      "bytes": 22175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,12 +572,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
+          "finance": 4,
+          "sport": 3,
           "other": 1,
-          "finance": 3,
           "zpravy": 12
         },
         "drop_counts": {
@@ -588,7 +591,11 @@
         },
         "sample_titles": [
           {
-            "title": "Úchvatná česká paráda v NHL. Pastrňák i Nečas shodně získali 100. bod v sezoně",
+            "title": "Sněmovna dala vládní regulaci cen benzinu zelenou. \"Socík, jak když vyšije\" kritizuje opozice",
+            "publishedAt": "2026-04-15T04:33:00Z"
+          },
+          {
+            "title": "Památný večer českého hokeje. Pastrňák i Nečas shodně zlomili magický milník",
             "publishedAt": "2026-04-15T04:31:00Z"
           },
           {
@@ -614,10 +621,6 @@
           {
             "title": "Běžný zlozvyk, který se nevyplácí: Chroupání ledu může mít nebezpečné následky",
             "publishedAt": "2026-04-15T03:30:00Z"
-          },
-          {
-            "title": "Česko plné policejních radarů. Prohlédněte si více než tisíc míst, kde se dnes měří",
-            "publishedAt": "2026-04-14T03:45:00Z"
           }
         ]
       }

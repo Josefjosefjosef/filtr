@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-15T04:40:13.011855Z",
+  "ingestedAt": "2026-04-15T04:59:44.978869Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Domácí násilí na mužích existuje. V hádce ustupují z obav, že se to otočí proti nim",
+      "url": "https://www.idnes.cz/praha/zpravy/domaci-nasili-muzi-statistika-hadky-zkusenosti-zpoved.A260407_898352_praha-zpravy_bur",
+      "dt": "2026-04-15T04:40:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "domácí",
+        "existuje",
+        "hádce",
+        "mužích",
+        "nim",
+        "násilí",
+        "obav",
+        "otočí",
+        "proti",
+        "ustupují"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -763,33 +790,6 @@
         "tradice",
         "zemřela",
         "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Označení Bomba cena může být beze slevy nekalá praktika, říká ombudsman",
-      "url": "https://www.idnes.cz/ekonomika/domaci/potraviny-dph-retezce-ombudsman-fialka-sebestyan.A260414_142418_ekonomika_drh",
-      "dt": "2026-04-14T14:28:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "beze",
-        "bomba",
-        "být",
-        "cena",
-        "nekalá",
-        "ombudsman",
-        "označení",
-        "praktika",
-        "slevy",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49012,
+      "bytes": 48830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,11 +1631,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T04:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 5,
+          "zpravy": 24,
+          "finance": 4,
           "sport": 1,
           "other": 1
         },
@@ -1649,6 +1649,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Domácí násilí na mužích existuje. V hádce ustupují z obav, že se to otočí proti nim",
+            "publishedAt": "2026-04-15T04:40:00Z"
+          },
           {
             "title": "Nová dominanta centra Brna. Dům se zkoseným vrcholem připomíná slavný mrakodrap",
             "publishedAt": "2026-04-15T04:03:00Z"
@@ -1675,10 +1679,6 @@
           },
           {
             "title": "Vraždám holčiček šlo zabránit, ale úřady jen přihlížely. Bály se obvinění z rasismu",
-            "publishedAt": "2026-04-14T22:00:00Z"
-          },
-          {
-            "title": "Plaťme za uzdravení místo za výkony. Nový šéf VZP o plánech na zásadní změny",
             "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]
