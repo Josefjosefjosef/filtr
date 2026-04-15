@@ -269,8 +269,64 @@ try {
         })
         .then(function () {
           if (navigator.serviceWorker.controller) return;
-          sessionStorage.setItem("iu_sw_reload_done", "1");
-          location.reload();
+          /** P0 smoke/Playwright: immediate reload() races page.goto (same URL) → "interrupted by another navigation".
+           *  sw.js runs skipWaiting + clients.claim() — controller often attaches without a hard reload; wait for that first. */
+          var tid = null;
+          function markSwSettled() {
+            try {
+              sessionStorage.setItem("iu_sw_reload_done", "1");
+            } catch (eM) {}
+          }
+          function hardReloadIfStillNoController() {
+            if (navigator.serviceWorker.controller) {
+              markSwSettled();
+              return;
+            }
+            markSwSettled();
+            location.reload();
+          }
+          try {
+            navigator.serviceWorker.addEventListener("controllerchange", function onCc() {
+              if (navigator.serviceWorker.controller) {
+                try {
+                  navigator.serviceWorker.removeEventListener("controllerchange", onCc);
+                } catch (eR) {}
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            });
+          } catch (eL) {}
+          try {
+            window.queueMicrotask(function () {
+              if (navigator.serviceWorker.controller) {
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC2) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            });
+          } catch (eQ) {
+            window.setTimeout(function () {
+              if (navigator.serviceWorker.controller) {
+                if (tid !== null) {
+                  try {
+                    clearTimeout(tid);
+                  } catch (eC3) {}
+                  tid = null;
+                }
+                markSwSettled();
+              }
+            }, 0);
+          }
+          tid = window.setTimeout(hardReloadIfStillNoController, 600);
         })
         .catch(function () {});
     } catch (e) {}
@@ -1862,7 +1918,12 @@ try {
     }
   }
 
-  async function evaluatePreferredPair() {
+  /**
+   * Feed-critical path: localStorage + TTL only.
+   * Do NOT await HEAD preflight here — loadData() always fetches from iuDataUrl("articles.json"|"videos.json");
+   * the old async evaluatePreferredPair() blocked first card paint ~2.8s (parallel HEAD timeouts) before any GET.
+   */
+  function getPreferredPairForLoadData() {
     const entry = loadPreferredPair();
     if (!entry) {
       return { articlesUrl: null, videosUrl: null, status: "missing" };
@@ -1870,17 +1931,7 @@ try {
     if (!entry.preferredAt || Date.now() - entry.preferredAt > PREFERRED_TTL_MS) {
       return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "expired" };
     }
-    const [articlesOk, videosOk] = await Promise.all([
-      quickCheckUrl(entry.articlesUrl),
-      quickCheckUrl(entry.videosUrl),
-    ]);
-    if (articlesOk && videosOk) {
-      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "ok" };
-    }
-    if (!articlesOk) {
-      return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "articles-unreachable" };
-    }
-    return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "videos-unreachable" };
+    return { articlesUrl: entry.articlesUrl, videosUrl: entry.videosUrl, status: "ok" };
   }
 
   function buildCandidateListFromPair(preferredEntry, type, baseSequence) {
@@ -12601,7 +12652,7 @@ function buildVideoAsArticleCard(it) {
       emptyBox.style.display = "block";
       emptyBox.innerHTML = "<p>Načítám data…</p>";
     }
-    const preferredEntry = await evaluatePreferredPair();
+    const preferredEntry = getPreferredPairForLoadData();
     const baseArticleUrls = [iuDataUrl("articles.json")];
     const baseVideoUrls = [iuDataUrl("videos.json")];
     const articleUrls = buildCandidateListFromPair(preferredEntry, "articles", baseArticleUrls);
