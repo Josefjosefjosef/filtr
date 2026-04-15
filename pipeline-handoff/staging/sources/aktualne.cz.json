@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-15T08:30:48.664356Z",
+  "ingestedAt": "2026-04-15T08:49:24.218313Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Orbán přivedl Maďarsko k bankrotu, řekl Magyar",
+      "url": "https://zpravy.aktualne.cz/zahranici/orban-privedl-madarsko-k-bankrotu-rekl-magyar/r~aaa29c37cd2f83de34ea057d100dca67/",
+      "dt": "2026-04-15T08:40:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bankrotu",
+        "magyar",
+        "maďarsko",
+        "orbán",
+        "přivedl",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Co by z nás zbylo bez paměti? Vychází Alchemised, nejočekávanější fantasy roku",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/co-by-z-nas-zbylo-bez-pameti-vychazi-alchemised-nejocekavanejsi-fantasy-roku/r~aaa296af33249582f899978611a7ef22/",
+      "dt": "2026-04-15T08:23:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "alchemised",
+        "fantasy",
+        "nejočekávanější",
+        "nás",
+        "paměti",
+        "roku",
+        "vychází",
+        "zbylo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -472,60 +520,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Je neuvěřitelný.“ 17letý syn mocného úředníka měl falšovat razítka advokáta. Už reagoval",
-      "url": "https://zpravy.aktualne.cz/domaci/je-neuveritelny-17lety-syn-mocneho-urednika-mel-falsovat-razitka-advokata-uz-reagoval/r~aaa29f1aa25121a19c753699042500f4/",
-      "dt": "2026-04-15T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "17letý",
-        "advokáta",
-        "falšovat",
-        "mocného",
-        "měl",
-        "neuvěřitelný",
-        "razítka",
-        "reagoval",
-        "syn",
-        "úředníka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "To tu ještě nebylo: Zelenskyj oznámil obří úspěch. Rusové se vzdali jednotce robotů",
-      "url": "https://zpravy.aktualne.cz/zahranici/to-tu-jeste-nebylo-zelenskyj-oznamil-obri-uspech-rusove-se-vzdali-jednotce-robotu/r~aaa29c84836fc991a79a511dbdba0598/",
-      "dt": "2026-04-15T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jednotce",
-        "ještě",
-        "nebylo",
-        "obří",
-        "oznámil",
-        "robotů",
-        "rusové",
-        "vzdali",
-        "zelenskyj",
-        "úspěch"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21436,
+      "bytes": 21299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,13 +567,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T08:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 13,
+          "other": 2,
           "sport": 3,
-          "zpravy": 14,
-          "finance": 2,
-          "other": 1
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -591,6 +585,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán přivedl Maďarsko k bankrotu, řekl Magyar",
+            "publishedAt": "2026-04-15T08:40:00Z"
+          },
+          {
+            "title": "Co by z nás zbylo bez paměti? Vychází Alchemised, nejočekávanější fantasy roku",
+            "publishedAt": "2026-04-15T08:23:00Z"
+          },
           {
             "title": "Místo Čechů měla jet na MS Itálie, zní z Ameriky. Kinského tam propírají v talkshow",
             "publishedAt": "2026-04-15T08:20:00Z"
@@ -614,14 +616,6 @@
           {
             "title": "KVÍZ: Dostali byste se na střední školu? Změřte síly s deváťáky!",
             "publishedAt": "2026-02-21T06:15:00Z"
-          },
-          {
-            "title": "Historický milník pro český hokej v zámoří. Pastrňák a Nečas to dokázali",
-            "publishedAt": "2026-04-15T04:31:00Z"
-          },
-          {
-            "title": "Za kolik se dá v Česku důstojně žít? Na částku nedosáhnou tři čtvrtiny žen",
-            "publishedAt": "2026-04-15T06:56:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-15T08:30:48.664356Z",
+  "ingestedAt": "2026-04-15T08:49:24.218313Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kuriózní loupež v Brně: Muži se převlékli za ochranku a v obchodě kradli alkohol",
+      "url": "https://www.denik.cz/krimi/lopuez-supermarket-lesna-brno-prevlek-zarive-vesty-straznici-ochranka.html",
+      "dt": "2026-04-15T08:24:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alkohol",
+        "brně",
+        "kradli",
+        "kuriózní",
+        "loupež",
+        "muži",
+        "obchodě",
+        "ochranku",
+        "převlékli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -622,30 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Požár ubytovny na pražském Žižkově: Málokdo tušil, kde bude spát",
-      "url": "https://www.denik.cz/pozary/nejistota-lidi-z-horici-ubytovny-malokdo-tusi-kde-bude-spat-20260414.html",
-      "dt": "2026-04-14T16:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "málokdo",
-        "požár",
-        "pražském",
-        "spát",
-        "tušil",
-        "ubytovny",
-        "žižkově"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31285,
+      "bytes": 31468,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:24:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -710,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kuriózní loupež v Brně: Muži se převlékli za ochranku a v obchodě kradli alkohol",
+            "publishedAt": "2026-04-15T08:24:00Z"
+          },
           {
             "title": "Zvýšení životního minima se odkládá. Stát šetří, domácnosti tratí",
             "publishedAt": "2026-04-15T08:00:00Z"
@@ -737,10 +743,6 @@
           {
             "title": "Cenzura je pohádka pražské kavárny. Macinka zveřejnil rozhovor s Petrem Pavlem",
             "publishedAt": "2026-04-15T05:35:00Z"
-          },
-          {
-            "title": "Vláda bude zřejmě moci regulovat ceny benzinu a nafty, schválila to Sněmovna",
-            "publishedAt": "2026-04-15T05:27:00Z"
           }
         ]
       }

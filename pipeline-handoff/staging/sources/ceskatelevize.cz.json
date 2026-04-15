@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-15T08:30:48.664356Z",
+  "ingestedAt": "2026-04-15T08:49:24.218313Z",
   "items": [
     {
       "section": "aktualne",
@@ -760,6 +760,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Tatran postoupil popáté za sebou do superfinále",
+      "url": "https://sport.ceskatelevize.cz/clanek/florbal/tatran-postoupil-popate-za-sebou-do-superfinale-156292",
+      "dt": "2026-04-15T08:43:58Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "popáté",
+        "postoupil",
+        "sebou",
+        "superfinále",
+        "tatran"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Dynamo přišlo o stadion, České Budějovice vypověděly klubu smlouvu",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/dynamo-prislo-o-stadion-ceske-budejovice-vypovedely-klubu-smlouvu-156291",
       "dt": "2026-04-15T07:24:05Z",
@@ -1510,31 +1532,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hronek asistoval, Vancouver porazil v prodloužení Anaheim s Dostálem v brance",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hronek-prispel-prihravkou-vancouver-porazil-v-prodlouzeni-anaheim-156263",
-      "dt": "2026-04-13T05:52:38Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anaheim",
-        "asistoval",
-        "brance",
-        "dostálem",
-        "hronek",
-        "porazil",
-        "prodloužení",
-        "vancouver"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1663,7 +1660,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40565,
+      "bytes": 40648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1700,7 +1697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T07:24:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:43:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1715,6 +1712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tatran postoupil popáté za sebou do superfinále",
+            "publishedAt": "2026-04-15T08:43:58Z"
+          },
           {
             "title": "Dynamo přišlo o stadion, České Budějovice vypověděly klubu smlouvu",
             "publishedAt": "2026-04-15T07:24:05Z"
@@ -1742,10 +1743,6 @@
           {
             "title": "Lvi porazili českobudějovické volejbalisty 3:0 a jsou krok od finále",
             "publishedAt": "2026-04-14T20:25:56Z"
-          },
-          {
-            "title": "Jihlava zvládla sedmý duel se Zlínem. Vyhrála první ligu a zahraje si baráž",
-            "publishedAt": "2026-04-14T18:00:15Z"
           }
         ]
       }
@@ -1757,7 +1754,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77072,
+      "bytes": 77001,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

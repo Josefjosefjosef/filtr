@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-15T08:30:48.664356Z",
+  "ingestedAt": "2026-04-15T08:49:24.218313Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Acer představuje několik nových produktů pro chytrou mobilitu",
+      "url": "https://zing.cz/article/acer-predstavuje-nekolik-novych-produktu-pro-chytrou-mobilitu",
+      "dt": "2026-04-15T08:30:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "acer",
+        "chytrou",
+        "mobilitu",
+        "nových",
+        "několik",
+        "produktů",
+        "představuje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -953,33 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Pirátská akce Windrose zná datum vydání, na Steamu oslovila 1,5 milionu hráčů",
-      "url": "https://zing.cz/article/piratska-akce-windrose-zna-datum-vydani-na-steamu-oslovila-1-5-milionu-hracu",
-      "dt": "2026-04-10T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "akce",
-        "datum",
-        "hráčů",
-        "milionu",
-        "oslovila",
-        "pirátská",
-        "steamu",
-        "vydání",
-        "windrose",
-        "zná"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -990,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125768,
+      "bytes": 125981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1027,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-15T08:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1043,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Acer představuje několik nových produktů pro chytrou mobilitu",
+            "publishedAt": "2026-04-15T08:30:00Z"
+          },
           {
             "title": "Warhammer Classics: návrat nostalgie i zapomenutých klenotů",
             "publishedAt": "2026-04-15T04:00:00Z"
@@ -1070,10 +1071,6 @@
           {
             "title": "Cities: Skylines bude mít dalšího vyzyvatele, poběží na Unreal Enginu 5",
             "publishedAt": "2026-04-14T12:00:00Z"
-          },
-          {
-            "title": "České studio SCS Software láká na konzolové verze svých kamionových simulátorů",
-            "publishedAt": "2026-04-14T10:00:00Z"
           }
         ]
       }
