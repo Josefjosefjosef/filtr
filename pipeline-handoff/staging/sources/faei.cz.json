@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-16T07:25:04.588914Z",
+  "ingestedAt": "2026-04-16T08:19:52.264398Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
+      "url": "https://profitonline.cz/radek-majercin-je-novym-lekarskym-reditelem-nemocnice-melnik/",
+      "dt": "2026-04-16T08:00:02Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "lékařským",
+        "majerčin",
+        "mělník",
+        "nemocnice",
+        "novým",
+        "radek",
+        "ředitelem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -266,31 +290,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Už si Orbán balí kufry do Moskvy? Putin ho přivítá s otevřenou náručí",
-      "url": "https://profitonline.cz/uz-si-orban-bali-kufry-do-moskvy-putin-ho-privita-s-otevrenou-naruci/",
-      "dt": "2026-04-14T04:00:34Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "balí",
-        "kufry",
-        "moskvy",
-        "náručí",
-        "orbán",
-        "otevřenou",
-        "putin",
-        "přivítá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19039,
+      "bytes": 18801,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,11 +337,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-16T06:00:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:00:02Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 10,
+          "zdravi": 2,
+          "finance": 9,
           "sport": 1
         },
         "drop_counts": {
@@ -355,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
+            "publishedAt": "2026-04-16T08:00:02Z"
+          },
           {
             "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
             "publishedAt": "2026-04-16T06:00:39Z"
@@ -382,10 +385,6 @@
           {
             "title": "Připravme se na celkové zdražování, ceny pohonných hmot porostou",
             "publishedAt": "2026-04-14T18:00:54Z"
-          },
-          {
-            "title": "Dan Bárta & Illustratosphere lákají na jarní turné",
-            "publishedAt": "2026-04-14T13:00:36Z"
           }
         ]
       }

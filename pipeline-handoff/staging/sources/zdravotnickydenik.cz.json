@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-16T07:25:04.588914Z",
+  "ingestedAt": "2026-04-16T08:19:52.264398Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soubehy-praci-lekaru-a-zdravotni-pojistovny/",
+      "dt": "2026-04-16T08:00:50Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kolik",
+        "liší",
+        "lékař",
+        "mít",
+        "pojišťoven",
+        "prací",
+        "pravidla",
+        "výrazně"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -244,33 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/poplatky-na-gynekologii-na-co-mate-narok/",
-      "dt": "2026-04-15T09:11:22Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chtějí",
-        "gynekologa",
-        "když",
-        "máte",
-        "nárok",
-        "peníze",
-        "poplatky",
-        "postupovat",
-        "přehledně",
-        "vás"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88097,
+      "bytes": 92263,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,11 +316,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:00:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "zdravi": 8,
+          "zpravy": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -335,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
+            "publishedAt": "2026-04-16T08:00:50Z"
+          },
           {
             "title": "Zfackovat sestru a odejít s pokutou? Kubek chce zpřísnit tresty za útoky na zdravotníky",
             "publishedAt": "2026-04-16T07:00:00Z"
@@ -362,10 +364,6 @@
           {
             "title": "Kolik šálků kávy denně prospívá psychice? Vědci našli překvapivě přesné číslo",
             "publishedAt": "2026-04-15T12:47:00Z"
-          },
-          {
-            "title": "Babiš střet zájmů nevyřešil, zdůrazňuje Kupka. Mluví o investičním fondu ve zdravotnictví",
-            "publishedAt": "2026-04-15T11:36:50Z"
           }
         ]
       }

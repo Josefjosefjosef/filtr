@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-16T07:25:04.588914Z",
+  "ingestedAt": "2026-04-16T08:19:52.264398Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Týden na Kypru z Prahy: Protaras nebo Ayia Napa. Zájezd od 7 876 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-kypru-z-prahy-protaras-nebo-ayia-napa",
+      "dt": "2026-04-16T07:35:00Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "876",
+        "ayia",
+        "kypru",
+        "napa",
+        "nebo",
+        "prahy",
+        "protaras",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -475,32 +501,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Rhodosu: letenky, ubytování s kuchyňkou a pronájem auta. Balíček od 4 614 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-rhodosu-letenky-ubytovani-s-kuchynkou",
-      "dt": "2026-04-09T09:45:57Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "614",
-        "auta",
-        "balíček",
-        "kuchyňkou",
-        "letenky",
-        "pronájem",
-        "rhodosu",
-        "týden",
-        "ubytování"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44441,
+      "bytes": 44282,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:03:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T07:35:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -563,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na Kypru z Prahy: Protaras nebo Ayia Napa. Zájezd od 7 876 Kč",
+            "publishedAt": "2026-04-16T07:35:00Z"
+          },
           {
             "title": "Pisa a celé Toskánsko z Prahy během jara. Letenky od 840 Kč",
             "publishedAt": "2026-04-15T13:03:40Z"
@@ -590,10 +594,6 @@
           {
             "title": "Přímé lety z Prahy na azorský ostrov São Miguel na jaře. Letenky od 5 897 Kč",
             "publishedAt": "2026-04-14T13:10:26Z"
-          },
-          {
-            "title": "Amalfské pobřeží z Vídně v dubnu. Letenky od 732 Kč",
-            "publishedAt": "2026-04-14T11:25:18Z"
           }
         ]
       }

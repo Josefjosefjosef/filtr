@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-16T07:25:04.588914Z",
+  "ingestedAt": "2026-04-16T08:19:52.264398Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,35 @@
         "teams",
         "windows",
         "zoomu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nová evropská aplikace ověří věk pro přístup k sociálním sítím. Účinnost ale naráží na VPN",
+      "url": "https://mobilmania.zive.cz/clanky/nova-evropska-aplikace-overi-vek-pro-pristup-k-socialnim-sitim-ucinnost-ale-narazi-na-vpn/sc-3-a-1364572/default.aspx",
+      "dt": "2026-04-16T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "aplikace",
+        "evropská",
+        "naráží",
+        "nová",
+        "ověří",
+        "přístup",
+        "sociálním",
+        "sítím",
+        "vpn",
+        "věk",
+        "účinnost"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -928,34 +957,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Srovnali jsme Pixel 10a a iPhone 17e. Google vítězí u displeje, Apple ve výkonu",
-      "url": "https://mobilmania.zive.cz/clanky/srovnali-jsme-pixel-10a-a-iphone-17e-google-vitezi-u-displeje-apple-ve-vykonu/sc-3-a-1364454/default.aspx",
-      "dt": "2026-04-13T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "10a",
-        "17e",
-        "apple",
-        "displeje",
-        "google",
-        "iphone",
-        "jsme",
-        "pixel",
-        "srovnali",
-        "vítězí",
-        "výkonu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -966,7 +967,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23399,
+      "bytes": 23256,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1003,7 +1004,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-16T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1021,6 +1022,10 @@
           {
             "title": "Linux místo Windows. Francouzská státní správa po Teams a Zoomu odstřihne další americký produkt",
             "publishedAt": "2026-04-15T14:45:00Z"
+          },
+          {
+            "title": "Nová evropská aplikace ověří věk pro přístup k sociálním sítím. Účinnost ale naráží na VPN",
+            "publishedAt": "2026-04-16T07:45:00Z"
           },
           {
             "title": "Ukrajinský Boosteroid vyzbrojil servery v Česku a útočí na herní byznys Nvidie a Microsoftu",
@@ -1045,10 +1050,6 @@
           {
             "title": "Google bojuje o zkratku Alt+mezerník. Jeho AI vyhledávač pro Windows si vyzkoušíte i v Česku",
             "publishedAt": "2026-04-15T12:45:00Z"
-          },
-          {
-            "title": "Co se v roce 2026 nejvíc hraje na Xboxu. Tady jsou nejoblíbenější hry pro Xbox X/S i starší One",
-            "publishedAt": "2026-04-15T11:45:00Z"
           }
         ]
       }
