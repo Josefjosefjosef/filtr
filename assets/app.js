@@ -20774,7 +20774,7 @@ function buildVideoAsArticleCard(it) {
           quick.__iuNakupOnlineResizeBound = false;
           quick.__iuNakupOnlineOnResize = null;
         } catch (_) {}
-        try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
+        try { quick.classList.remove("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
         for (var ni = 0; ni < __iuNakupOnlineFsProps.length; ni++) {
           try { quick.style.removeProperty(__iuNakupOnlineFsProps[ni]); } catch (_) {}
         }
@@ -20790,7 +20790,7 @@ function buildVideoAsArticleCard(it) {
       quick.style.setProperty("min-height", "0", "important");
       var desk = iuNakupOnlineIsDesktopViewport();
       if (desk) {
-        try { quick.classList.add("iu-nakup-online--desktop-fit"); } catch (_) {}
+        try { quick.classList.add("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
         var topPx = iuMeasureNakupOnlineDesktopOverlayTopPx();
         try {
           quick.style.setProperty("--iu-nakup-online-overlay-top", topPx + "px");
@@ -20812,7 +20812,7 @@ function buildVideoAsArticleCard(it) {
         try { quick.style.removeProperty("overflow"); } catch (_) {}
         try { quick.style.removeProperty("touch-action"); } catch (_) {}
       } else {
-        try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
+        try { quick.classList.remove("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
         quick.style.setProperty("inset", "0", "important");
         quick.style.setProperty("left", "0", "important");
         quick.style.setProperty("top", "0", "important");
@@ -21515,7 +21515,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-single-column"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}
