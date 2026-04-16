@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-16T13:35:31.209384Z",
+  "ingestedAt": "2026-04-16T13:54:42.779203Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V AHL se neposunul, teď je v reprezentaci. Nemohl jsem si vybrat líp, tvrdí Marcel o Kladně",
+      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace/474498/v-ahl-se-neposunul-ted-je-v-reprezentaci-nemohl-jsem-si-vybrat-lip-tvrdi-marcel-o-kladne.html",
+      "dt": "2026-04-16T13:35:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "ahl",
+        "jsem",
+        "kladně",
+        "líp",
+        "marcel",
+        "nemohl",
+        "neposunul",
+        "reprezentaci",
+        "tvrdí",
+        "vybrat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1038,32 +1065,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Klimentův pohyb, Hložkova postava. Olomouc přivádí útočný talent z Maďarska",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474453/klimentuv-pohyb-hlozkova-postava-olomouc-privadi-utocny-talent-z-madarska.html",
-      "dt": "2026-04-15T13:50:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "hložkova",
-        "klimentův",
-        "maďarska",
-        "olomouc",
-        "pohyb",
-        "postava",
-        "přivádí",
-        "talent",
-        "útočný"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1074,7 +1075,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 55394,
+      "bytes": 55436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1111,7 +1112,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T13:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1126,6 +1127,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V AHL se neposunul, teď je v reprezentaci. Nemohl jsem si vybrat líp, tvrdí Marcel o Kladně",
+            "publishedAt": "2026-04-16T13:35:00Z"
+          },
           {
             "title": "Vedení hokeje rozhodlo: Moták povede po MS reprezentaci, Gross jeho asistentem",
             "publishedAt": "2026-04-16T13:25:00Z"
@@ -1153,10 +1158,6 @@
           {
             "title": "Fotbalový skandál ONLINE: Obviněný sudí vystoupil z FAČR, hráči Startu Brno jsou bez výplat",
             "publishedAt": "2026-04-16T11:39:00Z"
-          },
-          {
-            "title": "Sparta padla a ve Varech se začalo slavit. Brankář zachytil euforii: Díky, Pardubice!",
-            "publishedAt": "2026-04-16T11:30:00Z"
           }
         ]
       }

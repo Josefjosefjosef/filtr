@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-16T13:35:31.209384Z",
+  "ingestedAt": "2026-04-16T13:54:42.779203Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Karlovarští strážníci trénovali s bývalým policejním vyjednavačem",
+      "url": "https://tydenikpolicie.cz/karlovarsti-straznici-trenovali-s-byvalym-policejnim-vyjednavacem/",
+      "dt": "2026-04-16T13:33:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bývalým",
+        "karlovarští",
+        "policejním",
+        "strážníci",
+        "trénovali",
+        "vyjednavačem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -260,34 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mladík na motocyklu tvrdil strážníkům v hradecké pěší zóně, že tam zásobuje svou inteligencí",
-      "url": "https://tydenikpolicie.cz/mladik-na-motocyklu-tvrdil-straznikum-v-hradecke-pesi-zone-ze-tam-zasobuje-svou-inteligenci/",
-      "dt": "2026-04-16T07:07:25Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "hradecké",
-        "inteligencí",
-        "mladík",
-        "motocyklu",
-        "pěší",
-        "strážníkům",
-        "svou",
-        "tam",
-        "tvrdil",
-        "zásobuje",
-        "zóně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16854,
+      "bytes": 16701,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T13:22:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:33:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -350,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karlovarští strážníci trénovali s bývalým policejním vyjednavačem",
+            "publishedAt": "2026-04-16T13:33:04Z"
+          },
           {
             "title": "Řidička BMW v Čeladné vjela při nebezpečném předjíždění na chodník, kde srazila dvě dívky. Z místa nehody utekla, poté ji srazil vlak",
             "publishedAt": "2026-04-16T13:22:18Z"
@@ -377,10 +376,6 @@
           {
             "title": "Kriminalisté pátrají po totožnosti mrtvého muže, který byl nalezen v lese na Tachovsku",
             "publishedAt": "2026-04-16T09:05:34Z"
-          },
-          {
-            "title": "Řidička na Znojemsku skončila s autem v potoce. Nadýchala více než dvě promile alkoholu",
-            "publishedAt": "2026-04-16T08:53:47Z"
           }
         ]
       }

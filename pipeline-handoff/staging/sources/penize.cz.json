@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-16T13:35:31.209384Z",
+  "ingestedAt": "2026-04-16T13:54:42.779203Z",
   "items": [
     {
       "section": "finance",
@@ -20,6 +20,31 @@
         "zvedá",
         "úrok",
         "čtyřce"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Air Bank vylepšila aplikaci. Ukáže lidem Chytrý zůstatek",
+      "url": "https://www.penize.cz/osobni-ucty/488438-air-bank-vylepsila-aplikaci-ukaze-lidem-chytry-zustatek",
+      "dt": "2026-04-16T14:45:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "air",
+        "aplikaci",
+        "bank",
+        "chytrý",
+        "lidem",
+        "ukáže",
+        "vylepšila",
+        "zůstatek"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -476,30 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zvýšení životního minima se znovu odkládá, potvrdila vláda",
-      "url": "https://www.penize.cz/davky-v-hmotne-nouzi/481095-zvyseni-zivotniho-minima-se-znovu-odklada-potvrdila-vlada",
-      "dt": "2026-04-13T14:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "minima",
-        "odkládá",
-        "potvrdila",
-        "vláda",
-        "znovu",
-        "zvýšení",
-        "životního"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18328,
+      "bytes": 18257,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,6 +569,10 @@
             "publishedAt": "2026-04-16T15:00:00Z"
           },
           {
+            "title": "Air Bank vylepšila aplikaci. Ukáže lidem Chytrý zůstatek",
+            "publishedAt": "2026-04-16T14:45:00Z"
+          },
+          {
             "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
             "publishedAt": "2026-04-16T13:57:00Z"
           },
@@ -590,10 +595,6 @@
           {
             "title": "Finanční poradci: ČNB už s to s naší regulací přehání, odnesou ji klienti",
             "publishedAt": "2026-04-15T11:20:00Z"
-          },
-          {
-            "title": "Vláda si nechala schválit snazší regulaci cen benzinu a nafty. Může trvat rok",
-            "publishedAt": "2026-04-15T08:00:00Z"
           }
         ]
       }

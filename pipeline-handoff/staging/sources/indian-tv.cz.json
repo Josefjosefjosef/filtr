@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-16T13:35:31.209384Z",
+  "ingestedAt": "2026-04-16T13:54:42.779203Z",
   "items": [
     {
       "section": "hry",
@@ -248,6 +248,31 @@
         "plus",
         "přinese",
         "závody"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Hackeři vs. GTA VI, Metro na obzoru a Xbox v krizi důvěry - INDIAN",
+      "url": "https://indian-tv.cz/porad/showtime/hackeri-vs-gta-vi-metro-na-obzoru-a-xbox-v-krizi-duvery-crpw80",
+      "dt": "2026-04-15T16:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "důvěry",
+        "gta",
+        "hackeři",
+        "indian",
+        "krizi",
+        "metro",
+        "obzoru",
+        "xbox"
       ],
       "feedCategory": "hry",
       "feedType": "rss",
@@ -1049,35 +1074,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Přijde Game Pass o Call of Duty v den vydání? Microsoft má zvažovat změnu strategie - INDIAN",
-      "url": "https://indian-tv.cz/clanek/prijde-game-pass-o-call-of-duty-v-den-vydani-e86hgv",
-      "dt": "2026-04-13T10:29:22Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "call",
-        "den",
-        "duty",
-        "game",
-        "indian",
-        "microsoft",
-        "pass",
-        "přijde",
-        "strategie",
-        "vydání",
-        "změnu",
-        "zvažovat"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1088,11 +1084,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211438,
+      "bytes": 206862,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 60,
+      "itemsParsed": 59,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",

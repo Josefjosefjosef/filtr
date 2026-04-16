@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T13:35:31.209384Z",
+  "ingestedAt": "2026-04-16T13:54:42.779203Z",
   "items": [
     {
       "section": "finance",
@@ -607,20 +607,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Je to paskvil, míní Rakušan o návrhu změny financování veřejnoprávních médií",
+      "title": "Zvorali jste to, tepal Hřib ve sněmovně Babišovu vládu",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-na-mimoradne-schuzi-resit-ceny-pohonnych-hmot-ci-verejnopravni-media-372432",
       "dt": "2026-04-16T02:15:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "financování",
-        "médií",
-        "míní",
-        "návrhu",
-        "paskvil",
-        "rakušan",
-        "veřejnoprávních",
-        "změny"
+        "babišovu",
+        "hřib",
+        "jste",
+        "sněmovně",
+        "tepal",
+        "vládu",
+        "zvorali"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -760,18 +759,42 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Nosková je na kurtu",
+      "title": "Rulíka by měl u národního týmu nahradit Moták s Grossem",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rulika-by-mel-u-narodniho-tymu-nahradit-motak-s-grossem-156312",
+      "dt": "2026-04-16T13:35:59Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "grossem",
+        "moták",
+        "měl",
+        "nahradit",
+        "národního",
+        "rulíka",
+        "týmu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Uspěla i Nosková",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-poradila-s-mertensovou-noskova-je-na-kurtu-156311",
       "dt": "2026-04-16T13:10:03Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "kurtu",
         "mertensovou",
         "muchová",
         "nosková",
         "poradila",
-        "stuttgartu"
+        "stuttgartu",
+        "uspěla"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1486,33 +1509,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokej bez červené: Jaké jsou důsledky sporu mezi Spartou a majitelem Pardubic Petrem Dědkem?",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokej-bez-cervene-jake-jsou-dusledky-sporu-mezi-spartou-a-majitelem-pardubic-petrem-dedkem-156282",
-      "dt": "2026-04-14T15:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dědkem",
-        "důsledky",
-        "hokej",
-        "jaké",
-        "majitelem",
-        "pardubic",
-        "petrem",
-        "spartou",
-        "sporu",
-        "červené"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1523,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42918,
+      "bytes": 42854,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1642,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38872,
+      "bytes": 38546,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1679,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T13:10:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:35:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1695,7 +1691,11 @@
         },
         "sample_titles": [
           {
-            "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Nosková je na kurtu",
+            "title": "Rulíka by měl u národního týmu nahradit Moták s Grossem",
+            "publishedAt": "2026-04-16T13:35:59Z"
+          },
+          {
+            "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Uspěla i Nosková",
             "publishedAt": "2026-04-16T13:10:03Z"
           },
           {
@@ -1721,10 +1721,6 @@
           {
             "title": "Semifinálové složení doplnily Arsenal a Bayern Mnichov",
             "publishedAt": "2026-04-15T21:29:26Z"
-          },
-          {
-            "title": "Nedvěd Spartu dál nepovede. Trenérem bude Augusta",
-            "publishedAt": "2026-04-15T20:19:25Z"
           }
         ]
       }
@@ -1736,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77441,
+      "bytes": 77508,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
