@@ -20726,7 +20726,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   var __iuNakupOnlineFsProps = [
-    "position", "inset", "left", "top", "width", "height", "max-width", "max-height", "margin",
+    "position", "inset", "left", "top", "right", "bottom", "width", "height", "max-width", "max-height", "margin",
     "z-index", "overflow", "overflow-x", "overflow-y", "box-sizing", "background", "padding",
     "display", "flex-direction", "min-height", "overscroll-behavior", "touch-action",
     "-webkit-overflow-scrolling"
@@ -20738,7 +20738,29 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
   }
-  /** P0: Nákup potravin online — fullscreen opaque overlay. Desktop ≥1024px: dvousloupcová kompozice + overflow-y auto jako záloha; mobile/tablet = scrollovatelné. */
+  /** Desktop ≥1024px: začátek overlaye pod horní lištou s vyhledáváním (#topbarWrap / Silver composer). Fallback: --iuTopbarHeight. */
+  function iuMeasureNakupOnlineDesktopOverlayTopPx() {
+    try {
+      var tb = document.getElementById("topbarWrap");
+      if (tb) {
+        var r = tb.getBoundingClientRect();
+        if (r && r.height > 4 && r.bottom > 0) return Math.max(0, Math.ceil(r.bottom));
+      }
+      var lh = document.getElementById("leftStickyHeader");
+      if (lh) {
+        var r2 = lh.getBoundingClientRect();
+        if (r2 && r2.bottom > 0) return Math.max(0, Math.ceil(r2.bottom));
+      }
+    } catch (_) {}
+    try {
+      var cs = window.getComputedStyle ? window.getComputedStyle(document.documentElement) : null;
+      var v = cs && cs.getPropertyValue("--iuTopbarHeight");
+      var n = v ? parseFloat(String(v).trim()) : NaN;
+      if (!isNaN(n) && n > 0) return Math.round(n);
+    } catch (_) {}
+    return 72;
+  }
+  /** P0: Nákup potravin online — fullscreen vrstva. Desktop: pod topbarem, jednosloupec (CSS), scroll celé vrstvy; mobile/tablet beze změny chování. */
   function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
     try {
       if (!quick) return;
@@ -20759,32 +20781,48 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       quick.style.setProperty("position", "fixed", "important");
-      quick.style.setProperty("inset", "0", "important");
-      quick.style.setProperty("left", "0", "important");
-      quick.style.setProperty("top", "0", "important");
-      quick.style.setProperty("width", "100vw", "important");
-      quick.style.setProperty("height", "100dvh", "important");
-      quick.style.setProperty("max-width", "100vw", "important");
-      quick.style.setProperty("max-height", "100dvh", "important");
       quick.style.setProperty("margin", "0", "important");
       quick.style.setProperty("z-index", "10170", "important");
       quick.style.setProperty("box-sizing", "border-box", "important");
       quick.style.setProperty("background", "#eaf0f7", "important");
-      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 4px) 6px calc(env(safe-area-inset-bottom, 0px) + 4px)", "important");
       quick.style.setProperty("display", "flex", "important");
       quick.style.setProperty("flex-direction", "column", "important");
       quick.style.setProperty("min-height", "0", "important");
       var desk = iuNakupOnlineIsDesktopViewport();
       if (desk) {
         try { quick.classList.add("iu-nakup-online--desktop-fit"); } catch (_) {}
+        var topPx = iuMeasureNakupOnlineDesktopOverlayTopPx();
+        try {
+          quick.style.setProperty("--iu-nakup-online-overlay-top", topPx + "px");
+        } catch (_) {}
+        try { quick.style.removeProperty("inset"); } catch (_) {}
+        quick.style.setProperty("left", "0", "important");
+        quick.style.setProperty("right", "0", "important");
+        quick.style.setProperty("top", topPx + "px", "important");
+        quick.style.setProperty("bottom", "0", "important");
+        try { quick.style.removeProperty("width"); } catch (_) {}
+        try { quick.style.removeProperty("height"); } catch (_) {}
+        try { quick.style.removeProperty("max-width"); } catch (_) {}
+        try { quick.style.removeProperty("max-height"); } catch (_) {}
+        quick.style.setProperty("padding", "10px 12px calc(env(safe-area-inset-bottom, 0px) + 16px)", "important");
         quick.style.setProperty("overflow-x", "hidden", "important");
         quick.style.setProperty("overflow-y", "auto", "important");
         try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
-        quick.style.setProperty("overscroll-behavior", "contain", "important");
+        try { quick.style.setProperty("overscroll-behavior", "auto"); } catch (_) {}
         try { quick.style.removeProperty("overflow"); } catch (_) {}
         try { quick.style.removeProperty("touch-action"); } catch (_) {}
       } else {
         try { quick.classList.remove("iu-nakup-online--desktop-fit"); } catch (_) {}
+        quick.style.setProperty("inset", "0", "important");
+        quick.style.setProperty("left", "0", "important");
+        quick.style.setProperty("top", "0", "important");
+        try { quick.style.removeProperty("right"); } catch (_) {}
+        try { quick.style.removeProperty("bottom"); } catch (_) {}
+        quick.style.setProperty("width", "100vw", "important");
+        quick.style.setProperty("height", "100dvh", "important");
+        quick.style.setProperty("max-width", "100vw", "important");
+        quick.style.setProperty("max-height", "100dvh", "important");
+        quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 4px) 6px calc(env(safe-area-inset-bottom, 0px) + 4px)", "important");
         quick.style.setProperty("overflow-x", "hidden", "important");
         quick.style.setProperty("overflow-y", "auto", "important");
         try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
@@ -20843,20 +20881,10 @@ function buildVideoAsArticleCard(it) {
         "</section>"
       );
     });
-    var sections = "";
-    if (sectionParts.length === 3) {
-      sections =
-        '<div class="iu-nakup-online-twoColShell">' +
-        '<div class="iu-nakup-online-desktopCol iu-nakup-online-desktopCol--left">' +
-        sectionParts[0] +
-        sectionParts[1] +
-        "</div>" +
-        '<div class="iu-nakup-online-desktopCol iu-nakup-online-desktopCol--right">' +
-        sectionParts[2] +
-        "</div></div>";
-    } else {
-      sections = sectionParts.join("");
-    }
+    var sections =
+      '<div class="iu-nakup-online-singleColShell" data-iu-nakup-online-layout="single">' +
+      sectionParts.join("") +
+      "</div>";
     return (
       '<div class="iu-nakup-online-premiumShell">' +
       head +
@@ -20935,7 +20963,7 @@ function buildVideoAsArticleCard(it) {
         iuDockQuickFeedToBodyForced(quick);
         iuSetViewportLock(true);
         document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open");
-        try { quick.classList.add("iu-nakup-online-feed-root"); } catch (_) {}
+        try { quick.classList.add("iu-nakup-online-feed-root", "iu-nakup-online-single-column"); } catch (_) {}
         try { quick.setAttribute("data-iu-qf-key", "naceneni"); } catch (_) {}
       }
       if (isMobileOverlayScope) {
@@ -21487,7 +21515,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-single-column"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}
