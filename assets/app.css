@@ -11870,6 +11870,12 @@ body.iu-quickFeedOpen{
   body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-feed{
     overflow: visible !important;
     max-height: none !important;
+    /* Flex řetězec: zabránit min-width:auto rozšíření karty přes šířku scrollportu (žádný inner scroll). */
+    min-width: 0 !important;
+  }
+  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-premiumShell,
+  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-fill{
+    min-width: 0 !important;
   }
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-feed{
