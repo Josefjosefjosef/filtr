@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T11:05:20.112667Z",
+  "ingestedAt": "2026-04-16T11:25:10.150419Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šalková v Rouenu na své druhé kariérní čtvrtfinále na WTA Tour nedosáhla",
+      "url": "https://www.sport.cz/clanek/tenis-salkova-v-rouenu-na-sve-druhe-karierni-ctvrtfinale-na-wta-tour-nedosahla-5437469",
+      "dt": "2026-04-16T11:02:04Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "druhé",
+        "kariérní",
+        "nedosáhla",
+        "rouenu",
+        "své",
+        "tour",
+        "wta",
+        "čtvrtfinále",
+        "šalková"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,31 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Basketbalistka Wilsonová podepsala v Las Vegas nejlukrativnější kontrakt ve WNBA",
-      "url": "https://www.sport.cz/clanek/basketbal-basketbalistka-wilsonova-podepsala-v-las-vegas-nejlukrativnejsi-kontrakt-ve-wnba-5437322",
-      "dt": "2026-04-15T20:19:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalistka",
-        "kontrakt",
-        "las",
-        "nejlukrativnější",
-        "podepsala",
-        "vegas",
-        "wilsonová",
-        "wnba"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42841,
+      "bytes": 42852,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:49:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T11:02:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šalková v Rouenu na své druhé kariérní čtvrtfinále na WTA Tour nedosáhla",
+            "publishedAt": "2026-04-16T11:02:04Z"
+          },
           {
             "title": "První posila, do Plzně se vrací stříbrný medailista z dvacítek",
             "publishedAt": "2026-04-16T10:49:26Z"
@@ -869,10 +874,6 @@
           {
             "title": "Seemanová se vrací do bazénu. V Ostravě se bude pokoušet o limit pro Evropu",
             "publishedAt": "2026-04-16T08:57:50Z"
-          },
-          {
-            "title": "Český hokej vybírá nového kouče reprezentace. Hadamczik měl přinést na výkonný výbor dvě jména",
-            "publishedAt": "2026-04-16T08:55:03Z"
           }
         ]
       }

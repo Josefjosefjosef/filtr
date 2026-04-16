@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-16T11:05:20.112667Z",
+  "ingestedAt": "2026-04-16T11:25:10.150419Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chorý se dozví trest za vyloučení proti Plzni. Slavii může chybět až šest zápasů",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-tomas-chory-vylouceni-plivanec-plivnuti-cervena-trest.A260416_123652_fotbal_tals",
+      "dt": "2026-04-16T11:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chorý",
+        "chybět",
+        "dozví",
+        "plzni",
+        "proti",
+        "slavii",
+        "trest",
+        "vyloučení",
+        "zápasů",
+        "šest"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Štvanici čeká rekonstrukce za miliony. Za Bouzkovou dorazí i přítel Barkov: Musí!",
-      "url": "https://www.idnes.cz/sport/tenis/stvanici-ceka-rekonstrukce-za-miliony-za-bouzkovou-dorazi-i-pritel-barkov-musi.A260415_184104_tenis_ikuc",
-      "dt": "2026-04-15T17:54:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "barkov",
-        "bouzkovou",
-        "dorazí",
-        "miliony",
-        "musí",
-        "přítel",
-        "rekonstrukce",
-        "čeká",
-        "štvanici"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49955,
+      "bytes": 50156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T11:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorý se dozví trest za vyloučení proti Plzni. Slavii může chybět až šest zápasů",
+            "publishedAt": "2026-04-16T11:10:00Z"
+          },
           {
             "title": "Nedvěd, hrdina Sparty: Od začátku bylo dané, že skončím. Augusta si vybral jiné",
             "publishedAt": "2026-04-16T10:46:00Z"
@@ -873,10 +878,6 @@
           {
             "title": "Smůla pro Noska. Po vleklém zranění si zlomil nohu. Aspoň že tu druhou, vtipkoval",
             "publishedAt": "2026-04-16T09:20:00Z"
-          },
-          {
-            "title": "Klukovina, která Real stála zápas. Za tohle ale nemůžete vylučovat, zlobil se Arbeloa",
-            "publishedAt": "2026-04-16T09:09:00Z"
           }
         ]
       }
