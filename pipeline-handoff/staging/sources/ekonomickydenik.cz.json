@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Donáškoví roboti skrývají miliardový zisk. Útočí na ně ale také vandalové",
+      "url": "https://ekonomickydenik.cz/donaskovi-roboti-skryvaji-miliardy-vandalove/",
+      "dt": "2026-04-16T05:54:20Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "donáškoví",
+        "miliardový",
+        "roboti",
+        "skrývají",
+        "také",
+        "vandalové",
+        "zisk",
+        "útočí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -751,34 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ministr obrany Zůna musí skončit, volá TOP 09. Vadí jí zakázaný podcast s prezidentem",
-      "url": "https://ekonomickydenik.cz/ministr-obrany-skoncit-podcast-prezident/",
-      "dt": "2026-04-14T10:44:06Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ministr",
-        "musí",
-        "obrany",
-        "podcast",
-        "prezidentem",
-        "skončit",
-        "top",
-        "vadí",
-        "volá",
-        "zakázaný",
-        "zůna"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73768,
+      "bytes": 73885,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:54:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -842,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Donáškoví roboti skrývají miliardový zisk. Útočí na ně ale také vandalové",
+            "publishedAt": "2026-04-16T05:54:20Z"
+          },
           {
             "title": "Evropa vyvíjí „lovce“ ruských dronů a sabotérů. Testovat je chce i na Ukrajině",
             "publishedAt": "2026-04-16T04:45:00Z"
@@ -869,10 +871,6 @@
           {
             "title": "Finanční jackpot i pro Česko? První překážka pro biliony na rakety, čipy a dálnice padla",
             "publishedAt": "2026-04-15T13:45:20Z"
-          },
-          {
-            "title": "Žít, nebo jen přežívat? Většina Čechů na důstojný standard nedosáhne",
-            "publishedAt": "2026-04-15T13:10:34Z"
           }
         ]
       }

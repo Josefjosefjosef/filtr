@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Průzkumné dobrodružství Outbound dorazí později",
+      "url": "https://zing.cz/article/pruzkumne-dobrodruzstvi-outbound-dorazi-pozdeji",
+      "dt": "2026-04-16T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dobrodružství",
+        "dorazí",
+        "outbound",
+        "později",
+        "průzkumné"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -950,27 +972,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Bez varování vyšlo nové Borderlands",
-      "url": "https://zing.cz/article/bez-varovani-vyslo-nove-borderlands",
-      "dt": "2026-04-11T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "borderlands",
-        "nové",
-        "varování",
-        "vyšlo"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -981,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126003,
+      "bytes": 125967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1018,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1034,6 +1035,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průzkumné dobrodružství Outbound dorazí později",
+            "publishedAt": "2026-04-16T06:00:00Z"
+          },
           {
             "title": "Industria 2 narychlo změnila datum vydání",
             "publishedAt": "2026-04-16T04:00:00Z"
@@ -1061,10 +1066,6 @@
           {
             "title": "Warhammer Classics: návrat nostalgie i zapomenutých klenotů",
             "publishedAt": "2026-04-15T04:00:00Z"
-          },
-          {
-            "title": "Trilogie série Gothic zamíří na PlayStation i Xbox, známe přesná data vydání",
-            "publishedAt": "2026-04-14T18:00:00Z"
           }
         ]
       }

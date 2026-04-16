@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Toto bychom dnes udělali jinak. Záchranář k letecké nehodě proslavené seriálem Sanitka",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zachranar-k-letecke-nehode-proslavene-serialem-sanitka/",
+      "dt": "2026-04-16T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bychom",
+        "jinak",
+        "letecké",
+        "nehodě",
+        "proslavené",
+        "sanitka",
+        "seriálem",
+        "toto",
+        "udělali",
+        "záchranář"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,31 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Umělá inteligence místo lékaře? V rukou nepoučených pacientů může škodit",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/umela-inteligence-misto-lekare-muze-skodit-adam-grundel/",
-      "dt": "2026-04-15T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "inteligence",
-        "lékaře",
-        "místo",
-        "nepoučených",
-        "pacientů",
-        "rukou",
-        "umělá",
-        "škodit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90823,
+      "bytes": 87869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Toto bychom dnes udělali jinak. Záchranář k letecké nehodě proslavené seriálem Sanitka",
+            "publishedAt": "2026-04-16T06:00:00Z"
+          },
           {
             "title": "Německá reforma zdravotnictví: Úspory mají nést pacienti, pojišťovny i farmaceutické firmy",
             "publishedAt": "2026-04-16T05:00:00Z"
@@ -362,10 +368,6 @@
           {
             "title": "AI bude objednávat testy i plánovat návštěvy lékaře. V Americe chystají velký experiment",
             "publishedAt": "2026-04-15T10:23:39Z"
-          },
-          {
-            "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
-            "publishedAt": "2026-04-15T09:11:22Z"
           }
         ]
       }

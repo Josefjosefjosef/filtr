@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
+      "url": "https://profitonline.cz/konec-naftove-modly-cesi-prchaji-k-elektrice-na-obmenu-vraku-to-ale-nestaci/",
+      "dt": "2026-04-16T06:00:39Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "elektrice",
+        "konec",
+        "modly",
+        "naftové",
+        "nestačí",
+        "obměnu",
+        "prchají",
+        "vraků",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,28 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Moody’s vrací ČEZ rating na úroveň A3",
-      "url": "https://profitonline.cz/moodys-vraci-cez-rating-na-uroven-a3/",
-      "dt": "2026-04-13T20:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "moody",
-        "rating",
-        "vrací",
-        "úroveň",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18746,
+      "bytes": 19039,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -333,10 +338,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T06:00:39Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
+          "zdravi": 1,
+          "finance": 10,
           "sport": 1
         },
         "drop_counts": {
@@ -349,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
+            "publishedAt": "2026-04-16T06:00:39Z"
+          },
           {
             "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
             "publishedAt": "2026-04-16T04:00:53Z"
@@ -376,10 +386,6 @@
           {
             "title": "Dan Bárta & Illustratosphere lákají na jarní turné",
             "publishedAt": "2026-04-14T13:00:36Z"
-          },
-          {
-            "title": "Raritní desetikoruna se prodala za 134 tisíc. Cenný je malý detail",
-            "publishedAt": "2026-04-14T10:00:33Z"
           }
         ]
       }

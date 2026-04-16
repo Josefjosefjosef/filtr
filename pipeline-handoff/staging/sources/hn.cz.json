@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Psychické potíže předcházejí menopauzu o několik let, hormonální změny přicházejí ještě dříve. Kdy se začít připravovat a jak?",
+      "url": "https://podcasty.hn.cz/c1-67867050-psychicke-potize-predchazeji-menopauzu-o-nekolik-let-hormonalni-zmeny-prichazeji-jeste-drive-kdy-se-zacit-pripravovat-a-jak",
+      "dt": "2026-04-16T05:02:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dříve",
+        "hormonální",
+        "ještě",
+        "let",
+        "menopauzu",
+        "několik",
+        "potíže",
+        "psychické",
+        "předcházejí",
+        "přicházejí",
+        "připravovat",
+        "začít",
+        "změny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1122,36 +1152,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Fosi Audio i5: První sluchátka značky sází na audiofilské měniče a ukazují, v čem Bluetooth pořád nestačí",
-      "url": "https://tech.hn.cz/c1-67867060-fosi-audio-i5-prvni-sluchatka-znacky-sazi-na-audiofilske-menice-a-ukazuji-v-cem-bluetooth-porad-nestaci",
-      "dt": "2026-04-15T07:20:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "audio",
-        "audiofilské",
-        "bluetooth",
-        "fosi",
-        "měniče",
-        "nestačí",
-        "pořád",
-        "první",
-        "sluchátka",
-        "sází",
-        "ukazují",
-        "značky",
-        "čem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1162,7 +1162,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185525,
+      "bytes": 185473,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1199,11 +1199,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:02:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "finance": 34,
-          "zpravy": 6
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1215,6 +1216,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Psychické potíže předcházejí menopauzu o několik let, hormonální změny přicházejí ještě dříve. Kdy se začít připravovat a jak?",
+            "publishedAt": "2026-04-16T05:02:00Z"
+          },
           {
             "title": "Stát otevřel cestu pro rychlejší výstavbu větrníků. Teď přichází klíčová fáze",
             "publishedAt": "2026-04-16T04:46:00Z"
@@ -1242,10 +1247,6 @@
           {
             "title": "Odmítá &bdquo;ultras&ldquo; i pražské Spolu. Šéfem lidovců ještě není, přesto už Grolich promlouvá do koalic v metropoli",
             "publishedAt": "2026-04-15T16:22:00Z"
-          },
-          {
-            "title": "Hnutí MAGA je ve válce s papežem. Trump i Vance zaútočili na Lva XIV., katolíci se nestačí divit",
-            "publishedAt": "2026-04-15T16:00:00Z"
           }
         ]
       }

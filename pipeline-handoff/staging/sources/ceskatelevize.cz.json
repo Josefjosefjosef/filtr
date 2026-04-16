@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Generace si někdy přestávají rozumět, říkají k proměnám češtiny jayzykovědci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/generace-si-nekdy-prestavaji-rozumet-rikaji-k-promenam-cestiny-jayzykovedci-372427",
+      "dt": "2026-04-16T05:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "generace",
+        "jayzykovědci",
+        "někdy",
+        "proměnám",
+        "přestávají",
+        "rozumět",
+        "češtiny",
+        "říkají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -709,31 +734,6 @@
         "pokračovat",
         "práci",
         "ruský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Estonsko se stalo druhou zemí v Evropě, která úspěšně naklonovala koně",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/estonsko-se-stalo-druhou-zemi-v-evrope-ktera-uspesne-naklonovala-kone-372394",
-      "dt": "2026-04-15T09:07:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "druhou",
-        "estonsko",
-        "evropě",
-        "koně",
-        "naklonovala",
-        "stalo",
-        "zemí",
-        "úspěšně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1509,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41543,
+      "bytes": 42164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,11 +1569,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
+          "other": 5,
+          "zpravy": 24,
           "finance": 1
         },
         "drop_counts": {
@@ -1586,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Generace si někdy přestávají rozumět, říkají k proměnám češtiny jayzykovědci",
+            "publishedAt": "2026-04-16T05:30:00Z"
+          },
           {
             "title": "Je v troskách, ale dokáží ho obnovit, říká Hladík o íránském jaderném programu",
             "publishedAt": "2026-04-16T05:00:00Z"
@@ -1613,10 +1617,6 @@
           {
             "title": "Kyjev a Oděsa hlásí po ruských útocích mrtvé",
             "publishedAt": "2026-04-16T01:05:22Z"
-          },
-          {
-            "title": "Colt CZ vstoupil na burzu v Amsterdamu, následuje tak další tuzemské firmy",
-            "publishedAt": "2026-04-15T19:21:14Z"
           }
         ]
       }
@@ -1722,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77323,
+      "bytes": 77273,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

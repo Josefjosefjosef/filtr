@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T05:09:57.923701Z",
+  "ingestedAt": "2026-04-16T06:05:05.070371Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Ze zimy rovnou do léta? Letos zapomeňte. Předpověď na květen slibuje pravé jaro",
+      "url": "https://www.denik.cz/pocasi/pocasi-kveten-2026-predpoved.html",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jaro",
+        "květen",
+        "letos",
+        "léta",
+        "pravé",
+        "předpověď",
+        "rovnou",
+        "slibuje",
+        "zapomeňte",
+        "zimy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zájem o hypotéky v březnu silně rostl. Než stouply úroky",
+      "url": "https://www.denik.cz/ekonomika/banky-hypoteky-narust-brezen.html",
+      "dt": "2026-04-16T04:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "březnu",
+        "hypotéky",
+        "než",
+        "rostl",
+        "silně",
+        "stouply",
+        "zájem",
+        "úroky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -600,60 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Za ubodání bezbranné stařenky kvůli penězům dostal muž osmnáct let vězení",
-      "url": "https://prazsky.denik.cz/krimi/za-ubodani-bezbranne-starenky-kvuli-penezum-dostal-muz-osmnact-let-vezeni-202604.html",
-      "dt": "2026-04-15T10:39:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bezbranné",
-        "dostal",
-        "kvůli",
-        "let",
-        "muž",
-        "osmnáct",
-        "penězům",
-        "stařenky",
-        "ubodání",
-        "vězení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Chorvatsku připlul obří žralok až k lodi s turisty. Monstrum měřilo osm metrů",
-      "url": "https://www.denik.cz/staty-eu/chorvatsko-obri-zralok-priplul-az-k-lodi-s-turisty-pula.html",
-      "dt": "2026-04-15T10:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chorvatsku",
-        "lodi",
-        "metrů",
-        "monstrum",
-        "měřilo",
-        "obří",
-        "osm",
-        "připlul",
-        "turisty",
-        "žralok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29948,
+      "bytes": 29843,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,12 +699,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "zpravy": 23,
-          "finance": 1
+          "zpravy": 22,
+          "finance": 2,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -718,6 +716,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ze zimy rovnou do léta? Letos zapomeňte. Předpověď na květen slibuje pravé jaro",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
+          {
+            "title": "Zájem o hypotéky v březnu silně rostl. Než stouply úroky",
+            "publishedAt": "2026-04-16T04:50:00Z"
+          },
           {
             "title": "Obrázek či písnička při sezení. Psychoterapeuti radí, jak bezpečně pracovat s AI",
             "publishedAt": "2026-04-16T04:05:00Z"
@@ -741,14 +747,6 @@
           {
             "title": "Radost z prvních hub sezony: s česnekem na topinkám nečekaná velikonoční dobrota",
             "publishedAt": "2026-04-16T02:20:00Z"
-          },
-          {
-            "title": "Zoo otevírají brány hlavní sezony: Kde a za kolik je vstupné, jaká zvířata čekat",
-            "publishedAt": "2026-04-16T02:00:00Z"
-          },
-          {
-            "title": "Zmatek v Hormuzském průlivu: Amerika blokuje, Írán podvádí, Evropa plánuje",
-            "publishedAt": "2026-04-15T16:30:00Z"
           }
         ]
       }
