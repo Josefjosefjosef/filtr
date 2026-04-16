@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T16:10:06.329540Z",
+  "ingestedAt": "2026-04-16T16:35:22.651019Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump tvrdí, že se Izrael a Libanon dohodly na příměří",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-tvrdi-ze-se-izrael-a-libanon-dohodly-na-primeri-372461",
+      "dt": "2026-04-16T16:05:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dohodly",
+        "izrael",
+        "libanon",
+        "příměří",
+        "trump",
+        "tvrdí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -727,31 +750,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Skládá se obrázek vlády, která selhává v tom nejzákladnějším, míní Výborný",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-na-mimoradne-schuzi-resit-ceny-pohonnych-hmot-ci-verejnopravni-media-372432",
-      "dt": "2026-04-16T02:15:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "míní",
-        "nejzákladnějším",
-        "obrázek",
-        "selhává",
-        "skládá",
-        "tom",
-        "vlády",
-        "výborný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Nejnižší možný trest. Chorý dostal stopku na jeden zápas",
@@ -825,20 +823,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Rulíka a spol. by měli u národního týmu nahradit Moták s Grossem",
+      "title": "Rulíka u reprezentace nahradí Moták. Asistentem bude Gross, gólmany povede Kameš",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/rulika-by-mel-u-narodniho-tymu-nahradit-motak-s-grossem-156312",
       "dt": "2026-04-16T13:35:59Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "grossem",
+        "asistentem",
+        "gross",
+        "gólmany",
+        "kameš",
         "moták",
-        "měli",
-        "nahradit",
-        "národního",
-        "rulíka",
-        "spol",
-        "týmu"
+        "nahradí",
+        "povede",
+        "reprezentace",
+        "rulíka"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1506,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42707,
+      "bytes": 42195,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1566,7 +1565,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T15:35:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T16:05:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1583,6 +1582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump tvrdí, že se Izrael a Libanon dohodly na příměří",
+            "publishedAt": "2026-04-16T16:05:14Z"
+          },
           {
             "title": "Šéf NATO přijel na návštěvu Česka",
             "publishedAt": "2026-04-16T15:35:25Z"
@@ -1610,10 +1613,6 @@
           {
             "title": "Nad myšlenkou vlastní armády EU zaznívají v Litvě pochybnosti",
             "publishedAt": "2026-04-16T12:36:49Z"
-          },
-          {
-            "title": "V Turecku zatkli 162 lidí za podporu střelby na škole a šíření paniky na sítích",
-            "publishedAt": "2026-04-16T12:26:06Z"
           }
         ]
       }
@@ -1625,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38128,
+      "bytes": 38211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1690,7 +1689,7 @@
             "publishedAt": "2026-04-16T14:27:12Z"
           },
           {
-            "title": "Rulíka a spol. by měli u národního týmu nahradit Moták s Grossem",
+            "title": "Rulíka u reprezentace nahradí Moták. Asistentem bude Gross, gólmany povede Kameš",
             "publishedAt": "2026-04-16T13:35:59Z"
           },
           {
@@ -1719,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77278,
+      "bytes": 77280,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
