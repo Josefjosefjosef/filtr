@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-16T15:51:07.310347Z",
+  "ingestedAt": "2026-04-16T16:10:06.329540Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš přijal šéfa NATO, řeší výdaje na obranu i summit v Turecku",
+      "url": "https://zpravy.aktualne.cz/domaci/babis-prijal-sefa-nato-resi-vydaje-na-obranu-i-summit-v-turecku/r~aaa29ba1f5f7f6080cce13770694d28a/",
+      "dt": "2026-04-16T15:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babiš",
+        "nato",
+        "obranu",
+        "přijal",
+        "summit",
+        "turecku",
+        "výdaje",
+        "řeší",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -501,34 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Americké automobilky se bouří. Evropa jim hrozí zákazem dovozu velkých pick-upů",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/technika-a-design/americke-automobilky-se-bouri-evropa-jim-hrozi-zakazem-dovozu-velkych-pick-upu/r~aaa29afcd3b85968b2d956ebe7f4fc4b/",
-      "dt": "2026-04-16T10:26:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "americké",
-        "automobilky",
-        "bouří",
-        "dovozu",
-        "evropa",
-        "hrozí",
-        "jim",
-        "pick",
-        "upů",
-        "velkých",
-        "zákazem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22115,
+      "bytes": 21940,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,12 +574,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T15:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T15:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
+          "zpravy": 11,
           "sport": 6,
-          "finance": 4
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -593,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš přijal šéfa NATO, řeší výdaje na obranu i summit v Turecku",
+            "publishedAt": "2026-04-16T15:59:00Z"
+          },
           {
             "title": "Izrael přes ohlášené mírové rozhovory útočil v Libanonu, zničil strategický most",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -620,10 +622,6 @@
           {
             "title": "Muchová předvedla skvělý obrat, Nosková totálně zničila Rusku",
             "publishedAt": "2026-04-16T13:54:00Z"
-          },
-          {
-            "title": "Ukrajinská armáda šlape do útoků s roboty, podnikla jich už přes stovku",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

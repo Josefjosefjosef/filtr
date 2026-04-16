@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-16T15:51:07.310347Z",
+  "ingestedAt": "2026-04-16T16:10:06.329540Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Podívejte se, kde mohou být nejvyšší větrníky a nejvýkonnější solární elektrárny. Akcelerační zóny už odmítly první kraje a obce",
+      "url": "https://archiv.hn.cz/c1-67867370-podivejte-se-kde-mohou-byt-nejvyssi-vetrniky-a-nejvykonnejsi-solarni-elektrarny-akceleracni-zony-uz-odmitly-prvni-kraje-a-obce",
+      "dt": "2026-04-16T16:03:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "akcelerační",
+        "být",
+        "elektrárny",
+        "kraje",
+        "nejvyšší",
+        "nejvýkonnější",
+        "obce",
+        "odmítly",
+        "podívejte",
+        "první",
+        "solární",
+        "větrníky",
+        "zóny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1146,35 +1176,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "AI mění práci programátorů a požírá byznys softwarových firem. Panika na trzích může být i tak přehnaná",
-      "url": "https://byznys.hn.cz/c1-67866120-ai-meni-praci-programatoru-a-pozira-byznys-softwarovych-firem-panika-na-trzich-muze-byt-i-tak-prehnana",
-      "dt": "2026-04-15T14:44:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "byznys",
-        "být",
-        "firem",
-        "mění",
-        "panika",
-        "požírá",
-        "programátorů",
-        "práci",
-        "přehnaná",
-        "softwarových",
-        "tak",
-        "trzích"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1185,7 +1186,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185046,
+      "bytes": 185124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1222,12 +1223,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T15:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T16:03:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "zdravi": 2,
+          "finance": 33,
           "cestovani": 1,
-          "zdravi": 1,
           "zpravy": 4
         },
         "drop_counts": {
@@ -1240,6 +1241,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podívejte se, kde mohou být nejvyšší větrníky a nejvýkonnější solární elektrárny. Akcelerační zóny už odmítly první kraje a obce",
+            "publishedAt": "2026-04-16T16:03:00Z"
+          },
           {
             "title": "Jste továrna na lži a klidně vás vypnu. Budoucí maďarský premiér chce očistit média od roků Orbánova vlivu",
             "publishedAt": "2026-04-16T15:43:00Z"
@@ -1267,10 +1272,6 @@
           {
             "title": "TGM a Havel a kýč aneb Hřích našeho národa proti Duchu svatému",
             "publishedAt": "2026-04-16T13:26:00Z"
-          },
-          {
-            "title": "Válka na Blízkém východě je pro Rusko finanční požehnání. Příliv petrodolarů se mu v březnu zdvojnásobil hlavně díky Indii a Číně",
-            "publishedAt": "2026-04-16T13:14:00Z"
           }
         ]
       }
