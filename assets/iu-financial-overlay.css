@@ -375,6 +375,8 @@
 }
 
 /* === Desktop ≥1025 + body.iu-desktop-home-grid + open state: full-page pod #leftStickyHeader, scroll na panelu, 1 sloupec (bez :has()) === */
+/* Root guard: JS nastavuje #iuQuickFeed.iu-financial-calculators-fullpage + třídy na backdrop/panel — nesahat na jiné overlaye. */
+/* Vrstvení: #leftStickyHeader / .topbar-new mají z-index 1000 (app.css) — overlay musí být NAD (dříve 990/991 kreslil topbar přes overlay). */
 @media (min-width: 1025px) {
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open #iuFinancialCalcBackdrop.iu-financial-overlay-backdrop.iu-financial-calculators-fullpage{
     inset: auto;
@@ -382,7 +384,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 990;
+    z-index: 10028;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage{
     inset: auto;
@@ -391,7 +396,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 991;
+    z-index: 10029;
+    background: rgb(241, 245, 249);
     align-items: stretch;
     justify-content: flex-start;
     padding: 0;
