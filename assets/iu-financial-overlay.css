@@ -408,7 +408,9 @@
     overscroll-behavior-y: contain;
     box-sizing: border-box;
   }
+  /* cardShell: výška = celý hub (všechny sekce), ne jen viewport — jinak flex:1 na scrollHost řeže výšku a šedé pozadí panelu „prosvítá“ pod dalšími sekcemi */
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open, body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-cardShell{
+    align-self: flex-start;
     width: 100%;
     max-width: min(720px, calc(100vw - 80px));
     margin-left: auto;
@@ -421,21 +423,27 @@
     box-shadow: none;
     overflow: visible !important;
     box-sizing: border-box;
+    background: #fff;
   }
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open, body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-inner{
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     max-height: none !important;
     overflow: visible !important;
   }
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open, body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
-    flex: 0 1 auto !important;
-    min-height: 0 !important;
+    flex: 0 0 auto !important;
+    min-height: auto !important;
     max-height: none !important;
     overflow: visible !important;
     overflow-y: visible !important;
     touch-action: auto;
     overscroll-behavior-y: auto;
+    background: #fff;
+  }
+  body.iu-desktop-home-grid.iu-financial-calculators-overlay-open, body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-calculators-list.iu-fin-hub-wrap{
+    background: #fff;
+    min-width: 0;
   }
   body.iu-desktop-home-grid.iu-financial-calculators-overlay-open, body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-header{
     position: relative;
