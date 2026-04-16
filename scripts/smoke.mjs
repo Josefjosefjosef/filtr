@@ -91,18 +91,23 @@ async function gotoProjectsMediaForSmoke(page) {
   await page.waitForTimeout(600);
 }
 
-/** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
+/** Retries when client navigation races domcontentloaded (same-URL interrupt can recur on the retry goto). */
 async function gotoDomContentLoaded(page, url) {
-  try {
-    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
-  } catch (e) {
-    const msg = String(e && e.message ? e.message : e);
-    if (/interrupted/i.test(msg)) {
-      await page.waitForTimeout(500);
+  let lastErr = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
       return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
+    } catch (e) {
+      lastErr = e;
+      const msg = String(e && e.message ? e.message : e);
+      if (/interrupted/i.test(msg)) {
+        await page.waitForTimeout(500 + attempt * 200);
+        continue;
+      }
+      throw e;
     }
-    throw e;
   }
+  throw lastErr;
 }
 
 async function runSmoke() {
