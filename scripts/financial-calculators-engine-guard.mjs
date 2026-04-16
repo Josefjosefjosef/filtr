@@ -3,12 +3,21 @@
  */
 import assert from "node:assert/strict";
 import {
+  computeAffordability,
+  computeAnnuityRenta,
   computeBudget,
+  computeDip,
   computeDiscount,
+  computeDps,
   computeFinancialCalculator,
+  computeIncomeLossSick,
   computeInflation,
+  computeInvestmentGoal,
+  computeInvestmentGrowth,
   computeLoan,
   computeMortgage,
+  computeRefinance,
+  computeRentVsMortgage,
   computeSavings,
   computeVat,
 } from "../assets/iu-financial-calculators-engine.js";
@@ -165,5 +174,87 @@ assert.equal(budDef.meta.badge, "deficit");
 
 const unk = computeFinancialCalculator("nope", {});
 assert.equal(unk.ok, false);
+
+const aff = computeAffordability({
+  netIncome: "80000",
+  otherDebts: "5000",
+  children: "0",
+  annualRatePercent: "5",
+  years: "25",
+});
+assert.equal(aff.ok, true);
+assert.ok(aff.outputs.some((o) => o.key === "maxLoan"));
+
+const refi = computeRefinance({
+  principal: "2000000",
+  currentRatePercent: "5.5",
+  newRatePercent: "4.5",
+  years: "20",
+  fee: "0",
+});
+assert.equal(refi.ok, true);
+assert.ok(refi.outputs.some((o) => o.key === "monthlySave"));
+
+const rvm = computeRentVsMortgage({
+  rent: "15000",
+  propertyPrice: "5000000",
+  downPayment: "1000000",
+  mortgageRatePercent: "5",
+  years: "30",
+  sideCosts: "4000",
+});
+assert.equal(rvm.ok, true);
+
+const ig = computeInvestmentGrowth({
+  initial: "1000",
+  monthly: "100",
+  annualReturnPercent: "4",
+  years: "5",
+  capitalization: "monthly",
+});
+assert.equal(ig.ok, true);
+
+const renta = computeAnnuityRenta({
+  targetMonthly: "20000",
+  years: "15",
+  annualReturnPercent: "5",
+  withdrawalPercent: "4",
+});
+assert.equal(renta.ok, true);
+
+const goal = computeInvestmentGoal({
+  targetAmount: "1000000",
+  initial: "0",
+  annualReturnPercent: "5",
+  years: "10",
+});
+assert.equal(goal.ok, true);
+
+const dip = computeDip({
+  monthlyContrib: "2000",
+  marginalTaxPercent: "15",
+  years: "10",
+  annualReturnPercent: "3",
+});
+assert.equal(dip.ok, true);
+
+const dps = computeDps({
+  monthlyEmployee: "1000",
+  employerMonthly: "0",
+  years: "15",
+  annualReturnPercent: "3",
+  stateSupportMonthly: "230",
+});
+assert.equal(dps.ok, true);
+
+const sick = computeIncomeLossSick({
+  netIncome: "40000",
+  replacementPercent: "60",
+  monthsOut: "2",
+});
+assert.equal(sick.ok, true);
+
+assert.equal(computeFinancialCalculator("affordability", { netIncome: "50000", otherDebts: "0", children: "0", annualRatePercent: "4", years: "20" }).ok, true);
+assert.equal(computeFinancialCalculator("investment-growth", { initial: "0", monthly: "100", annualReturnPercent: "0", years: "3", capitalization: "monthly" }).ok, true);
 
 console.log("PASS financial-calculators-engine-guard");
