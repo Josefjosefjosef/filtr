@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-16T04:20:03.198144Z",
+  "ingestedAt": "2026-04-16T04:41:05.013448Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Od Borga a McEnroea po Velkou čtyřku. Rivality, které měnily mužský tenis",
+      "url": "https://www.idnes.cz/sport/trendy/tenisove-rivality.A260415_113512_trendy_blah/foto",
+      "dt": "2026-04-16T04:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "borga",
+        "mcenroea",
+        "mužský",
+        "měnily",
+        "rivality",
+        "tenis",
+        "velkou",
+        "čtyřku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Obránci Floridy Alscher s Hovorkou asistovali u demolice Detroitu",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-hovorka-alscher-hertl.A260416_061744_nhl_mkr",
+      "dt": "2026-04-16T04:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alscher",
+        "asistovali",
+        "demolice",
+        "detroitu",
+        "floridy",
+        "hovorkou",
+        "obránci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,57 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejlepší mezi nejhoršími. Vancouver vybral Hronka jako nejužitečnějšího hráče",
-      "url": "https://www.idnes.cz/hokej/nhl/hronek-si-v-nhl-vyslouzil-oceneni-pro-nejuzitecnejsiho-hrace-vancouveru.A260415_121357_nhl_kazdt",
-      "dt": "2026-04-15T10:22:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hronka",
-        "hráče",
-        "jako",
-        "nejhoršími",
-        "nejlepší",
-        "nejužitečnějšího",
-        "vancouver",
-        "vybral"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Paní průkopnice. Union Berlín má trenérku. Stejně tak Břevnov. Kdo bude další?",
-      "url": "https://www.idnes.cz/fotbal/zahranici/marie-louise-etaova-trenerka-fotbalistu-unionu-berlin.A260414_173946_fot_zahranici_ten",
-      "dt": "2026-04-15T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "berlín",
-        "břevnov",
-        "další",
-        "paní",
-        "průkopnice",
-        "stejně",
-        "tak",
-        "trenérku",
-        "union"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47832,
+      "bytes": 47516,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -859,6 +857,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od Borga a McEnroea po Velkou čtyřku. Rivality, které měnily mužský tenis",
+            "publishedAt": "2026-04-16T04:30:00Z"
+          },
+          {
+            "title": "Obránci Floridy Alscher s Hovorkou asistovali u demolice Detroitu",
+            "publishedAt": "2026-04-16T04:17:00Z"
+          },
           {
             "title": "Tenisový luxus: unikátní odměna, Muchová se vyhýbá čokoládě. A kam všichni volají?",
             "publishedAt": "2026-04-15T22:00:00Z"
@@ -882,14 +888,6 @@
           {
             "title": "Pardubice - Sparta 1:0. Domácí jsou potřetí v řadě ve finále, rozhodla hrubka Krejčíka",
             "publishedAt": "2026-04-15T19:08:00Z"
-          },
-          {
-            "title": "Nedodržel hodnoty, porušil důvěru. Švýcaři otočili, měsíc před MS vyhodili trenéra",
-            "publishedAt": "2026-04-15T18:52:00Z"
-          },
-          {
-            "title": "Zbrojovka přetlačila Žižkov, Táborsko slaví v derby. Artis se dotáhl na třetí Opavu",
-            "publishedAt": "2026-04-15T18:41:00Z"
           }
         ]
       }

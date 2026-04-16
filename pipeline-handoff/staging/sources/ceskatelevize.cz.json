@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T04:20:03.198144Z",
+  "ingestedAt": "2026-04-16T04:41:05.013448Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Lidé kapitulují před AI, varuje výzkum před dalekosáhlými dopady",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/lide-kapituluji-pred-ai-varuje-vyzkum-pred-dalekosahlymi-dopady-372381",
+      "dt": "2026-04-16T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dalekosáhlými",
+        "dopady",
+        "kapitulují",
+        "lidé",
+        "varuje",
+        "výzkum"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -106,7 +129,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusko udeřilo na Kyjev, úřady hlásí oběti a zraněné",
+      "title": "Kyjev a Oděsa hlásí po ruských útocích mrtvé",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-uderilo-na-kyjev-urady-hlasi-obet-a-zranene-372429",
       "dt": "2026-04-16T01:05:22Z",
       "media_raw": "ČT24 / Domácí",
@@ -114,11 +137,10 @@
       "tokens": [
         "hlásí",
         "kyjev",
-        "oběti",
-        "rusko",
-        "udeřilo",
-        "zraněné",
-        "úřady"
+        "mrtvé",
+        "oděsa",
+        "ruských",
+        "útocích"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -711,31 +733,6 @@
         "poznání",
         "vědci",
         "všechny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rutte přijede za Babišem. Podle Pavla by tím mohl signalizovat problém",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/sef-nato-rutte-ve-ctvrtek-navstivi-cesko-372399",
-      "dt": "2026-04-15T08:59:14Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babišem",
-        "pavla",
-        "podle",
-        "problém",
-        "přijede",
-        "rutte",
-        "signalizovat",
-        "tím"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1515,7 +1512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41015,
+      "bytes": 40934,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,12 +1572,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:10:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 1,
-          "other": 4
+          "other": 5,
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1592,6 +1589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidé kapitulují před AI, varuje výzkum před dalekosáhlými dopady",
+            "publishedAt": "2026-04-16T04:30:00Z"
+          },
           {
             "title": "Banky poskytly v březnu hypotéky za 55,4 miliardy korun",
             "publishedAt": "2026-04-16T04:10:23Z"
@@ -1609,7 +1610,7 @@
             "publishedAt": "2026-04-16T01:27:41Z"
           },
           {
-            "title": "Rusko udeřilo na Kyjev, úřady hlásí oběti a zraněné",
+            "title": "Kyjev a Oděsa hlásí po ruských útocích mrtvé",
             "publishedAt": "2026-04-16T01:05:22Z"
           },
           {
@@ -1619,10 +1620,6 @@
           {
             "title": "Pavel jednal s Mileiem. Shodneme se v otázce Ukrajiny i Izraele, ocenil",
             "publishedAt": "2026-04-15T17:59:29Z"
-          },
-          {
-            "title": "Výbor europarlamentu podpořil návrh Nerudové na vynětí obytných budov z ETS 2",
-            "publishedAt": "2026-04-15T17:33:22Z"
           }
         ]
       }

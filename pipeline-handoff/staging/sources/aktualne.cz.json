@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-16T04:20:03.198144Z",
+  "ingestedAt": "2026-04-16T04:41:05.013448Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nevídaný výlev trenéra. Je jim to jedno, pustil se matador NHL do vlastních hráčů",
+      "url": "https://sport.aktualne.cz/hokej/nevidany-vylev-trenera-je-jim-to-jedno-pustil-se-matador-nhl-do-vlastnich-hracu/r~aaa298b160e955454a7362753633b748/",
+      "dt": "2026-04-16T04:20:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hráčů",
+        "jedno",
+        "jim",
+        "matador",
+        "nevídaný",
+        "nhl",
+        "pustil",
+        "trenéra",
+        "vlastních",
+        "výlev"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -143,22 +170,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Víme, kdo vyrábí Fialu-influencera, který rozplakal Babiše. Jedno jméno zůstává tajné",
+      "title": "Nová verze Fialy, která rozplakala i Babiše. Víme, kdo za ní stojí",
       "url": "https://zpravy.aktualne.cz/domaci/vime-kdo-vyrabi-fialu-influencera-ktery-rozplakal-babise-jedno-jmeno-zustava-tajne/r~aaa29e61d9bc6027d4a2dd8bd8176704/",
       "dt": "2026-04-16T03:30:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "babiše",
-        "fialu",
-        "influencera",
-        "jedno",
-        "jméno",
-        "rozplakal",
-        "tajné",
-        "vyrábí",
-        "víme",
-        "zůstává"
+        "fialy",
+        "nová",
+        "rozplakala",
+        "stojí",
+        "verze",
+        "víme"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -503,31 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neposílejte drony Ukrajině, vtahujete se do války, varuje Moskva Evropu",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "drony",
-        "evropu",
-        "moskva",
-        "neposílejte",
-        "ukrajině",
-        "varuje",
-        "vtahujete",
-        "války"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22094,
+      "bytes": 22122,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,13 +574,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:20:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
           "other": 1,
           "finance": 1,
-          "zpravy": 14,
-          "sport": 4
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -593,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nevídaný výlev trenéra. Je jim to jedno, pustil se matador NHL do vlastních hráčů",
+            "publishedAt": "2026-04-16T04:20:00Z"
+          },
           {
             "title": "Geniální hudebník i muž s řadou démonů. Silný dokument o Stypkovi otevírá 13. komnaty",
             "publishedAt": "2026-04-16T04:00:00Z"
@@ -614,16 +617,12 @@
             "publishedAt": "2026-04-16T03:30:00Z"
           },
           {
-            "title": "Víme, kdo vyrábí Fialu-influencera, který rozplakal Babiše. Jedno jméno zůstává tajné",
+            "title": "Nová verze Fialy, která rozplakala i Babiše. Víme, kdo za ní stojí",
             "publishedAt": "2026-04-16T03:30:00Z"
           },
           {
             "title": "Velkolepá bitva gigantů přinesla sedm gólů. Real v Lize mistrů končil plný vzteku",
             "publishedAt": "2026-04-15T21:00:00Z"
-          },
-          {
-            "title": "Čekají vás úžasné dva dny, napíná Trump kvůli Íránu. Ceny ropy i tak rostou",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }
