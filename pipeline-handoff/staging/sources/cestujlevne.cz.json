@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-16T09:34:42.668041Z",
+  "ingestedAt": "2026-04-16T09:54:55.271338Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Kapverdy v dubnu z Prahy: 5* hotel s all-inclusive. Zájezd od 20 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/kapverdy-v-dubnu-z-prahy-5-hotel-s-all-inclusive",
+      "dt": "2026-04-16T09:49:27Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "all",
+        "dubnu",
+        "hotel",
+        "inclusive",
+        "kapverdy",
+        "prahy",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -477,30 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Chorvatský Dubrovník z Vídně během jara. Letenky od 735 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/chorvatsky-dubrovnik-z-vidne-behem-jara",
-      "dt": "2026-04-09T12:27:35Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "735",
-        "během",
-        "chorvatský",
-        "dubrovník",
-        "jara",
-        "letenky",
-        "vídně"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44282,
+      "bytes": 45251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T09:49:27Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -563,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kapverdy v dubnu z Prahy: 5* hotel s all-inclusive. Zájezd od 20 990 Kč",
+            "publishedAt": "2026-04-16T09:49:27Z"
+          },
           {
             "title": "Týden na Kypru z Prahy: Protaras nebo Ayia Napa. Zájezd od 7 876 Kč",
             "publishedAt": "2026-04-16T07:35:00Z"
@@ -590,10 +595,6 @@
           {
             "title": "Z Prahy na termální ostrov Ischia do 4* hotelu se snídaní. Zájezd od 12 990 Kč",
             "publishedAt": "2026-04-14T18:13:54Z"
-          },
-          {
-            "title": "Přímé lety z Prahy na azorský ostrov São Miguel na jaře. Letenky od 5 897 Kč",
-            "publishedAt": "2026-04-14T13:10:26Z"
           }
         ]
       }

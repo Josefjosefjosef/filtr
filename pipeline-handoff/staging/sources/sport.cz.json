@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T09:34:42.668041Z",
+  "ingestedAt": "2026-04-16T09:54:55.271338Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Horníček zabojuje s Bragou o semifinále Evropské ligy",
+      "url": "https://www.sport.cz/clanek/fotbal-evropska-liga-hornicek-zabojuje-s-bragou-o-semifinale-evropske-ligy-5437456",
+      "dt": "2026-04-16T09:38:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bragou",
+        "evropské",
+        "horníček",
+        "ligy",
+        "semifinále",
+        "zabojuje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -753,33 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Pardubice jsou ve finále! K postupu proti Spartě jim stačil jediný gól",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-rozhodujici-bitva-o-finale-dynamo-hosti-spartu-v-sedmem-zapase-5436987",
-      "dt": "2026-04-15T13:00:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "finále",
-        "gól",
-        "jediný",
-        "jim",
-        "pardubice",
-        "postupu",
-        "proti",
-        "sestřih",
-        "spartě",
-        "stačil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43894,
+      "bytes": 43046,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T09:09:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T09:38:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Horníček zabojuje s Bragou o semifinále Evropské ligy",
+            "publishedAt": "2026-04-16T09:38:47Z"
+          },
           {
             "title": "Sklapni! Po vyřazení z Ligy mistrů se řeší potyčka mezi hráči Realu",
             "publishedAt": "2026-04-16T09:09:01Z"
@@ -869,10 +869,6 @@
           {
             "title": "Promotér z Miami zažaloval Messiho a Argentinu kvůli přípravným zápasům",
             "publishedAt": "2026-04-16T08:23:42Z"
-          },
-          {
-            "title": "Málek udržel potřetí v sezoně v AHL čisté konto",
-            "publishedAt": "2026-04-16T08:18:54Z"
           }
         ]
       }
