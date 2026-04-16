@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T12:20:02.086515Z",
+  "ingestedAt": "2026-04-16T12:39:46.418688Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "162 zatčených. Turecká policie ostře reagovala na školní střelby",
+      "url": "https://www.denik.cz/staty-mimo-eu/turecko-skolni-strelby-policie-zatykani.html",
+      "dt": "2026-04-16T11:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "162",
+        "ostře",
+        "policie",
+        "reagovala",
+        "střelby",
+        "turecká",
+        "zatčených",
+        "školní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,31 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zájem o hypotéky v březnu silně rostl. Než stouply úroky",
-      "url": "https://www.denik.cz/ekonomika/banky-hypoteky-narust-brezen.html",
-      "dt": "2026-04-16T04:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "březnu",
-        "hypotéky",
-        "než",
-        "rostl",
-        "silně",
-        "stouply",
-        "zájem",
-        "úroky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28907,
+      "bytes": 29004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +699,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T11:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T11:43:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 3
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "162 zatčených. Turecká policie ostře reagovala na školní střelby",
+            "publishedAt": "2026-04-16T11:43:00Z"
+          },
           {
             "title": "Poslanec ANO Kolovratník se omluvil z jednání Sněmovny. Zamířil na hokej",
             "publishedAt": "2026-04-16T11:18:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "V Dunajské Stredě srazil vlak Leo Expressu kamion.Řidič zahynul",
             "publishedAt": "2026-04-16T09:58:00Z"
-          },
-          {
-            "title": "Hvězdnou Katy Perryovou viní ze sexuálního útoku. Napadnout měla ženu",
-            "publishedAt": "2026-04-16T09:47:00Z"
           }
         ]
       }
