@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-16T17:14:51.933392Z",
+  "ingestedAt": "2026-04-16T17:30:02.910664Z",
   "items": [
     {
       "section": "finance",
@@ -57,6 +57,34 @@
         "své",
         "vehnali",
         "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Závazky k NATO jsou naše priorita. Uděláme vše pro to, abychom je splnili, řekl Babiš Ruttemu",
+      "url": "https://domaci.hn.cz/c1-67868060-zavazky-k-nato-jsou-nase-priorita-udelame-vse-pro-to-abychom-je-splnili-rekl-babis-ruttemu",
+      "dt": "2026-04-16T16:38:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "abychom",
+        "babiš",
+        "nato",
+        "naše",
+        "priorita",
+        "ruttemu",
+        "splnili",
+        "uděláme",
+        "vše",
+        "závazky",
+        "řekl"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1146,38 +1174,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Poslanci musí na poslední chvíli hasit problém, o kterém se ví dva roky. Nefunkční geoportál by znamenal kolaps územních plánů",
-      "url": "https://archiv.hn.cz/c1-67866720-poslanci-musi-na-posledni-chvili-hasit-problem-o-kterem-se-vi-dva-roky-nefunkcni-geoportal-by-znamenal-kolaps-uzemnich-planu",
-      "dt": "2026-04-15T14:55:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chvíli",
-        "dva",
-        "geoportál",
-        "hasit",
-        "kolaps",
-        "kterém",
-        "musí",
-        "nefunkční",
-        "plánů",
-        "poslanci",
-        "poslední",
-        "problém",
-        "roky",
-        "znamenal",
-        "územních"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1188,7 +1184,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185038,
+      "bytes": 184934,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1252,6 +1248,10 @@
             "publishedAt": "2026-04-16T16:55:00Z"
           },
           {
+            "title": "Závazky k NATO jsou naše priorita. Uděláme vše pro to, abychom je splnili, řekl Babiš Ruttemu",
+            "publishedAt": "2026-04-16T16:38:00Z"
+          },
+          {
             "title": "Podívejte se, kde mohou být nejvyšší větrníky a nejvýkonnější solární elektrárny. Akcelerační zóny už odmítly první kraje a obce",
             "publishedAt": "2026-04-16T16:03:00Z"
           },
@@ -1270,10 +1270,6 @@
           {
             "title": "AI už v českých podnicích není jen experiment. Širší nasazení ale vázne, uvádí studie Deloitte",
             "publishedAt": "2026-04-16T13:56:00Z"
-          },
-          {
-            "title": "Od války zpět k trhům taženým umělou inteligencí. Snad už brzy",
-            "publishedAt": "2026-04-16T13:41:00Z"
           }
         ]
       }

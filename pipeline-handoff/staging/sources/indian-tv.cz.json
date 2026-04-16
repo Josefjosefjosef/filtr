@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-16T17:14:51.933392Z",
+  "ingestedAt": "2026-04-16T17:30:02.910664Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Metro 2039 nás zavede zpět do temnoty, kde vládne strach, propaganda a legendární Lovec - INDIAN",
+      "url": "https://indian-tv.cz/clanek/metro-2039-nas-zavede-zpet-do-temnoty-kde-vladne-strach-livsqp",
+      "dt": "2026-04-16T17:15:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "2039",
+        "indian",
+        "legendární",
+        "lovec",
+        "metro",
+        "nás",
+        "propaganda",
+        "strach",
+        "temnoty",
+        "vládne",
+        "zavede",
+        "zpět"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1050,30 +1079,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Je to oficiálně venku. Ve čtvrtek uvidíme Metro 2039 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/je-to-oficialne-venku-ve-ctvrtek-uvidime-metro-2039-n5kedi",
-      "dt": "2026-04-13T13:37:06Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "2039",
-        "indian",
-        "metro",
-        "oficiálně",
-        "uvidíme",
-        "venku",
-        "čtvrtek"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,11 +1089,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 203805,
+      "bytes": 199589,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 59,
+      "itemsParsed": 57,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1121,7 +1126,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T16:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T17:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1136,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Metro 2039 nás zavede zpět do temnoty, kde vládne strach, propaganda a legendární Lovec - INDIAN",
+            "publishedAt": "2026-04-16T17:15:00Z"
+          },
           {
             "title": "Vesmírné dobrodružství Starfield si užijí i hráči na Nintendu Switch 2 - INDIAN",
             "publishedAt": "2026-04-16T16:55:00Z"
@@ -1163,10 +1172,6 @@
           {
             "title": "Brzy bude plnohodnotně představena akční adventura Marvel’s Wolverine - INDIAN",
             "publishedAt": "2026-04-16T06:38:04Z"
-          },
-          {
-            "title": "Už žádné nepřirozeně useknuté silnice. Nasdara v expanzi DayZ Badlands nabídne smysluplnější okraje mapy - INDIAN",
-            "publishedAt": "2026-04-16T06:11:41Z"
           }
         ]
       }
