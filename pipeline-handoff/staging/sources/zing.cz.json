@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-16T09:54:55.271338Z",
+  "ingestedAt": "2026-04-16T10:49:53.734428Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Survivalový kousek Grounded 2 se opět rozrostl",
+      "url": "https://zing.cz/article/survivalovy-kousek-grounded-2-se-opet-rozrostl",
+      "dt": "2026-04-16T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "grounded",
+        "kousek",
+        "opět",
+        "rozrostl",
+        "survivalový"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -959,30 +981,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Warhammer Survivors: Yarrick, Orci i Age of Sigmar v jednom",
-      "url": "https://zing.cz/article/warhammer-survivors-yarrick-orci-i-age-of-sigmar-v-jednom",
-      "dt": "2026-04-11T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "age",
-        "jednom",
-        "orci",
-        "sigmar",
-        "survivors",
-        "warhammer",
-        "yarrick"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +991,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126102,
+      "bytes": 126061,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1028,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1046,6 +1044,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Survivalový kousek Grounded 2 se opět rozrostl",
+            "publishedAt": "2026-04-16T10:00:00Z"
+          },
           {
             "title": "NVIDIA GeForce RTX 5060 nebo RTX 5070 Ti? Která grafika vám zajistí vítězství v Counter-Strike 2?",
             "publishedAt": "2026-04-16T08:30:00Z"
@@ -1073,10 +1075,6 @@
           {
             "title": "Morbid Metal: adept na úspěšnou roguelike řežbu",
             "publishedAt": "2026-04-15T14:00:00Z"
-          },
-          {
-            "title": "YouTuber už nechtěl čekat a postavil vlastní Steam Machine",
-            "publishedAt": "2026-04-15T12:00:00Z"
           }
         ]
       }

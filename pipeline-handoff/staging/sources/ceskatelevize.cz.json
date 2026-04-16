@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T09:54:55.271338Z",
+  "ingestedAt": "2026-04-16T10:49:53.734428Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vědci navrhli genetickou léčbu Downova syndromu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-navrhli-genetickou-lecbu-downova-syndromu-372440",
+      "dt": "2026-04-16T10:06:51Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "downova",
+        "genetickou",
+        "léčbu",
+        "navrhli",
+        "syndromu",
+        "vědci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -352,20 +375,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Chaotické kroky a nečinnost vlády zaplatí občané, prohlásil Kupka",
+      "title": "Opozice škodí Česku a není možné s ní diskutovat, prohlásil Babiš",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-na-mimoradne-schuzi-resit-ceny-pohonnych-hmot-ci-verejnopravni-media-372432",
       "dt": "2026-04-16T02:15:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "chaotické",
-        "kroky",
-        "kupka",
-        "nečinnost",
-        "občané",
+        "babiš",
+        "diskutovat",
+        "možné",
+        "opozice",
         "prohlásil",
-        "vlády",
-        "zaplatí"
+        "česku",
+        "škodí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -714,31 +736,6 @@
         "studie",
         "varování",
         "šířily"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trumpova administrativa žádá o zrušení rozsudků pro vůdce útoku na Kapitol",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trumpova-administrativa-zada-o-zruseni-rozsudku-pro-vudce-utoku-na-kapitol-372406",
-      "dt": "2026-04-15T12:24:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "administrativa",
-        "kapitol",
-        "rozsudků",
-        "trumpova",
-        "vůdce",
-        "zrušení",
-        "útoku",
-        "žádá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1518,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41396,
+      "bytes": 41592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1578,12 +1575,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T09:37:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:06:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 7,
           "finance": 2,
-          "zpravy": 22,
-          "other": 6
+          "zpravy": 21
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1595,6 +1592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vědci navrhli genetickou léčbu Downova syndromu",
+            "publishedAt": "2026-04-16T10:06:51Z"
+          },
           {
             "title": "Ceny benzinu a nafty poprvé od začátku bojů v Íránu klesly",
             "publishedAt": "2026-04-16T09:37:28Z"
@@ -1622,10 +1623,6 @@
           {
             "title": "Před 70 lety přišel na trh první videorekordér",
             "publishedAt": "2026-04-16T07:25:37Z"
-          },
-          {
-            "title": "O víkendu bude až dvacet stupňů, poté se ochladí",
-            "publishedAt": "2026-04-16T06:15:11Z"
           }
         ]
       }
@@ -1731,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77038,
+      "bytes": 77083,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-16T09:54:55.271338Z",
+  "ingestedAt": "2026-04-16T10:49:53.734428Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Napětí v Perském zálivu srazilo cenu zlata. Zájem investorů roste",
+      "url": "https://www.betterlife.cz/napeti-v-perskem-zalivu-srazilo-cenu-zlata-zajem-investoru-roste/",
+      "dt": "2026-04-16T09:55:04Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "cenu",
+        "investorů",
+        "napětí",
+        "perském",
+        "roste",
+        "srazilo",
+        "zlata",
+        "zájem",
+        "zálivu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -253,34 +279,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pět supermarketů Billa zavře své dveře. Nakupující musí využít náhradní obchody",
-      "url": "https://www.betterlife.cz/pet-supermarketu-billa-zavre-sve-dvere-nakupujici-musi-vyuzit-nahradni-obchody/",
-      "dt": "2026-04-12T10:29:51Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "billa",
-        "dveře",
-        "musí",
-        "nakupující",
-        "náhradní",
-        "obchody",
-        "pět",
-        "supermarketů",
-        "své",
-        "využít",
-        "zavře"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 74643,
+      "bytes": 74899,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -351,11 +349,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:40:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T09:55:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -367,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Napětí v Perském zálivu srazilo cenu zlata. Zájem investorů roste",
+            "publishedAt": "2026-04-16T09:55:04Z"
+          },
           {
             "title": "Chorvatsko mění pravidla pro řidiče. Registrace před cestou k moři bude pro řidiče povinná",
             "publishedAt": "2026-04-16T08:40:52Z"
@@ -394,10 +396,6 @@
           {
             "title": "České domácnosti kvůli špatným radám zbytečně přicházejí o peníze. Expert varuje před mýty o úsporách",
             "publishedAt": "2026-04-13T16:11:36Z"
-          },
-          {
-            "title": "Světloplachost trápí většinu populace. Roli hrají léky i nošení slunečních brýlí",
-            "publishedAt": "2026-04-13T09:26:30Z"
           }
         ]
       }

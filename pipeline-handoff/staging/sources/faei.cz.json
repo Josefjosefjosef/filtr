@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-16T09:54:55.271338Z",
+  "ingestedAt": "2026-04-16T10:49:53.734428Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
+      "url": "https://profitonline.cz/neprodavame-auta-po-havarii-tvrdi-inzeraty-realita-je-zcela-jina/",
+      "dt": "2026-04-16T10:00:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "auta",
+        "havárii",
+        "inzeráty",
+        "jiná",
+        "neprodáváme",
+        "realita",
+        "tvrdí",
+        "zcela"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -270,26 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bitcoin na třítýdenním maximu",
-      "url": "https://profitonline.cz/bitcoin-na-tritydennim-maximu/",
-      "dt": "2026-04-14T06:00:17Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bitcoin",
-        "maximu",
-        "třítýdenním"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18801,
+      "bytes": 18916,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,11 +342,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:00:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:00:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 9,
+          "zdravi": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -354,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
+            "publishedAt": "2026-04-16T10:00:00Z"
+          },
           {
             "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
             "publishedAt": "2026-04-16T08:00:02Z"
@@ -381,10 +390,6 @@
           {
             "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
             "publishedAt": "2026-04-15T04:00:45Z"
-          },
-          {
-            "title": "Připravme se na celkové zdražování, ceny pohonných hmot porostou",
-            "publishedAt": "2026-04-14T18:00:54Z"
           }
         ]
       }

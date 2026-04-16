@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-16T09:54:55.271338Z",
+  "ingestedAt": "2026-04-16T10:49:53.734428Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chybné znalecké posudky poškozují lékaře, říká Kubek. Ministerstvo připouští změny",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soudni-znalci-v-lekarstvi-ministerstvo-spravedlnosti/",
+      "dt": "2026-04-16T10:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chybné",
+        "kubek",
+        "lékaře",
+        "ministerstvo",
+        "posudky",
+        "poškozují",
+        "připouští",
+        "změny",
+        "znalecké",
+        "říká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "AI bude objednávat testy i plánovat návštěvy lékaře. V Americe chystají velký experiment",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/ai-bude-objednavat-testy-i-planovat-navstevy-lekare/",
-      "dt": "2026-04-15T10:23:39Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "americe",
-        "chystají",
-        "experiment",
-        "lékaře",
-        "návštěvy",
-        "objednávat",
-        "plánovat",
-        "testy",
-        "velký"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92263,
+      "bytes": 92115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:00:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -333,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chybné znalecké posudky poškozují lékaře, říká Kubek. Ministerstvo připouští změny",
+            "publishedAt": "2026-04-16T10:00:00Z"
+          },
           {
             "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
             "publishedAt": "2026-04-16T08:00:50Z"
@@ -360,10 +365,6 @@
           {
             "title": "Žena vyhrožovala vystřílením plzeňské nemocnice. Neřekli jí stav pacienta",
             "publishedAt": "2026-04-15T13:36:04Z"
-          },
-          {
-            "title": "Kolik šálků kávy denně prospívá psychice? Vědci našli překvapivě přesné číslo",
-            "publishedAt": "2026-04-15T12:47:00Z"
           }
         ]
       }
