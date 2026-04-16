@@ -21539,7 +21539,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -21674,7 +21674,7 @@ function buildVideoAsArticleCard(it) {
         }
         try {
           if (finPn) finPn.dataset.open = "0";
-          document.body.classList.remove("iu-financial-overlay-open");
+          document.body.classList.remove("iu-financial-overlay-open", "iu-financial-calculators-overlay-open");
         } catch (_) {}
       }
       if (typeof window.iuLegalDocsCloseSurface === "function") {
@@ -21705,7 +21705,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen");
     } catch (_) {}
   }
 
@@ -22062,7 +22062,7 @@ function buildVideoAsArticleCard(it) {
         modal.setAttribute('hidden', '');
       }
       modal.classList.remove('is-open');
-      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open', 'iu-legal-docs-overlay-open');
+      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open', 'iu-financial-calculators-overlay-open', 'iu-legal-docs-overlay-open');
     }
   }, true);
 
