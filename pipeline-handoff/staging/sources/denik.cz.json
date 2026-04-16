@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T03:47:50.719209Z",
+  "ingestedAt": "2026-04-16T04:04:33.864321Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lži u voleb v Maďarsku: Řeší Benešovy dekrety i smyšlené zatčení Orbána v ČSSR",
+      "url": "https://www.denik.cz/z_domova/volby-madarsko-dezinformace-lzi-viktor-orban-edvard-benes-dekrety-televize.html",
+      "dt": "2026-04-16T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "benešovy",
+        "dekrety",
+        "lži",
+        "maďarsku",
+        "orbána",
+        "smyšlené",
+        "voleb",
+        "zatčení",
+        "čssr",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,32 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mimořádná událost v Telči: Strojvůdce vystoupil, vlak ujel do sousedního kraje",
-      "url": "https://www.denik.cz/regiony/mimoradna-udalost-zeleznice-telc-vlak-se-sam-rozjel.html",
-      "dt": "2026-04-15T10:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kraje",
-        "mimořádná",
-        "sousedního",
-        "strojvůdce",
-        "telči",
-        "událost",
-        "ujel",
-        "vlak",
-        "vystoupil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29978,
+      "bytes": 30200,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lži u voleb v Maďarsku: Řeší Benešovy dekrety i smyšlené zatčení Orbána v ČSSR",
+            "publishedAt": "2026-04-16T03:30:00Z"
+          },
           {
             "title": "Zemřela Helena Vovsová: Sloužila u Heydrichů. Židům tajně nosila dopisy i jídlo",
             "publishedAt": "2026-04-16T03:00:00Z"
@@ -744,10 +749,6 @@
           {
             "title": "Je rozhodnuto, Aragorna v novém Pánovi prstenů si zahraje Jamie Dornan",
             "publishedAt": "2026-04-15T14:45:00Z"
-          },
-          {
-            "title": "V ochranném krytu Černobylu zůstává díra. Zhroucení sarkofágu by bylo pohromou",
-            "publishedAt": "2026-04-15T14:42:00Z"
           }
         ]
       }

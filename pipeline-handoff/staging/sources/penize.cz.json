@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-16T03:47:50.719209Z",
+  "ingestedAt": "2026-04-16T04:04:33.864321Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jaká je nejlepší bankovka světa? Tady jsou favoriti",
+      "url": "https://www.penize.cz/nakupy/488376-jaka-je-nejlepsi-bankovka-sveta-tady-jsou-favoriti",
+      "dt": "2026-04-16T05:10:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bankovka",
+        "favoriti",
+        "jaká",
+        "nejlepší",
+        "světa",
+        "tady"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -478,35 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Krypto a investice v apce jako další krok. Šéf Partners banky Borkovec o plánech na letošek",
-      "url": "https://www.penize.cz/osobni-ucty/484437-partners-banka-a-dalsi-plany-krypto-investice-pojisteni",
-      "dt": "2026-04-13T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "apce",
-        "banky",
-        "borkovec",
-        "další",
-        "investice",
-        "jako",
-        "krok",
-        "krypto",
-        "letošek",
-        "partners",
-        "plánech",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18315,
+      "bytes": 18176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,11 +548,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 13
+          "finance": 13,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -570,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaká je nejlepší bankovka světa? Tady jsou favoriti",
+            "publishedAt": "2026-04-16T05:10:00Z"
+          },
           {
             "title": "Nezaviněná dopravní nehoda? Jak v trestním řízení získat náhradu škody",
             "publishedAt": "2026-04-16T05:00:00Z"
@@ -597,10 +595,6 @@
           {
             "title": "Jak jsem chtěla utéct ze sociálních sítí. A skončila na Vinted",
             "publishedAt": "2026-04-15T05:05:00Z"
-          },
-          {
-            "title": "Překlenovací úvěry se zajištěním nabízí už jen jediná stavební spořitelna",
-            "publishedAt": "2026-04-15T05:00:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-16T03:47:50.719209Z",
+  "ingestedAt": "2026-04-16T04:04:33.864321Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
+      "url": "https://profitonline.cz/rezne-rany-i-trhani-vlasu-v-cesku-si-ublizuji-desitky-tisic-dospivajicich/",
+      "dt": "2026-04-16T04:00:53Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "desítky",
+        "dospívajících",
+        "rány",
+        "tisíc",
+        "trhání",
+        "ubližují",
+        "vlasů",
+        "česku",
+        "řezné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -260,30 +286,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V úterý zřejmě neotevře více čerpacích stanic než v pátek",
-      "url": "https://profitonline.cz/v-utery-zrejme-neotevre-vice-cerpacich-stanic-nez-v-patek/",
-      "dt": "2026-04-13T14:30:26Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "neotevře",
-        "než",
-        "pátek",
-        "stanic",
-        "zřejmě",
-        "úterý",
-        "čerpacích"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18689,
+      "bytes": 18746,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +333,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-15T13:00:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:00:53Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -347,6 +349,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
+            "publishedAt": "2026-04-16T04:00:53Z"
+          },
           {
             "title": "Česko stárne. Chybějící domovy pro seniory dokážeme postavit, ale kdo o ně bude pečovat?",
             "publishedAt": "2026-04-15T13:00:58Z"
@@ -374,10 +380,6 @@
           {
             "title": "Raritní desetikoruna se prodala za 134 tisíc. Cenný je malý detail",
             "publishedAt": "2026-04-14T10:00:33Z"
-          },
-          {
-            "title": "Apple a umělá inteligence: Tichý návrat krále?",
-            "publishedAt": "2026-04-14T08:00:09Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T03:47:50.719209Z",
+  "ingestedAt": "2026-04-16T04:04:33.864321Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češi přispěli Floridě ke kanonádě, Chicago předvedlo parádní obrat",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-cesi-prispeli-floride-ke-kanonade-chicago-predvedlo-paradni-obrat-5437431",
+      "dt": "2026-04-16T04:00:22Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chicago",
+        "floridě",
+        "kanonádě",
+        "obrat",
+        "parádní",
+        "předvedlo",
+        "přispěli",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,31 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "První posilou hokejistů Mladé Boleslavi je kanadský útočník Martel",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-prvni-posilou-hokejistu-mlade-boleslavi-je-kanadsky-utocnik-martel-5437035",
-      "dt": "2026-04-15T14:14:37Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boleslavi",
-        "hokejistů",
-        "kanadský",
-        "martel",
-        "mladé",
-        "posilou",
-        "první",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41670,
+      "bytes": 41607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T20:46:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:00:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi přispěli Floridě ke kanonádě, Chicago předvedlo parádní obrat",
+            "publishedAt": "2026-04-16T04:00:22Z"
+          },
           {
             "title": "Bayern v závěru využil početní výhodu a postupuje! Také Arsenal je v semifinále",
             "publishedAt": "2026-04-15T10:35:45Z"
@@ -860,10 +864,6 @@
           {
             "title": "Chlapík po vyřazení Sparty: Škoda, že se řešily věci okolo. Pokuty za názor bych nedával",
             "publishedAt": "2026-04-15T20:09:06Z"
-          },
-          {
-            "title": "Pešánova rošáda. Pardubickému trenérovi vyšel odvážný tah",
-            "publishedAt": "2026-04-15T19:50:33Z"
           }
         ]
       }

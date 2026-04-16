@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T03:47:50.719209Z",
+  "ingestedAt": "2026-04-16T04:04:33.864321Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dinosauři obsadili univerzitu. 682 lidí čekalo, jestli padne světový rekord",
+      "url": "https://www.idnes.cz/magaziny/koktejl/dinosauri-obsadili-univerzitu-682-lidi-cekalo-jestli-padne-svetovy-rekord.A260414_133737_koktejl_brna",
+      "dt": "2026-04-16T03:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "682",
+        "dinosauři",
+        "jestli",
+        "lidí",
+        "obsadili",
+        "padne",
+        "rekord",
+        "světový",
+        "univerzitu",
+        "čekalo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,31 +778,6 @@
         "smlouvu",
         "stadionu",
         "vypověděly"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "ČT a ČRo v číslech: kolik stojí výroba pořadů, kolik padne na mzdy",
-      "url": "https://www.idnes.cz/zpravy/domaci/ceska-televize-cesky-rozhlas-poplatky-rozpocet-cisla.A260415_161120_domaci_mikp",
-      "dt": "2026-04-15T15:04:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "kolik",
-        "mzdy",
-        "padne",
-        "pořadů",
-        "stojí",
-        "výroba",
-        "čro",
-        "číslech"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47378,
+      "bytes": 47013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T03:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1635,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dinosauři obsadili univerzitu. 682 lidí čekalo, jestli padne světový rekord",
+            "publishedAt": "2026-04-16T03:30:00Z"
+          },
           {
             "title": "Své lásky psychicky ničil a střídal, ukazuje dokument o Davidu Stypkovi",
             "publishedAt": "2026-04-16T03:00:00Z"
@@ -1662,10 +1668,6 @@
           {
             "title": "V Austrálii hoří jedna z jejích dvou rafinerií, země se obává většího nedostatku ropy",
             "publishedAt": "2026-04-15T20:30:00Z"
-          },
-          {
-            "title": "Pentagon v pohotovosti: Trump může každou chvíli nařídit zásah na Kubě",
-            "publishedAt": "2026-04-15T20:02:00Z"
           }
         ]
       }
