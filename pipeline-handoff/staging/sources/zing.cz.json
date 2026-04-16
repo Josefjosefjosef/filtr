@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-16T15:10:33.553270Z",
+  "ingestedAt": "2026-04-16T15:34:39.007319Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Filmový Street Fighter se připomíná akčním traileru",
+      "url": "https://zing.cz/article/filmovy-street-fighter-se-pripomina-akcnim-traileru",
+      "dt": "2026-04-16T15:30:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "akčním",
+        "fighter",
+        "filmový",
+        "připomíná",
+        "street",
+        "traileru"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -960,29 +983,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Overwatch představuje novou hrdinku se smrtícím dronem",
-      "url": "https://zing.cz/article/overwatch-predstavuje-novou-hrdinku-se-smrticim-dronem",
-      "dt": "2026-04-12T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dronem",
-        "hrdinku",
-        "novou",
-        "overwatch",
-        "představuje",
-        "smrtícím"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126334,
+      "bytes": 126412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T15:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1046,6 +1046,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Filmový Street Fighter se připomíná akčním traileru",
+            "publishedAt": "2026-04-16T15:30:00Z"
+          },
           {
             "title": "Chystá se God of War s čínskou mytologií? Nové informace to naznačují",
             "publishedAt": "2026-04-16T14:00:00Z"
@@ -1073,10 +1077,6 @@
           {
             "title": "Industria 2 narychlo změnila datum vydání",
             "publishedAt": "2026-04-16T04:00:00Z"
-          },
-          {
-            "title": "Mod Keizaal Online mění Skyrim v živé MMO",
-            "publishedAt": "2026-04-15T18:00:00Z"
           }
         ]
       }

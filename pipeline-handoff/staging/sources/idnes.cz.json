@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T15:10:33.553270Z",
+  "ingestedAt": "2026-04-16T15:34:39.007319Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Moc vás tu není, sedm, pecka, divila se Schillerová nezájmu opozice o schůzi",
       "url": "https://www.idnes.cz/zpravy/domaci/moc-vas-tu-neni-sedm-pecka-divila-se-schillerova-nezajmu-opozice-o-schuzi.A260416_162736_domaci_kop",
-      "dt": "2026-04-16T15:03:19Z",
+      "dt": "2026-04-16T15:25:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -21,6 +21,31 @@
         "schůzi",
         "sedm",
         "vás"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Macinka předvolal ruského velvyslance kvůli výhrůžkám českým firmám",
+      "url": "https://www.idnes.cz/zpravy/domaci/macinka-mzv-predvolani-rusky-velvyslanec.A260416_164849_domaci_aoc",
+      "dt": "2026-04-16T15:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "firmám",
+        "kvůli",
+        "macinka",
+        "předvolal",
+        "ruského",
+        "velvyslance",
+        "výhrůžkám",
+        "českým"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -47,31 +72,6 @@
         "vlastní",
         "vypnutím",
         "znemožnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Macinka předvolal ruského velvyslance kvůli výhrůžkám českým firmám",
-      "url": "https://www.idnes.cz/zpravy/domaci/macinka-mzv-predvolani-rusky-velvyslanec.A260416_164849_domaci_aoc",
-      "dt": "2026-04-16T14:58:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "firmám",
-        "kvůli",
-        "macinka",
-        "předvolal",
-        "ruského",
-        "velvyslance",
-        "výhrůžkám",
-        "českým"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49682,
+      "bytes": 49692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T15:03:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T15:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1638,15 +1638,15 @@
         "sample_titles": [
           {
             "title": "Moc vás tu není, sedm, pecka, divila se Schillerová nezájmu opozice o schůzi",
-            "publishedAt": "2026-04-16T15:03:19Z"
+            "publishedAt": "2026-04-16T15:25:00Z"
+          },
+          {
+            "title": "Macinka předvolal ruského velvyslance kvůli výhrůžkám českým firmám",
+            "publishedAt": "2026-04-16T15:15:00Z"
           },
           {
             "title": "Putin vypnutím Telegramu sabotuje vlastní armádu, znemožnil snahy o ofenzivu",
             "publishedAt": "2026-04-16T15:00:00Z"
-          },
-          {
-            "title": "Macinka předvolal ruského velvyslance kvůli výhrůžkám českým firmám",
-            "publishedAt": "2026-04-16T14:58:00Z"
           },
           {
             "title": "Historickým městem roku je Náměšť nad Oslavou. Z Vysočiny uspěla jako čtvrtá",
