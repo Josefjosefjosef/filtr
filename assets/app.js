@@ -10890,7 +10890,45 @@ function buildVideoAsArticleCard(it) {
             if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
               var stBb = history.state && history.state.iu_nav_overlay === true;
               if (stBb) {
-                history.back();
+                /* P0 mobile/tablet: z „Navigace po webu“ (mřížka / nav panel) nevolat history.back() na #iuMobileGateBack —
+                   embed/ifr (mapy, TV, rádio) + WebKit nechávají visící navigaci → Playwright timeout na 2. Zpět.
+                   Pouze MindMenu (tools) necháváme na back(); u nav vždy sync + URL jako po popstate. */
+                var gateNow = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+                if (gateNow === "tools") {
+                  history.back();
+                  return;
+                }
+                try {
+                  setTab("");
+                } catch (_st) {}
+                try {
+                  var uSync = new URL(window.location.href);
+                  if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
+                  uSync.searchParams.delete("section");
+                  uSync.searchParams.delete("topic");
+                  uSync.searchParams.delete("mode");
+                  history.replaceState(null, "", uSync.toString());
+                } catch (_url) {}
+                try {
+                  if (typeof window.iuHideAllOverlaysNow === "function") {
+                    window.iuHideAllOverlaysNow();
+                  }
+                } catch (_h) {}
+                try {
+                  if (typeof window.iuApplySectionFromURL === "function") {
+                    window.iuApplySectionFromURL();
+                  }
+                } catch (_a) {}
+                try {
+                  if (typeof window.iuApplyPanelFromUrl === "function") {
+                    window.iuApplyPanelFromUrl();
+                  }
+                } catch (_p) {}
+                try {
+                  if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") {
+                    window.iuDesktopHomeSectionGridGuardApply();
+                  }
+                } catch (_g) {}
                 return;
               }
             }
