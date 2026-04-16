@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-16T19:20:18.933130Z",
+  "ingestedAt": "2026-04-16T19:40:23.445784Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Má varlata a produkuje testosteron, prohlásila trenérka. Olympijská šampionka v boxu čelí dalšímu skandálu",
+      "url": "https://www.mmamag.cz/sampionka-box-skandal-imane-khelif/",
+      "dt": "2026-04-16T19:24:37Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxu",
+        "dalšímu",
+        "olympijská",
+        "produkuje",
+        "prohlásila",
+        "skandálu",
+        "testosteron",
+        "trenérka",
+        "varlata",
+        "čelí",
+        "šampionka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1046,31 +1074,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Procházka vs. Ulberg: technika proti chaosu. Analýza a tip na výsledek",
-      "url": "https://www.mmamag.cz/prochazka-ulberg-analyza-tip/",
-      "dt": "2026-04-08T03:15:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "analýza",
-        "chaosu",
-        "procházka",
-        "proti",
-        "technika",
-        "tip",
-        "ulberg",
-        "výsledek"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1081,7 +1084,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79110,
+      "bytes": 79027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1118,7 +1121,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:52:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T19:24:37Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1133,6 +1136,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Má varlata a produkuje testosteron, prohlásila trenérka. Olympijská šampionka v boxu čelí dalšímu skandálu",
+            "publishedAt": "2026-04-16T19:24:37Z"
+          },
           {
             "title": "Procházka v další bitvě o pás? Nemusí to být utopie",
             "publishedAt": "2026-04-16T18:52:53Z"
@@ -1160,10 +1167,6 @@
           {
             "title": "Největší legenda UFC vyměnila slávu za ostudu. Jon Jones pochlebuje Kadyrovovi a Rusku",
             "publishedAt": "2026-04-15T07:39:04Z"
-          },
-          {
-            "title": "Procházku dělilo 75 vteřin od titulu. Ulberg přiznal, že konec byl blízko",
-            "publishedAt": "2026-04-15T06:28:39Z"
           }
         ]
       }

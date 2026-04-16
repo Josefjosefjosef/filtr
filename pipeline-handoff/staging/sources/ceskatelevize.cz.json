@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T19:20:18.933130Z",
+  "ingestedAt": "2026-04-16T19:40:23.445784Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Semancová s možným střetem zájmů už pro resort nepracuje, řekl Juchelka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/semancova-s-moznym-stretem-zajmu-uz-pro-resort-nepracuje-rekl-juchelka-372467",
+      "dt": "2026-04-16T19:23:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "juchelka",
+        "možným",
+        "nepracuje",
+        "resort",
+        "semancová",
+        "střetem",
+        "zájmů",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -719,31 +744,6 @@
         "poté",
         "stupňů",
         "víkendu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Osudová noc. Během katastrofy v Černobylu se stala spousta chyb",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/osudova-noc-behem-katastrofy-v-cernobylu-se-stala-spousta-chyb-372410",
-      "dt": "2026-04-16T06:13:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "během",
-        "chyb",
-        "katastrofy",
-        "noc",
-        "osudová",
-        "spousta",
-        "stala",
-        "černobylu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1507,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41934,
+      "bytes": 42283,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,12 +1567,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:48:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T19:23:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
+          "zpravy": 24,
           "finance": 3,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1584,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Semancová s možným střetem zájmů už pro resort nepracuje, řekl Juchelka",
+            "publishedAt": "2026-04-16T19:23:59Z"
+          },
           {
             "title": "Zástupci Evropské komise budou jednat s Tiszou o reformách",
             "publishedAt": "2026-04-16T18:48:28Z"
@@ -1611,10 +1615,6 @@
           {
             "title": "Uděláme vše pro plnění závazků NATO, řekl Babiš po jednání s Ruttem",
             "publishedAt": "2026-04-16T15:35:25Z"
-          },
-          {
-            "title": "Nejhorší humanitární krize světa sílí. Súdán doplácí na válku s Íránem",
-            "publishedAt": "2026-04-16T15:20:00Z"
           }
         ]
       }
@@ -1720,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77298,
+      "bytes": 77294,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

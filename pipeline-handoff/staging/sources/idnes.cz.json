@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T19:20:18.933130Z",
+  "ingestedAt": "2026-04-16T19:40:23.445784Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Korupci jsem nikdy netoleroval. Myslel jsem, že vyhrajeme, řekl překvapený Orbán",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/madarsko-volby-viktor-orban-prohru-jsem-necekal.A260416_205340_zahranicni_kha",
+      "dt": "2026-04-16T19:16:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "jsem",
+        "korupci",
+        "myslel",
+        "netoleroval",
+        "nikdy",
+        "orbán",
+        "překvapený",
+        "vyhrajeme",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -759,33 +785,6 @@
         "ukrajinu",
         "zabilo",
         "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hegseth místo Bible citoval Pulp Fiction. Demokraté chtějí jeho impeachment",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/demokrate-usa-kongres-navrh-zaloby-na-ministra-obrany-hegsetha.A260416_141247_zahranicni_jira",
-      "dt": "2026-04-16T13:17:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bible",
-        "chtějí",
-        "citoval",
-        "demokraté",
-        "fiction",
-        "hegseth",
-        "impeachment",
-        "jeho",
-        "místo",
-        "pulp"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49300,
+      "bytes": 49445,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1624,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T19:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T19:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1641,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Korupci jsem nikdy netoleroval. Myslel jsem, že vyhrajeme, řekl překvapený Orbán",
+            "publishedAt": "2026-04-16T19:16:00Z"
+          },
           {
             "title": "Moc vás tu není, sedm, divila se Schillerová. Zůna odmítl snahu cenzurovat Pavla",
             "publishedAt": "2026-04-16T19:10:00Z"
@@ -1668,10 +1671,6 @@
           {
             "title": "Boj o účast na summitu NATO: prezident považuje vládní usnesení za cestovní plán",
             "publishedAt": "2026-04-16T18:06:00Z"
-          },
-          {
-            "title": "Tichý sjezd mocných, kterého se v Rusku obávají. Bilderberg řešil válku budoucnosti",
-            "publishedAt": "2026-04-16T18:00:00Z"
           }
         ]
       }

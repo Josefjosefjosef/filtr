@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T19:20:18.933130Z",
+  "ingestedAt": "2026-04-16T19:40:23.445784Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Komplikace pro Bragu! Horníček v boji o semifinále Evropské ligy inkasuje",
+      "title": "FOTBAL ONLINE: Úleva pro Horníčka! Další branka Betisu neplatí",
       "url": "https://www.sport.cz/clanek/fotbal-evropska-liga-hornicek-zabojuje-s-bragou-o-semifinale-evropske-ligy-5437456",
       "dt": "2026-04-16T09:38:47Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "boji",
-        "bragu",
-        "evropské",
+        "betisu",
+        "branka",
+        "další",
         "fotbal",
-        "horníček",
-        "inkasuje",
-        "komplikace",
-        "ligy",
+        "horníčka",
+        "neplatí",
         "online",
-        "semifinále"
+        "úleva"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velmi dobrá volba, řekl Rulík o svých nástupcích. Od hráčů ze zámoří má přísliby",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-velmi-dobra-volba-rekl-rulik-o-svych-nastupcich-od-hracu-ze-zamori-ma-prisliby-5437791",
+      "dt": "2026-04-16T19:17:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dobrá",
+        "hráčů",
+        "nástupcích",
+        "přísliby",
+        "rulík",
+        "svých",
+        "velmi",
+        "volba",
+        "zámoří",
+        "řekl"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -742,35 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Evropské země se bouří proti návratu ruských plavců, Ukrajinci zuří. Ohroženo je pořadatelství závodů",
-      "url": "https://www.sport.cz/clanek/ostatni-evropske-zeme-se-bouri-proti-navratu-ruskych-plavcu-ukrajinci-zuri-ohrozeno-je-poradatelstvi-zavodu-5437468",
-      "dt": "2026-04-16T12:55:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bouří",
-        "evropské",
-        "návratu",
-        "ohroženo",
-        "plavců",
-        "pořadatelství",
-        "proti",
-        "ruských",
-        "ukrajinci",
-        "země",
-        "zuří",
-        "závodů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44156,
+      "bytes": 44581,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:50:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T19:17:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -836,8 +832,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Komplikace pro Bragu! Horníček v boji o semifinále Evropské ligy inkasuje",
+            "title": "FOTBAL ONLINE: Úleva pro Horníčka! Další branka Betisu neplatí",
             "publishedAt": "2026-04-16T09:38:47Z"
+          },
+          {
+            "title": "Velmi dobrá volba, řekl Rulík o svých nástupcích. Od hráčů ze zámoří má přísliby",
+            "publishedAt": "2026-04-16T19:17:38Z"
           },
           {
             "title": "Životní zápis pro českého reprezentanta. Šín předvedl brilantní volej",
@@ -862,10 +862,6 @@
           {
             "title": "Dvě Češky ve čtvrtfinále. Nosková deklasovala žebříčkovou sousedku, Muchová otočila zápas s Mertensovou",
             "publishedAt": "2026-04-16T11:02:04Z"
-          },
-          {
-            "title": "Judistka Bodnárová vypadla na ME ve 2. kole s obhájkyní titulu",
-            "publishedAt": "2026-04-16T08:42:44Z"
           }
         ]
       }
