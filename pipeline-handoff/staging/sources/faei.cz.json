@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-16T13:54:42.779203Z",
+  "ingestedAt": "2026-04-16T14:50:11.890468Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
+      "url": "https://profitonline.cz/zlato-prudce-zlevnilo-vyplati-se-nakupovat-nebo-jeste-pockat/",
+      "dt": "2026-04-16T14:00:15Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ještě",
+        "nakupovat",
+        "nebo",
+        "počkat",
+        "prudce",
+        "vyplatí",
+        "zlato",
+        "zlevnilo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,29 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Apple a umělá inteligence: Tichý návrat krále?",
-      "url": "https://profitonline.cz/apple-a-umela-inteligence-tichy-navrat-krale/",
-      "dt": "2026-04-14T08:00:09Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "apple",
-        "inteligence",
-        "krále",
-        "návrat",
-        "tichý",
-        "umělá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18916,
+      "bytes": 19105,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T14:00:15Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -359,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
+            "publishedAt": "2026-04-16T14:00:15Z"
+          },
           {
             "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
             "publishedAt": "2026-04-16T10:00:00Z"
@@ -386,10 +392,6 @@
           {
             "title": "Revoluce v českém maloobchodě odstartovala. Bude mít úspěch?",
             "publishedAt": "2026-04-15T06:00:04Z"
-          },
-          {
-            "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
-            "publishedAt": "2026-04-15T04:00:45Z"
           }
         ]
       }
