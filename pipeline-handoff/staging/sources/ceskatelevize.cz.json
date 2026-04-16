@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T05:00:32.875735Z",
+  "ingestedAt": "2026-04-16T05:09:57.923701Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Je v troskách, ale dokáží ho obnovit, říká Hladík o íránském jaderném programu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/je-v-troskach-ale-dokazi-ho-obnovit-rika-hladik-o-iranskem-jadernem-programu-372423",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ale",
+        "dokáží",
+        "hladík",
+        "jaderném",
+        "obnovit",
+        "programu",
+        "troskách",
+        "íránském",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -717,26 +743,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Vědci dohnali mezeru v poznání a popsali všechny nervy v klitorisu ve 3D",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-dohnali-mezeru-v-poznani-a-popsali-vsechny-nervy-v-klitorisu-ve-3d-372383",
-      "dt": "2026-04-15T09:01:38Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Hokejisté zahájí herní přípravu domácím dvojzápasem s Němci",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokejiste-zahaji-herni-pripravu-domacim-dvojzapasem-s-nemci-156301",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dohnali",
-        "klitorisu",
-        "mezeru",
-        "nervy",
-        "popsali",
-        "poznání",
-        "vědci",
-        "všechny"
+        "domácím",
+        "dvojzápasem",
+        "herní",
+        "hokejisté",
+        "němci",
+        "přípravu",
+        "zahájí"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1474,34 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař vychytal pro Philadelphii vítězství i postup do play-off, Nečas čeká na 100 bodů",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-vychytal-pro-philadelphii-vitezstvi-i-postup-do-play-off-156277",
-      "dt": "2026-04-14T05:07:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "100",
-        "bodů",
-        "nečas",
-        "off",
-        "philadelphii",
-        "play",
-        "postup",
-        "vladař",
-        "vychytal",
-        "vítězství",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1512,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40996,
+      "bytes": 41543,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1572,11 +1569,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
-          "zpravy": 24,
+          "zpravy": 25,
+          "other": 4,
           "finance": 1
         },
         "drop_counts": {
@@ -1589,6 +1586,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je v troskách, ale dokáží ho obnovit, říká Hladík o íránském jaderném programu",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
           {
             "title": "Lidé kapitulují před AI, varuje výzkum před dalekosáhlými dopady",
             "publishedAt": "2026-04-16T04:30:00Z"
@@ -1616,10 +1617,6 @@
           {
             "title": "Colt CZ vstoupil na burzu v Amsterdamu, následuje tak další tuzemské firmy",
             "publishedAt": "2026-04-15T19:21:14Z"
-          },
-          {
-            "title": "Pavel jednal s Mileiem. Shodneme se v otázce Ukrajiny i Izraele, ocenil",
-            "publishedAt": "2026-04-15T17:59:29Z"
           }
         ]
       }
@@ -1631,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39394,
+      "bytes": 39235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokejisté zahájí herní přípravu domácím dvojzápasem s Němci",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
           {
             "title": "Když brankář nic nepustí, máte velkou šanci vyhrát, řekl Mandát",
             "publishedAt": "2026-04-16T04:00:00Z"
@@ -1710,10 +1711,6 @@
           {
             "title": "Litvínov baráž zvládne, nic jiného pro tenhle klub neexistuje, věří Reichel",
             "publishedAt": "2026-04-15T14:31:04Z"
-          },
-          {
-            "title": "Štvanici čeká renovace. Vše musí být hotové do července",
-            "publishedAt": "2026-04-15T14:18:04Z"
           }
         ]
       }
@@ -1725,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77249,
+      "bytes": 77323,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

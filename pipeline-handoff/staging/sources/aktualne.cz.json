@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-16T05:00:32.875735Z",
+  "ingestedAt": "2026-04-16T05:09:57.923701Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Rusku se schyluje ke vzpouře, varuje populární ruská blogerka Putina",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blogerka",
+        "populární",
+        "putina",
+        "rusku",
+        "ruská",
+        "schyluje",
+        "varuje",
+        "vzpouře"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Když dospělí odmítají vyrůst. Slunný byt nabízí tobogán i lezeckou stěnu",
+      "url": "https://magazin.aktualne.cz/bydleni/kdyz-dospeli-odmitaji-vyrust-slunny-byt-nabizi-tobogan-i-lezeckou-stenu/r~aaa29b17cd7f512e0ebcec0cc4459525/",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "byt",
+        "dospělí",
+        "když",
+        "lezeckou",
+        "nabízí",
+        "odmítají",
+        "slunný",
+        "stěnu",
+        "tobogán",
+        "vyrůst"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -480,58 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ivana Tykač odpověděla, zda se pokusí stát prezidentkou. Řekla, o co nejvíc usiluje",
-      "url": "https://zpravy.aktualne.cz/domaci/ivana-tykac-odpovedela-zda-se-pokusi-stat-prezidentkou-rekla-o-co-nejvic-usiluje/r~aaa2915d6c0fe1d901617de50eff48d0/",
-      "dt": "2026-04-15T14:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ivana",
-        "nejvíc",
-        "odpověděla",
-        "pokusí",
-        "prezidentkou",
-        "stát",
-        "tykač",
-        "usiluje",
-        "zda",
-        "řekla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice - Sparta 1:0. Dynamo to dokázalo, vydřelo sedmý zápas a je ve finále",
-      "url": "https://sport.aktualne.cz/hokej/pardubice-sparta-vrchol-traskave-serie-rivalove-jdou-do-sedmeho-zapasu-o-vsechno/r~aaa29c94cb54e49832e40d396af03515/",
-      "dt": "2026-04-15T15:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dokázalo",
-        "dynamo",
-        "finále",
-        "pardubice",
-        "sedmý",
-        "sparta",
-        "vydřelo",
-        "zápas"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21836,
+      "bytes": 21985,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,12 +579,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 13,
           "other": 2,
-          "zpravy": 12,
-          "sport": 5,
+          "sport": 4,
           "finance": 1
         },
         "drop_counts": {
@@ -597,6 +597,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Rusku se schyluje ke vzpouře, varuje populární ruská blogerka Putina",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Když dospělí odmítají vyrůst. Slunný byt nabízí tobogán i lezeckou stěnu",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
           {
             "title": "Madonna v červenci chystá nové album, naváže na Confessions on a Dance Floor",
             "publishedAt": "2026-04-16T04:49:00Z"
@@ -620,14 +628,6 @@
           {
             "title": "„Dvacet potížistů.“ Známý autobazar zveřejnil nový žebříček aut, která často odmítne",
             "publishedAt": "2026-04-16T03:40:00Z"
-          },
-          {
-            "title": "Macinka získal „další zbraň“ proti prezidentovi. Reportér o tom, co to říká o Zůnovi",
-            "publishedAt": "2026-04-16T03:30:00Z"
-          },
-          {
-            "title": "Z Abú Dhabí do Brna na kole. Jen se modlíte, ať vás vítr neshodí, popisuje cyklista",
-            "publishedAt": "2026-04-16T03:30:00Z"
           }
         ]
       }

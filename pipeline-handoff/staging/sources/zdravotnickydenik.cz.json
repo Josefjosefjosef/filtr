@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-16T05:00:32.875735Z",
+  "ingestedAt": "2026-04-16T05:09:57.923701Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Německá reforma zdravotnictví: Úspory mají nést pacienti, pojišťovny i farmaceutické firmy",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecka-reforma-zdravotnictvi-uspory-pacienti-pojistovny-farmaceuticke-firmy/",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "farmaceutické",
+        "firmy",
+        "mají",
+        "nést",
+        "německá",
+        "pacienti",
+        "pojišťovny",
+        "reforma",
+        "zdravotnictví",
+        "úspory"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hazard se životy končí: Vojtěch chce udělat tečku za trofejními výkony na játrech či slinivce",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/centralizace-onkologickych-vykonu/",
-      "dt": "2026-04-15T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chce",
-        "hazard",
-        "játrech",
-        "končí",
-        "slinivce",
-        "tečku",
-        "trofejními",
-        "udělat",
-        "vojtěch",
-        "výkony",
-        "životy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97500,
+      "bytes": 90823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:22:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -336,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Německá reforma zdravotnictví: Úspory mají nést pacienti, pojišťovny i farmaceutické firmy",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
           {
             "title": "Soud zamítl žalobu po změně pohlaví. V případu figurují tři pražské nemocnice",
             "publishedAt": "2026-04-15T15:22:33Z"
@@ -363,10 +366,6 @@
           {
             "title": "Poplatky u gynekologa přehledně: Na co máte nárok a jak postupovat, když po vás chtějí peníze",
             "publishedAt": "2026-04-15T09:11:22Z"
-          },
-          {
-            "title": "Jen 9 % pacientů umírá doma. Proč se většina lidí dostane k paliativní péči pozdě nebo vůbec?",
-            "publishedAt": "2026-04-15T08:00:00Z"
           }
         ]
       }
