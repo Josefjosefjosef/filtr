@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-16T04:04:33.864321Z",
+  "ingestedAt": "2026-04-16T04:20:03.198144Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na Bruntálsku, u Lipna i pod Řípem. Kde vyrostou větrníky s požehnáním státu?",
+      "url": "https://ekonomickydenik.cz/kde-vyrostou-vetrniky-akceleracni-zony/",
+      "dt": "2026-04-16T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bruntálsku",
+        "lipna",
+        "požehnáním",
+        "státu",
+        "vyrostou",
+        "větrníky",
+        "řípem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,33 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Unie zařízla ocel z Asie i Turecka. Chce zachránit vlastní krachující hutě",
-      "url": "https://ekonomickydenik.cz/unie-zarizla-ocel-z-asie-i-turecka-cla/",
-      "dt": "2026-04-14T08:01:45Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "asie",
-        "chce",
-        "hutě",
-        "krachující",
-        "ocel",
-        "turecka",
-        "unie",
-        "vlastní",
-        "zachránit",
-        "zařízla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72555,
+      "bytes": 73697,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T17:40:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -845,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Bruntálsku, u Lipna i pod Řípem. Kde vyrostou větrníky s požehnáním státu?",
+            "publishedAt": "2026-04-16T04:05:00Z"
+          },
           {
             "title": "Nerudová zabodovala. Uspěla s návrhem odsunout povolenky na vytápění",
             "publishedAt": "2026-04-15T17:40:50Z"
@@ -872,10 +873,6 @@
           {
             "title": "Nerudová kvůli ČT píše Bruselu. Česku by mohly hrozit pokuty",
             "publishedAt": "2026-04-15T13:04:26Z"
-          },
-          {
-            "title": "Král vodní energetiky Tesař expanduje. Rozjel už i stavbu fotovoltaik v Bulharsku",
-            "publishedAt": "2026-04-15T12:22:35Z"
           }
         ]
       }
