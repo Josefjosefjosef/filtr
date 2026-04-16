@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T22:35:52.769537Z",
+  "ingestedAt": "2026-04-16T22:55:32.861464Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muchová po drtivém obratu dál září. Kromě soupeřky smázla i moderátora",
+      "url": "https://www.sport.cz/clanek/tenis-muchova-po-drtivem-obratu-dal-zari-krome-souperky-smazla-i-moderatora-5437928",
+      "dt": "2026-04-16T22:44:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "drtivém",
+        "kromě",
+        "moderátora",
+        "muchová",
+        "obratu",
+        "smázla",
+        "soupeřky",
+        "září"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,36 +766,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ruský návrat do bazénů? Jsme proti, ale tlak už nic nezmění, obává se šéf českých plavců",
-      "url": "https://www.sport.cz/clanek/vodni-sporty-rusky-navrat-do-bazenu-jsme-proti-ale-tlak-uz-nic-nezmeni-obava-se-sef-ceskych-plavcu-5437664",
-      "dt": "2026-04-16T14:21:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "bazénů",
-        "jsme",
-        "nezmění",
-        "nic",
-        "návrat",
-        "obává",
-        "plavců",
-        "proti",
-        "ruský",
-        "tlak",
-        "českých",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44497,
+      "bytes": 44367,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +813,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T21:25:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T22:44:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -835,6 +830,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muchová po drtivém obratu dál září. Kromě soupeřky smázla i moderátora",
+            "publishedAt": "2026-04-16T22:44:17Z"
+          },
           {
             "title": "Olympiakos znovu ovládl základní část Evropské ligy basketbalistů",
             "publishedAt": "2026-04-16T21:25:09Z"
@@ -862,10 +861,6 @@
           {
             "title": "Společně za záchranou. Litvínovská kabina se složila na výjezd pro fanoušky",
             "publishedAt": "2026-04-16T18:42:29Z"
-          },
-          {
-            "title": "Velmi dobrá volba, řekl Rulík o svých nástupcích. Od hráčů ze zámoří má přísliby",
-            "publishedAt": "2026-04-16T19:17:38Z"
           }
         ]
       }
