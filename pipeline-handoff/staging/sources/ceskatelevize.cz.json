@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T06:05:05.070371Z",
+  "ingestedAt": "2026-04-16T06:25:38.457969Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "O víkendu bude až dvacet stupňů, poté se ochladí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/o-vikendu-bude-az-dvacet-stupnu-pote-se-ochladi-372435",
+      "dt": "2026-04-16T06:15:11Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dvacet",
+        "ochladí",
+        "poté",
+        "stupňů",
+        "víkendu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Osudová noc. Během katastrofy v Černobylu se stala spousta chyb",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/osudova-noc-behem-katastrofy-v-cernobylu-se-stala-spousta-chyb-372410",
+      "dt": "2026-04-16T06:13:16Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "během",
+        "chyb",
+        "katastrofy",
+        "noc",
+        "osudová",
+        "spousta",
+        "stala",
+        "černobylu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -686,54 +733,6 @@
         "obnovíme",
         "slíbil",
         "veřejnoprávních"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael bombardoval desítky obcí v Libanonu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-bombardoval-desitky-obci-v-libanonu-372400",
-      "dt": "2026-04-15T09:22:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bombardoval",
-        "desítky",
-        "izrael",
-        "libanonu",
-        "obcí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ruský Memorial chce pokračovat v práci z exilu, podporovatelům hrozí nebezpečí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusky-memorial-chce-pokracovat-v-praci-z-exilu-podporovatelum-hrozi-nebezpeci-372375",
-      "dt": "2026-04-15T09:19:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chce",
-        "exilu",
-        "hrozí",
-        "memorial",
-        "nebezpečí",
-        "podporovatelům",
-        "pokračovat",
-        "práci",
-        "ruský"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1509,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42164,
+      "bytes": 41411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,11 +1568,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T06:15:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
-          "zpravy": 24,
+          "zpravy": 23,
+          "other": 6,
           "finance": 1
         },
         "drop_counts": {
@@ -1586,6 +1585,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O víkendu bude až dvacet stupňů, poté se ochladí",
+            "publishedAt": "2026-04-16T06:15:11Z"
+          },
+          {
+            "title": "Osudová noc. Během katastrofy v Černobylu se stala spousta chyb",
+            "publishedAt": "2026-04-16T06:13:16Z"
+          },
           {
             "title": "Generace si někdy přestávají rozumět, říkají k proměnám češtiny jayzykovědci",
             "publishedAt": "2026-04-16T05:30:00Z"
@@ -1609,14 +1616,6 @@
           {
             "title": "Poslanci budou na mimořádné schůzi řešit ceny pohonných hmot či veřejnoprávní média",
             "publishedAt": "2026-04-16T02:15:40Z"
-          },
-          {
-            "title": "Čeští krajané v Chile požádali Pavla o podporu změny zákona o státním občanství",
-            "publishedAt": "2026-04-16T01:27:41Z"
-          },
-          {
-            "title": "Kyjev a Oděsa hlásí po ruských útocích mrtvé",
-            "publishedAt": "2026-04-16T01:05:22Z"
           }
         ]
       }
@@ -1722,7 +1721,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77273,
+      "bytes": 77279,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

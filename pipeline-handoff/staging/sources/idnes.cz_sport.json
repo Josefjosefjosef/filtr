@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-16T06:05:05.070371Z",
+  "ingestedAt": "2026-04-16T06:25:38.457969Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ústí půjčilo Dynamu vyjednavače. Kubáň: Město vydírá, destrukce nepomáhá nikomu",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/fotbal-viagem-usti-dynamo-ceske-budejovice.A260415_235234_fot_dsouteze_pbi",
+      "dt": "2026-04-16T05:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "destrukce",
+        "dynamu",
+        "kubáň",
+        "město",
+        "nepomáhá",
+        "nikomu",
+        "půjčilo",
+        "vydírá",
+        "vyjednavače",
+        "ústí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kouč českých florbalistů: Vrchol máme ještě před sebou, chceme být mistry světa",
+      "url": "https://www.idnes.cz/sport/ostatni/jsme-blizko-nase-prace-jeste-neskoncila-hlasi-kouc-florbalistu-naava.A260415_202344_florbal_mrg",
+      "dt": "2026-04-16T05:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "být",
+        "chceme",
+        "florbalistů",
+        "ještě",
+        "kouč",
+        "mistry",
+        "máme",
+        "sebou",
+        "světa",
+        "vrchol",
+        "českých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,57 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jako filmové hvězdy. Basketbalistky vyměnily dresy za večerní róby",
-      "url": "https://www.idnes.cz/sport/trendy/jako-filmove-hvezdy-basketbalistky-vymenily-dresy-za-vecerni-roby.A260415_110644_trendy_blah/foto",
-      "dt": "2026-04-15T10:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "basketbalistky",
-        "dresy",
-        "filmové",
-        "hvězdy",
-        "jako",
-        "róby",
-        "večerní",
-        "vyměnily"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
-      "url": "https://www.idnes.cz/sport/motorsport/rallye-sumava-klatovy-2026.A260414_114342_motorsport_ald",
-      "dt": "2026-04-15T10:43:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "klatovy",
-        "listina",
-        "program",
-        "rallye",
-        "startovní",
-        "trasa",
-        "výsledky",
-        "šumava"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47873,
+      "bytes": 48559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +859,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ústí půjčilo Dynamu vyjednavače. Kubáň: Město vydírá, destrukce nepomáhá nikomu",
+            "publishedAt": "2026-04-16T05:52:00Z"
+          },
+          {
+            "title": "Kouč českých florbalistů: Vrchol máme ještě před sebou, chceme být mistry světa",
+            "publishedAt": "2026-04-16T05:45:00Z"
+          },
           {
             "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
             "publishedAt": "2026-04-16T05:34:00Z"
@@ -878,14 +890,6 @@
           {
             "title": "Chlapík hrál se zraněním: Lidé viděli jinou Spartu. Zákulisní války? Strašně zbytečné",
             "publishedAt": "2026-04-15T20:38:00Z"
-          },
-          {
-            "title": "Muž pro klíčové chvíle. Mandát uznal: Těžší sérii jsem nezažil. Třinci máme co vracet",
-            "publishedAt": "2026-04-15T20:09:00Z"
-          },
-          {
-            "title": "Play off hokejové extraligy 2026: program, systém, finálová dvojice, kde sledovat",
-            "publishedAt": "2026-04-15T19:40:00Z"
           }
         ]
       }
