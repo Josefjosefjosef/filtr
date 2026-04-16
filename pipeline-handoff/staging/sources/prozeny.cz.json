@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-16T08:40:13.123898Z",
+  "ingestedAt": "2026-04-16T09:34:42.668041Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Abeceda ženských prsou: O ňadrech se dá říct všechno od A až po Z",
+      "url": "https://www.prozeny.cz/clanek/abeceda-zenskych-prsou-22715",
+      "dt": "2026-04-16T08:55:09Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "abeceda",
+        "prsou",
+        "všechno",
+        "ňadrech",
+        "říct",
+        "ženských"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -811,33 +834,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Péče po rozvodu: spravedlnost pro rodiče, nebo pro dítě? „Vyhrávají“ ti hlasitější rodiče a jejich potřeby",
-      "url": "https://www.prozeny.cz/clanek/podcasty-pauza-pro-dusi-pece-po-rozvodu-spravedlnost-pro-rodice-nebo-pro-dite-vyhravaji-ti-hlasitejsi-rodice-a-jejich-potreby-103073",
-      "dt": "2026-04-14T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "dítě",
-        "hlasitější",
-        "jejich",
-        "nebo",
-        "potřeby",
-        "péče",
-        "rodiče",
-        "rozvodu",
-        "spravedlnost",
-        "vyhrávají"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -848,7 +844,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39968,
+      "bytes": 39632,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -885,7 +881,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:16:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:55:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -901,6 +897,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Abeceda ženských prsou: O ňadrech se dá říct všechno od A až po Z",
+            "publishedAt": "2026-04-16T08:55:09Z"
+          },
           {
             "title": "Smutná Agáta Hanychová bez dcer. Děkuju, že tu vždycky jsi, vyznala se nejbližšímu člověku",
             "publishedAt": "2026-04-16T07:16:52Z"
@@ -927,10 +927,6 @@
           },
           {
             "title": "Život na vysoké tlapce: Čivavy Paris Hilton žijí jako milionáři, Heidi Klum má chlupatou kuličku",
-            "publishedAt": "2026-04-16T03:00:00Z"
-          },
-          {
-            "title": "Leoně Machálkové bude 60? Vypadá neuvěřitelně svěže. Inspirujte se jejím stylem",
             "publishedAt": "2026-04-16T03:00:00Z"
           }
         ]

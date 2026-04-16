@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-16T08:40:13.123898Z",
+  "ingestedAt": "2026-04-16T09:34:42.668041Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Matrix Milana Rokytky: ČTK ovládá Korte a zbrojaři. Inuité vám to řeknou",
+      "url": "https://hlidacipes.org/matrix-milana-rokytky-ctk-ovlada-korte-a-zbrojari-inuite-vam-to-reknou/",
+      "dt": "2026-04-16T09:30:59Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "inuité",
+        "korte",
+        "matrix",
+        "milana",
+        "ovládá",
+        "rokytky",
+        "vám",
+        "zbrojaři",
+        "čtk",
+        "řeknou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,32 +260,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Útěk inteligence z veřejného prostoru a jak se bránit. Psychologie kolapsu, díl druhý",
-      "url": "https://hlidacipes.org/utek-inteligence-z-verejneho-prostoru-a-jak-se-branit-psychologie-kolapsu-dil-druhy/",
-      "dt": "2026-04-12T05:30:41Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "bránit",
-        "druhý",
-        "díl",
-        "inteligence",
-        "kolapsu",
-        "prostoru",
-        "psychologie",
-        "veřejného",
-        "útěk"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,9 +268,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17251,
+      "bytes": 17216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:30:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T09:30:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Matrix Milana Rokytky: ČTK ovládá Korte a zbrojaři. Inuité vám to řeknou",
+            "publishedAt": "2026-04-16T09:30:59Z"
+          },
           {
             "title": "Více ruštiny, zrušit výchovu proti rasismu. To požaduje AfD v Sasku-Anahaltsku",
             "publishedAt": "2026-04-16T04:30:06Z"
@@ -348,10 +353,6 @@
           {
             "title": "Maďarsko Rusku dosluhuje. Kreml si sedlá nové trojské koně v Česku",
             "publishedAt": "2026-04-13T12:30:36Z"
-          },
-          {
-            "title": "Aleš Rozehnal: Macinka a Turek si hrají na mazáky. Čeká je návrat k bezvýznamnosti",
-            "publishedAt": "2026-04-13T09:45:08Z"
           }
         ]
       }

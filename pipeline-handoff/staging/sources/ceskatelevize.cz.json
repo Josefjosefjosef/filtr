@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T08:40:13.123898Z",
+  "ingestedAt": "2026-04-16T09:34:42.668041Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Žena zadržená na Slovensku kvůli požáru ve zbrojovce bude převezena do Česka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/pardubicky-kraj/zena-zadrzena-na-slovensku-kvuli-pozaru-v-pardubicke-zbrojovce-bude-prevezena-do-ceska-372438",
+      "dt": "2026-04-16T08:59:38Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kvůli",
+        "požáru",
+        "převezena",
+        "slovensku",
+        "zadržená",
+        "zbrojovce",
+        "česka",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -275,19 +300,17 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci budou na mimořádné schůzi řešit ceny pohonných hmot či veřejnoprávní média",
+      "title": "Sněmovna bude mimořádně řešit pohonné hmoty či veřejnoprávní média",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-na-mimoradne-schuzi-resit-ceny-pohonnych-hmot-ci-verejnopravni-media-372432",
       "dt": "2026-04-16T02:15:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "ceny",
-        "hmot",
-        "mimořádné",
+        "hmoty",
+        "mimořádně",
         "média",
-        "pohonných",
-        "poslanci",
-        "schůzi",
+        "pohonné",
+        "sněmovna",
         "veřejnoprávní",
         "řešit"
       ],
@@ -717,29 +740,29 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Při střelbě na škole v Turecku zemřelo osm dětí a dospělý, oznámil ministr vnitra",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pri-strelbe-na-zakladni-skole-v-turecku-zemreli-tri-zaci-a-ucitel-pise-afp-372405",
-      "dt": "2026-04-15T11:59:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Kompany v Paříži na lavičku nesmí, utkání podle něj ale beztak rozhodnou hráči",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kompany-v-parizi-na-lavicku-nesmi-utkani-podle-nej-ale-beztak-rozhodnou-hraci-156309",
+      "dt": "2026-04-16T08:49:26Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dospělý",
-        "dětí",
-        "ministr",
-        "osm",
-        "oznámil",
-        "při",
-        "střelbě",
-        "turecku",
-        "vnitra",
-        "zemřelo",
-        "škole"
+        "ale",
+        "beztak",
+        "hráči",
+        "kompany",
+        "lavičku",
+        "nesmí",
+        "něj",
+        "paříži",
+        "podle",
+        "rozhodnou",
+        "utkání"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1477,32 +1500,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Cyklistická Czech Tour zamíří poprvé na Ještěd. Start bude opět v Praze",
-      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/cyklisticka-czech-tour-zamiri-poprve-zamiri-na-jested-start-bude-opet-v-praze-156278",
-      "dt": "2026-04-14T11:46:57Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "cyklistická",
-        "czech",
-        "ještěd",
-        "opět",
-        "poprvé",
-        "praze",
-        "start",
-        "tour",
-        "zamíří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1513,7 +1510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41233,
+      "bytes": 41074,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,7 +1570,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:18:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:59:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1590,6 +1587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žena zadržená na Slovensku kvůli požáru ve zbrojovce bude převezena do Česka",
+            "publishedAt": "2026-04-16T08:59:38Z"
+          },
           {
             "title": "KLDR stupňuje výrobu jaderných zbraní, zapojuje se i Moskva",
             "publishedAt": "2026-04-16T08:18:08Z"
@@ -1617,10 +1618,6 @@
           {
             "title": "Generace si někdy přestávají rozumět, říkají k proměnám češtiny jayzykovědci",
             "publishedAt": "2026-04-16T05:30:00Z"
-          },
-          {
-            "title": "Je v troskách, ale dokáží ho obnovit, říká Hladík o íránském jaderném programu",
-            "publishedAt": "2026-04-16T05:00:00Z"
           }
         ]
       }
@@ -1632,7 +1629,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39435,
+      "bytes": 39293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1669,7 +1666,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T06:19:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:49:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1684,6 +1681,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kompany v Paříži na lavičku nesmí, utkání podle něj ale beztak rozhodnou hráči",
+            "publishedAt": "2026-04-16T08:49:26Z"
+          },
           {
             "title": "Alscher se blýskl v posledním utkání Floridy dvěma asistencemi, jednou nahrával i Hovorka",
             "publishedAt": "2026-04-16T06:19:13Z"
@@ -1711,10 +1712,6 @@
           {
             "title": "Sparta B se ode dna tabulky neodlepila, Zbrojovka porazila Žižkov",
             "publishedAt": "2026-04-15T17:48:56Z"
-          },
-          {
-            "title": "Měchura: Pozvánka mě vytrhla ze špatných myšlenek",
-            "publishedAt": "2026-04-15T15:12:16Z"
           }
         ]
       }
@@ -1726,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77225,
+      "bytes": 77076,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

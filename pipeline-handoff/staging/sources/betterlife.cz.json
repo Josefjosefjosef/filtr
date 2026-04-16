@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-16T08:40:13.123898Z",
+  "ingestedAt": "2026-04-16T09:34:42.668041Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Chorvatsko mění pravidla pro řidiče. Registrace před cestou k moři bude pro řidiče povinná",
+      "url": "https://www.betterlife.cz/chorvatsko-meni-pravidla-pro-ridice-registrace-pred-cestou-k-mori-bude-pro-ridice-povinna/",
+      "dt": "2026-04-16T08:40:52Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "cestou",
+        "chorvatsko",
+        "moři",
+        "mění",
+        "povinná",
+        "pravidla",
+        "registrace",
+        "řidiče"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -256,36 +281,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Příští týden v seriálu Ulice: Zakázaná láska, Koníček se vrací, zlom ve vyšetřování a pokažená žádost o ruku",
-      "url": "https://www.betterlife.cz/pristi-tyden-v-serialu-ulice-zakazana-laska-konicek-se-vraci-zlom-ve-vysetrovani-a-pokazena-zadost-o-ruku/",
-      "dt": "2026-04-12T08:29:59Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "koníček",
-        "láska",
-        "pokažená",
-        "příští",
-        "ruku",
-        "seriálu",
-        "týden",
-        "ulice",
-        "vrací",
-        "vyšetřování",
-        "zakázaná",
-        "zlom",
-        "žádost"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -296,7 +291,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 80325,
+      "bytes": 74643,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -356,10 +351,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:11:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:40:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -371,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorvatsko mění pravidla pro řidiče. Registrace před cestou k moři bude pro řidiče povinná",
+            "publishedAt": "2026-04-16T08:40:52Z"
+          },
           {
             "title": "IKEA po Evropě ruší fronty v restauracích. Češi si zatím počkají, ale dostanou lízátka s chutí kuliček",
             "publishedAt": "2026-04-15T16:11:54Z"
@@ -398,10 +398,6 @@
           {
             "title": "Světloplachost trápí většinu populace. Roli hrají léky i nošení slunečních brýlí",
             "publishedAt": "2026-04-13T09:26:30Z"
-          },
-          {
-            "title": "Ulice: Blanka v přestrojení, důkazy pro policii a Koníček v roli vyděrače",
-            "publishedAt": "2026-04-13T06:13:09Z"
           }
         ]
       }
