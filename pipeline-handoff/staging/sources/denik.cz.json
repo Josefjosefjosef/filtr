@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T14:50:11.890468Z",
+  "ingestedAt": "2026-04-16T15:10:33.553270Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Britka po vakcíně proti covidu ochrnula. Manžel žádá spravedlivější odškodnění",
+      "url": "https://www.denik.cz/staty-mimo-eu/covid-ockovani-vakcina-astrazeneca-odskodneni.html",
+      "dt": "2026-04-16T14:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "britka",
+        "covidu",
+        "manžel",
+        "ochrnula",
+        "odškodnění",
+        "proti",
+        "spravedlivější",
+        "vakcíně",
+        "žádá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -56,22 +82,22 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Tragédie. Řidička v Čeladné zranila dvě dívky, po nehodě ji samotnou srazil vlak",
+      "title": "Opilá řidička srazila na chodníku dvě školačky. Když utekla, střetla se s vlakem",
       "url": "https://www.denik.cz/nehody/celadna-tragedie-nehoda-ridicka-srazila-dve-divka-pote-vlak-srazeni.html",
       "dt": "2026-04-16T14:00:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "chodníku",
         "dvě",
-        "dívky",
-        "nehodě",
-        "samotnou",
-        "srazil",
-        "tragédie",
-        "vlak",
-        "zranila",
-        "čeladné",
-        "řidička"
+        "když",
+        "opilá",
+        "srazila",
+        "střetla",
+        "utekla",
+        "vlakem",
+        "řidička",
+        "školačky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -621,33 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš, Zůna, Macinka. Vláda tiše schválila delegaci na jednání NATO, bez Pavla",
-      "url": "https://www.denik.cz/z_domova/summit-nato-delegace-babis-zuna-macinka.html",
-      "dt": "2026-04-16T08:18:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "delegaci",
-        "jednání",
-        "macinka",
-        "nato",
-        "pavla",
-        "schválila",
-        "tiše",
-        "vláda",
-        "zůna"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28830,
+      "bytes": 28655,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T14:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T14:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -712,6 +711,10 @@
         },
         "sample_titles": [
           {
+            "title": "Britka po vakcíně proti covidu ochrnula. Manžel žádá spravedlivější odškodnění",
+            "publishedAt": "2026-04-16T14:20:00Z"
+          },
+          {
             "title": "Líbánky se změnily v peklo. Muže na Maledivách zmrzačil žralok",
             "publishedAt": "2026-04-16T14:05:00Z"
           },
@@ -720,7 +723,7 @@
             "publishedAt": "2026-04-16T14:00:00Z"
           },
           {
-            "title": "Tragédie. Řidička v Čeladné zranila dvě dívky, po nehodě ji samotnou srazil vlak",
+            "title": "Opilá řidička srazila na chodníku dvě školačky. Když utekla, střetla se s vlakem",
             "publishedAt": "2026-04-16T14:00:00Z"
           },
           {
@@ -738,10 +741,6 @@
           {
             "title": "V Zoo Dvorec slaví přírůstky. Narodila se tu vzácná lemuří dvojčata",
             "publishedAt": "2026-04-16T13:00:00Z"
-          },
-          {
-            "title": "Cena plynu pro domácnosti roste. Využívejte srovnávače, radí experti i úředníci",
-            "publishedAt": "2026-04-16T12:37:00Z"
           }
         ]
       }
