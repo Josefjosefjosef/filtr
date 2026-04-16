@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T13:14:59.078719Z",
+  "ingestedAt": "2026-04-16T13:35:31.209384Z",
   "items": [
     {
       "section": "finance",
@@ -659,12 +659,13 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kyjev a Oděsa hlásí po ruských útocích mrtvé",
+      "title": "Kyjev, Oděsa a Dnipro hlásí po ruských útocích mrtvé",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-uderilo-na-kyjev-urady-hlasi-obet-a-zranene-372429",
       "dt": "2026-04-16T01:05:22Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "dnipro",
         "hlásí",
         "kyjev",
         "mrtvé",
@@ -752,6 +753,29 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Nosková je na kurtu",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-poradila-s-mertensovou-noskova-je-na-kurtu-156311",
+      "dt": "2026-04-16T13:10:03Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "kurtu",
+        "mertensovou",
+        "muchová",
+        "nosková",
+        "poradila",
+        "stuttgartu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1489,30 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta podněcovala fanoušky k urážení Dědka, míní Pardubice",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/sparta-podnecovala-fanousky-k-urazeni-dedka-mini-pardubice-156280",
-      "dt": "2026-04-14T14:12:39Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dědka",
-        "fanoušky",
-        "míní",
-        "pardubice",
-        "podněcovala",
-        "sparta",
-        "urážení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1523,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42821,
+      "bytes": 42918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1642,7 +1642,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39199,
+      "bytes": 38872,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1679,7 +1679,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T12:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:10:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1694,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Nosková je na kurtu",
+            "publishedAt": "2026-04-16T13:10:03Z"
+          },
           {
             "title": "Jančařík v Havířově dohrál, deblisté se probojovali do semifinále",
             "publishedAt": "2026-04-16T12:15:00Z"
@@ -1721,10 +1725,6 @@
           {
             "title": "Nedvěd Spartu dál nepovede. Trenérem bude Augusta",
             "publishedAt": "2026-04-15T20:19:25Z"
-          },
-          {
-            "title": "Will vychytal Spartu a Mandát poslal Pardubice do finále",
-            "publishedAt": "2026-04-15T18:45:52Z"
           }
         ]
       }
@@ -1736,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77435,
+      "bytes": 77441,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
