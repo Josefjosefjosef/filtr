@@ -1002,13 +1002,90 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     return true;
   }
 
-  function applyBodyOpen(on) {
+  let __iuFinCalcResizeBound = null;
+
+  function iuFinCalcIsDesktopFullpageGuards() {
+    try {
+      if (typeof document === "undefined" || !document.body) return false;
+      if (!document.body.classList.contains("iu-desktop-home-grid")) return false;
+      if (typeof window.matchMedia !== "function") return false;
+      return window.matchMedia("(min-width: 1025px)").matches;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuFinCalcSyncChromeBottom() {
+    try {
+      const el = document.getElementById("leftStickyHeader");
+      if (!el || !document.documentElement) return;
+      const r = el.getBoundingClientRect();
+      const px = Math.max(0, Math.round(r.bottom * 1000) / 1000);
+      document.documentElement.style.setProperty("--iu-fin-calc-chrome-bottom", px + "px");
+    } catch (_) {}
+  }
+
+  function iuFinCalcClearDesktopFullpageLayout() {
+    try {
+      const qf = document.getElementById("iuQuickFeed");
+      if (qf) qf.classList.remove("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    try {
+      if (backdrop) backdrop.classList.remove("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    try {
+      if (panel) panel.classList.remove("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    try {
+      if (document.documentElement) document.documentElement.style.removeProperty("--iu-fin-calc-chrome-bottom");
+    } catch (_) {}
+    try {
+      if (__iuFinCalcResizeBound && typeof window !== "undefined" && typeof window.removeEventListener === "function") {
+        window.removeEventListener("resize", __iuFinCalcResizeBound, { passive: true });
+      }
+    } catch (_) {}
+    __iuFinCalcResizeBound = null;
+  }
+
+  function iuFinCalcApplyDesktopFullpageLayout(active) {
+    if (!active) {
+      iuFinCalcClearDesktopFullpageLayout();
+      return;
+    }
+    try {
+      const qf = document.getElementById("iuQuickFeed");
+      if (qf) qf.classList.add("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    try {
+      if (backdrop) backdrop.classList.add("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    try {
+      if (panel) panel.classList.add("iu-financial-calculators-fullpage");
+    } catch (_) {}
+    iuFinCalcSyncChromeBottom();
+    try {
+      if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+        __iuFinCalcResizeBound = function () {
+          iuFinCalcSyncChromeBottom();
+        };
+        window.addEventListener("resize", __iuFinCalcResizeBound, { passive: true });
+      }
+    } catch (_) {}
+  }
+
+  function applyBodyOpen(on, opts) {
+    const desktopFp = !!(opts && opts.desktopFullpage);
     try {
       if (on) {
         document.body.classList.add("iu-financial-overlay-open", "iu-modal-open");
+        if (desktopFp) document.body.classList.add("iu-financial-calculators-overlay-open");
         panel.dataset.open = "1";
       } else {
-        document.body.classList.remove("iu-financial-overlay-open", "iu-modal-open");
+        document.body.classList.remove(
+          "iu-financial-overlay-open",
+          "iu-modal-open",
+          "iu-financial-calculators-overlay-open",
+        );
         panel.dataset.open = "0";
       }
     } catch (_) {}
@@ -1057,20 +1134,20 @@ export function initIuFinancialCalculatorsOverlay(deps) {
         .map((cid) => {
           const c = byId(cid);
           if (!c || c.enabled === false) return "";
-          return `<button type="button" class="iu-financial-overlay-card ${esc(c.accentClass)}" data-iu-fin-pick="${esc(c.id)}">
+          return `<button type="button" class="iu-financial-overlay-card iu-financial-calculator-card ${esc(c.accentClass)}" data-iu-fin-pick="${esc(c.id)}">
         <span class="iu-financial-overlay-cardTitle">${esc(c.title)}</span>
         <span class="iu-financial-overlay-cardDesc">${esc(c.description)}</span>
       </button>`;
         })
         .filter(Boolean)
         .join("");
-      return `<section class="iu-fin-hub-section" data-iu-fin-hub-section="${esc(sec.id)}">
+      return `<section class="iu-fin-hub-section iu-financial-calculators-section" data-iu-fin-hub-section="${esc(sec.id)}">
       <h3 class="iu-fin-hub-sectionTitle">${esc(sec.title)}</h3>
       <p class="iu-fin-hub-sectionSub">${esc(sec.subtitle)}</p>
       <div class="iu-financial-overlay-hubGrid" role="list">${cards}</div>
     </section>`;
     }).join("");
-    views.innerHTML = `<div class="iu-fin-hub-wrap" data-iu-fin-hub="1">${sections}</div>`;
+    views.innerHTML = `<div class="iu-fin-hub-wrap iu-financial-calculators-list" data-iu-fin-hub="1">${sections}</div>`;
     views.querySelectorAll("[data-iu-fin-pick]").forEach((btn) => {
       btn.addEventListener("click", () => openCalculator(btn.getAttribute("data-iu-fin-pick"), null));
     });
@@ -1193,17 +1270,22 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     try {
       scrollHost.scrollTop = 0;
     } catch (_) {}
+    try {
+      if (panel) panel.scrollTop = 0;
+    } catch (_) {}
   }
 
   function openSurface(extra) {
     state.lastFocus = document.activeElement;
     ensureInBody();
+    const desktopFp = iuFinCalcIsDesktopFullpageGuards();
+    iuFinCalcApplyDesktopFullpageLayout(!!desktopFp);
     setLock(true);
-    applyBodyOpen(true);
+    applyBodyOpen(true, { desktopFullpage: !!desktopFp });
     setVis(true);
     try {
       panel.classList.toggle("iu-financial-overlay-panel--mobile", window.matchMedia("(max-width: 1023px)").matches);
-      panel.classList.toggle("iu-financial-overlay-panel--desktop", window.matchMedia("(min-width: 1024px)").matches);
+      panel.classList.toggle("iu-financial-overlay-panel--desktop", window.matchMedia("(min-width: 1025px)").matches);
     } catch (_) {}
     const ex = extra && typeof extra === "object" ? extra : {};
     if (ex.calculatorId) {
@@ -1220,7 +1302,8 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   function closeSurface() {
     setVis(false);
     setLock(false);
-    applyBodyOpen(false);
+    iuFinCalcClearDesktopFullpageLayout();
+    applyBodyOpen(false, { desktopFullpage: false });
     state.view = "hub";
     state.activeId = null;
     views.innerHTML = "";
@@ -1234,6 +1317,9 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       renderHub();
       try {
         scrollHost.scrollTop = 0;
+      } catch (_) {}
+      try {
+        if (panel) panel.scrollTop = 0;
       } catch (_) {}
     });
   }
