@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T08:19:52.264398Z",
+  "ingestedAt": "2026-04-16T08:40:13.123898Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "KLDR stupňuje výrobu jaderných zbraní, zapojuje se i Moskva",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/kldr-stupnuje-vyrobu-jadernych-zbrani-zapojuje-se-i-moskva-372428",
+      "dt": "2026-04-16T08:18:08Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jaderných",
+        "kldr",
+        "moskva",
+        "stupňuje",
+        "výrobu",
+        "zapojuje",
+        "zbraní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -712,31 +736,6 @@
         "vnitra",
         "zemřelo",
         "škole"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nerudová se kvůli změnám ve financování ČT a ČRo obrátila na Evropskou komisi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nerudova-se-kvuli-zmenam-ve-financovani-ct-a-cro-obratila-na-evropskou-komisi-372403",
-      "dt": "2026-04-15T11:24:12Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "evropskou",
-        "financování",
-        "komisi",
-        "kvůli",
-        "nerudová",
-        "obrátila",
-        "změnám",
-        "čro"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41657,
+      "bytes": 41233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,11 +1573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:18:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 6,
           "zpravy": 23,
+          "other": 6,
           "finance": 1
         },
         "drop_counts": {
@@ -1591,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KLDR stupňuje výrobu jaderných zbraní, zapojuje se i Moskva",
+            "publishedAt": "2026-04-16T08:18:08Z"
+          },
           {
             "title": "Zachytil dobu, kdy v Praze „žil divadelní bůh“. Fotograf Koudelka pokřtil publikaci Divadlo",
             "publishedAt": "2026-04-16T08:00:00Z"
@@ -1618,10 +1621,6 @@
           {
             "title": "Je v troskách, ale dokáží ho obnovit, říká Hladík o íránském jaderném programu",
             "publishedAt": "2026-04-16T05:00:00Z"
-          },
-          {
-            "title": "Lidé kapitulují před AI, varuje výzkum před dalekosáhlými dopady",
-            "publishedAt": "2026-04-16T04:30:00Z"
           }
         ]
       }
@@ -1727,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77108,
+      "bytes": 77225,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

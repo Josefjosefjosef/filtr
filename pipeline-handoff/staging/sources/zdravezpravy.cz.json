@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-16T08:19:52.264398Z",
+  "ingestedAt": "2026-04-16T08:40:13.123898Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
+      "url": "https://www.zdravezpravy.cz/2026/04/16/rychnovska-nemocnice-otevira-novy-urgent-za-125-mld-kc/",
+      "dt": "2026-04-16T07:09:53Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "miliardy",
+        "nemocnice",
+        "nový",
+        "otevírá",
+        "rychnovská",
+        "urgent"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -470,29 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Vyšetřování trestného činu podplacení ve VZP ČR pokračuje",
-      "url": "https://www.zdravezpravy.cz/2026/04/08/vysetrovani-podplaceni-ve-vseobecne-zdravotni-pojistovne-pokracuje/",
-      "dt": "2026-04-08T05:53:16Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "podplacení",
-        "pokračuje",
-        "trestného",
-        "vyšetřování",
-        "vzp",
-        "činu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 232290,
+      "bytes": 235849,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,11 +540,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T15:30:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T07:09:53Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 19,
-          "zpravy": 1
+          "zdravi": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -556,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
+            "publishedAt": "2026-04-16T07:09:53Z"
+          },
           {
             "title": "Zdravotní dotazník: Nejhorší je, když žadatel musí něco hledat, přemýšlet",
             "publishedAt": "2026-04-15T15:30:28Z"
@@ -583,10 +586,6 @@
           {
             "title": "Už se vám stalo, že jste si v autě poseděli, abyste se usebrali?",
             "publishedAt": "2026-04-14T04:40:25Z"
-          },
-          {
-            "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
-            "publishedAt": "2026-04-13T14:55:08Z"
           }
         ]
       }

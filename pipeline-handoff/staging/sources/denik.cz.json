@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T08:19:52.264398Z",
+  "ingestedAt": "2026-04-16T08:40:13.123898Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nálezy od dálnice D11 archeology překvapily. Vyvedly nás z omylu, přiznali",
+      "url": "https://www.denik.cz/regiony/rozvrtali-pudu-na-trutnovsku-a-zasli-tohle-nas-sokovalo-priznali-archeologove-20.html",
+      "dt": "2026-04-16T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "archeology",
+        "d11",
+        "dálnice",
+        "nálezy",
+        "nás",
+        "omylu",
+        "překvapily",
+        "přiznali",
+        "vyvedly"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -32,22 +58,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Běžce na Slovensku napadl ráno medvěd. Po šelmě začal pátrat zásahový tým",
+      "title": "Běžce na Slovensku napadl medvěd. Muž přežil, dokázal se vymanit ze spárů šelmy",
       "url": "https://www.denik.cz/staty-eu/slovensko-banska-bystrica-medved-napadl-bezce.html",
       "dt": "2026-04-16T07:35:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "běžce",
+        "dokázal",
         "medvěd",
+        "muž",
         "napadl",
-        "pátrat",
-        "ráno",
+        "přežil",
         "slovensku",
-        "tým",
-        "začal",
-        "zásahový",
-        "šelmě"
+        "spárů",
+        "vymanit",
+        "šelmy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -628,31 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "K-9 v akci. Pes bravurně zneškodnil muže, který napadl obsluhu obchodu",
-      "url": "https://www.denik.cz/ze_sveta/usa-zasah-policejni-pes-k-9-zneskodnil-muze-ktery-napadl-obsluhu-obchodu-video.html",
-      "dt": "2026-04-15T12:24:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "akci",
-        "bravurně",
-        "muže",
-        "napadl",
-        "obchodu",
-        "obsluhu",
-        "pes",
-        "zneškodnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29156,
+      "bytes": 29124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -718,11 +719,15 @@
         },
         "sample_titles": [
           {
+            "title": "Nálezy od dálnice D11 archeology překvapily. Vyvedly nás z omylu, přiznali",
+            "publishedAt": "2026-04-16T08:00:00Z"
+          },
+          {
             "title": "Revoluce v Záhřebu: Chorvatský Musk vypustil první evropské robotaxi do města",
             "publishedAt": "2026-04-16T07:41:00Z"
           },
           {
-            "title": "Běžce na Slovensku napadl ráno medvěd. Po šelmě začal pátrat zásahový tým",
+            "title": "Běžce na Slovensku napadl medvěd. Muž přežil, dokázal se vymanit ze spárů šelmy",
             "publishedAt": "2026-04-16T07:35:00Z"
           },
           {
@@ -744,10 +749,6 @@
           {
             "title": "Zázrak přírody? Exotická kráska z Afriky vykvétá v Prostějově desítky let",
             "publishedAt": "2026-04-16T06:08:00Z"
-          },
-          {
-            "title": "Ze zimy rovnou do léta? Letos zapomeňte. Předpověď na květen slibuje pravé jaro",
-            "publishedAt": "2026-04-16T05:00:00Z"
           }
         ]
       }
