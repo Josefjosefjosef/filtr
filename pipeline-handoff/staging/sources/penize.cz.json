@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-16T03:04:44.713676Z",
+  "ingestedAt": "2026-04-16T03:25:21.215410Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nezaviněná dopravní nehoda? Jak v trestním řízení získat náhradu škody",
+      "url": "https://www.penize.cz/spotrebitel/488345-nezavinena-dopravni-nehoda-jak-v-trestnim-rizeni-ziskat-nahradu-skody",
+      "dt": "2026-04-16T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dopravní",
+        "nehoda",
+        "nezaviněná",
+        "náhradu",
+        "trestním",
+        "získat",
+        "řízení",
+        "škody"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,32 +507,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Snazší vyzvednutí občanky, pas po 15 i bez souhlasu rodičů. Změny schválila vláda",
-      "url": "https://www.penize.cz/spotrebitel/488167-jednodussi-cestu-k-obcance-a-pasu-projedna-vlada-poplatky-porostou",
-      "dt": "2026-04-13T04:55:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "občanky",
-        "pas",
-        "rodičů",
-        "schválila",
-        "snazší",
-        "souhlasu",
-        "vláda",
-        "vyzvednutí",
-        "změny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18429,
+      "bytes": 18315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,11 +554,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-15T18:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T05:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 6
+          "zpravy": 7,
+          "finance": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nezaviněná dopravní nehoda? Jak v trestním řízení získat náhradu škody",
+            "publishedAt": "2026-04-16T05:00:00Z"
+          },
           {
             "title": "Oneplay se připojí k programu výhod Unity s Air Bank a O2",
             "publishedAt": "2026-04-15T18:30:00Z"
@@ -598,10 +601,6 @@
           {
             "title": "Překlenovací úvěry se zajištěním nabízí už jen jediná stavební spořitelna",
             "publishedAt": "2026-04-15T05:00:00Z"
-          },
-          {
-            "title": "Známe největší slídily. Své páníčky šmírují i auta známé značky",
-            "publishedAt": "2026-04-14T20:33:00Z"
           }
         ]
       }
