@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-16T20:43:09.513772Z",
+  "ingestedAt": "2026-04-16T21:00:16.961088Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po 44 letech dopaden: Francie převzala podezřelého z útoku na židovskou restauraci",
+      "url": "https://zpravy.aktualne.cz/zahranici/po-44-letech-dopaden-francie-prevzala-podezreleho-z-utoku-na-zidovskou-restauraci/r~aaa29155c07c6c9ed1429014a4407124/",
+      "dt": "2026-04-16T20:44:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dopaden",
+        "francie",
+        "letech",
+        "podezřelého",
+        "převzala",
+        "restauraci",
+        "útoku",
+        "židovskou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -489,32 +514,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Řidiči jsou v Česku nepoučitelní. Za jediný den od nich policisté vybrali statisíce",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/ridici-jsou-v-cesku-nepoucitelni-za-jediny-den-od-nich-policiste-vybrali-statisice/r~aaa29b30b8129a0262cf3c7a6e87aa50/",
-      "dt": "2026-04-16T12:57:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "den",
-        "jediný",
-        "nepoučitelní",
-        "nich",
-        "policisté",
-        "statisíce",
-        "vybrali",
-        "česku",
-        "řidiči"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -525,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21779,
+      "bytes": 21778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -562,12 +561,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T19:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T20:44:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
+          "zpravy": 12,
           "sport": 7,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -579,6 +578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po 44 letech dopaden: Francie převzala podezřelého z útoku na židovskou restauraci",
+            "publishedAt": "2026-04-16T20:44:00Z"
+          },
           {
             "title": "Orbán po drtivé porážce: Přijímám odpovědnost, výsledek mě překvapil",
             "publishedAt": "2026-04-16T19:29:00Z"
@@ -606,10 +609,6 @@
           {
             "title": "Macinka si předvolal ruského velvyslance kvůli výhrůžkám českým firmám",
             "publishedAt": "2026-04-16T15:03:00Z"
-          },
-          {
-            "title": "Babiš jednal s šéfem NATO, slíbil splnění závazků Česka",
-            "publishedAt": "2026-04-16T15:59:00Z"
           }
         ]
       }

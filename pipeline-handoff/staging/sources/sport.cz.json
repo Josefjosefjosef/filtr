@@ -1,29 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T20:43:09.513772Z",
+  "ingestedAt": "2026-04-16T21:00:16.961088Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Velký obrat! Horníčkova Braga se po skvělém vstupu do druhé půle přiblížila semifinále EL",
+      "title": "Šťastný samuraj. Procházka se stal otcem",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-velky-duvod-k-radosti-bojovnik-prochazka-se-stal-otcem-5437878",
+      "dt": "2026-04-16T20:44:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "otcem",
+        "procházka",
+        "samuraj",
+        "stal",
+        "šťastný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Neuvěřitelný obrat! Horníčkova Braga opět udeřila, semifinále EL má nadosah",
       "url": "https://www.sport.cz/clanek/fotbal-evropska-liga-hornicek-zabojuje-s-bragou-o-semifinale-evropske-ligy-5437456",
       "dt": "2026-04-16T09:38:47Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "braga",
-        "druhé",
         "fotbal",
         "horníčkova",
+        "nadosah",
+        "neuvěřitelný",
         "obrat",
         "online",
-        "přiblížila",
-        "půle",
+        "opět",
         "semifinále",
-        "skvělém",
-        "velký",
-        "vstupu"
+        "udeřila"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -743,30 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Phinney se vrací k závodění, na dráze chce na domácí olympiádu",
-      "url": "https://www.sport.cz/clanek/cyklistika-phinney-se-vraci-k-zavodeni-na-draze-chce-na-domaci-olympiadu-5437662",
-      "dt": "2026-04-16T13:31:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chce",
-        "domácí",
-        "dráze",
-        "olympiádu",
-        "phinney",
-        "vrací",
-        "závodění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44161,
+      "bytes": 44607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T20:10:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T20:44:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -832,7 +828,11 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Velký obrat! Horníčkova Braga se po skvělém vstupu do druhé půle přiblížila semifinále EL",
+            "title": "Šťastný samuraj. Procházka se stal otcem",
+            "publishedAt": "2026-04-16T20:44:34Z"
+          },
+          {
+            "title": "FOTBAL ONLINE: Neuvěřitelný obrat! Horníčkova Braga opět udeřila, semifinále EL má nadosah",
             "publishedAt": "2026-04-16T09:38:47Z"
           },
           {
@@ -858,10 +858,6 @@
           {
             "title": "SESTŘIH: Hokejová reprezentace vydřela na úvod přípravy na MS výhru, dva góly dali Flek a Tomášek",
             "publishedAt": "2026-04-16T07:38:45Z"
-          },
-          {
-            "title": "Nikdy jsem tolik netrénovala. Šwiateková ožila po týdnu s Nadalem",
-            "publishedAt": "2026-04-16T18:30:35Z"
           }
         ]
       }
