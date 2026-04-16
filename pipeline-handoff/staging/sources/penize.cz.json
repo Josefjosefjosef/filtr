@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-16T12:56:00.537920Z",
+  "ingestedAt": "2026-04-16T13:14:59.078719Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Termínované vklady mají novou jedničku. Zvedá úrok až ke čtyřce",
+      "url": "https://www.penize.cz/terminovane-vklady/488411-terminovane-vklady-maji-novou-jednicku-zveda-urok-az-ke-ctyrce",
+      "dt": "2026-04-16T15:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "jedničku",
+        "mají",
+        "novou",
+        "termínované",
+        "vklady",
+        "zvedá",
+        "úrok",
+        "čtyřce"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -475,32 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Zase o kus levněji. Maximální ceny benzinu a nafty na úterý 14. dubna",
-      "url": "https://www.penize.cz/doprava/488187-zase-o-kus-levneji-maximalni-ceny-benzinu-a-nafty-na-utery-14-dubna",
-      "dt": "2026-04-13T13:59:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "dubna",
-        "kus",
-        "levněji",
-        "maximální",
-        "nafty",
-        "zase",
-        "úterý"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18275,
+      "bytes": 18328,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,11 +547,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T13:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T15:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 13
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -564,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Termínované vklady mají novou jedničku. Zvedá úrok až ke čtyřce",
+            "publishedAt": "2026-04-16T15:00:00Z"
+          },
           {
             "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
             "publishedAt": "2026-04-16T13:57:00Z"
@@ -591,10 +594,6 @@
           {
             "title": "Vláda si nechala schválit snazší regulaci cen benzinu a nafty. Může trvat rok",
             "publishedAt": "2026-04-15T08:00:00Z"
-          },
-          {
-            "title": "Důchodci si přilepší. Juchelka má první balíček změn",
-            "publishedAt": "2026-04-15T05:10:00Z"
           }
         ]
       }

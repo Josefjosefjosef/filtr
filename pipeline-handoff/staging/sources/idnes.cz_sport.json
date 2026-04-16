@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-16T12:56:00.537920Z",
+  "ingestedAt": "2026-04-16T13:14:59.078719Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hokejová diplomacie. Premiér Kanady a finský prezident trénovali s Ottawou",
+      "url": "https://www.idnes.cz/sport/trendy/hokejova-diplomacie-premier-kanady-a-finsky-prezident-trenovali-s-ottawou.A260416_111344_trendy_subt",
+      "dt": "2026-04-16T13:04:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "diplomacie",
+        "finský",
+        "hokejová",
+        "kanady",
+        "ottawou",
+        "premiér",
+        "prezident",
+        "trénovali"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,33 +781,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bayern v divoké přestřelce vyzrál na Real, semifinále Ligy mistrů si zahraje i Arsenal",
-      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-ctvrtfinale-odvety-online-vysledky.A260415_134526_fot_pohary_duff",
-      "dt": "2026-04-15T21:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "arsenal",
-        "bayern",
-        "divoké",
-        "ligy",
-        "mistrů",
-        "přestřelce",
-        "real",
-        "semifinále",
-        "vyzrál",
-        "zahraje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49552,
+      "bytes": 49388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T12:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:04:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokejová diplomacie. Premiér Kanady a finský prezident trénovali s Ottawou",
+            "publishedAt": "2026-04-16T13:04:00Z"
+          },
           {
             "title": "Šalková v Rouenu na čtvrtfinále nedosáhla, podlehla německé veteránce",
             "publishedAt": "2026-04-16T12:31:00Z"
@@ -872,10 +874,6 @@
           {
             "title": "Chorý se dozví trest za vyloučení proti Plzni. Slavii může chybět až šest zápasů",
             "publishedAt": "2026-04-16T11:10:00Z"
-          },
-          {
-            "title": "Nedvěd, hrdina Sparty: Od začátku bylo dané, že skončím. Augusta si vybral jiné",
-            "publishedAt": "2026-04-16T10:46:00Z"
           }
         ]
       }

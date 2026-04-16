@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T12:56:00.537920Z",
+  "ingestedAt": "2026-04-16T13:14:59.078719Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa má leteckého paliva jen asi na šest týdnů, řekl šéf IEA",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/evropa-ma-leteckeho-paliva-jen-asi-na-sest-tydnu-rekl-sef-iea-372451",
+      "dt": "2026-04-16T12:59:01Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "asi",
+        "evropa",
+        "iea",
+        "jen",
+        "leteckého",
+        "paliva",
+        "týdnů",
+        "řekl",
+        "šest",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,31 +748,6 @@
         "podpořil",
         "vynětí",
         "výbor"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "BBC propustí přes desetinu zaměstnanců, zruší až dva tisíce míst",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/bbc-propusti-pres-desetinu-zamestnancu-zrusi-az-dva-tisice-mist-372422",
-      "dt": "2026-04-15T17:12:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bbc",
-        "desetinu",
-        "dva",
-        "míst",
-        "propustí",
-        "tisíce",
-        "zaměstnanců",
-        "zruší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1521,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42690,
+      "bytes": 42821,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,12 +1583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T12:36:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T12:59:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 6,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 21,
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1598,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa má leteckého paliva jen asi na šest týdnů, řekl šéf IEA",
+            "publishedAt": "2026-04-16T12:59:01Z"
+          },
           {
             "title": "Nad myšlenkou vlastní armády EU zaznívají v Litvě pochybnosti",
             "publishedAt": "2026-04-16T12:36:49Z"
@@ -1625,10 +1631,6 @@
           {
             "title": "Bejrút: Izrael zničil poslední most spojující jih Libanonu se zbytkem země",
             "publishedAt": "2026-04-16T11:43:56Z"
-          },
-          {
-            "title": "Jihomoravská rada odvolala šéfa znojemské nemocnice, nezajistil prý chod interny",
-            "publishedAt": "2026-04-16T10:59:50Z"
           }
         ]
       }
@@ -1734,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77367,
+      "bytes": 77435,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

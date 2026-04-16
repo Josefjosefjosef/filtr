@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-16T12:56:00.537920Z",
+  "ingestedAt": "2026-04-16T13:14:59.078719Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinovýhled: V kinech bude strašit nová Mumie a kdákat Pálfiho Slepice",
+      "url": "https://www.kinobox.cz/clanky/filmy/52735-kinovyhled-v-kinech-bude-strasit-lee-croninova-mumie-a-kdakat-palfiho-slepice",
+      "dt": "2026-04-16T13:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "kdákat",
+        "kinech",
+        "kinovýhled",
+        "mumie",
+        "nová",
+        "pálfiho",
+        "slepice",
+        "strašit"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -520,35 +545,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ridley Scott přiznal, jaký horor jej k smrti vyděsil. Která klasika ovlivnila legendárního Vetřelce?",
-      "url": "https://www.kinobox.cz/clanky/filmy/52663-ridley-scott-priznal-jaky-horor-jej-k-smrti-vydesil-cemu-vdeci-vetrelec-za-nehynouci-teror",
-      "dt": "2026-04-14T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "horor",
-        "jaký",
-        "jej",
-        "klasika",
-        "legendárního",
-        "ovlivnila",
-        "přiznal",
-        "ridley",
-        "scott",
-        "smrti",
-        "vetřelce",
-        "vyděsil"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,7 +555,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28628,
+      "bytes": 28495,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -596,7 +592,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -611,6 +607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinovýhled: V kinech bude strašit nová Mumie a kdákat Pálfiho Slepice",
+            "publishedAt": "2026-04-16T13:00:00Z"
+          },
           {
             "title": "Všichni fotři budou zase lotři. Stiller se v prvním traileru komediálního hitu mění v De Nira",
             "publishedAt": "2026-04-16T12:00:00Z"
@@ -638,10 +638,6 @@
           {
             "title": "Do kin vstupuje ucelený Kill Bill. Odvážný snímek znamenal zlom v Tarantinově kariéře",
             "publishedAt": "2026-04-15T17:00:00Z"
-          },
-          {
-            "title": "Lesní duch před 45 lety definoval hororovou kreativitu. Bez Stephena Kinga by si ale neškrtl",
-            "publishedAt": "2026-04-15T15:00:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-16T12:56:00.537920Z",
+  "ingestedAt": "2026-04-16T13:14:59.078719Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hubáčkův Creditas předběhl i ČEZ. Získal stavební povolení pro paroplynku",
+      "url": "https://ekonomickydenik.cz/hubackuv-creditas-ma-povoleni-pro-paroplynku/",
+      "dt": "2026-04-16T12:57:42Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "creditas",
+        "hubáčkův",
+        "paroplynku",
+        "povolení",
+        "předběhl",
+        "stavební",
+        "získal",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,29 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Havlíček změní název ministerstva průmyslu a obchodu",
-      "url": "https://ekonomickydenik.cz/havlicek-zmeni-nazev-ministerstva-hospodarstvi/",
-      "dt": "2026-04-14T18:31:21Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "havlíček",
-        "ministerstva",
-        "název",
-        "obchodu",
-        "průmyslu",
-        "změní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73975,
+      "bytes": 73745,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T12:09:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T12:57:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hubáčkův Creditas předběhl i ČEZ. Získal stavební povolení pro paroplynku",
+            "publishedAt": "2026-04-16T12:57:42Z"
+          },
           {
             "title": "Konec levných solárů: Za fotovoltaiku si lidé připlatí statisíce",
             "publishedAt": "2026-04-16T12:09:27Z"
@@ -870,10 +876,6 @@
           {
             "title": "Brněnská primátorka Vaňková kandidovat nebude. V emotivním videu uvedla důvody",
             "publishedAt": "2026-04-16T07:10:37Z"
-          },
-          {
-            "title": "CSG Nadační fond podporuje studenty a hasiče. Chystá i expanzi do zahraničí",
-            "publishedAt": "2026-04-16T06:10:47Z"
           }
         ]
       }
