@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-16T10:49:53.734428Z",
+  "ingestedAt": "2026-04-16T11:05:20.112667Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Býčí skála: jedno z nejtajemnějších a nejděsivějších míst Česku",
+      "url": "https://www.svetcestovatele.cz/byci-skala-jedno-z-nejtajemnejsich-a-nejdesivejsich-mist-cesku/",
+      "dt": "2026-04-16T11:00:30Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "býčí",
+        "jedno",
+        "míst",
+        "nejděsivějších",
+        "nejtajemnějších",
+        "skála",
+        "česku"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -506,30 +530,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Kde je nejmodřejší moře na světě? Zapomeňte na Pacifik. Máme ho v Evropě",
-      "url": "https://www.svetcestovatele.cz/kde-je-nejmodrejsi-more-na-svete-zapomente-na-pacifik-mame-ho-v-evrope/",
-      "dt": "2026-04-07T11:00:07Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "evropě",
-        "moře",
-        "máme",
-        "nejmodřejší",
-        "pacifik",
-        "světě",
-        "zapomeňte"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 147059,
+      "bytes": 145193,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:00:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T11:00:30Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -592,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Býčí skála: jedno z nejtajemnějších a nejděsivějších míst Česku",
+            "publishedAt": "2026-04-16T11:00:30Z"
+          },
           {
             "title": "Absurdní dohadování s australským úředním šimlem: Za synem mě nechtěli pustit dva roky, pomohla cestovatelka",
             "publishedAt": "2026-04-16T04:00:33Z"
@@ -619,10 +623,6 @@
           {
             "title": "Do porodnice už znovu nejdu. Na oddělení šestinedělí asi zamrzli ve středověku",
             "publishedAt": "2026-04-12T04:00:42Z"
-          },
-          {
-            "title": "Otráví všechny? Ministerstva asi povolí rozsypávání jedu proti hrabošům na povrch půdy",
-            "publishedAt": "2026-04-11T10:56:42Z"
           }
         ]
       }

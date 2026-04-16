@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T10:49:53.734428Z",
+  "ingestedAt": "2026-04-16T11:05:20.112667Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "První posila, do Plzně se vrací stříbrný medailista z dvacítek",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-prvni-posila-do-plzne-se-vraci-stribrny-medailista-z-dvacitek-5437462",
+      "dt": "2026-04-16T10:49:26Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dvacítek",
+        "medailista",
+        "plzně",
+        "posila",
+        "první",
+        "stříbrný",
+        "vrací"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,34 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chlapík po vyřazení Sparty: Škoda, že se řešily věci okolo. Pokuty za názor bych nedával",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-chlapik-po-vyrazeni-sparty-skoda-ze-se-resily-veci-okolo-davat-pokuty-za-nazor-toho-nejsem-zastance-5437288",
-      "dt": "2026-04-15T20:09:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bych",
-        "chlapík",
-        "nedával",
-        "názor",
-        "okolo",
-        "pokuty",
-        "sparty",
-        "vyřazení",
-        "věci",
-        "řešily",
-        "škoda"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42905,
+      "bytes": 42841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:42:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:49:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První posila, do Plzně se vrací stříbrný medailista z dvacítek",
+            "publishedAt": "2026-04-16T10:49:26Z"
+          },
           {
             "title": "Arsenal slaví úspěch, jaký nezažil 140 let. Prosím, užívejte si, reaguje kouč na kritiku",
             "publishedAt": "2026-04-16T10:42:07Z"
@@ -873,10 +873,6 @@
           {
             "title": "Český hokej vybírá nového kouče reprezentace. Hadamczik měl přinést na výkonný výbor dvě jména",
             "publishedAt": "2026-04-16T08:55:03Z"
-          },
-          {
-            "title": "Program finále play off Tipsport extraligy. Třinec hraje o titul s pardubickým Dynamem",
-            "publishedAt": "2026-04-16T07:03:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T10:49:53.734428Z",
+  "ingestedAt": "2026-04-16T11:05:20.112667Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jihomoravská rada odvolala šéfa znojemské nemocnice, nezajistil prý chod interny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihomoravska-rada-odvolala-sefa-znojemske-nemocnice-nezajistil-pry-chod-interny-372442",
+      "dt": "2026-04-16T10:59:50Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chod",
+        "interny",
+        "jihomoravská",
+        "nemocnice",
+        "nezajistil",
+        "odvolala",
+        "prý",
+        "rada",
+        "znojemské",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -712,30 +739,6 @@
         "viny",
         "zprostil",
         "části"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "AI skočily na falešné studie. Šířily varování před neexistující nemocí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/ai-skocily-na-falesne-studie-sirily-varovani-pred-neexistujici-nemoci-372404",
-      "dt": "2026-04-15T13:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "falešné",
-        "neexistující",
-        "nemocí",
-        "skočily",
-        "studie",
-        "varování",
-        "šířily"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1515,7 +1518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41592,
+      "bytes": 41751,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,12 +1578,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:06:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:59:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 7,
-          "finance": 2,
-          "zpravy": 21
+          "zpravy": 22,
+          "other": 6,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1592,6 +1595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jihomoravská rada odvolala šéfa znojemské nemocnice, nezajistil prý chod interny",
+            "publishedAt": "2026-04-16T10:59:50Z"
+          },
           {
             "title": "Vědci navrhli genetickou léčbu Downova syndromu",
             "publishedAt": "2026-04-16T10:06:51Z"
@@ -1619,10 +1626,6 @@
           {
             "title": "Pentagon zrychluje plánování možné vojenské operace na Kubě, píše USA Today",
             "publishedAt": "2026-04-16T07:29:02Z"
-          },
-          {
-            "title": "Před 70 lety přišel na trh první videorekordér",
-            "publishedAt": "2026-04-16T07:25:37Z"
           }
         ]
       }
@@ -1728,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77083,
+      "bytes": 77012,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
