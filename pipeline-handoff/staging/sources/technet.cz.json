@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-16T22:00:39.133203Z",
+  "ingestedAt": "2026-04-16T22:19:39.550890Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nová technologie čipů má za cíl odhalovat deepfake už u zdroje",
+      "url": "https://www.idnes.cz/technet/pc-mac/ai-umela-inteligence-snimac-originalni-fake-falesny.A260401_112318_hardware_vse",
+      "dt": "2026-04-16T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "cíl",
+        "deepfake",
+        "nová",
+        "odhalovat",
+        "technologie",
+        "zdroje",
+        "čipů"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -518,7 +542,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Před 100 lety vrcholily přípravy letu Norge, který přepsal dějiny polárnictví",
       "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-norge-polarni-vyprava-severni-pol-amundsen-behounek.A260407_130315_pred-100-lety_vov",
@@ -544,7 +568,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Test odhalil devítiprocentní chybovost v AI odpovědích na Googlu",
       "url": "https://www.idnes.cz/technet/technika/ai-prehledy-overview-spravna-odpoved-chyba.A260409_143652_tec_technika_vse",
@@ -744,31 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko od roku 1976 nepřistálo na Měsíci. Další sondy posouvá",
-      "url": "https://www.idnes.cz/technet/vesmir/vesmir-mesic-luna-sonda-mesic-26-27a-27b-28-29.A260407_221059_tec_vesmir_vse",
-      "dt": "2026-04-08T07:39:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "1976",
-        "další",
-        "měsíci",
-        "nepřistálo",
-        "posouvá",
-        "roku",
-        "rusko",
-        "sondy"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 48123,
+      "bytes": 47866,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 22,
-          "zpravy": 8
+          "other": 21,
+          "zpravy": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -832,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová technologie čipů má za cíl odhalovat deepfake už u zdroje",
+            "publishedAt": "2026-04-16T22:00:00Z"
+          },
           {
             "title": "Unikátní Anson spíše než nadšení vzbudil posedlost, říká pilot",
             "publishedAt": "2026-04-15T22:00:00Z"
@@ -859,10 +862,6 @@
           {
             "title": "Malá rozměry. Velká výkonem. To jsou Mini PC BARBONE",
             "publishedAt": "2026-04-14T22:01:00Z"
-          },
-          {
-            "title": "Bluetooth reprák z Ikea stojí méně než porce masových koulí. Jak hraje?",
-            "publishedAt": "2026-04-14T22:00:00Z"
           }
         ]
       }

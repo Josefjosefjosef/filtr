@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-04-16T22:00:39.133203Z",
+  "ingestedAt": "2026-04-16T22:19:39.550890Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kverulantův boj o Kalouskovy odměny posílil verdikt Městského soudu",
+      "url": "https://www.kverulant.org/article/kverulantuv-boj-o-kalouskovy-odmeny-posilil-verdikt-mestskeho-soudu/",
+      "dt": "2026-04-16T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "boj",
+        "kalouskovy",
+        "kverulantův",
+        "městského",
+        "odměny",
+        "posílil",
+        "soudu",
+        "verdikt"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -202,29 +227,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kverulant pokračuje v boji s nelegálním autobazarem na Praze 15",
-      "url": "https://www.kverulant.org/article/kverulant-pokracuje-v-boji-s-nelegalnim-autobazarem-na-praze-15/",
-      "dt": "2026-04-01T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "autobazarem",
-        "boji",
-        "kverulant",
-        "nelegálním",
-        "pokračuje",
-        "praze"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -235,7 +237,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 136174,
+      "bytes": 134331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -272,7 +274,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-15T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -287,6 +289,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kverulantův boj o Kalouskovy odměny posílil verdikt Městského soudu",
+            "publishedAt": "2026-04-16T22:07:00Z"
+          },
           {
             "title": "Mapa 25 míst, kde raději netankovat",
             "publishedAt": "2026-04-15T22:07:00Z"
@@ -314,10 +320,6 @@
           {
             "title": "Kverulant je na Benevity",
             "publishedAt": "2026-04-07T22:07:00Z"
-          },
-          {
-            "title": "Nejvíce pokutovanou drogerií byl Rossmann",
-            "publishedAt": "2026-04-06T22:07:00Z"
           }
         ]
       }
