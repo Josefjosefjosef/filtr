@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-16T16:35:22.651019Z",
+  "ingestedAt": "2026-04-16T16:55:05.662280Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Xbox chystá třicetiminutovou ukázku z hraní Gears of War: E-Day - INDIAN",
+      "url": "https://indian-tv.cz/clanek/xbox-chysta-tricetiminutovou-ukazku-z-hrani-gears-of-war-e-day-6u55kf",
+      "dt": "2026-04-16T16:38:48Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chystá",
+        "day",
+        "gears",
+        "hraní",
+        "indian",
+        "třicetiminutovou",
+        "ukázku",
+        "war",
+        "xbox"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1047,33 +1073,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Rozpočet hry Marathon měl činit zhruba 250 milionů dolarů - INDIAN",
-      "url": "https://indian-tv.cz/clanek/rozpocet-hry-marathon-mel-cinit-zhruba-250-milionu-dolaru-5ai8h6",
-      "dt": "2026-04-13T11:39:48Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "250",
-        "dolarů",
-        "hry",
-        "indian",
-        "marathon",
-        "milionů",
-        "měl",
-        "rozpočet",
-        "zhruba",
-        "činit"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1083,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 206862,
+      "bytes": 205596,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,7 +1120,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T16:38:48Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1136,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Xbox chystá třicetiminutovou ukázku z hraní Gears of War: E-Day - INDIAN",
+            "publishedAt": "2026-04-16T16:38:48Z"
+          },
           {
             "title": "Dnes vychází Cthulhu: The Cosmic Abyss. Venku jsou první recenze i trailer ukazující využití ovladače DualSense - INDIAN",
             "publishedAt": "2026-04-16T13:00:00Z"
@@ -1163,10 +1166,6 @@
           {
             "title": "Euro Truck Simulator 2 zavede hráče hluboko do Anatolie - INDIAN",
             "publishedAt": "2026-04-16T05:50:20Z"
-          },
-          {
-            "title": "Akční střílečka MOUSE: P.I. For Hire obdržela první recenze - INDIAN",
-            "publishedAt": "2026-04-16T05:41:31Z"
           }
         ]
       }
