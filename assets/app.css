@@ -11858,6 +11858,20 @@ body.iu-quickFeedOpen{
   overflow: visible;
   max-height: none;
 }
+/* Desktop ≥1024px: jednoznačný scrollport na #iuQuickFeed (guard třída z app.js — bez :has()). Inner karta zůstává bez vlastního scrollu. */
+@media (min-width: 1024px) {
+  body.iu-nakup-online-overlay-open #iuQuickFeed.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column.iu-nakup-online-root-scrollport{
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 0 !important;
+    overscroll-behavior-y: contain;
+  }
+  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-outerCard,
+  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-feed{
+    overflow: visible !important;
+    max-height: none !important;
+  }
+}
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-feed{
   flex: 1 1 auto;
   min-height: 0;
