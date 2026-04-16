@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T01:07:59.129245Z",
+  "ingestedAt": "2026-04-16T01:24:57.094220Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko udeřilo na Kyjev, úřady hlásí oběť a zraněné",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-uderilo-na-kyjev-urady-hlasi-obet-a-zranene-372429",
+      "dt": "2026-04-16T01:05:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hlásí",
+        "kyjev",
+        "oběť",
+        "rusko",
+        "udeřilo",
+        "zraněné",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -711,29 +735,6 @@
         "čro",
         "říká",
         "šťastný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán pohrozil blokádou Rudého a Ománského moře",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-vratily-cinsky-tanker-do-hormuzskeho-prulivu-372393",
-      "dt": "2026-04-15T06:41:57Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "blokádou",
-        "moře",
-        "ománského",
-        "pohrozil",
-        "rudého",
-        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1512,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41340,
+      "bytes": 41219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1572,11 +1573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T19:21:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T01:05:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 25,
+          "finance": 1,
           "other": 4
         },
         "drop_counts": {
@@ -1589,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko udeřilo na Kyjev, úřady hlásí oběť a zraněné",
+            "publishedAt": "2026-04-16T01:05:22Z"
+          },
           {
             "title": "Colt CZ vstoupil na burzu v Amsterdamu, následuje tak další tuzemské firmy",
             "publishedAt": "2026-04-15T19:21:14Z"
@@ -1616,10 +1621,6 @@
           {
             "title": "Rusko vyplatí odškodné za sestřelení ázerbájdžánského letounu",
             "publishedAt": "2026-04-15T15:07:22Z"
-          },
-          {
-            "title": "Severní Mariany zasáhl supertajfun Sinlaku, přinesl záplavy a ničil",
-            "publishedAt": "2026-04-15T14:33:57Z"
           }
         ]
       }
