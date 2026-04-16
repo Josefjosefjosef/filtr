@@ -21,6 +21,18 @@ const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
 const ROOT_REDIRECT_TIMEOUT_MS = 20000;
 /** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
 const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
+/** SPA + Playwright can both navigate to the same URL → "interrupted by another navigation"; bounded retries + URL settle. */
+const GOTO_INTERRUPTED_MAX_ATTEMPTS = 4;
+
+function sameDocumentUrl(a, b) {
+  try {
+    const x = new URL(a);
+    const y = new URL(b);
+    return x.origin === y.origin && x.pathname === y.pathname && x.search === y.search;
+  } catch {
+    return false;
+  }
+}
 
 let server = null;
 let failed = false;
@@ -74,7 +86,10 @@ function startServer() {
 
 /** Projects global hub: wait for Silver tall viewport (mount targets exist) before preview assertions. */
 async function gotoProjectsMediaForSmoke(page) {
-  await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
+  const mediaUrl = `${BASE}/projects/?section=media`;
+  if (!sameDocumentUrl(page.url(), mediaUrl)) {
+    await gotoDomContentLoaded(page, mediaUrl);
+  }
   // Locator re-resolves after DOM swaps; page.waitForSelector can time out when the same id is
   // detach/replaced during Silver shell paint — CI logs showed "visible" + 20s timeout on #iuSilverTallScrollViewport.
   const tallViewport = page.locator("#iuSilverTallScrollViewport").first();
@@ -91,18 +106,32 @@ async function gotoProjectsMediaForSmoke(page) {
   await page.waitForTimeout(600);
 }
 
-/** One retry when client navigation races domcontentloaded (e.g. /projects/?section=media vs /projects/). */
+/**
+ * Navigate for smoke: client router may commit the same URL while Playwright's goto is in flight
+ * ("interrupted by another navigation to the same URL"). Single retry was insufficient on CI.
+ * After interrupt, wait for the document URL to match (client won) or retry goto with backoff.
+ */
 async function gotoDomContentLoaded(page, url) {
-  try {
-    return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
-  } catch (e) {
-    const msg = String(e && e.message ? e.message : e);
-    if (/interrupted/i.test(msg)) {
-      await page.waitForTimeout(500);
+  for (let attempt = 0; attempt < GOTO_INTERRUPTED_MAX_ATTEMPTS; attempt++) {
+    try {
       return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
+    } catch (e) {
+      const msg = String(e && e.message ? e.message : e);
+      if (!/interrupted/i.test(msg)) throw e;
     }
-    throw e;
+    try {
+      await page.waitForURL((u) => sameDocumentUrl(u.href, url), {
+        timeout: 15000,
+        waitUntil: "domcontentloaded",
+      });
+      await page.waitForLoadState("domcontentloaded");
+      return null;
+    } catch (_) {
+      /* Client did not land on target in time — retry goto after short backoff */
+    }
+    await page.waitForTimeout(250 + attempt * 200);
   }
+  return await page.goto(url, { waitUntil: "domcontentloaded", timeout: GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS });
 }
 
 async function runSmoke() {
