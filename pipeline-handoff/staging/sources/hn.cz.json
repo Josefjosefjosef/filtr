@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-16T12:39:46.418688Z",
+  "ingestedAt": "2026-04-16T12:56:00.537920Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rakousko neví, komu patří polovina vídeňského letiště. Požadované informace nejsou k dispozici, sdělilo ministerstvo soudu",
+      "url": "https://byznys.hn.cz/c1-67867910-rakousko-nevi-komu-patri-polovina-videnskeho-letiste-pozadovane-informace-nejsou-k-dispozici-sdelilo-ministerstvo-soudu",
+      "dt": "2026-04-16T10:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dispozici",
+        "informace",
+        "komu",
+        "letiště",
+        "ministerstvo",
+        "nejsou",
+        "neví",
+        "patří",
+        "polovina",
+        "požadované",
+        "rakousko",
+        "sdělilo",
+        "soudu",
+        "vídeňského"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -557,25 +588,25 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Konec milionových pokut za švarcsystém? Stát mění definici nelegální práce a firmám otevírá legální cestu k OSVČ",
+      "title": "Konec milionových pokut za švarcsystém? Stát možná firmám otevře legální cestu k OSVČ, experti úpravu kritizují",
       "url": "https://archiv.hn.cz/c1-67867300-misto-mantinelu-legalizace-uprava-svarcsystemu-narazi-stat-podle-kritiku-nedrzi-krok-s-modernim-trhem-prace",
       "dt": "2026-04-15T16:47:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
         "cestu",
-        "definici",
+        "experti",
         "firmám",
         "konec",
+        "kritizují",
         "legální",
         "milionových",
-        "mění",
-        "nelegální",
+        "možná",
         "osvč",
-        "otevírá",
+        "otevře",
         "pokut",
-        "práce",
         "stát",
+        "úpravu",
         "švarcsystém"
       ],
       "feedCategory": "finance",
@@ -1137,32 +1168,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vyhoření zpočátku vypadá jako jízda pod Vítězným obloukem, v tom je nejzrádnější",
-      "url": "https://nazory.hn.cz/c1-67867040-vyhoreni-zpocatku-vypada-jako-jizda-pod-viteznym-obloukem-v-tom-je-nejzradnejsi",
-      "dt": "2026-04-15T09:45:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "jako",
-        "jízda",
-        "nejzrádnější",
-        "obloukem",
-        "tom",
-        "vyhoření",
-        "vypadá",
-        "vítězným",
-        "zpočátku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1173,7 +1178,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185391,
+      "bytes": 185267,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1210,7 +1215,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T10:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:43:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1227,6 +1232,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakousko neví, komu patří polovina vídeňského letiště. Požadované informace nejsou k dispozici, sdělilo ministerstvo soudu",
+            "publishedAt": "2026-04-16T10:43:00Z"
+          },
           {
             "title": "Další Orbán(ová). Budoucí maďarská šéfka diplomacie se jmenuje stejně jako premiér, byla ve vedení české Draslovky",
             "publishedAt": "2026-04-16T10:14:00Z"
@@ -1254,10 +1263,6 @@
           {
             "title": "Hypomonitor: Banky v březnu poskytly hypotéky za 55,4 miliardy korun, o 69 procent více než před rokem",
             "publishedAt": "2026-04-16T08:15:00Z"
-          },
-          {
-            "title": "J&T přitvrzuje v kauze ztracených mobilů. Žaluje majitele Unicornu Vladimíra Kováře a jeho firmy o 2,6 miliardy",
-            "publishedAt": "2026-04-16T07:59:00Z"
           }
         ]
       }
