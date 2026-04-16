@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T20:01:17.612594Z",
+  "ingestedAt": "2026-04-16T20:20:26.352794Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Korupci jsem nikdy netoleroval, řekl Orbán. Porážka ve volbách ho prý překvapila",
+      "url": "https://www.denik.cz/staty-eu/viktor-orban-porazka-volby.html",
+      "dt": "2026-04-16T19:29:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jsem",
+        "korupci",
+        "netoleroval",
+        "nikdy",
+        "orbán",
+        "porážka",
+        "prý",
+        "překvapila",
+        "volbách",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,33 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hádka Meloniové a Trumpa: Kritika papeže vše vyhrotila, spor začal už Sicílií",
-      "url": "https://www.denik.cz/staty-eu/giorgia-meloniova-donald-trump-kritika.html",
-      "dt": "2026-04-16T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hádka",
-        "kritika",
-        "meloniové",
-        "papeže",
-        "sicílií",
-        "spor",
-        "trumpa",
-        "vyhrotila",
-        "vše",
-        "začal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28693,
+      "bytes": 28943,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T19:29:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Korupci jsem nikdy netoleroval, řekl Orbán. Porážka ve volbách ho prý překvapila",
+            "publishedAt": "2026-04-16T19:29:00Z"
+          },
           {
             "title": "Po pádu autobusu do rokle zemřelo v Ekvádoru nejméně 14 lidí, 29 bylo zraněno",
             "publishedAt": "2026-04-16T18:00:00Z"
@@ -744,10 +748,6 @@
           {
             "title": "Hrozbu ruského útoku na ČR řeší policie. Experti k vládě: Nepodceňujte, reagujte",
             "publishedAt": "2026-04-16T15:22:00Z"
-          },
-          {
-            "title": "Ruské výhrůžky českým firmám: Macinka si předvolal ruského velvyslance",
-            "publishedAt": "2026-04-16T15:17:00Z"
           }
         ]
       }

@@ -1,24 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T20:01:17.612594Z",
+  "ingestedAt": "2026-04-16T20:20:26.352794Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Naděje pro Horníčka a spol. Braga se prosazuje",
+      "title": "FOTBAL ONLINE: Velký obrat! Horníčkova Braga se po skvělém vstupu do druhé půle přiblížila semifinále EL",
       "url": "https://www.sport.cz/clanek/fotbal-evropska-liga-hornicek-zabojuje-s-bragou-o-semifinale-evropske-ligy-5437456",
       "dt": "2026-04-16T09:38:47Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "braga",
+        "druhé",
         "fotbal",
-        "horníčka",
-        "naděje",
+        "horníčkova",
+        "obrat",
         "online",
-        "prosazuje",
-        "spol"
+        "přiblížila",
+        "půle",
+        "semifinále",
+        "skvělém",
+        "velký",
+        "vstupu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šestnáctiletý šachista Finěk se stane druhým nejmladším českým velmistrem",
+      "url": "https://www.sport.cz/clanek/ostatni-sestnactilety-sachista-finek-se-stane-druhym-nejmladsim-ceskym-velmistrem-5437843",
+      "dt": "2026-04-16T20:10:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "druhým",
+        "finěk",
+        "nejmladším",
+        "stane",
+        "velmistrem",
+        "českým",
+        "šachista",
+        "šestnáctiletý"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -737,35 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "PÁLÍ NEDO: Vystoupení na olympiádě se zametlo pod koberec, noví trenéři nesmí tahat králíky z klobouku",
-      "url": "https://www.sport.cz/clanek/nazory-komentare-pali-nedo-vystoupeni-na-olympiade-se-zametlo-pod-koberec-novi-treneri-nesmi-tahat-kraliky-z-klobouku-5437446",
-      "dt": "2026-04-16T13:20:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "klobouku",
-        "koberec",
-        "králíky",
-        "nedo",
-        "nesmí",
-        "noví",
-        "olympiádě",
-        "pálí",
-        "tahat",
-        "trenéři",
-        "vystoupení",
-        "zametlo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44574,
+      "bytes": 44162,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T19:17:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T20:10:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -831,8 +832,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Naděje pro Horníčka a spol. Braga se prosazuje",
+            "title": "FOTBAL ONLINE: Velký obrat! Horníčkova Braga se po skvělém vstupu do druhé půle přiblížila semifinále EL",
             "publishedAt": "2026-04-16T09:38:47Z"
+          },
+          {
+            "title": "Šestnáctiletý šachista Finěk se stane druhým nejmladším českým velmistrem",
+            "publishedAt": "2026-04-16T20:10:01Z"
           },
           {
             "title": "Společně za záchranou. Litvínovská kabina se složila na výjezd pro fanoušky",
@@ -857,10 +862,6 @@
           {
             "title": "Nikdy jsem tolik netrénovala. Šwiateková ožila po týdnu s Nadalem",
             "publishedAt": "2026-04-16T18:30:35Z"
-          },
-          {
-            "title": "Dvě Češky ve čtvrtfinále. Nosková deklasovala žebříčkovou sousedku, Muchová otočila zápas s Mertensovou",
-            "publishedAt": "2026-04-16T11:02:04Z"
           }
         ]
       }
