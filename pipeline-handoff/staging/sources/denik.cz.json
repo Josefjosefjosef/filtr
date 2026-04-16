@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-16T02:04:56.650416Z",
+  "ingestedAt": "2026-04-16T02:24:46.685936Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zoo otevírají brány hlavní sezony: Kde a za kolik je vstupné, jaká zvířata čekat",
+      "url": "https://www.denik.cz/cesi-v-cislech/cesko-zoo-v-roce-2026-prehledne-ceny-vstupne-na-jaka-zvirata-se-tesit.html",
+      "dt": "2026-04-16T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brány",
+        "hlavní",
+        "jaká",
+        "kolik",
+        "otevírají",
+        "sezony",
+        "vstupné",
+        "zoo",
+        "zvířata",
+        "čekat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kuriózní loupež v Brně: Muži se převlékli za ochranku a v obchodě kradli alkohol",
-      "url": "https://www.denik.cz/krimi/lopuez-supermarket-lesna-brno-prevlek-zarive-vesty-straznici-ochranka.html",
-      "dt": "2026-04-15T08:24:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "alkohol",
-        "brně",
-        "kradli",
-        "kuriózní",
-        "loupež",
-        "muži",
-        "obchodě",
-        "ochranku",
-        "převlékli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30323,
+      "bytes": 30247,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-15T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zoo otevírají brány hlavní sezony: Kde a za kolik je vstupné, jaká zvířata čekat",
+            "publishedAt": "2026-04-16T02:00:00Z"
+          },
           {
             "title": "Zmatek v Hormuzském průlivu: Amerika blokuje, Írán podvádí, Evropa plánuje",
             "publishedAt": "2026-04-15T16:30:00Z"
@@ -742,10 +747,6 @@
           {
             "title": "Český e-Finance Sport Team ovládl extrémní štafetový závod LIPTOV RIDE 2026",
             "publishedAt": "2026-04-15T13:00:00Z"
-          },
-          {
-            "title": "Kuriozita na Chrudimsku: Slepice poškodily novostavbu, případ řešily soudy",
-            "publishedAt": "2026-04-15T12:56:00Z"
           }
         ]
       }

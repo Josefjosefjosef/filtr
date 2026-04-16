@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T02:04:56.650416Z",
+  "ingestedAt": "2026-04-16T02:24:46.685936Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci budou na mimořádné schůzi řešit ceny pohonných hmot či veřejnoprávní média",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-budou-na-mimoradne-schuzi-resit-ceny-pohonnych-hmot-ci-verejnopravni-media-372432",
+      "dt": "2026-04-16T02:15:40Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ceny",
+        "hmot",
+        "mimořádné",
+        "média",
+        "pohonných",
+        "poslanci",
+        "schůzi",
+        "veřejnoprávní",
+        "řešit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -33,7 +59,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusko udeřilo na Kyjev, úřady hlásí oběť a zraněné",
+      "title": "Rusko udeřilo na Kyjev, úřady hlásí oběti a zraněné",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-uderilo-na-kyjev-urady-hlasi-obet-a-zranene-372429",
       "dt": "2026-04-16T01:05:22Z",
       "media_raw": "ČT24 / Domácí",
@@ -41,7 +67,7 @@
       "tokens": [
         "hlásí",
         "kyjev",
-        "oběť",
+        "oběti",
         "rusko",
         "udeřilo",
         "zraněné",
@@ -709,32 +735,6 @@
         "míří",
         "reorganizaci",
         "ukončila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Senát projedná zákon o vládní regulaci pohonných hmot příští týden",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senat-projedna-platnost-dalnicni-znamky-ci-pravo-na-zivot-off-line-372392",
-      "dt": "2026-04-15T08:06:24Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hmot",
-        "pohonných",
-        "projedná",
-        "příští",
-        "regulaci",
-        "senát",
-        "týden",
-        "vládní",
-        "zákon"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1513,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40937,
+      "bytes": 40702,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,7 +1573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T01:27:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T02:15:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1591,11 +1591,15 @@
         },
         "sample_titles": [
           {
+            "title": "Poslanci budou na mimořádné schůzi řešit ceny pohonných hmot či veřejnoprávní média",
+            "publishedAt": "2026-04-16T02:15:40Z"
+          },
+          {
             "title": "Čeští krajané v Chile požádali Pavla o podporu změny zákona o státním občanství",
             "publishedAt": "2026-04-16T01:27:41Z"
           },
           {
-            "title": "Rusko udeřilo na Kyjev, úřady hlásí oběť a zraněné",
+            "title": "Rusko udeřilo na Kyjev, úřady hlásí oběti a zraněné",
             "publishedAt": "2026-04-16T01:05:22Z"
           },
           {
@@ -1617,10 +1621,6 @@
           {
             "title": "Dominanta nad Plzní má prvního kastelána a novou expozici",
             "publishedAt": "2026-04-15T16:46:19Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události středy 15. dubna",
-            "publishedAt": "2026-04-15T16:29:00Z"
           }
         ]
       }
@@ -1726,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77249,
+      "bytes": 77261,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

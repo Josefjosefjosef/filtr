@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T02:04:56.650416Z",
+  "ingestedAt": "2026-04-16T02:24:46.685936Z",
   "items": [
     {
       "section": "finance",
@@ -791,6 +791,32 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Čínská ekonomika v prvním čtvrtletí vzrostla o pět procent, překonala odhady",
+      "url": "https://www.idnes.cz/ekonomika/domaci/cinska-ekonomika-v-prvnim-ctvrtleti-vzrostla-o-pet-procent-prekonala-odhady.A260416_040638_ekonomika_air",
+      "dt": "2026-04-16T02:13:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
+      "tokens": [
+        "ekonomika",
+        "odhady",
+        "procent",
+        "prvním",
+        "pět",
+        "překonala",
+        "vzrostla",
+        "čtvrtletí",
+        "čínská"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Já na prvním místě: Češi utrácejí jinak než dřív. Na jakém zboží se to nejvíc projevuje",
       "url": "https://www.idnes.cz/ekonomika/domaci/drogerie-rust-niesleniq.A260415_174553_ekonomika_vebe",
       "dt": "2026-04-15T22:00:00Z",
@@ -1549,32 +1575,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Schodek poroste, míra zadlužení dosáhne 45,6 procenta HDP, říká predikce",
-      "url": "https://www.idnes.cz/ekonomika/domaci/ministerstvo-financi-makroekonomicka-predikce.A260409_145131_ekonomika_rie",
-      "dt": "2026-04-09T13:40:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "dosáhne",
-        "hdp",
-        "míra",
-        "poroste",
-        "predikce",
-        "procenta",
-        "schodek",
-        "zadlužení",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1682,7 +1682,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45248,
+      "bytes": 45201,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1719,7 +1719,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T02:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1734,6 +1734,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čínská ekonomika v prvním čtvrtletí vzrostla o pět procent, překonala odhady",
+            "publishedAt": "2026-04-16T02:13:00Z"
+          },
           {
             "title": "Já na prvním místě: Češi utrácejí jinak než dřív. Na jakém zboží se to nejvíc projevuje",
             "publishedAt": "2026-04-15T22:00:00Z"
@@ -1761,10 +1765,6 @@
           {
             "title": "Posádka mise Artemis II na sobě při obletu Měsíce měla vlněné prádlo ze Sokolova",
             "publishedAt": "2026-04-14T17:27:00Z"
-          },
-          {
-            "title": "Označení Bomba cena může být beze slevy nekalá praktika, říká ombudsman",
-            "publishedAt": "2026-04-14T14:28:00Z"
           }
         ]
       }
