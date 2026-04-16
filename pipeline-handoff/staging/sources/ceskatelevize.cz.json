@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T21:00:16.961088Z",
+  "ingestedAt": "2026-04-16T21:20:26.511771Z",
   "items": [
     {
       "section": "aktualne",
@@ -760,6 +760,32 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Český fotbal udrží díky koeficientu svého zástupce v Lize mistrů",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/cesky-fotbal-udrzi-diky-koeficientu-sveho-zastupce-v-lize-mistru-156323",
+      "dt": "2026-04-16T21:03:16Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "díky",
+        "fotbal",
+        "koeficientu",
+        "lize",
+        "mistrů",
+        "svého",
+        "udrží",
+        "zástupce",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "UK Kings zaútočí na třetí triumf v řadě, ve finále univerzitní ligy je vyzvou Inženýři z ČVUT",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/uk-kings-zautoci-na-treti-triumf-v-rade-ve-finale-univerzitni-ligy-je-vyzvou-inzenyri-z-cvut-156322",
       "dt": "2026-04-16T20:48:29Z",
@@ -856,19 +882,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Freiburg si poradil s Celtou Vigo a je v semifinále Evropské ligy",
+      "title": "Freiburg si poradil s Celtou Vigo a v semifinále EL jej čeká Horníčkova Braga",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/freiburg-si-poradil-s-celtou-vigo-a-je-v-semifinale-evropske-ligy-156318",
       "dt": "2026-04-16T18:45:46Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "braga",
         "celtou",
-        "evropské",
         "freiburg",
-        "ligy",
+        "horníčkova",
+        "jej",
         "poradil",
         "semifinále",
-        "vigo"
+        "vigo",
+        "čeká"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1478,28 +1506,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tatran postoupil popáté za sebou do superfinále",
-      "url": "https://sport.ceskatelevize.cz/clanek/florbal/tatran-postoupil-popate-za-sebou-do-superfinale-156292",
-      "dt": "2026-04-15T08:43:58Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "popáté",
-        "postoupil",
-        "sebou",
-        "superfinále",
-        "tatran"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42233,
+      "bytes": 42341,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1635,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37385,
+      "bytes": 37405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1672,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T20:48:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T21:03:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1687,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český fotbal udrží díky koeficientu svého zástupce v Lize mistrů",
+            "publishedAt": "2026-04-16T21:03:16Z"
+          },
           {
             "title": "UK Kings zaútočí na třetí triumf v řadě, ve finále univerzitní ligy je vyzvou Inženýři z ČVUT",
             "publishedAt": "2026-04-16T20:48:29Z"
@@ -1698,7 +1708,7 @@
             "publishedAt": "2026-04-16T18:48:52Z"
           },
           {
-            "title": "Freiburg si poradil s Celtou Vigo a je v semifinále Evropské ligy",
+            "title": "Freiburg si poradil s Celtou Vigo a v semifinále EL jej čeká Horníčkova Braga",
             "publishedAt": "2026-04-16T18:45:46Z"
           },
           {
@@ -1708,10 +1718,6 @@
           {
             "title": "Los domácího ME: Na české házenkářky číhají Rakušanky, Chorvatky a silné Nizozemky",
             "publishedAt": "2026-04-16T16:51:24Z"
-          },
-          {
-            "title": "Nejnižší možný trest. Chorý dostal stopku na jeden zápas",
-            "publishedAt": "2026-04-16T15:15:46Z"
           }
         ]
       }
@@ -1723,7 +1729,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77340,
+      "bytes": 77312,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
