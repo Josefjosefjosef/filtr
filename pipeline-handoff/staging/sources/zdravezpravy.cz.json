@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-16T11:25:10.150419Z",
+  "ingestedAt": "2026-04-16T12:20:02.086515Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemoci srdce a cév řeší premiér Babiš investicemi. Ale je to dost?",
+      "url": "https://www.zdravezpravy.cz/2026/04/16/nemoci-srdce-a-cev-resi-premier-babis-tradicne-investicemi-bude-to-ale-stacit/",
+      "dt": "2026-04-16T10:44:41Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ale",
+        "babiš",
+        "cév",
+        "dost",
+        "investicemi",
+        "nemoci",
+        "premiér",
+        "srdce",
+        "řeší"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -467,32 +493,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ročně se vytřídí v Česku 750 tun nespotřebovaných léků. Patří do lékárny",
-      "url": "https://www.zdravezpravy.cz/2026/04/08/rocne-se-vytridi-v-cesku-pres-750-tun-nespotrebovanych-leku-ty-patri-do-lekarny/",
-      "dt": "2026-04-08T13:11:40Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "750",
-        "lékárny",
-        "léků",
-        "nespotřebovaných",
-        "patří",
-        "ročně",
-        "tun",
-        "vytřídí",
-        "česku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +503,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 235849,
+      "bytes": 237362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,7 +540,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:09:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T10:44:41Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -555,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemoci srdce a cév řeší premiér Babiš investicemi. Ale je to dost?",
+            "publishedAt": "2026-04-16T10:44:41Z"
+          },
           {
             "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
             "publishedAt": "2026-04-16T07:09:53Z"
@@ -582,10 +586,6 @@
           {
             "title": "Záludnosti zdravotních dotazníků pojišťoven řeší i onkopacienti",
             "publishedAt": "2026-04-14T10:00:46Z"
-          },
-          {
-            "title": "Už se vám stalo, že jste si v autě poseděli, abyste se usebrali?",
-            "publishedAt": "2026-04-14T04:40:25Z"
           }
         ]
       }

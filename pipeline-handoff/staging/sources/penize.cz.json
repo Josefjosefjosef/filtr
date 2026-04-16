@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-16T11:25:10.150419Z",
+  "ingestedAt": "2026-04-16T12:20:02.086515Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
+      "url": "https://www.penize.cz/doprava/488429-a-zase-dolu-maximalni-ceny-benzinu-a-nafty-na-patek-17-dubna",
+      "dt": "2026-04-16T13:57:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dolů",
+        "dubna",
+        "maximální",
+        "nafty",
+        "pátek",
+        "zase"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,32 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Orlen přidá ultrarychlé nabíječky podél dálnic. Doplní je nová aplikace",
-      "url": "https://www.penize.cz/doprava/488177-orlen-prida-ultrarychle-dobijecky-podel-dalnic-dobijeni-doplni-aplikace",
-      "dt": "2026-04-13T10:09:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aplikace",
-        "doplní",
-        "dálnic",
-        "nabíječky",
-        "nová",
-        "orlen",
-        "podél",
-        "přidá",
-        "ultrarychlé"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18201,
+      "bytes": 18275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +548,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T13:57:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 13,
-          "zpravy": 7
+          "zpravy": 7,
+          "finance": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
+            "publishedAt": "2026-04-16T13:57:00Z"
+          },
           {
             "title": "Jaká je nejlepší bankovka na světě? Tady jsou favoriti soutěže",
             "publishedAt": "2026-04-16T05:10:00Z"
@@ -592,10 +595,6 @@
           {
             "title": "Důchodci si přilepší. Juchelka má první balíček změn",
             "publishedAt": "2026-04-15T05:10:00Z"
-          },
-          {
-            "title": "Jak jsem chtěla utéct ze sociálních sítí. A skončila na Vinted",
-            "publishedAt": "2026-04-15T05:05:00Z"
           }
         ]
       }
