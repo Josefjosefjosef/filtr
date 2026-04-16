@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T21:40:03.741617Z",
+  "ingestedAt": "2026-04-16T22:00:39.133203Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Číňan chtěl z Keni propašovat 2200 mravenců. Soud ho poslal do vězení",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kena-cina-mravenci.A260416_175227_zahranicni_dvou",
+      "dt": "2026-04-16T21:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "2200",
+        "chtěl",
+        "keni",
+        "mravenců",
+        "poslal",
+        "propašovat",
+        "soud",
+        "vězení",
+        "číňan"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -761,32 +787,6 @@
         "vytrácí",
         "výrobou",
         "zelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obří žralok připlul k lodi v Chorvatsku a deset minut kolem ní kroužil",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/obri-zralok-priplul-k-lodi-v-chorvatsku-a-deset-minut-kolem-ni-krouzil.A260416_123322_zahranicni_wall",
-      "dt": "2026-04-16T13:36:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chorvatsku",
-        "deset",
-        "kolem",
-        "kroužil",
-        "lodi",
-        "minut",
-        "obří",
-        "připlul",
-        "žralok"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1589,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49343,
+      "bytes": 49170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,7 +1626,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T19:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T21:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 29,
@@ -1642,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Číňan chtěl z Keni propašovat 2200 mravenců. Soud ho poslal do vězení",
+            "publishedAt": "2026-04-16T21:17:00Z"
+          },
           {
             "title": "Putin chystá jaderný útok ve vesmíru jako na Pearl Harbor, varuje americký generál",
             "publishedAt": "2026-04-16T19:50:00Z"
@@ -1669,10 +1673,6 @@
           {
             "title": "Bílý dům v tísni. Neví o záhadném zmizení či úmrtí desítky amerických vědců",
             "publishedAt": "2026-04-16T18:37:00Z"
-          },
-          {
-            "title": "Policie odvolala pátrání po 16leté dívce z diagnostického ústavu. Čekala na zastávce",
-            "publishedAt": "2026-04-16T18:18:00Z"
           }
         ]
       }
