@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-16T04:41:05.013448Z",
+  "ingestedAt": "2026-04-16T05:00:32.875735Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "KOMENTÁŘ: Dvě tváře Sparty. Za další selhání si může jen a pouze sama",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-rano-komentar-dve-tvare-sparty-za-dalsi-selhani-si-muze-jen-a-pouze-sama-5437368",
+      "dt": "2026-04-16T04:47:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "dvě",
+        "jen",
+        "komentář",
+        "pouze",
+        "sama",
+        "selhání",
+        "sparty",
+        "tváře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,28 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel legendární kladenský útočník Kopecký",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-zemrel-legendarni-kladensky-utocnik-kopecky-5437037",
-      "dt": "2026-04-15T14:33:53Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kladenský",
-        "kopecký",
-        "legendární",
-        "zemřel",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42803,
+      "bytes": 43370,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:27:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:47:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KOMENTÁŘ: Dvě tváře Sparty. Za další selhání si může jen a pouze sama",
+            "publishedAt": "2026-04-16T04:47:47Z"
+          },
           {
             "title": "Češi přispěli Floridě ke kanonádě, Hertl asistoval při obratu Vegas",
             "publishedAt": "2026-04-16T04:00:22Z"
@@ -870,10 +878,6 @@
           {
             "title": "Volejbalové Lvice Praha jsou blízko bronzu ve své první extraligové sezoně",
             "publishedAt": "2026-04-15T20:28:17Z"
-          },
-          {
-            "title": "Florbalistky Vítkovic zdolaly Chodov v prodloužení a v semifinálové sérii snížily",
-            "publishedAt": "2026-04-15T20:23:03Z"
           }
         ]
       }

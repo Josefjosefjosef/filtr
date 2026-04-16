@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-16T04:41:05.013448Z",
+  "ingestedAt": "2026-04-16T05:00:32.875735Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Rusku se schyluje ke vzpouře. Před Putinem se věci tají, líčí blogerka",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-vzpoura-blogerka-kreml.A260416_063333_zahranicni_meli",
+      "dt": "2026-04-16T04:46:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "blogerka",
+        "líčí",
+        "putinem",
+        "rusku",
+        "schyluje",
+        "tají",
+        "vzpouře",
+        "věci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "O víkendu mohou Česko zasáhnout bouřky. Příští týden bude i mrznout",
+      "url": "https://www.idnes.cz/zpravy/domaci/pocasi-duben-predpoved-srazky-prehanky-mraz-slunce.A260416_060135_domaci_meli",
+      "dt": "2026-04-16T04:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bouřky",
+        "mrznout",
+        "příští",
+        "týden",
+        "víkendu",
+        "zasáhnout",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -725,58 +774,6 @@
         "uznal",
         "vyžádá",
         "čas"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "ODS vyzvala Babišovu vládu, aby řekla, na kolik dnů má Česko ropu a plyn",
-      "url": "https://www.idnes.cz/zpravy/domaci/ods-palicek-opatreni-na-ochranu-prumyslu-v-reakci-na-valku-v-iranu.A260415_132001_domaci_kop",
-      "dt": "2026-04-15T15:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babišovu",
-        "dnů",
-        "kolik",
-        "ods",
-        "plyn",
-        "ropu",
-        "vládu",
-        "vyzvala",
-        "česko",
-        "řekla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neurologických pacientů rychle přibývá. Včasné zahájení léčby je klíčové",
-      "url": "https://www.idnes.cz/zpravy/domaci/neurologie-mozek-onemocneni-vfn-alzheimer-skleroza.A260415_120419_domaci_hock",
-      "dt": "2026-04-15T15:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "klíčové",
-        "léčby",
-        "neurologických",
-        "pacientů",
-        "přibývá",
-        "rychle",
-        "včasné",
-        "zahájení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1578,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46594,
+      "bytes": 46146,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,11 +1615,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T04:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 26,
+          "finance": 3,
           "other": 1
         },
         "drop_counts": {
@@ -1635,6 +1632,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Rusku se schyluje ke vzpouře. Před Putinem se věci tají, líčí blogerka",
+            "publishedAt": "2026-04-16T04:46:00Z"
+          },
+          {
+            "title": "O víkendu mohou Česko zasáhnout bouřky. Příští týden bude i mrznout",
+            "publishedAt": "2026-04-16T04:34:00Z"
+          },
           {
             "title": "Čínská ekonomika v prvním čtvrtletí vzrostla o pět procent, nad odhady",
             "publishedAt": "2026-04-16T04:04:00Z"
@@ -1657,14 +1662,6 @@
           },
           {
             "title": "Padne zeď mezi Izraelem a Libanonem? Jednají po 30 letech, ale Hizballáh dál útočí",
-            "publishedAt": "2026-04-15T22:00:00Z"
-          },
-          {
-            "title": "Vypadli i důchodci a samoživitelky. Na podporu bydlení jsou všichni příliš bohatí",
-            "publishedAt": "2026-04-15T22:00:00Z"
-          },
-          {
-            "title": "Prodej drog jako zvrácený geocaching. Koks zlevňuje a válcuje Česko, líčí Frydrych",
             "publishedAt": "2026-04-15T22:00:00Z"
           }
         ]

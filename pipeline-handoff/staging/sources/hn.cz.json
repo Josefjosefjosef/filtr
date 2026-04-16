@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-16T04:41:05.013448Z",
+  "ingestedAt": "2026-04-16T05:00:32.875735Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stát otevřel cestu pro rychlejší výstavbu větrníků. Teď přichází klíčová fáze",
+      "url": "https://podcasty.hn.cz/c1-67867430-stat-otevrel-cestu-pro-rychlejsi-vystavbu-vetrniku-ted-prichazi-klicova-faze",
+      "dt": "2026-04-16T04:46:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cestu",
+        "fáze",
+        "klíčová",
+        "otevřel",
+        "přichází",
+        "rychlejší",
+        "stát",
+        "výstavbu",
+        "větrníků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1126,38 +1152,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Drahé byty ženou lidi do nájmů, o jednu nabídku se přetahují desítky zájemců. Řešení může být útěk z velkých měst",
-      "url": "https://byznys.hn.cz/c1-67865630-drahe-byty-zenou-lidi-do-najmu-o-jednu-nabidku-se-pretahuji-desitky-zajemcu-reseni-muze-byt-utek-z-velkych-mest",
-      "dt": "2026-04-15T07:20:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "byty",
-        "být",
-        "desítky",
-        "drahé",
-        "jednu",
-        "lidi",
-        "měst",
-        "nabídku",
-        "nájmů",
-        "přetahují",
-        "velkých",
-        "zájemců",
-        "útěk",
-        "řešení",
-        "ženou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1162,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185599,
+      "bytes": 185525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,11 +1199,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-15T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T04:46:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 34
+          "finance": 34,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1221,6 +1215,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stát otevřel cestu pro rychlejší výstavbu větrníků. Teď přichází klíčová fáze",
+            "publishedAt": "2026-04-16T04:46:00Z"
+          },
           {
             "title": "Pracnější zadávání zakázek šetří stovky milionů, tvrdí Správa železnic. Ale další firmy chce k zakázkám pouštět jen opatrně",
             "publishedAt": "2026-04-15T22:00:00Z"
@@ -1247,10 +1245,6 @@
           },
           {
             "title": "Hnutí MAGA je ve válce s papežem. Trump i Vance zaútočili na Lva XIV., katolíci se nestačí divit",
-            "publishedAt": "2026-04-15T16:00:00Z"
-          },
-          {
-            "title": "Přetížené jedničky. Sčítání odhalilo, na kterých silnicích je provoz jako na dálnici",
             "publishedAt": "2026-04-15T16:00:00Z"
           }
         ]
