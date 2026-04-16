@@ -4481,6 +4481,8 @@ try {
   /** Mapuje aliasy `section` z URL na kanonické klíče pro feed (paging, navigace). */
   function iuFeedPagingNormalizeSectionRaw(raw) {
     const k = String(raw || "").trim().toLowerCase();
+    /* Legacy ?section=tv: routed as allowed section but no body[data-section="tv"] CSS / view host — map to tvonline. */
+    if (k === "tv") return "tvonline";
     if (k === "home") return IU_ARTICLE_HUB_SECTION;
     if (k === "culture") return "kultura";
     if (k === "tech" || k === "bydleni") return IU_ARTICLE_HUB_SECTION;
@@ -24708,6 +24710,8 @@ function buildVideoAsArticleCard(it) {
 
   function normalizeSection(raw){
     const k = String(raw || '').trim().toLowerCase();
+    /* Legacy ?section=tv: feed hidden (iu-fc=0) but no #iuTvOnlineView without data-section=tvonline — blank main column. */
+    if (k === 'tv') return 'tvonline';
     if (k === 'radio') return 'radio';
     if (k === 'jr') return 'jr';
     if (k === 'media') return IU_ARTICLE_HUB_SECTION;

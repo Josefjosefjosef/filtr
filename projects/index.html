@@ -189,6 +189,7 @@ style-src 'self' 'unsafe-inline' https:;
     (function(){
       function normSection(s){
         var k = String(s || "").trim().toLowerCase();
+        if (k === "tv") return "tvonline";
         if (k === "radio") return "radio";
         if (k === "jr") return "jr";
         var allowed = {media:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,hry:1,kultura:1,veda:1,vzdelavani:1,ads:1,jr:1,radio:1,"myuzel-1":1,"myuzel-2":1,"myuzel-3":1,"myuzel-4":1,"myuzel-5":1};
