@@ -1353,6 +1353,67 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     closeSurface();
   });
 
+  /**
+   * BFCache / partial nav / chybějící close: DOM říká overlay zavřený, ale body může držet
+   * iu-financial-* + iu-modal-open a viewport lock → uživatel vidí „prázdnou“ stránku / nejde scrollovat.
+   * Revert CSS (#2665) tento stav neřeší — je to JS stav vs. DOM.
+   */
+  function iuFinCalcReconcileOrphanBodyState() {
+    try {
+      if (!backdrop || !panel || !document.body) return;
+      const domClosed =
+        backdrop.hasAttribute("hidden") &&
+        panel.hasAttribute("hidden") &&
+        String(panel.dataset.open || "0") !== "1";
+      if (!domClosed) return;
+      const finOnBody =
+        document.body.classList.contains("iu-financial-calculators-overlay-open") ||
+        document.body.classList.contains("iu-financial-overlay-open");
+      if (!finOnBody) {
+        iuFinCalcClearDesktopFullpageLayout();
+        return;
+      }
+      document.body.classList.remove(
+        "iu-financial-overlay-open",
+        "iu-financial-calculators-overlay-open",
+      );
+      iuFinCalcClearDesktopFullpageLayout();
+      try {
+        setLock(false);
+      } catch (_) {}
+      try {
+        const others =
+          typeof window !== "undefined" &&
+          typeof window.iuDetectOpenOverlays === "function"
+            ? window.iuDetectOpenOverlays()
+            : null;
+        if (Array.isArray(others) && others.length === 0) {
+          document.body.classList.remove("iu-modal-open");
+          if (typeof window.iuSetViewportLock === "function") {
+            window.iuSetViewportLock(false);
+          }
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  try {
+    if (typeof window !== "undefined") {
+      window.iuFinCalcReconcileOrphanBodyState = iuFinCalcReconcileOrphanBodyState;
+      const runReconcile = function () {
+        try {
+          iuFinCalcReconcileOrphanBodyState();
+        } catch (_) {}
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runReconcile, { once: true });
+      } else {
+        setTimeout(runReconcile, 0);
+      }
+      window.addEventListener("pageshow", runReconcile);
+    }
+  } catch (_) {}
+
   try {
     window.iuFinancialCalcOpenSurface = openSurface;
     window.iuFinancialCalcCloseSurface = closeSurface;
