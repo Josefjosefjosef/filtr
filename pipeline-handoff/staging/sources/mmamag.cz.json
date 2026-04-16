@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-16T18:44:44.214870Z",
+  "ingestedAt": "2026-04-16T19:02:57.190487Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Procházka v další bitvě o pás? Nemusí to být utopie",
+      "url": "https://www.mmamag.cz/prochazka-titulovy-souboj-ankalaev/",
+      "dt": "2026-04-16T18:52:53Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bitvě",
+        "být",
+        "další",
+        "nemusí",
+        "procházka",
+        "pás",
+        "utopie"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1047,34 +1071,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bojovník měl víc štěstí než rozumu. Oslava vítězství v kleci mohla skončit tragédií",
-      "url": "https://www.mmamag.cz/bojovnik-mma-pad-z-klece-2/",
-      "dt": "2026-04-08T03:01:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovník",
-        "kleci",
-        "měl",
-        "než",
-        "oslava",
-        "rozumu",
-        "skončit",
-        "tragédií",
-        "víc",
-        "vítězství",
-        "štěstí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1085,7 +1081,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79297,
+      "bytes": 79110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1122,7 +1118,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T17:29:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T18:52:53Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1137,6 +1133,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Procházka v další bitvě o pás? Nemusí to být utopie",
+            "publishedAt": "2026-04-16T18:52:53Z"
+          },
           {
             "title": "Leo Beránek z Clashe nepřestává běsnit. V Bohnicích zaútočil na pacienta",
             "publishedAt": "2026-04-16T17:29:15Z"
@@ -1164,10 +1164,6 @@
           {
             "title": "Procházku dělilo 75 vteřin od titulu. Ulberg přiznal, že konec byl blízko",
             "publishedAt": "2026-04-15T06:28:39Z"
-          },
-          {
-            "title": "Legendární trenér ostře sjel Procházku. A rozhodně si nebral servítky",
-            "publishedAt": "2026-04-15T03:01:00Z"
           }
         ]
       }
