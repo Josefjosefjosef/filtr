@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-16T20:20:26.352794Z",
+  "ingestedAt": "2026-04-16T20:43:09.513772Z",
   "items": [
     {
       "section": "aktualne",
@@ -756,6 +756,27 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Voženílek: Na Motáka se všichni těší",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vozenilek-na-motaka-se-vsichni-tesi-156321",
+      "dt": "2026-04-16T20:22:30Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "motáka",
+        "těší",
+        "voženílek",
+        "všichni"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Šínův gól Alkmaar v Konferenční lize neudržel",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sinuv-gol-alkmaar-v-konferencni-lize-neudrzel-156320",
       "dt": "2026-04-16T18:52:44Z",
@@ -1472,32 +1493,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Portland uspěl v Phoenixu, Krejčí si poprvé zahraje play-off NBA",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/portland-uspel-v-phoenixu-krejci-si-poprve-zahraje-play-off-nba-156290",
-      "dt": "2026-04-15T07:09:29Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "krejčí",
-        "nba",
-        "off",
-        "phoenixu",
-        "play",
-        "poprvé",
-        "portland",
-        "uspěl",
-        "zahraje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1627,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37650,
+      "bytes": 37416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1664,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:52:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T20:22:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1679,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Voženílek: Na Motáka se všichni těší",
+            "publishedAt": "2026-04-16T20:22:30Z"
+          },
           {
             "title": "Šínův gól Alkmaar v Konferenční lize neudržel",
             "publishedAt": "2026-04-16T18:52:44Z"
@@ -1706,10 +1705,6 @@
           {
             "title": "Češi dali Německu pět gólů. Tým táhli Flek s Tomáškem",
             "publishedAt": "2026-04-16T15:15:00Z"
-          },
-          {
-            "title": "Kdybych nevyhrál OH, nevymýšlel bych blbiny, říká Fuksa ke své účasti na maratonu",
-            "publishedAt": "2026-04-16T14:27:12Z"
           }
         ]
       }
@@ -1721,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77338,
+      "bytes": 77344,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
