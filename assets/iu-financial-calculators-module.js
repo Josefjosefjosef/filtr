@@ -1007,9 +1007,18 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   function iuFinCalcIsDesktopFullpageGuards() {
     try {
       if (typeof document === "undefined" || !document.body) return false;
-      if (!document.body.classList.contains("iu-desktop-home-grid")) return false;
       if (typeof window.matchMedia !== "function") return false;
-      return window.matchMedia("(min-width: 1025px)").matches;
+      if (!window.matchMedia("(min-width: 1025px)").matches) return false;
+      const p = String(typeof location !== "undefined" && location && location.pathname ? location.pathname : "").replace(/\\/g, "/");
+      const hub =
+        p === "/projects/" ||
+        p === "/projects" ||
+        p.indexOf("/projects/") === 0 ||
+        p === "/filtr/projects" ||
+        p === "/filtr/projects/";
+      if (!hub) return false;
+      /* P0: Nezáviset na body.iu-desktop-home-grid — iuDesktopHomeSectionGridGuardApply ho může odebrat dřív než existuje #iuSilverTallScrollViewport; pak se nespustil full-page režim (stack + neprůhledný backdrop) při reálném kliku. */
+      return true;
     } catch (_) {
       return false;
     }
