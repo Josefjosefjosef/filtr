@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-16T17:30:02.910664Z",
+  "ingestedAt": "2026-04-16T17:50:18.004233Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Leo Beránek z Clashe nepřestává běsnit. V Bohnicích zaútočil na pacienta",
+      "url": "https://www.mmamag.cz/beranek-bohnice-utok-pacient/",
+      "dt": "2026-04-16T17:29:15Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "beránek",
+        "bohnicích",
+        "běsnit",
+        "clashe",
+        "leo",
+        "nepřestává",
+        "pacienta",
+        "zaútočil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1050,35 +1075,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Když realita v MMA neodpovídala očekávání. Stačí se vrátit k těmto zápasům a obraz se začne měnit",
-      "url": "https://www.mmamag.cz/kdyz-realita-v-mma-neodpovidala-ocekavani-staci-se-vratit-k-temto-zapasum-a-obraz-se-zacne-menit/",
-      "dt": "2026-04-07T09:41:06Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "když",
-        "mma",
-        "měnit",
-        "neodpovídala",
-        "obraz",
-        "očekávání",
-        "realita",
-        "stačí",
-        "těmto",
-        "vrátit",
-        "začne",
-        "zápasům"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1085,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 79406,
+      "bytes": 79297,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,7 +1122,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T05:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-16T17:29:15Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1141,6 +1137,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Leo Beránek z Clashe nepřestává běsnit. V Bohnicích zaútočil na pacienta",
+            "publishedAt": "2026-04-16T17:29:15Z"
+          },
           {
             "title": "Okamžiky, kdy se zápas rozhodl během vteřiny. Momenty MMA a boxu, které změnily výsledek bez varování",
             "publishedAt": "2026-04-16T05:28:00Z"
@@ -1168,10 +1168,6 @@
           {
             "title": "Legendární trenér ostře sjel Procházku. A rozhodně si nebral servítky",
             "publishedAt": "2026-04-15T03:01:00Z"
-          },
-          {
-            "title": "Kdo v MMA a boxu vydělával víc, než odpovídalo výkonům. Případy, které dodnes vyvolávají otázky",
-            "publishedAt": "2026-04-14T09:29:12Z"
           }
         ]
       }
