@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T15:50:02.864755Z",
+  "ingestedAt": "2026-04-17T16:10:32.691582Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Ruské energie přinášejí korupci a válku.“ Nová maďarská vláda nechce nic slibovat",
+      "url": "https://ekonomickydenik.cz/ruske-energie-prinaseji-valku-madarska-vlada/",
+      "dt": "2026-04-17T15:50:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "energie",
+        "korupci",
+        "maďarská",
+        "nechce",
+        "nic",
+        "nová",
+        "přinášejí",
+        "ruské",
+        "slibovat",
+        "vláda",
+        "válku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,32 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa vyvíjí „lovce“ ruských dronů a sabotérů. Testovat je chce i na Ukrajině",
-      "url": "https://ekonomickydenik.cz/evropa-vyviji-lovce-ruskych-dronu-saboteru/",
-      "dt": "2026-04-16T04:45:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chce",
-        "dronů",
-        "evropa",
-        "lovce",
-        "ruských",
-        "sabotérů",
-        "testovat",
-        "ukrajině",
-        "vyvíjí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71387,
+      "bytes": 71633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:18:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Ruské energie přinášejí korupci a válku.“ Nová maďarská vláda nechce nic slibovat",
+            "publishedAt": "2026-04-17T15:50:00Z"
+          },
           {
             "title": "Hormuzský průliv je otevřen, Trump zatím neustoupí",
             "publishedAt": "2026-04-17T15:18:41Z"
@@ -870,10 +876,6 @@
           {
             "title": "Pošta v miliardové ztrátě. Metnar přivádí „krizového“ ředitele",
             "publishedAt": "2026-04-17T09:29:11Z"
-          },
-          {
-            "title": "Netflix ve výhledu zklamal. Firmu opouští její spoluzakladatel",
-            "publishedAt": "2026-04-17T08:58:37Z"
           }
         ]
       }
