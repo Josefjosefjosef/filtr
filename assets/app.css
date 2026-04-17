@@ -3077,7 +3077,7 @@ button.iu-close-btn-38:focus-visible{
   line-height:1;
 }
 
-/* Datovka: desktop full-viewport overlay + single scroll host (min-width 1025px matches mobile/tablet inject max 1024px) */
+/* Datovka: desktop full-viewport overlay + centered content shell (aligns with Finanční kalkulačky .iu-financial-overlay-cardShell gutters; min-width 1025px matches mobile/tablet inject max 1024px) */
 @media (min-width: 1025px){
   body.iu-modal-open #iuDsOverlay.iu-datovka-overlay-root:not([hidden]){
     height:100dvh;
@@ -3092,7 +3092,7 @@ button.iu-close-btn-38:focus-visible{
     transform:none;
     display:flex;
     flex-direction:column;
-    align-items:stretch;
+    align-items:center;
     justify-content:flex-start;
     width:100%;
     max-width:none;
@@ -3102,19 +3102,25 @@ button.iu-close-btn-38:focus-visible{
     padding:0;
     margin:0;
     overflow:hidden;
+    overflow-x:hidden;
     box-sizing:border-box;
+    background:rgb(241, 245, 249);
   }
   body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-ds-modal{
     flex:1 1 auto;
     min-height:0;
+    min-width:0;
     display:flex;
     flex-direction:column;
-    width:100%;
-    max-width:none;
+    width:min(720px, calc(100vw - 80px));
+    max-width:min(720px, calc(100vw - 80px));
+    align-self:center;
     height:auto;
     max-height:none;
-    border-radius:0;
-    box-shadow:none;
+    border-radius:16px;
+    box-shadow:0 24px 48px rgba(0,0,0,.22);
+    box-sizing:border-box;
+    overflow:hidden;
   }
   body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-ds-panelHeader{
     flex:0 0 auto;
