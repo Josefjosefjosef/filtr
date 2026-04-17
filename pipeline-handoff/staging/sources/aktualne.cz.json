@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T08:56:11.465086Z",
+  "ingestedAt": "2026-04-17T09:15:07.678045Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Charlie z Růže pro Algernon i Jíra z pohádky. Herec Jan Potměšil se nevzdával",
+      "url": "https://magazin.aktualne.cz/kultura/film/charlie-z-ruze-pro-algernon-i-jira-z-pohadky-herec-jan-potmesil-se-nevzdaval/r~aaa29ad66ecd95d1f4683cfeceb1be65/",
+      "dt": "2026-04-17T09:06:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "algernon",
+        "charlie",
+        "herec",
+        "jan",
+        "jíra",
+        "nevzdával",
+        "pohádky",
+        "potměšil",
+        "růže"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,17 +57,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Klempíř: StarDance do veřejnoprávní televize nepatří",
+      "title": "Klempíř „popravil“ StarDance. Pak litoval, že ho nepozvali na předávání cen",
       "url": "https://zpravy.aktualne.cz/domaci/klempir-stardance-do-verejnopravni-televize-nepatri/r~aaa29ae916310793598cf18fe27c8671/",
       "dt": "2026-04-17T08:36:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
+        "cen",
         "klempíř",
-        "nepatří",
-        "stardance",
-        "televize",
-        "veřejnoprávní"
+        "litoval",
+        "nepozvali",
+        "pak",
+        "popravil",
+        "předávání",
+        "stardance"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -216,22 +245,22 @@
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Nenechte je „ležet na chodníku“. Dítěti s depresí musí pomoct hlavně rodiče, říká expert",
+      "title": "Řval na počítač, pak se popral s matkou. Expert říká, zda si děti zaslouží nálepku",
       "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/nenechte-je-lezet-na-chodniku-diteti-s-depresi-musi-pomoct-hlavne-rodice-rika-expert/r~aaa29d91bb2b7c025c587ab89035d090/",
       "dt": "2026-04-17T07:43:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "chodníku",
-        "depresí",
-        "dítěti",
+        "děti",
         "expert",
-        "hlavně",
-        "ležet",
-        "musí",
-        "nenechte",
-        "pomoct",
-        "rodiče",
+        "matkou",
+        "nálepku",
+        "pak",
+        "popral",
+        "počítač",
+        "zaslouží",
+        "zda",
+        "řval",
         "říká"
       ],
       "feedCategory": "zpravy",
@@ -494,33 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Mezi intuicí a kontrolou. Držitelka pěti Českých lvů Anna Geislerová slaví kulatiny",
-      "url": "https://magazin.aktualne.cz/kultura/film/mezi-intuici-a-kontrolou-drzitelka-peti-ceskych-lvu-anna-geislerova-slavi-kulatiny/r~aaa298a1636806761de505326c3f0157/",
-      "dt": "2026-04-17T04:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anna",
-        "držitelka",
-        "geislerová",
-        "intuicí",
-        "kontrolou",
-        "kulatiny",
-        "lvů",
-        "pěti",
-        "slaví",
-        "českých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21993,
+      "bytes": 21805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,14 +570,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 3,
           "zpravy": 9,
           "sport": 4,
           "finance": 3,
-          "zdravi": 1,
-          "other": 3
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -588,11 +590,15 @@
         },
         "sample_titles": [
           {
+            "title": "Charlie z Růže pro Algernon i Jíra z pohádky. Herec Jan Potměšil se nevzdával",
+            "publishedAt": "2026-04-17T09:06:00Z"
+          },
+          {
             "title": "Ukrajinská armáda šlape do útoků s roboty, podnikla jich už přes stovku",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
-            "title": "Klempíř: StarDance do veřejnoprávní televize nepatří",
+            "title": "Klempíř „popravil“ StarDance. Pak litoval, že ho nepozvali na předávání cen",
             "publishedAt": "2026-04-17T08:36:00Z"
           },
           {
@@ -614,10 +620,6 @@
           {
             "title": "McDavid pošesté ovládl bodování NHL, dva útočníci přepsali české statistiky",
             "publishedAt": "2026-04-17T07:57:00Z"
-          },
-          {
-            "title": "Obnova těžby ropy a plynu po válce na Blízkém východě zabere dva roky, říká šéf IEA",
-            "publishedAt": "2026-04-17T07:55:00Z"
           }
         ]
       }

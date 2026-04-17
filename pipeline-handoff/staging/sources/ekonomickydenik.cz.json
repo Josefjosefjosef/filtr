@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T08:56:11.465086Z",
+  "ingestedAt": "2026-04-17T09:15:07.678045Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Netflix ve výhledu zklamal. Firmu opouští její spoluzakladatel",
+      "url": "https://ekonomickydenik.cz/netflix-vyhled-zklamal-opousti-spoluzakladatel/",
+      "dt": "2026-04-17T08:58:37Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "firmu",
+        "její",
+        "netflix",
+        "opouští",
+        "spoluzakladatel",
+        "výhledu",
+        "zklamal"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,31 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nerudová kvůli ČT píše Bruselu. Česku by mohly hrozit pokuty",
-      "url": "https://ekonomickydenik.cz/nerudova-ct-pise-bruselu-pokuty/",
-      "dt": "2026-04-15T13:04:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bruselu",
-        "hrozit",
-        "kvůli",
-        "mohly",
-        "nerudová",
-        "pokuty",
-        "píše",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72572,
+      "bytes": 72413,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:25:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:58:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Netflix ve výhledu zklamal. Firmu opouští její spoluzakladatel",
+            "publishedAt": "2026-04-17T08:58:37Z"
+          },
           {
             "title": "Proč Stanjura neodevzdal mobil? Schillerová řeší fungování ministerstva za bitcoinové kauzy",
             "publishedAt": "2026-04-17T08:25:54Z"
@@ -874,10 +877,6 @@
           {
             "title": "Ruský velvyslanec na koberečku: Macinka chce vysvětlení za výhrůžky",
             "publishedAt": "2026-04-16T15:54:37Z"
-          },
-          {
-            "title": "Už žádné výmluvy. Dětem kvůli internetu naskenujte pasy, oznámila von der Leyenová",
-            "publishedAt": "2026-04-16T15:18:00Z"
           }
         ]
       }

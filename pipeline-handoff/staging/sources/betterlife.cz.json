@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-17T08:56:11.465086Z",
+  "ingestedAt": "2026-04-17T09:15:07.678045Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Historie penzí je překvapivě krátká. První důchodci měli pracovat do 70 let, málokdo se ale dožil",
+      "url": "https://www.betterlife.cz/historie-penzi-je-prekvapive-kratka-prvni-duchodci-meli-pracovat-do-70-let-malokdo-se-ale-dozil/",
+      "dt": "2026-04-17T09:01:57Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "ale",
+        "dožil",
+        "důchodci",
+        "historie",
+        "krátká",
+        "let",
+        "málokdo",
+        "měli",
+        "penzí",
+        "pracovat",
+        "první",
+        "překvapivě"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -257,33 +286,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Světloplachost trápí většinu populace. Roli hrají léky i nošení slunečních brýlí",
-      "url": "https://www.betterlife.cz/svetloplachost-trapi-vetsinu-populace-roli-hraji-leky-i-noseni-slunecnich-bryli/",
-      "dt": "2026-04-13T09:26:30Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "brýlí",
-        "hrají",
-        "léky",
-        "nošení",
-        "populace",
-        "roli",
-        "slunečních",
-        "světloplachost",
-        "trápí",
-        "většinu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 76135,
+      "bytes": 76547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -354,7 +356,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T15:38:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:01:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -370,6 +372,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Historie penzí je překvapivě krátká. První důchodci měli pracovat do 70 let, málokdo se ale dožil",
+            "publishedAt": "2026-04-17T09:01:57Z"
+          },
           {
             "title": "Třináct minut bez známek života. Nicole Kerr po vážné nehodě popsala své zážitky z klinické smrti",
             "publishedAt": "2026-04-16T15:38:13Z"
@@ -397,10 +403,6 @@
           {
             "title": "Petr Nárožný slaví 88 a z Prahy se přestěhoval do Třeboně. Z okna se dívá na hřbitov a nemůže si to vynachválit",
             "publishedAt": "2026-04-14T08:20:55Z"
-          },
-          {
-            "title": "Naked Attraction: Práskání bičíkem se zvrtlo a dotaz na občasné přizvání kamarádky",
-            "publishedAt": "2026-04-14T06:06:22Z"
           }
         ]
       }
