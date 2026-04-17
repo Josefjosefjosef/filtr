@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-17T22:31:22.633303Z",
+  "updatedAt": "2026-04-17T22:50:22.530768Z",
   "feeds": {
     "https://www.aktualne.cz/rss/": {
       "topic": "aktualne",
@@ -699,7 +699,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42590,
+      "bytes": 42592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,15 +836,15 @@
     "https://www.vtelce.cz/feed/": {
       "topic": "kultura",
       "source": "vTelce",
-      "accepted": 0,
-      "status": "BOZO",
-      "itemsParsed": 0,
-      "itemsKept": 0,
-      "httpStatus": 0,
-      "contentType": "",
+      "accepted": 10,
+      "status": "OK",
+      "itemsParsed": 10,
+      "itemsKept": 10,
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 0,
-      "reason": "fetch_failed",
+      "bytes": 87888,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
@@ -876,7 +876,7 @@
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "bytes": 8263,
-      "reason": "http_500",
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
@@ -892,7 +892,7 @@
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "bytes": 21580,
-      "reason": "http_404",
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
