@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-17T22:14:45.124920Z",
+  "ingestedAt": "2026-04-17T22:30:20.782390Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Probíráte s chatbotem své zdraví? Dejte si pozor na to, co vám odpovídá",
+      "url": "https://www.idnes.cz/technet/software/umela-inteligence-ai-doktor-lekar-zdravi-dotaz-prompt.A260408_134313_software_vse",
+      "dt": "2026-04-17T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "chatbotem",
+        "dejte",
+        "odpovídá",
+        "pozor",
+        "probíráte",
+        "své",
+        "vám",
+        "zdraví"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Jaké skvosty nabídlo letošní setkání parních lokomotiv v Drážďanech",
+      "url": "https://www.idnes.cz/technet/technika/drazdany-setkani-parnich-lokomotiv.A260415_162716_tec_technika_alv",
+      "dt": "2026-04-17T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "drážďanech",
+        "jaké",
+        "letošní",
+        "lokomotiv",
+        "nabídlo",
+        "parních",
+        "setkání",
+        "skvosty"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -720,54 +770,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ústup Římanů z Británie mělo nastartovat vyprahlé klima. Jenže je to jinak",
-      "url": "https://www.lidovky.cz/nazory/rim-rise-britanie-provincie-sucho-letokruhy-mince-bitvy-povstani-barbari-piktove-skotove-sasove-zmen.A260407_120343_ln_nazory_lrj",
-      "dt": "2026-04-08T09:02:05Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "británie",
-        "jenže",
-        "jinak",
-        "klima",
-        "mělo",
-        "nastartovat",
-        "vyprahlé",
-        "ústup",
-        "římanů"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kometa PanSTARRS: Jak ji najít na noční obloze",
-      "url": "https://www.idnes.cz/technet/vesmir/kometa-c-2025-r3-panstarrs-miri-k-zemi-muze-jit-o-nejlepsi-kometu-roku-2026.A260115_144409_tec_vesmir_vanky",
-      "dt": "2026-04-08T08:30:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "kometa",
-        "najít",
-        "noční",
-        "obloze",
-        "panstarrs"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 47866,
+      "bytes": 47894,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,11 +817,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 16,
-          "zpravy": 14
+          "other": 18,
+          "zpravy": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -831,6 +833,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Probíráte s chatbotem své zdraví? Dejte si pozor na to, co vám odpovídá",
+            "publishedAt": "2026-04-17T22:00:00Z"
+          },
+          {
+            "title": "Jaké skvosty nabídlo letošní setkání parních lokomotiv v Drážďanech",
+            "publishedAt": "2026-04-17T22:00:00Z"
+          },
           {
             "title": "Nová technologie čipů má za cíl odhalovat deepfake už u zdroje",
             "publishedAt": "2026-04-16T22:00:00Z"
@@ -854,14 +864,6 @@
           {
             "title": "„Největší Čech“ byl i velký manipulátor. Autoři odhalují taje politiky Karla IV.",
             "publishedAt": "2026-04-15T08:00:00Z"
-          },
-          {
-            "title": "Co je ransomware a jak škodí. Devatero rad, jak se mu vyhnout",
-            "publishedAt": "2026-04-15T02:00:00Z"
-          },
-          {
-            "title": "Malá rozměry. Velká výkonem. To jsou Mini PC BARBONE",
-            "publishedAt": "2026-04-14T22:01:00Z"
           }
         ]
       }
