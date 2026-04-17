@@ -414,6 +414,9 @@
     max-width: min(720px, calc(100vw - 80px));
     margin-left: auto;
     margin-right: auto;
+    /* #iuFinancialCalcPanel je flex row; fullpage má align-items: stretch → cardShell se natáhl na výšku viewportu,
+       zatímco obsah hubu je delší → šedé pozadí panelu prosvítalo pod dalšími sekcemi. align-self zarovná výšku na obsah. */
+    align-self: flex-start;
     flex: 0 0 auto;
     min-height: 0;
     max-height: none !important;
