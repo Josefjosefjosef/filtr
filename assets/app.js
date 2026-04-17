@@ -20905,6 +20905,7 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    try { quick.classList.remove("iu-banking-quickfeed-root"); } catch (_) {}
     try { quick.style.removeProperty("display"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
@@ -20947,6 +20948,9 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       quick.innerHTML = "<div class=\"iuQHead\"><div class=\"iuQTitle\">" + iuQfEscape(titles[keyNorm] || keyNorm) + "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div><div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
+      try {
+        if (keyNorm === "banka") quick.classList.add("iu-banking-quickfeed-root");
+      } catch (_) {}
       const body = document.getElementById("iuQuickFeedMojeSluzbyBody");
       if (body && typeof window.iuRenderMojeSluzbyInQuickFeed === "function") window.iuRenderMojeSluzbyInQuickFeed(keyNorm, body);
       const closeBtn = document.getElementById("iuQCloseBtn");
@@ -21517,7 +21521,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}

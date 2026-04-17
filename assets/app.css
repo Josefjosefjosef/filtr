@@ -3137,6 +3137,29 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
+/* Internetové bankovnictví (QuickFeed, key banka): desktop centered shell — same width rule as Datovka .iu-ds-modal; guard .iu-banking-quickfeed-root only; no :has(). */
+@media (min-width: 1025px){
+  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]){
+    display:flex !important;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+    max-width:none;
+    min-width:0;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  /* Inner side gutters inside QuickFeed host (same 80px total budget idea as Datovka shell, but %-based so column <720px still breathes). */
+  #iuQuickFeed.iu-banking-quickfeed-root > .iuQHead,
+  #iuQuickFeed.iu-banking-quickfeed-root > .iuQCard{
+    width:min(720px, calc(100% - 48px));
+    max-width:min(720px, calc(100% - 48px));
+    min-width:0;
+    box-sizing:border-box;
+    align-self:center;
+  }
+}
+
 .iu-aiPanelHeaderActions{
   display: flex;
   align-items: center;
