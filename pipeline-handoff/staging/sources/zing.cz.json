@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-17T08:24:48.320072Z",
+  "ingestedAt": "2026-04-17T08:39:47.527635Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Film Michael se vrací k začátkům kariéry slavného zpěváka",
+      "url": "https://zing.cz/article/film-michael-se-vraci-k-zacatkum-kariery-slavneho-zpevaka",
+      "dt": "2026-04-17T08:30:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "film",
+        "kariéry",
+        "michael",
+        "slavného",
+        "vrací",
+        "začátkům",
+        "zpěváka"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,31 +986,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vývojář z malé vesnice slaví 250 000 prodejů na Steamu",
-      "url": "https://zing.cz/article/vyvojar-z-male-vesnice-slavi-250-000-prodeju-na-steamu",
-      "dt": "2026-04-12T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "000",
-        "250",
-        "malé",
-        "prodejů",
-        "slaví",
-        "steamu",
-        "vesnice",
-        "vývojář"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126455,
+      "bytes": 126665,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1050,6 +1049,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Film Michael se vrací k začátkům kariéry slavného zpěváka",
+            "publishedAt": "2026-04-17T08:30:00Z"
+          },
           {
             "title": "Metro 2039 se představuje, slibuje mluvícího protagonistu i reflexi války",
             "publishedAt": "2026-04-17T05:00:00Z"
@@ -1077,10 +1080,6 @@
           {
             "title": "Windrose zažívá úspěšný start, za 48 hodin prodal půl milionu kopií",
             "publishedAt": "2026-04-16T13:00:00Z"
-          },
-          {
-            "title": "Survivalový kousek Grounded 2 se opět rozrostl",
-            "publishedAt": "2026-04-16T10:00:00Z"
           }
         ]
       }

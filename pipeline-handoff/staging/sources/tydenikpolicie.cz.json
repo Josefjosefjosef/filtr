@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T08:24:48.320072Z",
+  "ingestedAt": "2026-04-17T08:39:47.527635Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Škoda po požáru elektroinstalace v průmyslovém areálu v Přerově byla vyčíslena na 50 milionů korun",
+      "url": "https://tydenikpolicie.cz/skoda-po-pozaru-elektroinstalace-v-prumyslovem-arealu-v-prerove-byla-vycislena-na-50-milionu-korun/",
+      "dt": "2026-04-17T08:24:09Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "areálu",
+        "elektroinstalace",
+        "korun",
+        "milionů",
+        "požáru",
+        "průmyslovém",
+        "přerově",
+        "vyčíslena",
+        "škoda"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,32 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kriminalistka přivezla z dubnového policejního plaveckého mistrovství na Vysočinu pět medailí",
-      "url": "https://tydenikpolicie.cz/kriminalistka-privezla-z-dubnoveho-policejniho-plaveckeho-mistrovstvi-na-vysocinu-pet-medaili/",
-      "dt": "2026-04-16T20:39:50Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dubnového",
-        "kriminalistka",
-        "medailí",
-        "mistrovství",
-        "plaveckého",
-        "policejního",
-        "pět",
-        "přivezla",
-        "vysočinu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -269,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15912,
+      "bytes": 15817,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:14:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:24:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Škoda po požáru elektroinstalace v průmyslovém areálu v Přerově byla vyčíslena na 50 milionů korun",
+            "publishedAt": "2026-04-17T08:24:09Z"
+          },
           {
             "title": "Požár haly v Horní Suché likvidovalo patnáct jednotek hasičů",
             "publishedAt": "2026-04-17T08:14:51Z"
@@ -348,10 +352,6 @@
           {
             "title": "Chlapec na sdíleném kole srazil v Ostravě 76letou chodkyni. Policisté hledají svědky",
             "publishedAt": "2026-04-17T06:51:18Z"
-          },
-          {
-            "title": "Trojice měla na Litoměřicku prodávat auta v exekuci",
-            "publishedAt": "2026-04-17T02:02:04Z"
           }
         ]
       }
