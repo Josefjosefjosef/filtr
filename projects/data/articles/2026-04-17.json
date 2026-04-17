@@ -1,6 +1,6 @@
 {
   "date": "2026-04-17",
-  "generatedAt": "2026-04-17T03:10:52.004705Z",
+  "generatedAt": "2026-04-17T03:30:55.198351Z",
   "items": [
     {
       "topic": "finance",
@@ -85,7 +85,7 @@
       "feedId": "spt_mmamag",
       "url": "https://www.mmamag.cz/v-mma-a-boxu-se-nepocitaji-jen-rany-kdo-zna-skutecne-vydaje-za-cestou-na-vrchol-rozumi-sportu-jinak-nez-ostatni/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7812879907926246,
+      "displayScore": 0.7411382667770525,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -116,7 +116,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/rodina-domaci-mazlicci-zlata-packa-konec-prihlaseni-94540",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6781082643164874,
+      "displayScore": 0.6435278260526067,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -147,13 +147,75 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/bydleni-kvetiny-a-zahrada-co-vysevat-vysev-v-dubnu-druhy-zeleniny-103083",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.676288434866766,
+      "displayScore": 0.6418886457670171,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "bydleni",
         "reason": "bydleni_pattern",
         "confidence": 0.88,
         "railSectionKey": "pocasi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tajemný soví muž z Cornwallu: Prvně se zjevil dvěma sestrám. Měl rudé oči, drápy",
+      "publishedAt": "2026-04-17T03:00:00Z",
+      "sources": [
+        {
+          "name": "Deník",
+          "url": "https://www.denik.cz/historie/sovi-muz-z-vesnice-mawman-cornwall-muz-mura-virginie-a-dalsi-podobni-kryptide.html"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "6bff3ac008779d96",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Deník",
+      "feedId": "zpr_denik",
+      "url": "https://www.denik.cz/historie/sovi-muz-z-vesnice-mawman-cornwall-muz-mura-virginie-a-dalsi-podobni-kryptide.html",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.8711345905728621,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci projednají návrh, který má usnadnit výměnu státních úředníků",
+      "publishedAt": "2026-04-17T03:00:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/zpravy/domaci/snemovna-pravidla-pro-statni-zamestnance-penzijni-sporeni.A260417_042814_domaci_kop"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "909379c9f856e4c8",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-pravidla-pro-statni-zamestnance-penzijni-sporeni.A260417_042814_domaci_kop",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0086821573769549,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -178,7 +240,7 @@
       "feedId": "spt_isport",
       "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/473108/co-delaji-posledni-pardubicti-sampioni-sef-hospody-sadrokartony-obrazy-nebo-rolfterapie.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.014432653525237,
+      "displayScore": 0.9628329697950286,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -209,7 +271,7 @@
       "feedId": "spt_isport",
       "url": "https://isport.blesk.cz/clanek/blesk-sport/474369/vdova-po-paskovi-prala-synovi-ke-kulatinam-neskutecna-podoba-s-tatou-37.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.014432653389116,
+      "displayScore": 0.9628329696724034,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -240,7 +302,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/sex-a-vztahy-laska-a-vztahy-novy-milenec-plastika-nebo-jen-rezignace-nejhorsi-zpusoby-jak-se-vyrovnat-se-starnutim-103109",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6762884355322457,
+      "displayScore": 0.6418886463665187,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -271,7 +333,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/film-a-televize/herecka-ana-geislerova-50-let-narozeniny.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8710666606869553,
+      "displayScore": 0.8289071243391597,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -333,7 +395,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/praha/zpravy/dvorecky-most-na-kole-cyklista-test-doprava-tipy-uskali.A260410_123515_praha-zpravy_bur",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.9835526271702104,
+      "displayScore": 0.9370752560723329,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -364,7 +426,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/zdravotnictvi/zdravi-detska-demence-priznaky-lecba-cesko.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.84943181447976,
+      "displayScore": 0.8092922667036773,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -426,7 +488,7 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/trojice-mela-na-litomericku-prodavat-auta-v-exekuci/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6270969879648428,
+      "displayScore": 0.5993010913604673,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -519,7 +581,7 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-podle-libanonu-porusuje-primeri-hizballah-zautocil-na-izraelske-vojaky-372470",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.9324302969182527,
+      "displayScore": 0.8939013711178396,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -550,7 +612,7 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/chilsky-prezident-kast-prijal-ve-svem-sidle-pavla-jako-prvni-zahranicni-navstevu-372469",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8865380266651312,
+      "displayScore": 0.8516374161996109,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
