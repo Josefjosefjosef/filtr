@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T21:35:18.010241Z",
+  "ingestedAt": "2026-04-17T21:54:57.010945Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Strach o diváka, pak euforie. Nečekaný hrdina Litvínova: Každý zápas bude bitka",
+      "url": "https://www.idnes.cz/hokej/extraliga/litvinov-jihlava-ondrej-balaz.A260417_233233_hokej_kazdt",
+      "dt": "2026-04-17T21:43:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bitka",
+        "diváka",
+        "euforie",
+        "hrdina",
+        "každý",
+        "litvínova",
+        "nečekaný",
+        "pak",
+        "strach",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,32 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rozhodnutí soudu ve Zlíně o dvou vazbách v kauze fotbalové korupce je pravomocné",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/korupcni-kauza-soud-zlin-vazba-pravomocne-rozhodnuti.A260417_115043_fot_dsouteze_czo",
-      "dt": "2026-04-17T10:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dvou",
-        "fotbalové",
-        "kauze",
-        "korupce",
-        "pravomocné",
-        "rozhodnutí",
-        "soudu",
-        "vazbách",
-        "zlíně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47078,
+      "bytes": 47093,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T20:55:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T21:43:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strach o diváka, pak euforie. Nečekaný hrdina Litvínova: Každý zápas bude bitka",
+            "publishedAt": "2026-04-17T21:43:00Z"
+          },
           {
             "title": "Litvínov - Jihlava 3:2. Verva zvládla drama! První barážový duel rozhodlo prodloužení",
             "publishedAt": "2026-04-17T20:55:40Z"
@@ -880,10 +885,6 @@
           {
             "title": "Právník Vondroušové: Čelí tlaku a stresu. Vzpomněla si na přepadení Kvitové",
             "publishedAt": "2026-04-17T17:00:00Z"
-          },
-          {
-            "title": "Kdo z NHL dorazí na MS? Finové vyhlíží hvězdu, Kanada staví našlapaný útok",
-            "publishedAt": "2026-04-17T16:55:00Z"
           }
         ]
       }
