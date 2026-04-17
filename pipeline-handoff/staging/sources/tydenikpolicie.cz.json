@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T13:14:42.961237Z",
+  "ingestedAt": "2026-04-17T13:35:06.717716Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté se rozloučili se svým kolegou prap. Radovanem Mikulíkem",
+      "url": "https://tydenikpolicie.cz/policiste-se-rozloucili-se-svym-kolegou-prap-radovanem-mikulikem/",
+      "dt": "2026-04-17T13:27:47Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kolegou",
+        "mikulíkem",
+        "policisté",
+        "prap",
+        "radovanem",
+        "rozloučili",
+        "svým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,32 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škoda po požáru elektroinstalace v průmyslovém areálu v Přerově byla vyčíslena na 50 milionů korun",
-      "url": "https://tydenikpolicie.cz/skoda-po-pozaru-elektroinstalace-v-prumyslovem-arealu-v-prerove-byla-vycislena-na-50-milionu-korun/",
-      "dt": "2026-04-17T08:24:09Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "areálu",
-        "elektroinstalace",
-        "korun",
-        "milionů",
-        "požáru",
-        "průmyslovém",
-        "přerově",
-        "vyčíslena",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16444,
+      "bytes": 16446,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T12:21:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:27:47Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -333,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté se rozloučili se svým kolegou prap. Radovanem Mikulíkem",
+            "publishedAt": "2026-04-17T13:27:47Z"
+          },
           {
             "title": "Zloděj v zemědělském areálu v Hněvkovicích usmrtil a ukradl prasata",
             "publishedAt": "2026-04-17T12:21:53Z"
@@ -360,10 +362,6 @@
           {
             "title": "Kriminalisté stále pátrají po totožnosti muže, jehož kosterní ostatky byly nalezeny před jedenácti lety v lese na Uherskohradišťsku",
             "publishedAt": "2026-04-17T09:10:22Z"
-          },
-          {
-            "title": "Hromadná SMS zpráva o pátrání po pohřešovaném muži na Hodonínsku zafungovala. Našli ho rozrušeného u lesa",
-            "publishedAt": "2026-04-17T08:51:53Z"
           }
         ]
       }

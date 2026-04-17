@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T13:14:42.961237Z",
+  "ingestedAt": "2026-04-17T13:35:06.717716Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hormuzský průliv je otevřený, oznámil íránský ministr zahraničí",
+      "url": "https://zahranicni.hn.cz/c1-67868380-hormuzsky-pruliv-je-otevreny-oznamil-iransky-ministr-zahranici",
+      "dt": "2026-04-17T13:08:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "hormuzský",
+        "ministr",
+        "otevřený",
+        "oznámil",
+        "průliv",
+        "zahraničí",
+        "íránský"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1045,38 +1069,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "&bdquo;Topinkovač&ldquo; místo laboratoře. V terénu dokáže na počkání poznat vzorky zakázaných látek i vystopovat jejich původ",
-      "url": "https://procne.hn.cz/c1-67866440-princezna-jednorozec",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "dokáže",
-        "jejich",
-        "laboratoře",
-        "ldquo",
-        "látek",
-        "místo",
-        "poznat",
-        "počkání",
-        "původ",
-        "terénu",
-        "topinkovač",
-        "vystopovat",
-        "vzorky",
-        "zakázaných"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1087,7 +1079,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 179134,
+      "bytes": 178910,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1124,7 +1116,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T12:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:08:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1142,6 +1134,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hormuzský průliv je otevřený, oznámil íránský ministr zahraničí",
+            "publishedAt": "2026-04-17T13:08:00Z"
+          },
           {
             "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
             "publishedAt": "2026-04-17T12:31:00Z"
@@ -1169,10 +1165,6 @@
           {
             "title": "Tejc podá trestní oznámení kvůli kauze bitcoin. Schillerová ukázala na ředitele Stanjurova kabinetu",
             "publishedAt": "2026-04-17T08:12:00Z"
-          },
-          {
-            "title": "Boj o maďarskou demokracii teprve začíná. Porážka Viktora Orbána byla mimořádná, ale Maďarsko nyní musí znovu vybudovat to, co on zničil",
-            "publishedAt": "2026-04-17T07:55:00Z"
           }
         ]
       }
