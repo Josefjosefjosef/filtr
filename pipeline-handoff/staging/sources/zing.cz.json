@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-17T04:50:06.300916Z",
+  "ingestedAt": "2026-04-17T05:10:16.460582Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Metro 2039 se představuje, slibuje mluvícího protagonistu i reflexi války",
+      "url": "https://zing.cz/article/metro-2039-se-predstavuje-slibuje-mluviciho-protagonistu-i-reflexi-valky",
+      "dt": "2026-04-17T05:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "2039",
+        "metro",
+        "mluvícího",
+        "protagonistu",
+        "představuje",
+        "reflexi",
+        "slibuje",
+        "války"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,30 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Mount and Blade 2: pobřežní nájezdy a chytřejší diplomacie",
-      "url": "https://zing.cz/article/mount-and-blade-2-pobrezni-najezdy-a-chytrejsi-diplomacie",
-      "dt": "2026-04-12T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "and",
-        "blade",
-        "chytřejší",
-        "diplomacie",
-        "mount",
-        "nájezdy",
-        "pobřežní"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126477,
+      "bytes": 126455,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T05:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1049,6 +1050,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Metro 2039 se představuje, slibuje mluvícího protagonistu i reflexi války",
+            "publishedAt": "2026-04-17T05:00:00Z"
+          },
           {
             "title": "Autoři Hytale žalují napodobeninu hry na Switchi",
             "publishedAt": "2026-04-17T04:00:00Z"
@@ -1076,10 +1081,6 @@
           {
             "title": "Survivalový kousek Grounded 2 se opět rozrostl",
             "publishedAt": "2026-04-16T10:00:00Z"
-          },
-          {
-            "title": "NVIDIA GeForce RTX 5060 nebo RTX 5070 Ti? Která grafika vám zajistí vítězství v Counter-Strike 2?",
-            "publishedAt": "2026-04-16T08:30:00Z"
           }
         ]
       }

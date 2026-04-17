@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-17T04:50:06.300916Z",
+  "ingestedAt": "2026-04-17T05:10:16.460582Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skončila základní část NHL. Vejmelka byl po dvou třetinách střídán, Nečas dostal volno",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474473/skoncila-zakladni-cast-nhl-vejmelka-byl-po-dvou-tretinach-stridan-necas-dostal-volno.html",
+      "dt": "2026-04-17T04:50:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "dostal",
+        "dvou",
+        "nečas",
+        "nhl",
+        "skončila",
+        "střídán",
+        "třetinách",
+        "vejmelka",
+        "volno",
+        "základní",
+        "část"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -235,34 +263,6 @@
         "sedmdesáti",
         "týmu",
         "čekat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL ONLINE: Colorado hostí Seattle, Nečas dostal volno. V akci Klapka i Hronek",
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474473/nhl-online-colorado-hosti-seattle-necas-dostal-volno-v-akci-klapka-i-hronek.html",
-      "dt": "2026-04-16T18:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "akci",
-        "colorado",
-        "dostal",
-        "hostí",
-        "hronek",
-        "klapka",
-        "nečas",
-        "nhl",
-        "online",
-        "seattle",
-        "volno"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1071,7 +1071,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 56231,
+      "bytes": 55803,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1108,7 +1108,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1123,6 +1123,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skončila základní část NHL. Vejmelka byl po dvou třetinách střídán, Nečas dostal volno",
+            "publishedAt": "2026-04-17T04:50:00Z"
+          },
           {
             "title": "Pravděpodobné sestavy: Slavia bez Chorého, o šanci se hlásí Prekop. Sparta s Kuchtou",
             "publishedAt": "2026-04-17T04:00:00Z"
@@ -1150,10 +1154,6 @@
           {
             "title": "Rulík se po výhře zdráhal komentovat dění. K novým koučům ale řekl: Za mě dobrá volba",
             "publishedAt": "2026-04-16T19:10:00Z"
-          },
-          {
-            "title": "Bizáry, Novotný na stožáru, ale... Ústí se blíží baráži! Artis neunáší tlak, věří opora",
-            "publishedAt": "2026-04-16T19:08:00Z"
           }
         ]
       }

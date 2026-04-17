@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T04:50:06.300916Z",
+  "ingestedAt": "2026-04-17T05:10:16.460582Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šéf kritizovaného imigračního úřadu ICE Lyons skončí ve funkci",
+      "url": "https://zpravy.aktualne.cz/zahranici/sef-kritizovaneho-imigracniho-uradu-ice-lyons-skonci-ve-funkci/r~aaa29a9ccdeea61dee4a08726ab48500/",
+      "dt": "2026-04-17T05:02:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "funkci",
+        "ice",
+        "imigračního",
+        "kritizovaného",
+        "lyons",
+        "skončí",
+        "úřadu",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -495,32 +520,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Ano, jsme spolu.“ Foltýn a mladá Pirátka začali nečekaný románek",
-      "url": "https://zpravy.aktualne.cz/domaci/ano-jsme-spolu-foltyn-a-mlada-piratka-zacali-necekany-romanek/r~aaa29bdfd50d37f469bd207667ac8b15/",
-      "dt": "2026-04-16T16:05:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ano",
-        "foltýn",
-        "jsme",
-        "mladá",
-        "nečekaný",
-        "pirátka",
-        "románek",
-        "spolu",
-        "začali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22042,
+      "bytes": 22220,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,7 +567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T05:02:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 14,
@@ -586,6 +585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf kritizovaného imigračního úřadu ICE Lyons skončí ve funkci",
+            "publishedAt": "2026-04-17T05:02:00Z"
+          },
           {
             "title": "Česko se připojí k zajištění bezpečnosti Hormuzu, Babiš chystá nabídku spojencům",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -612,10 +615,6 @@
           },
           {
             "title": "Chceme být českým Glastonbury, říká ředitel Rock for People. Cíl je unikátní zážitek",
-            "publishedAt": "2026-04-17T03:30:00Z"
-          },
-          {
-            "title": "„Babiš je stále dobrý.“ Architekt jeho kampaní říká, že problém ve vládě mají jiní",
             "publishedAt": "2026-04-17T03:30:00Z"
           }
         ]
