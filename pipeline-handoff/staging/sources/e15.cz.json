@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-17T13:54:54.215894Z",
+  "ingestedAt": "2026-04-17T14:14:33.164208Z",
   "items": [
     {
       "section": "doprava",
@@ -25,6 +25,30 @@
         "zemi",
         "zlom",
         "závada"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hormuzský průliv je otevřen, řekl íránský ministr zahraničí",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/hormuzsky-pruliv-je-otevren-rekl-iransky-ministr-zahranici-1432230",
+      "dt": "2026-04-17T13:20:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "hormuzský",
+        "ministr",
+        "otevřen",
+        "průliv",
+        "zahraničí",
+        "íránský",
+        "řekl"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -553,6 +577,28 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Hrozí vám riziko závislosti na informacích?",
+      "url": "https://www.e15.cz/radce/hrozi-vam-riziko-zavislosti-na-informacich-1430869",
+      "dt": "2026-04-16T22:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "hrozí",
+        "informacích",
+        "riziko",
+        "vám",
+        "závislosti"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Do Česka vstupuje nový fotomobil. Sází na 200Mpx teleobjektiv a 4K video",
       "url": "https://www.e15.cz/radce/do-ceska-vstupuje-novy-fotomobil-sazi-na-200mpx-teleobjektiv-a-4k-video-1431948",
       "dt": "2026-04-16T22:00:00Z",
@@ -567,28 +613,6 @@
         "video",
         "vstupuje",
         "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hrozí vám riziko závislosti na informacích?",
-      "url": "https://www.e15.cz/radce/hrozi-vam-riziko-zavislosti-na-informacich-1430869",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "hrozí",
-        "informacích",
-        "riziko",
-        "vám",
-        "závislosti"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1032,32 +1056,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Investiční rarita z ČSSR. Nevybalená motorka ČZ 400 se v Americe prodala za statisíce",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/investicni-rarita-z-cssr-nevybalena-motorka-cz-400-se-v-americe-prodala-za-statisice-1424326",
-      "dt": "2026-04-16T11:56:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "400",
-        "americe",
-        "investiční",
-        "motorka",
-        "nevybalená",
-        "prodala",
-        "rarita",
-        "statisíce",
-        "čssr"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1068,7 +1066,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54197,
+      "bytes": 54061,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1108,8 +1106,8 @@
         "raw_feed_latest_publishedAt": "2026-04-17T13:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 33
+          "zpravy": 6,
+          "finance": 34
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1124,6 +1122,10 @@
           {
             "title": "Zlom ve vyšetřování Air India. Piloti byli nevinní, 260 lidí poslala k zemi skrytá závada",
             "publishedAt": "2026-04-17T13:28:00Z"
+          },
+          {
+            "title": "Hormuzský průliv je otevřen, řekl íránský ministr zahraničí",
+            "publishedAt": "2026-04-17T13:20:00Z"
           },
           {
             "title": "Kreml hrozí útoky na evropské zbrojovky. Na seznamu cílů jsou i firmy v Česku",
@@ -1148,10 +1150,6 @@
           {
             "title": "Smlouva o dílo - Vzor ke stažení",
             "publishedAt": "2026-04-17T12:00:00Z"
-          },
-          {
-            "title": "Odstoupení od kupní smlouvy - Vzor ke stažení",
-            "publishedAt": "2026-04-17T11:00:00Z"
           }
         ]
       }

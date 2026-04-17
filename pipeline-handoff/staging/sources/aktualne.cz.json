@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T13:54:54.215894Z",
+  "ingestedAt": "2026-04-17T14:14:33.164208Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Feri zůstává ve vězení. Teplický soud se ale bude muset propuštěním znovu zabývat",
+      "url": "https://zpravy.aktualne.cz/domaci/feri-zustava-ve-vezeni-soud-jeho-zadost-o-propusteni-zamitl/r~aaa298543f410c4130501185de05f99c/",
+      "dt": "2026-04-16T07:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "feri",
+        "muset",
+        "propuštěním",
+        "soud",
+        "teplický",
+        "vězení",
+        "zabývat",
+        "znovu",
+        "zůstává"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -509,33 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusům „záhadně“ vybuchují továrny. Bez klíčového produktu, který tam vyrábí, nemohou válčit",
-      "url": "https://zpravy.aktualne.cz/zahranici/rusum-zahadne-vybuchuji-tovarny-bez-klicove-suroviny-kterou-tam-vyrabeji-nemohou-valcit/r~aaa29f90fe06753050d1a74666bebb9c/",
-      "dt": "2026-04-17T09:18:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "klíčového",
-        "nemohou",
-        "produktu",
-        "rusům",
-        "tam",
-        "továrny",
-        "vybuchují",
-        "vyrábí",
-        "válčit",
-        "záhadně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21877,
+      "bytes": 21864,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,8 +586,8 @@
         "raw_feed_latest_publishedAt": "2026-04-17T13:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
           "zpravy": 12,
+          "sport": 5,
           "finance": 2,
           "other": 1
         },
@@ -601,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Feri zůstává ve vězení. Teplický soud se ale bude muset propuštěním znovu zabývat",
+            "publishedAt": "2026-04-16T07:32:00Z"
+          },
           {
             "title": "Vondroušová se bála a nepustila domů dopingovou komisařku. Teď jí hrozí drakonický trest",
             "publishedAt": "2026-04-17T13:04:00Z"
@@ -628,10 +632,6 @@
           {
             "title": "Rusko přišlo ve válce o nejméně 212 tisíc vojáků, ukazuje analýza BBC",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Obrazem: Porážka USA v zátoce Sviní znovu ožila. Trump hrozí, Havana mobilizuje",
-            "publishedAt": "2026-04-17T12:28:00Z"
           }
         ]
       }
