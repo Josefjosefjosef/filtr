@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T05:10:16.460582Z",
+  "ingestedAt": "2026-04-17T05:30:39.800630Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Borneu havaroval vrtulník. Zahynulo osm lidí",
+      "url": "https://www.denik.cz/ze_sveta/borneo-nehoda-vrtulnik-obeti.html",
+      "dt": "2026-04-17T04:52:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "borneu",
+        "havaroval",
+        "lidí",
+        "osm",
+        "vrtulník",
+        "zahynulo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -527,6 +550,32 @@
       "_dt_serialized": true
     },
     {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Marek Ztracený vzpomíná: Hanka Zagorová byla svá a uměla stárnout s grácií",
+      "url": "https://www.denik.cz/hudba/marek-ztraceny-hana-zagorova-spoluprace-bioagraf-laska.html",
+      "dt": "2026-04-16T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "grácií",
+        "hanka",
+        "marek",
+        "stárnout",
+        "svá",
+        "uměla",
+        "vzpomíná",
+        "zagorová",
+        "ztracený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "doprava",
       "contentType": "article",
       "title": "Opilá řidička srazila na chodníku dvě školačky. Když utekla, střetla se s vlakem",
@@ -545,32 +594,6 @@
         "vlakem",
         "řidička",
         "školačky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Marek Ztracený vzpomíná: Hanka Zagorová byla svá a uměla stárnout s grácií",
-      "url": "https://www.denik.cz/hudba/marek-ztraceny-hana-zagorova-spoluprace-bioagraf-laska.html",
-      "dt": "2026-04-16T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "grácií",
-        "hanka",
-        "marek",
-        "stárnout",
-        "svá",
-        "uměla",
-        "vzpomíná",
-        "zagorová",
-        "ztracený"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -632,32 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Melanie Martinez vydala album Hades. Novinku představí i v Praze v O2 areně",
-      "url": "https://www.denik.cz/hudba/melanie-martinez-hades-sacrifice-praha-02-arena.html",
-      "dt": "2026-04-16T13:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "album",
-        "areně",
-        "hades",
-        "martinez",
-        "melanie",
-        "novinku",
-        "praze",
-        "představí",
-        "vydala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29278,
+      "bytes": 29264,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T03:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:52:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -721,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Borneu havaroval vrtulník. Zahynulo osm lidí",
+            "publishedAt": "2026-04-17T04:52:00Z"
+          },
           {
             "title": "Firma EURODECK se dočkala inovačního centra. Vzrostly tržby i nabídka",
             "publishedAt": "2026-04-17T03:55:00Z"
@@ -748,10 +749,6 @@
           {
             "title": "Když rozhodují vteřiny. Záchranáři trénovali první pomoc u dětí",
             "publishedAt": "2026-04-17T02:23:00Z"
-          },
-          {
-            "title": "StarDance do veřejnoprávní televize tak úplně nepatří, říká ministr Oto Klempíř",
-            "publishedAt": "2026-04-17T02:00:00Z"
           }
         ]
       }

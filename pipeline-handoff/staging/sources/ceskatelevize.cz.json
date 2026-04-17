@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T05:10:16.460582Z",
+  "ingestedAt": "2026-04-17T05:30:39.800630Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zemřel herec Jan Potměšil",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zemrel-herec-jan-potmesil-372473",
+      "dt": "2026-04-17T05:13:27Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "herec",
+        "jan",
+        "potměšil",
+        "zemřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,29 +744,6 @@
         "rada",
         "znojemské",
         "šéfa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vědci navrhli genetickou léčbu Downova syndromu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-navrhli-genetickou-lecbu-downova-syndromu-372440",
-      "dt": "2026-04-16T10:06:51Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "downova",
-        "genetickou",
-        "léčbu",
-        "navrhli",
-        "syndromu",
-        "vědci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1513,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42297,
+      "bytes": 42082,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,11 +1571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T05:13:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 3,
+          "zpravy": 26,
+          "other": 2,
           "finance": 2
         },
         "drop_counts": {
@@ -1590,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel herec Jan Potměšil",
+            "publishedAt": "2026-04-17T05:13:27Z"
+          },
           {
             "title": "Nový most v Praze má pomoci MHD, motoristům zůstane uzavřen",
             "publishedAt": "2026-04-17T05:00:00Z"
@@ -1617,10 +1619,6 @@
           {
             "title": "Česko podle prezidenta Filipín zadrželo muže podezřelého ve vlasti z korupce",
             "publishedAt": "2026-04-16T20:43:42Z"
-          },
-          {
-            "title": "Vaňková a Svoboda nebudou obhajovat primátorský mandát",
-            "publishedAt": "2026-04-16T20:00:00Z"
           }
         ]
       }
@@ -1726,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77291,
+      "bytes": 77305,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

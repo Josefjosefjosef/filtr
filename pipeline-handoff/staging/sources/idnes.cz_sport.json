@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T05:10:16.460582Z",
+  "ingestedAt": "2026-04-17T05:30:39.800630Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Od Hlinky až po Rulíka. Připomeňte si, jak si vedli předešlí trenéři českých hokejistů",
+      "url": "https://www.idnes.cz/hokej/reprezentace/treneri-reprezentace-prehled.A260413_135406_reprezentace_luji/foto",
+      "dt": "2026-04-17T05:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hlinky",
+        "hokejistů",
+        "předešlí",
+        "připomeňte",
+        "rulíka",
+        "trenéři",
+        "vedli",
+        "českých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,33 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bizarní penalta v Paraguayi. Odkop trefil střelce do tváře a míč skončil v síti",
-      "url": "https://www.idnes.cz/sport/trendy/bizarni-penalta-paraguay-odkop-trefil-strelce-do-obliceje.A260416_102835_trendy_subt",
-      "dt": "2026-04-16T11:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bizarní",
-        "míč",
-        "odkop",
-        "paraguayi",
-        "penalta",
-        "skončil",
-        "střelce",
-        "síti",
-        "trefil",
-        "tváře"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46198,
+      "bytes": 46455,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T05:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od Hlinky až po Rulíka. Připomeňte si, jak si vedli předešlí trenéři českých hokejistů",
+            "publishedAt": "2026-04-17T05:15:00Z"
+          },
           {
             "title": "Nováčkem roku se stává... Ale kdo? Zámoří čeká, experty rozdělili bývalí spolubydlící",
             "publishedAt": "2026-04-17T04:00:00Z"
@@ -880,10 +882,6 @@
           {
             "title": "Novotný na stožáru, Ústí s pokutou za výtržnictví. Politika vedlo jako údržbáře",
             "publishedAt": "2026-04-16T18:57:00Z"
-          },
-          {
-            "title": "Volejbalistky Liberce vyhrály v Brně před rekordní návštěvou, zářila Jelínková",
-            "publishedAt": "2026-04-16T18:52:00Z"
           }
         ]
       }
