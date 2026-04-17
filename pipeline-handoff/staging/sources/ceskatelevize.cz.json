@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T14:14:33.164208Z",
+  "ingestedAt": "2026-04-17T14:30:01.808922Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Soud zrušil vítěznou arbitráž Česka proti Synotu a zároveň zakázal další",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/soud-zrusil-viteznou-arbitraz-ceska-proti-synotu-a-zaroven-zakazal-dalsi-372495",
+      "dt": "2026-04-17T14:10:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "arbitráž",
+        "další",
+        "proti",
+        "soud",
+        "synotu",
+        "vítěznou",
+        "zakázal",
+        "zrušil",
+        "zároveň",
+        "česka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -76,18 +103,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Brífink Starmera a Macrona po jednání o Hormuzském průlivu",
+      "title": "Írán oznámil otevření Hormuzského průlivu, Trump blokádu neukončí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-oznamil-otevreni-hormuzskeho-prulivu-po-dobu-primeri-372492",
       "dt": "2026-04-17T12:59:08Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "brífink",
-        "hormuzském",
-        "jednání",
-        "macrona",
+        "blokádu",
+        "hormuzského",
+        "neukončí",
+        "otevření",
+        "oznámil",
         "průlivu",
-        "starmera"
+        "trump",
+        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -728,29 +757,6 @@
         "střetem",
         "zájmů",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zástupci Evropské komise budou jednat s Tiszou o reformách",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zastupci-evropske-komise-budou-jednat-s-tiszou-o-reformach-372462",
-      "dt": "2026-04-16T18:48:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "evropské",
-        "jednat",
-        "komise",
-        "reformách",
-        "tiszou",
-        "zástupci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1517,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42618,
+      "bytes": 42749,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1577,11 +1583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:53:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T14:10:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 23,
+          "finance": 3,
+          "zpravy": 22,
           "other": 5
         },
         "drop_counts": {
@@ -1595,6 +1601,10 @@
         },
         "sample_titles": [
           {
+            "title": "Soud zrušil vítěznou arbitráž Česka proti Synotu a zároveň zakázal další",
+            "publishedAt": "2026-04-17T14:10:30Z"
+          },
+          {
             "title": "Ceny ropy prudce klesají",
             "publishedAt": "2026-04-17T13:53:02Z"
           },
@@ -1607,7 +1617,7 @@
             "publishedAt": "2026-04-17T12:59:36Z"
           },
           {
-            "title": "Brífink Starmera a Macrona po jednání o Hormuzském průlivu",
+            "title": "Írán oznámil otevření Hormuzského průlivu, Trump blokádu neukončí",
             "publishedAt": "2026-04-17T12:59:08Z"
           },
           {
@@ -1621,10 +1631,6 @@
           {
             "title": "Inspekce zakazuje uvádět na trh tři druhy kojenecké výživy kvůli toxinu",
             "publishedAt": "2026-04-17T11:10:56Z"
-          },
-          {
-            "title": "Aplikace na ověřování věku je hotová, dle experta si ji země EU budou moci přizpůsobit",
-            "publishedAt": "2026-04-17T11:00:32Z"
           }
         ]
       }
@@ -1730,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76979,
+      "bytes": 76842,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T14:14:33.164208Z",
+  "ingestedAt": "2026-04-17T14:30:01.808922Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zemřel herec Jan Potměšil. Pohádkový švec Jíra i Martin z Bony a klid",
+      "url": "https://www.idnes.cz/kultura/divadlo/ve-veku-60-let-zemrel-divadelni-a-filmovy-herec-jan-potmesil.A260417_071219_divadlo_tbr",
+      "dt": "2026-04-17T14:15:44Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bony",
+        "herec",
+        "jan",
+        "jíra",
+        "klid",
+        "martin",
+        "pohádkový",
+        "potměšil",
+        "zemřel",
+        "švec"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izrael už nebude bombardovat Libanon. Má to zakázané od USA, uvedl Trump",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-uz-nebude-bombardovat-libanon-ma-to-zakazane-od-usa-uvedl-trump.A260417_161248_zahranicni_bro",
+      "dt": "2026-04-17T14:12:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bombardovat",
+        "izrael",
+        "libanon",
+        "nebude",
+        "trump",
+        "usa",
+        "uvedl",
+        "zakázané"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -731,61 +783,6 @@
         "úřady",
         "čechy",
         "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Metnar navrhl nového ředitele České pošty. Podnik byl loni v miliardové ztrátě",
-      "url": "https://www.idnes.cz/zpravy/domaci/metnar-posta-hodula-reditel-ztrata.A260417_103304_domaci_aoc",
-      "dt": "2026-04-17T10:18:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "loni",
-        "metnar",
-        "miliardové",
-        "navrhl",
-        "nového",
-        "podnik",
-        "pošty",
-        "ztrátě",
-        "české",
-        "ředitele"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Masové uplácení voličů, proruský favorit. Bulhary čekají osmé volby za pět let",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/bulharsko-volby-razie-uplaceni-penize-vitez-nestabilita-eu-uplatky-volici-euro.A260417_111426_zahranicni_fohl",
-      "dt": "2026-04-17T10:13:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bulhary",
-        "favorit",
-        "let",
-        "masové",
-        "osmé",
-        "proruský",
-        "pět",
-        "uplácení",
-        "volby",
-        "voličů",
-        "čekají"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50635,
+      "bytes": 50369,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,12 +1623,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T14:15:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 2,
-          "other": 1
+          "other": 2,
+          "zpravy": 26,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1643,6 +1640,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel herec Jan Potměšil. Pohádkový švec Jíra i Martin z Bony a klid",
+            "publishedAt": "2026-04-17T14:15:44Z"
+          },
+          {
+            "title": "Izrael už nebude bombardovat Libanon. Má to zakázané od USA, uvedl Trump",
+            "publishedAt": "2026-04-17T14:12:00Z"
+          },
           {
             "title": "Česko nabídne do Hormuzského průlivu radar, až se situace zklidní, oznámil Babiš",
             "publishedAt": "2026-04-17T14:02:00Z"
@@ -1666,14 +1671,6 @@
           {
             "title": "Firmy v Česku jako možné cíle? Zapojení Evropy do konfliktu roste, uvedl Kreml",
             "publishedAt": "2026-04-17T13:10:00Z"
-          },
-          {
-            "title": "Nejvyšší ceny paliv o víkendu opět mírně klesnou, nafta zlevní na 43 korun",
-            "publishedAt": "2026-04-17T13:09:00Z"
-          },
-          {
-            "title": "Zrezivělým autobusem dojeli gruzínští řidiči z Turecka do Česka. Inspektoři se divili",
-            "publishedAt": "2026-04-17T13:08:00Z"
           }
         ]
       }
