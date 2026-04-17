@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T14:50:24.547421Z",
+  "ingestedAt": "2026-04-17T15:50:02.864755Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "StarDance k České televizi neodmyslitelně patří, reaguje ČT na slova Klempíře",
+      "url": "https://www.denik.cz/film-a-televize/stardance-ceska-televize-oto-klempir.html",
+      "dt": "2026-04-17T15:28:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "klempíře",
+        "neodmyslitelně",
+        "patří",
+        "reaguje",
+        "slova",
+        "stardance",
+        "televizi",
+        "české"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,34 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Smrt v turistickém ráji: Muže stáhl proud, vše bezmocně sledovala žena na břehu",
-      "url": "https://www.denik.cz/ze_sveta/thajsko-hua-hin-muze-stahl-proud-zemrel-jeho-partnerka-jen-bezmocne-prihlizela.html",
-      "dt": "2026-04-17T08:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bezmocně",
-        "břehu",
-        "muže",
-        "proud",
-        "ráji",
-        "sledovala",
-        "smrt",
-        "stáhl",
-        "turistickém",
-        "vše",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29807,
+      "bytes": 29419,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T14:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:28:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -719,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "StarDance k České televizi neodmyslitelně patří, reaguje ČT na slova Klempíře",
+            "publishedAt": "2026-04-17T15:28:00Z"
+          },
           {
             "title": "Timmy má stále naději. Záchranná akce pokračuje, stav uvázlé velryby se zlepšil",
             "publishedAt": "2026-04-17T14:22:00Z"
@@ -746,10 +747,6 @@
           {
             "title": "Modrá vášeň nebo Západ slunce. Barmanský kurz na Přímce bavil názvy drinků",
             "publishedAt": "2026-04-17T13:00:00Z"
-          },
-          {
-            "title": "Francouzka zadržovaná ICE se vrátila do vlasti. V Americe žila s dávnou láskou",
-            "publishedAt": "2026-04-17T12:33:00Z"
           }
         ]
       }

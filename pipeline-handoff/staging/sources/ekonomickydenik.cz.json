@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T14:50:24.547421Z",
+  "ingestedAt": "2026-04-17T15:50:02.864755Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hormuzský průliv je otevřen, Trump zatím neustoupí",
+      "url": "https://ekonomickydenik.cz/hormuzsky-pruliv-je-otevren-trump-zatim-neustoupi/",
+      "dt": "2026-04-17T15:18:41Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hormuzský",
+        "neustoupí",
+        "otevřen",
+        "průliv",
+        "trump",
+        "zatím"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,30 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na Bruntálsku, u Lipna i pod Řípem. Kde vyrostou větrníky s požehnáním státu?",
-      "url": "https://ekonomickydenik.cz/kde-vyrostou-vetrniky-akceleracni-zony/",
-      "dt": "2026-04-16T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bruntálsku",
-        "lipna",
-        "požehnáním",
-        "státu",
-        "vyrostou",
-        "větrníky",
-        "řípem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71995,
+      "bytes": 71387,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:02:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:18:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -844,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hormuzský průliv je otevřen, Trump zatím neustoupí",
+            "publishedAt": "2026-04-17T15:18:41Z"
+          },
           {
             "title": "Miliardová past na emise? Auditoři cupují unijní fond, který měl zachránit oceláře",
             "publishedAt": "2026-04-17T13:02:53Z"
@@ -871,10 +874,6 @@
           {
             "title": "Netflix ve výhledu zklamal. Firmu opouští její spoluzakladatel",
             "publishedAt": "2026-04-17T08:58:37Z"
-          },
-          {
-            "title": "Proč Stanjura neodevzdal mobil? Schillerová řeší fungování ministerstva za bitcoinové kauzy",
-            "publishedAt": "2026-04-17T08:25:54Z"
           }
         ]
       }

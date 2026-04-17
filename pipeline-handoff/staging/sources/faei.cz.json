@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T14:50:24.547421Z",
+  "ingestedAt": "2026-04-17T15:50:02.864755Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přivede Magyar Maďarsko do eurozóny?",
+      "url": "https://profitonline.cz/privede-magyar-madarsko-do-eurozony/",
+      "dt": "2026-04-17T15:00:57Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "eurozóny",
+        "magyar",
+        "maďarsko",
+        "přivede"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -276,29 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Revoluce v českém maloobchodě odstartovala. Bude mít úspěch?",
-      "url": "https://profitonline.cz/revoluce-v-ceskem-maloobchode-odstartovala-bude-mit-uspech/",
-      "dt": "2026-04-15T06:00:04Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "maloobchodě",
-        "mít",
-        "odstartovala",
-        "revoluce",
-        "úspěch",
-        "českém"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19320,
+      "bytes": 18976,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:00:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:00:57Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 8,
@@ -363,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přivede Magyar Maďarsko do eurozóny?",
+            "publishedAt": "2026-04-17T15:00:57Z"
+          },
           {
             "title": "Jan Krafka řídí obchod Plzeňského Prazdroje",
             "publishedAt": "2026-04-17T13:00:02Z"
@@ -390,10 +392,6 @@
           {
             "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
             "publishedAt": "2026-04-16T08:00:02Z"
-          },
-          {
-            "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
-            "publishedAt": "2026-04-16T06:00:39Z"
           }
         ]
       }

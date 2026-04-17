@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T14:50:24.547421Z",
+  "ingestedAt": "2026-04-17T15:50:02.864755Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přehled týdne: Tohle se teď děje ve zdravotnictví napříč Českem",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnictvi-v-regionech-treti-dubnovy-tyden/",
+      "dt": "2026-04-17T15:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "děje",
+        "napříč",
+        "přehled",
+        "tohle",
+        "týdne",
+        "zdravotnictví",
+        "českem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,31 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Lék na bolest autismus nezpůsobuje. Přelomová studie uklidňuje těhotné",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/paracetamol-a-autismus-nova-data/",
-      "dt": "2026-04-16T12:54:49Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "autismus",
-        "bolest",
-        "lék",
-        "nezpůsobuje",
-        "přelomová",
-        "studie",
-        "těhotné",
-        "uklidňuje"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90436,
+      "bytes": 106462,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přehled týdne: Tohle se teď děje ve zdravotnictví napříč Českem",
+            "publishedAt": "2026-04-17T15:00:00Z"
+          },
           {
             "title": "Vojtěch chystá 3 velké změny. Ve Sněmovně představil plán resortu pro nejbližší měsíce",
             "publishedAt": "2026-04-17T14:00:00Z"
@@ -358,10 +361,6 @@
           {
             "title": "Jedno očkování proti chřipce na celý život? Vědci jsou blíž univerzální vakcíně",
             "publishedAt": "2026-04-17T05:00:00Z"
-          },
-          {
-            "title": "Zařídil jsem 300 milionů pro nemocnici, chlubil se Babiš ve Sněmovně. Lžete, rozčiloval se Hřib",
-            "publishedAt": "2026-04-16T14:58:37Z"
           }
         ]
       }

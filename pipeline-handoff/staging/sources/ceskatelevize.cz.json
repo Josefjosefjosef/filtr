@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T14:50:24.547421Z",
+  "ingestedAt": "2026-04-17T15:50:02.864755Z",
   "items": [
     {
       "section": "aktualne",
@@ -768,7 +768,29 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko – Německo",
+      "title": "Muchová si ve Stuttgartu vyšlápla na Gauffovou. Je v semifinále",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-vyslapla-na-gauffovou-je-v-semifinale-156333",
+      "dt": "2026-04-17T15:27:15Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "gauffovou",
+        "muchová",
+        "semifinále",
+        "stuttgartu",
+        "vyšlápla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Česko – Německo 2:0",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-nemecko-156327",
       "dt": "2026-04-17T14:43:00Z",
       "media_raw": "ČT sport",
@@ -1483,30 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Will vychytal Spartu a Mandát poslal Pardubice do finále",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubicky-mandat-k-postupu-do-finale-stacil-jediny-gol-156304",
-      "dt": "2026-04-15T18:45:52Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "mandát",
-        "pardubice",
-        "poslal",
-        "spartu",
-        "vychytal",
-        "will"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1517,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42835,
+      "bytes": 42766,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1636,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36747,
+      "bytes": 36778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1673,7 +1671,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T14:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:27:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,7 +1687,11 @@
         },
         "sample_titles": [
           {
-            "title": "Česko – Německo",
+            "title": "Muchová si ve Stuttgartu vyšlápla na Gauffovou. Je v semifinále",
+            "publishedAt": "2026-04-17T15:27:15Z"
+          },
+          {
+            "title": "Česko – Německo 2:0",
             "publishedAt": "2026-04-17T14:43:00Z"
           },
           {
@@ -1715,10 +1717,6 @@
           {
             "title": "Třemi duely začne v sobotu play-off NHL, obhájce trofeje chybí",
             "publishedAt": "2026-04-17T10:30:32Z"
-          },
-          {
-            "title": "Zachová třetí zlato nezíská, na ME vypadla hned v 1. kole",
-            "publishedAt": "2026-04-17T07:09:59Z"
           }
         ]
       }
@@ -1730,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76838,
+      "bytes": 76976,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
