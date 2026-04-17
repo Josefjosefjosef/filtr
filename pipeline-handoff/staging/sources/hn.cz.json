@@ -1,24 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T13:35:06.717716Z",
+  "ingestedAt": "2026-04-17T13:54:54.215894Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Hormuzský průliv je otevřený, oznámil íránský ministr zahraničí",
+      "title": "Hormuzský průliv je otevřený, oznámil Írán. Ceny ropy prudce padají",
       "url": "https://zahranicni.hn.cz/c1-67868380-hormuzsky-pruliv-je-otevreny-oznamil-iransky-ministr-zahranici",
       "dt": "2026-04-17T13:08:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
+        "ceny",
         "hormuzský",
-        "ministr",
         "otevřený",
         "oznámil",
+        "padají",
+        "prudce",
         "průliv",
-        "zahraničí",
-        "íránský"
+        "ropy",
+        "írán"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ryanair jde proti proudu: letecké palivo zdražuje a hrozí jeho nedostatek, firma zlevňuje letenky. Třeba i z Prahy",
+      "url": "https://byznys.hn.cz/c1-67868360-ryanair-jde-proti-proudu-letecke-palivo-zdrazuje-a-hrozi-jeho-nedostatek-firma-zlevnuje-letenky-treba-i-z-prahy",
+      "dt": "2026-04-17T12:55:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "firma",
+        "hrozí",
+        "jde",
+        "jeho",
+        "letecké",
+        "letenky",
+        "nedostatek",
+        "palivo",
+        "prahy",
+        "proti",
+        "proudu",
+        "ryanair",
+        "třeba",
+        "zdražuje",
+        "zlevňuje"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1039,36 +1073,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Větší množství, ale horší DNA. Vědci zkoumali, jaký vliv má sexuální abstinence na kvalitu spermií",
-      "url": "https://vikend.hn.cz/c1-67866450-vetsi-mnozstvi-ale-horsi-dna-vedci-zkoumali-jaky-vliv-ma-sexualni-abstinence-na-kvalitu-spermii",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "abstinence",
-        "ale",
-        "dna",
-        "horší",
-        "jaký",
-        "kvalitu",
-        "množství",
-        "sexuální",
-        "spermií",
-        "vliv",
-        "vědci",
-        "větší",
-        "zkoumali"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1079,7 +1083,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178910,
+      "bytes": 178806,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,8 +1139,12 @@
         },
         "sample_titles": [
           {
-            "title": "Hormuzský průliv je otevřený, oznámil íránský ministr zahraničí",
+            "title": "Hormuzský průliv je otevřený, oznámil Írán. Ceny ropy prudce padají",
             "publishedAt": "2026-04-17T13:08:00Z"
+          },
+          {
+            "title": "Ryanair jde proti proudu: letecké palivo zdražuje a hrozí jeho nedostatek, firma zlevňuje letenky. Třeba i z Prahy",
+            "publishedAt": "2026-04-17T12:55:00Z"
           },
           {
             "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
@@ -1161,10 +1169,6 @@
           {
             "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování mají pár dnů",
             "publishedAt": "2026-04-17T08:40:00Z"
-          },
-          {
-            "title": "Tejc podá trestní oznámení kvůli kauze bitcoin. Schillerová ukázala na ředitele Stanjurova kabinetu",
-            "publishedAt": "2026-04-17T08:12:00Z"
           }
         ]
       }

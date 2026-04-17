@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-17T13:35:06.717716Z",
+  "ingestedAt": "2026-04-17T13:54:54.215894Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Andrej nás nezavleče do války. Ruttemu ale zřejmě nasliboval hory doly",
+      "url": "https://www.epenize.eu/andrej-nas-nezavlece-do-valky-ruttemu-ale-zrejme-nasliboval-hory-doly/",
+      "dt": "2026-04-17T13:30:05Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "ale",
+        "andrej",
+        "doly",
+        "hory",
+        "nasliboval",
+        "nezavleče",
+        "nás",
+        "ruttemu",
+        "války",
+        "zřejmě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -476,32 +503,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Denní hlášení Ministerstva financí: Trapně uvádí hypotetické ceny paliv",
-      "url": "https://www.epenize.eu/denni-hlaseni-ministerstva-financi-trapne-uvadi-hypoteticke-ceny-paliv/",
-      "dt": "2026-04-09T07:00:44Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "ceny",
-        "denní",
-        "financí",
-        "hlášení",
-        "hypotetické",
-        "ministerstva",
-        "paliv",
-        "trapně",
-        "uvádí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 106704,
+      "bytes": 106418,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +550,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:09:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:30:05Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 17,
+          "sport": 1,
           "zpravy": 2
         },
         "drop_counts": {
@@ -566,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Andrej nás nezavleče do války. Ruttemu ale zřejmě nasliboval hory doly",
+            "publishedAt": "2026-04-17T13:30:05Z"
+          },
           {
             "title": "Ulévání poslance Kolovratníka: Hokej jako pracovní důvody",
             "publishedAt": "2026-04-17T07:09:43Z"
@@ -593,10 +598,6 @@
           {
             "title": "Výmysl chorého mozku. Placení médií ze státního rozpočtu se prodraží",
             "publishedAt": "2026-04-15T08:01:57Z"
-          },
-          {
-            "title": "Zlato jako na houpačce: Po prudkém poklesu poptávka roste",
-            "publishedAt": "2026-04-15T04:00:16Z"
           }
         ]
       }

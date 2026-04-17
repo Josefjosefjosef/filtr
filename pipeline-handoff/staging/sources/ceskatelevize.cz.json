@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T13:35:06.717716Z",
+  "ingestedAt": "2026-04-17T13:54:54.215894Z",
   "items": [
     {
       "section": "aktualne",
@@ -55,18 +55,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán oznámil otevření Hormuzského průlivu po dobu příměří",
+      "title": "Írán oznámil otevření Hormuzského průlivu, Trump blokádu neukončí",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-oznamil-otevreni-hormuzskeho-prulivu-po-dobu-primeri-372492",
       "dt": "2026-04-17T12:59:08Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dobu",
+        "blokádu",
         "hormuzského",
+        "neukončí",
         "otevření",
         "oznámil",
         "průlivu",
-        "příměří",
+        "trump",
         "írán"
       ],
       "feedCategory": "zpravy",
@@ -760,6 +761,30 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Macháč do druhého semifinále v sezoně nepostoupil, nestačil na Rubljova",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/machac-do-druheho-semifinale-v-sezone-nepostoupil-nestacil-na-rubljova-156332",
+      "dt": "2026-04-17T13:29:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "druhého",
+        "macháč",
+        "nepostoupil",
+        "nestačil",
+        "rubljova",
+        "semifinále",
+        "sezoně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1488,28 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Měchura: Pozvánka mě vytrhla ze špatných myšlenek",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/mechura-pozvanka-me-vytrhla-ze-spatnych-myslenek-156302",
-      "dt": "2026-04-15T15:12:16Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "myšlenek",
-        "měchura",
-        "pozvánka",
-        "vytrhla",
-        "špatných"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1520,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43097,
+      "bytes": 43187,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,7 +1609,7 @@
             "publishedAt": "2026-04-17T12:59:36Z"
           },
           {
-            "title": "Írán oznámil otevření Hormuzského průlivu po dobu příměří",
+            "title": "Írán oznámil otevření Hormuzského průlivu, Trump blokádu neukončí",
             "publishedAt": "2026-04-17T12:59:08Z"
           },
           {
@@ -1639,7 +1642,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36555,
+      "bytes": 36703,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1679,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:00:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:29:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1691,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Macháč do druhého semifinále v sezoně nepostoupil, nestačil na Rubljova",
+            "publishedAt": "2026-04-17T13:29:52Z"
+          },
           {
             "title": "Neodevzdaný test může ohrozit kariéru Markéty Vondroušové",
             "publishedAt": "2026-04-17T13:00:17Z"
@@ -1718,10 +1725,6 @@
           {
             "title": "Vejmelka základní část NHL jako brankář s nejvíce výhrami nezakončil",
             "publishedAt": "2026-04-17T06:29:05Z"
-          },
-          {
-            "title": "Český fotbal udrží díky koeficientu svého zástupce v Lize mistrů",
-            "publishedAt": "2026-04-16T21:03:16Z"
           }
         ]
       }
@@ -1733,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77426,
+      "bytes": 77444,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
