@@ -1,29 +1,47 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-17T19:19:51.740491Z",
+  "ingestedAt": "2026-04-17T19:39:45.223877Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Litvínov v problémech! Jihlava hlídá těsné vedení, navíc mohla znovu udeřit",
+      "title": "HOKEJ ONLINE: Videomomenty. Barážové drama v Litvínově nabídne prodloužení",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-baraz-zacina-litvinov-poprve-hosti-jihlavu-5436982",
       "dt": "2026-04-17T14:11:29Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "hlídá",
+        "barážové",
+        "drama",
         "hokej",
-        "jihlava",
-        "litvínov",
-        "navíc",
+        "litvínově",
+        "nabídne",
         "online",
-        "problémech",
-        "těsné",
-        "udeřit",
-        "vedení",
-        "videomomenty",
-        "znovu"
+        "prodloužení",
+        "videomomenty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Obhájkyně titulu mohou stále doufat ve finále",
+      "url": "https://www.sport.cz/clanek/florbal-obhajkyne-titulu-mohou-stale-doufat-ve-finale-5438862",
+      "dt": "2026-04-17T19:17:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "doufat",
+        "finále",
+        "obhájkyně",
+        "stále",
+        "titulu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -736,30 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Etaová se stálou trenérkou fotbalistů Unionu Berlín nestane",
-      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-etaova-se-stalou-trenerkou-fotbalistu-unionu-berlin-nestane-5438054",
-      "dt": "2026-04-17T10:19:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "berlín",
-        "etaová",
-        "fotbalistů",
-        "nestane",
-        "stálou",
-        "trenérkou",
-        "unionu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42575,
+      "bytes": 42599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:58:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T19:17:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -825,8 +819,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Litvínov v problémech! Jihlava hlídá těsné vedení, navíc mohla znovu udeřit",
+            "title": "HOKEJ ONLINE: Videomomenty. Barážové drama v Litvínově nabídne prodloužení",
             "publishedAt": "2026-04-17T14:11:29Z"
+          },
+          {
+            "title": "Obhájkyně titulu mohou stále doufat ve finále",
+            "publishedAt": "2026-04-17T19:17:48Z"
           },
           {
             "title": "Zádrhel v boji o Ligu mistrů. Como nebodovalo v Sassuolu",
@@ -851,10 +849,6 @@
           {
             "title": "Autoklub ČR schválil záměr vlastnit mostecký Autodrom s miliardářem Staňkem",
             "publishedAt": "2026-04-17T17:45:05Z"
-          },
-          {
-            "title": "Macháče přehrála ruská hvězda. Kopřiva schytal výprask",
-            "publishedAt": "2026-04-17T06:51:49Z"
           }
         ]
       }

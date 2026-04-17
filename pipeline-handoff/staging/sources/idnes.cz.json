@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T19:19:51.740491Z",
+  "ingestedAt": "2026-04-17T19:39:45.223877Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Koncerty a po letech zbrusu nová píseň. Poslechněte si, s čím přichází Céline Dion",
+      "url": "https://www.idnes.cz/kultura/hudba/zpevacka-celine-dion-pisen-francie-kanada.A260417_203713_hudba_mikp",
+      "dt": "2026-04-17T18:58:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "céline",
+        "dion",
+        "koncerty",
+        "letech",
+        "nová",
+        "poslechněte",
+        "píseň",
+        "přichází",
+        "zbrusu",
+        "čím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,32 +782,6 @@
         "ruce",
         "sundalo",
         "transparent"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dvorecký most změní trasy MHD. Jak od soboty pojedou tramvaje a autobusy?",
-      "url": "https://www.idnes.cz/praha/zpravy/dvorecky-most-zmeni-trasy-mhd-jak-od-soboty-pojedou-tramvaje-a-autobusy.A260417_130742_praha-zpravy_skr",
-      "dt": "2026-04-17T12:47:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "autobusy",
-        "dvorecký",
-        "mhd",
-        "most",
-        "pojedou",
-        "soboty",
-        "tramvaje",
-        "trasy",
-        "změní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50494,
+      "bytes": 50493,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,12 +1622,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:21:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T18:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 3,
-          "other": 2
+          "other": 3,
+          "zpravy": 24,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1638,6 +1639,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Koncerty a po letech zbrusu nová píseň. Poslechněte si, s čím přichází Céline Dion",
+            "publishedAt": "2026-04-17T18:58:00Z"
+          },
           {
             "title": "Vlak ve Svitavách srazil člověka, provoz byl obnoven",
             "publishedAt": "2026-04-17T18:21:32Z"
@@ -1665,10 +1670,6 @@
           {
             "title": "Zmrazených 20 miliard dolarů a tankery plné ropy? Jakou cenu Trump zaplatí Íránu",
             "publishedAt": "2026-04-17T17:17:00Z"
-          },
-          {
-            "title": "Stát se zbavil další odpovědnosti: dotovat plavání pro školáky. Zůstává však povinné",
-            "publishedAt": "2026-04-17T16:54:00Z"
           }
         ]
       }
