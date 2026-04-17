@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-17T07:24:58.997215Z",
+  "ingestedAt": "2026-04-17T07:48:18.153959Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ulévání poslance Kolovratníka: Hokej jako pracovní důvody",
+      "url": "https://www.epenize.eu/ulevani-poslance-kolovratnika-hokej-jako-pracovni-duvody/",
+      "dt": "2026-04-17T07:09:43Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "důvody",
+        "hokej",
+        "jako",
+        "kolovratníka",
+        "poslance",
+        "pracovní",
+        "ulévání"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +502,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Osobní msta? Proč Macinka nechce Pavla na summitu",
-      "url": "https://www.epenize.eu/osobni-msta-proc-macinka-nechce-pavla-na-summitu/",
-      "dt": "2026-04-09T05:31:20Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "macinka",
-        "msta",
-        "nechce",
-        "osobní",
-        "pavla",
-        "proč",
-        "summitu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 105980,
+      "bytes": 106704,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,10 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T23:00:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:09:43Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
+          "sport": 1,
+          "finance": 17,
           "zpravy": 2
         },
         "drop_counts": {
@@ -565,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulévání poslance Kolovratníka: Hokej jako pracovní důvody",
+            "publishedAt": "2026-04-17T07:09:43Z"
+          },
           {
             "title": "Wellness farmy pro černošské děti? RFK Jr. před Kongresem zapřel i nos mezi očima",
             "publishedAt": "2026-04-16T23:00:04Z"
@@ -592,10 +597,6 @@
           {
             "title": "Zlato jako na houpačce: Po prudkém poklesu poptávka roste",
             "publishedAt": "2026-04-15T04:00:16Z"
-          },
-          {
-            "title": "Konec velké italské romance: Trump pálí mosty i s Meloniovou",
-            "publishedAt": "2026-04-14T23:00:23Z"
           }
         ]
       }

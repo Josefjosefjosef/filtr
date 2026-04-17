@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T07:24:58.997215Z",
+  "ingestedAt": "2026-04-17T07:48:18.153959Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pavel v Chile podepsal memoranda. Rýpl do Kause, při podpisu daroval pero",
+      "url": "https://www.denik.cz/ze_sveta/petr-pavel-chile-pero-klaus-memoranda.html",
+      "dt": "2026-04-17T07:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chile",
+        "daroval",
+        "kause",
+        "memoranda",
+        "pavel",
+        "pero",
+        "podepsal",
+        "podpisu",
+        "při",
+        "rýpl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,31 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ruské výhrůžky českým firmám: Macinka si předvolal ruského velvyslance",
-      "url": "https://www.denik.cz/z_domova/ruske-hrozby-ceskym-firmam-petr-macinka-velvyslanec.html",
-      "dt": "2026-04-16T15:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "firmám",
-        "macinka",
-        "předvolal",
-        "ruské",
-        "ruského",
-        "velvyslance",
-        "výhrůžky",
-        "českým"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29387,
+      "bytes": 29602,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T06:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavel v Chile podepsal memoranda. Rýpl do Kause, při podpisu daroval pero",
+            "publishedAt": "2026-04-17T07:05:00Z"
+          },
           {
             "title": "Sousedský spor vyvrcholil pobodáním psů. Senior odešel od soudu s podmínkou",
             "publishedAt": "2026-04-17T06:50:00Z"
@@ -743,10 +749,6 @@
           {
             "title": "Zemřel divadelní a filmový herec Jan Potměšil. Bylo mu 60 let",
             "publishedAt": "2026-04-17T05:21:00Z"
-          },
-          {
-            "title": "Na Borneu havaroval vrtulník. Zahynulo osm lidí",
-            "publishedAt": "2026-04-17T04:52:00Z"
           }
         ]
       }

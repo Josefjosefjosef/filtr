@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T07:24:58.997215Z",
+  "ingestedAt": "2026-04-17T07:48:18.153959Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evropa má prostředky k odminování Hormuzu, řeší bezpečnost plavby",
+      "url": "https://zpravy.aktualne.cz/zahranici/evropa-ma-prostredky-k-odminovani-hormuzu-resi-bezpecnost-plavby/r~aaa29017bc9474e02ee07ddc4d497a94/",
+      "dt": "2026-04-17T07:34:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bezpečnost",
+        "evropa",
+        "hormuzu",
+        "odminování",
+        "plavby",
+        "prostředky",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -394,23 +418,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Babiš je stále dobrý.“ Architekt jeho kampaní říká, že problém ve vládě mají jiní",
+      "title": "Babišův \"režisér\" kampaní: Premiérovi to jde, Macinka si užíval funkci. Popsal obrat",
       "url": "https://zpravy.aktualne.cz/domaci/babis-je-stale-dobry-architekt-jeho-kampani-rika-ze-problem-ve-vlade-maji-jini/r~aaa29f6e3500407fb1df0659c33dbdeb/",
       "dt": "2026-04-17T03:30:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "architekt",
-        "babiš",
-        "dobrý",
-        "jeho",
-        "jiní",
+        "babišův",
+        "funkci",
+        "jde",
         "kampaní",
-        "mají",
-        "problém",
-        "stále",
-        "vládě",
-        "říká"
+        "macinka",
+        "obrat",
+        "popsal",
+        "premiérovi",
+        "režisér",
+        "užíval"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -496,30 +519,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Orbán po drtivé porážce: Přijímám odpovědnost, výsledek mě překvapil",
-      "url": "https://zpravy.aktualne.cz/zahranici/orban-po-drtive-porazce-prijimam-odpovednost-vysledek-me-prekvapil/r~aaa299df1869b5b523c82c06f866ee33/",
-      "dt": "2026-04-16T19:29:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "drtivé",
-        "odpovědnost",
-        "orbán",
-        "porážce",
-        "překvapil",
-        "přijímám",
-        "výsledek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22106,
+      "bytes": 22071,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,11 +566,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:34:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 3,
           "zpravy": 12,
+          "sport": 3,
           "finance": 2,
           "other": 3
         },
@@ -585,6 +584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa má prostředky k odminování Hormuzu, řeší bezpečnost plavby",
+            "publishedAt": "2026-04-17T07:34:00Z"
+          },
           {
             "title": "„Neuvěřitelné vzedmutí.“ Český objev už je mezi adepty na prestižní trofej",
             "publishedAt": "2026-04-17T04:30:00Z"
@@ -612,10 +615,6 @@
           {
             "title": "Zemřel Jan Potměšil, hvězda filmu Bony a klid, bylo mu 60 let",
             "publishedAt": "2026-04-17T05:35:00Z"
-          },
-          {
-            "title": "Nenechte si ujít: Černohumorné drama Slepice či koncerty světových soundtracků",
-            "publishedAt": "2026-04-17T05:15:00Z"
           }
         ]
       }

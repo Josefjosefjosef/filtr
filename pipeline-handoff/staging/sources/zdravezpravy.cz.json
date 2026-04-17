@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-17T07:24:58.997215Z",
+  "ingestedAt": "2026-04-17T07:48:18.153959Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Benda: Vládní koalice je zdivočelá. ODS mění kandidáta do rady VZP",
+      "url": "https://www.zdravezpravy.cz/2026/04/17/vladni-koalice-je-zdivocela-rekl-benda-a-zmenil-kandidata-do-vedeni-vzp-cr/",
+      "dt": "2026-04-17T07:09:49Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "benda",
+        "kandidáta",
+        "koalice",
+        "mění",
+        "ods",
+        "rady",
+        "vládní",
+        "vzp",
+        "zdivočelá"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -469,30 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Irena Storová: Lékárník naočkovat pacienta zvládne, to není problém",
-      "url": "https://www.zdravezpravy.cz/2026/04/09/irena-storova-lekarnik-naockovat-pacienta-zvladne-to-neni-problem/",
-      "dt": "2026-04-09T04:26:35Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "irena",
-        "lékárník",
-        "naočkovat",
-        "pacienta",
-        "problém",
-        "storová",
-        "zvládne"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -503,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 234850,
+      "bytes": 210676,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -540,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T14:00:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:09:49Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -555,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Benda: Vládní koalice je zdivočelá. ODS mění kandidáta do rady VZP",
+            "publishedAt": "2026-04-17T07:09:49Z"
+          },
           {
             "title": "Pracující důchodci loni vyšetřili díky nižšímu odvodu 4 mld. Kč",
             "publishedAt": "2026-04-16T14:00:04Z"
@@ -582,10 +588,6 @@
           {
             "title": "Zdravotní dotazníky u životního pojištění: Na co si dát pozor!!!",
             "publishedAt": "2026-04-14T11:00:50Z"
-          },
-          {
-            "title": "Komentář: Porodnost nezvýšily minulé vlády a nezvýší ji ani ta současná",
-            "publishedAt": "2026-04-14T10:38:00Z"
           }
         ]
       }
