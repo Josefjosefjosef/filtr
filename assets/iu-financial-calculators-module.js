@@ -1357,22 +1357,53 @@ export function initIuFinancialCalculatorsOverlay(deps) {
    * BFCache / partial nav / chybějící close: DOM říká overlay zavřený, ale body může držet
    * iu-financial-* + iu-modal-open a viewport lock → uživatel vidí „prázdnou“ stránku / nejde scrollovat.
    * Revert CSS (#2665) tento stav neřeší — je to JS stav vs. DOM.
+   *
+   * P0: Musí chytit i rozpad dataset.open vs. hidden (např. dataset "1" ale oba uzly už mají hidden),
+   * jinak stará podmínka domClosed vracela false a reconcile se nespustil.
    */
   function iuFinCalcReconcileOrphanBodyState() {
     try {
-      if (!backdrop || !panel || !document.body) return;
-      const domClosed =
-        backdrop.hasAttribute("hidden") &&
-        panel.hasAttribute("hidden") &&
-        String(panel.dataset.open || "0") !== "1";
-      if (!domClosed) return;
+      if (!document.body) return;
+      const bd = document.getElementById("iuFinancialCalcBackdrop");
+      const pn = document.getElementById("iuFinancialCalcPanel");
+      if (!bd || !pn) {
+        try {
+          document.body.classList.remove(
+            "iu-financial-overlay-open",
+            "iu-financial-calculators-overlay-open",
+          );
+        } catch (_) {}
+        return;
+      }
       const finOnBody =
         document.body.classList.contains("iu-financial-calculators-overlay-open") ||
         document.body.classList.contains("iu-financial-overlay-open");
       if (!finOnBody) {
-        iuFinCalcClearDesktopFullpageLayout();
+        try {
+          iuFinCalcClearDesktopFullpageLayout();
+        } catch (_) {}
         return;
       }
+
+      const openFlag = String(pn.dataset.open || "0") === "1";
+      const bothHiddenAttr = bd.hasAttribute("hidden") && pn.hasAttribute("hidden");
+      let bothInvis = false;
+      try {
+        const unseen = (el) => {
+          const s = getComputedStyle(el);
+          return s.display === "none" || s.visibility === "hidden";
+        };
+        bothInvis = unseen(bd) && unseen(pn);
+      } catch (_) {}
+
+      /* Skutečně otevřený povrch: dataset 1 a alespoň jeden z backdrop/panel není „zavřený“ v DOM ani computed. */
+      const finSurfaceReallyOpen =
+        openFlag &&
+        !bothHiddenAttr &&
+        !bothInvis;
+
+      if (finSurfaceReallyOpen) return;
+
       document.body.classList.remove(
         "iu-financial-overlay-open",
         "iu-financial-calculators-overlay-open",
@@ -1382,6 +1413,11 @@ export function initIuFinancialCalculatorsOverlay(deps) {
         setLock(false);
       } catch (_) {}
       try {
+        if (typeof window.iuSetViewportLock === "function") {
+          window.iuSetViewportLock(false);
+        }
+      } catch (_) {}
+      try {
         const others =
           typeof window !== "undefined" &&
           typeof window.iuDetectOpenOverlays === "function"
@@ -1389,9 +1425,6 @@ export function initIuFinancialCalculatorsOverlay(deps) {
             : null;
         if (Array.isArray(others) && others.length === 0) {
           document.body.classList.remove("iu-modal-open");
-          if (typeof window.iuSetViewportLock === "function") {
-            window.iuSetViewportLock(false);
-          }
         }
       } catch (_) {}
     } catch (_) {}
