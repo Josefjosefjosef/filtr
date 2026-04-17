@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T17:04:31.707127Z",
+  "ingestedAt": "2026-04-17T17:19:54.445728Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stavebnictví v Česku obchází strach. Je dražší materiál i hůř dostupné půjčky",
+      "url": "https://www.denik.cz/ekonomika/cesko-stavebnictvi-krize-drazsi-material-i-hur-dostupne-pujcky.html",
+      "dt": "2026-04-17T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dostupné",
+        "dražší",
+        "hůř",
+        "materiál",
+        "obchází",
+        "půjčky",
+        "stavebnictví",
+        "strach",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,33 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Osm let Brna pod Vaňkovou? Splněný sen o aréně, ale i váhání s nemocnicí",
-      "url": "https://www.denik.cz/regiony/velke-uspechy-pady-projekt-marketa-vankova-politika-brno.html",
-      "dt": "2026-04-17T08:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "aréně",
-        "brna",
-        "let",
-        "nemocnicí",
-        "osm",
-        "sen",
-        "splněný",
-        "vaňkovou",
-        "váhání"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29457,
+      "bytes": 29557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,10 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "finance": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -716,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stavebnictví v Česku obchází strach. Je dražší materiál i hůř dostupné půjčky",
+            "publishedAt": "2026-04-17T17:00:00Z"
+          },
           {
             "title": "StarDance k České televizi neodmyslitelně patří, reaguje ČT na slova Klempíře",
             "publishedAt": "2026-04-17T15:28:00Z"
@@ -743,10 +747,6 @@
           {
             "title": "Írán otevřel Hormuzský průliv pro obchod, podle Trumpa blokáda země trvá",
             "publishedAt": "2026-04-17T13:07:00Z"
-          },
-          {
-            "title": "Modrá vášeň nebo Západ slunce. Barmanský kurz na Přímce bavil názvy drinků",
-            "publishedAt": "2026-04-17T13:00:00Z"
           }
         ]
       }
