@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-17T06:10:13.241314Z",
+  "ingestedAt": "2026-04-17T07:06:00.462008Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zapomenuté klíče, jméno známého, nevybavená vzpomínka z dovolené. Co s tím?",
+      "url": "https://www.plnezdravi.cz/zapomenute-klice-jmeno-znameho-nevybavena-vzpominka-z-dovolene-co-s-tim/",
+      "dt": "2026-04-17T07:00:43Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "dovolené",
+        "jméno",
+        "klíče",
+        "nevybavená",
+        "tím",
+        "vzpomínka",
+        "zapomenuté",
+        "známého"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -476,33 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Až polovina zdravotníků čelí vyhoření. Kvůli psychické nepohodě chtějí změnit profesi",
-      "url": "https://www.plnezdravi.cz/az-polovina-zdravotniku-celi-vyhoreni-kvuli-psychicke-nepohode-chteji-zmenit-profesi/",
-      "dt": "2026-03-31T07:00:58Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "chtějí",
-        "kvůli",
-        "nepohodě",
-        "polovina",
-        "profesi",
-        "psychické",
-        "vyhoření",
-        "zdravotníků",
-        "změnit",
-        "čelí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 130603,
+      "bytes": 127463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T07:00:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:00:43Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -565,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zapomenuté klíče, jméno známého, nevybavená vzpomínka z dovolené. Co s tím?",
+            "publishedAt": "2026-04-17T07:00:43Z"
+          },
           {
             "title": "Na léčbu závislosti na nikotinu lze získat až 2 500 Kč. Pojišťovny podporují odvykání kouření",
             "publishedAt": "2026-04-16T07:00:14Z"
@@ -592,10 +594,6 @@
           {
             "title": "Ladislav Dubánek: EU zvažuje zákaz alkoholu v kosmetice",
             "publishedAt": "2026-04-10T07:00:43Z"
-          },
-          {
-            "title": "Určité druhy zeleniny nikdy nekonzumujte syrové. Zaděláváte si na zdravotní problémy",
-            "publishedAt": "2026-04-08T23:00:15Z"
           }
         ]
       }

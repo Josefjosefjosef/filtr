@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-17T06:10:13.241314Z",
+  "ingestedAt": "2026-04-17T07:06:00.462008Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Luxusní symbol Dubaje se na rok a půl uzavře. Burdž al-Arab čeká rekonstrukce",
+      "url": "https://www.penize.cz/spotrebitel/488454-turiste-prisli-o-oblibenou-atrakci-ikonicky-dubajsky-hotel-se-na-rok-a-pul-uzavre",
+      "dt": "2026-04-17T09:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "arab",
+        "burdž",
+        "dubaje",
+        "luxusní",
+        "půl",
+        "rekonstrukce",
+        "rok",
+        "symbol",
+        "uzavře",
+        "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -472,29 +499,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Penzijko vám má vydělat víc. Tady jsou návrhy",
-      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488227-penzijko-vam-ma-vydelat-vic-tady-jsou-navrhy",
-      "dt": "2026-04-14T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "návrhy",
-        "penzijko",
-        "tady",
-        "vydělat",
-        "vám",
-        "víc"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17662,
+      "bytes": 17732,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +546,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 15,
@@ -558,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Luxusní symbol Dubaje se na rok a půl uzavře. Burdž al-Arab čeká rekonstrukce",
+            "publishedAt": "2026-04-17T09:00:00Z"
+          },
           {
             "title": "Vinted jako nejlevnější kurýr? Evropou koluje trik, který platforma vidí nerada",
             "publishedAt": "2026-04-17T05:05:00Z"
@@ -585,10 +593,6 @@
           {
             "title": "Jaká je nejlepší bankovka na světě? Tady jsou favoriti soutěže",
             "publishedAt": "2026-04-16T05:10:00Z"
-          },
-          {
-            "title": "Nezaviněná dopravní nehoda? Jak v trestním řízení získat náhradu škody",
-            "publishedAt": "2026-04-16T05:00:00Z"
           }
         ]
       }

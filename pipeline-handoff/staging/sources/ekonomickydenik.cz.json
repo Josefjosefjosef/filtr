@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T06:10:13.241314Z",
+  "ingestedAt": "2026-04-17T07:06:00.462008Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "O armádu je velký zájem. Zůna se hádá s Černochovou, čí je to zásluha",
+      "url": "https://ekonomickydenik.cz/armada-velky-zajem-zuna-hada-cernochova/",
+      "dt": "2026-04-17T06:07:59Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádu",
+        "hádá",
+        "velký",
+        "zájem",
+        "zásluha",
+        "zůna",
+        "černochovou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,31 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejrychleji rostoucí dopravce na pražském letišti ohlásil novou destinaci",
-      "url": "https://ekonomickydenik.cz/dopravce-easyjet-praha-maroko/",
-      "dt": "2026-04-15T12:09:36Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "destinaci",
-        "dopravce",
-        "letišti",
-        "nejrychleji",
-        "novou",
-        "ohlásil",
-        "pražském",
-        "rostoucí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73562,
+      "bytes": 72787,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T06:07:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O armádu je velký zájem. Zůna se hádá s Černochovou, čí je to zásluha",
+            "publishedAt": "2026-04-17T06:07:59Z"
+          },
           {
             "title": "Nahradit uhlí jen plynem je riskantní. Proto stavíme i zelené zdroje tepla, říká manažer Veolie",
             "publishedAt": "2026-04-17T05:20:00Z"
@@ -874,10 +877,6 @@
           {
             "title": "Šest týdnů a dost? Evropě dochází letecké palivo, hrozí rušení letů",
             "publishedAt": "2026-04-16T14:26:59Z"
-          },
-          {
-            "title": "Brusel se zajímá o financování ČT a rozhlasu. Česko přijalo akt o svobodě médií, upozorňuje",
-            "publishedAt": "2026-04-16T13:31:31Z"
           }
         ]
       }

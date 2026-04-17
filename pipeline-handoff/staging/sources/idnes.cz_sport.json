@@ -1,18 +1,47 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T06:10:13.241314Z",
+  "ingestedAt": "2026-04-17T07:06:00.462008Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Skončila základní část NHL, Vejmelka se prostřídal s Vaněčkem",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vejmelka-vanecek.A260417_071326_nhl_mkr",
-      "dt": "2026-04-17T06:05:16Z",
+      "title": "Nelamte nad námi hůl, přeje si kouč Jihostroje. Lvi však v Budějovicích umí",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbal-jihostroj-ceske-budejovice-semifinale-kouc.A260417_899965_sporty_czo",
+      "dt": "2026-04-17T06:29:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
+        "budějovicích",
+        "hůl",
+        "jihostroje",
+        "kouč",
+        "lvi",
+        "nelamte",
+        "námi",
+        "přeje",
+        "umí",
+        "však"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skončila základní část NHL. Vejmelka se prostřídal s Vaněčkem, Nečas odpočíval",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vejmelka-vanecek.A260417_071326_nhl_mkr",
+      "dt": "2026-04-17T06:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "nečas",
         "nhl",
+        "odpočíval",
         "prostřídal",
         "skončila",
         "vaněčkem",
@@ -759,31 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejová diplomacie. Premiér Kanady a finský prezident trénovali s Ottawou",
-      "url": "https://www.idnes.cz/sport/trendy/hokejova-diplomacie-premier-kanady-a-finsky-prezident-trenovali-s-ottawou.A260416_111344_trendy_subt",
-      "dt": "2026-04-16T13:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "diplomacie",
-        "finský",
-        "hokejová",
-        "kanady",
-        "ottawou",
-        "premiér",
-        "prezident",
-        "trénovali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45565,
+      "bytes": 45458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T06:05:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T06:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,8 +851,12 @@
         },
         "sample_titles": [
           {
-            "title": "Skončila základní část NHL, Vejmelka se prostřídal s Vaněčkem",
-            "publishedAt": "2026-04-17T06:05:16Z"
+            "title": "Nelamte nad námi hůl, přeje si kouč Jihostroje. Lvi však v Budějovicích umí",
+            "publishedAt": "2026-04-17T06:29:00Z"
+          },
+          {
+            "title": "Skončila základní část NHL. Vejmelka se prostřídal s Vaněčkem, Nečas odpočíval",
+            "publishedAt": "2026-04-17T06:14:00Z"
           },
           {
             "title": "Bez toho to není ono. Pastrňák prozradil, jaké jídlo musí mít před zápasem",
@@ -873,10 +881,6 @@
           {
             "title": "To byl nervák! AEK obrat nedotáhl, český šampion si zahraje hlavní fázi Ligy mistrů",
             "publishedAt": "2026-04-16T21:30:00Z"
-          },
-          {
-            "title": "Braga je v semifinále Evropské ligy. U velké otočky v Seville byl i Horníček",
-            "publishedAt": "2026-04-16T21:21:00Z"
           }
         ]
       }

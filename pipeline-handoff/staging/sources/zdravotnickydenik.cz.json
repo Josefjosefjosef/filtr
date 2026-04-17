@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T06:10:13.241314Z",
+  "ingestedAt": "2026-04-17T07:06:00.462008Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Komentář: Očkování není ideologie a prevence není katalog",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/komentar-ockovani-neni-ideologie-a-prevence-neni-katalog/",
+      "dt": "2026-04-17T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ideologie",
+        "katalog",
+        "komentář",
+        "očkování",
+        "prevence"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Toto bychom dnes udělali jinak. Záchranář k letecké nehodě proslavené seriálem Sanitka",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zachranar-k-letecke-nehode-proslavene-serialem-sanitka/",
-      "dt": "2026-04-16T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bychom",
-        "jinak",
-        "letecké",
-        "nehodě",
-        "proslavené",
-        "sanitka",
-        "seriálem",
-        "toto",
-        "udělali",
-        "záchranář"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99442,
+      "bytes": 97218,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Očkování není ideologie a prevence není katalog",
+            "publishedAt": "2026-04-17T07:00:00Z"
+          },
           {
             "title": "Nemocnice přežila plameny, audit odhalil 1500 chyb. Dnes je vzorem požární bezpečnosti",
             "publishedAt": "2026-04-17T06:00:00Z"
@@ -360,10 +359,6 @@
           {
             "title": "Chybné znalecké posudky poškozují lékaře, říká Kubek. Ministerstvo připouští změny",
             "publishedAt": "2026-04-16T10:00:00Z"
-          },
-          {
-            "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
-            "publishedAt": "2026-04-16T08:00:50Z"
           }
         ]
       }
