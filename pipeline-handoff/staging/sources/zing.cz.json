@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-17T11:35:19.474259Z",
+  "ingestedAt": "2026-04-17T12:35:10.000924Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Uniklo datum vydání Black Flag Resynced, dočkáme se dřív, než jsme doufali",
+      "url": "https://zing.cz/article/uniklo-datum-vydani-black-flag-resynced-dockame-se-driv-nez-jsme-doufali",
+      "dt": "2026-04-17T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "black",
+        "datum",
+        "doufali",
+        "dočkáme",
+        "dřív",
+        "flag",
+        "jsme",
+        "než",
+        "resynced",
+        "uniklo",
+        "vydání"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,29 +990,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Unikly informace o zrušeném pokračování série Metro",
-      "url": "https://zing.cz/article/unikly-informace-o-zrusenim-pokracovani-serie-metro",
-      "dt": "2026-04-13T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "informace",
-        "metro",
-        "pokračování",
-        "série",
-        "unikly",
-        "zrušeném"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -995,7 +1000,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126598,
+      "bytes": 126687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1032,7 +1037,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1048,6 +1053,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Uniklo datum vydání Black Flag Resynced, dočkáme se dřív, než jsme doufali",
+            "publishedAt": "2026-04-17T12:00:00Z"
+          },
           {
             "title": "Blizzard plánuje poslední stream k Lord of Hatred",
             "publishedAt": "2026-04-17T10:00:00Z"
@@ -1075,10 +1084,6 @@
           {
             "title": "Filmový Street Fighter se připomíná akčním traileru",
             "publishedAt": "2026-04-16T15:30:00Z"
-          },
-          {
-            "title": "Chystá se God of War s čínskou mytologií? Nové informace to naznačují",
-            "publishedAt": "2026-04-16T14:00:00Z"
           }
         ]
       }

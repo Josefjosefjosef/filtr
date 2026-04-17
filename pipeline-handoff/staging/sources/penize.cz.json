@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-17T11:35:19.474259Z",
+  "ingestedAt": "2026-04-17T12:35:10.000924Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Kdy natankovat plnou? Maximální ceny benzinu a nafty na víkend",
+      "url": "https://www.penize.cz/doprava/488492-kdy-natankovat-plnou-maximalni-ceny-benzinu-a-nafty-na-vikend",
+      "dt": "2026-04-17T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "maximální",
+        "nafty",
+        "natankovat",
+        "plnou",
+        "víkend"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -473,32 +497,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kosmetika pro relax, nebo riziko? Plátýnkové masky v testu dopadly nejhůř",
-      "url": "https://www.penize.cz/nakupy/488231-kosmetika-pro-relax-nebo-riziko-platynkove-masky-v-testu-dopadly-nejhur",
-      "dt": "2026-04-14T08:50:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dopadly",
-        "kosmetika",
-        "masky",
-        "nebo",
-        "nejhůř",
-        "plátýnkové",
-        "relax",
-        "riziko",
-        "testu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17727,
+      "bytes": 17725,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,11 +544,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 5
+          "zpravy": 6,
+          "finance": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdy natankovat plnou? Maximální ceny benzinu a nafty na víkend",
+            "publishedAt": "2026-04-17T13:59:00Z"
+          },
           {
             "title": "Luxusní symbol Dubaje se na rok a půl uzavře. Burdž al-Arab čeká rekonstrukce",
             "publishedAt": "2026-04-17T09:00:00Z"
@@ -589,10 +591,6 @@
           {
             "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
             "publishedAt": "2026-04-16T13:57:00Z"
-          },
-          {
-            "title": "Jaká je nejlepší bankovka na světě? Tady jsou favoriti soutěže",
-            "publishedAt": "2026-04-16T05:10:00Z"
           }
         ]
       }

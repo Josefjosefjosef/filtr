@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T11:35:19.474259Z",
+  "ingestedAt": "2026-04-17T12:35:10.000924Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vražda sudího přímo na hřišti. Amatérskou ligou otřásla tragická událost",
+      "url": "https://www.idnes.cz/fotbal/zahranici/vrazda-rozhodciho-primo-na-hristi-ekvadorem-otrasla-tragicka-udalost.A260417_110727_fot_zahranici_duff",
+      "dt": "2026-04-17T12:13:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "amatérskou",
+        "hřišti",
+        "ligou",
+        "otřásla",
+        "přímo",
+        "sudího",
+        "tragická",
+        "událost",
+        "vražda"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -766,35 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Gross kvůli reprezentaci měnil plány: Zase získám nový pohled, potřeboval jsem uzrát",
-      "url": "https://www.idnes.cz/hokej/reprezentace/trener-pavel-gross-rozhovor.A260416_191947_reprezentace_ivt",
-      "dt": "2026-04-16T19:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "gross",
-        "jsem",
-        "kvůli",
-        "měnil",
-        "nový",
-        "plány",
-        "pohled",
-        "potřeboval",
-        "reprezentaci",
-        "uzrát",
-        "zase",
-        "získám"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47477,
+      "bytes": 47272,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vražda sudího přímo na hřišti. Amatérskou ligou otřásla tragická událost",
+            "publishedAt": "2026-04-17T12:13:00Z"
+          },
           {
             "title": "Noví trenéři? Dobrá volba, říká Rulík. Jak to vypadá s posilami ze zámoří a ze Sparty?",
             "publishedAt": "2026-04-17T11:30:00Z"
@@ -884,10 +885,6 @@
           {
             "title": "Biatlonové prázdniny. Jak si závodnice užívají volné dny po náročné sezoně?",
             "publishedAt": "2026-04-17T10:27:00Z"
-          },
-          {
-            "title": "Legendy Dynama vyzývají majitelku: Prodejte klub. Jste problém, ne partner",
-            "publishedAt": "2026-04-17T10:10:00Z"
           }
         ]
       }

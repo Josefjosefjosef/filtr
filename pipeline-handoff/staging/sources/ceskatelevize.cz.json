@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T11:35:19.474259Z",
+  "ingestedAt": "2026-04-17T12:35:10.000924Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vojta Náprstek se narodil před 200 lety. Do Prahy přinesl vzdálené civilizace i feminismus",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vojta-naprstek-se-narodil-pred-200-lety-do-prahy-prinesl-vzdalene-civilizace-i-feminismus-372478",
+      "dt": "2026-04-17T11:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "200",
+        "civilizace",
+        "feminismus",
+        "lety",
+        "narodil",
+        "náprstek",
+        "prahy",
+        "přinesl",
+        "vojta",
+        "vzdálené"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -59,21 +86,23 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Česko pro bezpečnost Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
+      "title": "Česko pro bezpečnost Hormuzského průlivu podle Babiše nabídne systém na rušení dronů a střel",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesko-pro-zajisteni-bezpecnosti-hormuzskeho-prulivu-nabidne-pasivni-radar-rekl-babis-372484",
       "dt": "2026-04-17T10:25:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "babiš",
+        "babiše",
         "bezpečnost",
+        "dronů",
         "hormuzského",
         "nabídne",
-        "pasivní",
+        "podle",
         "průlivu",
-        "radar",
-        "česko",
-        "řekl"
+        "rušení",
+        "střel",
+        "systém",
+        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -466,7 +495,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Izrael podle Libanonu porušuje příměří, Hizballáh zaútočil na izraelské vojáky",
+      "title": "Izrael zabil navzdory příměří v Libanonu 13 lidí, útočil i Hizballáh",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/izrael-podle-libanonu-porusuje-primeri-hizballah-zautocil-na-izraelske-vojaky-372470",
       "dt": "2026-04-17T01:29:19Z",
       "media_raw": "ČT24 / Domácí",
@@ -474,13 +503,12 @@
       "tokens": [
         "hizballáh",
         "izrael",
-        "izraelské",
         "libanonu",
-        "podle",
-        "porušuje",
+        "lidí",
+        "navzdory",
         "příměří",
-        "vojáky",
-        "zaútočil"
+        "zabil",
+        "útočil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -726,32 +754,6 @@
         "potvrdil",
         "příměří",
         "trumpem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Uděláme vše pro plnění závazků NATO, řekl Babiš po jednání s Ruttem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/sef-nato-prijel-na-navstevu-ceska-372459",
-      "dt": "2026-04-16T15:35:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babiš",
-        "jednání",
-        "nato",
-        "plnění",
-        "ruttem",
-        "uděláme",
-        "vše",
-        "závazků",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1523,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43847,
+      "bytes": 43252,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,11 +1585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:10:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 3
+          "other": 4,
+          "zpravy": 26
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1600,6 +1602,10 @@
         },
         "sample_titles": [
           {
+            "title": "Vojta Náprstek se narodil před 200 lety. Do Prahy přinesl vzdálené civilizace i feminismus",
+            "publishedAt": "2026-04-17T11:30:00Z"
+          },
+          {
             "title": "Inspekce zakazuje uvádět na trh tři druhy kojenecké výživy kvůli toxinu",
             "publishedAt": "2026-04-17T11:10:56Z"
           },
@@ -1608,7 +1614,7 @@
             "publishedAt": "2026-04-17T11:00:32Z"
           },
           {
-            "title": "Česko pro bezpečnost Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
+            "title": "Česko pro bezpečnost Hormuzského průlivu podle Babiše nabídne systém na rušení dronů a střel",
             "publishedAt": "2026-04-17T10:25:40Z"
           },
           {
@@ -1626,10 +1632,6 @@
           {
             "title": "Hosté Událostí, komentářů probrali financování veřejnoprávních médií",
             "publishedAt": "2026-04-17T09:39:25Z"
-          },
-          {
-            "title": "Španělští archeologové objevili v Gibraltarském zálivu desítky vraků",
-            "publishedAt": "2026-04-17T08:33:04Z"
           }
         ]
       }
@@ -1735,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77682,
+      "bytes": 77467,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

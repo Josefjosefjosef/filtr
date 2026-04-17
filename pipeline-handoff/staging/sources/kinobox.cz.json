@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-17T11:35:19.474259Z",
+  "ingestedAt": "2026-04-17T12:35:10.000924Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nicolas Cage se vrátí do své nejděsivější role. Chystá se pokračování úspěšného hororu",
+      "url": "https://www.kinobox.cz/clanky/filmy/52736-vrazdici-nicolas-cage-se-vrati-chysta-se-pokracovani-hororu-sekac",
+      "dt": "2026-04-17T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "cage",
+        "chystá",
+        "hororu",
+        "nejděsivější",
+        "nicolas",
+        "pokračování",
+        "role",
+        "své",
+        "vrátí",
+        "úspěšného"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,35 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Insidious v šestém filmu otevírá brány pekla. Trailer přivádí démony či teror zubařského křesla",
-      "url": "https://www.kinobox.cz/clanky/filmy/52697-insidious-v-sestem-filmu-otevira-brany-pekla-trailer-privadi-demony-ci-teror-zubarskeho-kresla",
-      "dt": "2026-04-15T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "brány",
-        "démony",
-        "filmu",
-        "insidious",
-        "křesla",
-        "otevírá",
-        "pekla",
-        "přivádí",
-        "teror",
-        "trailer",
-        "zubařského",
-        "šestém"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -566,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28451,
+      "bytes": 28217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -603,7 +601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -619,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nicolas Cage se vrátí do své nejděsivější role. Chystá se pokračování úspěšného hororu",
+            "publishedAt": "2026-04-17T12:00:00Z"
+          },
           {
             "title": "Žádost o ruku v Ulici. Dopadnou zásnuby oblíbeného páru podle plánu?",
             "publishedAt": "2026-04-17T11:00:00Z"
@@ -646,10 +648,6 @@
           {
             "title": "Kinovýhled: V kinech bude strašit nová Mumie a kdákat Pálfiho Slepice",
             "publishedAt": "2026-04-16T13:00:00Z"
-          },
-          {
-            "title": "Všichni fotři budou zase lotři. Stiller se v prvním traileru komediálního hitu mění v De Nira",
-            "publishedAt": "2026-04-16T12:00:00Z"
           }
         ]
       }
