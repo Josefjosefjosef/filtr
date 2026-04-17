@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T11:15:03.728706Z",
+  "ingestedAt": "2026-04-17T11:35:19.474259Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nebezpečí v kojenecké výživě: Inspekce zakázala tyto tři produkty s toxinem",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/kojenecka-vyziva-inspekce-zakaz-tri-produkty-s-toxinem/",
+      "dt": "2026-04-17T11:14:41Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "inspekce",
+        "kojenecké",
+        "nebezpečí",
+        "produkty",
+        "toxinem",
+        "tyto",
+        "tři",
+        "výživě",
+        "zakázala"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,31 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/soubehy-praci-lekaru-a-zdravotni-pojistovny/",
-      "dt": "2026-04-16T08:00:50Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kolik",
-        "liší",
-        "lékař",
-        "mít",
-        "pojišťoven",
-        "prací",
-        "pravidla",
-        "výrazně"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95887,
+      "bytes": 89264,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:14:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:14:41Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -327,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nebezpečí v kojenecké výživě: Inspekce zakázala tyto tři produkty s toxinem",
+            "publishedAt": "2026-04-17T11:14:41Z"
+          },
           {
             "title": "Miliony pro „onkologicky nemocnou Karolínku“. Sbírka na sociální síti budí silné podezření",
             "publishedAt": "2026-04-17T09:14:34Z"
@@ -354,10 +359,6 @@
           {
             "title": "Lék na bolest autismus nezpůsobuje. Přelomová studie uklidňuje těhotné",
             "publishedAt": "2026-04-16T12:54:49Z"
-          },
-          {
-            "title": "Po ultimátu přišel vyhazov. Ředitel znojemské nemocnice skončil ze dne na den",
-            "publishedAt": "2026-04-16T10:56:14Z"
           }
         ]
       }

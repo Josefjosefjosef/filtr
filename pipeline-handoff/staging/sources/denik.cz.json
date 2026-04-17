@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T11:15:03.728706Z",
+  "ingestedAt": "2026-04-17T11:35:19.474259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA se v tichosti chystají na vojenskou akci v další zemi. Zbývá souhlas Trumpa",
+      "url": "https://www.denik.cz/ze_sveta/zasah-na-kube-pripravy-donald-trump.html",
+      "dt": "2026-04-17T11:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "akci",
+        "chystají",
+        "další",
+        "souhlas",
+        "tichosti",
+        "trumpa",
+        "usa",
+        "vojenskou",
+        "zbývá",
+        "zemi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -627,31 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když rozhodují vteřiny. Záchranáři trénovali první pomoc u dětí",
-      "url": "https://ustecky.denik.cz/ctenar-reporter/kdyz-rozhoduji-vteriny-zachranari-trenovali-prvni-pomoc-u-deti-20260415.html",
-      "dt": "2026-04-17T02:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětí",
-        "když",
-        "pomoc",
-        "první",
-        "rozhodují",
-        "trénovali",
-        "vteřiny",
-        "záchranáři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29291,
+      "bytes": 29333,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA se v tichosti chystají na vojenskou akci v další zemi. Zbývá souhlas Trumpa",
+            "publishedAt": "2026-04-17T11:00:00Z"
+          },
           {
             "title": "Muž z Karlovarska znásilňoval dceru, matka mu ji držela. Nemáš zlobit, řekla jí",
             "publishedAt": "2026-04-17T10:20:00Z"
@@ -742,10 +748,6 @@
           {
             "title": "Osm let Brna pod Vaňkovou? Splněný sen o aréně, ale i váhání s nemocnicí",
             "publishedAt": "2026-04-17T08:40:00Z"
-          },
-          {
-            "title": "Smrt v turistickém ráji: Muže stáhl proud, vše bezmocně sledovala žena na břehu",
-            "publishedAt": "2026-04-17T08:01:00Z"
           }
         ]
       }

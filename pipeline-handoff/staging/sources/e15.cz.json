@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-17T11:15:03.728706Z",
+  "ingestedAt": "2026-04-17T11:35:19.474259Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko na ochranu Hormuzského průlivu nabídne pasivní radar, oznámil BAbiš",
+      "url": "https://www.e15.cz/domaci/cesko-na-ochranu-hormuzskeho-prulivu-nabidne-pasivni-radar-oznamil-babis-1432220",
+      "dt": "2026-04-17T10:54:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "babiš",
+        "hormuzského",
+        "nabídne",
+        "ochranu",
+        "oznámil",
+        "pasivní",
+        "průlivu",
+        "radar",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1046,34 +1072,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pavel na summit NATO nepoletí. Vláda schválila přepravu jen Babišovi, Macinkovi a Zůnovi",
-      "url": "https://www.e15.cz/domaci/politika/pavel-na-summit-nato-nepoleti-vlada-schvalila-prepravu-jen-babisovi-macinkovi-a-zunovi-1432182",
-      "dt": "2026-04-16T08:07:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "babišovi",
-        "jen",
-        "macinkovi",
-        "nato",
-        "nepoletí",
-        "pavel",
-        "přepravu",
-        "schválila",
-        "summit",
-        "vláda",
-        "zůnovi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53774,
+      "bytes": 53899,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:54:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1137,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko na ochranu Hormuzského průlivu nabídne pasivní radar, oznámil BAbiš",
+            "publishedAt": "2026-04-17T10:54:00Z"
+          },
           {
             "title": "Miliardy z Německa už přijíždějí do Chebu. Daimler Truck odhalil plány s novým závodem",
             "publishedAt": "2026-04-17T10:38:00Z"
@@ -1164,10 +1166,6 @@
           {
             "title": "Dvorecký most se otevírá. Podívejte se, jak budou vypadat další pražské brány přes řeku",
             "publishedAt": "2026-04-17T07:27:00Z"
-          },
-          {
-            "title": "Air Bank vylepšuje aplikaci. Nová funkce v My Air vám ukáže, jak lépe hospodařit",
-            "publishedAt": "2026-04-17T07:15:00Z"
           }
         ]
       }

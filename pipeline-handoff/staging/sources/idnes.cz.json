@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T11:15:03.728706Z",
+  "ingestedAt": "2026-04-17T11:35:19.474259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rezignujte, vyzývají Starmera kvůli Epsteinovi. Mandelson neměl prověrku",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/velka-britanie-keir-starmer-opozice-demise-velvyslanec-peter-mandelson-epstein.A260417_124257_zahranicni_kha",
+      "dt": "2026-04-17T11:08:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "epsteinovi",
+        "kvůli",
+        "mandelson",
+        "neměl",
+        "prověrku",
+        "rezignujte",
+        "starmera",
+        "vyzývají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -764,27 +789,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Exporadce Pospíšila odmítl v Dozimetru vypovídat. V pondělí přitom svědčil",
-      "url": "https://www.idnes.cz/zpravy/domaci/dozimetr-soud-fremr-pokracovani-svedek.A260416_154257_domaci_mul",
-      "dt": "2026-04-17T07:04:41Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
+      "title": "Zavírání malých obchodů na venkově zpomalilo. Pomáhá podpora státu i bezobslužnost",
+      "url": "https://www.idnes.cz/ekonomika/domaci/prodejna-vesnice-zavirani.A260416_142724_ekonomika_vebe",
+      "dt": "2026-04-17T11:19:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
       "tokens": [
-        "dozimetru",
-        "exporadce",
-        "odmítl",
-        "pondělí",
-        "pospíšila",
-        "přitom",
-        "svědčil",
-        "vypovídat"
+        "bezobslužnost",
+        "malých",
+        "obchodů",
+        "podpora",
+        "pomáhá",
+        "státu",
+        "venkově",
+        "zavírání",
+        "zpomalilo"
       ],
-      "feedCategory": "zpravy",
+      "feedCategory": "finance",
       "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
     },
@@ -1543,33 +1569,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Beermixy už nejsou jen letní osvěžení. Výrobci do nich přidávají funkční složky",
-      "url": "https://www.idnes.cz/ekonomika/domaci/beermixy-funkcni-nealko-piva.A260325_124537_ekonomika_vebe",
-      "dt": "2026-04-09T22:00:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "beermixy",
-        "funkční",
-        "jen",
-        "letní",
-        "nejsou",
-        "nich",
-        "osvěžení",
-        "přidávají",
-        "složky",
-        "výrobci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1580,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49458,
+      "bytes": 49935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1616,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:53:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1633,6 +1632,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rezignujte, vyzývají Starmera kvůli Epsteinovi. Mandelson neměl prověrku",
+            "publishedAt": "2026-04-17T11:08:00Z"
+          },
           {
             "title": "Foldyna chtěl zkoumat svéprávnost šéfa Pirátů Hřiba, toho ale podrželo ANO",
             "publishedAt": "2026-04-17T10:53:14Z"
@@ -1660,10 +1663,6 @@
           {
             "title": "Metnar navrhl nového ředitele České pošty. Podnik byl loni v miliardové ztrátě",
             "publishedAt": "2026-04-17T10:18:00Z"
-          },
-          {
-            "title": "Lex vyhazov. Snažíte se dostat na vodítko státní správu, vytkl vládě Rakušan",
-            "publishedAt": "2026-04-17T10:17:59Z"
           }
         ]
       }
@@ -1675,7 +1674,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45045,
+      "bytes": 45222,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1712,7 +1711,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1727,6 +1726,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zavírání malých obchodů na venkově zpomalilo. Pomáhá podpora státu i bezobslužnost",
+            "publishedAt": "2026-04-17T11:19:00Z"
+          },
           {
             "title": "Teď se bát nemusíme, není tu inflační podhoubí, říká centrální bankéř Kubíček",
             "publishedAt": "2026-04-16T22:00:00Z"
@@ -1754,10 +1757,6 @@
           {
             "title": "Maximální ceny paliv klesnou na zatím nejnižší hodnotu. Opozice systém kritizuje",
             "publishedAt": "2026-04-15T13:05:00Z"
-          },
-          {
-            "title": "Domácnosti si přes zimu přitopily. S válkou se ale vrátila energetická nervozita",
-            "publishedAt": "2026-04-15T12:15:00Z"
           }
         ]
       }

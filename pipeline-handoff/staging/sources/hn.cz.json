@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T11:15:03.728706Z",
+  "ingestedAt": "2026-04-17T11:35:19.474259Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko chce poslat do Hormuzu pasivní radar. Zapojil by se do mise zemí ochotných pomoci Trumpovi",
+      "url": "https://domaci.hn.cz/c1-67868260-cesko-chce-poslat-do-hormuzu-pasivni-radar-zapojil-by-se-do-mise-zemi-ochotnych-pomoci-trumpovi",
+      "dt": "2026-04-17T10:56:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chce",
+        "hormuzu",
+        "mise",
+        "ochotných",
+        "pasivní",
+        "pomoci",
+        "poslat",
+        "radar",
+        "trumpovi",
+        "zapojil",
+        "zemí",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -34,7 +63,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování jen pár dnů",
+      "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování mají pár dnů",
       "url": "https://domaci.hn.cz/c1-67868160-prectete-si-tisic-stran-a-hlasujte-ministerstvo-poslalo-poslancum-novou-verzi-stavebniho-zakona-na-prostudovani-maji-par-dnu",
       "dt": "2026-04-17T08:40:00Z",
       "media_raw": "HN / Ekonomika",
@@ -42,7 +71,7 @@
       "tokens": [
         "dnů",
         "hlasujte",
-        "jen",
+        "mají",
         "ministerstvo",
         "novou",
         "poslalo",
@@ -1041,38 +1070,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nechceme být jen potrubí na peníze, které převálcuje Apple. Umělá inteligence změní banky od základu, říká topmanažerka z ČSOB",
-      "url": "https://procne.hn.cz/c1-67866320-ai-zmeni-banky-od-zakladu",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "apple",
-        "banky",
-        "být",
-        "inteligence",
-        "jen",
-        "nechceme",
-        "peníze",
-        "potrubí",
-        "převálcuje",
-        "topmanažerka",
-        "umělá",
-        "změní",
-        "základu",
-        "čsob",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1083,7 +1080,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178898,
+      "bytes": 178966,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1120,7 +1117,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:56:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 33,
@@ -1138,11 +1135,15 @@
         },
         "sample_titles": [
           {
+            "title": "Česko chce poslat do Hormuzu pasivní radar. Zapojil by se do mise zemí ochotných pomoci Trumpovi",
+            "publishedAt": "2026-04-17T10:56:00Z"
+          },
+          {
             "title": "Špatné výsledky České pošty. Loni prodělala přes miliardu, zachránit ji má bývalý manažer Sportisima",
             "publishedAt": "2026-04-17T09:02:00Z"
           },
           {
-            "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování jen pár dnů",
+            "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování mají pár dnů",
             "publishedAt": "2026-04-17T08:40:00Z"
           },
           {
@@ -1164,10 +1165,6 @@
           {
             "title": "Češi mají enormní zájem o službu v armádě. Podle Zůny je letošní náborový cíl už skoro naplněn",
             "publishedAt": "2026-04-17T05:00:00Z"
-          },
-          {
-            "title": "Vysokorychlostní tratě na tom možná nebudou tak špatně. Evropské dotace vypadají nadějně, říká šéf Správy železnic",
-            "publishedAt": "2026-04-17T04:24:00Z"
           }
         ]
       }
