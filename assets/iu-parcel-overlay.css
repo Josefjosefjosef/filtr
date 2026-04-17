@@ -81,6 +81,32 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
   }
 }
 
+/* Desktop ≥1025px: centered shell + 24px side gutters (guard .iu-parcels-quickfeed-root only) — same width budget as banking QuickFeed / Datovka modal; no :has(). */
+@media (min-width: 1025px){
+  #iuParcelsPopover.iu-parcels-modal.iu-parcels-quickfeed-root.is-open{
+    position: fixed;
+    top: 24px;
+    bottom: 24px;
+    left: 50%;
+    right: auto;
+    width: min(720px, calc(100% - 48px));
+    max-width: min(720px, calc(100% - 48px));
+    min-width: 0;
+    margin: 0;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  #iuParcelsPopover.iu-parcels-quickfeed-root.is-open > .iu-parcels-modal-header,
+  #iuParcelsPopover.iu-parcels-quickfeed-root.is-open > .iu-parcels-modal-content{
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    align-self: stretch;
+  }
+}
+
 .iu-parcels-modal-header{
   display: flex;
   align-items: center;

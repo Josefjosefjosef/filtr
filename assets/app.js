@@ -18804,6 +18804,15 @@ function buildVideoAsArticleCard(it) {
     overlay.setAttribute("aria-hidden", "false");
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
+    try {
+      if (modal) {
+        if (window.matchMedia && window.matchMedia("(min-width: 1025px)").matches) {
+          modal.classList.add("iu-parcels-quickfeed-root");
+        } else {
+          modal.classList.remove("iu-parcels-quickfeed-root");
+        }
+      }
+    } catch (_) {}
   }
 
   function openParcels() {
@@ -18819,6 +18828,9 @@ function buildVideoAsArticleCard(it) {
 
   function closeParcels() {
     if (!modal || !overlay) return;
+    try {
+      if (modal) modal.classList.remove("iu-parcels-quickfeed-root");
+    } catch (_) {}
     overlay.classList.remove("is-open");
     modal.classList.remove("is-open");
     overlay.setAttribute("aria-hidden", "true");
