@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-17T07:06:00.462008Z",
+  "ingestedAt": "2026-04-17T07:24:58.997215Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy do Říma od středy do neděle s odbaveným zavazadlem. Letenky od 1 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-rima-od-stredy-do-nedele-s-odbavenym-zavazadlem",
+      "dt": "2026-04-17T07:13:12Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "letenky",
+        "neděle",
+        "odbaveným",
+        "prahy",
+        "středy",
+        "zavazadlem",
+        "říma"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,31 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Na slunný Kypr z Prahy během května a června. Letenky od 2 075 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/na-slunny-kypr-z-prahy-behem-kvetna-a-cervna",
-      "dt": "2026-04-10T09:43:22Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "075",
-        "během",
-        "května",
-        "kypr",
-        "letenky",
-        "prahy",
-        "slunný",
-        "června"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 43357,
+      "bytes": 42919,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-16T14:21:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:13:12Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -565,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy do Říma od středy do neděle s odbaveným zavazadlem. Letenky od 1 990 Kč",
+            "publishedAt": "2026-04-17T07:13:12Z"
+          },
           {
             "title": "Varšava z Bratislavy i na prodloužené víkendy. Letenky od 732 Kč",
             "publishedAt": "2026-04-16T14:21:51Z"
@@ -592,10 +596,6 @@
           {
             "title": "Nová linka easyJet z Prahy do Marrákeše. Letenky od 2 262 Kč",
             "publishedAt": "2026-04-15T09:52:56Z"
-          },
-          {
-            "title": "Florencie z Prahy o letních prázdninách. Letenky od 1 402 Kč",
-            "publishedAt": "2026-04-15T09:15:08Z"
           }
         ]
       }
