@@ -1,26 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-17T18:29:41.109810Z",
+  "ingestedAt": "2026-04-17T18:49:04.930869Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Další rána pro Litvínov! Jihlava znovu vede",
+      "title": "HOKEJ ONLINE: Videomomenty. Litvínov v problémech! Jihlava se znovu prosadila, pak trefila i tyčku",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-baraz-zacina-litvinov-poprve-hosti-jihlavu-5436982",
       "dt": "2026-04-17T14:11:29Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "další",
         "hokej",
         "jihlava",
         "litvínov",
         "online",
-        "rána",
-        "vede",
+        "pak",
+        "problémech",
+        "prosadila",
+        "trefila",
+        "tyčku",
         "videomomenty",
         "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mělo to šťávu a energii, řekl Rulík o mladících. Mrzí ho absence Šimka, chtěl ho na mistrovství",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-melo-to-stavu-a-energii-rekl-rulik-o-mladicich-mrzi-ho-absence-simka-chtel-ho-na-mistrovstvi-5438826",
+      "dt": "2026-04-17T18:39:41Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "absence",
+        "chtěl",
+        "energii",
+        "mistrovství",
+        "mladících",
+        "mrzí",
+        "mělo",
+        "rulík",
+        "řekl",
+        "šimka",
+        "šťávu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -731,35 +761,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úlet v televizním studiu. Fotbalový expert začal ubližovat sám sobě, dostal kapesník na krev",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-bizarni-moment-kultovni-postava-premier-league-tloukla-ve-studiu-zoufale-hlavou-o-stul-dostala-kapesnik-na-krev-5437943",
-      "dt": "2026-04-17T08:52:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dostal",
-        "expert",
-        "fotbalový",
-        "kapesník",
-        "krev",
-        "sobě",
-        "studiu",
-        "sám",
-        "televizním",
-        "ubližovat",
-        "začal",
-        "úlet"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +771,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41973,
+      "bytes": 42721,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,7 +808,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:21:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T18:39:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -825,8 +826,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Další rána pro Litvínov! Jihlava znovu vede",
+            "title": "HOKEJ ONLINE: Videomomenty. Litvínov v problémech! Jihlava se znovu prosadila, pak trefila i tyčku",
             "publishedAt": "2026-04-17T14:11:29Z"
+          },
+          {
+            "title": "Mělo to šťávu a energii, řekl Rulík o mladících. Mrzí ho absence Šimka, chtěl ho na mistrovství",
+            "publishedAt": "2026-04-17T18:39:41Z"
           },
           {
             "title": "Totální průšvih Tottenhamu. Kinského parťáci si neumí ani přihrát",
@@ -851,10 +856,6 @@
           {
             "title": "Mám ráda i holčičí věci, nejenom motorky, říká česká reprezentantka",
             "publishedAt": "2026-04-17T07:30:33Z"
-          },
-          {
-            "title": "Rozlučka na Roland Garros. Tenisový šoumen zve na velký mejdan",
-            "publishedAt": "2026-04-17T16:22:25Z"
           }
         ]
       }

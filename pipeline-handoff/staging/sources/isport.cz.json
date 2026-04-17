@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-17T18:29:41.109810Z",
+  "ingestedAt": "2026-04-17T18:49:04.930869Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "To jste ještě neviděli! Divočák Galvas oslnil drzou fintou, střídačka se smála. A Fleka má taky rád…",
+      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace/474553/to-jste-jeste-nevideli-divocak-galvas-oslnil-drzou-fintou-stridacka-se-smala-a-fleka-ma-taky-rad.html",
+      "dt": "2026-04-17T18:40:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "divočák",
+        "drzou",
+        "fintou",
+        "fleka",
+        "galvas",
+        "ještě",
+        "jste",
+        "neviděli",
+        "oslnil",
+        "rád",
+        "smála",
+        "střídačka",
+        "taky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1048,33 +1078,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plzeň chystá slávu: 15 let od titulu, sejdou se strůjci senzační cesty na vrchol",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474490/plzen-chysta-slavu-15-let-od-titulu-sejdou-se-strujci-senzacni-cesty-na-vrchol.html",
-      "dt": "2026-04-16T14:29:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "cesty",
-        "chystá",
-        "let",
-        "plzeň",
-        "sejdou",
-        "senzační",
-        "slávu",
-        "strůjci",
-        "titulu",
-        "vrchol"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1085,11 +1088,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 52642,
+      "bytes": 53924,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 42,
+      "itemsParsed": 43,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1122,7 +1125,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T18:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1137,6 +1140,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "To jste ještě neviděli! Divočák Galvas oslnil drzou fintou, střídačka se smála. A Fleka má taky rád…",
+            "publishedAt": "2026-04-17T18:40:00Z"
+          },
           {
             "title": "ONLINE: Litvínov - Jihlava 1:2. Hosté se v baráži opět ujímají vedení, trefil se Lhoták",
             "publishedAt": "2026-04-17T18:20:00Z"
@@ -1164,10 +1171,6 @@
           {
             "title": "Předpremiéra filmu Generace Wembley. Nenechte si ujít setkání s legendami z EURO 1996",
             "publishedAt": "2026-04-17T14:44:00Z"
-          },
-          {
-            "title": "Alibismus disciplinárky? Pocit nespravedlnosti teď dopadne na komisi i Chorého",
-            "publishedAt": "2026-04-17T14:20:00Z"
           }
         ]
       }
