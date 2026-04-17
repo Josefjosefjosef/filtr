@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T21:54:57.010945Z",
+  "ingestedAt": "2026-04-17T22:14:45.124920Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V cizí budově našli plzeňští strážníci tři muže",
+      "url": "https://tydenikpolicie.cz/v-cizi-budove-nasli-plzensti-straznici-tri-muze/",
+      "dt": "2026-04-17T22:02:44Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "budově",
+        "cizí",
+        "muže",
+        "našli",
+        "plzeňští",
+        "strážníci",
+        "tři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,37 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kriminalisté stále pátrají po totožnosti muže, jehož kosterní ostatky byly nalezeny před jedenácti lety v lese na Uherskohradišťsku",
-      "url": "https://tydenikpolicie.cz/kriminaliste-stale-patraji-po-totoznosti-muze-jehoz-kosterni-ostatky-byly-nalezeny-pred-jedenacti-lety-v-lese-na-uherskohradistsku/",
-      "dt": "2026-04-17T09:10:22Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "byly",
-        "jedenácti",
-        "jehož",
-        "kosterní",
-        "kriminalisté",
-        "lese",
-        "lety",
-        "muže",
-        "nalezeny",
-        "ostatky",
-        "pátrají",
-        "stále",
-        "totožnosti",
-        "uherskohradišťsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16539,
+      "bytes": 16211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:02:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T22:02:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V cizí budově našli plzeňští strážníci tři muže",
+            "publishedAt": "2026-04-17T22:02:44Z"
+          },
           {
             "title": "Rozrušený muž nacházející se v těžké životní situaci se v Plzni pohyboval po tramvajovém mostě",
             "publishedAt": "2026-04-17T18:02:59Z"
@@ -357,10 +354,6 @@
           {
             "title": "Hledaný 17letý chovanec výchovného ústavu se policistům snažil utéct, uplavat a nakonec se před nimi schovat",
             "publishedAt": "2026-04-17T11:45:33Z"
-          },
-          {
-            "title": "Podezřelé z vloupání do budovy přírodovědecké fakulty v Praze vyčmuchal služební pes Bobík",
-            "publishedAt": "2026-04-17T10:34:03Z"
           }
         ]
       }

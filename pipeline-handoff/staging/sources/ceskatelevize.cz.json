@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T21:54:57.010945Z",
+  "ingestedAt": "2026-04-17T22:14:45.124920Z",
   "items": [
     {
       "section": "aktualne",
@@ -762,6 +762,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Do přípravy hokejistů před MS se zapojí Bednář, Kempný, Beránek a Špaček",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/do-pripravy-hokejistu-na-ms-se-zapoji-bednar-kempny-beranek-a-spacek-156337",
+      "dt": "2026-04-17T21:59:01Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "bednář",
+        "beránek",
+        "hokejistů",
+        "kempný",
+        "přípravy",
+        "zapojí",
+        "špaček"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Lvi Praha jsou popáté v řadě ve finále extraligy volejbalistů. Postup slavili na palubovce Jihostroje",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/lvi-praha-jsou-popate-v-rade-ve-finale-extraligy-volejbalistu-postup-slavili-na-palubovce-156336",
       "dt": "2026-04-17T19:57:54Z",
@@ -1491,30 +1515,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejisté zahájí herní přípravu domácím dvojzápasem s Němci",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokejiste-zahaji-herni-pripravu-domacim-dvojzapasem-s-nemci-156301",
-      "dt": "2026-04-16T05:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "domácím",
-        "dvojzápasem",
-        "herní",
-        "hokejisté",
-        "němci",
-        "přípravu",
-        "zahájí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1525,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42811,
+      "bytes": 42795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1644,7 +1644,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36976,
+      "bytes": 37025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1681,7 +1681,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T19:57:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T21:59:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1696,6 +1696,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do přípravy hokejistů před MS se zapojí Bednář, Kempný, Beránek a Špaček",
+            "publishedAt": "2026-04-17T21:59:01Z"
+          },
           {
             "title": "Lvi Praha jsou popáté v řadě ve finále extraligy volejbalistů. Postup slavili na palubovce Jihostroje",
             "publishedAt": "2026-04-17T19:57:54Z"
@@ -1723,10 +1727,6 @@
           {
             "title": "Neodevzdaný test může ohrozit kariéru Markéty Vondroušové",
             "publishedAt": "2026-04-17T13:00:17Z"
-          },
-          {
-            "title": "Lidé se naposledy rozloučily s Imrichem Bugárem",
-            "publishedAt": "2026-04-17T12:43:52Z"
           }
         ]
       }
@@ -1738,7 +1738,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76944,
+      "bytes": 76841,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
