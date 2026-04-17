@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T08:39:47.527635Z",
+  "ingestedAt": "2026-04-17T08:56:11.465086Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Opilý řidič se zákazem řízení jel na Českokrumlovsku s proraženou pneumatikou",
+      "url": "https://tydenikpolicie.cz/opily-ridic-se-zakazem-rizeni-jel-na-ceskokrumlovsku-s-prorazenou-pneumatikou/",
+      "dt": "2026-04-17T08:50:19Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jel",
+        "opilý",
+        "pneumatikou",
+        "proraženou",
+        "zákazem",
+        "českokrumlovsku",
+        "řidič",
+        "řízení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,32 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cizinci v peugeotu naměřili policisté na padesátce na Trutnovsku rychlost 115 km/hod",
-      "url": "https://tydenikpolicie.cz/cizinci-v-peugeotu-namerili-policiste-na-padesatce-na-trutnovsku-rychlost-115-km-hod/",
-      "dt": "2026-04-16T20:44:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "115",
-        "cizinci",
-        "hod",
-        "naměřili",
-        "padesátce",
-        "peugeotu",
-        "policisté",
-        "rychlost",
-        "trutnovsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -269,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15817,
+      "bytes": 15824,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:24:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:50:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opilý řidič se zákazem řízení jel na Českokrumlovsku s proraženou pneumatikou",
+            "publishedAt": "2026-04-17T08:50:19Z"
+          },
           {
             "title": "Škoda po požáru elektroinstalace v průmyslovém areálu v Přerově byla vyčíslena na 50 milionů korun",
             "publishedAt": "2026-04-17T08:24:09Z"
@@ -348,10 +351,6 @@
           {
             "title": "Žena ve Zlíně vběhla přímo před projíždějící auto",
             "publishedAt": "2026-04-17T06:59:40Z"
-          },
-          {
-            "title": "Chlapec na sdíleném kole srazil v Ostravě 76letou chodkyni. Policisté hledají svědky",
-            "publishedAt": "2026-04-17T06:51:18Z"
           }
         ]
       }

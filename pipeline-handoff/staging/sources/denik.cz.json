@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T08:39:47.527635Z",
+  "ingestedAt": "2026-04-17T08:56:11.465086Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Osm let Brna pod Vaňkovou? Splněný sen o aréně, ale i váhání s nemocnicí",
+      "url": "https://www.denik.cz/regiony/velke-uspechy-pady-projekt-marketa-vankova-politika-brno.html",
+      "dt": "2026-04-17T08:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "aréně",
+        "brna",
+        "let",
+        "nemocnicí",
+        "osm",
+        "sen",
+        "splněný",
+        "vaňkovou",
+        "váhání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -631,33 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Delegace na summit NATO? Pavel vládní usnesení považuje spíš za cestovní plán",
-      "url": "https://www.denik.cz/z_domova/summit-nato-usneseni-vlady-petr-pavel.html",
-      "dt": "2026-04-16T17:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cestovní",
-        "delegace",
-        "nato",
-        "pavel",
-        "plán",
-        "považuje",
-        "spíš",
-        "summit",
-        "usnesení",
-        "vládní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29146,
+      "bytes": 29129,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -721,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osm let Brna pod Vaňkovou? Splněný sen o aréně, ale i váhání s nemocnicí",
+            "publishedAt": "2026-04-17T08:30:00Z"
+          },
           {
             "title": "Smrt v turistickém ráji: Muže stáhl proud, vše bezmocně sledovala žena na břehu",
             "publishedAt": "2026-04-17T08:01:00Z"
@@ -748,10 +752,6 @@
           {
             "title": "Všechno ve mně volalo, ano, chci žít, vzpomínal na osudnou nehodu Jan Potměšil",
             "publishedAt": "2026-04-17T06:07:00Z"
-          },
-          {
-            "title": "Autor Facebooku Zuckerberg testuje svůj AI klon. Avataři míří i do firem v ČR",
-            "publishedAt": "2026-04-17T05:30:00Z"
           }
         ]
       }
