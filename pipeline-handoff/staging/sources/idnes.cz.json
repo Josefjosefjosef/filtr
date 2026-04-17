@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T02:30:41.448425Z",
+  "ingestedAt": "2026-04-17T02:50:06.428464Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jako první jsme projeli nový most na kole. Chodníky jsou OK, ale kde si dát pozor?",
+      "url": "https://www.idnes.cz/praha/zpravy/dvorecky-most-na-kole-cyklista-test-doprava-tipy-uskali.A260410_123515_praha-zpravy_bur",
+      "dt": "2026-04-17T02:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "chodníky",
+        "dát",
+        "jako",
+        "jsme",
+        "kole",
+        "most",
+        "nový",
+        "pozor",
+        "projeli",
+        "první"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,32 +783,6 @@
         "sbaleno",
         "výtvarník",
         "věčnost"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cheb schválil vstup Mercedesu do průmyslového parku, vyrábět má od roku 2029",
-      "url": "https://www.idnes.cz/karlovy-vary/zpravy/cheb-zastupitele-schvalili-stragicky-investor-zona-mercedes-benz-trucks.A260413_151257_plzen-zpravy_pp",
-      "dt": "2026-04-16T14:40:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "2029",
-        "cheb",
-        "mercedesu",
-        "parku",
-        "průmyslového",
-        "roku",
-        "schválil",
-        "vstup",
-        "vyrábět"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48869,
+      "bytes": 49063,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T01:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T02:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1635,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jako první jsme projeli nový most na kole. Chodníky jsou OK, ale kde si dát pozor?",
+            "publishedAt": "2026-04-17T02:30:00Z"
+          },
           {
             "title": "Izrael pokračoval v ostřelování jižního Libanonu i po začátku příměří",
             "publishedAt": "2026-04-17T01:57:00Z"
@@ -1662,10 +1668,6 @@
           {
             "title": "Putin chystá jaderný útok ve vesmíru jako na Pearl Harbor, varuje americký generál",
             "publishedAt": "2026-04-16T19:50:00Z"
-          },
-          {
-            "title": "Korupci jsem nikdy netoleroval. Myslel jsem, že vyhrajeme, řekl překvapený Orbán",
-            "publishedAt": "2026-04-16T19:16:00Z"
           }
         ]
       }

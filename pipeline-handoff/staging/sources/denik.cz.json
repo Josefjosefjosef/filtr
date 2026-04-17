@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T02:30:41.448425Z",
+  "ingestedAt": "2026-04-17T02:50:06.428464Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Demencí mohou trpět nejen starší lidé, ale i děti. Malým pacientům pomáhají v ČR",
+      "url": "https://www.denik.cz/zdravotnictvi/zdravi-detska-demence-priznaky-lecba-cesko.html",
+      "dt": "2026-04-17T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "demencí",
+        "děti",
+        "lidé",
+        "malým",
+        "nejen",
+        "pacientům",
+        "pomáhají",
+        "starší",
+        "trpět"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Říkají mu Lars a mohla to být fajn parodie. Jsou to však dvě hodiny nudy",
-      "url": "https://www.denik.cz/film-a-televize/rikaji-mi-lars-film-recenze-martin-hofmann.html",
-      "dt": "2026-04-16T11:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "být",
-        "dvě",
-        "fajn",
-        "hodiny",
-        "lars",
-        "nudy",
-        "parodie",
-        "však",
-        "říkají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28689,
+      "bytes": 28901,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,10 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T02:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zdravi": 1,
+          "zpravy": 23,
           "finance": 1
         },
         "drop_counts": {
@@ -715,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Demencí mohou trpět nejen starší lidé, ale i děti. Malým pacientům pomáhají v ČR",
+            "publishedAt": "2026-04-17T02:30:00Z"
+          },
           {
             "title": "Když rozhodují vteřiny. Záchranáři trénovali první pomoc u dětí",
             "publishedAt": "2026-04-17T02:23:00Z"
@@ -742,10 +748,6 @@
           {
             "title": "Vláda udělá vše pro to, aby závazky k NATO splnila, řekl Babiš Ruttemu v Praze",
             "publishedAt": "2026-04-16T17:10:00Z"
-          },
-          {
-            "title": "Delegace na summit NATO? Pavel vládní usnesení považuje spíš za cestovní plán",
-            "publishedAt": "2026-04-16T17:05:00Z"
           }
         ]
       }
