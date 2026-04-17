@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T10:15:10.773943Z",
+  "ingestedAt": "2026-04-17T10:35:24.235736Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tvrdá premiéra ženy na bundesligové lavičce. Fanoušci ji posílají ke sporáku",
+      "url": "https://sport.aktualne.cz/fotbal/tvrda-premiera-zeny-na-bundesligove-lavicce-fanousci-ji-posilaji-ke-sporaku/r~aaa293407323571441d36266b51f498f/",
+      "dt": "2026-04-17T08:36:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bundesligové",
+        "fanoušci",
+        "lavičce",
+        "posílají",
+        "premiéra",
+        "sporáku",
+        "tvrdá",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -32,23 +57,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Češi v Brazílii drženi dva měsíce za pašování kaktusů, je s nimi vedeno soudní řízení",
+      "title": "Našli jim 100 kaktusů v kufru: čtyři Češi skončili v Brazílii u soudu",
       "url": "https://zpravy.aktualne.cz/domaci/cesi-v-brazilii-drzeni-dva-mesice-za-pasovani-kaktusu-je-s-nimi-vedeno-soudni-rizeni/r~aaa29d0574c10cbea5cca9c5c67c0459/",
       "dt": "2026-04-17T10:08:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
+        "100",
         "brazílii",
-        "drženi",
-        "dva",
+        "jim",
         "kaktusů",
-        "měsíce",
-        "nimi",
-        "pašování",
-        "soudní",
-        "vedeno",
+        "kufru",
+        "našli",
+        "skončili",
+        "soudu",
         "češi",
-        "řízení"
+        "čtyři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -205,31 +229,6 @@
         "popravil",
         "předávání",
         "stardance"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tvrdá premiéra ženy na bundesligové lavičce. Fanoušci ji posílají ke sporáku",
-      "url": "https://sport.aktualne.cz/fotbal/tvrda-premiera-zeny-na-bundesligove-lavicce-fanousci-ji-posilaji-ke-sporaku/r~aaa293407323571441d36266b51f498f/",
-      "dt": "2026-04-17T08:36:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bundesligové",
-        "fanoušci",
-        "lavičce",
-        "posílají",
-        "premiéra",
-        "sporáku",
-        "tvrdá",
-        "ženy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -538,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21908,
+      "bytes": 21886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,9 +577,9 @@
         "raw_feed_latest_publishedAt": "2026-04-17T10:09:42Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
           "finance": 5,
           "zpravy": 8,
-          "sport": 5,
           "other": 1,
           "zdravi": 1
         },
@@ -595,11 +594,15 @@
         },
         "sample_titles": [
           {
+            "title": "Tvrdá premiéra ženy na bundesligové lavičce. Fanoušci ji posílají ke sporáku",
+            "publishedAt": "2026-04-17T08:36:00Z"
+          },
+          {
             "title": "„Taková ta jízda s převahou.“ Nejsilnější Audi Q3 našla svůj domov na dálnici",
             "publishedAt": "2026-04-17T10:09:42Z"
           },
           {
-            "title": "Češi v Brazílii drženi dva měsíce za pašování kaktusů, je s nimi vedeno soudní řízení",
+            "title": "Našli jim 100 kaktusů v kufru: čtyři Češi skončili v Brazílii u soudu",
             "publishedAt": "2026-04-17T10:08:00Z"
           },
           {
@@ -621,10 +624,6 @@
           {
             "title": "Charlie z Růže pro Algernon i Jíra z pohádky. Herec Jan Potměšil se nevzdával",
             "publishedAt": "2026-04-17T09:06:00Z"
-          },
-          {
-            "title": "Klempíř „popravil“ StarDance. Pak litoval, že ho nepozvali na předávání cen",
-            "publishedAt": "2026-04-17T08:36:00Z"
           }
         ]
       }
