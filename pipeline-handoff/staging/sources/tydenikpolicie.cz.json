@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T17:19:54.445728Z",
+  "ingestedAt": "2026-04-17T17:39:42.599751Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidička mercedesu projela v Pařížské ulici v Praze výlohou do prodejny",
+      "url": "https://tydenikpolicie.cz/ridicka-mercedesu-projela-v-parizske-ulici-v-praze-vylohou-do-prodejny/",
+      "dt": "2026-04-17T17:32:42Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "mercedesu",
+        "pařížské",
+        "praze",
+        "prodejny",
+        "projela",
+        "ulici",
+        "výlohou",
+        "řidička"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -244,31 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý řidič se zákazem řízení jel na Českokrumlovsku s proraženou pneumatikou",
-      "url": "https://tydenikpolicie.cz/opily-ridic-se-zakazem-rizeni-jel-na-ceskokrumlovsku-s-prorazenou-pneumatikou/",
-      "dt": "2026-04-17T08:50:19Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jel",
-        "opilý",
-        "pneumatikou",
-        "proraženou",
-        "zákazem",
-        "českokrumlovsku",
-        "řidič",
-        "řízení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16446,
+      "bytes": 16650,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:27:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T17:32:42Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidička mercedesu projela v Pařížské ulici v Praze výlohou do prodejny",
+            "publishedAt": "2026-04-17T17:32:42Z"
+          },
           {
             "title": "Policisté se rozloučili se svým kolegou prap. Radovanem Mikulíkem",
             "publishedAt": "2026-04-17T13:27:47Z"
@@ -358,10 +362,6 @@
           {
             "title": "Z Ruska se zpátky do Čech vrátily dvě děti, které tam unesl jejich otec. Policie předpokládá, že vydán bude také on",
             "publishedAt": "2026-04-17T10:25:03Z"
-          },
-          {
-            "title": "Kriminalisté stále pátrají po totožnosti muže, jehož kosterní ostatky byly nalezeny před jedenácti lety v lese na Uherskohradišťsku",
-            "publishedAt": "2026-04-17T09:10:22Z"
           }
         ]
       }

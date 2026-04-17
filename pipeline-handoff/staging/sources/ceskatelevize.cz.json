@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T17:19:54.445728Z",
+  "ingestedAt": "2026-04-17T17:39:42.599751Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán slíbil pozastavit svůj jaderný program, tvrdí Trump",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-slibil-pozastavit-svuj-jaderny-program-tvrdi-trump-372505",
+      "dt": "2026-04-17T17:17:57Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jaderný",
+        "pozastavit",
+        "program",
+        "slíbil",
+        "svůj",
+        "trump",
+        "tvrdí",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -739,32 +764,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko podle prezidenta Filipín zadrželo muže podezřelého ve vlasti z korupce",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/cesko-podle-prezidenta-filipin-zadrzela-muze-podezreleho-ve-vlasti-z-korupce-372468",
-      "dt": "2026-04-16T20:43:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "filipín",
-        "korupce",
-        "muže",
-        "podezřelého",
-        "podle",
-        "prezidenta",
-        "vlasti",
-        "zadrželo",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Univerzitní bronz získali hráči Falcons. O titul budou hrát Kings a Engineers",
@@ -836,14 +835,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko – Německo 4:0",
+      "title": "Národní tým zvládl i druhou německou zkoušku, znovu se činil Tomáškův útok",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-nemecko-156327",
       "dt": "2026-04-17T14:43:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "německo",
-        "česko"
+        "druhou",
+        "národní",
+        "německou",
+        "tomáškův",
+        "tým",
+        "zkoušku",
+        "znovu",
+        "zvládl",
+        "útok",
+        "činil"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1516,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42486,
+      "bytes": 42452,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,7 +1583,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T16:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T17:17:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1593,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán slíbil pozastavit svůj jaderný program, tvrdí Trump",
+            "publishedAt": "2026-04-17T17:17:57Z"
+          },
           {
             "title": "SOUHRN: Zásadní události pátku 17. dubna",
             "publishedAt": "2026-04-17T16:30:00Z"
@@ -1620,10 +1631,6 @@
           {
             "title": "Írán oznámil otevření Hormuzského průlivu, Trump blokádu neukončí",
             "publishedAt": "2026-04-17T12:59:08Z"
-          },
-          {
-            "title": "O víkendu nejvyšší ceny paliv opět mírně klesnou",
-            "publishedAt": "2026-04-17T12:35:20Z"
           }
         ]
       }
@@ -1635,7 +1642,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37356,
+      "bytes": 37182,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1700,7 +1707,7 @@
             "publishedAt": "2026-04-17T15:27:15Z"
           },
           {
-            "title": "Česko – Německo 4:0",
+            "title": "Národní tým zvládl i druhou německou zkoušku, znovu se činil Tomáškův útok",
             "publishedAt": "2026-04-17T14:43:00Z"
           },
           {
@@ -1729,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76961,
+      "bytes": 76965,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
