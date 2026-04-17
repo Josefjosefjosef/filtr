@@ -18807,9 +18807,9 @@ function buildVideoAsArticleCard(it) {
     try {
       if (modal) {
         if (window.matchMedia && window.matchMedia("(min-width: 1025px)").matches) {
-          modal.classList.add("iu-parcels-quickfeed-root");
+          modal.classList.add("iu-parcels-desktop-fs");
         } else {
-          modal.classList.remove("iu-parcels-quickfeed-root");
+          modal.classList.remove("iu-parcels-desktop-fs");
         }
       }
     } catch (_) {}
@@ -18829,7 +18829,7 @@ function buildVideoAsArticleCard(it) {
   function closeParcels() {
     if (!modal || !overlay) return;
     try {
-      if (modal) modal.classList.remove("iu-parcels-quickfeed-root");
+      if (modal) modal.classList.remove("iu-parcels-desktop-fs");
     } catch (_) {}
     overlay.classList.remove("is-open");
     modal.classList.remove("is-open");
