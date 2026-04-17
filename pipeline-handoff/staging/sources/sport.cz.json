@@ -1,24 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-17T09:55:11.168822Z",
+  "ingestedAt": "2026-04-17T10:15:10.773943Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: Kopřiva se rve o cenný skalp! Macháče čeká ruská hvězda",
+      "title": "Rozhodnutí soudu ve Zlíně o dvou vazbách v kauze fotbalové korupce je pravomocné",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-rozhodnuti-soudu-ve-zline-o-dvou-vazbach-v-kauze-fotbalove-korupce-je-pravomocne-5438020",
+      "dt": "2026-04-17T09:58:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dvou",
+        "fotbalové",
+        "kauze",
+        "korupce",
+        "pravomocné",
+        "rozhodnutí",
+        "soudu",
+        "vazbách",
+        "zlíně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "TENIS ONLINE: Kopřiva bojuje o cenný skalp, musí ale otáčet. Macháče čeká ruská hvězda",
       "url": "https://www.sport.cz/clanek/tenis-machace-ceka-ruska-hvezda-o-semifinale-si-zahraje-i-kopriva-5437936",
       "dt": "2026-04-17T06:51:49Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "ale",
+        "bojuje",
         "cenný",
         "hvězda",
         "kopřiva",
         "macháče",
+        "musí",
         "online",
+        "otáčet",
         "ruská",
-        "rve",
         "skalp",
         "tenis",
         "čeká"
@@ -760,30 +789,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Společně za záchranou. Litvínovská kabina se složila na výjezd pro fanoušky",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-spolecne-za-zachranou-litvinovska-kabina-se-slozila-na-vyjezd-pro-fanousky-5437779",
-      "dt": "2026-04-16T18:42:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fanoušky",
-        "kabina",
-        "litvínovská",
-        "složila",
-        "společně",
-        "výjezd",
-        "záchranou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44203,
+      "bytes": 43719,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:20:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:58:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,7 +852,11 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: Kopřiva se rve o cenný skalp! Macháče čeká ruská hvězda",
+            "title": "Rozhodnutí soudu ve Zlíně o dvou vazbách v kauze fotbalové korupce je pravomocné",
+            "publishedAt": "2026-04-17T09:58:42Z"
+          },
+          {
+            "title": "TENIS ONLINE: Kopřiva bojuje o cenný skalp, musí ale otáčet. Macháče čeká ruská hvězda",
             "publishedAt": "2026-04-17T06:51:49Z"
           },
           {
@@ -873,10 +882,6 @@
           {
             "title": "Pastrňák i Nečas mezi naprostou elitou! Produktivitu NHL ovládl McDavid",
             "publishedAt": "2026-04-17T07:35:16Z"
-          },
-          {
-            "title": "Mám ráda i holčičí věci, nejenom motorky, říká česká reprezentantka",
-            "publishedAt": "2026-04-17T07:30:33Z"
           }
         ]
       }

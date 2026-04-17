@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-17T09:55:11.168822Z",
+  "ingestedAt": "2026-04-17T10:15:10.773943Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Malta z Prahy přímým letem v květnu a červnu. Letenky od 3 676 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/malta-z-prahy-primym-letem-v-kvetnu-a-cervnu",
+      "dt": "2026-04-17T10:00:00Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "676",
+        "květnu",
+        "letem",
+        "letenky",
+        "malta",
+        "prahy",
+        "přímým",
+        "červnu"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,30 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Dubnový týden na Madeiře s polopenzí z Prahy. Zájezd od 12 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/dubnovy-tyden-na-madeire-s-polopenzi-z-prahy",
-      "dt": "2026-04-10T16:00:13Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "dubnový",
-        "madeiře",
-        "polopenzí",
-        "prahy",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44212,
+      "bytes": 43371,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:21:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -566,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Malta z Prahy přímým letem v květnu a červnu. Letenky od 3 676 Kč",
+            "publishedAt": "2026-04-17T10:00:00Z"
+          },
           {
             "title": "Týden na Thassosu z Prahy i Ostravy. Zájezd od 9 890 Kč",
             "publishedAt": "2026-04-17T08:21:47Z"
@@ -593,10 +598,6 @@
           {
             "title": "Pisa a celé Toskánsko z Prahy během jara. Letenky od 840 Kč",
             "publishedAt": "2026-04-15T13:03:40Z"
-          },
-          {
-            "title": "Buy & Fly: Týden na Tenerife s all-inclusive z Prahy. Zájezd od 11 290 Kč",
-            "publishedAt": "2026-04-15T11:52:11Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-17T09:55:11.168822Z",
+  "ingestedAt": "2026-04-17T10:15:10.773943Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kinobox Daily: New York 50. let, jak ho neznáte. Kdo stojí za vraždou Bruce Willise?",
+      "url": "https://www.kinobox.cz/clanky/daily/52796-kinobox-daily-new-york-50-let-jak-ho-neznate-kdo-stoji-za-vrazdou-bruce-willise",
+      "dt": "2026-04-17T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "bruce",
+        "daily",
+        "kinobox",
+        "let",
+        "new",
+        "neznáte",
+        "stojí",
+        "vraždou",
+        "willise",
+        "york"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -531,28 +558,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Novinky na Kinoboxu: Hodnocení seriálů po sezónách",
-      "url": "https://www.kinobox.cz/clanky/tema/52673-novinky-na-kinoboxu-hodnoceni-po-sezonach",
-      "dt": "2026-04-14T16:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "hodnocení",
-        "kinoboxu",
-        "novinky",
-        "seriálů",
-        "sezónách"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -563,7 +568,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29080,
+      "bytes": 29038,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -600,10 +605,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 20
+          "zpravy": 1,
+          "other": 19
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -615,6 +621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: New York 50. let, jak ho neznáte. Kdo stojí za vraždou Bruce Willise?",
+            "publishedAt": "2026-04-17T10:00:00Z"
+          },
           {
             "title": "Nejepičtější akční film roku? Street Fighter se v natřískaném traileru snaží o filmový reparát",
             "publishedAt": "2026-04-17T09:00:00Z"
@@ -642,10 +652,6 @@
           {
             "title": "Kinobox Daily: Jak získat 140 milionů dolarů tím, že v celém filmu nic neukážete? To vám předvede Neviditelný",
             "publishedAt": "2026-04-16T10:00:00Z"
-          },
-          {
-            "title": "Ještě mrazivější a drtivější. Nejlepší Godzilla míří v pokračování na New York",
-            "publishedAt": "2026-04-16T09:00:00Z"
           }
         ]
       }

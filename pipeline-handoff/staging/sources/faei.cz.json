@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T09:55:11.168822Z",
+  "ingestedAt": "2026-04-17T10:15:10.773943Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
+      "url": "https://profitonline.cz/staci-pichnuti-spendlikem-aby-vykrvacel-vazna-nemoc-se-dedi-po-generace/",
+      "dt": "2026-04-17T10:00:22Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dědí",
+        "generace",
+        "nemoc",
+        "píchnutí",
+        "stačí",
+        "vykrvácel",
+        "vážná",
+        "špendlíkem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -275,30 +300,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Připravme se na celkové zdražování, ceny pohonných hmot porostou",
-      "url": "https://profitonline.cz/pripravme-se-na-celkove-zdrazovani-ceny-pohonnych-hmot-porostou/",
-      "dt": "2026-04-14T18:00:54Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "celkové",
-        "ceny",
-        "hmot",
-        "pohonných",
-        "porostou",
-        "připravme",
-        "zdražování"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +310,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19359,
+      "bytes": 19403,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,11 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T06:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:00:22Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 9,
-          "zdravi": 2,
+          "zdravi": 3,
+          "finance": 8,
           "sport": 1
         },
         "drop_counts": {
@@ -363,6 +364,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
+            "publishedAt": "2026-04-17T10:00:22Z"
+          },
           {
             "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
             "publishedAt": "2026-04-17T06:00:46Z"
@@ -390,10 +395,6 @@
           {
             "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
             "publishedAt": "2026-04-16T04:00:53Z"
-          },
-          {
-            "title": "Česko stárne. Chybějící domovy pro seniory dokážeme postavit, ale kdo o ně bude pečovat?",
-            "publishedAt": "2026-04-15T13:00:58Z"
           }
         ]
       }

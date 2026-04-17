@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T09:55:11.168822Z",
+  "ingestedAt": "2026-04-17T10:15:10.773943Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko útočilo na Dnipro a Oděskou oblast, Rumunsko zaznamenalo cizí dron",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-utocilo-na-dnipro-a-odeskou-oblast-rumunsko-zaznamenalo-cizi-dron-372481",
+      "dt": "2026-04-17T10:00:47Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "cizí",
+        "dnipro",
+        "dron",
+        "oblast",
+        "oděskou",
+        "rumunsko",
+        "rusko",
+        "zaznamenalo",
+        "útočilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,33 +746,6 @@
         "seznam",
         "zveřejnilo",
         "česka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa má leteckého paliva jen asi na šest týdnů, řekl šéf IEA",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/evropa-ma-leteckeho-paliva-jen-asi-na-sest-tydnu-rekl-sef-iea-372451",
-      "dt": "2026-04-16T12:59:01Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "asi",
-        "evropa",
-        "iea",
-        "jen",
-        "leteckého",
-        "paliva",
-        "týdnů",
-        "řekl",
-        "šest",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1523,7 +1522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43276,
+      "bytes": 43110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,12 +1582,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:39:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:00:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "other": 2,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1600,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko útočilo na Dnipro a Oděskou oblast, Rumunsko zaznamenalo cizí dron",
+            "publishedAt": "2026-04-17T10:00:47Z"
+          },
           {
             "title": "Soud potrestal podmínkou ženu, která v Českém Krumlově poškodila desítky aut",
             "publishedAt": "2026-04-17T09:39:43Z"
@@ -1627,10 +1630,6 @@
           {
             "title": "V přerovském podniku Meopta hořelo, škoda je padesát milionů korun",
             "publishedAt": "2026-04-17T06:22:46Z"
-          },
-          {
-            "title": "Zaměstnavatelé chtějí rozšířit benefity o další možnosti péče o duševní zdraví",
-            "publishedAt": "2026-04-17T05:30:00Z"
           }
         ]
       }
@@ -1736,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77222,
+      "bytes": 77304,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
