@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-17T08:08:13.398821Z",
+  "ingestedAt": "2026-04-17T08:24:48.320072Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Týden na Thassosu z Prahy i Ostravy. Zájezd od 9 890 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/thassos-z-prahy-i-ostravy-na-tyden-u-more",
+      "dt": "2026-04-17T08:21:47Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "890",
+        "ostravy",
+        "prahy",
+        "thassosu",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,28 +504,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Z Vídně na Sardinii v dubnu. Letenky od 732 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/ze-vidne-na-sardinii-v-dubnu",
-      "dt": "2026-04-10T13:20:15Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "732",
-        "dubnu",
-        "letenky",
-        "sardinii",
-        "vídně"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 42919,
+      "bytes": 44212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:13:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:21:47Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -565,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na Thassosu z Prahy i Ostravy. Zájezd od 9 890 Kč",
+            "publishedAt": "2026-04-17T08:21:47Z"
+          },
           {
             "title": "Z Prahy do Říma od středy do neděle s odbaveným zavazadlem. Letenky od 1 990 Kč",
             "publishedAt": "2026-04-17T07:13:12Z"
@@ -592,10 +597,6 @@
           {
             "title": "Buy & Fly: Týden na Tenerife s all-inclusive z Prahy. Zájezd od 11 290 Kč",
             "publishedAt": "2026-04-15T11:52:11Z"
-          },
-          {
-            "title": "Nová linka easyJet z Prahy do Marrákeše. Letenky od 2 262 Kč",
-            "publishedAt": "2026-04-15T09:52:56Z"
           }
         ]
       }

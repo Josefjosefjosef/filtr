@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T08:08:13.398821Z",
+  "ingestedAt": "2026-04-17T08:24:48.320072Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "POHLED: Dá Hadamczik trenérům klid na práci? Doufejme, Rulíka už potopil",
+      "url": "https://www.idnes.cz/hokej/reprezentace/motak-gross-hadamczik-trener.A260416_200009_reprezentace_kazdt",
+      "dt": "2026-04-17T08:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "doufejme",
+        "hadamczik",
+        "klid",
+        "pohled",
+        "potopil",
+        "práci",
+        "rulíka",
+        "trenérům"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -766,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel Alex Manninger, někdejší brankář Arsenalu. Do jeho auta narazil vlak",
-      "url": "https://www.idnes.cz/fotbal/zahranici/alex-manninger-rakousko-brankar-arsenal-smrt-umrti-zesnul.A260416_161901_fot_zahranici_tals",
-      "dt": "2026-04-16T14:41:32Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alex",
-        "arsenalu",
-        "auta",
-        "brankář",
-        "jeho",
-        "manninger",
-        "narazil",
-        "někdejší",
-        "vlak",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46406,
+      "bytes": 46371,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POHLED: Dá Hadamczik trenérům klid na práci? Doufejme, Rulíka už potopil",
+            "publishedAt": "2026-04-17T08:00:00Z"
+          },
           {
             "title": "Olympijští šampioni Miuraová a Kihara se loučí. Čekají nás teď další výzvy, napsali",
             "publishedAt": "2026-04-17T07:28:00Z"
@@ -882,10 +884,6 @@
           {
             "title": "Prostějov nad propastí, před pár lety snil o lize. Hráči nekontrolují těla, všiml si trenér",
             "publishedAt": "2026-04-17T05:27:00Z"
-          },
-          {
-            "title": "Od Hlinky až po Rulíka. Připomeňte si, jak si vedli předešlí trenéři českých hokejistů",
-            "publishedAt": "2026-04-17T05:15:00Z"
           }
         ]
       }

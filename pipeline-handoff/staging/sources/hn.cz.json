@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T08:08:13.398821Z",
+  "ingestedAt": "2026-04-17T08:24:48.320072Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Tejc podá trestní oznámení kvůli kauze bitcoin. Schillerová ukázala na ředitele Stanjurova kabinetu",
+      "url": "https://domaci.hn.cz/c1-67868170-tejc-poda-trestni-oznameni-kvuli-kauze-bitcoin-schillerova-ukazala-na-reditele-stanjurova-kabinetu",
+      "dt": "2026-04-17T08:12:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bitcoin",
+        "kabinetu",
+        "kauze",
+        "kvůli",
+        "oznámení",
+        "podá",
+        "schillerová",
+        "stanjurova",
+        "tejc",
+        "trestní",
+        "ukázala",
+        "ředitele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -914,27 +943,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Auto, které by nikdo jiný nevyrobil",
-      "url": "https://procne.hn.cz/c1-67866160-auto-ktere-by-nikdo-jiny-nevyrobil",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "auto",
-        "jiný",
-        "nevyrobil",
-        "nikdo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -945,7 +953,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 177334,
+      "bytes": 177284,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -982,11 +990,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:12:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 1,
+          "zpravy": 2,
+          "finance": 37,
           "zdravi": 1
         },
         "drop_counts": {
@@ -999,6 +1007,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tejc podá trestní oznámení kvůli kauze bitcoin. Schillerová ukázala na ředitele Stanjurova kabinetu",
+            "publishedAt": "2026-04-17T08:12:00Z"
+          },
           {
             "title": "Cheeseburger za dvacku? Zapomeňte. Fastfood je u nás velký byznys a jde nahoru, jen KFC to má zkažené",
             "publishedAt": "2026-04-17T07:45:00Z"
@@ -1025,10 +1037,6 @@
           },
           {
             "title": "Kulturní tipy: Koncerty světové hudby nejen ze seriálů, originální film Slepice či inscenace Aktivní zálohy",
-            "publishedAt": "2026-04-16T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (17. 4. 2026)",
             "publishedAt": "2026-04-16T22:00:00Z"
           }
         ]

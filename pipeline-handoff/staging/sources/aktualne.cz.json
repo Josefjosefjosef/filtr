@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T08:08:13.398821Z",
+  "ingestedAt": "2026-04-17T08:24:48.320072Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "MMF varuje před zastropováním cen energií, opatření podle něj zvýhodňují bohaté",
+      "url": "https://zpravy.aktualne.cz/ekonomika/mmf-varuje-pred-zastropovanim-cen-opatreni-podle-nej-zvyhodnuji-bohate/r~aaa294dae794f80b6a6961118d5322c4/",
+      "dt": "2026-04-17T08:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bohaté",
+        "cen",
+        "energií",
+        "mmf",
+        "něj",
+        "opatření",
+        "podle",
+        "varuje",
+        "zastropováním",
+        "zvýhodňují"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -499,33 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babišův \"režisér\" kampaní: Premiérovi to jde, Macinka si užíval funkci. Popsal obrat",
-      "url": "https://zpravy.aktualne.cz/domaci/babis-je-stale-dobry-architekt-jeho-kampani-rika-ze-problem-ve-vlade-maji-jini/r~aaa29f6e3500407fb1df0659c33dbdeb/",
-      "dt": "2026-04-17T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babišův",
-        "funkci",
-        "jde",
-        "kampaní",
-        "macinka",
-        "obrat",
-        "popsal",
-        "premiérovi",
-        "režisér",
-        "užíval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21958,
+      "bytes": 21934,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,13 +573,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 3,
           "sport": 3,
-          "finance": 2,
           "zdravi": 1,
-          "zpravy": 11,
+          "zpravy": 10,
           "other": 3
         },
         "drop_counts": {
@@ -592,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MMF varuje před zastropováním cen energií, opatření podle něj zvýhodňují bohaté",
+            "publishedAt": "2026-04-17T08:10:00Z"
+          },
           {
             "title": "McDavid pošesté ovládl bodování NHL, dva útočníci přepsali české statistiky",
             "publishedAt": "2026-04-17T07:57:00Z"
@@ -619,10 +623,6 @@
           {
             "title": "Impozantní kousek Muchové, tleskala i soupeřka. Češka pak pobavila zpražením moderátora",
             "publishedAt": "2026-04-16T18:14:00Z"
-          },
-          {
-            "title": "Venezuela zpět ve hře: MMF a Světová banka obnovily spolupráci",
-            "publishedAt": "2026-04-17T06:21:00Z"
           }
         ]
       }
