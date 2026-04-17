@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T01:50:15.038933Z",
+  "ingestedAt": "2026-04-17T02:10:37.454327Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trojice měla na Litoměřicku prodávat auta v exekuci",
+      "url": "https://tydenikpolicie.cz/trojice-mela-na-litomericku-prodavat-auta-v-exekuci/",
+      "dt": "2026-04-17T02:02:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "auta",
+        "exekuci",
+        "litoměřicku",
+        "měla",
+        "prodávat",
+        "trojice"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -220,40 +243,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidička BMW v Čeladné vjela při nebezpečném předjíždění na chodník, kde srazila dvě dívky. Z místa nehody utekla, poté ji srazil vlak",
-      "url": "https://tydenikpolicie.cz/ridicka-bmw-v-celadne-vjela-pri-nebezpecnem-predjizdeni-na-chodnik-kde-srazila-dve-divky-z-mista-nehody-utekla-pote-ji-srazil-vlak/",
-      "dt": "2026-04-16T13:22:18Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bmw",
-        "chodník",
-        "dvě",
-        "dívky",
-        "místa",
-        "nebezpečném",
-        "nehody",
-        "poté",
-        "předjíždění",
-        "při",
-        "srazil",
-        "srazila",
-        "utekla",
-        "vjela",
-        "vlak",
-        "čeladné",
-        "řidička"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -264,7 +253,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15719,
+      "bytes": 15092,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -301,7 +290,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T20:44:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T02:02:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -316,6 +305,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trojice měla na Litoměřicku prodávat auta v exekuci",
+            "publishedAt": "2026-04-17T02:02:04Z"
+          },
           {
             "title": "Cizinci v peugeotu naměřili policisté na padesátce na Trutnovsku rychlost 115 km/hod",
             "publishedAt": "2026-04-16T20:44:06Z"
@@ -343,10 +336,6 @@
           {
             "title": "Policisté v Nymburce dopadli krátce po činu cizince podezřelého z posprejování vlaku",
             "publishedAt": "2026-04-16T14:21:16Z"
-          },
-          {
-            "title": "Na Vodňansku boural opilý řidič škodovky bez řidičáku",
-            "publishedAt": "2026-04-16T14:18:32Z"
           }
         ]
       }

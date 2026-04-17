@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T01:50:15.038933Z",
+  "ingestedAt": "2026-04-17T02:10:37.454327Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "StarDance do veřejnoprávní televize tak úplně nepatří, říká ministr Oto Klempíř",
+      "url": "https://www.denik.cz/z_domova/ministr-kultury-oto-klempir-koncesioinarske-poplatky-stardance-do-ct-nepatri.html",
+      "dt": "2026-04-17T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "klempíř",
+        "ministr",
+        "nepatří",
+        "oto",
+        "stardance",
+        "tak",
+        "televize",
+        "veřejnoprávní",
+        "úplně",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,34 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Safari Park ve Dvoře se pochlubil mláďaty vzácné hyenky. Již brzy se ukáží lidem",
-      "url": "https://www.denik.cz/regiony/vzacny-odchov-ve-dvore-kralove-narodila-se-ctyri-mladata-hyenek-20260416.html",
-      "dt": "2026-04-16T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brzy",
-        "dvoře",
-        "hyenky",
-        "již",
-        "lidem",
-        "mláďaty",
-        "park",
-        "pochlubil",
-        "safari",
-        "ukáží",
-        "vzácné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28943,
+      "bytes": 28869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-16T19:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "StarDance do veřejnoprávní televize tak úplně nepatří, říká ministr Oto Klempíř",
+            "publishedAt": "2026-04-17T02:00:00Z"
+          },
           {
             "title": "Korupci jsem nikdy netoleroval, řekl Orbán. Porážka ve volbách ho prý překvapila",
             "publishedAt": "2026-04-16T19:29:00Z"
@@ -744,10 +747,6 @@
           {
             "title": "Speed Marathon nedopadl dobře: Řidiči nedodržují rychlost, hřešili i jinak",
             "publishedAt": "2026-04-16T15:35:00Z"
-          },
-          {
-            "title": "Hrozbu ruského útoku na ČR řeší policie. Experti k vládě: Nepodceňujte, reagujte",
-            "publishedAt": "2026-04-16T15:22:00Z"
           }
         ]
       }
