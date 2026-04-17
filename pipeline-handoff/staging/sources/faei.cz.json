@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T16:49:39.765770Z",
+  "ingestedAt": "2026-04-17T17:04:31.707127Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-silny-zaver-tydne-diky-uzavrenemu-primeri/",
+      "dt": "2026-04-17T17:00:59Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "díky",
+        "příměří",
+        "silný",
+        "trzích",
+        "týden",
+        "týdne",
+        "uzavřenému",
+        "závěr"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,29 +300,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olympiáda v LA 2028: boj o lístky i nové sporty",
-      "url": "https://profitonline.cz/olympiada-v-la-2028-boj-o-listky-i-nove-sporty/",
-      "dt": "2026-04-15T10:00:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "2028",
-        "boj",
-        "lístky",
-        "nové",
-        "olympiáda",
-        "sporty"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +310,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18976,
+      "bytes": 18973,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,12 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:00:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T17:00:59Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 8,
-          "zdravi": 3,
-          "sport": 1
+          "finance": 9,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -361,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
+            "publishedAt": "2026-04-17T17:00:59Z"
+          },
           {
             "title": "Přivede Magyar Maďarsko do eurozóny?",
             "publishedAt": "2026-04-17T15:00:57Z"
@@ -388,10 +394,6 @@
           {
             "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
             "publishedAt": "2026-04-16T10:00:00Z"
-          },
-          {
-            "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
-            "publishedAt": "2026-04-16T08:00:02Z"
           }
         ]
       }

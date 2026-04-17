@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T16:49:39.765770Z",
+  "ingestedAt": "2026-04-17T17:04:31.707127Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Stát se zbavil další odpovědnosti: dotovat plavání pro školáky. Zůstává však povinné",
+      "url": "https://www.idnes.cz/zpravy/domaci/plavani-zakladni-skoly-rozpocet-placeni-stat-ministerstvo-skolstvi.A260417_184305_domaci_svm",
+      "dt": "2026-04-17T16:54:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "další",
+        "dotovat",
+        "odpovědnosti",
+        "plavání",
+        "povinné",
+        "stát",
+        "však",
+        "zbavil",
+        "zůstává",
+        "školáky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,31 +782,6 @@
         "smrtelně",
         "tváří",
         "vážně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šťastný chce rentu pro úspěšné sportovce, aby se nedostávali do finančních problémů",
-      "url": "https://www.idnes.cz/zpravy/domaci/ministr-stastny-renta-sportovci-narodni-sportovni-agentura.A260417_115012_domaci_aoc",
-      "dt": "2026-04-17T11:53:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "finančních",
-        "nedostávali",
-        "problémů",
-        "rentu",
-        "sportovce",
-        "úspěšné",
-        "šťastný"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51556,
+      "bytes": 51245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1622,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T16:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T16:54:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 24,
+          "finance": 3,
           "other": 3
         },
         "drop_counts": {
@@ -1637,6 +1639,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stát se zbavil další odpovědnosti: dotovat plavání pro školáky. Zůstává však povinné",
+            "publishedAt": "2026-04-17T16:54:00Z"
+          },
           {
             "title": "Paliva po otevření Hormuzu rychle zlevní, návrat k normálu ale potrvá, míní analytici",
             "publishedAt": "2026-04-17T16:19:00Z"
@@ -1664,10 +1670,6 @@
           {
             "title": "Závislost ho málem zničila. Teď chce na skútru objet svět",
             "publishedAt": "2026-04-17T14:38:00Z"
-          },
-          {
-            "title": "Světelná závora je hazard s dopravou, tvrdí Praha 8 a chystá správní žalobu",
-            "publishedAt": "2026-04-17T14:27:00Z"
           }
         ]
       }
