@@ -16333,9 +16333,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overscroll-behavior: auto;
     box-sizing: border-box;
   }
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-placeholder],
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-probe],
-  body.iu-desktop-home-grid #iuSilverTallScrollViewport [data-iu-silver-tall-scroll-spacer]{
+  /* P0: Neukrývat placeholder/probe dřív než Silver preview tlačítka (defer app.js) — jinak ≥1025px prázdná deska bez textu. */
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-placeholder],
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-probe],
+  body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-spacer]{
     display: none !important;
   }
   body.iu-desktop-home-grid #iuSilverTallScrollViewport [class$="PreviewCardMount"]{
