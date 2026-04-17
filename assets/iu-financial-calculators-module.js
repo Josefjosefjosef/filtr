@@ -1354,13 +1354,34 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   });
 
   /**
-   * BFCache / partial nav / chybějící close: DOM říká overlay zavřený, ale body může držet
+   * BFCache / partial nav / chybějící close / asset mismatch: DOM říká overlay zavřený, ale body může držet
    * iu-financial-* + iu-modal-open a viewport lock → uživatel vidí „prázdnou“ stránku / nejde scrollovat.
-   * Revert CSS (#2665) tento stav neřeší — je to JS stav vs. DOM.
    *
-   * P0: Musí chytit i rozpad dataset.open vs. hidden (např. dataset "1" ale oba uzly už mají hidden),
-   * jinak stará podmínka domClosed vracela false a reconcile se nespustil.
+   * P0: Musí chytit i rozpad dataset.open vs. hidden (např. dataset "1" ale oba uzly už mají hidden).
+   *
+   * P0 (real browser): Když už na body nejsou iu-financial-* (např. částečný teardown), stará větev
+   * `if (!finOnBody) return` nechala viset iu-modal-open + iuSetViewportLock — stejný vizuální výsledek.
+   * Globální unlock a iu-modal-open proto provádíme jen když iuDetectOpenOverlays() je prázdné a na body
+   * nejsou jiné „shell“ značky jiných overlayů.
    */
+  function iuFinCalcBodyHasOtherModalShellMarks() {
+    try {
+      const b = document.body;
+      if (!b) return false;
+      return (
+        b.classList.contains("iu-quickFeedOpen") ||
+        b.classList.contains("iu-quickFeedMojeFullscreen") ||
+        b.classList.contains("iu-mobileGateToolsQuickOpen") ||
+        b.classList.contains("iu-nakup-online-overlay-open") ||
+        b.classList.contains("iu-ds-overlay-open") ||
+        b.classList.contains("iu-legal-docs-overlay-open") ||
+        b.classList.contains("iu-ai-narrow-fullscreen")
+      );
+    } catch (_) {
+      return true;
+    }
+  }
+
   function iuFinCalcReconcileOrphanBodyState() {
     try {
       if (!document.body) return;
@@ -1373,14 +1394,27 @@ export function initIuFinancialCalculatorsOverlay(deps) {
             "iu-financial-calculators-overlay-open",
           );
         } catch (_) {}
-        return;
-      }
-      const finOnBody =
-        document.body.classList.contains("iu-financial-calculators-overlay-open") ||
-        document.body.classList.contains("iu-financial-overlay-open");
-      if (!finOnBody) {
         try {
           iuFinCalcClearDesktopFullpageLayout();
+        } catch (_) {}
+        try {
+          if (!iuFinCalcBodyHasOtherModalShellMarks()) {
+            const others =
+              typeof window !== "undefined" && typeof window.iuDetectOpenOverlays === "function"
+                ? window.iuDetectOpenOverlays()
+                : null;
+            if (Array.isArray(others) && others.length === 0) {
+              try {
+                setLock(false);
+              } catch (_) {}
+              try {
+                if (typeof window.iuSetViewportLock === "function") {
+                  window.iuSetViewportLock(false);
+                }
+              } catch (_) {}
+              document.body.classList.remove("iu-modal-open");
+            }
+          }
         } catch (_) {}
         return;
       }
@@ -1404,27 +1438,32 @@ export function initIuFinancialCalculatorsOverlay(deps) {
 
       if (finSurfaceReallyOpen) return;
 
-      document.body.classList.remove(
-        "iu-financial-overlay-open",
-        "iu-financial-calculators-overlay-open",
-      );
-      iuFinCalcClearDesktopFullpageLayout();
       try {
-        setLock(false);
+        document.body.classList.remove(
+          "iu-financial-overlay-open",
+          "iu-financial-calculators-overlay-open",
+        );
       } catch (_) {}
       try {
-        if (typeof window.iuSetViewportLock === "function") {
-          window.iuSetViewportLock(false);
-        }
+        iuFinCalcClearDesktopFullpageLayout();
       } catch (_) {}
       try {
-        const others =
-          typeof window !== "undefined" &&
-          typeof window.iuDetectOpenOverlays === "function"
-            ? window.iuDetectOpenOverlays()
-            : null;
-        if (Array.isArray(others) && others.length === 0) {
-          document.body.classList.remove("iu-modal-open");
+        if (!iuFinCalcBodyHasOtherModalShellMarks()) {
+          const others =
+            typeof window !== "undefined" && typeof window.iuDetectOpenOverlays === "function"
+              ? window.iuDetectOpenOverlays()
+              : null;
+          if (Array.isArray(others) && others.length === 0) {
+            try {
+              setLock(false);
+            } catch (_) {}
+            try {
+              if (typeof window.iuSetViewportLock === "function") {
+                window.iuSetViewportLock(false);
+              }
+            } catch (_) {}
+            document.body.classList.remove("iu-modal-open");
+          }
         }
       } catch (_) {}
     } catch (_) {}
@@ -1433,17 +1472,45 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   try {
     if (typeof window !== "undefined") {
       window.iuFinCalcReconcileOrphanBodyState = iuFinCalcReconcileOrphanBodyState;
-      const runReconcile = function () {
+      const runReconcileImmediate = function () {
         try {
           iuFinCalcReconcileOrphanBodyState();
         } catch (_) {}
       };
+      const runReconcileAfterPaint = function () {
+        try {
+          iuFinCalcReconcileOrphanBodyState();
+        } catch (_) {}
+        try {
+          setTimeout(function () {
+            try {
+              iuFinCalcReconcileOrphanBodyState();
+            } catch (_) {}
+          }, 0);
+        } catch (_) {}
+        try {
+          setTimeout(function () {
+            try {
+              iuFinCalcReconcileOrphanBodyState();
+            } catch (_) {}
+          }, 60);
+        } catch (_) {}
+      };
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", runReconcile, { once: true });
+        document.addEventListener("DOMContentLoaded", runReconcileImmediate, { once: true });
       } else {
-        setTimeout(runReconcile, 0);
+        setTimeout(runReconcileImmediate, 0);
       }
-      window.addEventListener("pageshow", runReconcile);
+      window.addEventListener("pageshow", runReconcileAfterPaint);
+      try {
+        document.addEventListener("visibilitychange", function () {
+          try {
+            if (document.visibilityState === "visible") {
+              runReconcileAfterPaint();
+            }
+          } catch (_) {}
+        });
+      } catch (_) {}
     }
   } catch (_) {}
 
