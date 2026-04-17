@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T12:35:10.000924Z",
+  "ingestedAt": "2026-04-17T12:55:28.802141Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
+      "url": "https://domaci.hn.cz/c1-67867900-nejsem-rasista-ale-jak-maturant-a-bdquo-cesky-charlie-kirk-ldquo-ozivuje-ultra-konzervativni-scenu",
+      "dt": "2026-04-17T12:31:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "bdquo",
+        "charlie",
+        "kirk",
+        "konzervativní",
+        "ldquo",
+        "maturant",
+        "nejsem",
+        "oživuje",
+        "rasista",
+        "scénu",
+        "ultra",
+        "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1047,35 +1077,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odpověď na krizi bydlení? Chybějící miliony domů by mohly vzniknout díky robotům a betonovému 3D tisku",
-      "url": "https://procne.hn.cz/c1-67866430-miliony-domu-cekaji-na-sve-roboty",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "betonovému",
-        "bydlení",
-        "chybějící",
-        "domů",
-        "díky",
-        "krizi",
-        "miliony",
-        "mohly",
-        "odpověď",
-        "robotům",
-        "tisku",
-        "vzniknout"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1086,7 +1087,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 179093,
+      "bytes": 179134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1123,11 +1124,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:31:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 32,
+          "sport": 1,
           "zpravy": 3,
           "zdravi": 4
         },
@@ -1141,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
+            "publishedAt": "2026-04-17T12:31:00Z"
+          },
           {
             "title": "Fotbal a volby jako brzdy blízkovýchodní eskapády. Blíží se další světový time out?",
             "publishedAt": "2026-04-17T11:41:00Z"
@@ -1168,10 +1173,6 @@
           {
             "title": "Boj o maďarskou demokracii teprve začíná. Porážka Viktora Orbána byla mimořádná, ale Maďarsko nyní musí znovu vybudovat to, co on zničil",
             "publishedAt": "2026-04-17T07:55:00Z"
-          },
-          {
-            "title": "Cheeseburger za dvacku? Zapomeňte. Fastfood je u nás velký byznys a jde nahoru, jen KFC to má zkažené",
-            "publishedAt": "2026-04-17T07:45:00Z"
           }
         ]
       }

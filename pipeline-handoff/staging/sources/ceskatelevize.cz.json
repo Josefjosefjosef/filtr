@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T12:35:10.000924Z",
+  "ingestedAt": "2026-04-17T12:55:28.802141Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "O víkendu nejvyšší ceny paliv opět mírně klesnou",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/o-vikendu-nejvyssi-ceny-paliv-opet-mirne-klesnou-372490",
+      "dt": "2026-04-17T12:35:20Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ceny",
+        "klesnou",
+        "mírně",
+        "nejvyšší",
+        "opět",
+        "paliv",
+        "víkendu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,25 +763,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Netanjahu potvrdil Trumpem oznámené příměří mezi Izraelem a Libanonem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-tvrdi-ze-se-izrael-a-libanon-dohodly-na-primeri-372461",
-      "dt": "2026-04-16T16:05:14Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Lidé se naposledy rozloučily s Imrichem Bugárem",
+      "url": "https://sport.ceskatelevize.cz/clanek/atletika/lide-se-naposledy-rozloucily-s-imrichem-bugarem-156330",
+      "dt": "2026-04-17T12:43:52Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "izraelem",
-        "libanonem",
-        "netanjahu",
-        "oznámené",
-        "potvrdil",
-        "příměří",
-        "trumpem"
+        "bugárem",
+        "imrichem",
+        "lidé",
+        "naposledy",
+        "rozloučily"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1490,31 +1512,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Štvanici čeká renovace. Vše musí být hotové do července",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/stvanici-ceka-renovace-vse-musi-byt-hotove-do-cervence-156299",
-      "dt": "2026-04-15T14:18:04Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "být",
-        "hotové",
-        "musí",
-        "renovace",
-        "vše",
-        "čeká",
-        "července",
-        "štvanici"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1525,7 +1522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43252,
+      "bytes": 43090,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1585,11 +1582,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:35:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "other": 4,
-          "zpravy": 26
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1601,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O víkendu nejvyšší ceny paliv opět mírně klesnou",
+            "publishedAt": "2026-04-17T12:35:20Z"
+          },
           {
             "title": "Vojta Náprstek se narodil před 200 lety. Do Prahy přinesl vzdálené civilizace i feminismus",
             "publishedAt": "2026-04-17T11:30:00Z"
@@ -1628,10 +1630,6 @@
           {
             "title": "Soud potrestal podmínkou ženu, která v Českém Krumlově poškodila desítky aut",
             "publishedAt": "2026-04-17T09:39:43Z"
-          },
-          {
-            "title": "Hosté Událostí, komentářů probrali financování veřejnoprávních médií",
-            "publishedAt": "2026-04-17T09:39:25Z"
           }
         ]
       }
@@ -1643,7 +1641,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36527,
+      "bytes": 36415,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1680,7 +1678,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:26:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T12:43:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1695,6 +1693,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidé se naposledy rozloučily s Imrichem Bugárem",
+            "publishedAt": "2026-04-17T12:43:52Z"
+          },
           {
             "title": "Stálou trenérkou Unionu Berlín se Etaová nestane, ublížilo by to ženskému fotbalu",
             "publishedAt": "2026-04-17T11:26:37Z"
@@ -1722,10 +1724,6 @@
           {
             "title": "UK Kings zaútočí na třetí triumf v řadě, ve finále univerzitní ligy je vyzvou Inženýři z ČVUT",
             "publishedAt": "2026-04-16T20:48:29Z"
-          },
-          {
-            "title": "Voženílek se opět může potkat s koučem Motákem. V extralize mi dal velkou roli, vzpomíná",
-            "publishedAt": "2026-04-16T20:22:30Z"
           }
         ]
       }
@@ -1737,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77467,
+      "bytes": 77471,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
