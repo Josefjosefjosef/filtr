@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T03:09:59.849412Z",
+  "ingestedAt": "2026-04-17T03:29:58.461138Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tajemný soví muž z Cornwallu: Prvně se zjevil dvěma sestrám. Měl rudé oči, drápy",
+      "url": "https://www.denik.cz/historie/sovi-muz-z-vesnice-mawman-cornwall-muz-mura-virginie-a-dalsi-podobni-kryptide.html",
+      "dt": "2026-04-17T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cornwallu",
+        "drápy",
+        "dvěma",
+        "muž",
+        "měl",
+        "oči",
+        "prvně",
+        "rudé",
+        "sestrám",
+        "soví",
+        "tajemný",
+        "zjevil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,31 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Palivový strop klesl. Pro pátek stát ručil nejnižší ceny",
-      "url": "https://www.denik.cz/ekonomika/ceny-paliva-strop-patek.html",
-      "dt": "2026-04-16T12:24:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ceny",
-        "klesl",
-        "nejnižší",
-        "palivový",
-        "pátek",
-        "ručil",
-        "strop",
-        "stát"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28886,
+      "bytes": 29032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,12 +704,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T02:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "zdravi": 1,
-          "finance": 1
+          "zpravy": 24,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -717,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tajemný soví muž z Cornwallu: Prvně se zjevil dvěma sestrám. Měl rudé oči, drápy",
+            "publishedAt": "2026-04-17T03:00:00Z"
+          },
           {
             "title": "Strachu o děti se nezbavíte. Je to doživotní výbava, říká Aňa Geislerová",
             "publishedAt": "2026-04-17T02:40:00Z"
@@ -744,10 +751,6 @@
           {
             "title": "Po pádu autobusu do rokle zemřelo v Ekvádoru nejméně 14 lidí, 29 bylo zraněno",
             "publishedAt": "2026-04-16T18:00:00Z"
-          },
-          {
-            "title": "Babiš nabízí pomoc při zajištění bezpečnosti Hormuzského průlivu, detaily neřekl",
-            "publishedAt": "2026-04-16T17:37:00Z"
           }
         ]
       }

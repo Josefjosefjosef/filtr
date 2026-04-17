@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T03:09:59.849412Z",
+  "ingestedAt": "2026-04-17T03:29:58.461138Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci projednají návrh, který má usnadnit výměnu státních úředníků",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-pravidla-pro-statni-zamestnance-penzijni-sporeni.A260417_042814_domaci_kop",
+      "dt": "2026-04-17T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "návrh",
+        "poslanci",
+        "projednají",
+        "státních",
+        "usnadnit",
+        "výměnu",
+        "úředníků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,31 +782,6 @@
         "varuje",
         "změnu",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sbaleno na věčnost. Výtvarník Gemrot navrhl památník obětem holokaustu",
-      "url": "https://www.idnes.cz/kultura/vytvarne-umeni/jen-gemrot-jom-ha-soa-holokaust-antisemitismus.A260416_104646_vytvarne-umeni_rts",
-      "dt": "2026-04-16T14:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "gemrot",
-        "holokaustu",
-        "navrhl",
-        "obětem",
-        "památník",
-        "sbaleno",
-        "výtvarník",
-        "věčnost"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49063,
+      "bytes": 48635,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,12 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "finance": 1,
-          "other": 1
+          "zpravy": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1637,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslanci projednají návrh, který má usnadnit výměnu státních úředníků",
+            "publishedAt": "2026-04-17T03:00:00Z"
+          },
           {
             "title": "Jako první jsme projeli nový most na kole. Chodníky jsou OK, ale kde si dát pozor?",
             "publishedAt": "2026-04-17T02:30:00Z"
@@ -1664,10 +1666,6 @@
           {
             "title": "Číňan chtěl z Keni propašovat 2200 mravenců. Soud ho poslal do vězení",
             "publishedAt": "2026-04-16T21:17:00Z"
-          },
-          {
-            "title": "Putin chystá jaderný útok ve vesmíru jako na Pearl Harbor, varuje americký generál",
-            "publishedAt": "2026-04-16T19:50:00Z"
           }
         ]
       }
