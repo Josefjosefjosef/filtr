@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T07:48:18.153959Z",
+  "ingestedAt": "2026-04-17T08:08:13.398821Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cheeseburger za dvacku? Zapomeňte. Fastfood je u nás velký byznys a jde nahoru, jen KFC to má zkažené",
+      "url": "https://podcasty.hn.cz/c1-67868120-cheeseburger-za-dvacku-zapomente-fastfood-je-u-nas-velky-byznys-a-jde-nahoru-jen-kfc-to-ma-zkazene",
+      "dt": "2026-04-17T07:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "byznys",
+        "cheeseburger",
+        "dvacku",
+        "fastfood",
+        "jde",
+        "jen",
+        "kfc",
+        "nahoru",
+        "nás",
+        "velký",
+        "zapomeňte",
+        "zkažené"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -906,29 +935,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "120 hodin: Road trip na&nbsp;sever",
-      "url": "https://procne.hn.cz/c1-67866150-120-hodin-road-trip-na-sever",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "120",
-        "hodin",
-        "nbsp",
-        "road",
-        "sever",
-        "trip"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -939,7 +945,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 177285,
+      "bytes": 177334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -976,7 +982,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T07:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -993,6 +999,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cheeseburger za dvacku? Zapomeňte. Fastfood je u nás velký byznys a jde nahoru, jen KFC to má zkažené",
+            "publishedAt": "2026-04-17T07:45:00Z"
+          },
           {
             "title": "Češi mají enormní zájem o službu v armádě. Podle Zůny je letošní náborový cíl už skoro naplněn",
             "publishedAt": "2026-04-17T05:00:00Z"
@@ -1019,10 +1029,6 @@
           },
           {
             "title": "Finanční trhy (17. 4. 2026)",
-            "publishedAt": "2026-04-16T22:00:00Z"
-          },
-          {
-            "title": "Mám nápad!",
             "publishedAt": "2026-04-16T22:00:00Z"
           }
         ]

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T07:48:18.153959Z",
+  "ingestedAt": "2026-04-17T08:08:13.398821Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policistům v Teplicích ujížděl zdrogovaný řidič se zákazem řízení v autě bez technické",
+      "url": "https://tydenikpolicie.cz/policistum-v-teplicich-ujizdel-zdrogovany-ridic-se-zakazem-rizeni-v-aute-bez-technicke/",
+      "dt": "2026-04-17T08:00:01Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autě",
+        "policistům",
+        "technické",
+        "teplicích",
+        "ujížděl",
+        "zdrogovaný",
+        "zákazem",
+        "řidič",
+        "řízení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -226,29 +252,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Turnovští policisté řeší kuriózní krádež komínu",
-      "url": "https://tydenikpolicie.cz/turnovsti-policiste-resi-kuriozni-kradez-kominu/",
-      "dt": "2026-04-16T20:18:40Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "komínu",
-        "krádež",
-        "kuriózní",
-        "policisté",
-        "turnovští",
-        "řeší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -259,7 +262,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15367,
+      "bytes": 15845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -296,7 +299,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:15:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:00:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -311,6 +314,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policistům v Teplicích ujížděl zdrogovaný řidič se zákazem řízení v autě bez technické",
+            "publishedAt": "2026-04-17T08:00:01Z"
+          },
           {
             "title": "Po nehodě ve Staré Vsi nad Ondřejnicí museli resuscitovat cyklistu",
             "publishedAt": "2026-04-17T07:15:08Z"
@@ -338,10 +345,6 @@
           {
             "title": "Kriminalistka přivezla z dubnového policejního plaveckého mistrovství na Vysočinu pět medailí",
             "publishedAt": "2026-04-16T20:39:50Z"
-          },
-          {
-            "title": "Bernardovu cenu poprvé získal policista",
-            "publishedAt": "2026-04-16T20:33:11Z"
           }
         ]
       }

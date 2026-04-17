@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-17T07:48:18.153959Z",
+  "ingestedAt": "2026-04-17T08:08:13.398821Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Loupežná střílečka Fairgames od PlayStationu stále žije - INDIAN",
+      "url": "https://indian-tv.cz/clanek/loupezna-strilecka-fairgames-od-playstationu-stale-zije-y9zelx",
+      "dt": "2026-04-17T08:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "fairgames",
+        "indian",
+        "loupežná",
+        "playstationu",
+        "stále",
+        "střílečka",
+        "žije"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1054,33 +1078,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Rockstar odmítl zaplatit hackerům. Ukradená data se začínají objevovat na internetu - INDIAN",
-      "url": "https://indian-tv.cz/clanek/rockstar-odmitl-zaplatit-hackerum-ukradena-data-jsou-na-internetu",
-      "dt": "2026-04-13T21:02:13Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "data",
-        "hackerům",
-        "indian",
-        "internetu",
-        "objevovat",
-        "odmítl",
-        "rockstar",
-        "ukradená",
-        "zaplatit",
-        "začínají"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 199336,
+      "bytes": 199752,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,7 +1125,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:30:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1143,6 +1140,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Loupežná střílečka Fairgames od PlayStationu stále žije - INDIAN",
+            "publishedAt": "2026-04-17T08:00:00Z"
+          },
           {
             "title": "Phasmophobia a Alan Wake 2 se spojí v časově omezené bezplatné události - INDIAN",
             "publishedAt": "2026-04-17T07:30:07Z"
@@ -1170,10 +1171,6 @@
           {
             "title": "Dnes vychází Cthulhu: The Cosmic Abyss. Venku jsou první recenze i trailer ukazující využití ovladače DualSense - INDIAN",
             "publishedAt": "2026-04-16T13:00:00Z"
-          },
-          {
-            "title": "Zřejmě byly předčasně odhaleny fyzické edice populárního westernu Red Dead Redemption - INDIAN",
-            "publishedAt": "2026-04-16T11:19:16Z"
           }
         ]
       }
