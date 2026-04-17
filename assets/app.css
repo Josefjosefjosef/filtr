@@ -15670,11 +15670,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   padding-right: 8px;
 }
 
-/* P0: Dvojitá svislá scroll lišta (PC ~901–1024px): základní .iuSilverTallScrollViewport má overflow-y:auto + max-height, zatímco html už drží hlavní vertikální scroll (overflow-y:scroll). Třída body.iu-desktop-home-grid se zapíná až od 1025px — mezera ponechávala vnitřní scroll kontejner s prázdným/useless trackem. Desktop (≥901px) = jediný vertikální scroll owner = dokument. */
+/* P0: True single scroll na desktopu — základ .iuSilverTallScrollViewport má overflow-x:hidden + overflow-y:auto. CSS spec: pokud je jedna osa hidden a druhá visible, „visible“ se přepočítá na auto → mrtvý track/gutter. Proto musí být shorthand overflow:visible (ne jen overflow-y), + scrollbar-gutter reset. Rodič #iuSilverTallScrollSection drží overflow-x:hidden. */
 @media (min-width: 901px){
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
-    overflow-y: visible !important;
+    overflow: visible !important;
     max-height: none !important;
+    scrollbar-gutter: auto !important;
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: auto !important;
   }
 }
 
@@ -15759,8 +15762,10 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   pointer-events: none;
 }
 
-.silver-welcome-stack--evening .iuSilverTallScrollViewport{
-  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.06);
+@media (max-width: 900px){
+  .silver-welcome-stack--evening .iuSilverTallScrollViewport{
+    scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.06);
+  }
 }
 
 .silver-calendar-summary-card[role="button"]{
@@ -16333,8 +16338,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     align-content: start;
     /* P0 CLS (1366×768): rezervovat výšku hostitele — přechod scroll box (max-height) → volný grid jinak skočí ~0.18 CLS. */
     min-height: min(78vh, 820px);
-    overflow-y: visible !important;
-    overflow-x: hidden;
+    /* Stejné jako @media (min-width:901px) Silver fix: hidden+visible longhand → computed overflow-y:auto + prázdný track. */
+    overflow: visible !important;
+    scrollbar-gutter: auto !important;
     max-height: none !important;
     min-width: 0;
     -webkit-overflow-scrolling: auto;
