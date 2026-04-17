@@ -15670,6 +15670,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   padding-right: 8px;
 }
 
+/* P0: Dvojitá svislá scroll lišta (PC ~901–1024px): základní .iuSilverTallScrollViewport má overflow-y:auto + max-height, zatímco html už drží hlavní vertikální scroll (overflow-y:scroll). Třída body.iu-desktop-home-grid se zapíná až od 1025px — mezera ponechávala vnitřní scroll kontejner s prázdným/useless trackem. Desktop (≥901px) = jediný vertikální scroll owner = dokument. */
+@media (min-width: 901px){
+  #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
+    overflow-y: visible !important;
+    max-height: none !important;
+  }
+}
+
 #iuSilverTallScrollViewport [class$="PreviewCardMount"]{
   min-height:152px;
   width:100%;
