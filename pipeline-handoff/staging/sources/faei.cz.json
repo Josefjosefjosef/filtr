@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T12:55:28.802141Z",
+  "ingestedAt": "2026-04-17T13:14:42.961237Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jan Krafka řídí obchod Plzeňského Prazdroje",
+      "url": "https://profitonline.cz/jan-krafka-ridi-obchod-plzenskeho-prazdroje/",
+      "dt": "2026-04-17T13:00:02Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "jan",
+        "krafka",
+        "obchod",
+        "plzeňského",
+        "prazdroje",
+        "řídí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -276,30 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Končím! Farmáře vyhnala z pole černá budoucnost zemědělství",
-      "url": "https://profitonline.cz/koncim-farmare-vyhnala-z-pole-cerna-budoucnost-zemedelstvi/",
-      "dt": "2026-04-15T04:00:45Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "budoucnost",
-        "farmáře",
-        "končím",
-        "pole",
-        "vyhnala",
-        "zemědělství",
-        "černá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -310,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19403,
+      "bytes": 19320,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,11 +346,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:00:02Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 8,
+          "zdravi": 3,
           "sport": 1
         },
         "drop_counts": {
@@ -364,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jan Krafka řídí obchod Plzeňského Prazdroje",
+            "publishedAt": "2026-04-17T13:00:02Z"
+          },
           {
             "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
             "publishedAt": "2026-04-17T10:00:22Z"
@@ -391,10 +394,6 @@
           {
             "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
             "publishedAt": "2026-04-16T06:00:39Z"
-          },
-          {
-            "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
-            "publishedAt": "2026-04-16T04:00:53Z"
           }
         ]
       }

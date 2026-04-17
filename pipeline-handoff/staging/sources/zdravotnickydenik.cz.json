@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T12:55:28.802141Z",
+  "ingestedAt": "2026-04-17T13:14:42.961237Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Válka do správní rady VZP protlačíme, věří TOP 09. Současná situace je bizarní, míní Benda",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/valek-spravni-rada-vzp-benda/",
+      "dt": "2026-04-17T13:04:56Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "benda",
+        "bizarní",
+        "míní",
+        "protlačíme",
+        "rady",
+        "situace",
+        "současná",
+        "správní",
+        "top",
+        "vzp",
+        "válka",
+        "věří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,33 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Chybné znalecké posudky poškozují lékaře, říká Kubek. Ministerstvo připouští změny",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/soudni-znalci-v-lekarstvi-ministerstvo-spravedlnosti/",
-      "dt": "2026-04-16T10:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chybné",
-        "kubek",
-        "lékaře",
-        "ministerstvo",
-        "posudky",
-        "poškozují",
-        "připouští",
-        "změny",
-        "znalecké",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89264,
+      "bytes": 89001,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T11:14:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T13:04:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Válka do správní rady VZP protlačíme, věří TOP 09. Současná situace je bizarní, míní Benda",
+            "publishedAt": "2026-04-17T13:04:56Z"
+          },
           {
             "title": "Nebezpečí v kojenecké výživě: Inspekce zakázala tyto tři produkty s toxinem",
             "publishedAt": "2026-04-17T11:14:41Z"
@@ -355,10 +361,6 @@
           {
             "title": "Průlom v léčbě Alzheimera? Léky neúčinkují, tvrdí nová analýza. Její výsledky rozdělují experty",
             "publishedAt": "2026-04-16T13:58:00Z"
-          },
-          {
-            "title": "Lék na bolest autismus nezpůsobuje. Přelomová studie uklidňuje těhotné",
-            "publishedAt": "2026-04-16T12:54:49Z"
           }
         ]
       }
