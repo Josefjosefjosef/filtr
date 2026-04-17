@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T14:30:01.808922Z",
+  "ingestedAt": "2026-04-17T14:50:24.547421Z",
   "items": [
     {
       "section": "finance",
@@ -83,6 +83,38 @@
         "scénu",
         "ultra",
         "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vydělával tam, kam se jiní neodvážili vstoupit. Zemřel Mark Mobius, muž, který přitáhl velký kapitál na vznikající trhy",
+      "url": "https://archiv.hn.cz/c1-67868300-vydelaval-tam-kam-se-jini-neodvazili-vstoupit-zemrel-mark-mobius-muz-ktery-pritahl-velky-kapital-na-vznikajici-trhy",
+      "dt": "2026-04-17T12:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "jiní",
+        "kam",
+        "kapitál",
+        "mark",
+        "mobius",
+        "muž",
+        "neodvážili",
+        "přitáhl",
+        "tam",
+        "trhy",
+        "velký",
+        "vstoupit",
+        "vydělával",
+        "vznikající",
+        "zemřel"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1046,33 +1078,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vymyslel, jak vyčistit vodu od léků a chemikálií. Uspěl navzdory autismu i podceňování ve škole",
-      "url": "https://procne.hn.cz/c1-67866460-vycistit-vodu-od-chemikalii",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "autismu",
-        "chemikálií",
-        "léků",
-        "navzdory",
-        "podceňování",
-        "uspěl",
-        "vodu",
-        "vymyslel",
-        "vyčistit",
-        "škole"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1083,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178807,
+      "bytes": 178780,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1123,10 +1128,10 @@
         "raw_feed_latest_publishedAt": "2026-04-17T13:08:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
+          "finance": 33,
           "sport": 1,
           "zpravy": 3,
-          "zdravi": 4
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1151,6 +1156,10 @@
             "publishedAt": "2026-04-17T12:31:00Z"
           },
           {
+            "title": "Vydělával tam, kam se jiní neodvážili vstoupit. Zemřel Mark Mobius, muž, který přitáhl velký kapitál na vznikající trhy",
+            "publishedAt": "2026-04-17T12:01:00Z"
+          },
+          {
             "title": "Fotbal a volby jako brzdy blízkovýchodní eskapády. Blíží se další světový time out?",
             "publishedAt": "2026-04-17T11:41:00Z"
           },
@@ -1165,10 +1174,6 @@
           {
             "title": "Špatné výsledky České pošty. Loni prodělala přes miliardu, zachránit ji má bývalý manažer Sportisima",
             "publishedAt": "2026-04-17T09:02:00Z"
-          },
-          {
-            "title": "Přečtěte si tisíc stran a hlasujte. Ministerstvo poslalo poslancům novou verzi stavebního zákona, na prostudování mají pár dnů",
-            "publishedAt": "2026-04-17T08:40:00Z"
           }
         ]
       }

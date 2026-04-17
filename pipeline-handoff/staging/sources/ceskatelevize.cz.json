@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T14:30:01.808922Z",
+  "ingestedAt": "2026-04-17T14:50:24.547421Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V brněnském studiu ČT vznikl stávkový výbor v reakci na návrh zákona",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/v-brnenskem-studiu-ct-vznikl-stavkovy-vybor-v-reakci-na-navrh-zakona-372499",
+      "dt": "2026-04-17T14:37:02Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brněnském",
+        "návrh",
+        "reakci",
+        "studiu",
+        "stávkový",
+        "vznikl",
+        "výbor",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -741,26 +766,20 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Semancová s možným střetem zájmů už pro resort nepracuje, řekl Juchelka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/semancova-s-moznym-stretem-zajmu-uz-pro-resort-nepracuje-rekl-juchelka-372467",
-      "dt": "2026-04-16T19:23:59Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Česko – Německo",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-nemecko-156327",
+      "dt": "2026-04-17T14:43:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "juchelka",
-        "možným",
-        "nepracuje",
-        "resort",
-        "semancová",
-        "střetem",
-        "zájmů",
-        "řekl"
+        "německo",
+        "česko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1488,31 +1507,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta B se ode dna tabulky neodlepila, Zbrojovka porazila Žižkov",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sparta-b-se-ode-dna-tabulky-neodlepila-podlehla-artisu-13-156303",
-      "dt": "2026-04-15T17:48:56Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dna",
-        "neodlepila",
-        "ode",
-        "porazila",
-        "sparta",
-        "tabulky",
-        "zbrojovka",
-        "žižkov"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1523,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42749,
+      "bytes": 42835,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,11 +1577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T14:10:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T14:37:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 22,
+          "finance": 3,
           "other": 5
         },
         "drop_counts": {
@@ -1600,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V brněnském studiu ČT vznikl stávkový výbor v reakci na návrh zákona",
+            "publishedAt": "2026-04-17T14:37:02Z"
+          },
           {
             "title": "Soud zrušil vítěznou arbitráž Česka proti Synotu a zároveň zakázal další",
             "publishedAt": "2026-04-17T14:10:30Z"
@@ -1627,10 +1625,6 @@
           {
             "title": "Vojta Náprstek se narodil před 200 lety. Do Prahy přinesl vzdálené civilizace i feminismus",
             "publishedAt": "2026-04-17T11:30:00Z"
-          },
-          {
-            "title": "Inspekce zakazuje uvádět na trh tři druhy kojenecké výživy kvůli toxinu",
-            "publishedAt": "2026-04-17T11:10:56Z"
           }
         ]
       }
@@ -1642,7 +1636,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36703,
+      "bytes": 36747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1679,7 +1673,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T13:29:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T14:43:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1694,6 +1688,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko – Německo",
+            "publishedAt": "2026-04-17T14:43:00Z"
+          },
           {
             "title": "Macháč do druhého semifinále v sezoně nepostoupil, nestačil na Rubljova",
             "publishedAt": "2026-04-17T13:29:52Z"
@@ -1721,10 +1719,6 @@
           {
             "title": "Zachová třetí zlato nezíská, na ME vypadla hned v 1. kole",
             "publishedAt": "2026-04-17T07:09:59Z"
-          },
-          {
-            "title": "Vejmelka základní část NHL jako brankář s nejvíce výhrami nezakončil",
-            "publishedAt": "2026-04-17T06:29:05Z"
           }
         ]
       }
@@ -1736,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76842,
+      "bytes": 76838,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
