@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T19:04:06.481406Z",
+  "ingestedAt": "2026-04-17T19:19:51.740491Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Už by nesměli střílet toulavé psy a kočky. Myslivci ostře kritizují možný zákaz",
+      "url": "https://zpravy.aktualne.cz/domaci/uz-by-nesmeli-strilet-toulave-psy-a-kocky-myslivci-ostre-kritizuji-mozny-zakaz/r~aaa294ac1ffc174c6304f231b0c87465/",
+      "dt": "2026-04-17T19:01:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kočky",
+        "kritizují",
+        "možný",
+        "myslivci",
+        "nesměli",
+        "ostře",
+        "psy",
+        "střílet",
+        "toulavé",
+        "zákaz"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -517,31 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nafta i benzin o víkendu zlevní, nové ceny platí až do pondělí",
-      "url": "https://zpravy.aktualne.cz/ekonomika/nafta-i-benzin-o-vikendu-zlevni-nove-ceny-plati-az-do-pondeli/r~aaa29cd2d8155240f1ea9196fbf37c02/",
-      "dt": "2026-04-17T12:22:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "benzin",
-        "ceny",
-        "nafta",
-        "nové",
-        "platí",
-        "pondělí",
-        "víkendu",
-        "zlevní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22808,
+      "bytes": 22874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,12 +591,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T17:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T19:01:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
+          "zpravy": 11,
           "sport": 6,
-          "finance": 3,
+          "finance": 2,
           "other": 1
         },
         "drop_counts": {
@@ -607,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už by nesměli střílet toulavé psy a kočky. Myslivci ostře kritizují možný zákaz",
+            "publishedAt": "2026-04-17T19:01:00Z"
+          },
           {
             "title": "Teherán souhlasí s pozastavením jaderného programu a uran se převeze do USA, řekl Trump. Írán to popírá",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -634,10 +640,6 @@
           {
             "title": "Udržitelnost dává smysl, říká jihočeský farmář. Dodává sýry na nejlepší smažák v Praze",
             "publishedAt": "2026-04-17T17:13:00Z"
-          },
-          {
-            "title": "Evropští lídři ocenili otevření Hormuzského průlivu. Brzy tam vyšlou mírovou misi",
-            "publishedAt": "2026-04-17T15:57:00Z"
           }
         ]
       }
