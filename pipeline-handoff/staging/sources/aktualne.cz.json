@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T17:39:42.599751Z",
+  "ingestedAt": "2026-04-17T17:59:45.087443Z",
   "items": [
     {
       "section": "aktualne",
@@ -22,6 +22,30 @@
         "ukazuje",
         "vojáků",
         "válce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Debutant Brízgala pomohl i napodruhé porazit v přípravě Němce",
+      "url": "https://sport.aktualne.cz/hokej/hokejova-reprezentace/debutant-brizgala-pomohl-i-napodruhe-porazit-v-priprave-nemce/r~aaa29290ef30a08f65a7619173ef6fce/",
+      "dt": "2026-04-17T17:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brízgala",
+        "debutant",
+        "napodruhé",
+        "němce",
+        "pomohl",
+        "porazit",
+        "přípravě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -516,34 +540,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Je jich pět a rozhodli se zemřít. Česká televize uvede nový Strachův film Lajf",
-      "url": "https://magazin.aktualne.cz/kultura/film/je-jich-pet-a-rozhodli-se-zemrit-ceska-televize-uvede-novy-strachuv-film-lajf/r~aaa29c91f314a233fafbe35616b113e4/",
-      "dt": "2026-04-17T11:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "film",
-        "jich",
-        "lajf",
-        "nový",
-        "pět",
-        "rozhodli",
-        "strachův",
-        "televize",
-        "uvede",
-        "zemřít",
-        "česká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22683,
+      "bytes": 22754,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,13 +587,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T17:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T17:32:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 10,
+          "sport": 6,
           "finance": 3,
-          "sport": 5,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -612,6 +608,10 @@
           {
             "title": "Rusko přišlo ve válce o nejméně 212 tisíc vojáků, ukazuje analýza BBC",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Debutant Brízgala pomohl i napodruhé porazit v přípravě Němce",
+            "publishedAt": "2026-04-17T17:32:00Z"
           },
           {
             "title": "Překvapivé hodnocení vlivného politika. Ukrajina v nejsilnější pozici, má tři scénáře",
@@ -636,10 +636,6 @@
           {
             "title": "Absolutní klasika, zní ze světa. Muchovou otrávil divný rozhovor, zaujala reakce poražené Coco",
             "publishedAt": "2026-04-17T16:12:00Z"
-          },
-          {
-            "title": "Černý den českého tenisu zlomila Muchová. Další tři si semifinále nezahrají",
-            "publishedAt": "2026-04-17T11:02:00Z"
           }
         ]
       }

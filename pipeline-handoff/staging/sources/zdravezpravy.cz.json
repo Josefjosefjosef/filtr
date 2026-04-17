@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-17T17:39:42.599751Z",
+  "ingestedAt": "2026-04-17T17:59:45.087443Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hemofilici už žijí jako ostatní lidé. A to díky preventivní léčbě",
+      "url": "https://www.zdravezpravy.cz/2026/04/17/hemofilici-ziji-jako-ostatni-lide-to-diky-preventivni-lecbe/",
+      "dt": "2026-04-17T15:42:13Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "díky",
+        "hemofilici",
+        "jako",
+        "lidé",
+        "léčbě",
+        "ostatní",
+        "preventivní",
+        "žijí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,30 +496,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Žena, která dodala Perrymu smrtelný ketamin, dostala 15 let",
-      "url": "https://www.zdravezpravy.cz/2026/04/09/zena-ktera-dodala-perrymu-smrtelny-ketamin-dostala-15-let/",
-      "dt": "2026-04-09T13:29:58Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dodala",
-        "dostala",
-        "ketamin",
-        "let",
-        "perrymu",
-        "smrtelný",
-        "žena"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +506,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 210676,
+      "bytes": 213006,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +543,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:09:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:42:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hemofilici už žijí jako ostatní lidé. A to díky preventivní léčbě",
+            "publishedAt": "2026-04-17T15:42:13Z"
+          },
           {
             "title": "Benda: Vládní koalice je zdivočelá. ODS mění kandidáta do rady VZP",
             "publishedAt": "2026-04-17T07:09:49Z"
@@ -584,10 +589,6 @@
           {
             "title": "Divizi zdravotní péče Penta Hospitals CZ nově vede Martin Křížek",
             "publishedAt": "2026-04-15T07:50:31Z"
-          },
-          {
-            "title": "Zdravotní dotazníky u životního pojištění: Na co si dát pozor!!!",
-            "publishedAt": "2026-04-14T11:00:50Z"
           }
         ]
       }
