@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T09:15:07.678045Z",
+  "ingestedAt": "2026-04-17T09:35:00.083787Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Moták k nároďáku sedí, umí hrát i útočně, líčí Jandač. Rulík? Dělal si nesmyslné alibi",
+      "url": "https://www.idnes.cz/hokej/reprezentace/josef-jandac-rozhovor-treneri-motak-gross-narodni-tym-cesko.A260416_142128_reprezentace_huda",
+      "dt": "2026-04-17T08:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alibi",
+        "dělal",
+        "hrát",
+        "jandač",
+        "líčí",
+        "moták",
+        "nesmyslné",
+        "nároďáku",
+        "rulík",
+        "sedí",
+        "umí",
+        "útočně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,31 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejvíc za pyrotechniku zaplatí Baník, Olomouc dostala pokutu za rasismus",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/disciplinarni-komise-pyrotechnika-pokuty.A260416_174940_fotbal_kazdt",
-      "dt": "2026-04-16T15:53:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baník",
-        "dostala",
-        "nejvíc",
-        "olomouc",
-        "pokutu",
-        "pyrotechniku",
-        "rasismus",
-        "zaplatí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46464,
+      "bytes": 47101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T08:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Moták k nároďáku sedí, umí hrát i útočně, líčí Jandač. Rulík? Dělal si nesmyslné alibi",
+            "publishedAt": "2026-04-17T08:52:00Z"
+          },
           {
             "title": "Judistka Zachová na třetí zlato z ME nedosáhne, v Tbilisi prohrála první kolo",
             "publishedAt": "2026-04-17T08:31:00Z"
@@ -879,10 +887,6 @@
           {
             "title": "Fuksova výzva: uběhnout maraton pod tři hodiny. A za pět dní Světový pohár!",
             "publishedAt": "2026-04-17T07:00:00Z"
-          },
-          {
-            "title": "Nelamte nad námi hůl, přeje si kouč Jihostroje. Lvi však v Budějovicích umí",
-            "publishedAt": "2026-04-17T06:29:00Z"
           }
         ]
       }

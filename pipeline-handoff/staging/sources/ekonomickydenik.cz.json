@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T09:15:07.678045Z",
+  "ingestedAt": "2026-04-17T09:35:00.083787Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pošta v miliardové ztrátě. Metnar přivádí „krizového“ ředitele",
+      "url": "https://ekonomickydenik.cz/posta-ztrata-metnar-krizovy-reditel-hodul/",
+      "dt": "2026-04-17T09:29:11Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "krizového",
+        "metnar",
+        "miliardové",
+        "pošta",
+        "přivádí",
+        "ztrátě",
+        "ředitele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,32 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Žít, nebo jen přežívat? Většina Čechů na důstojný standard nedosáhne",
-      "url": "https://ekonomickydenik.cz/prezit-vs-zit-hranice-dustojneho-prijmu/",
-      "dt": "2026-04-15T13:10:34Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "důstojný",
-        "jen",
-        "nebo",
-        "nedosáhne",
-        "přežívat",
-        "standard",
-        "většina",
-        "čechů",
-        "žít"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72413,
+      "bytes": 72920,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:58:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:29:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pošta v miliardové ztrátě. Metnar přivádí „krizového“ ředitele",
+            "publishedAt": "2026-04-17T09:29:11Z"
+          },
           {
             "title": "Netflix ve výhledu zklamal. Firmu opouští její spoluzakladatel",
             "publishedAt": "2026-04-17T08:58:37Z"
@@ -873,10 +875,6 @@
           {
             "title": "Vystřízlivění v Evropě, Slováci přebírají štafetu od Maďarů. Bez ruské ropy žádné sankce",
             "publishedAt": "2026-04-16T17:10:49Z"
-          },
-          {
-            "title": "Ruský velvyslanec na koberečku: Macinka chce vysvětlení za výhrůžky",
-            "publishedAt": "2026-04-16T15:54:37Z"
           }
         ]
       }

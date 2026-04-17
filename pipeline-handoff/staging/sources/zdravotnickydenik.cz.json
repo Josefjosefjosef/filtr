@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T09:15:07.678045Z",
+  "ingestedAt": "2026-04-17T09:35:00.083787Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Miliony pro „onkologicky nemocnou Karolínku“. Sbírka na sociální síti budí silné podezření",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/onkologicky-nemocna-karolina-podezrela-sbirka/",
+      "dt": "2026-04-17T09:14:34Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "budí",
+        "karolínku",
+        "miliony",
+        "nemocnou",
+        "onkologicky",
+        "podezření",
+        "sbírka",
+        "silné",
+        "sociální",
+        "síti"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,33 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Zfackovat sestru a odejít s pokutou? Kubek chce zpřísnit tresty za útoky na zdravotníky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zfackovat-sestru-a-odejit-s-pokutou-kubek-chce-zprisnit-tresty-za-utoky-na-zdravotniky/",
-      "dt": "2026-04-16T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chce",
-        "kubek",
-        "odejít",
-        "pokutou",
-        "sestru",
-        "tresty",
-        "zdravotníky",
-        "zfackovat",
-        "zpřísnit",
-        "útoky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97218,
+      "bytes": 95887,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,11 +312,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:14:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -328,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliony pro „onkologicky nemocnou Karolínku“. Sbírka na sociální síti budí silné podezření",
+            "publishedAt": "2026-04-17T09:14:34Z"
+          },
           {
             "title": "Komentář: Očkování není ideologie a prevence není katalog",
             "publishedAt": "2026-04-17T07:00:00Z"
@@ -355,10 +358,6 @@
           {
             "title": "Po ultimátu přišel vyhazov. Ředitel znojemské nemocnice skončil ze dne na den",
             "publishedAt": "2026-04-16T10:56:14Z"
-          },
-          {
-            "title": "Chybné znalecké posudky poškozují lékaře, říká Kubek. Ministerstvo připouští změny",
-            "publishedAt": "2026-04-16T10:00:00Z"
           }
         ]
       }
