@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T10:54:49.056815Z",
+  "ingestedAt": "2026-04-17T11:15:03.728706Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Aplikace na ověřování věku je hotová, dle experta si ji země EU budou moci přizpůsobit",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/aplikace-na-overovani-veku-je-hotova-dle-experta-si-ji-zeme-eu-budou-moci-prizpusobit-372482",
+      "dt": "2026-04-17T11:00:32Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aplikace",
+        "dle",
+        "experta",
+        "hotová",
+        "moci",
+        "ověřování",
+        "přizpůsobit",
+        "věku",
+        "země"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,31 +751,6 @@
         "súdán",
         "válku",
         "íránem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Cheb schválil vstup Daimler Truck do svého průmyslového parku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/cheb-schvalil-vstup-daimler-truck-do-sveho-prumysloveho-parku-372455",
-      "dt": "2026-04-16T14:34:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cheb",
-        "daimler",
-        "parku",
-        "průmyslového",
-        "schválil",
-        "svého",
-        "truck",
-        "vstup"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1524,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43476,
+      "bytes": 43683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1584,12 +1585,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:25:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:00:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 2,
-          "finance": 1
+          "other": 3,
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1601,6 +1601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aplikace na ověřování věku je hotová, dle experta si ji země EU budou moci přizpůsobit",
+            "publishedAt": "2026-04-17T11:00:32Z"
+          },
           {
             "title": "Česko pro bezpečnost Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
             "publishedAt": "2026-04-17T10:25:40Z"
@@ -1628,10 +1632,6 @@
           {
             "title": "„Otékaly mi klouby, rodiče se o mě báli.“ Dnes lze hemofilii díky léčbě zvládat",
             "publishedAt": "2026-04-17T08:13:13Z"
-          },
-          {
-            "title": "Rezavý rám, poškozené brzdy. Polovina zkontrolovaných autobusů měla problémy",
-            "publishedAt": "2026-04-17T07:22:14Z"
           }
         ]
       }
@@ -1737,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77326,
+      "bytes": 77548,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

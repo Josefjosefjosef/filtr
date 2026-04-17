@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-17T10:54:49.056815Z",
+  "ingestedAt": "2026-04-17T11:15:03.728706Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Život s alkoholikem. Jak poznat, že pije moc, jak pomáhat a kdy už utéct",
+      "url": "https://www.prozeny.cz/clanek/rodina-rodinne-vztahy-zivot-s-alkoholikem-jak-poznat-ze-pije-moc-jak-pomahat-a-kdy-uz-utect-94492",
+      "dt": "2026-04-17T11:06:10Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "alkoholikem",
+        "moc",
+        "pije",
+        "pomáhat",
+        "poznat",
+        "utéct",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -805,34 +829,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zlobivý pes neexistuje! Pejsek vám nedělá naschvály. Poznejte příčiny problémového chování",
-      "url": "https://www.prozeny.cz/clanek/rodina-domaci-mazlicci-vycvik-psa-vychova-proc-zlobi-jak-zabranit-problemovemu-chovani-102962",
-      "dt": "2026-04-16T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "chování",
-        "naschvály",
-        "nedělá",
-        "neexistuje",
-        "pejsek",
-        "pes",
-        "poznejte",
-        "problémového",
-        "příčiny",
-        "vám",
-        "zlobivý"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -843,7 +839,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39636,
+      "bytes": 39476,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -880,7 +876,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:51:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T11:06:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 28,
@@ -896,6 +892,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Život s alkoholikem. Jak poznat, že pije moc, jak pomáhat a kdy už utéct",
+            "publishedAt": "2026-04-17T11:06:10Z"
+          },
           {
             "title": "Nejčastější nemoci, které přicházejí po 50. roce. Na co si dát pozor, i když žijete zdravě",
             "publishedAt": "2026-04-17T08:51:24Z"
@@ -922,10 +922,6 @@
           },
           {
             "title": "„Mě rozesměje málokdo!“ Eva Leinweberová o tom, proč je mezi ženami méně komiků a koho rozchechtala při natáčení",
-            "publishedAt": "2026-04-17T03:00:00Z"
-          },
-          {
-            "title": "Jeden outfit, dvě ženy. Jak sluší trenčkot či kožená bunda třicátnici vs. šedesátnici?",
             "publishedAt": "2026-04-17T03:00:00Z"
           }
         ]
