@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T19:59:38.911881Z",
+  "ingestedAt": "2026-04-17T20:19:37.239163Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Předseda akademie odmítá tvrzení Klempíře: Na Anděly jsme ministra pozvali",
+      "url": "https://www.denik.cz/z_domova/klempir-vedral-ceny-andel-pozvanka.html",
+      "dt": "2026-04-17T19:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "akademie",
+        "anděly",
+        "jsme",
+        "klempíře",
+        "ministra",
+        "odmítá",
+        "pozvali",
+        "předseda",
+        "tvrzení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -628,32 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Život se s Janem Potměšilem nemazlil: Po nehodě exotem i bojovníkem, věřil synům",
-      "url": "https://www.denik.cz/film-a-televize/zemrel-jan-potmesil-nehoda-nemoc-manzelka-rodina-deti.html",
-      "dt": "2026-04-17T09:11:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojovníkem",
-        "exotem",
-        "janem",
-        "nehodě",
-        "nemazlil",
-        "potměšilem",
-        "synům",
-        "věřil",
-        "život"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29515,
+      "bytes": 29320,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T17:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T19:37:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -717,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předseda akademie odmítá tvrzení Klempíře: Na Anděly jsme ministra pozvali",
+            "publishedAt": "2026-04-17T19:37:00Z"
+          },
           {
             "title": "Seniorka v mercedesu projela v Pařížské ulici v centru Prahy výlohou obchodu",
             "publishedAt": "2026-04-17T17:48:00Z"
@@ -744,10 +748,6 @@
           {
             "title": "Ražba dálničního tunelu Opevnění na D11 pokračuje. Dělníci se blíží k polovině",
             "publishedAt": "2026-04-17T13:32:00Z"
-          },
-          {
-            "title": "Sociální služby balancují na hraně přežití, peníze od státu přicházejí pozdě",
-            "publishedAt": "2026-04-17T13:30:00Z"
           }
         ]
       }
