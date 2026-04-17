@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-17T05:50:21.471593Z",
+  "ingestedAt": "2026-04-17T06:10:13.241314Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocnice přežila plameny, audit odhalil 1500 chyb. Dnes je vzorem požární bezpečnosti",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-audit-1500-chyb-pozarni-bezpecnost/",
+      "dt": "2026-04-17T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "1500",
+        "audit",
+        "bezpečnosti",
+        "chyb",
+        "nemocnice",
+        "odhalil",
+        "plameny",
+        "požární",
+        "přežila",
+        "vzorem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Německá reforma zdravotnictví: Úspory mají nést pacienti, pojišťovny i farmaceutické firmy",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecka-reforma-zdravotnictvi-uspory-pacienti-pojistovny-farmaceuticke-firmy/",
-      "dt": "2026-04-16T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "farmaceutické",
-        "firmy",
-        "mají",
-        "nést",
-        "německá",
-        "pacienti",
-        "pojišťovny",
-        "reforma",
-        "zdravotnictví",
-        "úspory"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99954,
+      "bytes": 99442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocnice přežila plameny, audit odhalil 1500 chyb. Dnes je vzorem požární bezpečnosti",
+            "publishedAt": "2026-04-17T06:00:00Z"
+          },
           {
             "title": "Jedno očkování proti chřipce na celý život? Vědci jsou blíž univerzální vakcíně",
             "publishedAt": "2026-04-17T05:00:00Z"
@@ -360,10 +364,6 @@
           {
             "title": "Kolik prací může mít lékař? Pravidla pojišťoven se výrazně liší",
             "publishedAt": "2026-04-16T08:00:50Z"
-          },
-          {
-            "title": "Zfackovat sestru a odejít s pokutou? Kubek chce zpřísnit tresty za útoky na zdravotníky",
-            "publishedAt": "2026-04-16T07:00:00Z"
           }
         ]
       }

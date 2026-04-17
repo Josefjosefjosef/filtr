@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T05:50:21.471593Z",
+  "ingestedAt": "2026-04-17T06:10:13.241314Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Skončila základní část NHL, Vejmelka se prostřídal s Vaněčkem",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vejmelka-vanecek.A260417_071326_nhl_mkr",
-      "dt": "2026-04-17T05:45:43Z",
+      "dt": "2026-04-17T06:05:16Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -19,6 +19,32 @@
         "vejmelka",
         "základní",
         "část"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bez toho to není ono. Pastrňák prozradil, jaké jídlo musí mít před zápasem",
+      "url": "https://www.idnes.cz/sport/trendy/bez-toho-to-neni-ono-pastrnak-prozradil-jake-jidlo-musi-mit-pred-zapasem.A260416_120816_trendy_blah",
+      "dt": "2026-04-17T06:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "jaké",
+        "jídlo",
+        "musí",
+        "mít",
+        "ono",
+        "pastrňák",
+        "prozradil",
+        "toho",
+        "zápasem"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -758,35 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Divoký konec? Mám se všemi dobrý vztah, tvrdí Lurvink. Trousil chce posílit obranu",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/louis-lurvink-jan-trousil-pardubice-sigma.A260414_215808_fotbal_hava",
-      "dt": "2026-04-16T12:24:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chce",
-        "divoký",
-        "dobrý",
-        "konec",
-        "lurvink",
-        "mám",
-        "obranu",
-        "posílit",
-        "trousil",
-        "tvrdí",
-        "vztah",
-        "všemi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45809,
+      "bytes": 45565,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T05:45:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T06:05:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,7 +848,11 @@
         "sample_titles": [
           {
             "title": "Skončila základní část NHL, Vejmelka se prostřídal s Vaněčkem",
-            "publishedAt": "2026-04-17T05:45:43Z"
+            "publishedAt": "2026-04-17T06:05:16Z"
+          },
+          {
+            "title": "Bez toho to není ono. Pastrňák prozradil, jaké jídlo musí mít před zápasem",
+            "publishedAt": "2026-04-17T06:00:00Z"
           },
           {
             "title": "Prostějov nad propastí, před pár lety snil o lize. Hráči nekontrolují těla, všiml si trenér",
@@ -876,10 +877,6 @@
           {
             "title": "Braga je v semifinále Evropské ligy. U velké otočky v Seville byl i Horníček",
             "publishedAt": "2026-04-16T21:21:00Z"
-          },
-          {
-            "title": "Zázračný talent je velmistrem! Finěk se titulu dočkal jako druhý nejmladší Čech",
-            "publishedAt": "2026-04-16T20:22:00Z"
           }
         ]
       }

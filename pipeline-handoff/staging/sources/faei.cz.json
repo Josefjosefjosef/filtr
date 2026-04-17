@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T05:50:21.471593Z",
+  "ingestedAt": "2026-04-17T06:10:13.241314Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
+      "url": "https://profitonline.cz/konflikt-na-blizkem-vychode-zdrazi-nove-domy-a-byty-v-cesku/",
+      "dt": "2026-04-17T06:00:46Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "blízkém",
+        "byty",
+        "domy",
+        "konflikt",
+        "nové",
+        "východě",
+        "zdraží",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,29 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dan Bárta & Illustratosphere lákají na jarní turné",
-      "url": "https://profitonline.cz/dan-barta-illustratosphere-lakaji-na-jarni-turne/",
-      "dt": "2026-04-14T13:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bárta",
-        "dan",
-        "illustratosphere",
-        "jarní",
-        "lákají",
-        "turné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19227,
+      "bytes": 19359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +346,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T06:00:46Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -361,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
+            "publishedAt": "2026-04-17T06:00:46Z"
+          },
           {
             "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
             "publishedAt": "2026-04-17T04:00:21Z"
@@ -388,10 +394,6 @@
           {
             "title": "Česko stárne. Chybějící domovy pro seniory dokážeme postavit, ale kdo o ně bude pečovat?",
             "publishedAt": "2026-04-15T13:00:58Z"
-          },
-          {
-            "title": "Olympiáda v LA 2028: boj o lístky i nové sporty",
-            "publishedAt": "2026-04-15T10:00:14Z"
           }
         ]
       }
