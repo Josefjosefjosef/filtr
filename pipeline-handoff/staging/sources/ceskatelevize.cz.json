@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T04:31:30.989299Z",
+  "ingestedAt": "2026-04-17T04:50:06.300916Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Norského seniora zbavila léčba současně AIDS i rakoviny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/norskeho-seniora-zbavila-lecba-soucasne-aids-i-rakoviny-372456",
+      "dt": "2026-04-17T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aids",
+        "léčba",
+        "norského",
+        "rakoviny",
+        "seniora",
+        "současně",
+        "zbavila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,33 +744,6 @@
         "nejvyšší",
         "paliv",
         "pátek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na summit NATO mají jet podle vládního usnesení Babiš, Macinka a Zůna",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/na-summit-nato-maji-jet-podle-vladniho-usneseni-babis-macinka-a-zuna-372439",
-      "dt": "2026-04-16T09:36:36Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babiš",
-        "jet",
-        "macinka",
-        "mají",
-        "nato",
-        "podle",
-        "summit",
-        "usnesení",
-        "vládního",
-        "zůna"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42921,
+      "bytes": 42482,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,12 +1571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 3,
-          "other": 2
+          "other": 3,
+          "zpravy": 24,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1591,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Norského seniora zbavila léčba současně AIDS i rakoviny",
+            "publishedAt": "2026-04-17T04:30:00Z"
+          },
           {
             "title": "Obětí nehod v Česku i v EU ubývá. K naplnění cílů to ale nestačí",
             "publishedAt": "2026-04-17T04:00:00Z"
@@ -1618,10 +1619,6 @@
           {
             "title": "Semancová s možným střetem zájmů už pro resort nepracuje, řekl Juchelka",
             "publishedAt": "2026-04-16T19:23:59Z"
-          },
-          {
-            "title": "Zástupci Evropské komise budou jednat s Tiszou o reformách",
-            "publishedAt": "2026-04-16T18:48:28Z"
           }
         ]
       }
@@ -1727,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77313,
+      "bytes": 77367,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T04:31:30.989299Z",
+  "ingestedAt": "2026-04-17T04:50:06.300916Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Vysokorychlostní tratě na tom možná nebudou tak špatně. Evropské dotace vypadají nadějně, říká šéf Správy železnic",
+      "url": "https://podcasty.hn.cz/c1-67868080-vysokorychlostni-trate-na-tom-mozna-nebudou-tak-spatne-evropske-dotace-vypadaji-nadejne-rika-sef-spravy-zeleznic",
+      "dt": "2026-04-17T04:24:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dotace",
+        "evropské",
+        "možná",
+        "nadějně",
+        "nebudou",
+        "správy",
+        "tak",
+        "tom",
+        "tratě",
+        "vypadají",
+        "vysokorychlostní",
+        "říká",
+        "špatně",
+        "šéf",
+        "železnic"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -878,24 +910,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Boutique",
-      "url": "https://procne.hn.cz/c1-67866130-boutique",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "boutique"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -906,7 +920,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 177295,
+      "bytes": 177355,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -943,10 +957,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-16T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:24:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 39,
+          "zpravy": 1,
+          "finance": 38,
           "zdravi": 1
         },
         "drop_counts": {
@@ -959,6 +974,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vysokorychlostní tratě na tom možná nebudou tak špatně. Evropské dotace vypadají nadějně, říká šéf Správy železnic",
+            "publishedAt": "2026-04-17T04:24:00Z"
+          },
           {
             "title": "Motorkou přes památku UNESCO, Češi v zapomenuté válce a běžecké botky za šest stovek. Několik tipů na Vietnam skoro bez turistů",
             "publishedAt": "2026-04-16T22:00:00Z"
@@ -985,10 +1004,6 @@
           },
           {
             "title": "Kurátor",
-            "publishedAt": "2026-04-16T22:00:00Z"
-          },
-          {
-            "title": "Terapie světlem",
             "publishedAt": "2026-04-16T22:00:00Z"
           }
         ]
