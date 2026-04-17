@@ -1026,10 +1026,17 @@ export function initIuFinancialCalculatorsOverlay(deps) {
 
   function iuFinCalcSyncChromeBottom() {
     try {
+      if (!document.documentElement) return;
       const el = document.getElementById("leftStickyHeader");
-      if (!el || !document.documentElement) return;
-      const r = el.getBoundingClientRect();
-      const px = Math.max(0, Math.round(r.bottom * 1000) / 1000);
+      const vh = typeof window !== "undefined" && window.innerHeight ? window.innerHeight : 0;
+      let px = 72;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        const raw = Math.max(0, Math.round(r.bottom * 1000) / 1000);
+        if (raw > 0 && (vh <= 0 || raw < vh - 32)) {
+          px = raw;
+        }
+      }
       document.documentElement.style.setProperty("--iu-fin-calc-chrome-bottom", px + "px");
     } catch (_) {}
   }
