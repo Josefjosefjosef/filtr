@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-17T16:30:10.376845Z",
+  "ingestedAt": "2026-04-17T16:49:39.765770Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Paliva po otevření Hormuzu rychle zlevní, návrat k normálu ale potrvá, míní analytici",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/paliva-po-otevreni-hormuzu-rychle-zlevni-navrat-k-normalu-ale-potrva-mini-analytici.A260417_180640_eko-zahranicni_idh",
+      "dt": "2026-04-17T16:19:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "analytici",
+        "hormuzu",
+        "míní",
+        "normálu",
+        "návrat",
+        "otevření",
+        "paliva",
+        "potrvá",
+        "rychle",
+        "zlevní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,32 +780,6 @@
         "sportovce",
         "úspěšné",
         "šťastný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Podezření ze zneužití pravomoci. Tejc podá trestní oznámení v kauze bitcoinů",
-      "url": "https://www.idnes.cz/zpravy/domaci/schillerova-s-tejcem-predstavi-nova-zjisteni-v-bitcoinove-kauze.A260416_123844_domaci_vank",
-      "dt": "2026-04-17T11:47:10Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bitcoinů",
-        "kauze",
-        "oznámení",
-        "podezření",
-        "podá",
-        "pravomoci",
-        "tejc",
-        "trestní",
-        "zneužití"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51532,
+      "bytes": 51556,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,11 +1620,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:31:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T16:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 25,
+          "finance": 3,
+          "zpravy": 24,
           "other": 3
         },
         "drop_counts": {
@@ -1635,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paliva po otevření Hormuzu rychle zlevní, návrat k normálu ale potrvá, míní analytici",
+            "publishedAt": "2026-04-17T16:19:00Z"
+          },
           {
             "title": "Írán otevřel Hormuz obchodním lodím. Dál ale trvá americká blokáda, reagoval Trump",
             "publishedAt": "2026-04-17T15:31:46Z"
@@ -1662,10 +1668,6 @@
           {
             "title": "Světelná závora je hazard s dopravou, tvrdí Praha 8 a chystá správní žalobu",
             "publishedAt": "2026-04-17T14:27:00Z"
-          },
-          {
-            "title": "Na letadlovce USA kvůli blokádě dochází jídlo, vojáci fotí poloprázdné tácy",
-            "publishedAt": "2026-04-17T14:23:00Z"
           }
         ]
       }
