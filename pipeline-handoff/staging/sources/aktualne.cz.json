@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T03:50:45.958245Z",
+  "ingestedAt": "2026-04-17T04:09:57.596899Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Mezi intuicí a kontrolou. Držitelka pěti Českých lvů Anna Geislerová slaví kulatiny",
+      "url": "https://magazin.aktualne.cz/kultura/film/mezi-intuici-a-kontrolou-drzitelka-peti-ceskych-lvu-anna-geislerova-slavi-kulatiny/r~aaa298a1636806761de505326c3f0157/",
+      "dt": "2026-04-17T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "anna",
+        "držitelka",
+        "geislerová",
+        "intuicí",
+        "kontrolou",
+        "kulatiny",
+        "lvů",
+        "pěti",
+        "slaví",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -500,33 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mimořádný úspěch ve Dvoře Králové. Safari park slaví narození vzácných hyenek",
-      "url": "https://magazin.aktualne.cz/mimoradny-uspech-ve-dvore-kralove-safari-park-slavi-narozeni-vzacnych-hyenek/r~aaa29386b740c74404741c2d9169f614/",
-      "dt": "2026-04-16T14:15:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dvoře",
-        "hyenek",
-        "králové",
-        "mimořádný",
-        "narození",
-        "park",
-        "safari",
-        "slaví",
-        "vzácných",
-        "úspěch"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21948,
+      "bytes": 22078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,10 +574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T03:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
+          "other": 1,
+          "zpravy": 13,
           "finance": 1,
           "sport": 5
         },
@@ -591,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mezi intuicí a kontrolou. Držitelka pěti Českých lvů Anna Geislerová slaví kulatiny",
+            "publishedAt": "2026-04-17T04:00:00Z"
+          },
           {
             "title": "Ozempic má nečekanou konkurenci. Vědci našli přímo v mozku přirozený vypínač hladu",
             "publishedAt": "2026-04-17T03:35:00Z"
@@ -618,10 +623,6 @@
           {
             "title": "Česko se připojí k zajištění bezpečnosti Hormuzu, Babiš chystá nabídku spojencům",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Po 44 letech dopaden: Francie převzala podezřelého z útoku na židovskou restauraci",
-            "publishedAt": "2026-04-16T20:44:00Z"
           }
         ]
       }

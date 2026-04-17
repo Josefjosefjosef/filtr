@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-17T03:50:45.958245Z",
+  "ingestedAt": "2026-04-17T04:09:57.596899Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
+      "url": "https://profitonline.cz/jedna-vterina-na-silnici-statisice-na-uctu-odskodneni-po-nehode-roste/",
+      "dt": "2026-04-17T04:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "jedna",
+        "nehodě",
+        "odškodnění",
+        "roste",
+        "silnici",
+        "statisíce",
+        "vteřina",
+        "účtu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,31 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Raritní desetikoruna se prodala za 134 tisíc. Cenný je malý detail",
-      "url": "https://profitonline.cz/raritni-desetikoruna-se-prodala-za-134-tisic-cenny-je-maly-detail/",
-      "dt": "2026-04-14T10:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "134",
-        "cenný",
-        "desetikoruna",
-        "detail",
-        "malý",
-        "prodala",
-        "raritní",
-        "tisíc"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19105,
+      "bytes": 19227,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-16T14:00:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -361,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
+            "publishedAt": "2026-04-17T04:00:21Z"
+          },
           {
             "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
             "publishedAt": "2026-04-16T14:00:15Z"
@@ -388,10 +392,6 @@
           {
             "title": "Olympiáda v LA 2028: boj o lístky i nové sporty",
             "publishedAt": "2026-04-15T10:00:14Z"
-          },
-          {
-            "title": "Revoluce v českém maloobchodě odstartovala. Bude mít úspěch?",
-            "publishedAt": "2026-04-15T06:00:04Z"
           }
         ]
       }
