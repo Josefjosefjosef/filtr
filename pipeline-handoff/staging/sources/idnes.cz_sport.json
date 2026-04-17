@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T09:35:00.083787Z",
+  "ingestedAt": "2026-04-17T09:55:11.168822Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Počtvrté mezi milionáři. Český koeficient slaví, o co se bude hrát příští rok?",
+      "url": "https://www.idnes.cz/fotbal/pohary/narodni-koeficient-liga-mistru-cesko-10-misto.A260417_093242_fot_pohary_duff",
+      "dt": "2026-04-17T09:40:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hrát",
+        "koeficient",
+        "milionáři",
+        "počtvrté",
+        "příští",
+        "rok",
+        "slaví",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Začíná evropský seriál. Stříteský změnil parťáka, Cais si naplánoval pět podniků",
+      "url": "https://www.idnes.cz/sport/motorsport/mistrovstvi-evropy-v-automobilovych-soutezich-cais-stritesky-rallye.A260417_899945_motorsport_czo",
+      "dt": "2026-04-17T09:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cais",
+        "evropský",
+        "naplánoval",
+        "parťáka",
+        "podniků",
+        "pět",
+        "seriál",
+        "stříteský",
+        "začíná",
+        "změnil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,60 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hlavní kouč hokejistů Moták, asistentem je Gross. Národní tým potvrdil nové trenéry",
-      "url": "https://www.idnes.cz/hokej/reprezentace/novi-treneri-reprezentace-zdenek-motak-pavel-gross.A260416_140656_reprezentace_hrj",
-      "dt": "2026-04-16T16:36:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "asistentem",
-        "gross",
-        "hlavní",
-        "hokejistů",
-        "kouč",
-        "moták",
-        "nové",
-        "národní",
-        "potvrdil",
-        "trenéry",
-        "tým"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obviněný rozhodčí Tomanec vystoupil z FAČR, fotbalisté Startu Brno jsou bez výplat",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/rozhodci-tomanec-vystoupil-z-facr.A260416_175616_fotbal_ald",
-      "dt": "2026-04-16T16:10:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brno",
-        "fačr",
-        "fotbalisté",
-        "obviněný",
-        "rozhodčí",
-        "startu",
-        "tomanec",
-        "vystoupil",
-        "výplat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47101,
+      "bytes": 47258,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T08:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T09:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Počtvrté mezi milionáři. Český koeficient slaví, o co se bude hrát příští rok?",
+            "publishedAt": "2026-04-17T09:40:00Z"
+          },
+          {
+            "title": "Začíná evropský seriál. Stříteský změnil parťáka, Cais si naplánoval pět podniků",
+            "publishedAt": "2026-04-17T09:27:00Z"
+          },
           {
             "title": "Moták k nároďáku sedí, umí hrát i útočně, líčí Jandač. Rulík? Dělal si nesmyslné alibi",
             "publishedAt": "2026-04-17T08:52:00Z"
@@ -879,14 +885,6 @@
           {
             "title": "POHLED: Dá Hadamczik trenérům klid na práci? Doufejme, Rulíka už potopil",
             "publishedAt": "2026-04-17T08:00:00Z"
-          },
-          {
-            "title": "Olympijští šampioni Miuraová a Kihara se loučí. Čekají nás teď další výzvy, napsali",
-            "publishedAt": "2026-04-17T07:28:00Z"
-          },
-          {
-            "title": "Fuksova výzva: uběhnout maraton pod tři hodiny. A za pět dní Světový pohár!",
-            "publishedAt": "2026-04-17T07:00:00Z"
           }
         ]
       }
