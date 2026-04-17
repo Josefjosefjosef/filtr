@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T04:09:57.596899Z",
+  "ingestedAt": "2026-04-17T04:31:30.989299Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tajemství, které může změnit bezpečnost Evropy? Příroda přepisuje válečné strategie",
+      "url": "https://ekonomickydenik.cz/tajemstvi-bezpecnost-priroda-baziny-mokrady/",
+      "dt": "2026-04-17T04:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bezpečnost",
+        "evropy",
+        "přepisuje",
+        "příroda",
+        "strategie",
+        "tajemství",
+        "válečné",
+        "změnit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Čím nahradíme benzin a naftu? Šéf Orlen Unipetrolu popsal, co čeká řidiče",
-      "url": "https://ekonomickydenik.cz/benzin-nafta-alternativy-orlen-unipetrol/",
-      "dt": "2026-04-15T11:39:41Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "benzin",
-        "naftu",
-        "nahradíme",
-        "orlen",
-        "popsal",
-        "unipetrolu",
-        "čeká",
-        "čím",
-        "řidiče",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73174,
+      "bytes": 73568,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-16T18:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T04:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 3
+          "finance": 28,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -847,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tajemství, které může změnit bezpečnost Evropy? Příroda přepisuje válečné strategie",
+            "publishedAt": "2026-04-17T04:15:00Z"
+          },
           {
             "title": "„Máme jiná čísla než vy.“ Babiš před šéfem NATO vysvětloval výdaje na obranu",
             "publishedAt": "2026-04-16T18:51:00Z"
@@ -874,10 +876,6 @@
           {
             "title": "Spor o miliardy pro kraje. S přesměrováním daní ministerstva nesouhlasí",
             "publishedAt": "2026-04-16T13:20:12Z"
-          },
-          {
-            "title": "Hubáčkův Creditas předběhl i ČEZ. Získal stavební povolení pro paroplynku",
-            "publishedAt": "2026-04-16T12:57:42Z"
           }
         ]
       }
