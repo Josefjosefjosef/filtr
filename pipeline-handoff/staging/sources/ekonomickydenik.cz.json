@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-17T10:35:24.235736Z",
+  "ingestedAt": "2026-04-17T10:54:49.056815Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Agresor s kriminálním chováním.“ Evropa se vysmála ruským hrozbám bombardovat fabriky",
+      "url": "https://ekonomickydenik.cz/agresor-kriminalnim-chovanim-rusko-hrozby/",
+      "dt": "2026-04-17T10:35:11Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "agresor",
+        "bombardovat",
+        "chováním",
+        "evropa",
+        "fabriky",
+        "hrozbám",
+        "kriminálním",
+        "ruským",
+        "vysmála"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -754,33 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Finanční jackpot i pro Česko? První překážka pro biliony na rakety, čipy a dálnice padla",
-      "url": "https://ekonomickydenik.cz/jackpot-cesko-rakety-cipy-dalnice/",
-      "dt": "2026-04-15T13:45:20Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biliony",
-        "dálnice",
-        "finanční",
-        "jackpot",
-        "padla",
-        "první",
-        "překážka",
-        "rakety",
-        "česko",
-        "čipy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72920,
+      "bytes": 72771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T09:29:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:35:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 28,
-          "zpravy": 2
+          "finance": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -844,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Agresor s kriminálním chováním.“ Evropa se vysmála ruským hrozbám bombardovat fabriky",
+            "publishedAt": "2026-04-17T10:35:11Z"
+          },
           {
             "title": "Pošta v miliardové ztrátě. Metnar přivádí „krizového“ ředitele",
             "publishedAt": "2026-04-17T09:29:11Z"
@@ -871,10 +874,6 @@
           {
             "title": "„Máme jiná čísla než vy.“ Babiš před šéfem NATO vysvětloval výdaje na obranu",
             "publishedAt": "2026-04-16T18:51:00Z"
-          },
-          {
-            "title": "Vystřízlivění v Evropě, Slováci přebírají štafetu od Maďarů. Bez ruské ropy žádné sankce",
-            "publishedAt": "2026-04-16T17:10:49Z"
           }
         ]
       }

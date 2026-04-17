@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-17T10:35:24.235736Z",
+  "ingestedAt": "2026-04-17T10:54:49.056815Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šenkeřík před baráží: Reichelovy tréninky? Ostré! Musíme využít únavu Jihlavy",
+      "url": "https://www.idnes.cz/hokej/extraliga/senkerik-hokej-reichel-litvinov-jihlava-baraz.A260417_073228_hokej_pbi",
+      "dt": "2026-04-17T10:32:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráží",
+        "jihlavy",
+        "musíme",
+        "ostré",
+        "reichelovy",
+        "tréninky",
+        "využít",
+        "únavu",
+        "šenkeřík"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Biatlonové prázdniny. Jak si závodnice užívají volné dny po náročné sezoně?",
+      "url": "https://www.idnes.cz/sport/trendy/biatlonove-prazdniny-jak-si-zavodnice-uzivaji-volne-dny-po-sezone.A260416_122353_trendy_subt/foto",
+      "dt": "2026-04-17T10:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "biatlonové",
+        "dny",
+        "náročné",
+        "prázdniny",
+        "sezoně",
+        "užívají",
+        "volné",
+        "závodnice"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,59 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chorý bude Slavii chybět jeden zápas. Podle disciplinárky nelze prokázat úmysl",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-tomas-chory-plivnuti-trest-jeden-zapas-cervena-karta.A260416_123652_fotbal_tals",
-      "dt": "2026-04-16T16:49:18Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chorý",
-        "chybět",
-        "disciplinárky",
-        "jeden",
-        "nelze",
-        "podle",
-        "prokázat",
-        "slavii",
-        "zápas",
-        "úmysl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plavkyni Seemanovou čeká na ostravské Velké ceně první letošní start",
-      "url": "https://www.idnes.cz/sport/ostatni/velka-cena-ostravy-barbora-seemanova.A260416_182804_sporty_jsl",
-      "dt": "2026-04-16T16:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ceně",
-        "letošní",
-        "ostravské",
-        "plavkyni",
-        "první",
-        "seemanovou",
-        "start",
-        "velké",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47477,
+      "bytes": 47687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:32:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +851,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šenkeřík před baráží: Reichelovy tréninky? Ostré! Musíme využít únavu Jihlavy",
+            "publishedAt": "2026-04-17T10:32:00Z"
+          },
+          {
+            "title": "Biatlonové prázdniny. Jak si závodnice užívají volné dny po náročné sezoně?",
+            "publishedAt": "2026-04-17T10:27:00Z"
+          },
           {
             "title": "Rozhodnutí soudu ve Zlíně o dvou vazbách v kauze fotbalové korupce je pravomocné",
             "publishedAt": "2026-04-17T10:04:00Z"
@@ -876,14 +882,6 @@
           {
             "title": "Kdo z NHL dorazí na MS? Finové vyhlíží hvězdu, první jméno pro Kanadu i USA",
             "publishedAt": "2026-04-17T08:30:00Z"
-          },
-          {
-            "title": "McDavid získal pošesté Art Ross Trophy, MacKinnon vládl mezi střelci",
-            "publishedAt": "2026-04-17T08:28:00Z"
-          },
-          {
-            "title": "Bojovník Procházka se stal otcem. Sdílel první snímek a prozradil jméno dcery",
-            "publishedAt": "2026-04-17T08:08:00Z"
           }
         ]
       }

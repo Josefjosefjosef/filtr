@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-17T10:35:24.235736Z",
+  "ingestedAt": "2026-04-17T10:54:49.056815Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Muž znásilňoval dceru, matka mu ji držela. To máš za zlobení, řekla jí",
+      "url": "https://www.denik.cz/krimi/plzen-soud-krajsky-partnerska-dvojice-tyrani-znasilneni-deti-karlovarsko.html",
+      "dt": "2026-04-17T10:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dceru",
+        "držela",
+        "matka",
+        "muž",
+        "máš",
+        "zlobení",
+        "znásilňoval",
+        "řekla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,33 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "StarDance do veřejnoprávní televize tak úplně nepatří, říká ministr Oto Klempíř",
-      "url": "https://www.denik.cz/z_domova/ministr-kultury-oto-klempir-koncesioinarske-poplatky-stardance-do-ct-nepatri.html",
-      "dt": "2026-04-17T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "klempíř",
-        "ministr",
-        "nepatří",
-        "oto",
-        "stardance",
-        "tak",
-        "televize",
-        "veřejnoprávní",
-        "úplně",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29142,
+      "bytes": 29256,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž znásilňoval dceru, matka mu ji držela. To máš za zlobení, řekla jí",
+            "publishedAt": "2026-04-17T10:20:00Z"
+          },
           {
             "title": "Zábradlí na mostech nad dálnicí D2 požírá rez. Přesto stále čekají na výměnu",
             "publishedAt": "2026-04-17T10:05:00Z"
@@ -743,10 +745,6 @@
           {
             "title": "Smrt v turistickém ráji: Muže stáhl proud, vše bezmocně sledovala žena na břehu",
             "publishedAt": "2026-04-17T08:01:00Z"
-          },
-          {
-            "title": "Dvorecký most se otevírá. Uleví dopravě v Praze, auta na něj ale nesmí",
-            "publishedAt": "2026-04-17T08:00:00Z"
           }
         ]
       }

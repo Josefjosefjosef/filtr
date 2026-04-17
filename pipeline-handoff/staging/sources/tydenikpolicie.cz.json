@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-17T10:35:24.235736Z",
+  "ingestedAt": "2026-04-17T10:54:49.056815Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podezřelé z vloupání do budovy přírodovědecké fakulty v Praze vyčmuchal služební pes Bobík",
+      "url": "https://tydenikpolicie.cz/podezrele-z-vloupani-do-budovy-prirodovedecke-fakulty-v-praze-vycmuchal-sluzebni-pes-bobik/",
+      "dt": "2026-04-17T10:34:03Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bobík",
+        "budovy",
+        "fakulty",
+        "pes",
+        "podezřelé",
+        "praze",
+        "přírodovědecké",
+        "služební",
+        "vloupání",
+        "vyčmuchal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -249,32 +276,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Díky poctivosti nálezce se ztracená peněženka v Chomutově vrátila zpět k majitelce",
-      "url": "https://tydenikpolicie.cz/diky-poctivosti-nalezce-se-ztracena-penezenka-v-chomutove-vratila-zpet-k-majitelce/",
-      "dt": "2026-04-17T07:07:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chomutově",
-        "díky",
-        "majitelce",
-        "nálezce",
-        "peněženka",
-        "poctivosti",
-        "vrátila",
-        "zpět",
-        "ztracená"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +286,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16629,
+      "bytes": 16868,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +323,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T10:25:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:34:03Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -337,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podezřelé z vloupání do budovy přírodovědecké fakulty v Praze vyčmuchal služební pes Bobík",
+            "publishedAt": "2026-04-17T10:34:03Z"
+          },
           {
             "title": "Z Ruska se zpátky do Čech vrátily dvě děti, které tam unesl jejich otec. Policie předpokládá, že vydán bude také on",
             "publishedAt": "2026-04-17T10:25:03Z"
@@ -364,10 +369,6 @@
           {
             "title": "Kriminalisté v Plzni řeší sexuální obtěžování ve vlaku. Pátrají po totožnosti muže, který by mohl být důležitou osobou pro trestní řízení",
             "publishedAt": "2026-04-17T08:06:37Z"
-          },
-          {
-            "title": "Policistům v Teplicích ujížděl zdrogovaný řidič se zákazem řízení v autě bez technické",
-            "publishedAt": "2026-04-17T08:00:01Z"
           }
         ]
       }

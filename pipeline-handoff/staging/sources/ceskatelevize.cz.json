@@ -1,25 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-17T10:35:24.235736Z",
+  "ingestedAt": "2026-04-17T10:54:49.056815Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Česko pro zajištění bezpečnosti Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
+      "title": "Česko pro bezpečnost Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesko-pro-zajisteni-bezpecnosti-hormuzskeho-prulivu-nabidne-pasivni-radar-rekl-babis-372484",
       "dt": "2026-04-17T10:25:40Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "babiš",
-        "bezpečnosti",
+        "bezpečnost",
         "hormuzského",
         "nabídne",
         "pasivní",
         "průlivu",
         "radar",
-        "zajištění",
         "česko",
         "řekl"
       ],
@@ -762,6 +761,33 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Třemi duely začne v sobotu play-off NHL, obhájce trofeje chybí",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/tremi-duely-zacne-v-sobotu-play-off-nhl-obhajce-trofeje-chybi-156326",
+      "dt": "2026-04-17T10:30:32Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "chybí",
+        "duely",
+        "nhl",
+        "obhájce",
+        "off",
+        "play",
+        "sobotu",
+        "trofeje",
+        "třemi",
+        "začne"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Zachová třetí zlato nezíská, na ME vypadla hned v 1. kole",
       "url": "https://sport.ceskatelevize.cz/clanek/judo/zachova-treti-zlato-neziska-na-me-vypadla-hned-v-1-kole-156325",
       "dt": "2026-04-17T07:09:59Z",
@@ -1488,35 +1514,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Můžeme znovu vyhrát Ligu mistrů, věří Dembélé. Pořád máme touhu získávat trofeje",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/muzeme-znovu-vyhrat-ligu-mistru-veri-dembele-porad-mame-touhu-ziskavat-trofeje-156295",
-      "dt": "2026-04-15T09:19:04Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dembélé",
-        "ligu",
-        "mistrů",
-        "máme",
-        "můžeme",
-        "pořád",
-        "touhu",
-        "trofeje",
-        "vyhrát",
-        "věří",
-        "znovu",
-        "získávat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1527,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43496,
+      "bytes": 43476,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1605,7 +1602,7 @@
         },
         "sample_titles": [
           {
-            "title": "Česko pro zajištění bezpečnosti Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
+            "title": "Česko pro bezpečnost Hormuzského průlivu nabídne pasivní radar, řekl Babiš",
             "publishedAt": "2026-04-17T10:25:40Z"
           },
           {
@@ -1646,7 +1643,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37606,
+      "bytes": 37293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1683,7 +1680,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T07:09:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T10:30:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1698,6 +1695,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třemi duely začne v sobotu play-off NHL, obhájce trofeje chybí",
+            "publishedAt": "2026-04-17T10:30:32Z"
+          },
           {
             "title": "Zachová třetí zlato nezíská, na ME vypadla hned v 1. kole",
             "publishedAt": "2026-04-17T07:09:59Z"
@@ -1725,10 +1726,6 @@
           {
             "title": "Klopýtnutí po 26 duelech. Šelmy podlehly v prvním finále Liberci",
             "publishedAt": "2026-04-16T18:48:52Z"
-          },
-          {
-            "title": "Freiburg si poradil s Celtou Vigo a v semifinále EL jej čeká Horníčkova Braga",
-            "publishedAt": "2026-04-16T18:45:46Z"
           }
         ]
       }
