@@ -1,36 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-17T16:10:32.691582Z",
+  "ingestedAt": "2026-04-17T16:30:10.376845Z",
   "items": [
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Evropští lídři ocenili otevření Hormuzského průlivu. Brzy tam vyšlou mírovou misi",
-      "url": "https://zpravy.aktualne.cz/zahranici/evropsti-lidri-ocenili-otevreni-hormuzskeho-prulivu-brzy-tam-vyslou-mirovou-misi/r~aaa29792de27b700acfd2a9d0bd196e0/",
-      "dt": "2026-04-17T15:57:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brzy",
-        "evropští",
-        "hormuzského",
-        "lídři",
-        "misi",
-        "mírovou",
-        "ocenili",
-        "otevření",
-        "průlivu",
-        "tam",
-        "vyšlou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -51,6 +23,63 @@
         "průlivu",
         "trump",
         "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Absolutní klasika, zní ze světa. Muchovou otrávil divný rozhovor, zaujala reakce poražené Coco",
+      "url": "https://sport.aktualne.cz/tenis/absolutni-klasika-zni-ze-sveta-muchovou-otravil-divny-rozhovor-zaujala-reakce-porazene-coco/r~aaa295a95f3382ede188693cee09f91f/",
+      "dt": "2026-04-17T16:12:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "absolutní",
+        "coco",
+        "divný",
+        "klasika",
+        "muchovou",
+        "otrávil",
+        "poražené",
+        "reakce",
+        "rozhovor",
+        "světa",
+        "zaujala",
+        "zní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Evropští lídři ocenili otevření Hormuzského průlivu. Brzy tam vyšlou mírovou misi",
+      "url": "https://zpravy.aktualne.cz/zahranici/evropsti-lidri-ocenili-otevreni-hormuzskeho-prulivu-brzy-tam-vyslou-mirovou-misi/r~aaa29792de27b700acfd2a9d0bd196e0/",
+      "dt": "2026-04-17T15:57:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brzy",
+        "evropští",
+        "hormuzského",
+        "lídři",
+        "misi",
+        "mírovou",
+        "ocenili",
+        "otevření",
+        "průlivu",
+        "tam",
+        "vyšlou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -515,32 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Miliony na hlasy: bulharská policie zasahuje proti kupování voličů před volbami",
-      "url": "https://zpravy.aktualne.cz/zahranici/miliony-na-hlasy-bulharska-policie-zasahuje-proti-kupovani-volicu-pred-volbami/r~aaa29f335bf95900ecb294fb38d06232/",
-      "dt": "2026-04-17T10:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bulharská",
-        "hlasy",
-        "kupování",
-        "miliony",
-        "policie",
-        "proti",
-        "volbami",
-        "voličů",
-        "zasahuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22386,
+      "bytes": 22545,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,11 +591,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T16:12:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 5,
+          "zpravy": 11,
+          "sport": 6,
           "other": 2,
           "finance": 1
         },
@@ -607,12 +610,16 @@
         },
         "sample_titles": [
           {
-            "title": "Evropští lídři ocenili otevření Hormuzského průlivu. Brzy tam vyšlou mírovou misi",
-            "publishedAt": "2026-04-17T15:57:00Z"
-          },
-          {
             "title": "Írán oznámil plné otevření Hormuzského průlivu. Námořní blokádu neukončíme, opáčil Trump",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Absolutní klasika, zní ze světa. Muchovou otrávil divný rozhovor, zaujala reakce poražené Coco",
+            "publishedAt": "2026-04-17T16:12:00Z"
+          },
+          {
+            "title": "Evropští lídři ocenili otevření Hormuzského průlivu. Brzy tam vyšlou mírovou misi",
+            "publishedAt": "2026-04-17T15:57:00Z"
           },
           {
             "title": "Černý den českého tenisu zlomila Muchová. Další tři si semifinále nezahrají",
@@ -633,10 +640,6 @@
           {
             "title": "Zemřel Jan Potměšil, hvězda filmu Bony a klid. Bylo mu 60 let",
             "publishedAt": "2026-04-17T05:35:00Z"
-          },
-          {
-            "title": "Feri zůstává ve vězení. Teplický soud se ale bude muset propuštěním znovu zabývat",
-            "publishedAt": "2026-04-16T07:32:00Z"
           }
         ]
       }

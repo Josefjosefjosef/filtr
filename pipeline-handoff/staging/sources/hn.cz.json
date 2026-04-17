@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-17T16:10:32.691582Z",
+  "ingestedAt": "2026-04-17T16:30:10.376845Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Českou poštu má zachránit někdejší šéf Tchiba či Sportisima. Bude se ale muset obejít bez propouštění a zavírání poboček",
+      "url": "https://domaci.hn.cz/c1-67868250-ceskou-postu-ma-zachranit-nekdejsi-sef-tchiba-ci-sportisima-bude-se-ale-muset-obejit-bez-propousteni-a-zavirani-pobocek",
+      "dt": "2026-04-17T15:59:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "muset",
+        "někdejší",
+        "obejít",
+        "poboček",
+        "poštu",
+        "propouštění",
+        "sportisima",
+        "tchiba",
+        "zachránit",
+        "zavírání",
+        "českou",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1057,31 +1087,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "TOP 11 inovátorů Česka. Kdo se letos dostal do výběru Hospodářských novin",
-      "url": "https://procne.hn.cz/c1-67866550-top-11-inovatoru-ceska",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dostal",
-        "hospodářských",
-        "inovátorů",
-        "letos",
-        "novin",
-        "top",
-        "výběru",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1097,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 178882,
+      "bytes": 179014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,11 +1134,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T15:59:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 34,
+          "zpravy": 4,
           "sport": 1,
           "zdravi": 1
         },
@@ -1147,6 +1152,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Českou poštu má zachránit někdejší šéf Tchiba či Sportisima. Bude se ale muset obejít bez propouštění a zavírání poboček",
+            "publishedAt": "2026-04-17T15:59:00Z"
+          },
           {
             "title": "Praha má nový most přes Vltavu, první skoro po 12 letech. Proč je z něj i pomník boje proti automobilismu?",
             "publishedAt": "2026-04-17T15:39:00Z"
@@ -1174,10 +1183,6 @@
           {
             "title": "Vydělával tam, kam se jiní neodvážili vstoupit. Zemřel Mark Mobius, muž, který přitáhl velký kapitál na vznikající trhy",
             "publishedAt": "2026-04-17T12:01:00Z"
-          },
-          {
-            "title": "Fotbal a volby jako brzdy blízkovýchodní eskapády. Blíží se další světový time out?",
-            "publishedAt": "2026-04-17T11:41:00Z"
           }
         ]
       }

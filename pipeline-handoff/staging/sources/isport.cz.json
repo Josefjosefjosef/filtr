@@ -1,26 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-17T16:10:32.691582Z",
+  "ingestedAt": "2026-04-17T16:30:10.376845Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Německo 2:0. Národní tým dává další gól, zvýšil Voženílek",
-      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace/474515/online-cesko-nemecko-2-0-narodni-tym-dava-dalsi-gol-zvysil-vozenilek.html",
-      "dt": "2026-04-17T15:45:00Z",
+      "title": "ONLINE: Česko - Německo 3:0. Národní tým dává další gól, v přesilovce udeřil Flek",
+      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace/474515/online-cesko-nemecko-3-0-narodni-tym-dava-dalsi-gol-v-presilovce-uderil-flek.html",
+      "dt": "2026-04-17T16:05:00Z",
       "media_raw": "iSport",
       "media_norm": "iSport",
       "tokens": [
         "další",
         "dává",
+        "flek",
         "gól",
         "národní",
         "německo",
+        "přesilovce",
         "tým",
-        "voženílek",
-        "zvýšil",
+        "udeřil",
         "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vondroušová: Je to stres, když vám někdo chce vlézt domů. Myslela jsem na bezpečí",
+      "url": "https://isport.blesk.cz/clanek/tenis/474540/vondrousova-je-to-stres-kdyz-vam-nekdo-chce-vlezt-domu-myslela-jsem-na-bezpeci.html",
+      "dt": "2026-04-17T16:00:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "bezpečí",
+        "chce",
+        "domů",
+        "jsem",
+        "když",
+        "myslela",
+        "někdo",
+        "stres",
+        "vlézt",
+        "vondroušová",
+        "vám"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1049,34 +1078,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sonne? Sparta potřebuje jiné typy. Získala vklady do budoucna, ale chybí jí „Puyol“",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474452/sonne-sparta-potrebuje-jine-typy-ziskala-vklady-do-budoucna-ale-chybi-ji-puyol.html",
-      "dt": "2026-04-16T13:20:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "ale",
-        "budoucna",
-        "chybí",
-        "jiné",
-        "potřebuje",
-        "puyol",
-        "sonne",
-        "sparta",
-        "typy",
-        "vklady",
-        "získala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1087,11 +1088,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 52027,
+      "bytes": 53374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 42,
+      "itemsParsed": 43,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1124,7 +1125,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-17T16:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1140,8 +1141,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Německo 2:0. Národní tým dává další gól, zvýšil Voženílek",
-            "publishedAt": "2026-04-17T15:45:00Z"
+            "title": "ONLINE: Česko - Německo 3:0. Národní tým dává další gól, v přesilovce udeřil Flek",
+            "publishedAt": "2026-04-17T16:05:00Z"
+          },
+          {
+            "title": "Vondroušová: Je to stres, když vám někdo chce vlézt domů. Myslela jsem na bezpečí",
+            "publishedAt": "2026-04-17T16:00:00Z"
           },
           {
             "title": "Ubrat stopery, nestíhají. Smetana musí v Baníku udělat změnu. Oživit zbraň z Bohemky",
@@ -1166,10 +1171,6 @@
           {
             "title": "MS ve fotbale ONLINE: Další změna trenéra! U týmu Saúdské Arábie skončil Renard",
             "publishedAt": "2026-04-17T13:12:00Z"
-          },
-          {
-            "title": "Vondroušová řeší dopingový problém. Viní ji, že neodevzdala vzorek. Hrozí jí až čtyři roky",
-            "publishedAt": "2026-04-17T12:42:00Z"
           }
         ]
       }
