@@ -1,25 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T16:29:29.434843Z",
+  "ingestedAt": "2026-04-18T16:44:50.168247Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Soud poslal do vazby Američanku obviněnou z požáru haly v Pardubicích",
-      "url": "https://www.idnes.cz/zpravy/domaci/zharsky-utok-v-pardubicich-lpp-holding-americanka-slovensko-vazba-policie.A260418_105002_domaci_svm",
-      "dt": "2026-04-18T16:01:00Z",
+      "title": "Při střelbě v Kyjevě zemřelo pět lidí. Útočník si vzal rukojmí a pálil i do policie",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kyjev-moskva-strelba-ukrajina-rukojmi-zbran-rusko.A260418_175946_zahranicni_hock",
+      "dt": "2026-04-18T16:38:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "američanku",
-        "haly",
-        "obviněnou",
-        "pardubicích",
-        "poslal",
-        "požáru",
-        "soud",
-        "vazby"
+        "kyjevě",
+        "lidí",
+        "policie",
+        "pálil",
+        "pět",
+        "při",
+        "rukojmí",
+        "střelbě",
+        "vzal",
+        "zemřelo",
+        "útočník"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -31,21 +34,46 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Manželský pár zemřel v Mostě po střetu s mustangem. Jeho řidič nadýchal",
+      "title": "Manželé senioři zemřeli v Mostě po střetu s mustangem. Jeho řidič nadýchal",
       "url": "https://www.idnes.cz/usti/zpravy/nehoda-osobni-aut-most-umrti-policie.A260418_150936_usti-zpravy_zdo",
-      "dt": "2026-04-18T15:51:00Z",
+      "dt": "2026-04-18T16:35:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
         "jeho",
-        "manželský",
+        "manželé",
         "mostě",
         "mustangem",
         "nadýchal",
-        "pár",
+        "senioři",
         "střetu",
-        "zemřel",
+        "zemřeli",
         "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud poslal do vazby Američanku obviněnou z požáru haly v Pardubicích",
+      "url": "https://www.idnes.cz/zpravy/domaci/zharsky-utok-v-pardubicich-lpp-holding-americanka-slovensko-vazba-policie.A260418_105002_domaci_svm",
+      "dt": "2026-04-18T16:32:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "američanku",
+        "haly",
+        "obviněnou",
+        "pardubicích",
+        "poslal",
+        "požáru",
+        "soud",
+        "vazby"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -759,36 +787,6 @@
         "století",
         "vojty",
         "živila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jejich prádlo oblétlo Měsíc. Artemis zvedla zájem, ale scházejí šičky, říká šéf firmy",
-      "url": "https://www.idnes.cz/karlovy-vary/zpravy/sokolov-lasting-martin-walter-obleceni-kosmonauti-vesmir-artemis.A260417_153127_vary-zpravy_vb",
-      "dt": "2026-04-18T08:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "artemis",
-        "firmy",
-        "jejich",
-        "měsíc",
-        "oblétlo",
-        "prádlo",
-        "scházejí",
-        "zvedla",
-        "zájem",
-        "říká",
-        "šičky",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1590,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48188,
+      "bytes": 48102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1627,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T16:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T16:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1647,12 +1645,16 @@
         },
         "sample_titles": [
           {
-            "title": "Soud poslal do vazby Američanku obviněnou z požáru haly v Pardubicích",
-            "publishedAt": "2026-04-18T16:01:00Z"
+            "title": "Při střelbě v Kyjevě zemřelo pět lidí. Útočník si vzal rukojmí a pálil i do policie",
+            "publishedAt": "2026-04-18T16:38:00Z"
           },
           {
-            "title": "Manželský pár zemřel v Mostě po střetu s mustangem. Jeho řidič nadýchal",
-            "publishedAt": "2026-04-18T15:51:00Z"
+            "title": "Manželé senioři zemřeli v Mostě po střetu s mustangem. Jeho řidič nadýchal",
+            "publishedAt": "2026-04-18T16:35:00Z"
+          },
+          {
+            "title": "Soud poslal do vazby Američanku obviněnou z požáru haly v Pardubicích",
+            "publishedAt": "2026-04-18T16:32:00Z"
           },
           {
             "title": "Írán opět zastavil ropnou tepnu. Dvě lodě v Hormuzském průlivu zasáhla palba",
@@ -1673,10 +1675,6 @@
           {
             "title": "V Libanonu zastřelili francouzského vojáka při odklizení výbušnin. Macron viní Hizballáh",
             "publishedAt": "2026-04-18T14:00:00Z"
-          },
-          {
-            "title": "Obama konečně otevře svou knihovnu, pyšní se řadou „nej“ i hřištěm na basket",
-            "publishedAt": "2026-04-18T13:57:00Z"
           }
         ]
       }
