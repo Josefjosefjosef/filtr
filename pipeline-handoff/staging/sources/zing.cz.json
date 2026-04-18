@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-18T13:50:36.601083Z",
+  "ingestedAt": "2026-04-18T14:49:43.756294Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Carmack: Quake Arena byl můj oblíbený projekt od id Software",
+      "url": "https://zing.cz/article/carmack-quake-arena-byl-muj-oblibeny-projekt-od-id-software",
+      "dt": "2026-04-18T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "arena",
+        "carmack",
+        "můj",
+        "oblíbený",
+        "projekt",
+        "quake",
+        "software"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -950,29 +974,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Pokračování série Metro na uniklých gameplay záběrech",
-      "url": "https://zing.cz/article/pokracovani-serie-metro-na-uniklych-gameplay-zaberech",
-      "dt": "2026-04-13T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "gameplay",
-        "metro",
-        "pokračování",
-        "série",
-        "uniklých",
-        "záběrech"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -983,7 +984,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126904,
+      "bytes": 126947,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1020,7 +1021,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1035,6 +1036,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Carmack: Quake Arena byl můj oblíbený projekt od id Software",
+            "publishedAt": "2026-04-18T14:00:00Z"
+          },
           {
             "title": "Iniciativa Stop Killing Games uspěla v EU parlamentu",
             "publishedAt": "2026-04-18T12:00:00Z"
@@ -1062,10 +1067,6 @@
           {
             "title": "Uniklo datum vydání Black Flag Resynced, dočkáme se dřív, než jsme doufali",
             "publishedAt": "2026-04-17T12:00:00Z"
-          },
-          {
-            "title": "Blizzard plánuje poslední stream k Lord of Hatred",
-            "publishedAt": "2026-04-17T10:00:00Z"
           }
         ]
       }

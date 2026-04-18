@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-18T13:50:36.601083Z",
+  "ingestedAt": "2026-04-18T14:49:43.756294Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Warhammer 40,000: Space Marine 2 nalákal velké množství hráčů - INDIAN",
+      "url": "https://indian-tv.cz/clanek/warhammer-40-000-space-marine-2-nalakal-velke-mnozstvi-hracu-1w8igt",
+      "dt": "2026-04-18T14:40:21Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "000",
+        "hráčů",
+        "indian",
+        "marine",
+        "množství",
+        "nalákal",
+        "space",
+        "velké",
+        "warhammer"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1054,32 +1080,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Capcom se opět trefil do černého. Pragmata sbírá vysoké známky - INDIAN",
-      "url": "https://indian-tv.cz/clanek/capcom-se-opet-trefil-do-cerneho-pragmata-9mysov",
-      "dt": "2026-04-14T10:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "capcom",
-        "indian",
-        "opět",
-        "pragmata",
-        "sbírá",
-        "trefil",
-        "vysoké",
-        "známky",
-        "černého"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1090,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 195679,
+      "bytes": 195292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,7 +1127,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:43:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T14:40:21Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1142,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Warhammer 40,000: Space Marine 2 nalákal velké množství hráčů - INDIAN",
+            "publishedAt": "2026-04-18T14:40:21Z"
+          },
           {
             "title": "Odpočinková kooperační hra Outbound se mírně opozdí - INDIAN",
             "publishedAt": "2026-04-18T07:43:11Z"
@@ -1169,10 +1173,6 @@
           {
             "title": "Pirátský survival Windrose slaví raketový start a ukazuje Skull and Bones jak se to dělá - INDIAN",
             "publishedAt": "2026-04-17T08:30:00Z"
-          },
-          {
-            "title": "Loupežná střílečka Fairgames od PlayStationu stále žije - INDIAN",
-            "publishedAt": "2026-04-17T08:00:00Z"
           }
         ]
       }

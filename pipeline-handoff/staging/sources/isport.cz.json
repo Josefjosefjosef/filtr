@@ -1,26 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-18T13:50:36.601083Z",
+  "ingestedAt": "2026-04-18T14:49:43.756294Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Baník - Bohemians 0:1. Ristovski zaskočil Jedličku! Zlín vede, ztrácí Dukla",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474561/online-banik-bohemians-0-1-ristovski-zaskocil-jedlicku-zlin-vede-ztraci-dukla.html",
-      "dt": "2026-04-18T13:40:00Z",
+      "title": "ONLINE: Baník - Bohemians 0:2. Jurečka nedal penaltu! Dukla snížila, Zlín vede",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474561/online-banik-bohemians-0-2-jurecka-nedal-penaltu-dukla-snizila-zlin-vede.html",
+      "dt": "2026-04-18T14:25:00Z",
       "media_raw": "iSport",
       "media_norm": "iSport",
       "tokens": [
         "baník",
         "bohemians",
         "dukla",
-        "jedličku",
-        "ristovski",
+        "jurečka",
+        "nedal",
+        "penaltu",
+        "snížila",
         "vede",
-        "zaskočil",
-        "zlín",
-        "ztrácí"
+        "zlín"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: studená sprcha pro Krejčího Wolves! Leeds jim nasázel dva rychlé góly",
+      "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/474548/online-studena-sprcha-pro-krejciho-wolves-leeds-jim-nasazel-dva-rychle-goly.html",
+      "dt": "2026-04-18T14:20:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "dva",
+        "góly",
+        "jim",
+        "krejčího",
+        "leeds",
+        "nasázel",
+        "rychlé",
+        "sprcha",
+        "studená",
+        "wolves"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -70,31 +97,6 @@
         "prostor",
         "vyvolenými",
         "začátku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Krejčího Wolves hrají s Leedsem, český reprezentant nechybí v základu",
-      "url": "https://isport.blesk.cz/clanek/fotbal-zahranici-anglie-premier-league/474548/online-krejciho-wolves-hraji-s-leedsem-cesky-reprezentant-nechybi-v-zakladu.html",
-      "dt": "2026-04-18T12:45:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "hrají",
-        "krejčího",
-        "leedsem",
-        "nechybí",
-        "reprezentant",
-        "wolves",
-        "základu",
-        "český"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1068,7 +1070,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 54080,
+      "bytes": 53967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1105,7 +1107,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T13:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T14:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1121,8 +1123,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Baník - Bohemians 0:1. Ristovski zaskočil Jedličku! Zlín vede, ztrácí Dukla",
-            "publishedAt": "2026-04-18T13:40:00Z"
+            "title": "ONLINE: Baník - Bohemians 0:2. Jurečka nedal penaltu! Dukla snížila, Zlín vede",
+            "publishedAt": "2026-04-18T14:25:00Z"
+          },
+          {
+            "title": "ONLINE: studená sprcha pro Krejčího Wolves! Leeds jim nasázel dva rychlé góly",
+            "publishedAt": "2026-04-18T14:20:00Z"
           },
           {
             "title": "Tragédie Nedvědova parťáka (†48): Zabil ho vlak",
@@ -1131,10 +1137,6 @@
           {
             "title": "Moták s Grossem nebyli na začátku vyvolenými. Teď je ale fér dát jim prostor",
             "publishedAt": "2026-04-18T13:30:00Z"
-          },
-          {
-            "title": "ONLINE: Krejčího Wolves hrají s Leedsem, český reprezentant nechybí v základu",
-            "publishedAt": "2026-04-18T12:45:00Z"
           },
           {
             "title": "Rozbor finále extraligy: střet bývalých kolegů i třinecké déjà vu. Dočká se Dynamo?",
