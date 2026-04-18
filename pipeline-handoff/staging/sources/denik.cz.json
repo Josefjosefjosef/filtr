@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T18:05:10.897939Z",
+  "ingestedAt": "2026-04-18T19:04:50.953716Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž původem z Moskvy zabil na ulici v Kyjevě šest lidí, policie ho zastřelila",
+      "url": "https://www.denik.cz/staty-mimo-eu/muz-puvodem-z-moskvy-zabil-na-ulici-v-kyjeve-sest-lidi-policie-ho-zastrelila.html",
+      "dt": "2026-04-18T17:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kyjevě",
+        "lidí",
+        "moskvy",
+        "muž",
+        "policie",
+        "původem",
+        "ulici",
+        "zabil",
+        "zastřelila",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -625,34 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Evropě dochází letecké palivo: Letní zájezdy se zatím neruší, letenky ale zdraží",
-      "url": "https://www.denik.cz/doprava/nedostatek-leteckeho-paliva-letni-zajezdy-ruseni-dovolenych-cestovni-kancelare.html",
-      "dt": "2026-04-18T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "dochází",
-        "evropě",
-        "letecké",
-        "letenky",
-        "letní",
-        "neruší",
-        "palivo",
-        "zatím",
-        "zdraží",
-        "zájezdy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28699,
+      "bytes": 28656,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T16:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž původem z Moskvy zabil na ulici v Kyjevě šest lidí, policie ho zastřelila",
+            "publishedAt": "2026-04-18T17:57:00Z"
+          },
           {
             "title": "Žhářský útok v Pardubicích: Ženu zadrženou na Slovensku soud poslal do vazby",
             "publishedAt": "2026-04-18T16:09:00Z"
@@ -743,10 +746,6 @@
           {
             "title": "Tip na výlet: Vydejte se na rozhlednu Panorama v Chlebovicích",
             "publishedAt": "2026-04-18T13:00:00Z"
-          },
-          {
-            "title": "Britská policie vyšetřuje žhářský útok na obchod v Londýně, nikdo nebyl zraněn",
-            "publishedAt": "2026-04-18T12:30:00Z"
           }
         ]
       }
