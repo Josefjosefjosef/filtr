@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T11:45:07.644372Z",
+  "ingestedAt": "2026-04-18T12:04:29.010372Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muchová - Svitolinová. Po Gauffové čeká českou tenistku další Nemesis. Ve hře je finále",
+      "url": "https://sport.aktualne.cz/tenis/muchova-svitolinova-po-gauffove-ceka-ceskou-tenistku-dalsi-nemesis-ve-hre-je-finale/r~aaa29ec105dc829f0a13e7d87e4f053b/",
+      "dt": "2026-04-18T11:39:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "další",
+        "finále",
+        "gauffové",
+        "hře",
+        "muchová",
+        "nemesis",
+        "svitolinová",
+        "tenistku",
+        "čeká",
+        "českou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -511,34 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zapomenutá slovenská dodávka měla nahradit 1203. Vznikl proto i Moskvič s kabinou Favoritu",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/historie-automobilu/zapomenuta-slovenska-dodavka-mela-nahradit-1203-vznikl-proto-i-moskvic-s-kabinou-favoritu/r~aaa29aea6fbfdbd86b48a4b7535d803d/",
-      "dt": "2026-04-18T04:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "1203",
-        "dodávka",
-        "favoritu",
-        "kabinou",
-        "moskvič",
-        "měla",
-        "nahradit",
-        "proto",
-        "slovenská",
-        "vznikl",
-        "zapomenutá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21796,
+      "bytes": 21615,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,13 +585,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T11:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T11:39:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 2,
+          "sport": 4,
+          "finance": 1,
           "zpravy": 13,
-          "other": 2,
-          "sport": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muchová - Svitolinová. Po Gauffové čeká českou tenistku další Nemesis. Ve hře je finále",
+            "publishedAt": "2026-04-18T11:39:00Z"
+          },
           {
             "title": "Návrat na Měsíc je v zájmu celého Západu. Další krok bude expedice na Mars, říká vědec",
             "publishedAt": "2026-04-18T11:10:00Z"
@@ -631,10 +634,6 @@
           {
             "title": "Nikterak originální, ale vítězná. Pastrňák ovládl NHL v netradiční anketě",
             "publishedAt": "2026-04-18T09:09:00Z"
-          },
-          {
-            "title": "Turkův úředník „s dlouhými chapadly“. Kdo je Martin Kocanda, otec náctiletého „génia“",
-            "publishedAt": "2026-04-18T08:03:00Z"
           }
         ]
       }
