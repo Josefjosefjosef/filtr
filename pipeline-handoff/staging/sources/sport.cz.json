@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T10:14:22.663899Z",
+  "ingestedAt": "2026-04-18T10:30:49.743526Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Videomomenty. Startuje extraligové finále mezi Pardubicemi a Třincem",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-startuje-extraligove-finale-mezi-pardubicemi-a-trincem-5437457",
+      "dt": "2026-04-18T10:17:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "extraligové",
+        "finále",
+        "pardubicemi",
+        "startuje",
+        "třincem",
+        "videomomenty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,30 +773,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Brazílie v slzách. Zemřel legendární basketbalista Schmidt, rekordman OH a MS",
-      "url": "https://www.sport.cz/clanek/basketbal-brazilie-v-slzach-zemrel-legendarni-basketbalista-schmidt-rekordman-oh-a-ms-5438915",
-      "dt": "2026-04-17T20:41:14Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalista",
-        "brazílie",
-        "legendární",
-        "rekordman",
-        "schmidt",
-        "slzách",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42870,
+      "bytes": 43485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:37:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:17:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +835,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Videomomenty. Startuje extraligové finále mezi Pardubicemi a Třincem",
+            "publishedAt": "2026-04-18T10:17:38Z"
+          },
           {
             "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko v přípravě na světový šampionát",
             "publishedAt": "2026-04-18T07:18:00Z"
@@ -863,10 +866,6 @@
           {
             "title": "Pastrňák má podle ankety mezi hráči nejlepší přezdívku v NHL",
             "publishedAt": "2026-04-18T07:59:18Z"
-          },
-          {
-            "title": "Baráž není spravedlivá, ale na Litvínov máme, míní jihlavský kanonýr",
-            "publishedAt": "2026-04-18T07:49:56Z"
           }
         ]
       }

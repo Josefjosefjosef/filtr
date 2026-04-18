@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T10:14:22.663899Z",
+  "ingestedAt": "2026-04-18T10:30:49.743526Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Anglický deník: Co dělá ruský přístav v Plymouthu?",
+      "url": "https://nazory.aktualne.cz/anglicky-denik-co-dela-rusky-pristav-v-plymouthu/r~aaa29442c8df74609adef09512eca619/",
+      "dt": "2026-04-18T10:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "anglický",
+        "deník",
+        "dělá",
+        "plymouthu",
+        "přístav",
+        "ruský"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -516,32 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když robot začne žít vlastním životem: Edward ovládl Polsko",
-      "url": "https://zpravy.aktualne.cz/zahranici/robot-edward-ozil-a-ovladl-polsko-krici-na-divocaky-mluvi-s-politiky/r~aaa29be38afa5e249a5c97f7141048a7/",
-      "dt": "2026-04-18T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "edward",
-        "když",
-        "ovládl",
-        "polsko",
-        "robot",
-        "vlastním",
-        "začne",
-        "životem",
-        "žít"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -552,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21920,
+      "bytes": 22103,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,7 +586,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -608,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Anglický deník: Co dělá ruský přístav v Plymouthu?",
+            "publishedAt": "2026-04-18T10:14:00Z"
+          },
           {
             "title": "Miliarda dolarů a ruka nejkrásnější ženy v zemi. Šéf ugandské armády vznesl bizarní požadavek",
             "publishedAt": "2026-04-18T09:22:00Z"
@@ -635,10 +636,6 @@
           {
             "title": "Soudila dopravní nehody, teď sama jednu způsobila. A nadýchala dvě promile",
             "publishedAt": "2026-04-18T07:48:00Z"
-          },
-          {
-            "title": "„Všechno jsem mu obětoval, dluží mi peníze.“ Ruský otec tenisového showmana promluvil",
-            "publishedAt": "2026-04-18T07:38:00Z"
           }
         ]
       }
