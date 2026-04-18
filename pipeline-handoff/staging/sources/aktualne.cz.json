@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T21:42:53.719561Z",
+  "ingestedAt": "2026-04-18T22:02:45.960497Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "„Asi se rozbzučím radostí.“ Litera objímala a apelovala na ministerstvo kultury",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/asi-se-rozbzucim-radosti-litera-objimala-a-apelovala-na-ministerstvo-kultury/r~aaa29d3a6e7c5e605cd5382acbab0bea/",
+      "dt": "2026-04-18T21:42:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "apelovala",
+        "asi",
+        "kultury",
+        "litera",
+        "ministerstvo",
+        "objímala",
+        "radostí",
+        "rozbzučím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -507,34 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Česká hra získala prestižní cenu BAFTA za nejlepší příběh, porazila i francouzský hit",
-      "url": "https://magazin.aktualne.cz/kultura/ceska-hra-kingdom-come-deliverance-2-ziskala-cenu-bafta-za-nejlepsi-pribeh/r~aaa2917563ca434adc204482338f35bf/",
-      "dt": "2026-04-18T14:55:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bafta",
-        "cenu",
-        "francouzský",
-        "hit",
-        "hra",
-        "nejlepší",
-        "porazila",
-        "prestižní",
-        "příběh",
-        "získala",
-        "česká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21341,
+      "bytes": 21306,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T20:25:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T21:42:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 10,
           "other": 2,
+          "sport": 10,
           "zpravy": 8
         },
         "drop_counts": {
@@ -599,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Asi se rozbzučím radostí.“ Litera objímala a apelovala na ministerstvo kultury",
+            "publishedAt": "2026-04-18T21:42:00Z"
+          },
           {
             "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
             "publishedAt": "2026-04-18T16:17:00Z"
@@ -626,10 +627,6 @@
           {
             "title": "Baráž bez překvapení. Litvínov doma dvěma výhrami rázně vykročil k záchraně",
             "publishedAt": "2026-04-18T18:26:00Z"
-          },
-          {
-            "title": "Otočkou za 16 sekund Pardubice rozhodly drama. Proti Třinci mají první finálový bod",
-            "publishedAt": "2026-04-18T18:19:00Z"
           }
         ]
       }
