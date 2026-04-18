@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T09:24:24.087580Z",
+  "ingestedAt": "2026-04-18T09:39:57.738554Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bizarní požadavky. Šéf ugandské armády nabídl 100 krav za Meloniovou, teď chce nejkrásnější Turkyni",
+      "url": "https://zpravy.aktualne.cz/zahranici/bizarni-pozadavky-sef-ugandske-armady-nabidl-100-krav-za-meloniovou-ted-chce-nejkrasnejsi-turkyni/r~aaa29f7b5d0c45ff1e213464670aee0c/",
+      "dt": "2026-04-18T09:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "100",
+        "armády",
+        "bizarní",
+        "chce",
+        "krav",
+        "meloniovou",
+        "nabídl",
+        "nejkrásnější",
+        "požadavky",
+        "turkyni",
+        "ugandské",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -513,31 +542,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Litvínov dvakrát dotahoval, první zápas baráže vyhrál v prodloužení",
-      "url": "https://sport.aktualne.cz/hokej/litvinov-dvakrat-dotahoval-prvni-zapas-baraze-vyhral-v-prodlouzeni/r~aaa29d327c9e600be8ad2e3be46b3162/",
-      "dt": "2026-04-17T20:27:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "baráže",
-        "dotahoval",
-        "dvakrát",
-        "litvínov",
-        "prodloužení",
-        "první",
-        "vyhrál",
-        "zápas"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +552,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21919,
+      "bytes": 21926,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,12 +589,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:22:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "other": 2,
-          "sport": 4,
+          "sport": 3,
           "finance": 1,
           "zdravi": 1
         },
@@ -604,6 +608,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bizarní požadavky. Šéf ugandské armády nabídl 100 krav za Meloniovou, teď chce nejkrásnější Turkyni",
+            "publishedAt": "2026-04-18T09:22:00Z"
+          },
           {
             "title": "Teherán znovu uzavřel Hormuzský průliv. Otevře ho, až USA ukončí blokádu íránských přístavů",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -631,10 +639,6 @@
           {
             "title": "„Všechno jsem mu obětoval, dluží mi peníze.“ Ruský otec tenisového showmana promluvil",
             "publishedAt": "2026-04-18T07:38:00Z"
-          },
-          {
-            "title": "„Doufám, že ty žádné děti mít nebudeš.“ Nejmladší poslankyně i zástupce SPD, na akci to vřelo",
-            "publishedAt": "2026-04-18T07:19:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T09:24:24.087580Z",
+  "ingestedAt": "2026-04-18T09:39:57.738554Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud rozhodne o vazbě pro Američanku obviněnou z útoku na pardubickou firmu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/soud-rozhodne-o-vazbe-pro-americanku-obvinenou-z-utoku-na-pardubickou-firmu-372517",
+      "dt": "2026-04-18T09:30:57Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "američanku",
+        "firmu",
+        "obviněnou",
+        "pardubickou",
+        "rozhodne",
+        "soud",
+        "vazbě",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,27 +762,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Soud potrestal podmínkou ženu, která v Českém Krumlově poškodila desítky aut",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/soud-potrestal-podminkou-zenu-ktera-v-ceskem-krumlove-poskodila-desitky-aut-372480",
-      "dt": "2026-04-17T09:39:43Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Skalská vypadla na MS v judu v osmifinále, Klammert a další Češi v prvním kole",
+      "url": "https://sport.ceskatelevize.cz/clanek/judo/skalska-vypadla-na-ms-v-judu-v-osmifinale-klammert-a-dalsi-cesi-v-prvnim-kole-156339",
+      "dt": "2026-04-18T09:31:08Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "aut",
-        "desítky",
-        "krumlově",
-        "podmínkou",
-        "potrestal",
-        "poškodila",
-        "soud",
-        "českém",
-        "ženu"
+        "další",
+        "judu",
+        "klammert",
+        "kole",
+        "osmifinále",
+        "prvním",
+        "skalská",
+        "vypadla",
+        "češi"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1491,34 +1516,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kompany v Paříži na lavičku nesmí, utkání podle něj ale beztak rozhodnou hráči",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kompany-v-parizi-na-lavicku-nesmi-utkani-podle-nej-ale-beztak-rozhodnou-hraci-156309",
-      "dt": "2026-04-16T08:49:26Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ale",
-        "beztak",
-        "hráči",
-        "kompany",
-        "lavičku",
-        "nesmí",
-        "něj",
-        "paříži",
-        "podle",
-        "rozhodnou",
-        "utkání"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1529,7 +1526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41658,
+      "bytes": 41632,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1589,7 +1586,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:30:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1606,6 +1603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud rozhodne o vazbě pro Američanku obviněnou z útoku na pardubickou firmu",
+            "publishedAt": "2026-04-18T09:30:57Z"
+          },
           {
             "title": "Pro Paměť národa se poběží v devatenácti městech, nově v Mimoni, Rtyni a Vimperku",
             "publishedAt": "2026-04-18T09:01:00Z"
@@ -1633,10 +1634,6 @@
           {
             "title": "Čtyři generace Evropanů ukázaly, kdo tíhne k autoritářům",
             "publishedAt": "2026-04-18T05:00:00Z"
-          },
-          {
-            "title": "Hispánci v Texasu se obracejí k Trumpovi zády",
-            "publishedAt": "2026-04-18T04:02:00Z"
           }
         ]
       }
@@ -1648,7 +1645,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36946,
+      "bytes": 37017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1685,7 +1682,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:31:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1700,6 +1697,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skalská vypadla na MS v judu v osmifinále, Klammert a další Češi v prvním kole",
+            "publishedAt": "2026-04-18T09:31:08Z"
+          },
           {
             "title": "Obrovská euforie, že jsme zvládli první krok, řekl nečekaný střelec Vervy Baláž",
             "publishedAt": "2026-04-18T04:00:00Z"
@@ -1727,10 +1728,6 @@
           {
             "title": "Národní tým zvládl i druhou německou zkoušku, znovu se činil Tomáškův útok",
             "publishedAt": "2026-04-17T14:43:00Z"
-          },
-          {
-            "title": "Macháč do druhého semifinále v sezoně nepostoupil, nestačil na Rubljova",
-            "publishedAt": "2026-04-17T13:29:52Z"
           }
         ]
       }
@@ -1742,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77249,
+      "bytes": 77259,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

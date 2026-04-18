@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T09:24:24.087580Z",
+  "ingestedAt": "2026-04-18T09:39:57.738554Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Výhru dnes na ME v judu zaznamenala jen Skalská, vypadla v osmifinále",
+      "url": "https://www.sport.cz/clanek/ostatni-vyhru-dnes-na-me-v-judu-zaznamenala-jen-skalska-vypadla-v-osmifinale-5438941",
+      "dt": "2026-04-18T09:30:13Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jen",
+        "judu",
+        "osmifinále",
+        "skalská",
+        "vypadla",
+        "výhru",
+        "zaznamenala"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,28 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obhájkyně titulu mohou stále doufat ve finále",
-      "url": "https://www.sport.cz/clanek/florbal-obhajkyne-titulu-mohou-stale-doufat-ve-finale-5438862",
-      "dt": "2026-04-17T19:17:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "doufat",
-        "finále",
-        "obhájkyně",
-        "stále",
-        "titulu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43488,
+      "bytes": 43545,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:07:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:30:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výhru dnes na ME v judu zaznamenala jen Skalská, vypadla v osmifinále",
+            "publishedAt": "2026-04-18T09:30:13Z"
+          },
           {
             "title": "Mám ráda i holčičí věci, nejenom motorky, říká česká reprezentantka",
             "publishedAt": "2026-04-17T07:30:33Z"
@@ -857,10 +863,6 @@
           {
             "title": "Z tribuny na led! Černoch se z diváka proměnil v hráče a potěšil syna, hokejového fanatika",
             "publishedAt": "2026-04-18T07:42:25Z"
-          },
-          {
-            "title": "Program finále play off Tipsport extraligy. Třinec hraje o titul s pardubickým Dynamem",
-            "publishedAt": "2026-04-18T04:18:00Z"
           }
         ]
       }
