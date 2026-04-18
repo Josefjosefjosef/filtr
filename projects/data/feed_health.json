@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-17T23:50:50.178520Z",
+  "updatedAt": "2026-04-18T00:05:19.488273Z",
   "feeds": {
     "https://www.aktualne.cz/rss/": {
       "topic": "aktualne",
@@ -91,7 +91,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76802,
+      "bytes": 76762,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
@@ -683,7 +683,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/vzdelavani",
-      "bytes": 36973,
+      "bytes": 36972,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -884,15 +884,15 @@
     "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw": {
       "topic": "aktualne",
       "source": "YouTube – ČT24",
-      "accepted": 0,
-      "status": "BOZO",
-      "itemsParsed": 0,
-      "itemsKept": 0,
-      "httpStatus": 500,
-      "contentType": "text/html; charset=utf-8",
+      "accepted": 15,
+      "status": "OK",
+      "itemsParsed": 15,
+      "itemsKept": 15,
+      "httpStatus": 200,
+      "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
-      "bytes": 0,
-      "reason": "http_500",
+      "bytes": 21580,
+      "reason": "http_404",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
