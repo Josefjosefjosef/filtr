@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T22:15:18.094346Z",
+  "ingestedAt": "2026-04-18T22:34:44.404850Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Španělský pohár je v moci Basků. San Sebastian vyhrál ve finále na penalty",
+      "url": "https://sport.aktualne.cz/fotbal/spanelsky-pohar-je-v-moci-basku-san-sebastian-vyhral-ve-finale-na-penalty/r~aaa299946253172394df86e12abae8eb/",
+      "dt": "2026-04-18T22:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "basků",
+        "finále",
+        "moci",
+        "penalty",
+        "pohár",
+        "san",
+        "sebastian",
+        "vyhrál",
+        "španělský"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -56,21 +82,22 @@
     {
       "section": "kultura",
       "contentType": "article",
-      "title": "Magnesii Literu za knihu roku získala Dora Kaprálová za Mariborskou hypnózu",
+      "title": "Magnesia Litera zná vítěze. Knihou roku je Mariborská hypnóza od Dory Kaprálové",
       "url": "https://magazin.aktualne.cz/kultura/literatura/magnesii-literu-za-knihu-roku-ziskala-dora-kapralova-za-mariborskou-hypnozu/r~aaa296d3ced439ee5a20c62e991e6db0/",
-      "dt": "2026-04-18T20:25:18Z",
+      "dt": "2026-04-18T20:25:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "dora",
-        "hypnózu",
-        "kaprálová",
-        "knihu",
-        "literu",
-        "magnesii",
-        "mariborskou",
+        "dory",
+        "hypnóza",
+        "kaprálové",
+        "knihou",
+        "litera",
+        "magnesia",
+        "mariborská",
         "roku",
-        "získala"
+        "vítěze",
+        "zná"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -505,33 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zděšení ve Vítkovicích. Baník znovu selhal, od pádu na samé dno ho spasila Karviná",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/zdeseni-ve-vitkovicich-banik-znovu-selhal-od-padu-na-same-dno-ho-spasila-karvina/r~aaa2903ead8266edce2d4781ae0872e9/",
-      "dt": "2026-04-18T15:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "baník",
-        "dno",
-        "karviná",
-        "pádu",
-        "samé",
-        "selhal",
-        "spasila",
-        "vítkovicích",
-        "zděšení",
-        "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21306,
+      "bytes": 21126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T21:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T22:22:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 2,
           "sport": 10,
+          "other": 2,
           "zpravy": 8
         },
         "drop_counts": {
@@ -597,6 +597,10 @@
         },
         "sample_titles": [
           {
+            "title": "Španělský pohár je v moci Basků. San Sebastian vyhrál ve finále na penalty",
+            "publishedAt": "2026-04-18T22:22:00Z"
+          },
+          {
             "title": "„Asi se rozbzučím radostí.“ Litera objímala a apelovala na ministerstvo kultury",
             "publishedAt": "2026-04-18T21:42:00Z"
           },
@@ -605,8 +609,8 @@
             "publishedAt": "2026-04-18T16:17:00Z"
           },
           {
-            "title": "Magnesii Literu za knihu roku získala Dora Kaprálová za Mariborskou hypnózu",
-            "publishedAt": "2026-04-18T20:25:18Z"
+            "title": "Magnesia Litera zná vítěze. Knihou roku je Mariborská hypnóza od Dory Kaprálové",
+            "publishedAt": "2026-04-18T20:25:00Z"
           },
           {
             "title": "„Vystrašilo mě to.\" Satoranský chyběl Barceloně dva týdny kvůli potížím se srdcem",
@@ -623,10 +627,6 @@
           {
             "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
             "publishedAt": "2026-04-18T18:30:59Z"
-          },
-          {
-            "title": "Baráž bez překvapení. Litvínov doma dvěma výhrami rázně vykročil k záchraně",
-            "publishedAt": "2026-04-18T18:26:00Z"
           }
         ]
       }

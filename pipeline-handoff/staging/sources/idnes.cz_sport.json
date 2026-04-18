@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T22:15:18.094346Z",
+  "ingestedAt": "2026-04-18T22:34:44.404850Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Real Sociedad počtvrté ovládl Copa del Rey, Atlético porazil na penalty",
+      "url": "https://www.idnes.cz/fotbal/zahranici/san-sebastian-real-sociedad-spanelsky-pohar-finale-atletico-penalty.A260419_001003_fot_zahranici_ten",
+      "dt": "2026-04-18T22:11:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "atlético",
+        "copa",
+        "del",
+        "ovládl",
+        "penalty",
+        "porazil",
+        "počtvrté",
+        "real",
+        "rey",
+        "sociedad"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tati, pro tebe! Rezek o postupu, generálu Koubkovi a pravdě o penaltě se Skoty",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/jan-rezek-rozhovor-mistrovstvi-sveta-postup-penalta-skotsko.A260415_091258_ms-fotbal_jic",
+      "dt": "2026-04-18T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "generálu",
+        "koubkovi",
+        "penaltě",
+        "postupu",
+        "pravdě",
+        "rezek",
+        "skoty",
+        "tati",
+        "tebe"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -741,60 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bouchnout musí hned první střídání. Start série bude důležitý, tuší kouč Třince",
-      "url": "https://www.idnes.cz/hokej/extraliga/trinec-pardubice-zacatek-finale-boris-zabka-hudacek-roman.A260418_900206_hokej_jrv",
-      "dt": "2026-04-18T11:16:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bouchnout",
-        "důležitý",
-        "hned",
-        "kouč",
-        "musí",
-        "první",
-        "start",
-        "střídání",
-        "série",
-        "tuší",
-        "třince"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jediná česká výhra, pak konec. Judistka Skalská vypadla na ME v osmifinále",
-      "url": "https://www.idnes.cz/sport/ostatni/mistrovstvi-evropy-tbilisi-judo-skalska.A260418_120040_sporty_jrv",
-      "dt": "2026-04-18T10:43:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jediná",
-        "judistka",
-        "konec",
-        "osmifinále",
-        "pak",
-        "skalská",
-        "vypadla",
-        "výhra",
-        "česká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46008,
+      "bytes": 46279,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T21:21:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T22:11:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +856,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Real Sociedad počtvrté ovládl Copa del Rey, Atlético porazil na penalty",
+            "publishedAt": "2026-04-18T22:11:00Z"
+          },
+          {
+            "title": "Tati, pro tebe! Rezek o postupu, generálu Koubkovi a pravdě o penaltě se Skoty",
+            "publishedAt": "2026-04-18T22:00:00Z"
+          },
           {
             "title": "Zraněný Krejčí nedohrál, Wolves padli. Tottenham s Kinským bral jen bod",
             "publishedAt": "2026-04-18T21:21:40Z"
@@ -880,14 +887,6 @@
           {
             "title": "Satoranského vyděsily srdeční potíže. Museli jsme být opatrní, přiznal po návratu",
             "publishedAt": "2026-04-18T19:35:00Z"
-          },
-          {
-            "title": "Schick se zapsal mezi střelce, Leverkusen přesto padl. Debut Etaové skončil prohrou",
-            "publishedAt": "2026-04-18T19:33:42Z"
-          },
-          {
-            "title": "Kuchta je zpátky, dvougólový a nadšený: Věřím, že ve Spartě ještě stopu zanechám",
-            "publishedAt": "2026-04-18T19:28:00Z"
           }
         ]
       }
