@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T19:04:50.953716Z",
+  "ingestedAt": "2026-04-18T19:25:26.815317Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Českokrumlovsku se srazilo auto se sanitkou. Dvě ženy utrpěly zranění",
+      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/ceskokrumlovsko-automobil-sanitka-zraneni-nehoda-zachranar.A260418_203829_budejovice-zpravy_hock",
+      "dt": "2026-04-18T18:38:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "auto",
+        "dvě",
+        "sanitkou",
+        "srazilo",
+        "utrpěly",
+        "zranění",
+        "českokrumlovsku",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -748,34 +773,6 @@
         "nepřežil",
         "velké",
         "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Posprejovali historickou budovu v Praze, hrozí jim tvrdší trest. Policie prosí o pomoc",
-      "url": "https://www.idnes.cz/praha/zpravy/policie-praha-historicka-budova-patrani-svedci-holesovice.A260418_120724_praha-zpravy_berr",
-      "dt": "2026-04-18T10:37:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "budovu",
-        "historickou",
-        "hrozí",
-        "jim",
-        "policie",
-        "pomoc",
-        "posprejovali",
-        "praze",
-        "prosí",
-        "trest",
-        "tvrdší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47202,
+      "bytes": 47022,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,11 +1613,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T18:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T18:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
           "zpravy": 23,
+          "other": 3,
           "finance": 4
         },
         "drop_counts": {
@@ -1633,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Českokrumlovsku se srazilo auto se sanitkou. Dvě ženy utrpěly zranění",
+            "publishedAt": "2026-04-18T18:38:00Z"
+          },
           {
             "title": "Magnesia Litera 2026",
             "publishedAt": "2026-04-18T18:29:00Z"
@@ -1660,10 +1661,6 @@
           {
             "title": "Český bestseller? Kopr. Jsme extrémně citliví, když nám na pultech chybí",
             "publishedAt": "2026-04-18T17:33:00Z"
-          },
-          {
-            "title": "Rekordní zájem. Sály a zahrady Pražského hradu přilákaly tisíce lidí",
-            "publishedAt": "2026-04-18T17:31:00Z"
           }
         ]
       }

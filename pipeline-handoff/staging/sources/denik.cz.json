@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T19:04:50.953716Z",
+  "ingestedAt": "2026-04-18T19:25:26.815317Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vláda nechce Vystrčilovi poskytnout letoun k cestě na Tchaj-wan, píše Blesk",
+      "url": "https://www.denik.cz/z_domova/vlada-nechce-vystrcilovi-poskytnout-letoun-k-ceste-na-tchaj-wan.html",
+      "dt": "2026-04-18T19:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blesk",
+        "cestě",
+        "letoun",
+        "nechce",
+        "poskytnout",
+        "píše",
+        "tchaj",
+        "vláda",
+        "vystrčilovi",
+        "wan"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rok, který se stále vrací. Deset dní po kapitulaci Jugoslávie propukly masakry",
-      "url": "https://www.denik.cz/historie/kapitulace-jugoslavie-1941-masakry.html",
-      "dt": "2026-04-18T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "deset",
-        "dní",
-        "jugoslávie",
-        "kapitulaci",
-        "masakry",
-        "propukly",
-        "rok",
-        "stále",
-        "vrací"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28656,
+      "bytes": 28688,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T19:06:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vláda nechce Vystrčilovi poskytnout letoun k cestě na Tchaj-wan, píše Blesk",
+            "publishedAt": "2026-04-18T19:06:00Z"
+          },
           {
             "title": "Muž původem z Moskvy zabil na ulici v Kyjevě šest lidí, policie ho zastřelila",
             "publishedAt": "2026-04-18T17:57:00Z"
@@ -742,10 +747,6 @@
           {
             "title": "Video s vráceným perem je virálem. Na Klausovu slávu z Chile zatím ale nemá",
             "publishedAt": "2026-04-18T13:25:00Z"
-          },
-          {
-            "title": "Tip na výlet: Vydejte se na rozhlednu Panorama v Chlebovicích",
-            "publishedAt": "2026-04-18T13:00:00Z"
           }
         ]
       }

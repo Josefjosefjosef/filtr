@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T19:04:50.953716Z",
+  "ingestedAt": "2026-04-18T19:25:26.815317Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ofsajd, nebo ne? Finále rozhodl sporný gól. Žabka si stěžoval: Ovlivnění výsledku",
+      "url": "https://www.idnes.cz/hokej/extraliga/pardubice-trinec-play-off-finala-sporny-moment-ofsajd-boris-zabka.A260418_194739_hokej_ivt",
+      "dt": "2026-04-18T19:08:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finále",
+        "gól",
+        "nebo",
+        "ofsajd",
+        "ovlivnění",
+        "rozhodl",
+        "sporný",
+        "stěžoval",
+        "výsledku",
+        "žabka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,34 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olomoucký volejbal v krizi, klub prý dluží peníze. Skončí? Nemusel by získat licenci",
-      "url": "https://www.idnes.cz/sport/ostatni/volejbal-olomouc-krize-financni-potize-jiri-zemanek-santovka.A260417_173640_sporty_hava",
-      "dt": "2026-04-18T07:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dluží",
-        "klub",
-        "krizi",
-        "licenci",
-        "nemusel",
-        "olomoucký",
-        "peníze",
-        "prý",
-        "skončí",
-        "volejbal",
-        "získat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45963,
+      "bytes": 45625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T19:00:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T19:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -859,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ofsajd, nebo ne? Finále rozhodl sporný gól. Žabka si stěžoval: Ovlivnění výsledku",
+            "publishedAt": "2026-04-18T19:08:00Z"
+          },
           {
             "title": "ONLINE: Zraněný Krejčí nedohrál, Wolves padli. Tottenham s Kinským bral jen bod",
             "publishedAt": "2026-04-18T19:00:05Z"
@@ -886,10 +889,6 @@
           {
             "title": "Příbram zdolala ve druhé lize béčko Sparty, Vlašim je už devět kol bez porážky",
             "publishedAt": "2026-04-18T17:20:03Z"
-          },
-          {
-            "title": "Další bídný výkon a fotbalisté Baníku se opět šli zpovídat fanouškům",
-            "publishedAt": "2026-04-18T17:14:00Z"
           }
         ]
       }

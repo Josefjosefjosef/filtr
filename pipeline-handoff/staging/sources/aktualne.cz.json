@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T19:04:50.953716Z",
+  "ingestedAt": "2026-04-18T19:25:26.815317Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
+      "url": "https://sport.aktualne.cz/fotbal/strach-o-krejciho-kapitan-repre-se-zranil-wolverhampton-uz-v-pondeli-muze-padnout/r~aaa2985acd2677486097272af92e7237/",
+      "dt": "2026-04-18T16:17:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kapitán",
+        "krejčího",
+        "pondělí",
+        "repre",
+        "sestoupit",
+        "strach",
+        "wolverhampton",
+        "zranil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,31 +260,6 @@
         "soud",
         "vazby",
         "zbrojovce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
-      "url": "https://sport.aktualne.cz/fotbal/strach-o-krejciho-kapitan-repre-se-zranil-wolverhampton-uz-v-pondeli-muze-padnout/r~aaa2985acd2677486097272af92e7237/",
-      "dt": "2026-04-18T16:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kapitán",
-        "krejčího",
-        "pondělí",
-        "repre",
-        "sestoupit",
-        "strach",
-        "wolverhampton",
-        "zranil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -545,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21459,
+      "bytes": 21539,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,8 +585,8 @@
         "raw_feed_latest_publishedAt": "2026-04-18T18:30:59Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
           "sport": 9,
+          "zpravy": 10,
           "other": 1
         },
         "drop_counts": {
@@ -599,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
+            "publishedAt": "2026-04-18T16:17:00Z"
+          },
           {
             "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
             "publishedAt": "2026-04-18T18:30:59Z"
@@ -626,10 +630,6 @@
           {
             "title": "Teherán znovu uzavřel Hormuzský průliv. Otevře ho, až USA ukončí blokádu íránských přístavů",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Expanze ambiciózního lídra. Aliance s vlivným hejtmanem může sehrát zásadní roli",
-            "publishedAt": "2026-04-18T16:33:00Z"
           }
         ]
       }
