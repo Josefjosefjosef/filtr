@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T05:23:01.053045Z",
+  "ingestedAt": "2026-04-18T05:39:35.816280Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump hrozí Íránu zachováním blokády. Příměří možná neprodloužím, dodal",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-iran-valka-hormuzsky-pruliv-usa-teheran-blokada-pristavy-primeri.A260418_072259_zahranicni_svm",
+      "dt": "2026-04-18T05:22:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "blokády",
+        "dodal",
+        "hrozí",
+        "možná",
+        "neprodloužím",
+        "příměří",
+        "trump",
+        "zachováním",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,31 +777,6 @@
         "situace",
         "zklidní",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "OBRAZEM: Historické tramvaje, jazz i fronta na přívoz. Jak se otevíral most",
-      "url": "https://www.idnes.cz/praha/zpravy/obrazem-slavnostni-otevreni-dvoreckeho-mostu-praha.A260417_141919_praha-zpravy_pari/foto",
-      "dt": "2026-04-17T13:56:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "fronta",
-        "historické",
-        "jazz",
-        "most",
-        "obrazem",
-        "otevíral",
-        "přívoz",
-        "tramvaje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48804,
+      "bytes": 48871,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T05:22:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1633,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump hrozí Íránu zachováním blokády. Příměří možná neprodloužím, dodal",
+            "publishedAt": "2026-04-18T05:22:00Z"
+          },
           {
             "title": "Bém do konce měsíce ukáže plán proti závislostem, omezit chce i alkohol",
             "publishedAt": "2026-04-18T05:00:00Z"
@@ -1659,10 +1664,6 @@
           },
           {
             "title": "Úklid jako z katalogu je cesta k frustraci, říká expertka na krásný domov",
-            "publishedAt": "2026-04-17T22:00:00Z"
-          },
-          {
-            "title": "Exprezident jako spasitel i potížista. Favorit bulharských voleb zneklidňuje EU",
             "publishedAt": "2026-04-17T22:00:00Z"
           }
         ]
