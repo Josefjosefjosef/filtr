@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T07:19:41.813653Z",
+  "ingestedAt": "2026-04-18T07:39:50.168574Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejmladší poslankyně vyrazila proti Pochodu pro život. Pro blokádu mám pochopení, řekla",
+      "url": "https://zpravy.aktualne.cz/domaci/nejmladsi-poslankyne-vyrazila-proti-pochodu-pro-zivot-pro-blokadu-mam-pochopeni-rekla/r~aaa29537b9d805e0276794bc6bb55f5e/",
+      "dt": "2026-04-18T07:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blokádu",
+        "mám",
+        "nejmladší",
+        "pochodu",
+        "pochopení",
+        "poslankyně",
+        "proti",
+        "vyrazila",
+        "řekla",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -113,23 +140,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Den krutého horka. Japonští meteorologové zavedli nový termín pro extrémně teplé dny",
+      "title": "Kruté horko. Japonci mají nový oficiální termín pro extrémně teplé dny",
       "url": "https://zpravy.aktualne.cz/zahranici/den-kruteho-horka-japonsti-meteorologove-zavedli-novy-termin-pro-extremne-teple-dny/r~aaa294d7142f3062383a6234fcb9ab87/",
       "dt": "2026-04-18T06:03:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "den",
         "dny",
         "extrémně",
-        "horka",
-        "japonští",
-        "krutého",
-        "meteorologové",
+        "horko",
+        "japonci",
+        "kruté",
+        "mají",
         "nový",
+        "oficiální",
         "teplé",
-        "termín",
-        "zavedli"
+        "termín"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -513,34 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Udržitelnost dává smysl, říká jihočeský farmář. Dodává sýry na nejlepší smažák v Praze",
-      "url": "https://zpravy.aktualne.cz/ekonomika/udrzitelnost-dava-smysl-rika-jihocesky-farmar-dodava-syry-na-nejlepsi-smazak-v-praze/r~aaa29114bfe6b17d56ed852e09386d15/",
-      "dt": "2026-04-17T17:13:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dodává",
-        "dává",
-        "farmář",
-        "jihočeský",
-        "nejlepší",
-        "praze",
-        "smažák",
-        "smysl",
-        "sýry",
-        "udržitelnost",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22256,
+      "bytes": 22050,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,13 +586,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "sport": 4,
           "other": 1,
-          "finance": 2,
+          "finance": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -607,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejmladší poslankyně vyrazila proti Pochodu pro život. Pro blokádu mám pochopení, řekla",
+            "publishedAt": "2026-04-18T07:19:00Z"
+          },
           {
             "title": "Rusko se opět pokouší zatáhnout Bělorusko do války, upozornil Zelenskyj",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -624,7 +626,7 @@
             "publishedAt": "2026-04-18T06:26:00Z"
           },
           {
-            "title": "Den krutého horka. Japonští meteorologové zavedli nový termín pro extrémně teplé dny",
+            "title": "Kruté horko. Japonci mají nový oficiální termín pro extrémně teplé dny",
             "publishedAt": "2026-04-18T06:03:00Z"
           },
           {
@@ -634,10 +636,6 @@
           {
             "title": "Většina majitelů je přehlíží. Naučte se poznat nenápadné signály, kterými vám pes dává najevo, že trpí",
             "publishedAt": "2026-04-18T05:15:00Z"
-          },
-          {
-            "title": "Maringotka snů. Když uvidíte interiér, neuvěříte, že má jen 22 metrů",
-            "publishedAt": "2026-04-18T04:59:00Z"
           }
         ]
       }

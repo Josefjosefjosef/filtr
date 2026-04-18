@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T07:19:41.813653Z",
+  "ingestedAt": "2026-04-18T07:39:50.168574Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič dodávky naboural na dálnici D1 zezadu do kamionu. Na místě zemřel",
+      "url": "https://tydenikpolicie.cz/ridic-dodavky-naboural-na-dalnici-d1-zezadu-do-kamionu-na-miste-zemrel/",
+      "dt": "2026-04-18T07:20:00Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dodávky",
+        "dálnici",
+        "kamionu",
+        "místě",
+        "naboural",
+        "zemřel",
+        "zezadu",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -226,30 +251,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž obviněný z mravnostního trestného činu se ukrývá před policií",
-      "url": "https://tydenikpolicie.cz/muz-obvineny-z-mravnostniho-trestneho-cinu-se-ukryva-pred-policii/",
-      "dt": "2026-04-17T12:00:27Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "mravnostního",
-        "muž",
-        "obviněný",
-        "policií",
-        "trestného",
-        "ukrývá",
-        "činu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -260,7 +261,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15688,
+      "bytes": 15874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -297,7 +298,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:02:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:20:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -312,6 +313,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič dodávky naboural na dálnici D1 zezadu do kamionu. Na místě zemřel",
+            "publishedAt": "2026-04-18T07:20:00Z"
+          },
           {
             "title": "Lišovští policisté objasnili dvě vloupání do rodinných domů",
             "publishedAt": "2026-04-18T04:02:39Z"
@@ -339,10 +344,6 @@
           {
             "title": "Policisté se rozloučili se svým kolegou prap. Radovanem Mikulíkem",
             "publishedAt": "2026-04-17T13:27:47Z"
-          },
-          {
-            "title": "Zloděj v zemědělském areálu v Hněvkovicích usmrtil a ukradl prasata",
-            "publishedAt": "2026-04-17T12:21:53Z"
           }
         ]
       }
