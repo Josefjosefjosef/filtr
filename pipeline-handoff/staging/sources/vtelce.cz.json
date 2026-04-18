@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-18T17:44:49.385537Z",
+  "ingestedAt": "2026-04-18T18:05:10.897939Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Klub rváčů: Opilí herci, oběti pro roli, líčení levou rukou a televizní skandál v den premiéry",
+      "url": "https://www.vtelce.cz/klub-rvacu-opili-herci-obeti-pro-roli-liceni-levou-rukou-a-televizni-skandal-v-den-premiery/",
+      "dt": "2026-04-18T17:56:37Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "den",
+        "herci",
+        "klub",
+        "levou",
+        "líčení",
+        "oběti",
+        "opilí",
+        "premiéry",
+        "roli",
+        "rukou",
+        "rváčů",
+        "skandál",
+        "televizní"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -258,36 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dennis postrach okolí: Skutečná tragédie předlohy, žížaly v kapse a tajné zubní náhrady hlavního hrdiny",
-      "url": "https://www.vtelce.cz/dennis-postrach-okoli-skutecna-tragedie-predlohy-zizaly-v-kapse-a-tajne-zubni-nahrady-hlavniho-hrdiny/",
-      "dt": "2026-04-17T14:10:12Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "dennis",
-        "hlavního",
-        "hrdiny",
-        "kapse",
-        "náhrady",
-        "okolí",
-        "postrach",
-        "předlohy",
-        "skutečná",
-        "tajné",
-        "tragédie",
-        "zubní",
-        "žížaly"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,8 +298,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 80787,
-      "reason": "",
+      "bytes": 76575,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -335,11 +335,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:28:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:56:37Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "other": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klub rváčů: Opilí herci, oběti pro roli, líčení levou rukou a televizní skandál v den premiéry",
+            "publishedAt": "2026-04-18T17:56:37Z"
+          },
           {
             "title": "Fakjů pane učiteli: Role psaná na tělo, fyzická proměna, natáčení v bývalé káznici a soudní spor o nadávku",
             "publishedAt": "2026-04-18T17:28:01Z"
@@ -378,10 +382,6 @@
           {
             "title": "Příští týden v Ulici: Soniny drsné politické intriky, krize v polyamorním vztahu, stěhování a Lukáš musí změnit plány",
             "publishedAt": "2026-04-17T16:56:39Z"
-          },
-          {
-            "title": "Kutnohorská kauza: Bolest a manipulace za zavřenými dveřmi. Producenti slibují zcela intimní zpověď obětí",
-            "publishedAt": "2026-04-17T15:57:32Z"
           }
         ]
       }

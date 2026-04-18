@@ -1,27 +1,26 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T17:44:49.385537Z",
+  "ingestedAt": "2026-04-18T18:05:10.897939Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Sparta - Jablonec 3:1, Kuchta mohl mít hattrick, jeho gól ale ruší ofsajd",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-sparta-jablonec-online-vysledek.A260417_144232_fotbal_tals",
-      "dt": "2026-04-18T17:36:30Z",
+      "title": "ONLINE: Pardubice - Třinec 3:2. Will drží domácí v oslabení při Sedlákově trestu",
+      "url": "https://www.idnes.cz/hokej/extraliga/1-finale-pardubice-trinec-online-zpravodajstvi.A260418_123548_hokej_drev",
+      "dt": "2026-04-18T17:59:58Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "ale",
-        "gól",
-        "hattrick",
-        "jablonec",
-        "jeho",
-        "kuchta",
-        "mít",
-        "ofsajd",
-        "ruší",
-        "sparta"
+        "domácí",
+        "drží",
+        "oslabení",
+        "pardubice",
+        "při",
+        "sedlákově",
+        "trestu",
+        "třinec",
+        "will"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -33,20 +32,50 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Pardubice - Třinec 3:2. Slepené góly Červenky se Smejkalem otáčí duel",
-      "url": "https://www.idnes.cz/hokej/extraliga/1-finale-pardubice-trinec-online-zpravodajstvi.A260418_123548_hokej_drev",
-      "dt": "2026-04-18T17:33:53Z",
+      "title": "Fotbalový bůh nám pořád dává šanci. Kouč Dukly burcuje: O místo v lize se porveme!",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-dukla-karvina-pavel-sustr-trener-rozhovor.A260418_193004_fotbal_tals",
+      "dt": "2026-04-18T17:53:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "duel",
+        "burcuje",
+        "bůh",
+        "dukly",
+        "dává",
+        "fotbalový",
+        "kouč",
+        "lize",
+        "místo",
+        "nám",
+        "porveme",
+        "pořád",
+        "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sparta - Jablonec 3:1, klidný zápas pro domácí, dvěma góly ho rozhodl Kuchta",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-sparta-jablonec-online-vysledek.A260417_144232_fotbal_tals",
+      "dt": "2026-04-18T17:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "domácí",
+        "dvěma",
         "góly",
-        "otáčí",
-        "pardubice",
-        "slepené",
-        "smejkalem",
-        "třinec",
-        "červenky"
+        "jablonec",
+        "klidný",
+        "kuchta",
+        "rozhodl",
+        "sparta",
+        "zápas"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -762,32 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík dál mění nominaci před MS, povolal dva světové šampiony a jednoho sparťana",
-      "url": "https://www.idnes.cz/hokej/reprezentace/ms-2026-cesko-radim-rulik-priprava-kemp.A260403_132445_reprezentace_ivt",
-      "dt": "2026-04-18T06:34:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dva",
-        "jednoho",
-        "mění",
-        "nominaci",
-        "povolal",
-        "rulík",
-        "sparťana",
-        "světové",
-        "šampiony"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44918,
+      "bytes": 45145,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:36:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:59:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -852,12 +855,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Sparta - Jablonec 3:1, Kuchta mohl mít hattrick, jeho gól ale ruší ofsajd",
-            "publishedAt": "2026-04-18T17:36:30Z"
+            "title": "ONLINE: Pardubice - Třinec 3:2. Will drží domácí v oslabení při Sedlákově trestu",
+            "publishedAt": "2026-04-18T17:59:58Z"
           },
           {
-            "title": "ONLINE: Pardubice - Třinec 3:2. Slepené góly Červenky se Smejkalem otáčí duel",
-            "publishedAt": "2026-04-18T17:33:53Z"
+            "title": "Fotbalový bůh nám pořád dává šanci. Kouč Dukly burcuje: O místo v lize se porveme!",
+            "publishedAt": "2026-04-18T17:53:00Z"
+          },
+          {
+            "title": "Sparta - Jablonec 3:1, klidný zápas pro domácí, dvěma góly ho rozhodl Kuchta",
+            "publishedAt": "2026-04-18T17:52:00Z"
           },
           {
             "title": "Příbram zdolala ve druhé lize béčko Sparty, Vlašim je už devět kol bez porážky",
@@ -878,10 +885,6 @@
           {
             "title": "ONLINE: Wolves prohráli na Leedsu, Krejčí kvůli zranění střídal. Kinský opět v základu",
             "publishedAt": "2026-04-18T16:58:18Z"
-          },
-          {
-            "title": "Davidová je po další operaci vyhřezlé ploténky. Obratle jí lékaři zpevnili šrouby",
-            "publishedAt": "2026-04-18T16:51:00Z"
           }
         ]
       }
