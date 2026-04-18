@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T12:20:37.706317Z",
+  "ingestedAt": "2026-04-18T12:39:20.681389Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pražský hrad zpřístupnil reprezentační prostory",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/prazsky-hrad-zpristupnil-reprezentacni-prostory-372519",
+      "dt": "2026-04-18T12:14:46Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hrad",
+        "pražský",
+        "prostory",
+        "reprezentační",
+        "zpřístupnil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,29 +754,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Česko pro bezpečnost Hormuzského průlivu podle Babiše nabídne systém na rušení dronů a střel",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/cesko-pro-zajisteni-bezpecnosti-hormuzskeho-prulivu-nabidne-pasivni-radar-rekl-babis-372484",
-      "dt": "2026-04-17T10:25:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Jarní cenu v Pardubicích vyhrála osmiletá klisna Platina",
+      "url": "https://sport.ceskatelevize.cz/clanek/dostihy/jarni-cenu-v-pardubicich-vyhrala-osmileta-klisna-platina-156341",
+      "dt": "2026-04-18T12:22:30Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "babiše",
-        "bezpečnost",
-        "dronů",
-        "hormuzského",
-        "nabídne",
-        "podle",
-        "průlivu",
-        "rušení",
-        "střel",
-        "systém",
-        "česko"
+        "cenu",
+        "jarní",
+        "klisna",
+        "osmiletá",
+        "pardubicích",
+        "platina",
+        "vyhrála"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1042,7 +1060,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Lidé se naposledy rozloučily s Imrichem Bugárem",
+      "title": "Lidé se naposledy rozloučili s Imrichem Bugárem",
       "url": "https://sport.ceskatelevize.cz/clanek/atletika/lide-se-naposledy-rozloucily-s-imrichem-bugarem-156330",
       "dt": "2026-04-17T12:43:52Z",
       "media_raw": "ČT sport",
@@ -1052,7 +1070,7 @@
         "imrichem",
         "lidé",
         "naposledy",
-        "rozloučily"
+        "rozloučili"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1493,29 +1511,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová si ve Stuttgartu poradila s Mertensovou. Uspěla i Nosková",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-poradila-s-mertensovou-noskova-je-na-kurtu-156311",
-      "dt": "2026-04-16T13:10:03Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "mertensovou",
-        "muchová",
-        "nosková",
-        "poradila",
-        "stuttgartu",
-        "uspěla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1526,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41835,
+      "bytes": 41880,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1586,7 +1581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T12:04:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:14:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1603,6 +1598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pražský hrad zpřístupnil reprezentační prostory",
+            "publishedAt": "2026-04-18T12:14:46Z"
+          },
           {
             "title": "Izraelská armáda vytvořila žlutou linii v Libanonu. Podobně jako v Gaze",
             "publishedAt": "2026-04-18T12:04:51Z"
@@ -1630,10 +1629,6 @@
           {
             "title": "Nejméně dvě obchodní lodě zasáhla palba ve znovu uzavřeném Hormuzském průlivu",
             "publishedAt": "2026-04-18T06:40:42Z"
-          },
-          {
-            "title": "Tchajwanským průlivem proplul japonský torpédoborec, Čína ostře protestuje",
-            "publishedAt": "2026-04-18T06:22:52Z"
           }
         ]
       }
@@ -1682,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:45:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:22:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1697,6 +1692,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jarní cenu v Pardubicích vyhrála osmiletá klisna Platina",
+            "publishedAt": "2026-04-18T12:22:30Z"
+          },
           {
             "title": "Konec éry Warriors? Trenér Kerr po vyřazení nevyloučil odchod z klubu",
             "publishedAt": "2026-04-18T09:45:40Z"
@@ -1724,10 +1723,6 @@
           {
             "title": "Litvínov si oddechl. Jihlavu udolal v prodloužení prvního barážového duelu",
             "publishedAt": "2026-04-17T16:54:43Z"
-          },
-          {
-            "title": "Muchová si ve Stuttgartu vyšlápla na Gauffovou. Je v semifinále",
-            "publishedAt": "2026-04-17T15:27:15Z"
           }
         ]
       }

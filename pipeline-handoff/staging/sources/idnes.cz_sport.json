@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T12:20:37.706317Z",
+  "ingestedAt": "2026-04-18T12:39:20.681389Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vzhůru na finále! Liberecké volejbalistky v sérii vedou a doufají v nabitou halu",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbal-extraliga-zen-finale-dukla-liberec-selmy-brno.A260418_900163_sporty_jrv",
+      "dt": "2026-04-18T11:59:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "doufají",
+        "finále",
+        "halu",
+        "liberecké",
+        "nabitou",
+        "sérii",
+        "vedou",
+        "volejbalistky",
+        "vzhůru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,33 +793,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Alcaraz se s těžkým srdcem odhlásil i z Madridu: Hodně bolí, že tady nebudu hrát",
-      "url": "https://www.idnes.cz/sport/tenis/carlos-alcaraz-novak-djokovic-madrid-odhlaseni.A260417_182900_tenis_kazdt",
-      "dt": "2026-04-17T16:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alcaraz",
-        "bolí",
-        "hodně",
-        "hrát",
-        "madridu",
-        "nebudu",
-        "odhlásil",
-        "srdcem",
-        "tady",
-        "těžkým"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45998,
+      "bytes": 46088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +840,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T11:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T11:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -857,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vzhůru na finále! Liberecké volejbalistky v sérii vedou a doufají v nabitou halu",
+            "publishedAt": "2026-04-18T11:59:00Z"
+          },
           {
             "title": "ONLINE: Wolves s Krejčím nastoupí na Leedsu, večer šlágr Chelsea proti United",
             "publishedAt": "2026-04-18T11:20:00Z"
@@ -884,10 +887,6 @@
           {
             "title": "Golfistka Váchová je opět ve finálových kolech, zbylé Češky v Johannesburgu končí",
             "publishedAt": "2026-04-18T08:48:00Z"
-          },
-          {
-            "title": "Pogačar se šetří a cesta pro Evenepoela je volná. Nebo připraví Amstel další šok?",
-            "publishedAt": "2026-04-18T08:18:36Z"
           }
         ]
       }

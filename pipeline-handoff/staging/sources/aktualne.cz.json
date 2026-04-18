@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T12:20:37.706317Z",
+  "ingestedAt": "2026-04-18T12:39:20.681389Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Toxický“ Trump se stává přítěží. Evropští národovci od něj dávají ruce pryč",
+      "url": "https://zpravy.aktualne.cz/zahranici/toxicky-trump-se-stava-pritezi-evropsti-narodovci-od-nej-davaji-ruce-pryc/r~aaa293af03aece85db744985e831e457/",
+      "dt": "2026-04-18T12:13:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dávají",
+        "evropští",
+        "národovci",
+        "něj",
+        "pryč",
+        "přítěží",
+        "ruce",
+        "stává",
+        "toxický",
+        "trump"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,21 +85,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Muchová - Svitolinová. Úchvatný start české tenistky. Semifinále začala brejkem",
+      "title": "Muchová - Svitolinová. Češka v úvodu zaskočila favoritku, ta se snaží zachránit set",
       "url": "https://sport.aktualne.cz/tenis/muchova-svitolinova-po-gauffove-ceka-ceskou-tenistku-dalsi-nemesis-ve-hre-je-finale/r~aaa29ec105dc829f0a13e7d87e4f053b/",
       "dt": "2026-04-18T11:39:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "brejkem",
+        "favoritku",
         "muchová",
-        "semifinále",
-        "start",
+        "set",
+        "snaží",
         "svitolinová",
-        "tenistky",
-        "začala",
-        "úchvatný",
-        "české"
+        "zachránit",
+        "zaskočila",
+        "úvodu",
+        "češka"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -511,31 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Maringotka snů. Když uvidíte interiér, neuvěříte, že má jen 22 metrů",
-      "url": "https://magazin.aktualne.cz/bydleni/maringotka-snu-kdyz-se-21-6-metru-ctverecnich-promeni-v-plnohodnotne-misto-pro-zivot/r~aaa2974bd6cda4659f6052092a2f62b6/",
-      "dt": "2026-04-18T04:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "interiér",
-        "jen",
-        "když",
-        "maringotka",
-        "metrů",
-        "neuvěříte",
-        "snů",
-        "uvidíte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21661,
+      "bytes": 21673,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,7 +585,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T12:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:13:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 14,
@@ -602,6 +604,10 @@
         },
         "sample_titles": [
           {
+            "title": "„Toxický“ Trump se stává přítěží. Evropští národovci od něj dávají ruce pryč",
+            "publishedAt": "2026-04-18T12:13:00Z"
+          },
+          {
             "title": "Berlínská legenda: Fatou je zřejmě nejstarší gorila na světě",
             "publishedAt": "2026-04-18T12:05:00Z"
           },
@@ -610,7 +616,7 @@
             "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
-            "title": "Muchová - Svitolinová. Úchvatný start české tenistky. Semifinále začala brejkem",
+            "title": "Muchová - Svitolinová. Češka v úvodu zaskočila favoritku, ta se snaží zachránit set",
             "publishedAt": "2026-04-18T11:39:00Z"
           },
           {
@@ -628,10 +634,6 @@
           {
             "title": "Trump znovu promluvil o UFO. Našli jsme spoustu velmi zajímavých dokumentů, tvrdí",
             "publishedAt": "2026-04-18T09:11:00Z"
-          },
-          {
-            "title": "Zemřela francouzská herečka Nathalie Bayeová, držitelka čtyř cen César",
-            "publishedAt": "2026-04-18T09:10:00Z"
           }
         ]
       }
