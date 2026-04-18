@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T11:26:00.779043Z",
+  "ingestedAt": "2026-04-18T11:45:07.644372Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Írán opět zastavil ropnou tepnu. Dvě lodě v Hormuzském průlivu zasáhla palba",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/hormuzsky-pruliv-konvoj-blokada-ropa-plyn-donald-trump-iran-usa.A260418_084903_eko-zahranicni_svm",
+      "dt": "2026-04-18T11:25:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dvě",
+        "hormuzském",
+        "lodě",
+        "opět",
+        "palba",
+        "průlivu",
+        "ropnou",
+        "tepnu",
+        "zastavil",
+        "zasáhla",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -311,33 +339,6 @@
         "požití",
         "zkolaboval",
         "záchranka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otevření Hormuzu nevydrželo ani den. Írán ho kvůli blokádě USA znovu uzavřel",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/hormuzsky-pruliv-konvoj-blokada-ropa-plyn-donald-trump-iran-usa.A260418_084903_eko-zahranicni_svm",
-      "dt": "2026-04-18T09:17:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "blokádě",
-        "den",
-        "hormuzu",
-        "kvůli",
-        "nevydrželo",
-        "otevření",
-        "usa",
-        "uzavřel",
-        "znovu",
-        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49538,
+      "bytes": 49440,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1628,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T11:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T11:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
           "finance": 5,
+          "zpravy": 22,
           "other": 3
         },
         "drop_counts": {
@@ -1644,6 +1645,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán opět zastavil ropnou tepnu. Dvě lodě v Hormuzském průlivu zasáhla palba",
+            "publishedAt": "2026-04-18T11:25:00Z"
+          },
           {
             "title": "Řidič na festivalu Comic-Con v Melbourne najel do lidí, jeden člověk zemřel",
             "publishedAt": "2026-04-18T11:16:00Z"
@@ -1671,10 +1676,6 @@
           {
             "title": "Budou kompenzace za zrušené lety? EU chystá nové pokyny, krizi s palivy odmítá",
             "publishedAt": "2026-04-18T10:21:00Z"
-          },
-          {
-            "title": "Pražský hrad se otevřel lidem. Mohou navštívit sály i zahrady, zájem je velký",
-            "publishedAt": "2026-04-18T10:18:00Z"
           }
         ]
       }

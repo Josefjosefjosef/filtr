@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T11:26:00.779043Z",
+  "ingestedAt": "2026-04-18T11:45:07.644372Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lenka Filipová se zotavuje po vážném zranění. Koncert v Kutné Hoře opět odložen",
+      "url": "https://www.denik.cz/regiony/kutna-hora-tylovo-divadlo-koncert-zpevacka-lenka-filipova-zraneni-odlozeno-2026.html",
+      "dt": "2026-04-18T11:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "filipová",
+        "hoře",
+        "koncert",
+        "kutné",
+        "lenka",
+        "odložen",
+        "opět",
+        "vážném",
+        "zotavuje",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,33 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán otevřel Hormuzský průliv pro obchod, podle Trumpa blokáda země trvá",
-      "url": "https://www.denik.cz/ze_sveta/hormuzsky-pruliv-iran-otevreni-primeri.html",
-      "dt": "2026-04-17T13:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blokáda",
-        "hormuzský",
-        "obchod",
-        "otevřel",
-        "podle",
-        "průliv",
-        "trumpa",
-        "trvá",
-        "země",
-        "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28626,
+      "bytes": 28540,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T11:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -723,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lenka Filipová se zotavuje po vážném zranění. Koncert v Kutné Hoře opět odložen",
+            "publishedAt": "2026-04-18T11:30:00Z"
+          },
           {
             "title": "Řidič v Melbourne jel do lidí. Na festivalu Comic Con zemřel jeden člověk",
             "publishedAt": "2026-04-18T10:58:00Z"
@@ -750,10 +754,6 @@
           {
             "title": "Pavel v Chile nechal pero s českými granáty. Psal si jím poznámky",
             "publishedAt": "2026-04-18T05:04:00Z"
-          },
-          {
-            "title": "Čas strávený v lese pomáhá zlepšit imunitu proti rakovině, říká světový imunolog",
-            "publishedAt": "2026-04-18T05:00:00Z"
           }
         ]
       }
