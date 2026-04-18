@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T08:50:58.407155Z",
+  "ingestedAt": "2026-04-18T09:09:30.605936Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Russell by pochopil, kdyby Verstappen odešel z formule 1",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-russell-by-pochopil-kdyby-verstappen-odesel-z-formule-1-5438814",
+      "dt": "2026-04-18T08:50:36Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "formule",
+        "kdyby",
+        "odešel",
+        "pochopil",
+        "russell",
+        "verstappen"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,34 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mělo to šťávu a energii, řekl Rulík o mladících. Mrzí ho absence Šimka, chtěl ho na mistrovství",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-melo-to-stavu-a-energii-rekl-rulik-o-mladicich-mrzi-ho-absence-simka-chtel-ho-na-mistrovstvi-5438826",
-      "dt": "2026-04-17T18:39:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "absence",
-        "chtěl",
-        "energii",
-        "mistrovství",
-        "mladících",
-        "mrzí",
-        "mělo",
-        "rulík",
-        "řekl",
-        "šimka",
-        "šťávu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44122,
+      "bytes": 43324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:59:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T08:50:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -830,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Russell by pochopil, kdyby Verstappen odešel z formule 1",
+            "publishedAt": "2026-04-18T08:50:36Z"
+          },
           {
             "title": "Pastrňák má podle ankety mezi hráči nejlepší přezdívku v NHL",
             "publishedAt": "2026-04-18T07:59:18Z"
@@ -857,10 +856,6 @@
           {
             "title": "San Diego Padres z MLB míří k rekordnímu prodeji",
             "publishedAt": "2026-04-18T07:12:36Z"
-          },
-          {
-            "title": "Pudil jezdí v Anglii na traktoru a vzpomíná: Vrba mi na Euru řekl, že nemám šanci hrát",
-            "publishedAt": "2026-04-18T06:59:25Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T08:50:58.407155Z",
+  "ingestedAt": "2026-04-18T09:09:30.605936Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Golfistka Váchová je opět ve finálových kolech, zbylé Češky v Johannesburgu končí",
+      "url": "https://www.idnes.cz/sport/ostatni/vachova-golf-ladies-european-tour-johannesburg.A260418_103912_sporty_jrv",
+      "dt": "2026-04-18T08:48:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finálových",
+        "golfistka",
+        "johannesburgu",
+        "kolech",
+        "končí",
+        "opět",
+        "váchová",
+        "zbylé",
+        "češky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,35 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muž, který českému fotbalu pojistil Ligu mistrů. Snad tenhle sen neskončí, zářil Isi",
-      "url": "https://www.idnes.cz/fotbal/pohary/konferencni-liga-aek-ateny-rayo-vallecano-isi-palazon-gol.A260417_101555_fot_pohary_tals",
-      "dt": "2026-04-17T13:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fotbalu",
-        "isi",
-        "ligu",
-        "mistrů",
-        "muž",
-        "neskončí",
-        "pojistil",
-        "sen",
-        "snad",
-        "tenhle",
-        "zářil",
-        "českému"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47136,
+      "bytes": 46992,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T08:18:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T08:48:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -856,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Golfistka Váchová je opět ve finálových kolech, zbylé Češky v Johannesburgu končí",
+            "publishedAt": "2026-04-18T08:48:00Z"
+          },
           {
             "title": "Pogačar se šetří a cesta pro Evenepoela je volná. Nebo připraví Amstel další šok?",
             "publishedAt": "2026-04-18T08:18:36Z"
@@ -883,10 +884,6 @@
           {
             "title": "Rulík dál mění nominaci před MS, povolal dva světové šampiony a jednoho sparťana",
             "publishedAt": "2026-04-18T06:34:00Z"
-          },
-          {
-            "title": "Prokletí Gauffové zlomeno. Konečně, konečně jsem ji porazila, zářila Muchová",
-            "publishedAt": "2026-04-18T06:12:00Z"
           }
         ]
       }
