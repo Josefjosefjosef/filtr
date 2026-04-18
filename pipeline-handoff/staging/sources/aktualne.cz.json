@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T11:09:25.834523Z",
+  "ingestedAt": "2026-04-18T11:26:00.779043Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Návrat na Měsíc je v zájmu celého Západu. Další krok bude expedice na Mars, říká vědec",
+      "url": "https://zpravy.aktualne.cz/ekonomika/navrat-na-mesic-je-v-zajmu-celeho-zapadu-dalsi-krok-bude-expedice-na-mars-rika-vedec/r~aaa2937287fa7d56930cf8e9657e5f73/",
+      "dt": "2026-04-18T11:10:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "celého",
+        "další",
+        "expedice",
+        "krok",
+        "mars",
+        "měsíc",
+        "návrat",
+        "vědec",
+        "zájmu",
+        "západu",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -511,34 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "„Zobala to jako lentilky.“ Žena si vyzvedla 800 balení hypnotik na recept, problém je obří",
-      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/zobala-to-jako-lentilky-zena-si-vyzvedla-800-baleni-hypnotik-na-recept-problem-je-obri/r~aaa299524984074be4890fdbee0420b4/",
-      "dt": "2026-04-18T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "800",
-        "balení",
-        "hypnotik",
-        "jako",
-        "lentilky",
-        "obří",
-        "problém",
-        "recept",
-        "vyzvedla",
-        "zobala",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22103,
+      "bytes": 21796,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,14 +586,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T11:10:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "zpravy": 13,
           "other": 2,
-          "sport": 3,
-          "finance": 1,
-          "zdravi": 1
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -605,6 +604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrat na Měsíc je v zájmu celého Západu. Další krok bude expedice na Mars, říká vědec",
+            "publishedAt": "2026-04-18T11:10:00Z"
+          },
           {
             "title": "Anglický deník: Co dělá ruský přístav v Plymouthu?",
             "publishedAt": "2026-04-18T10:14:00Z"
@@ -632,10 +635,6 @@
           {
             "title": "Turkův úředník „s dlouhými chapadly“. Kdo je Martin Kocanda, otec náctiletého „génia“",
             "publishedAt": "2026-04-18T08:03:00Z"
-          },
-          {
-            "title": "Soudila dopravní nehody, teď sama jednu způsobila. A nadýchala dvě promile",
-            "publishedAt": "2026-04-18T07:48:00Z"
           }
         ]
       }

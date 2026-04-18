@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T11:09:25.834523Z",
+  "ingestedAt": "2026-04-18T11:26:00.779043Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Davidová po operaci zad. I přes berle rozdává úsměvy",
+      "url": "https://www.sport.cz/clanek/zimni-sporty-biatlon-davidova-po-operaci-zad-i-pres-berle-rozdava-usmevy-5438946",
+      "dt": "2026-04-18T10:48:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "berle",
+        "davidová",
+        "operaci",
+        "rozdává",
+        "zad",
+        "úsměvy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -23,29 +46,6 @@
         "velké",
         "vyrážejí",
         "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Davidová po operaci zad. I přes berle rozdává úsměvy",
-      "url": "https://www.sport.cz/clanek/zimni-sporty-biatlon-davidova-po-operaci-zad-i-pres-berle-rozdava-usmevy-5438946",
-      "dt": "2026-04-18T10:48:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "berle",
-        "davidová",
-        "operaci",
-        "rozdává",
-        "zad",
-        "úsměvy"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -774,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43279,
+      "bytes": 43298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,8 +814,8 @@
         "raw_feed_latest_publishedAt": "2026-04-18T10:57:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "zdravi": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -828,12 +828,12 @@
         },
         "sample_titles": [
           {
-            "title": "V NHL se chystá velké rozuzlení. Češi v osmi klubech vyrážejí na misi za Stanley Cupem",
-            "publishedAt": "2026-04-18T10:57:22Z"
-          },
-          {
             "title": "Davidová po operaci zad. I přes berle rozdává úsměvy",
             "publishedAt": "2026-04-18T10:48:48Z"
+          },
+          {
+            "title": "V NHL se chystá velké rozuzlení. Češi v osmi klubech vyrážejí na misi za Stanley Cupem",
+            "publishedAt": "2026-04-18T10:57:22Z"
           },
           {
             "title": "Výhru dnes na ME v judu zaznamenala jen Skalská, vypadla v osmifinále",

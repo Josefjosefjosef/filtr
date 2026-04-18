@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T11:09:25.834523Z",
+  "ingestedAt": "2026-04-18T11:26:00.779043Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič v Melbourne jel do lidí. Na festivalu Comic Con zemřel jeden člověk",
+      "url": "https://www.denik.cz/ze_sveta/melbourne-utok-auto-ridic-comic-con.html",
+      "dt": "2026-04-18T10:58:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "comic",
+        "con",
+        "festivalu",
+        "jeden",
+        "jel",
+        "lidí",
+        "melbourne",
+        "zemřel",
+        "člověk",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlk se podhrabal ze zoo a rozpoutal mega akci. Šelmu se nakonec podařilo najít",
+      "url": "https://www.denik.cz/ze_sveta/jizni-korea-vlk-nukgu-utek-odchyt.html",
+      "dt": "2026-04-18T10:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "akci",
+        "mega",
+        "najít",
+        "nakonec",
+        "podařilo",
+        "podhrabal",
+        "rozpoutal",
+        "vlk",
+        "zoo",
+        "šelmu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -605,60 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Modrá vášeň nebo Západ slunce. Barmanský kurz na Přímce bavil názvy drinků",
-      "url": "https://znojemsky.denik.cz/ctenar-reporter/barmansky-kuru-znojmo-sou-primeticka-martin-benda-klara-nemcova-studenti.html",
-      "dt": "2026-04-17T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "barmanský",
-        "bavil",
-        "drinků",
-        "kurz",
-        "modrá",
-        "nebo",
-        "názvy",
-        "přímce",
-        "slunce",
-        "vášeň",
-        "západ"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Francouzka zadržovaná ICE se vrátila do vlasti. V Americe žila s dávnou láskou",
-      "url": "https://www.denik.cz/staty-eu/francouzska-ice-vazba-propusteni.html",
-      "dt": "2026-04-17T12:33:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "americe",
-        "dávnou",
-        "francouzka",
-        "ice",
-        "láskou",
-        "vlasti",
-        "vrátila",
-        "zadržovaná",
-        "žila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29024,
+      "bytes": 28626,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:58:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -723,6 +723,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič v Melbourne jel do lidí. Na festivalu Comic Con zemřel jeden člověk",
+            "publishedAt": "2026-04-18T10:58:00Z"
+          },
+          {
+            "title": "Vlk se podhrabal ze zoo a rozpoutal mega akci. Šelmu se nakonec podařilo najít",
+            "publishedAt": "2026-04-18T10:50:00Z"
+          },
           {
             "title": "Rozhovor Deníku.cz s Klempířem vyvolal bouři. Lidé ho cupují nejen za StarDance",
             "publishedAt": "2026-04-18T09:30:00Z"
@@ -746,14 +754,6 @@
           {
             "title": "Čas strávený v lese pomáhá zlepšit imunitu proti rakovině, říká světový imunolog",
             "publishedAt": "2026-04-18T05:00:00Z"
-          },
-          {
-            "title": "Trump slíbil další dokumenty o UFO. Zveřejní je prý brzy",
-            "publishedAt": "2026-04-18T04:49:00Z"
-          },
-          {
-            "title": "V Dubaji zadrželi Ira. Je podezřelý z řízení zločinecké sítě",
-            "publishedAt": "2026-04-18T04:40:00Z"
           }
         ]
       }
