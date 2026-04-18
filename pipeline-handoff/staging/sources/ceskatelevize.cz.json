@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T10:49:46.683785Z",
+  "ingestedAt": "2026-04-18T11:09:25.834523Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zemřela francouzská herečka Nathalie Bayeová, držitelka čtyř cen César",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/zemrela-francouzska-herecka-nathalie-bayeova-drzitelka-ctyr-cen-cesar-372518",
+      "dt": "2026-04-18T10:45:49Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bayeová",
+        "cen",
+        "césar",
+        "držitelka",
+        "francouzská",
+        "herečka",
+        "nathalie",
+        "zemřela",
+        "čtyř"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -108,7 +134,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán opět uzavřel Hormuzský průliv, píše AFP. Důvodem je americká námořní blokáda",
+      "title": "Írán opět uzavřel Hormuzský průliv, píše AFP. Důvodem je americká blokáda",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/konvoj-tankeru-proplouva-otevrenym-hormuzskym-prulivem-372516",
       "dt": "2026-04-18T06:40:42Z",
       "media_raw": "ČT24 / Domácí",
@@ -119,7 +145,6 @@
         "blokáda",
         "důvodem",
         "hormuzský",
-        "námořní",
         "opět",
         "průliv",
         "píše",
@@ -727,32 +752,6 @@
         "tisíc",
         "zabavila",
         "úplatky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko útočilo na Dnipro a Oděskou oblast, Rumunsko zaznamenalo cizí dron",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-utocilo-na-dnipro-a-odeskou-oblast-rumunsko-zaznamenalo-cizi-dron-372481",
-      "dt": "2026-04-17T10:00:47Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cizí",
-        "dnipro",
-        "dron",
-        "oblast",
-        "oděskou",
-        "rumunsko",
-        "rusko",
-        "zaznamenalo",
-        "útočilo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1528,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41632,
+      "bytes": 41637,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,11 +1587,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:30:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:45:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 4,
+          "other": 5,
+          "zpravy": 22,
           "finance": 3
         },
         "drop_counts": {
@@ -1605,6 +1604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřela francouzská herečka Nathalie Bayeová, držitelka čtyř cen César",
+            "publishedAt": "2026-04-18T10:45:49Z"
+          },
           {
             "title": "Soud rozhodne o vazbě pro Američanku obviněnou z útoku na pardubickou firmu",
             "publishedAt": "2026-04-18T09:30:57Z"
@@ -1622,7 +1625,7 @@
             "publishedAt": "2026-04-18T07:00:00Z"
           },
           {
-            "title": "Írán opět uzavřel Hormuzský průliv, píše AFP. Důvodem je americká námořní blokáda",
+            "title": "Írán opět uzavřel Hormuzský průliv, píše AFP. Důvodem je americká blokáda",
             "publishedAt": "2026-04-18T06:40:42Z"
           },
           {
@@ -1632,10 +1635,6 @@
           {
             "title": "PŘEHLEDNĚ: Takhle mění nový Dvorecký most tramvajovou dopravu v Praze",
             "publishedAt": "2026-04-18T06:00:00Z"
-          },
-          {
-            "title": "Čtyři generace Evropanů ukázaly, kdo tíhne k autoritářům",
-            "publishedAt": "2026-04-18T05:00:00Z"
           }
         ]
       }
@@ -1741,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77218,
+      "bytes": 77289,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

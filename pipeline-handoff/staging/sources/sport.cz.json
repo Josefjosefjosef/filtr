@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T10:49:46.683785Z",
+  "ingestedAt": "2026-04-18T11:09:25.834523Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V NHL se chystá velké rozuzlení. Češi v osmi klubech vyrážejí na misi za Stanley Cupem",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-v-nhl-se-chysta-velke-rozuzleni-cesi-v-osmi-klubech-vyrazeji-na-misi-za-stanley-cupem-5438947",
+      "dt": "2026-04-18T10:57:22Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chystá",
+        "cupem",
+        "klubech",
+        "misi",
+        "nhl",
+        "osmi",
+        "rozuzlení",
+        "stanley",
+        "velké",
+        "vyrážejí",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Davidová po operaci zad. I přes berle rozdává úsměvy",
+      "url": "https://www.sport.cz/clanek/zimni-sporty-biatlon-davidova-po-operaci-zad-i-pres-berle-rozdava-usmevy-5438946",
+      "dt": "2026-04-18T10:48:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "berle",
+        "davidová",
+        "operaci",
+        "rozdává",
+        "zad",
+        "úsměvy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -713,60 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nečekaný hrdina. První utkání baráže rozhodl sváteční střelec, na gól čekal přes čtyři roky",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-necekany-hrdina-prvni-utkani-baraze-rozhodl-svatecni-strelec-na-gol-cekal-pres-ctyri-roky-5438922",
-      "dt": "2026-04-17T21:15:34Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "baráže",
-        "gól",
-        "hrdina",
-        "nečekaný",
-        "první",
-        "roky",
-        "rozhodl",
-        "střelec",
-        "sváteční",
-        "utkání",
-        "čekal",
-        "čtyři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Voráčková si triumf v Evropské lize nezopakuje, Zaragoza bude hrát o bronz",
-      "url": "https://www.sport.cz/clanek/basketbal-vorackova-si-triumf-v-evropske-lize-nezopakuje-zaragoza-bude-hrat-o-bronz-5438924",
-      "dt": "2026-04-17T21:11:11Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bronz",
-        "evropské",
-        "hrát",
-        "lize",
-        "nezopakuje",
-        "triumf",
-        "voráčková",
-        "zaragoza"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44121,
+      "bytes": 43279,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,10 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:38:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:57:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -829,6 +827,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V NHL se chystá velké rozuzlení. Češi v osmi klubech vyrážejí na misi za Stanley Cupem",
+            "publishedAt": "2026-04-18T10:57:22Z"
+          },
+          {
+            "title": "Davidová po operaci zad. I přes berle rozdává úsměvy",
+            "publishedAt": "2026-04-18T10:48:48Z"
+          },
           {
             "title": "Výhru dnes na ME v judu zaznamenala jen Skalská, vypadla v osmifinále",
             "publishedAt": "2026-04-18T09:30:13Z"
@@ -852,14 +858,6 @@
           {
             "title": "Kerr po vyřazení nevyloučil konec u Warriors, které dovedl v NBA k titulům",
             "publishedAt": "2026-04-18T09:37:46Z"
-          },
-          {
-            "title": "Mám ráda i holčičí věci, nejenom motorky, říká česká reprezentantka",
-            "publishedAt": "2026-04-17T07:30:33Z"
-          },
-          {
-            "title": "Šokující zpověď a fotografie teenagera. V přímém přenosu ukazuje, jak rostou svaly po lécích pro zvířata",
-            "publishedAt": "2026-04-18T09:07:29Z"
           }
         ]
       }
