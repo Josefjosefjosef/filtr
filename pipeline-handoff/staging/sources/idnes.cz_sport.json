@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T04:20:34.200066Z",
+  "ingestedAt": "2026-04-18T04:40:29.423523Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Číčo, vítej! Chrudimský talent se ukázal v Ústí, co ví o sázkařském maléru?",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/cicovsky-z-usti-jsem-utikat-nechtel.A260417_181917_fot_dsouteze_pbi",
+      "dt": "2026-04-18T04:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chrudimský",
+        "maléru",
+        "sázkařském",
+        "talent",
+        "ukázal",
+        "vítej",
+        "ústí",
+        "číčo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -770,32 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šenkeřík před baráží: Reichelovy tréninky? Ostré! Musíme využít únavu Jihlavy",
-      "url": "https://www.idnes.cz/hokej/extraliga/senkerik-hokej-reichel-litvinov-jihlava-baraz.A260417_073228_hokej_pbi",
-      "dt": "2026-04-17T10:32:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baráží",
-        "jihlavy",
-        "musíme",
-        "ostré",
-        "reichelovy",
-        "tréninky",
-        "využít",
-        "únavu",
-        "šenkeřík"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46975,
+      "bytes": 47220,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -858,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Číčo, vítej! Chrudimský talent se ukázal v Ústí, co ví o sázkařském maléru?",
+            "publishedAt": "2026-04-18T04:00:00Z"
+          },
           {
             "title": "Neokoukaný trenér ve finále. Žabka změnil Třinec, čím se liší od Varadi a Motáka?",
             "publishedAt": "2026-04-17T22:00:00Z"
@@ -885,10 +888,6 @@
           {
             "title": "Lvi Praha popáté v řadě zabojují o titul. Budějovice litují: Byli jsme zabrždění",
             "publishedAt": "2026-04-17T19:10:00Z"
-          },
-          {
-            "title": "Čeští hokejisté opět porazili Německo. V Karlových Varech inkasovali až v závěru",
-            "publishedAt": "2026-04-17T17:45:39Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T04:20:34.200066Z",
+  "ingestedAt": "2026-04-18T04:40:29.423523Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zapomenutá slovenská dodávka měla nahradit 1203. Vznikl proto i Moskvič s kabinou Favoritu",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/historie-automobilu/zapomenuta-slovenska-dodavka-mela-nahradit-1203-vznikl-proto-i-moskvic-s-kabinou-favoritu/r~aaa29aea6fbfdbd86b48a4b7535d803d/",
+      "dt": "2026-04-18T04:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "1203",
+        "dodávka",
+        "favoritu",
+        "kabinou",
+        "moskvič",
+        "měla",
+        "nahradit",
+        "proto",
+        "slovenská",
+        "vznikl",
+        "zapomenutá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -517,33 +545,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Feri zůstává ve vězení. Teplický soud se ale bude muset propuštěním znovu zabývat",
-      "url": "https://zpravy.aktualne.cz/domaci/feri-zustava-ve-vezeni-soud-jeho-zadost-o-propusteni-zamitl/r~aaa298543f410c4130501185de05f99c/",
-      "dt": "2026-04-16T07:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "feri",
-        "muset",
-        "propuštěním",
-        "soud",
-        "teplický",
-        "vězení",
-        "zabývat",
-        "znovu",
-        "zůstává"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +555,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22680,
+      "bytes": 22802,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,13 +592,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:32:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 3,
           "zdravi": 1,
-          "zpravy": 10,
+          "zpravy": 9,
           "sport": 6,
-          "finance": 2,
           "other": 1
         },
         "drop_counts": {
@@ -610,6 +611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zapomenutá slovenská dodávka měla nahradit 1203. Vznikl proto i Moskvič s kabinou Favoritu",
+            "publishedAt": "2026-04-18T04:32:00Z"
+          },
           {
             "title": "„Zobala to jako lentilky.“ Žena si vyzvedla 800 balení hypnotik na recept, problém je obří",
             "publishedAt": "2026-04-18T03:30:00Z"
@@ -637,10 +642,6 @@
           {
             "title": "„Myslivecká lobby je silná.“ Poslanci jim chtějí zakázat odstřel psů a koček, už reagovali",
             "publishedAt": "2026-04-17T19:01:00Z"
-          },
-          {
-            "title": "V Praze otevřeli Dvorecký most. Jízdní řády MHD doznají velkých změn",
-            "publishedAt": "2026-04-17T13:33:00Z"
           }
         ]
       }
