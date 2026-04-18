@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T22:02:45.960497Z",
+  "ingestedAt": "2026-04-18T22:15:18.094346Z",
   "items": [
     {
       "section": "aktualne",
@@ -756,6 +756,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Soutěž k cyklistickému závodu Amstel Gold Race",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/soutez-k-cyklistickemu-zavodu-amstel-gold-race-156297",
+      "dt": "2026-04-18T22:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "amstel",
+        "cyklistickému",
+        "gold",
+        "race",
+        "soutěž",
+        "závodu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Opava a Děčín míří do čtvrtfinále, Písek musí do předkola",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/opava-a-decin-miri-do-ctvrtfinale-pisek-musi-do-predkola-156355",
       "dt": "2026-04-18T20:18:30Z",
@@ -1470,30 +1493,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zachová třetí zlato nezíská, na ME vypadla hned v 1. kole",
-      "url": "https://sport.ceskatelevize.cz/clanek/judo/zachova-treti-zlato-neziska-na-me-vypadla-hned-v-1-kole-156325",
-      "dt": "2026-04-17T07:09:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hned",
-        "kole",
-        "nezíská",
-        "třetí",
-        "vypadla",
-        "zachová",
-        "zlato"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1622,7 +1621,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36777,
+      "bytes": 36548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1659,7 +1658,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T20:18:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1674,6 +1673,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soutěž k cyklistickému závodu Amstel Gold Race",
+            "publishedAt": "2026-04-18T22:00:00Z"
+          },
           {
             "title": "Opava a Děčín míří do čtvrtfinále, Písek musí do předkola",
             "publishedAt": "2026-04-18T20:18:30Z"
@@ -1701,10 +1704,6 @@
           {
             "title": "Schick přidal jedenáctý gól v sezoně, Leverkusen ale prohrál s Augsburgem",
             "publishedAt": "2026-04-18T16:42:41Z"
-          },
-          {
-            "title": "Davidová je po další operaci, čeká ji šest týdnů klidového režimu",
-            "publishedAt": "2026-04-18T16:32:19Z"
           }
         ]
       }
