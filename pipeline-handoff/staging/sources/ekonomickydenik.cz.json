@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-18T09:59:24.786680Z",
+  "ingestedAt": "2026-04-18T10:14:22.663899Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
+      "url": "https://ekonomickydenik.cz/krusnohorsky-tunel-vysokorychlostni-zeleznice-projekt/",
+      "dt": "2026-04-18T10:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "125",
+        "drážďan",
+        "jaké",
+        "krušnohorského",
+        "miliard",
+        "milníky",
+        "rychlotrati",
+        "tunelu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -750,36 +775,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš a Macinka mají místo jisté, Pavel nabízí ústupek. Vláda rozhodla o letu na summit NATO",
-      "url": "https://ekonomickydenik.cz/babis-macinka-pavel-let-summit-nato/",
-      "dt": "2026-04-16T08:39:10Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "jisté",
-        "letu",
-        "macinka",
-        "mají",
-        "místo",
-        "nabízí",
-        "nato",
-        "pavel",
-        "rozhodla",
-        "summit",
-        "vláda",
-        "ústupek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71183,
+      "bytes": 70962,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,10 +822,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 29,
+          "zpravy": 1,
+          "finance": 28,
           "zdravi": 1
         },
         "drop_counts": {
@@ -843,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
+            "publishedAt": "2026-04-18T10:05:00Z"
+          },
           {
             "title": "Šibeniční lhůta a tisíc stran změn. Nereálné, zlobí se Kupka",
             "publishedAt": "2026-04-18T08:45:00Z"
@@ -870,10 +870,6 @@
           {
             "title": "Miliardová past na emise? Auditoři cupují unijní fond, který měl zachránit oceláře",
             "publishedAt": "2026-04-17T13:02:53Z"
-          },
-          {
-            "title": "Boj o každou kapku: Stát pošle stovky milionů na nové vodovody",
-            "publishedAt": "2026-04-17T11:59:54Z"
           }
         ]
       }

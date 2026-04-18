@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-18T09:59:24.786680Z",
+  "ingestedAt": "2026-04-18T10:14:22.663899Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbal a dovolená. Češi horečně nakupují letenky do Ameriky",
+      "url": "https://profitonline.cz/fotbal-a-dovolena-cesi-horecne-nakupuji-letenky-do-ameriky/",
+      "dt": "2026-04-18T10:00:10Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ameriky",
+        "dovolená",
+        "fotbal",
+        "horečně",
+        "letenky",
+        "nakupují",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,33 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Konec naftové modly. Češi prchají k elektrice, na obměnu vraků to ale nestačí",
-      "url": "https://profitonline.cz/konec-naftove-modly-cesi-prchaji-k-elektrice-na-obmenu-vraku-to-ale-nestaci/",
-      "dt": "2026-04-16T06:00:39Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "elektrice",
-        "konec",
-        "modly",
-        "naftové",
-        "nestačí",
-        "obměnu",
-        "prchají",
-        "vraků",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +302,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18850,
+      "bytes": 18891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,11 +339,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-18T08:00:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:00:10Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "sport": 1,
           "finance": 9,
-          "zdravi": 3
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -358,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbal a dovolená. Češi horečně nakupují letenky do Ameriky",
+            "publishedAt": "2026-04-18T10:00:10Z"
+          },
           {
             "title": "Statisíce Čechů přichází o peníze ve starém penzijním připojištění",
             "publishedAt": "2026-04-18T08:00:38Z"
@@ -385,10 +387,6 @@
           {
             "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
             "publishedAt": "2026-04-17T06:00:46Z"
-          },
-          {
-            "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
-            "publishedAt": "2026-04-17T04:00:21Z"
           }
         ]
       }

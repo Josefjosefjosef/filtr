@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T09:59:24.786680Z",
+  "ingestedAt": "2026-04-18T10:14:22.663899Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při pádu z okna v Opavě utrpěl muž vážná zranění",
+      "url": "https://tydenikpolicie.cz/pri-padu-z-okna-v-opave-utrpel-muz-vazna-zraneni/",
+      "dt": "2026-04-18T10:03:40Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "muž",
+        "okna",
+        "opavě",
+        "pádu",
+        "při",
+        "utrpěl",
+        "vážná",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -230,30 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zloděj v zemědělském areálu v Hněvkovicích usmrtil a ukradl prasata",
-      "url": "https://tydenikpolicie.cz/zlodej-v-zemedelskem-arealu-v-hnevkovicich-usmrtil-a-ukradl-prasata/",
-      "dt": "2026-04-17T12:21:53Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "areálu",
-        "hněvkovicích",
-        "prasata",
-        "ukradl",
-        "usmrtil",
-        "zemědělském",
-        "zloděj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -264,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16008,
+      "bytes": 16076,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -301,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:37:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T10:03:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -316,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při pádu z okna v Opavě utrpěl muž vážná zranění",
+            "publishedAt": "2026-04-18T10:03:40Z"
+          },
           {
             "title": "Za vážnými zdravotními komplikacemi u muže v Brně stála nejspíš kombinace alkoholu a fentanylu",
             "publishedAt": "2026-04-18T07:37:58Z"
@@ -343,10 +348,6 @@
           {
             "title": "Rozrušený muž nacházející se v těžké životní situaci se v Plzni pohyboval po tramvajovém mostě",
             "publishedAt": "2026-04-17T18:02:59Z"
-          },
-          {
-            "title": "Řidička mercedesu projela v Pařížské ulici v Praze výlohou do prodejny",
-            "publishedAt": "2026-04-17T17:32:42Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T09:59:24.786680Z",
+  "ingestedAt": "2026-04-18T10:14:22.663899Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko v přípravě na světový šampionát",
+      "url": "https://www.sport.cz/clanek/hokej-ms-2026-nominace-soupiska-cesko-5436620",
+      "dt": "2026-04-18T07:18:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2026",
+        "aktuální",
+        "hokejové",
+        "kádr",
+        "přípravě",
+        "reprezentace",
+        "světový",
+        "česko",
+        "české",
+        "šampionát"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,30 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ANALÝZA: Ze smrtící zbraně se stala slabina! Co stojí za propadem Baníku?",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-analyza-ze-smrtici-zbrane-se-stala-slabina-co-stoji-za-propadem-baniku-5438065",
-      "dt": "2026-04-17T20:34:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "baníku",
-        "propadem",
-        "slabina",
-        "smrtící",
-        "stala",
-        "stojí",
-        "zbraně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43069,
+      "bytes": 42870,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,6 +837,10 @@
         },
         "sample_titles": [
           {
+            "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko v přípravě na světový šampionát",
+            "publishedAt": "2026-04-18T07:18:00Z"
+          },
+          {
             "title": "Kerr po vyřazení nevyloučil konec u Warriors, které dovedl v NBA k titulům",
             "publishedAt": "2026-04-18T09:37:46Z"
           },
@@ -860,10 +867,6 @@
           {
             "title": "Baráž není spravedlivá, ale na Litvínov máme, míní jihlavský kanonýr",
             "publishedAt": "2026-04-18T07:49:56Z"
-          },
-          {
-            "title": "Váchová prošla jako jediná z českých golfistek do finálových kol v JAR",
-            "publishedAt": "2026-04-18T07:44:12Z"
           }
         ]
       }
