@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T17:05:02.866943Z",
+  "ingestedAt": "2026-04-18T17:24:44.538031Z",
   "items": [
     {
       "section": "aktualne",
@@ -753,6 +753,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/pribram-zdolala-becko-sparty-vlasim-se-veze-na-vlne-156350",
+      "dt": "2026-04-18T17:18:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "béčko",
+        "příbram",
+        "sparty",
+        "veze",
+        "vlašim",
+        "vlně",
+        "zdolala"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Krejčí se zranil a zápas nedohrál, Wolverhampton je blízko sestupu",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/krejci-se-zranil-a-zapas-nedohral-wolverhampton-je-blizko-sestupu-156349",
       "dt": "2026-04-18T16:47:26Z",
@@ -880,7 +904,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:1",
+      "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:2",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-extraligy-dynamo-pardubice-ocelari-trinec-156344",
       "dt": "2026-04-18T14:58:00Z",
       "media_raw": "ČT sport",
@@ -1479,29 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šínův gól Alkmaar v Konferenční lize neudržel",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sinuv-gol-alkmaar-v-konferencni-lize-neudrzel-156320",
-      "dt": "2026-04-16T18:52:44Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "alkmaar",
-        "gól",
-        "konferenční",
-        "lize",
-        "neudržel",
-        "šínův"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1631,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36735,
+      "bytes": 36789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T16:47:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:18:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
+            "publishedAt": "2026-04-18T17:18:45Z"
+          },
           {
             "title": "Krejčí se zranil a zápas nedohrál, Wolverhampton je blízko sestupu",
             "publishedAt": "2026-04-18T16:47:26Z"
@@ -1704,16 +1709,12 @@
             "publishedAt": "2026-04-18T15:15:04Z"
           },
           {
-            "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:1",
+            "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:2",
             "publishedAt": "2026-04-18T14:58:00Z"
           },
           {
             "title": "Muchová si ve Stuttgartu zahraje o svůj třetí titul",
             "publishedAt": "2026-04-18T14:28:40Z"
-          },
-          {
-            "title": "Fotbalistky v kvalifikaci pro MS vyhrály v Černé Hoře",
-            "publishedAt": "2026-04-18T13:53:04Z"
           }
         ]
       }
@@ -1725,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77270,
+      "bytes": 77278,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T17:05:02.866943Z",
+  "ingestedAt": "2026-04-18T17:24:44.538031Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Cena pšenice skokově vzrostla. Na vině je počasí i geopolitika",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/psenice-cena-rust.A260417_125854_eko-zahranicni_rie",
+      "dt": "2026-04-18T17:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cena",
+        "geopolitika",
+        "počasí",
+        "pšenice",
+        "skokově",
+        "vině",
+        "vzrostla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž v pražské zoo spadl z lanovky, má lehká poranění",
+      "url": "https://www.idnes.cz/praha/zpravy/zoo-lanovka-zachranna-sit-pad-policie-poraneni.A260418_182708_praha-zpravy_hock",
+      "dt": "2026-04-18T16:58:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "lanovky",
+        "lehká",
+        "muž",
+        "poranění",
+        "pražské",
+        "spadl",
+        "zoo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,60 +781,6 @@
         "smysl",
         "televizionář",
         "ztvárnit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Operuje obézní. Po zákroku lze žaludek přepít, líčí lékař. Co říká na Ozempic?",
-      "url": "https://www.idnes.cz/usti/zpravy/primar-rejholec-nemocnice-chirurgie-operace-obezni-ozempic-obezita.A260417_095409_usti-zpravy_grr",
-      "dt": "2026-04-18T08:54:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "lze",
-        "lékař",
-        "líčí",
-        "obézní",
-        "operuje",
-        "ozempic",
-        "přepít",
-        "zákroku",
-        "říká",
-        "žaludek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Feminista plný nápadů, živila ho matka. Dvě století od narození Vojty Náprstka",
-      "url": "https://www.idnes.cz/zpravy/domaci/vojta-naprstek-vystava-narozeni-vyroci.A260417_151830_domaci_ichuc",
-      "dt": "2026-04-18T08:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dvě",
-        "feminista",
-        "matka",
-        "narození",
-        "nápadů",
-        "náprstka",
-        "plný",
-        "století",
-        "vojty",
-        "živila"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48102,
+      "bytes": 47444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1621,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T16:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 5,
+          "finance": 6,
+          "zpravy": 21,
           "other": 3
         },
         "drop_counts": {
@@ -1644,6 +1638,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cena pšenice skokově vzrostla. Na vině je počasí i geopolitika",
+            "publishedAt": "2026-04-18T17:00:00Z"
+          },
+          {
+            "title": "Muž v pražské zoo spadl z lanovky, má lehká poranění",
+            "publishedAt": "2026-04-18T16:58:00Z"
+          },
           {
             "title": "Při střelbě v Kyjevě zemřelo pět lidí. Útočník si vzal rukojmí a pálil i do policie",
             "publishedAt": "2026-04-18T16:38:00Z"
@@ -1667,14 +1669,6 @@
           {
             "title": "Bypass aorty, přešití ledvin. Kubík má v USA po klíčové operaci, trvala deset hodin",
             "publishedAt": "2026-04-18T15:00:00Z"
-          },
-          {
-            "title": "Historici zabránili demolici bývalé věznice, Chrastava nabídne cely k pronájmu",
-            "publishedAt": "2026-04-18T14:14:00Z"
-          },
-          {
-            "title": "V Libanonu zastřelili francouzského vojáka při odklizení výbušnin. Macron viní Hizballáh",
-            "publishedAt": "2026-04-18T14:00:00Z"
           }
         ]
       }
