@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T19:44:39.681069Z",
+  "ingestedAt": "2026-04-18T20:05:46.354656Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Knihou roku je Mariborská hypnóza. Magnesia Litera rozdala ceny",
+      "url": "https://www.denik.cz/film-a-televize/magnesia-litera-knizni-ceny-mariborska-hypnoza-rok-2025.html",
+      "dt": "2026-04-18T19:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ceny",
+        "hypnóza",
+        "knihou",
+        "litera",
+        "magnesia",
+        "mariborská",
+        "roku",
+        "rozdala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sezona hradů a zámků v ČR: Lidé si za vstupné připlatí, někde i o desítky korun",
-      "url": "https://www.denik.cz/z_domova/cesko-hrady-a-zamky-nova-sezona-2026-cena-vyssi-vstupne.html",
-      "dt": "2026-04-18T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "desítky",
-        "hradů",
-        "korun",
-        "lidé",
-        "někde",
-        "připlatí",
-        "sezona",
-        "vstupné",
-        "zámků"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28688,
+      "bytes": 28603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T19:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T19:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Knihou roku je Mariborská hypnóza. Magnesia Litera rozdala ceny",
+            "publishedAt": "2026-04-18T19:40:00Z"
+          },
           {
             "title": "Vláda nechce Vystrčilovi poskytnout letoun k cestě na Tchaj-wan, píše Blesk",
             "publishedAt": "2026-04-18T19:06:00Z"
@@ -743,10 +746,6 @@
           {
             "title": "Přání řidičů se vyplní: Jednodenní dálniční známka už nebude končit o půlnoci",
             "publishedAt": "2026-04-18T14:00:00Z"
-          },
-          {
-            "title": "Video s vráceným perem je virálem. Na Klausovu slávu z Chile zatím ale nemá",
-            "publishedAt": "2026-04-18T13:25:00Z"
           }
         ]
       }

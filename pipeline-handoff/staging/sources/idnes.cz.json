@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T19:44:39.681069Z",
+  "ingestedAt": "2026-04-18T20:05:46.354656Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Magnesii Literu za knihu roku získala Dora Kaprálová, cenu čtenářů má Cyril Děckař",
+      "url": "https://www.idnes.cz/kultura/literatura/magnesia-litera-2026-dora-kapralova-cyril-deckar-radovan-jursa-jaroslava-haladova-mariborska-hypnoza.A260418_154050_literatura_nh",
+      "dt": "2026-04-18T19:45:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cenu",
+        "cyril",
+        "dora",
+        "děckař",
+        "kaprálová",
+        "knihu",
+        "literu",
+        "magnesii",
+        "roku",
+        "získala",
+        "čtenářů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -752,34 +780,6 @@
         "obchod",
         "oscar",
         "ukradený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš blábolí, řekl Benda a hájí mimořádné schůze. Hrubá urážka, oponoval Šťastný",
-      "url": "https://www.idnes.cz/zpravy/domaci/mimoradna-schuze-snemovny-andrej-babis-marek-benda-boris-stastny-ods-motoriste-vlada-ano.A260418_115528_domaci_svm",
-      "dt": "2026-04-18T10:55:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babiš",
-        "benda",
-        "blábolí",
-        "hrubá",
-        "hájí",
-        "mimořádné",
-        "oponoval",
-        "schůze",
-        "urážka",
-        "řekl",
-        "šťastný"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47190,
+      "bytes": 46898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1620,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T19:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T19:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 3,
-          "zpravy": 23,
+          "other": 4,
+          "zpravy": 22,
           "finance": 4
         },
         "drop_counts": {
@@ -1637,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Magnesii Literu za knihu roku získala Dora Kaprálová, cenu čtenářů má Cyril Děckař",
+            "publishedAt": "2026-04-18T19:45:00Z"
+          },
           {
             "title": "Magnesia Litera 2026. Jaké jsou nejlepší knihy roku 2025",
             "publishedAt": "2026-04-18T19:32:00Z"
@@ -1664,10 +1668,6 @@
           {
             "title": "V Libanonu zastřelili francouzského vojáka při odklizení výbušnin. Macron viní Hizballáh",
             "publishedAt": "2026-04-18T17:55:00Z"
-          },
-          {
-            "title": "Šest mrtvých po střelbě v Kyjevě. Útočník z Moskvy si vzal rukojmí a pálil i do policie",
-            "publishedAt": "2026-04-18T17:52:00Z"
           }
         ]
       }
