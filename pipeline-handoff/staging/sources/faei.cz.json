@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-18T04:01:11.259739Z",
+  "ingestedAt": "2026-04-18T04:20:34.200066Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Okamžiky dějin: Jak Evropané objevovali nejmenší kontinent",
+      "url": "https://profitonline.cz/okamziky-dejin-jak-evropane-objevovali-nejmensi-kontinent/",
+      "dt": "2026-04-18T04:00:12Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dějin",
+        "evropané",
+        "kontinent",
+        "nejmenší",
+        "objevovali",
+        "okamžiky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,32 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko stárne. Chybějící domovy pro seniory dokážeme postavit, ale kdo o ně bude pečovat?",
-      "url": "https://profitonline.cz/cesko-starne-chybejici-domovy-pro-seniory-dokazeme-postavit-ale-kdo-o-ne-bude-pecovat/",
-      "dt": "2026-04-15T13:00:58Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "chybějící",
-        "dokážeme",
-        "domovy",
-        "pečovat",
-        "postavit",
-        "seniory",
-        "stárne",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -310,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18973,
+      "bytes": 18714,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-17T17:00:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:00:12Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -363,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Okamžiky dějin: Jak Evropané objevovali nejmenší kontinent",
+            "publishedAt": "2026-04-18T04:00:12Z"
+          },
           {
             "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
             "publishedAt": "2026-04-17T17:00:59Z"
@@ -390,10 +391,6 @@
           {
             "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
             "publishedAt": "2026-04-16T14:00:15Z"
-          },
-          {
-            "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
-            "publishedAt": "2026-04-16T10:00:00Z"
           }
         ]
       }

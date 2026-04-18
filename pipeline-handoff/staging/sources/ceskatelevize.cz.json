@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T04:01:11.259739Z",
+  "ingestedAt": "2026-04-18T04:20:34.200066Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hispánci v Texasu se obracejí k Trumpovi zády",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/hispanci-v-texasu-se-obraceji-k-trumpovi-zady-372507",
+      "dt": "2026-04-18T04:02:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hispánci",
+        "obracejí",
+        "texasu",
+        "trumpovi",
+        "zády"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -738,27 +760,29 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Zemřel Jan Potměšil. Hrál létajícího ševce či ve filmu Bony a klid",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zemrel-herec-jan-potmesil-372473",
-      "dt": "2026-04-17T05:13:27Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Obrovská euforie, že jsme zvládli první krok, řekl nečekaný střelec Vervy Baláž",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/obrovska-euforie-ze-jsme-zvladli-prvni-krok-rekl-svatecni-strelec-vervy-balaz-156338",
+      "dt": "2026-04-18T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "bony",
-        "filmu",
-        "hrál",
-        "jan",
-        "klid",
-        "létajícího",
-        "potměšil",
-        "zemřel",
-        "ševce"
+        "baláž",
+        "euforie",
+        "jsme",
+        "krok",
+        "nečekaný",
+        "obrovská",
+        "první",
+        "střelec",
+        "vervy",
+        "zvládli",
+        "řekl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1492,33 +1516,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Alscher se blýskl v posledním utkání Floridy dvěma asistencemi, jednou nahrával i Hovorka",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/alscher-se-blyskl-v-poslednim-utkani-floridy-dvema-asistencemi-jednou-nahraval-i-hovorka-156308",
-      "dt": "2026-04-16T06:19:13Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "alscher",
-        "asistencemi",
-        "blýskl",
-        "dvěma",
-        "floridy",
-        "hovorka",
-        "jednou",
-        "nahrával",
-        "posledním",
-        "utkání"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1529,7 +1526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43104,
+      "bytes": 42983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1589,7 +1586,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T03:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1606,6 +1603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hispánci v Texasu se obracejí k Trumpovi zády",
+            "publishedAt": "2026-04-18T04:02:00Z"
+          },
           {
             "title": "USA o měsíc prodloužily výjimku na nákup sankcionované ruské ropy na tankerech",
             "publishedAt": "2026-04-18T03:07:00Z"
@@ -1633,10 +1634,6 @@
           {
             "title": "Írán slíbil pozastavit svůj jaderný program, tvrdí Trump",
             "publishedAt": "2026-04-17T17:17:57Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pátku 17. dubna",
-            "publishedAt": "2026-04-17T16:30:00Z"
           }
         ]
       }
@@ -1648,7 +1645,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37025,
+      "bytes": 36945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1685,7 +1682,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-17T21:59:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1700,6 +1697,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obrovská euforie, že jsme zvládli první krok, řekl nečekaný střelec Vervy Baláž",
+            "publishedAt": "2026-04-18T04:00:00Z"
+          },
           {
             "title": "Do přípravy hokejistů před MS se zapojí Bednář, Kempný, Beránek a Špaček",
             "publishedAt": "2026-04-17T21:59:01Z"
@@ -1727,10 +1728,6 @@
           {
             "title": "Macháč do druhého semifinále v sezoně nepostoupil, nestačil na Rubljova",
             "publishedAt": "2026-04-17T13:29:52Z"
-          },
-          {
-            "title": "Neodevzdaný test může ohrozit kariéru Markéty Vondroušové",
-            "publishedAt": "2026-04-17T13:00:17Z"
           }
         ]
       }
@@ -1742,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77230,
+      "bytes": 77237,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

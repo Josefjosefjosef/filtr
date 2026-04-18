@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T04:01:11.259739Z",
+  "ingestedAt": "2026-04-18T04:20:34.200066Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lišovští policisté objasnili dvě vloupání do rodinných domů",
+      "url": "https://tydenikpolicie.cz/lisovsti-policiste-objasnili-dve-vloupani-do-rodinnych-domu/",
+      "dt": "2026-04-18T04:02:39Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "domů",
+        "dvě",
+        "lišovští",
+        "objasnili",
+        "policisté",
+        "rodinných",
+        "vloupání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -226,35 +250,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hledaný 17letý chovanec výchovného ústavu se policistům snažil utéct, uplavat a nakonec se před nimi schovat",
-      "url": "https://tydenikpolicie.cz/hledany-17lety-chovanec-vychovneho-ustavu-se-policistum-snazil-utect-uplavat-a-nakonec-se-pred-nimi-schovat/",
-      "dt": "2026-04-17T11:45:33Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "17letý",
-        "chovanec",
-        "hledaný",
-        "nakonec",
-        "nimi",
-        "policistům",
-        "schovat",
-        "snažil",
-        "uplavat",
-        "utéct",
-        "výchovného",
-        "ústavu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -265,7 +260,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15896,
+      "bytes": 15688,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -302,7 +297,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T02:02:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:02:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -317,6 +312,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lišovští policisté objasnili dvě vloupání do rodinných domů",
+            "publishedAt": "2026-04-18T04:02:39Z"
+          },
           {
             "title": "Jako soupeře si muž v Litoměřicích vybral toaletu v obchodním centru",
             "publishedAt": "2026-04-18T02:02:21Z"
@@ -344,10 +343,6 @@
           {
             "title": "Zloděj v zemědělském areálu v Hněvkovicích usmrtil a ukradl prasata",
             "publishedAt": "2026-04-17T12:21:53Z"
-          },
-          {
-            "title": "Konflikt v chatě poblíž Bosonoh skončil těžkým zraněním",
-            "publishedAt": "2026-04-17T12:13:50Z"
           }
         ]
       }
