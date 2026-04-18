@@ -94,7 +94,7 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
   }
 }
 
-/* Desktop ≥1025px: fullscreen overlay stage (#iuParcelsPopover) + centered white shell (.iu-parcels-modal-shell); guard .iu-parcels-desktop-fs only; no :has(). */
+/* Desktop ≥1025px: #iuParcelsPopover = fullscreen stage (ID-only; no JS guard — avoids base .iu-parcels-modal inset:24px when class missing). Shell stays inner card. No :has(). */
 @media (min-width: 1025px){
   .iu-parcels-overlay.is-open{
     min-height: 100vh;
@@ -102,7 +102,7 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
     width: 100%;
     inset: 0;
   }
-  #iuParcelsPopover.iu-parcels-modal.iu-parcels-desktop-fs.is-open{
+  #iuParcelsPopover.iu-parcels-modal.is-open{
     position: fixed;
     inset: 0;
     left: 0;
@@ -129,7 +129,7 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
-  #iuParcelsPopover.iu-parcels-desktop-fs.is-open > .iu-parcels-modal-shell{
+  #iuParcelsPopover.is-open > .iu-parcels-modal-shell{
     width: min(720px, calc(100% - 48px));
     max-width: min(720px, calc(100% - 48px));
     min-width: 0;
@@ -143,7 +143,7 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,.18);
   }
-  #iuParcelsPopover.iu-parcels-desktop-fs.is-open > .iu-parcels-modal-shell > .iu-parcels-modal-content{
+  #iuParcelsPopover.is-open > .iu-parcels-modal-shell > .iu-parcels-modal-content{
     flex: 1 1 auto;
     min-height: 0;
   }
