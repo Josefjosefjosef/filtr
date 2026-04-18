@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-18T06:03:31.975881Z",
+  "ingestedAt": "2026-04-18T07:00:07.622913Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová imunoterapie rakovinu zvládne, tvrdí vědci. Chce to jen čas",
+      "url": "https://www.zdravezpravy.cz/2026/04/18/nova-imunoterapie-rakovinu-zvladne-tvrdi-vedci-chce-to-jen-cas/",
+      "dt": "2026-04-18T06:30:20Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "chce",
+        "imunoterapie",
+        "jen",
+        "nová",
+        "rakovinu",
+        "tvrdí",
+        "vědci",
+        "zvládne",
+        "čas"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,30 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Operace žaludku vede ke zhubnutí. Lidé po ní totiž méně jedí",
-      "url": "https://www.zdravezpravy.cz/2026/04/09/operace-zaludku-vede-ke-zhubnuti-lide-po-ni-totiz-mene-jedi/",
-      "dt": "2026-04-09T14:52:47Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "jedí",
-        "lidé",
-        "operace",
-        "totiž",
-        "vede",
-        "zhubnutí",
-        "žaludku"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 213006,
+      "bytes": 219821,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:42:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T06:30:20Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -558,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová imunoterapie rakovinu zvládne, tvrdí vědci. Chce to jen čas",
+            "publishedAt": "2026-04-18T06:30:20Z"
+          },
           {
             "title": "Hemofilici už žijí jako ostatní lidé. A to díky preventivní léčbě",
             "publishedAt": "2026-04-17T15:42:13Z"
@@ -585,10 +591,6 @@
           {
             "title": "Rezort zemědělství chce kupovat více českých potravin",
             "publishedAt": "2026-04-15T12:20:13Z"
-          },
-          {
-            "title": "Divizi zdravotní péče Penta Hospitals CZ nově vede Martin Křížek",
-            "publishedAt": "2026-04-15T07:50:31Z"
           }
         ]
       }

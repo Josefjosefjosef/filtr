@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T06:03:31.975881Z",
+  "ingestedAt": "2026-04-18T07:00:07.622913Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "KVÍZ: Naďa Konvalinková slaví 75. Jak dobře znáte hvězdu českých komedií?",
+      "url": "https://www.denik.cz/film-a-televize/kviz-nada-konvalinkova.html",
+      "dt": "2026-04-18T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dobře",
+        "hvězdu",
+        "komedií",
+        "konvalinková",
+        "kvíz",
+        "naďa",
+        "slaví",
+        "znáte",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,31 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Fico trvá na ruském plynu. Potvrdil žalobu kvůli nařízení EU",
-      "url": "https://www.denik.cz/staty-eu/slovensko-fico-ropa-plyn-rusko-evropska-komise-zaloba.html",
-      "dt": "2026-04-17T11:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fico",
-        "kvůli",
-        "nařízení",
-        "plynu",
-        "potvrdil",
-        "ruském",
-        "trvá",
-        "žalobu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29405,
+      "bytes": 29118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T05:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T06:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -723,6 +724,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KVÍZ: Naďa Konvalinková slaví 75. Jak dobře znáte hvězdu českých komedií?",
+            "publishedAt": "2026-04-18T06:00:00Z"
+          },
           {
             "title": "Útok při cvičení. Medvědi hnědí napadli na Aljašce dva americké vojáky",
             "publishedAt": "2026-04-18T05:15:00Z"
@@ -750,10 +755,6 @@
           {
             "title": "Na psy má alergii, tak bere na procházku rostliny. Muž ze Židenic pomáhá přírodě",
             "publishedAt": "2026-04-18T03:33:00Z"
-          },
-          {
-            "title": "Sezona hradů a zámků v ČR: Lidé si za vstupné připlatí, někde i o desítky korun",
-            "publishedAt": "2026-04-18T03:30:00Z"
           }
         ]
       }

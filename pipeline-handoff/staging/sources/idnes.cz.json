@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T06:03:31.975881Z",
+  "ingestedAt": "2026-04-18T07:00:07.622913Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bobr v příkopu budil obavy, nakonec si jen počkal na odvoz k řece",
+      "url": "https://www.idnes.cz/plzen/zpravy/puclice-domazlicko-bobr-evropsky-zraneny-prikop-zvire-zachranar.A260414_082327_plzen-zpravy_vb",
+      "dt": "2026-04-18T06:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bobr",
+        "budil",
+        "jen",
+        "nakonec",
+        "obavy",
+        "odvoz",
+        "počkal",
+        "příkopu",
+        "řece"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -751,32 +777,6 @@
         "potměšil",
         "zemřel",
         "švec"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko nabídne do Hormuzského průlivu radar, až se situace zklidní, oznámil Babiš",
-      "url": "https://www.idnes.cz/zpravy/domaci/babis-hormuzsky-pruliv-radar-nabidka-pomoci-cesko.A260417_122806_domaci_aoc",
-      "dt": "2026-04-17T14:02:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babiš",
-        "hormuzského",
-        "nabídne",
-        "oznámil",
-        "průlivu",
-        "radar",
-        "situace",
-        "zklidní",
-        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48871,
+      "bytes": 48734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T05:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T06:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1634,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bobr v příkopu budil obavy, nakonec si jen počkal na odvoz k řece",
+            "publishedAt": "2026-04-18T06:23:00Z"
+          },
           {
             "title": "Trump hrozí Íránu zachováním blokády. Příměří možná neprodloužím, dodal",
             "publishedAt": "2026-04-18T05:22:00Z"
@@ -1660,10 +1664,6 @@
           },
           {
             "title": "Lidl expanduje s privátními značkami. Nově se objeví i v Kauflandu",
-            "publishedAt": "2026-04-17T22:00:00Z"
-          },
-          {
-            "title": "Úklid jako z katalogu je cesta k frustraci, říká expertka na krásný domov",
             "publishedAt": "2026-04-17T22:00:00Z"
           }
         ]
