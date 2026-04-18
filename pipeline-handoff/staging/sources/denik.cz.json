@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T15:12:51.117844Z",
+  "ingestedAt": "2026-04-18T16:10:08.411818Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Slovensku odrodili obří dvojčata i dítě se zubem",
+      "url": "https://www.denik.cz/staty-eu/slovensko-brezno-porody-zoubek-nejvetsi-dvojcata.html",
+      "dt": "2026-04-18T15:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvojčata",
+        "dítě",
+        "obří",
+        "odrodili",
+        "slovensku",
+        "zubem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Seniorka v mercedesu projela v Pařížské ulici v centru Prahy výlohou obchodu",
-      "url": "https://www.denik.cz/nehody/parizska-ulice-zazila-necekany-manevr-seniorka-projela-autem-primo-do-vylohy-202.html",
-      "dt": "2026-04-17T17:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "centru",
-        "mercedesu",
-        "obchodu",
-        "pařížské",
-        "prahy",
-        "projela",
-        "seniorka",
-        "ulici",
-        "výlohou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28485,
+      "bytes": 28526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T14:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T15:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -719,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Slovensku odrodili obří dvojčata i dítě se zubem",
+            "publishedAt": "2026-04-18T15:45:00Z"
+          },
           {
             "title": "Pokus o vyproštění velryby: Záchrana pokračuje, pomoci by mohly vzduchové vaky",
             "publishedAt": "2026-04-18T14:40:00Z"
@@ -746,10 +747,6 @@
           {
             "title": "Magyar získal další mandáty. Vítěz maďarských voleb má 140 křesel",
             "publishedAt": "2026-04-18T12:23:00Z"
-          },
-          {
-            "title": "Lenka Filipová se zotavuje po vážném zranění. Koncert v Kutné Hoře opět odložen",
-            "publishedAt": "2026-04-18T11:30:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-18T15:12:51.117844Z",
+  "ingestedAt": "2026-04-18T16:10:08.411818Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zabiják, o kterém se nemluví: Světem se šíří superhouby, na které přestává fungovat léčba",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zabijak-o-kterem-se-nemluvi-svetem-se-siri-superhouby-na-ktere-prestava-fungovat-lecba/",
+      "dt": "2026-04-18T15:45:48Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "fungovat",
+        "kterém",
+        "léčba",
+        "nemluví",
+        "přestává",
+        "superhouby",
+        "světem",
+        "zabiják",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jedno očkování proti chřipce na celý život? Vědci jsou blíž univerzální vakcíně",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/univerzalni-ockovani-proti-chripce-vyzkum/",
-      "dt": "2026-04-17T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "blíž",
-        "celý",
-        "chřipce",
-        "jedno",
-        "očkování",
-        "proti",
-        "univerzální",
-        "vakcíně",
-        "vědci",
-        "život"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103599,
+      "bytes": 104083,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T11:20:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T15:45:48Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zabiják, o kterém se nemluví: Světem se šíří superhouby, na které přestává fungovat léčba",
+            "publishedAt": "2026-04-18T15:45:48Z"
+          },
           {
             "title": "37 tisíc nakažených a dva mrtví kojenci. Proč moderní vakcíny proti černému kašli ztrácí dech?",
             "publishedAt": "2026-04-18T11:20:53Z"
@@ -361,10 +364,6 @@
           {
             "title": "Miliony pro „onkologicky nemocnou Karolínku“. Sbírka na sociální síti budí silné podezření",
             "publishedAt": "2026-04-17T09:14:34Z"
-          },
-          {
-            "title": "Komentář: Očkování není ideologie a prevence není katalog",
-            "publishedAt": "2026-04-17T07:00:00Z"
           }
         ]
       }

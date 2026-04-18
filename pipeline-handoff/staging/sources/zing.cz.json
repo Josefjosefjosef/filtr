@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-18T15:12:51.117844Z",
+  "ingestedAt": "2026-04-18T16:10:08.411818Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Dimraeth: když Skyrim a Diablo zplodí pixel-artové RPG",
+      "url": "https://zing.cz/article/dimraeth-kdyz-skyrim-a-diablo-zplodi-pixel-artove-rpg",
+      "dt": "2026-04-18T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "artové",
+        "diablo",
+        "dimraeth",
+        "když",
+        "pixel",
+        "rpg",
+        "skyrim",
+        "zplodí"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -949,31 +974,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Metro 2039 je realitou, k představení dojde již tento týden",
-      "url": "https://zing.cz/article/metro-2039-je-realitou-k-predstaveni-dojde-jiz-tento-tyden",
-      "dt": "2026-04-13T16:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "2039",
-        "dojde",
-        "již",
-        "metro",
-        "představení",
-        "realitou",
-        "tento",
-        "týden"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -984,7 +984,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126947,
+      "bytes": 126922,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1021,7 +1021,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1036,6 +1036,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dimraeth: když Skyrim a Diablo zplodí pixel-artové RPG",
+            "publishedAt": "2026-04-18T16:00:00Z"
+          },
           {
             "title": "Carmack: Quake Arena byl můj oblíbený projekt od id Software",
             "publishedAt": "2026-04-18T14:00:00Z"
@@ -1063,10 +1067,6 @@
           {
             "title": "Epic rozdává loňský stealth hit The Stone of Madness",
             "publishedAt": "2026-04-17T14:00:00Z"
-          },
-          {
-            "title": "Uniklo datum vydání Black Flag Resynced, dočkáme se dřív, než jsme doufali",
-            "publishedAt": "2026-04-17T12:00:00Z"
           }
         ]
       }
