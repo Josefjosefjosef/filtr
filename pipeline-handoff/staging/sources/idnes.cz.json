@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T05:00:10.656731Z",
+  "ingestedAt": "2026-04-18T05:23:01.053045Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bém do konce měsíce ukáže plán proti závislostem, omezit chce i alkohol",
+      "url": "https://www.idnes.cz/zpravy/domaci/bem-zavislosti-alkohol-cigarety-plan-adam-vojtech-boris-stastny.A260417_194657_domaci_svm",
+      "dt": "2026-04-18T05:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "alkohol",
+        "bém",
+        "chce",
+        "konce",
+        "měsíce",
+        "omezit",
+        "plán",
+        "proti",
+        "ukáže",
+        "závislostem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -749,33 +776,6 @@
         "otevíral",
         "přívoz",
         "tramvaje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec největší dálniční ostudy se blíží. Silničáři řekli, kdy začnou opravu zvlněné D1",
-      "url": "https://www.idnes.cz/ostrava/zpravy/rsd-reditel-matl-zvlnena-dalnice-d1-oprava-ostrava-rekonstrukce.A260417_113520_ostrava-zpravy_jog",
-      "dt": "2026-04-17T13:49:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "blíží",
-        "dálniční",
-        "konec",
-        "největší",
-        "opravu",
-        "ostudy",
-        "silničáři",
-        "začnou",
-        "zvlněné",
-        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48516,
+      "bytes": 48804,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,7 +1616,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T02:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1633,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bém do konce měsíce ukáže plán proti závislostem, omezit chce i alkohol",
+            "publishedAt": "2026-04-18T05:00:00Z"
+          },
           {
             "title": "USA o měsíc prodloužily výjimku na nákup sankcionované ruské ropy",
             "publishedAt": "2026-04-18T02:35:00Z"
@@ -1660,10 +1664,6 @@
           {
             "title": "Exprezident jako spasitel i potížista. Favorit bulharských voleb zneklidňuje EU",
             "publishedAt": "2026-04-17T22:00:00Z"
-          },
-          {
-            "title": "Bělorusko staví cesty a dělostřelecká postavení u Ukrajiny, varoval Zelenskyj",
-            "publishedAt": "2026-04-17T19:55:00Z"
           }
         ]
       }

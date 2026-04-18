@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T05:00:10.656731Z",
+  "ingestedAt": "2026-04-18T05:23:01.053045Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Maringotka snů. Když se 21,6 metru čtverečního promění v plnohodnotné místo pro život",
+      "url": "https://magazin.aktualne.cz/bydleni/maringotka-snu-kdyz-se-21-6-metru-ctverecnich-promeni-v-plnohodnotne-misto-pro-zivot/r~aaa2974bd6cda4659f6052092a2f62b6/",
+      "dt": "2026-04-18T04:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "když",
+        "maringotka",
+        "metru",
+        "místo",
+        "plnohodnotné",
+        "promění",
+        "snů",
+        "čtverečního",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -518,33 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Výhledy jsou šílené.“ Dřívější konec zimy znamená radikální změny pro české ovoce",
-      "url": "https://zpravy.aktualne.cz/domaci/vyhledy-jsou-silene-drivejsi-konec-zimy-znamena-radikalni-zmeny-pro-ceske-ovoce/r~aaa29f4e8b84f5dab1f60f44e825e264/",
-      "dt": "2026-04-17T14:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dřívější",
-        "konec",
-        "ovoce",
-        "radikální",
-        "výhledy",
-        "zimy",
-        "změny",
-        "znamená",
-        "české",
-        "šílené"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -555,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22812,
+      "bytes": 22742,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -592,13 +591,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 9,
           "other": 1,
           "finance": 3,
           "zdravi": 1,
-          "zpravy": 9,
           "sport": 6
         },
         "drop_counts": {
@@ -611,6 +610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maringotka snů. Když se 21,6 metru čtverečního promění v plnohodnotné místo pro život",
+            "publishedAt": "2026-04-18T04:59:00Z"
+          },
           {
             "title": "KVÍZ: Realita na plátně. Znáte filmy inspirované skutečnými událostmi?",
             "publishedAt": "2026-04-18T04:45:00Z"
@@ -638,10 +641,6 @@
           {
             "title": "Teherán souhlasí s pozastavením jaderného programu a uran se převeze do USA, řekl Trump. Írán to popírá",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Rusko se opět pokouší zatáhnout Bělorusko do války, upozornil Zelenskyj",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

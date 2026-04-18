@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-18T05:00:10.656731Z",
+  "ingestedAt": "2026-04-18T05:23:01.053045Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Bouře kolem škrtů ve zdravotnictví: Německá ministryně čelila palbě otázek i z vlastních řad",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/boure-kolem-skrtu-ve-zdravotnictvi-nemecko/",
+      "dt": "2026-04-18T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bouře",
+        "kolem",
+        "ministryně",
+        "německá",
+        "otázek",
+        "palbě",
+        "vlastních",
+        "zdravotnictví",
+        "čelila",
+        "řad",
+        "škrtů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,35 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Průlom v léčbě Alzheimera? Léky neúčinkují, tvrdí nová analýza. Její výsledky rozdělují experty",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/prulomove-leky-na-alzheimerovu-chorobu-ucinnost-zpochybnuje-analyza/",
-      "dt": "2026-04-16T13:58:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "alzheimera",
-        "analýza",
-        "experty",
-        "její",
-        "léky",
-        "léčbě",
-        "neúčinkují",
-        "nová",
-        "průlom",
-        "rozdělují",
-        "tvrdí",
-        "výsledky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 106462,
+      "bytes": 105096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,10 +314,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-17T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -330,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bouře kolem škrtů ve zdravotnictví: Německá ministryně čelila palbě otázek i z vlastních řad",
+            "publishedAt": "2026-04-18T05:00:00Z"
+          },
           {
             "title": "Přehled týdne: Tohle se teď děje ve zdravotnictví napříč Českem",
             "publishedAt": "2026-04-17T15:00:00Z"
@@ -357,10 +361,6 @@
           {
             "title": "Nemocnice přežila plameny, audit odhalil 1500 chyb. Dnes je vzorem požární bezpečnosti",
             "publishedAt": "2026-04-17T06:00:00Z"
-          },
-          {
-            "title": "Jedno očkování proti chřipce na celý život? Vědci jsou blíž univerzální vakcíně",
-            "publishedAt": "2026-04-17T05:00:00Z"
           }
         ]
       }
