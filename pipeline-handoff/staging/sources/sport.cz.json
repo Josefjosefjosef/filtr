@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T04:40:29.423523Z",
+  "ingestedAt": "2026-04-18T05:00:10.656731Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Český šampion míří do Oktagonu. Nedávno jsem vyskočil z montérek, směje se",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-cesky-sampion-miri-do-oktagonu-nedavno-jsem-vyskocil-z-monterek-smeje-se-5437944",
+      "dt": "2026-04-18T04:44:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "jsem",
+        "montérek",
+        "míří",
+        "nedávno",
+        "oktagonu",
+        "směje",
+        "vyskočil",
+        "český",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,34 +764,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "KOMENTÁŘ: V baráži je herně nejhorší tým od covidu. Přesto bude překvapením, když ztratí zápas",
-      "url": "https://www.sport.cz/clanek/nazory-komentare-komentar-v-barazi-je-herne-nejhorsi-tym-od-covidu-presto-bude-prekvapenim-kdyz-ztrati-zapas-5438466",
-      "dt": "2026-04-17T13:25:44Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "baráži",
-        "covidu",
-        "herně",
-        "když",
-        "komentář",
-        "nejhorší",
-        "překvapením",
-        "přesto",
-        "tým",
-        "ztratí",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42192,
+      "bytes": 42190,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,12 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:33:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T04:44:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zpravy": 1,
-          "zdravi": 1
+          "sport": 29,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -830,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český šampion míří do Oktagonu. Nedávno jsem vyskočil z montérek, směje se",
+            "publishedAt": "2026-04-18T04:44:34Z"
+          },
           {
             "title": "Pardubice po 14 letech, nebo dopadne finále jako předloni? Experti se neshodnou",
             "publishedAt": "2026-04-18T04:33:17Z"
@@ -857,10 +858,6 @@
           {
             "title": "Voráčková si triumf v Evropské lize nezopakuje, Zaragoza bude hrát o bronz",
             "publishedAt": "2026-04-17T21:11:11Z"
-          },
-          {
-            "title": "Inter učinil další krok k titulu. Como zaváhalo v boji o Ligu mistrů",
-            "publishedAt": "2026-04-17T18:58:20Z"
           }
         ]
       }
