@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T12:04:29.010372Z",
+  "ingestedAt": "2026-04-18T12:20:37.706317Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izraelská armáda vytvořila žlutou linii v Libanonu. Podobně jako v Gaze",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izraelska-armada-vytvorila-zlutou-linii-v-libanonu-podobne-jako-v-gaze-372520",
+      "dt": "2026-04-18T12:04:51Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "armáda",
+        "gaze",
+        "izraelská",
+        "jako",
+        "libanonu",
+        "linii",
+        "podobně",
+        "vytvořila",
+        "žlutou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -725,33 +751,6 @@
         "střel",
         "systém",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pokus o kupování hlasů. Bulharská policie zabavila stovky tisíc eur na úplatky",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/pokus-o-kupovani-hlasu-bulharska-policie-zabavila-stovky-tisic-eur-na-uplatky-372483",
-      "dt": "2026-04-17T10:13:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bulharská",
-        "eur",
-        "hlasů",
-        "kupování",
-        "pokus",
-        "policie",
-        "stovky",
-        "tisíc",
-        "zabavila",
-        "úplatky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41712,
+      "bytes": 41835,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,11 +1586,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:45:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:04:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
           "zpravy": 22,
+          "other": 5,
           "finance": 3
         },
         "drop_counts": {
@@ -1604,6 +1603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izraelská armáda vytvořila žlutou linii v Libanonu. Podobně jako v Gaze",
+            "publishedAt": "2026-04-18T12:04:51Z"
+          },
           {
             "title": "Zemřela francouzská herečka Nathalie Bayeová, držitelka čtyř cen César",
             "publishedAt": "2026-04-18T10:45:49Z"
@@ -1631,10 +1634,6 @@
           {
             "title": "Tchajwanským průlivem proplul japonský torpédoborec, Čína ostře protestuje",
             "publishedAt": "2026-04-18T06:22:52Z"
-          },
-          {
-            "title": "PŘEHLEDNĚ: Takhle mění nový Dvorecký most tramvajovou dopravu v Praze",
-            "publishedAt": "2026-04-18T06:00:00Z"
           }
         ]
       }

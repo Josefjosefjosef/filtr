@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-18T12:04:29.010372Z",
+  "ingestedAt": "2026-04-18T12:20:37.706317Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kvíz: Vyrostli jste na legendárním Večerníčku? Poznejte slavné pohádky podle obrázku",
+      "url": "https://www.kinobox.cz/clanky/tema/52802-kviz-vyrostli-jste-na-legendarnim-vecernicku-poznejte-slavne-pohadky-podle-obrazku",
+      "dt": "2026-04-18T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "jste",
+        "kvíz",
+        "legendárním",
+        "obrázku",
+        "podle",
+        "pohádky",
+        "poznejte",
+        "slavné",
+        "večerníčku",
+        "vyrostli"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -526,33 +553,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Největšího sci-fi kinematografie se Spielberg vzdal. Prokletý projekt by zničil filmové studio",
-      "url": "https://www.kinobox.cz/clanky/filmy/52696-nejvetsiho-sci-fi-kinematografie-se-spielberg-vzdal-proklety-projekt-by-znicil-filmove-studio",
-      "dt": "2026-04-16T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "filmové",
-        "kinematografie",
-        "největšího",
-        "projekt",
-        "prokletý",
-        "sci",
-        "spielberg",
-        "studio",
-        "vzdal",
-        "zničil"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -563,7 +563,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28604,
+      "bytes": 28456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -600,7 +600,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -616,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kvíz: Vyrostli jste na legendárním Večerníčku? Poznejte slavné pohádky podle obrázku",
+            "publishedAt": "2026-04-18T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Drsný historický opus Maso a krev přivedl do Hollywoodu ikonického režiséra",
             "publishedAt": "2026-04-18T10:00:00Z"
@@ -643,10 +647,6 @@
           {
             "title": "Hodina zmizení byla slabý odvar. Hororový zmrzlinář mění v traileru děti v krvelačná monstra",
             "publishedAt": "2026-04-17T14:00:00Z"
-          },
-          {
-            "title": "Nicolas Cage se vrátí do své nejděsivější role. Chystá se pokračování úspěšného hororu",
-            "publishedAt": "2026-04-17T12:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-18T12:04:29.010372Z",
+  "ingestedAt": "2026-04-18T12:20:37.706317Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Víc funkcí, méně peněz. Vláda chystá vlastní návrh krácení odměn zastupitelům",
+      "url": "https://ekonomickydenik.cz/vic-funkci-mene-penez-vlada-chysta-vlastni-navrh-kraceni-odmen-zastupitelum/",
+      "dt": "2026-04-18T12:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystá",
+        "funkcí",
+        "krácení",
+        "návrh",
+        "odměn",
+        "peněz",
+        "vlastní",
+        "vláda",
+        "víc",
+        "zastupitelům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -750,31 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa se mění v obří prachárnu a vydělává i Česko. Kde se bude vyrábět TNT?",
-      "url": "https://ekonomickydenik.cz/evropa-obri-pracharna-tnt/",
-      "dt": "2026-04-16T09:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropa",
-        "mění",
-        "obří",
-        "prachárnu",
-        "tnt",
-        "vydělává",
-        "vyrábět",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70962,
+      "bytes": 70440,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,11 +824,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "finance": 28,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -839,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Víc funkcí, méně peněz. Vláda chystá vlastní návrh krácení odměn zastupitelům",
+            "publishedAt": "2026-04-18T12:05:00Z"
+          },
           {
             "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
             "publishedAt": "2026-04-18T10:05:00Z"
@@ -866,10 +872,6 @@
           {
             "title": "Hormuzský průliv je otevřen, Trump zatím neustoupí",
             "publishedAt": "2026-04-17T15:18:41Z"
-          },
-          {
-            "title": "Miliardová past na emise? Auditoři cupují unijní fond, který měl zachránit oceláře",
-            "publishedAt": "2026-04-17T13:02:53Z"
           }
         ]
       }

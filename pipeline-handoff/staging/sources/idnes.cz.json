@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T12:04:29.010372Z",
+  "ingestedAt": "2026-04-18T12:20:37.706317Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
       "title": "Írán opět zastavil ropnou tepnu. Dvě lodě v Hormuzském průlivu zasáhla palba",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/hormuzsky-pruliv-konvoj-blokada-ropa-plyn-donald-trump-iran-usa.A260418_084903_eko-zahranicni_svm",
-      "dt": "2026-04-18T11:25:00Z",
+      "dt": "2026-04-18T12:10:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -23,6 +23,58 @@
         "zastavil",
         "zasáhla",
         "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Turisté mají v Berlíně sbírat odpadky, dostanou za to odměnu. Inspirací je Kodaň",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/nemecko-berlin-turismus-ekologie-odpadky-znecisteni.A260414_112942_zahranicni_herp",
+      "dt": "2026-04-18T12:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "berlíně",
+        "dostanou",
+        "inspirací",
+        "kodaň",
+        "mají",
+        "odměnu",
+        "odpadky",
+        "sbírat",
+        "turisté"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Filmové poklady na iVysílání: pět neokoukaných tipů, které byste neměli minout",
+      "url": "https://www.idnes.cz/kultura/film-televize/ivysilani-mlceni-wind-river-krysar-mlceni.A260417_141420_filmvideo_jgo",
+      "dt": "2026-04-18T12:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "byste",
+        "filmové",
+        "ivysílání",
+        "minout",
+        "neměli",
+        "neokoukaných",
+        "poklady",
+        "pět",
+        "tipů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -738,56 +790,6 @@
         "pána",
         "pár",
         "vzpomíná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nacher o poplatcích: Seniorům a firmám je odpustíme ještě letos, náhrada nebude",
-      "url": "https://www.idnes.cz/zpravy/domaci/patrik-nacher-o-poplatcich.A260417_180519_domaci_tvrk",
-      "dt": "2026-04-17T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "firmám",
-        "ještě",
-        "letos",
-        "nacher",
-        "nebude",
-        "náhrada",
-        "odpustíme",
-        "poplatcích",
-        "seniorům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lidl expanduje s privátními značkami. Nově se objeví i v Kauflandu",
-      "url": "https://www.idnes.cz/ekonomika/podniky/kaufland-lidl-privatni-znacky.A260417_101350_ekoakcie_vebe",
-      "dt": "2026-04-17T22:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "expanduje",
-        "kauflandu",
-        "lidl",
-        "nově",
-        "objeví",
-        "privátními",
-        "značkami"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1591,7 +1593,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49440,
+      "bytes": 49686,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,12 +1630,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T11:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T12:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
+          "finance": 4,
           "zpravy": 22,
-          "other": 3
+          "other": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1647,7 +1649,15 @@
         "sample_titles": [
           {
             "title": "Írán opět zastavil ropnou tepnu. Dvě lodě v Hormuzském průlivu zasáhla palba",
-            "publishedAt": "2026-04-18T11:25:00Z"
+            "publishedAt": "2026-04-18T12:10:00Z"
+          },
+          {
+            "title": "Turisté mají v Berlíně sbírat odpadky, dostanou za to odměnu. Inspirací je Kodaň",
+            "publishedAt": "2026-04-18T12:01:00Z"
+          },
+          {
+            "title": "Filmové poklady na iVysílání: pět neokoukaných tipů, které byste neměli minout",
+            "publishedAt": "2026-04-18T12:00:00Z"
           },
           {
             "title": "Řidič na festivalu Comic-Con v Melbourne najel do lidí, jeden člověk zemřel",
@@ -1668,14 +1678,6 @@
           {
             "title": "Posprejovali historickou budovu v Praze, hrozí jim tvrdší trest. Policie prosí o pomoc",
             "publishedAt": "2026-04-18T10:37:00Z"
-          },
-          {
-            "title": "Hrad Velhartice chrání novinka, do cesty poprvé uložili speciální geomříž",
-            "publishedAt": "2026-04-18T10:24:00Z"
-          },
-          {
-            "title": "Budou kompenzace za zrušené lety? EU chystá nové pokyny, krizi s palivy odmítá",
-            "publishedAt": "2026-04-18T10:21:00Z"
           }
         ]
       }
