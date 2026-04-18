@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T09:09:30.605936Z",
+  "ingestedAt": "2026-04-18T09:24:24.087580Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
       "title": "Otevření Hormuzu nevydrželo ani den. Írán ho kvůli blokádě USA znovu uzavřel",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/hormuzsky-pruliv-konvoj-blokada-ropa-plyn-donald-trump-iran-usa.A260418_084903_eko-zahranicni_svm",
-      "dt": "2026-04-18T08:55:00Z",
+      "dt": "2026-04-18T09:17:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -22,6 +22,57 @@
         "uzavřel",
         "znovu",
         "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud rozhodne o vazbě pro Američanku obviněnou z požáru haly v Pardubicích",
+      "url": "https://www.idnes.cz/zpravy/domaci/zharsky-utok-v-pardubicich-lpp-holding-americanka-slovensko-vazba-policie.A260418_105002_domaci_svm",
+      "dt": "2026-04-18T09:05:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "američanku",
+        "haly",
+        "obviněnou",
+        "pardubicích",
+        "požáru",
+        "rozhodne",
+        "soud",
+        "vazbě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TELEVIZIONÁŘ: Hitlera chtěl ztvárnit pravdivě, jinak nemá smysl ho hrát",
+      "url": "https://www.idnes.cz/kultura/film-televize/televizionar-hitler.A260416_110436_filmvideo_spm",
+      "dt": "2026-04-18T09:04:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chtěl",
+        "hitlera",
+        "hrát",
+        "jinak",
+        "nemá",
+        "pravdivě",
+        "smysl",
+        "televizionář",
+        "ztvárnit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -727,61 +778,6 @@
         "státu",
         "vracet",
         "české"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zmrazených 20 miliard dolarů a tankery plné ropy? Jakou cenu Trump zaplatí Íránu",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/iran-usa-donald-trump-blokada-hormuzsky-pruliv-lode-ropa-ustupky.A260417_174328_zahranicni_kha",
-      "dt": "2026-04-17T17:17:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cenu",
-        "dolarů",
-        "jakou",
-        "miliard",
-        "plné",
-        "ropy",
-        "tankery",
-        "trump",
-        "zaplatí",
-        "zmrazených",
-        "íránu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stát se zbavil další odpovědnosti: dotovat plavání pro školáky. Zůstává však povinné",
-      "url": "https://www.idnes.cz/zpravy/domaci/plavani-zakladni-skoly-rozpocet-placeni-stat-ministerstvo-skolstvi.A260417_184305_domaci_svm",
-      "dt": "2026-04-17T16:54:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "další",
-        "dotovat",
-        "odpovědnosti",
-        "plavání",
-        "povinné",
-        "stát",
-        "však",
-        "zbavil",
-        "zůstává",
-        "školáky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48461,
+      "bytes": 48692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,12 +1618,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T08:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 3,
-          "zpravy": 25,
-          "other": 2
+          "zpravy": 24,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1641,7 +1637,15 @@
         "sample_titles": [
           {
             "title": "Otevření Hormuzu nevydrželo ani den. Írán ho kvůli blokádě USA znovu uzavřel",
-            "publishedAt": "2026-04-18T08:55:00Z"
+            "publishedAt": "2026-04-18T09:17:00Z"
+          },
+          {
+            "title": "Soud rozhodne o vazbě pro Američanku obviněnou z požáru haly v Pardubicích",
+            "publishedAt": "2026-04-18T09:05:00Z"
+          },
+          {
+            "title": "TELEVIZIONÁŘ: Hitlera chtěl ztvárnit pravdivě, jinak nemá smysl ho hrát",
+            "publishedAt": "2026-04-18T09:04:00Z"
           },
           {
             "title": "Feminista plný nápadů, živila ho matka. Dvě století od narození Vojty Náprstka",
@@ -1662,14 +1666,6 @@
           {
             "title": "Dvě stě lidí, 38 národností. Pražský Wargaming ukazuje sílu českého herního průmyslu",
             "publishedAt": "2026-04-18T07:00:00Z"
-          },
-          {
-            "title": "Den krutého horka. Japonci vybrali nový termín pro extrémní teploty",
-            "publishedAt": "2026-04-18T06:56:00Z"
-          },
-          {
-            "title": "Existují mimozemšťané? Trumpova vláda objevila „zajímavé“ dokumenty",
-            "publishedAt": "2026-04-18T06:49:00Z"
           }
         ]
       }
