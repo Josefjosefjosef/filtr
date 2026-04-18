@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T02:04:53.792470Z",
+  "ingestedAt": "2026-04-18T02:24:58.944946Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jako soupeře si muž v Litoměřicích vybral toaletu v obchodním centru",
+      "url": "https://tydenikpolicie.cz/jako-soupere-si-muz-v-litomericich-vybral-toaletu-v-obchodnim-centru/",
+      "dt": "2026-04-18T02:02:21Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "centru",
+        "jako",
+        "litoměřicích",
+        "muž",
+        "obchodním",
+        "soupeře",
+        "toaletu",
+        "vybral"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -230,33 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Podezřelé z vloupání do budovy přírodovědecké fakulty v Praze vyčmuchal služební pes Bobík",
-      "url": "https://tydenikpolicie.cz/podezrele-z-vloupani-do-budovy-prirodovedecke-fakulty-v-praze-vycmuchal-sluzebni-pes-bobik/",
-      "dt": "2026-04-17T10:34:03Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bobík",
-        "budovy",
-        "fakulty",
-        "pes",
-        "podezřelé",
-        "praze",
-        "přírodovědecké",
-        "služební",
-        "vloupání",
-        "vyčmuchal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16113,
+      "bytes": 15896,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T00:02:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T02:02:21Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jako soupeře si muž v Litoměřicích vybral toaletu v obchodním centru",
+            "publishedAt": "2026-04-18T02:02:21Z"
+          },
           {
             "title": "Na svobodě byl teprve tři týdny a už měl mít na svědomí sérii vloupání do aut",
             "publishedAt": "2026-04-18T00:02:15Z"
@@ -346,10 +348,6 @@
           {
             "title": "Konflikt v chatě poblíž Bosonoh skončil těžkým zraněním",
             "publishedAt": "2026-04-17T12:13:50Z"
-          },
-          {
-            "title": "Muž obviněný z mravnostního trestného činu se ukrývá před policií",
-            "publishedAt": "2026-04-17T12:00:27Z"
           }
         ]
       }
