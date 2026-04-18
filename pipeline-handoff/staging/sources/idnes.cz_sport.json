@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T07:00:07.622913Z",
+  "ingestedAt": "2026-04-18T07:19:41.813653Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Olomoucký volejbal v krizi, klub prý dluží peníze. Skončí? Nemusel by získat licenci",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbal-olomouc-krize-financni-potize-jiri-zemanek-santovka.A260417_173640_sporty_hava",
+      "dt": "2026-04-18T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dluží",
+        "klub",
+        "krizi",
+        "licenci",
+        "nemusel",
+        "olomoucký",
+        "peníze",
+        "prý",
+        "skončí",
+        "volejbal",
+        "získat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přípravné zápasy a aktuální soupiska českých hokejistů před MS 2026",
+      "url": "https://www.idnes.cz/hokej/ms-2026/pripravne-zapasy-ceskych-hokejistu-pred-ms.A260415_214600_ms-hokej-2026_ald",
+      "dt": "2026-04-18T06:47:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "aktuální",
+        "hokejistů",
+        "přípravné",
+        "soupiska",
+        "zápasy",
+        "českých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -742,59 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vražda sudího přímo na hřišti. Amatérskou ligou otřásla tragická událost",
-      "url": "https://www.idnes.cz/fotbal/zahranici/vrazda-rozhodciho-primo-na-hristi-ekvadorem-otrasla-tragicka-udalost.A260417_110727_fot_zahranici_duff",
-      "dt": "2026-04-17T12:13:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "amatérskou",
-        "hřišti",
-        "ligou",
-        "otřásla",
-        "přímo",
-        "sudího",
-        "tragická",
-        "událost",
-        "vražda"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Noví trenéři? Dobrá volba, říká Rulík. Jak to vypadá s posilami ze zámoří a ze Sparty?",
-      "url": "https://www.idnes.cz/hokej/ms-2026/radim-rulik-priprava-hodnoceni-nastupci-posily-z-nhl.A260417_083806_ms-hokej-2026_drev",
-      "dt": "2026-04-17T11:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dobrá",
-        "noví",
-        "posilami",
-        "rulík",
-        "sparty",
-        "trenéři",
-        "volba",
-        "vypadá",
-        "zámoří",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46596,
+      "bytes": 46868,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T06:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +856,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Olomoucký volejbal v krizi, klub prý dluží peníze. Skončí? Nemusel by získat licenci",
+            "publishedAt": "2026-04-18T07:00:00Z"
+          },
+          {
+            "title": "Přípravné zápasy a aktuální soupiska českých hokejistů před MS 2026",
+            "publishedAt": "2026-04-18T06:47:00Z"
+          },
           {
             "title": "Rulík dál mění nominaci před MS, povolal dva světové šampiony a jednoho sparťana",
             "publishedAt": "2026-04-18T06:34:00Z"
@@ -880,14 +887,6 @@
           {
             "title": "Neokoukaný trenér ve finále. Žabka změnil Třinec, čím se liší od Varadi a Motáka?",
             "publishedAt": "2026-04-17T22:00:00Z"
-          },
-          {
-            "title": "Lampard dovedl Coventry po 25 letech do Premier League. Musí nás brát vážně, říká",
-            "publishedAt": "2026-04-17T21:53:00Z"
-          },
-          {
-            "title": "Strach o diváka, pak euforie. Nečekaný hrdina Litvínova: Každý zápas bude bitka",
-            "publishedAt": "2026-04-17T21:43:00Z"
           }
         ]
       }

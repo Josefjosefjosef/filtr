@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T07:00:07.622913Z",
+  "ingestedAt": "2026-04-18T07:19:41.813653Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Imunoterapie si poradí s dříve neléčitelnými nemocemi. Zatím má ale řadu slabin",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/imunoterapie-si-poradi-s-drive-nelecitelnymi-nemocemi-zatim-ma-ale-radu-slabin-372477",
+      "dt": "2026-04-18T07:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ale",
+        "dříve",
+        "imunoterapie",
+        "neléčitelnými",
+        "nemocemi",
+        "poradí",
+        "slabin",
+        "zatím",
+        "řadu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,32 +746,6 @@
         "vraků",
         "zálivu",
         "španělští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Otékaly mi klouby, rodiče se o mě báli.“ Dnes lze hemofilii díky léčbě zvládat",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/otekaly-mi-klouby-rodice-se-o-me-bali-dnes-lze-hemofilii-diky-lecbe-zvladat-372436",
-      "dt": "2026-04-17T08:13:13Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "báli",
-        "díky",
-        "hemofilii",
-        "klouby",
-        "lze",
-        "léčbě",
-        "otékaly",
-        "rodiče",
-        "zvládat"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1521,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42209,
+      "bytes": 42270,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,12 +1581,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T06:40:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 3,
-          "other": 4
+          "other": 5,
+          "zpravy": 22,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1598,6 +1598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Imunoterapie si poradí s dříve neléčitelnými nemocemi. Zatím má ale řadu slabin",
+            "publishedAt": "2026-04-18T07:00:00Z"
+          },
           {
             "title": "Konvoj tankerů proplouvá otevřeným Hormuzským průlivem",
             "publishedAt": "2026-04-18T06:40:42Z"
@@ -1625,10 +1629,6 @@
           {
             "title": "Americká vláda dle Trumpa objevila zajímavé dokumenty o UFO a chce je zveřejnit",
             "publishedAt": "2026-04-18T00:15:00Z"
-          },
-          {
-            "title": "Babiš lavíruje ohledně závazku zvyšovat rozpočet na obranu",
-            "publishedAt": "2026-04-17T18:40:15Z"
           }
         ]
       }
@@ -1734,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77231,
+      "bytes": 77235,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
