@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-18T07:39:50.168574Z",
+  "ingestedAt": "2026-04-18T07:54:17.900184Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stanjura nevrátil mobily ani tablet. Asi ví proč",
+      "url": "https://www.epenize.eu/stanjura-nevratil-mobily-ani-tablet-asi-vi-proc/",
+      "dt": "2026-04-18T07:44:53Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "asi",
+        "mobily",
+        "nevrátil",
+        "proč",
+        "stanjura",
+        "tablet"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,30 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dezoláti útočí na prezidenta kvůli Zemanovi. Na summit nejel",
-      "url": "https://www.epenize.eu/dezolati-utoci-na-prezidenta-kvuli-zemanovi-na-summit-nejel/",
-      "dt": "2026-04-10T08:20:49Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "dezoláti",
-        "kvůli",
-        "nejel",
-        "prezidenta",
-        "summit",
-        "zemanovi",
-        "útočí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 104519,
+      "bytes": 105145,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,7 +546,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T23:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:44:53Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -564,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stanjura nevrátil mobily ani tablet. Asi ví proč",
+            "publishedAt": "2026-04-18T07:44:53Z"
+          },
           {
             "title": "Umění miliardového obchodu: Trumpova cesta k míru s Íránem",
             "publishedAt": "2026-04-17T23:00:45Z"
@@ -591,10 +594,6 @@
           {
             "title": "„Buďte rádi, že to není horší“: Trumpova bizarní spokojenost s drahým benzínem",
             "publishedAt": "2026-04-15T23:00:06Z"
-          },
-          {
-            "title": "Rutte přijede za Babišem. Asi má z toho našeho chaosu strach",
-            "publishedAt": "2026-04-15T15:36:45Z"
           }
         ]
       }

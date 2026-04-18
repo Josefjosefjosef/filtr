@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T07:39:50.168574Z",
+  "ingestedAt": "2026-04-18T07:54:17.900184Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Všechno jsem mu obětoval, dluží mi peníze.“ Ruský otec tenisového showmana promluvil",
+      "url": "https://sport.aktualne.cz/tenis/vsechno-jsem-mu-obetoval-dluzi-mi-penize-rusky-otec-tenisoveho-showmana-promluvil/r~aaa29d6cf829f4d1d87c95254a7248d0/",
+      "dt": "2026-04-18T07:38:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dluží",
+        "jsem",
+        "obětoval",
+        "otec",
+        "peníze",
+        "promluvil",
+        "ruský",
+        "showmana",
+        "tenisového",
+        "všechno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -513,32 +540,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Překvapivé hodnocení vlivného politika. Ukrajina v nejsilnější pozici, má tři scénáře",
-      "url": "https://zpravy.aktualne.cz/zahranici/prekvapive-hodnoceni-vlivneho-politika-ukrajina-v-nejsilnejsi-pozici-ma-tri-scenare/r~aaa294b3760f14f50530e0cbd94dd618/",
-      "dt": "2026-04-17T17:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hodnocení",
-        "nejsilnější",
-        "politika",
-        "pozici",
-        "překvapivé",
-        "scénáře",
-        "tři",
-        "ukrajina",
-        "vlivného"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22050,
+      "bytes": 21987,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -586,11 +587,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:38:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 12,
           "other": 1,
           "finance": 1,
           "zdravi": 1
@@ -605,6 +606,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Všechno jsem mu obětoval, dluží mi peníze.“ Ruský otec tenisového showmana promluvil",
+            "publishedAt": "2026-04-18T07:38:00Z"
+          },
           {
             "title": "Nejmladší poslankyně vyrazila proti Pochodu pro život. Pro blokádu mám pochopení, řekla",
             "publishedAt": "2026-04-18T07:19:00Z"
@@ -632,10 +637,6 @@
           {
             "title": "Užitečnější než Pastrňák. Nikdo ho nechce potkat, zní před play off k trumfu Bruins",
             "publishedAt": "2026-04-18T05:30:00Z"
-          },
-          {
-            "title": "Většina majitelů je přehlíží. Naučte se poznat nenápadné signály, kterými vám pes dává najevo, že trpí",
-            "publishedAt": "2026-04-18T05:15:00Z"
           }
         ]
       }

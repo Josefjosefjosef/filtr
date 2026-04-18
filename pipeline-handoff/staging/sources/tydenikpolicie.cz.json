@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T07:39:50.168574Z",
+  "ingestedAt": "2026-04-18T07:54:17.900184Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Za vážnými zdravotními komplikacemi u muže v Brně stála nejspíš kombinace alkoholu a fentanylu",
+      "url": "https://tydenikpolicie.cz/za-vaznymi-zdravotnimi-komplikacemi-u-muze-v-brne-stala-nejspis-kombinace-alkoholu-a-fentanylu/",
+      "dt": "2026-04-18T07:37:58Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "alkoholu",
+        "brně",
+        "fentanylu",
+        "kombinace",
+        "komplikacemi",
+        "muže",
+        "nejspíš",
+        "stála",
+        "vážnými",
+        "zdravotními"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -227,30 +254,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konflikt v chatě poblíž Bosonoh skončil těžkým zraněním",
-      "url": "https://tydenikpolicie.cz/konflikt-v-chate-pobliz-bosonoh-skoncil-tezkym-zranenim/",
-      "dt": "2026-04-17T12:13:50Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bosonoh",
-        "chatě",
-        "konflikt",
-        "poblíž",
-        "skončil",
-        "těžkým",
-        "zraněním"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -261,7 +264,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15874,
+      "bytes": 16008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -298,7 +301,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:37:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -313,6 +316,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za vážnými zdravotními komplikacemi u muže v Brně stála nejspíš kombinace alkoholu a fentanylu",
+            "publishedAt": "2026-04-18T07:37:58Z"
+          },
           {
             "title": "Řidič dodávky naboural na dálnici D1 zezadu do kamionu. Na místě zemřel",
             "publishedAt": "2026-04-18T07:20:00Z"
@@ -340,10 +347,6 @@
           {
             "title": "Řidička mercedesu projela v Pařížské ulici v Praze výlohou do prodejny",
             "publishedAt": "2026-04-17T17:32:42Z"
-          },
-          {
-            "title": "Policisté se rozloučili se svým kolegou prap. Radovanem Mikulíkem",
-            "publishedAt": "2026-04-17T13:27:47Z"
           }
         ]
       }

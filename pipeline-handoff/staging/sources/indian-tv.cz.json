@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-18T07:39:50.168574Z",
+  "ingestedAt": "2026-04-18T07:54:17.900184Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Odpočinková kooperační hra Outbound se mírně opozdí - INDIAN",
+      "url": "https://indian-tv.cz/clanek/odpocinkova-kooperacni-hra-outbound-se-mirne-opozdi-cjied3",
+      "dt": "2026-04-18T07:43:11Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "hra",
+        "indian",
+        "kooperační",
+        "mírně",
+        "odpočinková",
+        "opozdí",
+        "outbound"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1056,33 +1080,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "V Xboxu mají s novým vedením probíhat debaty o možném návratu exkluzivit - INDIAN",
-      "url": "https://indian-tv.cz/clanek/v-xboxu-maji-s-novym-vedenim-probihat-debaty-o-exkluzivitach-gmiszl",
-      "dt": "2026-04-14T09:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "debaty",
-        "exkluzivit",
-        "indian",
-        "mají",
-        "možném",
-        "novým",
-        "návratu",
-        "probíhat",
-        "vedením",
-        "xboxu"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1093,7 +1090,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 194476,
+      "bytes": 195648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1130,7 +1127,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T16:09:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:43:11Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1145,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odpočinková kooperační hra Outbound se mírně opozdí - INDIAN",
+            "publishedAt": "2026-04-18T07:43:11Z"
+          },
           {
             "title": "Battlefield 6 chce získat zpět hráče. Chystají se námořní bitvy i největší mapa - INDIAN",
             "publishedAt": "2026-04-17T16:09:08Z"
@@ -1172,10 +1173,6 @@
           {
             "title": "Loupežná střílečka Fairgames od PlayStationu stále žije - INDIAN",
             "publishedAt": "2026-04-17T08:00:00Z"
-          },
-          {
-            "title": "Phasmophobia a Alan Wake 2 se spojí v časově omezené bezplatné události - INDIAN",
-            "publishedAt": "2026-04-17T07:30:07Z"
           }
         ]
       }
