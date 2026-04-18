@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T09:39:57.738554Z",
+  "ingestedAt": "2026-04-18T09:59:24.786680Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rozhovor Deníku.cz s Klempířem vyvolal bouři. Lidé ho cupují nejen za StarDance",
+      "url": "https://www.denik.cz/z_domova/oto-klempir-denik-star-dance-rozhovor.html",
+      "dt": "2026-04-18T09:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouři",
+        "cupují",
+        "deníku",
+        "klempířem",
+        "lidé",
+        "nejen",
+        "rozhovor",
+        "stardance",
+        "vyvolal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,32 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stát znovu snížil palivové stropy. Ceny platí pro víkend a pondělí",
-      "url": "https://www.denik.cz/z_domova/cesko-maximalni-ceny-paliv-ministerstvo-financi-rozhodnuti-vikend-170426.html",
-      "dt": "2026-04-17T12:19:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ceny",
-        "palivové",
-        "platí",
-        "pondělí",
-        "snížil",
-        "stropy",
-        "stát",
-        "víkend",
-        "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29178,
+      "bytes": 29024,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -723,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozhovor Deníku.cz s Klempířem vyvolal bouři. Lidé ho cupují nejen za StarDance",
+            "publishedAt": "2026-04-18T09:30:00Z"
+          },
           {
             "title": "Lidl otevře svou první hospodu. Kličku před zákonem schválil soud",
             "publishedAt": "2026-04-18T07:10:00Z"
@@ -750,10 +754,6 @@
           {
             "title": "V Dubaji zadrželi Ira. Je podezřelý z řízení zločinecké sítě",
             "publishedAt": "2026-04-18T04:40:00Z"
-          },
-          {
-            "title": "Restaurace Srdcovka získala prestižní ocenění, peníze udělají radost dětem",
-            "publishedAt": "2026-04-18T03:35:00Z"
           }
         ]
       }

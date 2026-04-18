@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T09:39:57.738554Z",
+  "ingestedAt": "2026-04-18T09:59:24.786680Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kerr po vyřazení nevyloučil konec u Warriors, které dovedl v NBA k titulům",
+      "url": "https://www.sport.cz/clanek/basketbal-kerr-po-vyrazeni-nevyloucil-konec-u-warriors-ktere-dovedl-v-nba-k-titulum-5438942",
+      "dt": "2026-04-18T09:37:46Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dovedl",
+        "kerr",
+        "konec",
+        "nba",
+        "nevyloučil",
+        "titulům",
+        "vyřazení",
+        "warriors"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,30 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Procházkův přemožitel musel pod kudlu. Čeká ho dlouhá pauza",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-prochazkuv-premozitel-musel-pod-kudlu-ceka-ho-dlouha-pauza-5438838",
-      "dt": "2026-04-17T20:14:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dlouhá",
-        "kudlu",
-        "musel",
-        "pauza",
-        "procházkův",
-        "přemožitel",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43545,
+      "bytes": 43069,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T09:30:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T09:37:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -832,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kerr po vyřazení nevyloučil konec u Warriors, které dovedl v NBA k titulům",
+            "publishedAt": "2026-04-18T09:37:46Z"
+          },
           {
             "title": "Výhru dnes na ME v judu zaznamenala jen Skalská, vypadla v osmifinále",
             "publishedAt": "2026-04-18T09:30:13Z"
@@ -859,10 +864,6 @@
           {
             "title": "Váchová prošla jako jediná z českých golfistek do finálových kol v JAR",
             "publishedAt": "2026-04-18T07:44:12Z"
-          },
-          {
-            "title": "Z tribuny na led! Černoch se z diváka proměnil v hráče a potěšil syna, hokejového fanatika",
-            "publishedAt": "2026-04-18T07:42:25Z"
           }
         ]
       }
