@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-18T08:30:01.757946Z",
+  "ingestedAt": "2026-04-18T08:50:58.407155Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Šibeniční lhůta a tisíc stran změn. Nereálné, zlobí se Kupka",
+      "url": "https://ekonomickydenik.cz/sibenicni-lhuta-a-tisic-stran-zmen-nerealne-zlobi-se-kupka/",
+      "dt": "2026-04-18T08:45:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "kupka",
+        "lhůta",
+        "nereálné",
+        "stran",
+        "tisíc",
+        "zlobí",
+        "změn",
+        "šibeniční"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -755,34 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Revoluce v kapse vojáka: CSG mění útočné pušky v ničitele levných zabijáckých dronů",
-      "url": "https://ekonomickydenik.cz/revoluce-v-kapse-vojaka-protidronova-munice/",
-      "dt": "2026-04-16T08:09:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "csg",
-        "dronů",
-        "kapse",
-        "levných",
-        "mění",
-        "ničitele",
-        "pušky",
-        "revoluce",
-        "vojáka",
-        "zabijáckých",
-        "útočné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71681,
+      "bytes": 71183,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +827,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T08:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 29
+          "finance": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šibeniční lhůta a tisíc stran změn. Nereálné, zlobí se Kupka",
+            "publishedAt": "2026-04-18T08:45:00Z"
+          },
           {
             "title": "Jen přes mou mrtvolu. Starostové se bouří proti návrhu zón pro větrné elektrárny",
             "publishedAt": "2026-04-18T04:05:00Z"
@@ -873,10 +874,6 @@
           {
             "title": "Boj o každou kapku: Stát pošle stovky milionů na nové vodovody",
             "publishedAt": "2026-04-17T11:59:54Z"
-          },
-          {
-            "title": "StarDance na ČT nepatří. Podle Klempíře je málo veřejnoprávní",
-            "publishedAt": "2026-04-17T11:46:32Z"
           }
         ]
       }

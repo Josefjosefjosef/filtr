@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-18T08:30:01.757946Z",
+  "ingestedAt": "2026-04-18T08:50:58.407155Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Procházkův přemožitel má koleno na maděru. Návrat do klece je v nedohlednu",
+      "url": "https://www.mmamag.cz/ulberg-prochazka-zraneni-operace-pauza/",
+      "dt": "2026-04-18T08:35:18Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "klece",
+        "koleno",
+        "maděru",
+        "nedohlednu",
+        "návrat",
+        "procházkův",
+        "přemožitel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1072,31 +1096,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Poslední staredown mezi Procházkou a Ulbergem. Čech slíbil oheň v kleci",
-      "url": "https://www.mmamag.cz/staredown-prochazka-ulberg-ufc/",
-      "dt": "2026-04-11T09:38:39Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "kleci",
-        "oheň",
-        "poslední",
-        "procházkou",
-        "slíbil",
-        "staredown",
-        "ulbergem",
-        "čech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1107,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78137,
+      "bytes": 78130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1144,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T05:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T08:35:18Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1159,6 +1158,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Procházkův přemožitel má koleno na maděru. Návrat do klece je v nedohlednu",
+            "publishedAt": "2026-04-18T08:35:18Z"
+          },
           {
             "title": "Extrémy, kterým bojovníci MMA a boxu vystavují své tělo. Se skóre 10 z 10 skončí jen ti, co sport chápou do hloubky",
             "publishedAt": "2026-04-18T05:16:00Z"
@@ -1186,10 +1189,6 @@
           {
             "title": "Pereira prozradil, čím si Procházka v kleci podepsal ortel. Samurajský přístup ho stál titul",
             "publishedAt": "2026-04-17T07:02:17Z"
-          },
-          {
-            "title": "Fanoušci MMA a boxu se na tom neshodnou dodnes. Zjistěte, jestli máte přehled na to, abyste měli vlastní názor",
-            "publishedAt": "2026-04-17T05:06:00Z"
           }
         ]
       }
