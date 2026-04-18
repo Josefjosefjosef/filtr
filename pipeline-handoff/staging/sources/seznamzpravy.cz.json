@@ -1,34 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-18T21:05:06.676986Z",
+  "ingestedAt": "2026-04-18T21:25:05.200407Z",
   "items": [
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
-      "url": "https://www.seznamzpravy.cz/clanek/kultura-magnesia-litera-2026-dora-kapralova-304351",
-      "dt": "2026-04-18T19:41:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy / Domácí",
-      "tokens": [
-        "dvě",
-        "jen",
-        "kaprálová",
-        "litery",
-        "lásku",
-        "magnesie",
-        "pozdě",
-        "všechno",
-        "získala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -47,6 +21,32 @@
         "vláda",
         "vystrčilovi",
         "wan"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
+      "url": "https://www.seznamzpravy.cz/clanek/kultura-magnesia-litera-2026-dora-kapralova-304351",
+      "dt": "2026-04-18T19:41:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy / Domácí",
+      "tokens": [
+        "dvě",
+        "jen",
+        "kaprálová",
+        "litery",
+        "lásku",
+        "magnesie",
+        "pozdě",
+        "všechno",
+        "získala"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -769,32 +769,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
-      "url": "https://www.seznamzpravy.cz/clanek/kultura-magnesia-litera-2026-dora-kapralova-304351",
-      "dt": "2026-04-18T19:41:00Z",
-      "media_raw": "Seznam Zprávy / Byznys",
-      "media_norm": "Seznam Zprávy / Byznys",
-      "tokens": [
-        "dvě",
-        "jen",
-        "kaprálová",
-        "litery",
-        "lásku",
-        "magnesie",
-        "pozdě",
-        "všechno",
-        "získala"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_sz_byznys",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Vláda podle Babiše neposkytne Vystrčilovi letoun k cestě na Tchaj-wan",
@@ -812,6 +786,32 @@
         "vláda",
         "vystrčilovi",
         "wan"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
+      "url": "https://www.seznamzpravy.cz/clanek/kultura-magnesia-litera-2026-dora-kapralova-304351",
+      "dt": "2026-04-18T19:41:00Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy / Byznys",
+      "tokens": [
+        "dvě",
+        "jen",
+        "kaprálová",
+        "litery",
+        "lásku",
+        "magnesie",
+        "pozdě",
+        "všechno",
+        "získala"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -2362,12 +2362,12 @@
         },
         "sample_titles": [
           {
-            "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
-            "publishedAt": "2026-04-18T19:41:00Z"
-          },
-          {
             "title": "Vláda podle Babiše neposkytne Vystrčilovi letoun k cestě na Tchaj-wan",
             "publishedAt": "2026-04-18T19:06:38Z"
+          },
+          {
+            "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
+            "publishedAt": "2026-04-18T19:41:00Z"
           },
           {
             "title": "Dvacet let od prvního finále má další šanci. Hrál NHL, ale titul mu chybí",
@@ -2443,8 +2443,8 @@
         "raw_feed_latest_publishedAt": "2026-04-18T20:23:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 7,
           "zpravy": 20,
+          "finance": 7,
           "sport": 2,
           "zdravi": 1
         },
@@ -2459,12 +2459,12 @@
         },
         "sample_titles": [
           {
-            "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
-            "publishedAt": "2026-04-18T19:41:00Z"
-          },
-          {
             "title": "Vláda podle Babiše neposkytne Vystrčilovi letoun k cestě na Tchaj-wan",
             "publishedAt": "2026-04-18T19:06:38Z"
+          },
+          {
+            "title": "Na všechno je pozdě, jen ne na lásku. Kaprálová získala dvě Magnesie Litery",
+            "publishedAt": "2026-04-18T19:41:00Z"
           },
           {
             "title": "Dvacet let od prvního finále má další šanci. Hrál NHL, ale titul mu chybí",
