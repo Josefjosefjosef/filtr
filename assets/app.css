@@ -3137,26 +3137,73 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (QuickFeed, key banka): desktop centered shell — same width rule as Datovka .iu-ds-modal; guard .iu-banking-quickfeed-root only; no :has(). */
+/* Internetové bankovnictví (key banka): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; žádný center-column 100% hack. */
 @media (min-width: 1025px){
-  #iuCenterStage[data-iu-view="quick"] #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]){
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]){
+    position:fixed;
+    inset:0;
+    left:0;
+    top:0;
+    transform:none;
     display:flex !important;
     flex-direction:column;
     align-items:center;
+    justify-content:flex-start;
     width:100%;
     max-width:none;
-    min-width:0;
-    box-sizing:border-box;
+    height:100dvh;
+    max-height:100dvh;
+    min-height:0;
+    padding:0;
+    margin:0;
+    overflow:hidden;
     overflow-x:hidden;
-  }
-  /* Inner side gutters inside QuickFeed host (same 80px total budget idea as Datovka shell, but %-based so column <720px still breathes). */
-  #iuQuickFeed.iu-banking-quickfeed-root > .iuQHead,
-  #iuQuickFeed.iu-banking-quickfeed-root > .iuQCard{
-    width:min(720px, calc(100% - 48px));
-    max-width:min(720px, calc(100% - 48px));
-    min-width:0;
     box-sizing:border-box;
+    background:rgb(241, 245, 249);
+    z-index:10040;
+  }
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal{
+    flex:1 1 auto;
+    min-height:0;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    width:min(720px, calc(100vw - 80px));
+    max-width:min(720px, calc(100vw - 80px));
     align-self:center;
+    height:auto;
+    max-height:none;
+    border-radius:16px;
+    box-shadow:0 24px 48px rgba(0,0,0,.22);
+    box-sizing:border-box;
+    overflow:hidden;
+    background:#fff;
+  }
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead{
+    flex:0 0 auto;
+    width:100%;
+    margin:0;
+    padding:14px 16px;
+    box-sizing:border-box;
+    border-bottom:1px solid rgba(0,0,0,.08);
+  }
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    padding:14px 16px 16px;
+    box-sizing:border-box;
+  }
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host > .iuQCard{
+    background:transparent;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    padding:0;
+    margin:0;
   }
 }
 
