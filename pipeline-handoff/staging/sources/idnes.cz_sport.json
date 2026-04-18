@@ -1,26 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T17:24:44.538031Z",
+  "ingestedAt": "2026-04-18T17:44:49.385537Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Sparta - Jablonec 3:1, uklidnění pro domácí, svůj druhý gól dává Kuchta",
+      "title": "ONLINE: Sparta - Jablonec 3:1, Kuchta mohl mít hattrick, jeho gól ale ruší ofsajd",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-sparta-jablonec-online-vysledek.A260417_144232_fotbal_tals",
-      "dt": "2026-04-18T17:20:17Z",
+      "dt": "2026-04-18T17:36:30Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "domácí",
-        "druhý",
-        "dává",
+        "ale",
         "gól",
+        "hattrick",
         "jablonec",
+        "jeho",
         "kuchta",
-        "sparta",
-        "svůj",
-        "uklidnění"
+        "mít",
+        "ofsajd",
+        "ruší",
+        "sparta"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Pardubice - Třinec 3:2. Slepené góly Červenky se Smejkalem otáčí duel",
+      "url": "https://www.idnes.cz/hokej/extraliga/1-finale-pardubice-trinec-online-zpravodajstvi.A260418_123548_hokej_drev",
+      "dt": "2026-04-18T17:33:53Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "duel",
+        "góly",
+        "otáčí",
+        "pardubice",
+        "slepené",
+        "smejkalem",
+        "třinec",
+        "červenky"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -124,31 +150,6 @@
         "kaše",
         "litvínov",
         "náskok"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Pardubice - Třinec 1:2. Kovařčík rychlou akcí dostává hosty do vedení",
-      "url": "https://www.idnes.cz/hokej/extraliga/1-finale-pardubice-trinec-online-zpravodajstvi.A260418_123548_hokej_drev",
-      "dt": "2026-04-18T17:00:35Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "akcí",
-        "dostává",
-        "hosty",
-        "kovařčík",
-        "pardubice",
-        "rychlou",
-        "třinec",
-        "vedení"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -797,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44529,
+      "bytes": 44918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:20:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:36:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,8 +852,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Sparta - Jablonec 3:1, uklidnění pro domácí, svůj druhý gól dává Kuchta",
-            "publishedAt": "2026-04-18T17:20:17Z"
+            "title": "ONLINE: Sparta - Jablonec 3:1, Kuchta mohl mít hattrick, jeho gól ale ruší ofsajd",
+            "publishedAt": "2026-04-18T17:36:30Z"
+          },
+          {
+            "title": "ONLINE: Pardubice - Třinec 3:2. Slepené góly Červenky se Smejkalem otáčí duel",
+            "publishedAt": "2026-04-18T17:33:53Z"
           },
           {
             "title": "Příbram zdolala ve druhé lize béčko Sparty, Vlašim je už devět kol bez porážky",
@@ -869,10 +874,6 @@
           {
             "title": "ONLINE: Litvínov - Jihlava 3:1. Náskok domácích jistí David Kaše",
             "publishedAt": "2026-04-18T17:02:05Z"
-          },
-          {
-            "title": "ONLINE: Pardubice - Třinec 1:2. Kovařčík rychlou akcí dostává hosty do vedení",
-            "publishedAt": "2026-04-18T17:00:35Z"
           },
           {
             "title": "ONLINE: Wolves prohráli na Leedsu, Krejčí kvůli zranění střídal. Kinský opět v základu",

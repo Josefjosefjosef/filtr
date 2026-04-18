@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T17:24:44.538031Z",
+  "ingestedAt": "2026-04-18T17:44:49.385537Z",
   "items": [
     {
       "section": "aktualne",
@@ -753,6 +753,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Dukla házenkáře Plzně v semifinále extraligy nezastavila",
+      "url": "https://sport.ceskatelevize.cz/clanek/hazena/dukla-hazenkare-plzne-v-semifinale-extraligy-nezastavila-156351",
+      "dt": "2026-04-18T17:22:20Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dukla",
+        "extraligy",
+        "házenkáře",
+        "nezastavila",
+        "plzně",
+        "semifinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/pribram-zdolala-becko-sparty-vlasim-se-veze-na-vlne-156350",
       "dt": "2026-04-18T17:18:45Z",
@@ -904,7 +927,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:2",
+      "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 3:2",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-extraligy-dynamo-pardubice-ocelari-trinec-156344",
       "dt": "2026-04-18T14:58:00Z",
       "media_raw": "ČT sport",
@@ -1476,33 +1499,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Voženílek se opět může potkat s koučem Motákem. V extralize mi dal velkou roli, vzpomíná",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vozenilek-na-motaka-se-vsichni-tesi-156321",
-      "dt": "2026-04-16T20:22:30Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dal",
-        "extralize",
-        "koučem",
-        "motákem",
-        "opět",
-        "potkat",
-        "roli",
-        "velkou",
-        "voženílek",
-        "vzpomíná"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1513,7 +1509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41941,
+      "bytes": 41957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,7 +1628,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36789,
+      "bytes": 36558,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1669,7 +1665,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:18:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T17:22:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1684,6 +1680,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dukla házenkáře Plzně v semifinále extraligy nezastavila",
+            "publishedAt": "2026-04-18T17:22:20Z"
+          },
           {
             "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
             "publishedAt": "2026-04-18T17:18:45Z"
@@ -1709,12 +1709,8 @@
             "publishedAt": "2026-04-18T15:15:04Z"
           },
           {
-            "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 1:2",
+            "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec 3:2",
             "publishedAt": "2026-04-18T14:58:00Z"
-          },
-          {
-            "title": "Muchová si ve Stuttgartu zahraje o svůj třetí titul",
-            "publishedAt": "2026-04-18T14:28:40Z"
           }
         ]
       }
@@ -1726,7 +1722,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77278,
+      "bytes": 77272,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
