@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-18T12:57:34.434589Z",
+  "ingestedAt": "2026-04-18T13:14:31.597794Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Biometan je plyn budoucnosti, jeho podíl se ztrojnásobil",
+      "url": "https://profitonline.cz/biometan-je-plyn-budoucnosti-jeho-podil-se-ztrojnasobil/",
+      "dt": "2026-04-18T13:00:05Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "biometan",
+        "budoucnosti",
+        "jeho",
+        "plyn",
+        "podíl",
+        "ztrojnásobil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -268,30 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Radek Majerčin je novým lékařským ředitelem Nemocnice Mělník",
-      "url": "https://profitonline.cz/radek-majercin-je-novym-lekarskym-reditelem-nemocnice-melnik/",
-      "dt": "2026-04-16T08:00:02Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "lékařským",
-        "majerčin",
-        "mělník",
-        "nemocnice",
-        "novým",
-        "radek",
-        "ředitelem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18891,
+      "bytes": 19062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,12 +338,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-18T10:00:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T13:00:05Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "finance": 10,
           "sport": 1,
-          "finance": 9,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Biometan je plyn budoucnosti, jeho podíl se ztrojnásobil",
+            "publishedAt": "2026-04-18T13:00:05Z"
+          },
           {
             "title": "Fotbal a dovolená. Češi horečně nakupují letenky do Ameriky",
             "publishedAt": "2026-04-18T10:00:10Z"
@@ -383,10 +386,6 @@
           {
             "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
             "publishedAt": "2026-04-17T10:00:22Z"
-          },
-          {
-            "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
-            "publishedAt": "2026-04-17T06:00:46Z"
           }
         ]
       }
