@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T16:10:08.411818Z",
+  "ingestedAt": "2026-04-18T16:29:29.434843Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Soud poslal do vazby Američanku obviněnou v případu požáru ve zbrojovce LPP",
+      "url": "https://www.denik.cz/krimi/soud-poslal-do-vazby-americanku-obvinenou-v-pripadu-pozaru-ve-zbrojovce-lpp-2026.html",
+      "dt": "2026-04-18T16:09:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "američanku",
+        "lpp",
+        "obviněnou",
+        "poslal",
+        "požáru",
+        "případu",
+        "soud",
+        "vazby",
+        "zbrojovce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -210,7 +236,7 @@
       "section": "aktualne",
       "contentType": "article",
       "title": "Lenka Filipová se zotavuje po vážném zranění. Koncert v Kutné Hoře opět odložen",
-      "url": "https://www.denik.cz/regiony/kutna-hora-tylovo-divadlo-koncert-zpevacka-lenka-filipova-zraneni-odlozeno-2026.html",
+      "url": "https://www.denik.cz/hudba/kutna-hora-tylovo-divadlo-koncert-zpevacka-lenka-filipova-zraneni-odlozeno-2026.html",
       "dt": "2026-04-18T11:30:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
@@ -627,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Předseda akademie odmítá tvrzení Klempíře: Na Anděly jsme ministra pozvali",
-      "url": "https://www.denik.cz/z_domova/klempir-vedral-ceny-andel-pozvanka.html",
-      "dt": "2026-04-17T19:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "akademie",
-        "anděly",
-        "jsme",
-        "klempíře",
-        "ministra",
-        "odmítá",
-        "pozvali",
-        "předseda",
-        "tvrzení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28526,
+      "bytes": 28799,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T16:09:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud poslal do vazby Američanku obviněnou v případu požáru ve zbrojovce LPP",
+            "publishedAt": "2026-04-18T16:09:00Z"
+          },
           {
             "title": "Na Slovensku odrodili obří dvojčata i dítě se zubem",
             "publishedAt": "2026-04-18T15:45:00Z"
@@ -743,10 +747,6 @@
           {
             "title": "Britská policie vyšetřuje žhářský útok na obchod v Londýně, nikdo nebyl zraněn",
             "publishedAt": "2026-04-18T12:30:00Z"
-          },
-          {
-            "title": "Magyar získal další mandáty. Vítěz maďarských voleb má 140 křesel",
-            "publishedAt": "2026-04-18T12:23:00Z"
           }
         ]
       }
