@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-18T05:39:35.816280Z",
+  "ingestedAt": "2026-04-18T06:03:31.975881Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pejšová v PWHL skórovala, Boston ale podlehl Montrealu v prodloužení",
+      "url": "https://www.sport.cz/clanek/hokej-pejsova-v-pwhl-skorovala-boston-ale-podlehl-montrealu-v-prodlouzeni-5438933",
+      "dt": "2026-04-18T05:47:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "boston",
+        "montrealu",
+        "pejšová",
+        "podlehl",
+        "prodloužení",
+        "pwhl",
+        "skórovala"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,30 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Saúdská Arábie je před fotbalovým MS bez trenéra, Francouz Renard skončil",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-saudska-arabie-je-pred-fotbalovym-ms-bez-trenera-francouz-renard-skoncil-5438493",
-      "dt": "2026-04-17T13:35:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "arábie",
-        "fotbalovým",
-        "francouz",
-        "renard",
-        "saúdská",
-        "skončil",
-        "trenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42190,
+      "bytes": 42108,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:44:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T05:47:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -827,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pejšová v PWHL skórovala, Boston ale podlehl Montrealu v prodloužení",
+            "publishedAt": "2026-04-18T05:47:05Z"
+          },
           {
             "title": "Pardubice po 14 letech, nebo dopadne finále jako předloni? Experti se neshodnou",
             "publishedAt": "2026-04-18T04:33:17Z"
@@ -854,10 +859,6 @@
           {
             "title": "Nečekaný hrdina. První utkání baráže rozhodl sváteční střelec, na gól čekal přes čtyři roky",
             "publishedAt": "2026-04-17T21:15:34Z"
-          },
-          {
-            "title": "Voráčková si triumf v Evropské lize nezopakuje, Zaragoza bude hrát o bronz",
-            "publishedAt": "2026-04-17T21:11:11Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T05:39:35.816280Z",
+  "ingestedAt": "2026-04-18T06:03:31.975881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Možná budeme muset znovu shazovat bomby.“ Trump už zase hrozí Íránu",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bomby",
+        "budeme",
+        "hrozí",
+        "možná",
+        "muset",
+        "shazovat",
+        "trump",
+        "zase",
+        "znovu",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -34,23 +61,24 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Většina majitelů přehlíží první signály bolesti. Co vám váš pes skutečně říká?",
+      "title": "Většina majitelů to přehlíží. Naučte se poznat nenápadné signály, kterými vám pes dává najevo, že trpí",
       "url": "https://magazin.aktualne.cz/vetsina-majitelu-prehlizi-prvni-signaly-bolesti-co-vam-vas-pes-skutecne-rika/r~aaa29a66a846d2f62786af02989fe9a9/",
       "dt": "2026-04-18T05:15:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "bolesti",
+        "dává",
         "majitelů",
+        "najevo",
+        "naučte",
+        "nenápadné",
         "pes",
-        "první",
+        "poznat",
         "přehlíží",
         "signály",
-        "skutečně",
+        "trpí",
         "vám",
-        "váš",
-        "většina",
-        "říká"
+        "většina"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -62,7 +90,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Maringotka snů. Když uvidíte interiér, nebudete věřit, že má jen 22 metrů",
+      "title": "Maringotka snů. Když uvidíte interiér, neuvěříte, že má jen 22 metrů",
       "url": "https://magazin.aktualne.cz/bydleni/maringotka-snu-kdyz-se-21-6-metru-ctverecnich-promeni-v-plnohodnotne-misto-pro-zivot/r~aaa2974bd6cda4659f6052092a2f62b6/",
       "dt": "2026-04-18T04:59:00Z",
       "media_raw": "Aktuálně",
@@ -73,10 +101,9 @@
         "když",
         "maringotka",
         "metrů",
-        "nebudete",
+        "neuvěříte",
         "snů",
-        "uvidíte",
-        "věřit"
+        "uvidíte"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -236,35 +263,6 @@
         "světový",
         "výkony",
         "zesnulé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Teherán souhlasí s pozastavením jaderného programu a uran se převeze do USA, řekl Trump. Írán to popírá",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jaderného",
-        "popírá",
-        "pozastavením",
-        "programu",
-        "převeze",
-        "souhlasí",
-        "teherán",
-        "trump",
-        "uran",
-        "usa",
-        "írán",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -555,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22570,
+      "bytes": 22379,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -595,8 +593,8 @@
         "raw_feed_latest_publishedAt": "2026-04-18T05:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
           "zpravy": 10,
+          "sport": 5,
           "other": 1,
           "finance": 3,
           "zdravi": 1
@@ -612,15 +610,19 @@
         },
         "sample_titles": [
           {
+            "title": "„Možná budeme muset znovu shazovat bomby.“ Trump už zase hrozí Íránu",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Užitečnější než Pastrňák. Nikdo ho nechce potkat, zní před play off k trumfu Bruins",
             "publishedAt": "2026-04-18T05:30:00Z"
           },
           {
-            "title": "Většina majitelů přehlíží první signály bolesti. Co vám váš pes skutečně říká?",
+            "title": "Většina majitelů to přehlíží. Naučte se poznat nenápadné signály, kterými vám pes dává najevo, že trpí",
             "publishedAt": "2026-04-18T05:15:00Z"
           },
           {
-            "title": "Maringotka snů. Když uvidíte interiér, nebudete věřit, že má jen 22 metrů",
+            "title": "Maringotka snů. Když uvidíte interiér, neuvěříte, že má jen 22 metrů",
             "publishedAt": "2026-04-18T04:59:00Z"
           },
           {
@@ -638,10 +640,6 @@
           {
             "title": "Když robot začne žít vlastním životem: Edward ovládl Polsko",
             "publishedAt": "2026-04-18T03:30:00Z"
-          },
-          {
-            "title": "Litvínov dvakrát dotahoval, první zápas baráže vyhrál v prodloužení",
-            "publishedAt": "2026-04-17T20:27:00Z"
           }
         ]
       }

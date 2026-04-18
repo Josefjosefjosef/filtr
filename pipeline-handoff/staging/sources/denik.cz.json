@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T05:39:35.816280Z",
+  "ingestedAt": "2026-04-18T06:03:31.975881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Útok při cvičení. Medvědi hnědí napadli na Aljašce dva americké vojáky",
+      "url": "https://www.denik.cz/ze_sveta/aljaska-medvedi-vojaci-zraneni.html",
+      "dt": "2026-04-18T05:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "aljašce",
+        "americké",
+        "cvičení",
+        "dva",
+        "hnědí",
+        "medvědi",
+        "napadli",
+        "při",
+        "vojáky",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,32 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nemáte ji doma? V ČR se objevila nebezpečná kosmetika, jde o mléko, gel i parfém",
-      "url": "https://www.denik.cz/z_domova/cesko-inspekce-nebezpecna-kosmetika-v-obchodech-sprchovy-gel-mleko-parfem.html",
-      "dt": "2026-04-17T11:44:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "doma",
-        "gel",
-        "jde",
-        "kosmetika",
-        "mléko",
-        "nebezpečná",
-        "nemáte",
-        "objevila",
-        "parfém"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29279,
+      "bytes": 29405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T05:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T05:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -722,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útok při cvičení. Medvědi hnědí napadli na Aljašce dva americké vojáky",
+            "publishedAt": "2026-04-18T05:15:00Z"
+          },
           {
             "title": "Pavel v Chile nechal pero s českými granáty. Psal si jím poznámky",
             "publishedAt": "2026-04-18T05:04:00Z"
@@ -749,10 +754,6 @@
           {
             "title": "Sezona hradů a zámků v ČR: Lidé si za vstupné připlatí, někde i o desítky korun",
             "publishedAt": "2026-04-18T03:30:00Z"
-          },
-          {
-            "title": "Rok, který se stále vrací. Deset dní po kapitulaci Jugoslávie propukly masakry",
-            "publishedAt": "2026-04-18T03:00:00Z"
           }
         ]
       }
