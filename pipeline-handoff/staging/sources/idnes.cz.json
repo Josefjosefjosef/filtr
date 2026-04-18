@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T13:14:31.597794Z",
+  "ingestedAt": "2026-04-18T13:30:31.856800Z",
   "items": [
     {
       "section": "aktualne",
@@ -21,6 +21,58 @@
         "práce",
         "samoživitelky",
         "ztráta"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ignorujete statistiky i odborníky. Lidé spílají kraji kvůli rušení interny",
+      "url": "https://www.idnes.cz/hradec-kralove/zpravy/ruseni-interny-novy-bydzov-beseda-verejnost.A260417_171050_hradec-zpravy_the",
+      "dt": "2026-04-18T13:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ignorujete",
+        "interny",
+        "kraji",
+        "kvůli",
+        "lidé",
+        "odborníky",
+        "rušení",
+        "spílají",
+        "statistiky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Válka v Íránu vyhnala ceny pistácií vzhůru, dosáhly osmiletého maxima",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/valka-iran-ceny-pistacii.A260413_135150_eko-zahranicni_rie",
+      "dt": "2026-04-18T13:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ceny",
+        "dosáhly",
+        "maxima",
+        "osmiletého",
+        "pistácií",
+        "vyhnala",
+        "vzhůru",
+        "válka",
+        "íránu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -738,58 +790,6 @@
         "přespal",
         "své",
         "vysvětlil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bobr v příkopu budil obavy, nakonec si jen počkal na odvoz k řece",
-      "url": "https://www.idnes.cz/plzen/zpravy/puclice-domazlicko-bobr-evropsky-zraneny-prikop-zvire-zachranar.A260414_082327_plzen-zpravy_vb",
-      "dt": "2026-04-18T06:23:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bobr",
-        "budil",
-        "jen",
-        "nakonec",
-        "obavy",
-        "odvoz",
-        "počkal",
-        "příkopu",
-        "řece"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump hrozí Íránu zachováním blokády. Příměří možná neprodloužím, dodal",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-iran-valka-hormuzsky-pruliv-usa-teheran-blokada-pristavy-primeri.A260418_072259_zahranicni_svm",
-      "dt": "2026-04-18T05:22:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "blokády",
-        "dodal",
-        "hrozí",
-        "možná",
-        "neprodloužím",
-        "příměří",
-        "trump",
-        "zachováním",
-        "íránu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1593,7 +1593,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48842,
+      "bytes": 48776,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1633,8 +1633,8 @@
         "raw_feed_latest_publishedAt": "2026-04-18T13:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 4,
+          "zpravy": 22,
+          "finance": 5,
           "other": 3
         },
         "drop_counts": {
@@ -1649,6 +1649,14 @@
         "sample_titles": [
           {
             "title": "Nemoc, násilí, ztráta práce. Samoživitelky bez peněz končí v azylových domech",
+            "publishedAt": "2026-04-18T13:00:00Z"
+          },
+          {
+            "title": "Ignorujete statistiky i odborníky. Lidé spílají kraji kvůli rušení interny",
+            "publishedAt": "2026-04-18T13:00:00Z"
+          },
+          {
+            "title": "Válka v Íránu vyhnala ceny pistácií vzhůru, dosáhly osmiletého maxima",
             "publishedAt": "2026-04-18T13:00:00Z"
           },
           {
@@ -1670,14 +1678,6 @@
           {
             "title": "Filmové poklady na iVysílání: pět neokoukaných tipů, které byste neměli minout",
             "publishedAt": "2026-04-18T12:00:00Z"
-          },
-          {
-            "title": "Má jasnou vizi. A když něčemu nerozumí, tak se zeptá, říká ředitelka o Bolkovi",
-            "publishedAt": "2026-04-18T11:49:00Z"
-          },
-          {
-            "title": "Řidič na festivalu Comic-Con v Melbourne najel do lidí, jeden člověk zemřel",
-            "publishedAt": "2026-04-18T11:16:00Z"
           }
         ]
       }

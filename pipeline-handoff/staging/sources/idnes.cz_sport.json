@@ -1,26 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-18T13:14:31.597794Z",
+  "ingestedAt": "2026-04-18T13:30:31.856800Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Zlín - Teplice 1:0, domácí jdou rychle do vedení, skóre otevírá Černín",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-zlin-teplice-online-vysledek.A260417_140618_fotbal_tals",
-      "dt": "2026-04-18T13:06:33Z",
+      "title": "ONLINE: Baník - Bohemians 0:1, skóre otevírá střelou zpoza vápna Ristovski",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-banik-ostrava-bohemians-online-vysledek.A260417_123528_fotbal_tals",
+      "dt": "2026-04-18T13:22:16Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "domácí",
-        "jdou",
+        "baník",
+        "bohemians",
         "otevírá",
-        "rychle",
+        "ristovski",
         "skóre",
+        "střelou",
+        "vápna",
+        "zpoza"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Zlín - Teplice 1:1, zběsilý úvod, z dorážky snižuje hostující Mareček",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-zlin-teplice-online-vysledek.A260417_140618_fotbal_tals",
+      "dt": "2026-04-18T13:12:05Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dorážky",
+        "hostující",
+        "mareček",
+        "snižuje",
         "teplice",
-        "vedení",
+        "zběsilý",
         "zlín",
-        "černín"
+        "úvod"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -45,30 +69,6 @@
         "nejlepší",
         "postavení",
         "šestce"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Baník - Bohemians 0:0, domácím hrozí, že klesnou na poslední příčku",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-banik-ostrava-bohemians-online-vysledek.A260417_123528_fotbal_tals",
-      "dt": "2026-04-18T13:03:32Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baník",
-        "bohemians",
-        "domácím",
-        "hrozí",
-        "klesnou",
-        "poslední",
-        "příčku"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -797,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44769,
+      "bytes": 44689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T13:06:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T13:22:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,16 +851,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Zlín - Teplice 1:0, domácí jdou rychle do vedení, skóre otevírá Černín",
-            "publishedAt": "2026-04-18T13:06:33Z"
+            "title": "ONLINE: Baník - Bohemians 0:1, skóre otevírá střelou zpoza vápna Ristovski",
+            "publishedAt": "2026-04-18T13:22:16Z"
+          },
+          {
+            "title": "ONLINE: Zlín - Teplice 1:1, zběsilý úvod, z dorážky snižuje hostující Mareček",
+            "publishedAt": "2026-04-18T13:12:05Z"
           },
           {
             "title": "ONLINE: Liberec - Ml. Boleslav 0:0, domácí hájí postavení v nejlepší šestce",
             "publishedAt": "2026-04-18T13:03:35Z"
-          },
-          {
-            "title": "ONLINE: Baník - Bohemians 0:0, domácím hrozí, že klesnou na poslední příčku",
-            "publishedAt": "2026-04-18T13:03:32Z"
           },
           {
             "title": "ONLINE: Dukla - Karviná 0:0, domácí se chtějí odlepit ze dna tabulky",
