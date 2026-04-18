@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-18T07:54:17.900184Z",
+  "ingestedAt": "2026-04-18T08:12:23.361572Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Statisíce Čechů přichází o peníze ve starém penzijním připojištění",
+      "url": "https://profitonline.cz/statisice-cechu-prichazi-o-penize-ve-starem-penzijnim-pripojisteni/",
+      "dt": "2026-04-18T08:00:38Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "penzijním",
+        "peníze",
+        "přichází",
+        "připojištění",
+        "starém",
+        "statisíce",
+        "čechů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,32 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Řezné rány i trhání vlasů. V Česku si ubližují desítky tisíc dospívajících",
-      "url": "https://profitonline.cz/rezne-rany-i-trhani-vlasu-v-cesku-si-ublizuji-desitky-tisic-dospivajicich/",
-      "dt": "2026-04-16T04:00:53Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "desítky",
-        "dospívajících",
-        "rány",
-        "tisíc",
-        "trhání",
-        "ubližují",
-        "vlasů",
-        "česku",
-        "řezné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18714,
+      "bytes": 18850,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-18T04:00:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T08:00:38Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 9,
@@ -360,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Statisíce Čechů přichází o peníze ve starém penzijním připojištění",
+            "publishedAt": "2026-04-18T08:00:38Z"
+          },
           {
             "title": "Okamžiky dějin: Jak Evropané objevovali nejmenší kontinent",
             "publishedAt": "2026-04-18T04:00:12Z"
@@ -387,10 +389,6 @@
           {
             "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
             "publishedAt": "2026-04-17T04:00:21Z"
-          },
-          {
-            "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
-            "publishedAt": "2026-04-16T14:00:15Z"
           }
         ]
       }

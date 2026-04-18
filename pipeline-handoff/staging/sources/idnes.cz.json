@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-18T07:54:17.900184Z",
+  "ingestedAt": "2026-04-18T08:12:23.361572Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U Velké Bíteše na D1 narazil řidič dodávky do kamionu, nehodu nepřežil",
+      "url": "https://www.idnes.cz/jihlava/zpravy/na-d1-u-velke-bitese-rano-zemrel-ridic-dodavky-ktera-narazila-do-kamionu.A260418_092449_jihlava-zpravy_zdo",
+      "dt": "2026-04-18T07:33:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bíteše",
+        "dodávky",
+        "kamionu",
+        "narazil",
+        "nehodu",
+        "nepřežil",
+        "velké",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,31 +778,6 @@
         "rozpustí",
         "slunce",
         "sníh"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael už nebude bombardovat Libanon. Má to zakázané od USA, uvedl Trump",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-uz-nebude-bombardovat-libanon-ma-to-zakazane-od-usa-uvedl-trump.A260417_161248_zahranicni_bro",
-      "dt": "2026-04-17T15:22:37Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bombardovat",
-        "izrael",
-        "libanon",
-        "nebude",
-        "trump",
-        "usa",
-        "uvedl",
-        "zakázané"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49587,
+      "bytes": 48963,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,11 +1618,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:33:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
           "zpravy": 23,
+          "finance": 5,
           "other": 2
         },
         "drop_counts": {
@@ -1635,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U Velké Bíteše na D1 narazil řidič dodávky do kamionu, nehodu nepřežil",
+            "publishedAt": "2026-04-18T07:33:00Z"
+          },
           {
             "title": "Hormuzský průliv se opět otevřel, proplouvá jím konvoj tankerů",
             "publishedAt": "2026-04-18T07:06:00Z"
@@ -1662,10 +1666,6 @@
           {
             "title": "Trump hrozí Íránu zachováním blokády. Příměří možná neprodloužím, dodal",
             "publishedAt": "2026-04-18T05:22:00Z"
-          },
-          {
-            "title": "Bém do konce měsíce ukáže plán proti závislostem, omezit chce i alkohol",
-            "publishedAt": "2026-04-18T05:00:00Z"
           }
         ]
       }

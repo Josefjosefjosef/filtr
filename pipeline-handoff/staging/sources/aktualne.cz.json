@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-18T07:54:17.900184Z",
+  "ingestedAt": "2026-04-18T08:12:23.361572Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soudila dopravní nehody, teď sama jednu způsobila. A nadýchala dvě promile",
+      "url": "https://zpravy.aktualne.cz/domaci/soudila-dopravni-nehody-ted-sama-jednu-zpusobila-a-nadychala-dve-promile/r~aaa2927f0af7e5a68602411d6572cb5a/",
+      "dt": "2026-04-18T07:48:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dopravní",
+        "dvě",
+        "jednu",
+        "nadýchala",
+        "nehody",
+        "promile",
+        "sama",
+        "soudila",
+        "způsobila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -33,22 +59,23 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Nejmladší poslankyně vyrazila proti Pochodu pro život. Pro blokádu mám pochopení, řekla",
+      "title": "„Doufám, že ty žádné děti mít nebudeš.“ Nejmladší poslankyně i zástupce SPD, na akci to vřelo",
       "url": "https://zpravy.aktualne.cz/domaci/nejmladsi-poslankyne-vyrazila-proti-pochodu-pro-zivot-pro-blokadu-mam-pochopeni-rekla/r~aaa29537b9d805e0276794bc6bb55f5e/",
       "dt": "2026-04-18T07:19:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "blokádu",
-        "mám",
+        "akci",
+        "doufám",
+        "děti",
+        "mít",
+        "nebudeš",
         "nejmladší",
-        "pochodu",
-        "pochopení",
         "poslankyně",
-        "proti",
-        "vyrazila",
-        "řekla",
-        "život"
+        "spd",
+        "vřelo",
+        "zástupce",
+        "žádné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -516,30 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Debutant Brízgala pomohl i napodruhé porazit v přípravě Němce",
-      "url": "https://sport.aktualne.cz/hokej/hokejova-reprezentace/debutant-brizgala-pomohl-i-napodruhe-porazit-v-priprave-nemce/r~aaa29290ef30a08f65a7619173ef6fce/",
-      "dt": "2026-04-17T17:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brízgala",
-        "debutant",
-        "napodruhé",
-        "němce",
-        "pomohl",
-        "porazit",
-        "přípravě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -550,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21987,
+      "bytes": 22017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,11 +590,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:48:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
-          "zpravy": 12,
+          "zpravy": 13,
+          "sport": 4,
           "other": 1,
           "finance": 1,
           "zdravi": 1
@@ -607,11 +610,15 @@
         },
         "sample_titles": [
           {
+            "title": "Soudila dopravní nehody, teď sama jednu způsobila. A nadýchala dvě promile",
+            "publishedAt": "2026-04-18T07:48:00Z"
+          },
+          {
             "title": "„Všechno jsem mu obětoval, dluží mi peníze.“ Ruský otec tenisového showmana promluvil",
             "publishedAt": "2026-04-18T07:38:00Z"
           },
           {
-            "title": "Nejmladší poslankyně vyrazila proti Pochodu pro život. Pro blokádu mám pochopení, řekla",
+            "title": "„Doufám, že ty žádné děti mít nebudeš.“ Nejmladší poslankyně i zástupce SPD, na akci to vřelo",
             "publishedAt": "2026-04-18T07:19:00Z"
           },
           {
@@ -633,10 +640,6 @@
           {
             "title": "Kruté horko. Japonci mají nový oficiální termín pro extrémně teplé dny",
             "publishedAt": "2026-04-18T06:03:00Z"
-          },
-          {
-            "title": "Užitečnější než Pastrňák. Nikdo ho nechce potkat, zní před play off k trumfu Bruins",
-            "publishedAt": "2026-04-18T05:30:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-18T07:54:17.900184Z",
+  "ingestedAt": "2026-04-18T08:12:23.361572Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,35 @@
         "spotify",
         "vykradli",
         "zaplatit"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Zasponzorovali daňoví poplatníci EU americké firmě vývoj? Co znamená, že Onsemi kupuje čipovou firmu z Brna",
+      "url": "https://www.zive.cz/clanky/zasponzorovali-danovi-poplatnici-eu-americke-firme-vyvoj-co-znamena-ze-onsemi-kupuje-cipovou-firmu-z-brna/sc-3-a-240760/default.aspx",
+      "dt": "2026-04-18T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "americké",
+        "brna",
+        "daňoví",
+        "firmu",
+        "firmě",
+        "kupuje",
+        "onsemi",
+        "poplatníci",
+        "vývoj",
+        "zasponzorovali",
+        "znamená",
+        "čipovou"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -927,35 +956,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Poskládali jsme sestavu pro zpracování videa. Intel míchá kartami, je levnější a výkonnější než AMD",
-      "url": "https://www.zive.cz/clanky/poskladali-jsme-sestavu-pro-zpracovani-videa-intel-micha-kartami-je-levnejsi-a-vykonnejsi-nez-amd/sc-3-a-240672/default.aspx",
-      "dt": "2026-04-14T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "amd",
-        "intel",
-        "jsme",
-        "kartami",
-        "levnější",
-        "míchá",
-        "než",
-        "poskládali",
-        "sestavu",
-        "videa",
-        "výkonnější",
-        "zpracování"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -966,7 +966,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22086,
+      "bytes": 22080,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1003,7 +1003,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-18T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1021,6 +1021,10 @@
           {
             "title": "Hackeři, kteří vykradli Spotify, u soudu prohráli bez boje. Musí zaplatit 322 milionů dolarů",
             "publishedAt": "2026-04-17T15:45:00Z"
+          },
+          {
+            "title": "Zasponzorovali daňoví poplatníci EU americké firmě vývoj? Co znamená, že Onsemi kupuje čipovou firmu z Brna",
+            "publishedAt": "2026-04-18T07:45:00Z"
           },
           {
             "title": "Která expanze pro World of Warcraft je nejlepší? Seřadili jsme všechna rozšíření",
@@ -1045,10 +1049,6 @@
           {
             "title": "Nejlepší doplněk pro turisty. MapyClimbs doplní na Mapy.com přehlednější grafy stoupání",
             "publishedAt": "2026-04-17T11:45:00Z"
-          },
-          {
-            "title": "Jak na YouTube vypnout Shorts? Google konečně přidal potřebné nastavení",
-            "publishedAt": "2026-04-17T12:45:00Z"
           }
         ]
       }
