@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-18T22:54:36.173504Z",
+  "ingestedAt": "2026-04-18T23:15:00.252195Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump se bojí Rogana víc než Íránu. A Rogan to moc dobře ví",
+      "url": "https://www.epenize.eu/trump-se-boji-rogana-vic-nez-iranu-a-rogan-to-moc-dobre-vi/",
+      "dt": "2026-04-18T23:00:19Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bojí",
+        "dobře",
+        "moc",
+        "než",
+        "rogan",
+        "rogana",
+        "trump",
+        "víc",
+        "íránu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -473,32 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trumpova spojenkyně řekla Kongresu pravdu o Íránu: Prezident jí za to čistil žaludek",
-      "url": "https://www.epenize.eu/trumpova-spojenkyne-rekla-kongresu-pravdu-o-iranu-prezident-ji-za-to-cistil-zaludek/",
-      "dt": "2026-04-10T23:00:37Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "kongresu",
-        "pravdu",
-        "prezident",
-        "spojenkyně",
-        "trumpova",
-        "íránu",
-        "čistil",
-        "řekla",
-        "žaludek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 105145,
+      "bytes": 105084,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +546,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:44:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T23:00:19Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -563,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump se bojí Rogana víc než Íránu. A Rogan to moc dobře ví",
+            "publishedAt": "2026-04-18T23:00:19Z"
+          },
           {
             "title": "Stanjura nevrátil mobily ani tablet. Asi ví proč",
             "publishedAt": "2026-04-18T07:44:53Z"
@@ -590,10 +594,6 @@
           {
             "title": "Vondráčkovy prázdné řeči: Veřejnoprávní zpravodajství nemusí nikomu chybět",
             "publishedAt": "2026-04-16T07:00:59Z"
-          },
-          {
-            "title": "„Buďte rádi, že to není horší“: Trumpova bizarní spokojenost s drahým benzínem",
-            "publishedAt": "2026-04-15T23:00:06Z"
           }
         ]
       }
