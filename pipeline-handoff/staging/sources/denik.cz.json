@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-18T20:05:46.354656Z",
+  "ingestedAt": "2026-04-18T21:05:06.676986Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Obchody Spar v Rakousku stáhly dětské výživy. Kvůli vydírání",
+      "url": "https://www.denik.cz/staty-eu/hipp-rakousko-spar-detske-prikrmy-varovani.html",
+      "dt": "2026-04-18T20:24:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětské",
+        "kvůli",
+        "obchody",
+        "rakousku",
+        "spar",
+        "stáhly",
+        "vydírání",
+        "výživy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,7 +83,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Muž původem z Moskvy zabil na ulici v Kyjevě šest lidí, policie ho zastřelila",
+      "title": "Muž zabil na ulici v Kyjevě šest lidí, ohrožoval rukojmí. Policie ho zastřelila",
       "url": "https://www.denik.cz/staty-mimo-eu/muz-puvodem-z-moskvy-zabil-na-ulici-v-kyjeve-sest-lidi-policie-ho-zastrelila.html",
       "dt": "2026-04-18T17:57:00Z",
       "media_raw": "Deník",
@@ -66,10 +91,10 @@
       "tokens": [
         "kyjevě",
         "lidí",
-        "moskvy",
         "muž",
+        "ohrožoval",
         "policie",
-        "původem",
+        "rukojmí",
         "ulici",
         "zabil",
         "zastřelila",
@@ -625,33 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na psy má alergii, tak bere na procházku rostliny. Muž ze Židenic pomáhá přírodě",
-      "url": "https://brnensky.denik.cz/zpravy_region/dobra-duse-z-deniku-brno-zidenice-leopold-bartos-rostliny-prochazka-priroda.html",
-      "dt": "2026-04-18T03:33:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "alergii",
-        "bere",
-        "muž",
-        "pomáhá",
-        "procházku",
-        "psy",
-        "přírodě",
-        "rostliny",
-        "tak",
-        "židenic"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28603,
+      "bytes": 28250,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-18T19:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T20:24:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +714,10 @@
         },
         "sample_titles": [
           {
+            "title": "Obchody Spar v Rakousku stáhly dětské výživy. Kvůli vydírání",
+            "publishedAt": "2026-04-18T20:24:00Z"
+          },
+          {
             "title": "Knihou roku je Mariborská hypnóza. Magnesia Litera rozdala ceny",
             "publishedAt": "2026-04-18T19:40:00Z"
           },
@@ -724,7 +726,7 @@
             "publishedAt": "2026-04-18T19:06:00Z"
           },
           {
-            "title": "Muž původem z Moskvy zabil na ulici v Kyjevě šest lidí, policie ho zastřelila",
+            "title": "Muž zabil na ulici v Kyjevě šest lidí, ohrožoval rukojmí. Policie ho zastřelila",
             "publishedAt": "2026-04-18T17:57:00Z"
           },
           {
@@ -742,10 +744,6 @@
           {
             "title": "Pokračování hry Kingdom Come má prestižní cenu. Uspěla na BAFTA",
             "publishedAt": "2026-04-18T14:24:00Z"
-          },
-          {
-            "title": "Přání řidičů se vyplní: Jednodenní dálniční známka už nebude končit o půlnoci",
-            "publishedAt": "2026-04-18T14:00:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T20:05:46.354656Z",
+  "ingestedAt": "2026-04-18T21:05:06.676986Z",
   "items": [
     {
       "section": "aktualne",
@@ -758,6 +758,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Opava a Děčín míří do čtvrtfinále, Písek musí do předkola",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/opava-a-decin-miri-do-ctvrtfinale-pisek-musi-do-predkola-156355",
+      "dt": "2026-04-18T20:18:30Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "děčín",
+        "musí",
+        "míří",
+        "opava",
+        "písek",
+        "předkola",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Lazio zvítězilo v Neapoli a Inter má k titulu ještě blíž",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/lazio-zvitezilo-v-neapoli-a-inter-ma-k-titulu-jeste-bliz-156353",
       "dt": "2026-04-18T18:28:15Z",
@@ -1471,32 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vejmelka základní část NHL jako brankář s nejvíce výhrami nezakončil",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vejmelka-zakladni-cast-nhl-jako-brankar-s-nejvice-vyhrami-nezakoncil-156324",
-      "dt": "2026-04-17T06:29:05Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brankář",
-        "jako",
-        "nejvíce",
-        "nezakončil",
-        "nhl",
-        "vejmelka",
-        "výhrami",
-        "základní",
-        "část"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43079,
+      "bytes": 42881,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1623,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36372,
+      "bytes": 36642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1660,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T18:28:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T20:18:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1675,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opava a Děčín míří do čtvrtfinále, Písek musí do předkola",
+            "publishedAt": "2026-04-18T20:18:30Z"
+          },
           {
             "title": "Lazio zvítězilo v Neapoli a Inter má k titulu ještě blíž",
             "publishedAt": "2026-04-18T18:28:15Z"
@@ -1704,10 +1706,6 @@
           {
             "title": "Davidová je po další operaci, čeká ji šest týdnů klidového režimu",
             "publishedAt": "2026-04-18T16:32:19Z"
-          },
-          {
-            "title": "Choupenitch zopakoval v Káhiře stříbrný úspěch",
-            "publishedAt": "2026-04-18T15:53:07Z"
           }
         ]
       }
@@ -1719,7 +1717,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77212,
+      "bytes": 77147,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
