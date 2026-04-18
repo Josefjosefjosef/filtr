@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-18T14:49:43.756294Z",
+  "ingestedAt": "2026-04-18T15:12:51.117844Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Frenetická střílečka Saros se chlubí tím, jak poběží na PS5 a PS5 Pro - INDIAN",
+      "url": "https://indian-tv.cz/clanek/freneticka-strilecka-saros-se-chlubi-vykonem-9461vr",
+      "dt": "2026-04-18T15:03:17Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chlubí",
+        "frenetická",
+        "indian",
+        "poběží",
+        "ps5",
+        "saros",
+        "střílečka",
+        "tím"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1055,31 +1080,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Na internet unikly detaily o příběhu 007: First Light - INDIAN",
-      "url": "https://indian-tv.cz/clanek/na-internet-unikly-detaily-o-pribehu-007-first-light-863ez0",
-      "dt": "2026-04-14T12:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "007",
-        "detaily",
-        "first",
-        "indian",
-        "internet",
-        "light",
-        "příběhu",
-        "unikly"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1090,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 195292,
+      "bytes": 196032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,7 +1127,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T14:40:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T15:03:17Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1142,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Frenetická střílečka Saros se chlubí tím, jak poběží na PS5 a PS5 Pro - INDIAN",
+            "publishedAt": "2026-04-18T15:03:17Z"
+          },
           {
             "title": "Warhammer 40,000: Space Marine 2 nalákal velké množství hráčů - INDIAN",
             "publishedAt": "2026-04-18T14:40:21Z"
@@ -1169,10 +1173,6 @@
           {
             "title": "Assassin’s Creed: Black Flag Resynced předčasně odhaluje datum vydání - INDIAN",
             "publishedAt": "2026-04-17T10:25:31Z"
-          },
-          {
-            "title": "Pirátský survival Windrose slaví raketový start a ukazuje Skull and Bones jak se to dělá - INDIAN",
-            "publishedAt": "2026-04-17T08:30:00Z"
           }
         ]
       }

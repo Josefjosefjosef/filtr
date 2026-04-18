@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-18T14:49:43.756294Z",
+  "ingestedAt": "2026-04-18T15:12:51.117844Z",
   "items": [
     {
       "section": "aktualne",
@@ -755,6 +755,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-extraligy-dynamo-pardubice-ocelari-trinec-156344",
+      "dt": "2026-04-18T14:58:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dynamo",
+        "extraligy",
+        "finále",
+        "oceláři",
+        "off",
+        "pardubice",
+        "play",
+        "třinec"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Muchová si ve Stuttgartu zahraje o svůj třetí titul",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-zahraje-o-svuj-treti-titul-156343",
       "dt": "2026-04-18T14:28:40Z",
@@ -1476,32 +1501,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češi dali Německu pět gólů. Tým táhli Flek s Tomáškem",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-nemecko-156313",
-      "dt": "2026-04-16T15:15:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dali",
-        "flek",
-        "gólů",
-        "německu",
-        "pět",
-        "tomáškem",
-        "táhli",
-        "tým",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1631,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36578,
+      "bytes": 36759,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T14:28:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T14:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Finále play-off extraligy Dynamo Pardubice – Oceláři Třinec",
+            "publishedAt": "2026-04-18T14:58:00Z"
+          },
           {
             "title": "Muchová si ve Stuttgartu zahraje o svůj třetí titul",
             "publishedAt": "2026-04-18T14:28:40Z"
@@ -1710,10 +1713,6 @@
           {
             "title": "Do přípravy hokejistů před MS se zapojí Bednář, Kempný, Beránek a Špaček",
             "publishedAt": "2026-04-17T21:59:01Z"
-          },
-          {
-            "title": "Lvi Praha jsou popáté v řadě ve finále extraligy volejbalistů. Postup slavili na palubovce Jihostroje",
-            "publishedAt": "2026-04-17T19:57:54Z"
           }
         ]
       }
@@ -1725,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77224,
+      "bytes": 77220,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

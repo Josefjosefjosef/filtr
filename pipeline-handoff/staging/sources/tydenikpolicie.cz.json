@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-18T14:49:43.756294Z",
+  "ingestedAt": "2026-04-18T15:12:51.117844Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž spadl v pražské zoo z menší výšky z lanovky. S lehkým zraněním skončil v péči záchranářů",
+      "url": "https://tydenikpolicie.cz/muz-spadl-v-prazske-zoo-z-mensi-vysky-z-lanovky-s-lehkym-zranenim-skoncil-v-peci-zachranaru/",
+      "dt": "2026-04-18T14:47:32Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "lanovky",
+        "lehkým",
+        "menší",
+        "muž",
+        "pražské",
+        "péči",
+        "skončil",
+        "spadl",
+        "výšky",
+        "zoo",
+        "zraněním",
+        "záchranářů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,33 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rozrušený muž nacházející se v těžké životní situaci se v Plzni pohyboval po tramvajovém mostě",
-      "url": "https://tydenikpolicie.cz/rozruseny-muz-nachazejici-se-v-tezke-zivotni-situaci-se-v-plzni-pohyboval-po-tramvajovem-moste/",
-      "dt": "2026-04-17T18:02:59Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "mostě",
-        "muž",
-        "nacházející",
-        "plzni",
-        "pohyboval",
-        "rozrušený",
-        "situaci",
-        "tramvajovém",
-        "těžké",
-        "životní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16119,
+      "bytes": 16025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T12:54:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-18T14:47:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž spadl v pražské zoo z menší výšky z lanovky. S lehkým zraněním skončil v péči záchranářů",
+            "publishedAt": "2026-04-18T14:47:32Z"
+          },
           {
             "title": "Dva zranění po požáru tří aut u Českých Budějovic",
             "publishedAt": "2026-04-18T12:54:20Z"
@@ -345,10 +351,6 @@
           {
             "title": "Jako soupeře si muž v Litoměřicích vybral toaletu v obchodním centru",
             "publishedAt": "2026-04-18T02:02:21Z"
-          },
-          {
-            "title": "Na svobodě byl teprve tři týdny a už měl mít na svědomí sérii vloupání do aut",
-            "publishedAt": "2026-04-18T00:02:15Z"
           }
         ]
       }
