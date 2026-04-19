@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T20:54:51.481539Z",
+  "ingestedAt": "2026-04-19T21:15:22.853121Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lyon i bez Šulce zamíchal kartami ve hře o titul. Karabec u výhry v Paříži nechyběl",
+      "url": "https://sport.aktualne.cz/fotbal/lyon-i-bez-sulce-zamichal-kartami-ve-hre-o-titul-karabec-u-vyhry-v-parizi-nechybel/r~aaa297ba587fbe4b19ca9d351b9f6b9d/",
+      "dt": "2026-04-19T20:58:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hře",
+        "karabec",
+        "kartami",
+        "lyon",
+        "nechyběl",
+        "paříži",
+        "titul",
+        "výhry",
+        "zamíchal",
+        "šulce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -519,37 +546,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dvě století marného kopání. Záhada Oak Islandu možná končí, poklad mohl být od začátku jen mýtus",
-      "url": "https://magazin.aktualne.cz/oak-island-a-money-pit-alias-nejdele-hledany-pokladu-v-historii-je-mozne-ze-nikdy-neexistoval/r~aaa294276cd0b26c9ba1eaa397827afa/",
-      "dt": "2026-04-19T13:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "být",
-        "dvě",
-        "islandu",
-        "jen",
-        "končí",
-        "kopání",
-        "marného",
-        "možná",
-        "mýtus",
-        "oak",
-        "poklad",
-        "století",
-        "začátku",
-        "záhada"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -560,7 +556,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21684,
+      "bytes": 21437,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -597,12 +593,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T19:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T20:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 11,
           "other": 1,
-          "sport": 10,
-          "zpravy": 7,
+          "zpravy": 6,
           "finance": 2
         },
         "drop_counts": {
@@ -615,6 +611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lyon i bez Šulce zamíchal kartami ve hře o titul. Karabec u výhry v Paříži nechyběl",
+            "publishedAt": "2026-04-19T20:58:00Z"
+          },
           {
             "title": "Dcera Karla Gotta Charlotte vydá svůj debutový singl. Natáčela ho v Londýně",
             "publishedAt": "2026-04-19T19:48:00Z"
@@ -642,10 +642,6 @@
           {
             "title": "Útočník v Louisianě po domácí hádce zastřelil osm dětí, policisté ho pak zabili",
             "publishedAt": "2026-04-19T16:49:00Z"
-          },
-          {
-            "title": "Útok na ruský stínový tanker ukazuje na „tajnou“ dohodu. Opuštěná loď může způsobit katastrofu",
-            "publishedAt": "2026-04-19T16:59:00Z"
           }
         ]
       }

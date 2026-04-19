@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T20:54:51.481539Z",
+  "ingestedAt": "2026-04-19T21:15:22.853121Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "AC Milán je po výhře ve Veroně druhý, Juventus si upevnil čtvrté místo",
+      "url": "https://www.sport.cz/clanek/fotbal-serie-a-ac-milan-po-vyhre-ve-verone-vystridal-neapol-na-druhem-miste-italske-ligy-5440403",
+      "dt": "2026-04-19T15:25:36Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "druhý",
+        "juventus",
+        "milán",
+        "místo",
+        "upevnil",
+        "veroně",
+        "výhře",
+        "čtvrté"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Změnilo se klima. Už je to o nás, ne o věcech kolem, tvrdil Sejk",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-zmenilo-se-klima-uz-je-to-o-nas-ne-o-vecech-kolem-tvrdil-sejk-5440448",
+      "dt": "2026-04-19T20:53:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "klima",
+        "kolem",
+        "nás",
+        "sejk",
+        "tvrdil",
+        "věcech",
+        "změnilo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -282,32 +331,6 @@
         "vyhroceném",
         "výhru",
         "závěru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "AC Milán po výhře ve Veroně vystřídal Neapol na druhém místě italské ligy",
-      "url": "https://www.sport.cz/clanek/fotbal-serie-a-ac-milan-po-vyhre-ve-verone-vystridal-neapol-na-druhem-miste-italske-ligy-5440403",
-      "dt": "2026-04-19T15:25:36Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "druhém",
-        "italské",
-        "ligy",
-        "milán",
-        "místě",
-        "neapol",
-        "veroně",
-        "vystřídal",
-        "výhře"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -753,32 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mám ráda i holčičí věci, nejenom motorky, říká česká reprezentantka",
-      "url": "https://www.sport.cz/clanek/podcasty-zenske-podani-ja-se-bojim-obcas-maminka-porad-rika-divka-z-motorky-5437045",
-      "dt": "2026-04-17T07:30:33Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "holčičí",
-        "motorky",
-        "mám",
-        "nejenom",
-        "reprezentantka",
-        "ráda",
-        "věci",
-        "česká",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47729,
+      "bytes": 47908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T20:36:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T20:53:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -842,6 +839,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AC Milán je po výhře ve Veroně druhý, Juventus si upevnil čtvrté místo",
+            "publishedAt": "2026-04-19T15:25:36Z"
+          },
+          {
+            "title": "Změnilo se klima. Už je to o nás, ne o věcech kolem, tvrdil Sejk",
+            "publishedAt": "2026-04-19T20:53:37Z"
+          },
           {
             "title": "Basketbalistky Fenerbahce vyhrály Euroligu, Voráčková slaví se Zaragozou bronz",
             "publishedAt": "2026-04-19T20:36:07Z"
@@ -865,14 +870,6 @@
           {
             "title": "Pěsti a krvavá louže, koncovka druhého finále se vyostřila. Stránský: Oba týmy si měří pinďoury",
             "publishedAt": "2026-04-19T19:38:58Z"
-          },
-          {
-            "title": "SESTŘIH: Plzeň s Pardubicemi totálně vyhořela. Po přestávce jí dal mat Tanko",
-            "publishedAt": "2026-04-19T18:29:34Z"
-          },
-          {
-            "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc přetlačila Slovácko",
-            "publishedAt": "2026-04-19T04:02:04Z"
           }
         ]
       }
