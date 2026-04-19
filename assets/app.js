@@ -21892,12 +21892,9 @@ function buildVideoAsArticleCard(it) {
     if (key === "fincalc") return { actionType: "overlay", overlayId: "financial", key: "fincalc" };
     if (key === "legaldocs") return { actionType: "overlay", overlayId: "legal", key: "legaldocs" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
-    /* P0: mobile/tablet — open #iu-aiPanel (body-mounted modal); desktop — unchanged QuickFeed flow */
+    /* P0: AI asistenti — vždy stejný overlay (#iu-aiPanel); úzké viewporty řeší CSS (iu-ai-narrow-fullscreen), desktop = datovka-like shell v app.css. */
     if (key === "ai") {
-      const aiNarrow =
-        typeof window.matchMedia === "function" && window.matchMedia("(max-width: 1023px)").matches;
-      if (aiNarrow) return { actionType: "overlay", overlayId: "ai", key: "ai" };
-      return { actionType: "overlay", overlayId: "quickfeed", key: "ai" };
+      return { actionType: "overlay", overlayId: "ai", key: "ai" };
     }
     if (key === "deepl" || key === "convert" || key === "naceneni") {
       return { actionType: "overlay", overlayId: "quickfeed", key };
@@ -22343,7 +22340,8 @@ function buildVideoAsArticleCard(it) {
       if (a) closePanel();
     });
 
-    // init
+    // init (guard lives later in bundle — use window)
+    if (typeof window.iuAiEnsureGuardClasses === "function") window.iuAiEnsureGuardClasses();
     aiPanel.hidden = true;
     if (aiOverlay) aiOverlay.hidden = true;
     aiPanel.dataset.open = '0';
@@ -25023,6 +25021,18 @@ function buildVideoAsArticleCard(it) {
   }
   try { window.iuSetElOpenVisible = iuSetElOpenVisible; } catch (_) {}
 
+  function iuAiEnsureGuardClasses() {
+    try {
+      const ov = document.getElementById("iu-aiOverlay");
+      const pan = document.getElementById("iu-aiPanel");
+      const scrollHost = pan ? pan.querySelector(".iu-aiPanelBody") : null;
+      if (ov) ov.classList.add("iu-ai-overlay-root");
+      if (pan) pan.classList.add("iu-ai-overlay-root");
+      if (scrollHost) scrollHost.classList.add("iu-ai-scroll-host");
+    } catch (_) {}
+  }
+  try { window.iuAiEnsureGuardClasses = iuAiEnsureGuardClasses; } catch (_) {}
+
   function ensureAiModalInBody() {
     const overlays = document.querySelectorAll("#iu-aiOverlay");
     const panels = document.querySelectorAll("#iu-aiPanel");
@@ -25035,6 +25045,7 @@ function buildVideoAsArticleCard(it) {
       document.body.appendChild(overlay);
       document.body.appendChild(panel);
     } catch (_) {}
+    iuAiEnsureGuardClasses();
     return true;
   }
   try { window.ensureAiModalInBody = ensureAiModalInBody; } catch (_) {}
