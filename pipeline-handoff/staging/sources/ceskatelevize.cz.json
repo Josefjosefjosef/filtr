@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T06:58:09.725552Z",
+  "ingestedAt": "2026-04-19T07:14:56.421629Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "KVÍZ: Poznáte česká města podle mapy jejich tramvajových tratí?",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/kviz-poznate-ceska-mesta-podle-mapy-jejich-tramvajovych-trati-372479",
+      "dt": "2026-04-19T07:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jejich",
+        "kvíz",
+        "mapy",
+        "města",
+        "podle",
+        "poznáte",
+        "tramvajových",
+        "tratí",
+        "česká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,29 +752,6 @@
         "přehledně",
         "takhle",
         "tramvajovou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čtyři generace Evropanů ukázaly, kdo tíhne k autoritářům",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/ctyri-generace-evropanu-ukazaly-kdo-tihne-k-autoritarum-372409",
-      "dt": "2026-04-18T05:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "autoritářům",
-        "evropanů",
-        "generace",
-        "tíhne",
-        "ukázaly",
-        "čtyři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1508,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41782,
+      "bytes": 41625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1568,11 +1571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T06:36:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 4
+          "other": 5,
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1584,6 +1587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KVÍZ: Poznáte česká města podle mapy jejich tramvajových tratí?",
+            "publishedAt": "2026-04-19T07:00:00Z"
+          },
           {
             "title": "Výbuch na jihu Libanonu zabil izraelského vojáka, další zranil",
             "publishedAt": "2026-04-19T06:36:38Z"
@@ -1611,10 +1618,6 @@
           {
             "title": "KLDR odpálila několik balistických střel, oznámily sousední země",
             "publishedAt": "2026-04-18T23:03:42Z"
-          },
-          {
-            "title": "Nejistý vývoj na Blízkém východě budí větší zájem o tuzemské dovolené",
-            "publishedAt": "2026-04-18T20:00:00Z"
           }
         ]
       }
@@ -1720,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77264,
+      "bytes": 77232,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
