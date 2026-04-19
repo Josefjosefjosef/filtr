@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T06:34:56.591861Z",
+  "ingestedAt": "2026-04-19T06:58:09.725552Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výbuch na jihu Libanonu zabil izraelského vojáka, další zranil",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/vybuch-na-jihu-libanonu-zabil-izraelskeho-vojaka-dalsi-zranil-372538",
+      "dt": "2026-04-19T06:36:38Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "další",
+        "izraelského",
+        "jihu",
+        "libanonu",
+        "vojáka",
+        "výbuch",
+        "zabil",
+        "zranil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,23 +758,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Hispánci v Texasu se obracejí k Trumpovi zády",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/hispanci-v-texasu-se-obraceji-k-trumpovi-zady-372507",
-      "dt": "2026-04-18T04:02:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Vladař patnácti zákroky vychytal svoji první výhru v play-off",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-patnacti-zakroky-vychytal-svoji-prvni-vyhru-v-play-off-156357",
+      "dt": "2026-04-19T06:35:03Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "hispánci",
-        "obracejí",
-        "texasu",
-        "trumpovi",
-        "zády"
+        "off",
+        "patnácti",
+        "play",
+        "první",
+        "svoji",
+        "vladař",
+        "vychytal",
+        "výhru",
+        "zákroky"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1469,32 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stálou trenérkou Unionu Berlín se Etaová nestane, ublížilo by to ženskému fotbalu",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/stalou-trenerkou-unionu-berlin-se-etaova-nestane-ublizilo-by-to-zenskemu-fotbalu-156329",
-      "dt": "2026-04-17T11:26:37Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "berlín",
-        "etaová",
-        "fotbalu",
-        "nestane",
-        "stálou",
-        "trenérkou",
-        "ublížilo",
-        "unionu",
-        "ženskému"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41800,
+      "bytes": 41782,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,7 +1568,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T06:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T06:36:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1581,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výbuch na jihu Libanonu zabil izraelského vojáka, další zranil",
+            "publishedAt": "2026-04-19T06:36:38Z"
+          },
           {
             "title": "„Mlčení je amnestií pachatelům.“ Ukrajinské ženy hovoří o sexuálním násilí ruských vojáků",
             "publishedAt": "2026-04-19T06:03:00Z"
@@ -1608,10 +1615,6 @@
           {
             "title": "Nejistý vývoj na Blízkém východě budí větší zájem o tuzemské dovolené",
             "publishedAt": "2026-04-18T20:00:00Z"
-          },
-          {
-            "title": "Vláda odmítla Vystrčilovi poskytnout letoun na Tchaj-wan",
-            "publishedAt": "2026-04-18T19:42:50Z"
           }
         ]
       }
@@ -1623,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36503,
+      "bytes": 36543,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1660,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T06:35:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1675,6 +1678,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař patnácti zákroky vychytal svoji první výhru v play-off",
+            "publishedAt": "2026-04-19T06:35:03Z"
+          },
           {
             "title": "Na tuhle šanci jsem čekal dlouho, řekl Kuchta a dal dva góly",
             "publishedAt": "2026-04-19T05:30:00Z"
@@ -1702,10 +1709,6 @@
           {
             "title": "Dukla házenkáře Plzně v semifinále extraligy nezastavila, Zubří porazilo Karvinou",
             "publishedAt": "2026-04-18T17:22:20Z"
-          },
-          {
-            "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
-            "publishedAt": "2026-04-18T17:18:45Z"
           }
         ]
       }
@@ -1717,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77276,
+      "bytes": 77264,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

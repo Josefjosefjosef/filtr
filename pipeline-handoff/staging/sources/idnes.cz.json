@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T06:34:56.591861Z",
+  "ingestedAt": "2026-04-19T06:58:09.725552Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pracuje s problémovými psy. Největší chybou je jejich polidšťování, říká žena",
+      "url": "https://www.idnes.cz/usti/zpravy/vondrakova-doggoland-spolek-zvirata-zachrana-pomoc.A260417_101042_usti-zpravy_grr",
+      "dt": "2026-04-19T06:35:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chybou",
+        "jejich",
+        "největší",
+        "polidšťování",
+        "pracuje",
+        "problémovými",
+        "psy",
+        "říká",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -754,33 +780,6 @@
         "pronájmu",
         "věznice",
         "zabránili"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obama konečně otevře svou knihovnu, pyšní se řadou „nej“ i hřištěm na basket",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-chicago-barack-obama-centrum-knihovna-vstupne.A260417_133518_zahranicni_dtt",
-      "dt": "2026-04-18T13:57:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "basket",
-        "hřištěm",
-        "knihovnu",
-        "konečně",
-        "nej",
-        "obama",
-        "otevře",
-        "pyšní",
-        "svou",
-        "řadou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48879,
+      "bytes": 48744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T06:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1638,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pracuje s problémovými psy. Největší chybou je jejich polidšťování, říká žena",
+            "publishedAt": "2026-04-19T06:35:00Z"
+          },
           {
             "title": "Ostravské stopy: Jezdili jsme sem kvůli Stodolní i Mrazíkovi, vzpomíná Dejdar",
             "publishedAt": "2026-04-19T05:56:00Z"
@@ -1664,10 +1667,6 @@
           },
           {
             "title": "Jen ať to Amerika vidí. Fotka zlynčovaného kluka zažehla boj za práva černochů",
-            "publishedAt": "2026-04-18T22:00:00Z"
-          },
-          {
-            "title": "Texas těží ropu i plyn, sází však i na nové zdroje. Ve větrnících je jedničkou",
             "publishedAt": "2026-04-18T22:00:00Z"
           }
         ]
