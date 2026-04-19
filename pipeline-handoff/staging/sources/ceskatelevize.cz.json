@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T05:15:16.236236Z",
+  "ingestedAt": "2026-04-19T05:34:57.142219Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bulharsko v předčasných volbách vybírá nový parlament",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/bulhari-v-predcasnych-volbach-vybiraji-novy-parlament-372537",
+      "dt": "2026-04-19T05:24:16Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bulharsko",
+        "nový",
+        "parlament",
+        "předčasných",
+        "volbách",
+        "vybírá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -731,28 +754,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Americká vláda dle Trumpa objevila zajímavé dokumenty o UFO a chce je zveřejnit",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/americka-vlada-dle-trumpa-objevila-zajimave-dokumenty-o-ufo-a-chce-je-zverejnit-372511",
-      "dt": "2026-04-18T00:15:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Na tuhle šanci jsem čekal dlouho, řekl Kuchta a dal dva góly",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/na-tuhle-sanci-jsem-cekal-dlouho-rekl-kuchta-a-dal-dva-goly-156356",
+      "dt": "2026-04-19T05:30:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "americká",
-        "chce",
-        "dle",
-        "dokumenty",
-        "objevila",
-        "trumpa",
-        "ufo",
-        "vláda",
-        "zajímavé",
-        "zveřejnit"
+        "dal",
+        "dlouho",
+        "dva",
+        "góly",
+        "jsem",
+        "kuchta",
+        "tuhle",
+        "čekal",
+        "řekl",
+        "šanci"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1471,29 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jeřábek dál povede Plzeň. Smlouvu prodloužil o rok",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/jerabek-dal-povede-plzen-smlouvu-prodlouzil-o-rok-156328",
-      "dt": "2026-04-17T11:08:51Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "jeřábek",
-        "plzeň",
-        "povede",
-        "prodloužil",
-        "rok",
-        "smlouvu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1504,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42069,
+      "bytes": 41957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1564,7 +1564,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:24:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1580,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bulharsko v předčasných volbách vybírá nový parlament",
+            "publishedAt": "2026-04-19T05:24:16Z"
+          },
           {
             "title": "WC karta usnadňuje přístup na toaletu dvěma tisícům pacientů",
             "publishedAt": "2026-04-19T05:02:00Z"
@@ -1607,10 +1611,6 @@
           {
             "title": "Africký kontinent nelze dál drancovat a vykořisťovat, varoval papež v Angole",
             "publishedAt": "2026-04-18T19:35:16Z"
-          },
-          {
-            "title": "Falešní policisté a bankéři obírají své oběti v přibývajících kyberpodvodech",
-            "publishedAt": "2026-04-18T19:24:45Z"
           }
         ]
       }
@@ -1622,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36676,
+      "bytes": 36503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1659,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1674,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na tuhle šanci jsem čekal dlouho, řekl Kuchta a dal dva góly",
+            "publishedAt": "2026-04-19T05:30:00Z"
+          },
           {
             "title": "Rozebereme si zápas a připravíme se ještě lépe, říká Sobotka",
             "publishedAt": "2026-04-19T05:00:00Z"
@@ -1701,10 +1705,6 @@
           {
             "title": "Příbram zdolala béčko Sparty, Vlašim se veze na vlně",
             "publishedAt": "2026-04-18T17:18:45Z"
-          },
-          {
-            "title": "Krejčí se zranil a Wolverhampton je blízko sestupu. Manchester U. porazil Chelsea",
-            "publishedAt": "2026-04-18T16:47:26Z"
           }
         ]
       }
@@ -1716,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77262,
+      "bytes": 77266,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

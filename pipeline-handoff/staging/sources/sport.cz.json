@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T05:15:16.236236Z",
+  "ingestedAt": "2026-04-19T05:34:57.142219Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jiný průběh, stejný výsledek. Litvínov trestal jihlavské fauly a je o další krok blíž k záchraně",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-jiny-prubeh-stejny-vysledek-litvinov-trestal-jihlavske-fauly-a-je-o-dalsi-krok-bliz-k-zachrane-5439968",
+      "dt": "2026-04-19T05:30:40Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "blíž",
+        "další",
+        "fauly",
+        "jihlavské",
+        "jiný",
+        "krok",
+        "litvínov",
+        "průběh",
+        "stejný",
+        "trestal",
+        "výsledek",
+        "záchraně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,31 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Kuchta se dvakrát trefil. Sparta vyhrála počtvrté za sebou",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-kuchta-se-dvakrat-trefil-sparta-vyhrala-poctvrte-za-sebou-5439878",
-      "dt": "2026-04-18T17:50:57Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dvakrát",
-        "kuchta",
-        "počtvrté",
-        "sebou",
-        "sestřih",
-        "sparta",
-        "trefil",
-        "vyhrála"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49500,
+      "bytes": 49436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:11:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:30:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jiný průběh, stejný výsledek. Litvínov trestal jihlavské fauly a je o další krok blíž k záchraně",
+            "publishedAt": "2026-04-19T05:30:40Z"
+          },
           {
             "title": "Muchová ve Stuttgartu útočí na třetí titul, ve finále ji čeká světová dvojka",
             "publishedAt": "2026-04-19T05:11:01Z"
@@ -865,10 +873,6 @@
           {
             "title": "Wolverhampton znovu ztratil, Krejčí střídal kvůli zranění. Tottenham s Kinským remizoval",
             "publishedAt": "2026-04-18T13:51:03Z"
-          },
-          {
-            "title": "Neapol doma podlehla v Serii A Laziu Řím",
-            "publishedAt": "2026-04-18T18:08:02Z"
           }
         ]
       }
