@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-19T12:09:42.908713Z",
+  "ingestedAt": "2026-04-19T12:29:55.868633Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "5 znaků, jak rozpoznat negativní a toxické lidi. Věčné stížnosti, kritika a závist. Nikdy je nezměníte!",
+      "url": "https://www.prozeny.cz/clanek/5-znaku-jak-rozpoznat-negativni-lidi-77903",
+      "dt": "2026-04-19T12:21:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "kritika",
+        "lidi",
+        "negativní",
+        "nezměníte",
+        "nikdy",
+        "rozpoznat",
+        "stížnosti",
+        "toxické",
+        "věčné",
+        "znaků",
+        "závist"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -799,34 +827,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nevíte, co vařit? Pečené kuře je jistota! Nejlepší recepty na kuřátko pokaždé trochu jinak",
-      "url": "https://www.prozeny.cz/clanek/recepty-masa-nevite-co-varit-pecene-kure-je-jistota-nejlepsi-recepty-na-kuratko-pokazde-trochu-jinak-103096",
-      "dt": "2026-04-17T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "jinak",
-        "jistota",
-        "kuře",
-        "kuřátko",
-        "nejlepší",
-        "nevíte",
-        "pečené",
-        "pokaždé",
-        "recepty",
-        "trochu",
-        "vařit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -837,7 +837,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39374,
+      "bytes": 39403,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -874,7 +874,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T08:19:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -889,6 +889,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "5 znaků, jak rozpoznat negativní a toxické lidi. Věčné stížnosti, kritika a závist. Nikdy je nezměníte!",
+            "publishedAt": "2026-04-19T12:21:00Z"
+          },
           {
             "title": "Nicole Kidman prolomila mlčení o noci, kdy se jí v Benátkách zhroutil svět: Maminka zemřela!",
             "publishedAt": "2026-04-19T08:19:47Z"
@@ -916,10 +920,6 @@
           {
             "title": "Šest nástrah, které čekají v parku na vašeho psa. Naučte se je včas rozpoznat a vyhnout se jim",
             "publishedAt": "2026-04-19T03:00:00Z"
-          },
-          {
-            "title": "Kvíz: Jak dobře si pamatujete básničky ze školy? Jak lvové bijem o mříže a další známé poklady",
-            "publishedAt": "2026-04-18T15:40:33Z"
           }
         ]
       }

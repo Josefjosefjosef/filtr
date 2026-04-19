@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-19T12:09:42.908713Z",
+  "ingestedAt": "2026-04-19T12:29:55.868633Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Blíží se další zdražování paliv, kerosinu pro letadla je podle Havlíčka dost",
+      "url": "https://ekonomickydenik.cz/dalsi-zdrazovani-paliv-kerosinu-je-dost-havlicek/",
+      "dt": "2026-04-19T12:16:46Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "blíží",
+        "další",
+        "dost",
+        "havlíčka",
+        "kerosinu",
+        "letadla",
+        "paliv",
+        "podle",
+        "zdražování"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -754,33 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brusel se zajímá o financování ČT a rozhlasu. Česko přijalo akt o svobodě médií, upozorňuje",
-      "url": "https://ekonomickydenik.cz/brusel-sleduje-deni-kolem-ct/",
-      "dt": "2026-04-16T13:31:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "akt",
-        "brusel",
-        "financování",
-        "médií",
-        "přijalo",
-        "rozhlasu",
-        "svobodě",
-        "upozorňuje",
-        "zajímá",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69306,
+      "bytes": 68990,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:16:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -845,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blíží se další zdražování paliv, kerosinu pro letadla je podle Havlíčka dost",
+            "publishedAt": "2026-04-19T12:16:46Z"
+          },
           {
             "title": "Válka mění hru o plyn: Turecko chce přivést dodávky z Kataru do Evropy",
             "publishedAt": "2026-04-19T10:05:00Z"
@@ -872,10 +875,6 @@
           {
             "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
             "publishedAt": "2026-04-18T10:05:00Z"
-          },
-          {
-            "title": "Šibeniční lhůta a tisíc stran změn. Nereálné, zlobí se Kupka",
-            "publishedAt": "2026-04-18T08:45:00Z"
           }
         ]
       }
