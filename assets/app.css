@@ -2869,7 +2869,8 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 }
 #iu-aiOverlay { z-index: 9998; }
 #iuDsOverlay.iu-ds-overlay { z-index: 10027; }
-#iu-aiPanel, #iuDsPanel.iu-ds-panel {
+/* #iu-aiPanel a #iuDsPanel: oddělené základní strip pravidla — desktop ≥1025px pro AI řeší samostatný datovka-like blok (žádný slepený override). */
+#iuDsPanel.iu-ds-panel {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -2878,22 +2879,28 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   justify-content: center;
   box-sizing: border-box;
   min-width: 0;
-}
-#iu-aiPanel {
-  z-index: 9999;
-  top: 84px;
-  width: min(920px, calc(100vw - 24px));
-  max-height: calc(100vh - 108px);
-  overflow: auto;
-  padding: 18px;
-}
-#iuDsPanel.iu-ds-panel {
   z-index: 10028;
   top: max(64px, min(84px, 12vw));
   width: min(920px, calc(100vw - clamp(16px, 4.2vw, 24px)));
   max-height: calc(100vh - clamp(80px, 14vh, 108px));
   overflow: hidden;
   padding: clamp(12px, 3.5vw, 18px);
+}
+#iu-aiPanel {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 0;
+  z-index: 9999;
+  top: 84px;
+  width: min(920px, calc(100vw - 24px));
+  max-height: calc(100vh - 108px);
+  overflow: auto;
+  padding: 18px;
 }
 
 @media (max-width: 640px) {
@@ -3006,6 +3013,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 .iu-ds-panelHeader span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .iu-ds-panelBody{padding:14px 16px 16px;overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
 .iu-datovka-scroll-host{min-height:0}
+.iu-ai-scroll-host{min-height:0}
 .iu-ds-helper{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.6))}
 .iu-ds-status{margin:0 0 14px;font-size:13px;line-height:1.45;color:var(--muted,rgba(11,27,43,0.72));padding:10px 12px;border-radius:10px;background:rgba(31,75,153,0.06);border:1px solid rgba(31,75,153,0.12);word-break:break-word}
 .iu-ds-profile-list{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -3127,6 +3135,66 @@ button.iu-close-btn-38:focus-visible{
     padding:14px 16px;
   }
   body.iu-modal-open #iuDsPanel.iu-datovka-overlay-root .iu-datovka-scroll-host{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:contain;
+    padding:14px 16px 16px;
+  }
+}
+
+/* AI asistenti (desktop ≥1025px): 1:1 stejný model jako Datovka výše — fullscreen outer + centrování + inner card + jeden scroll host (.iu-ai-scroll-host na .iu-aiPanelBody). */
+@media (min-width: 1025px){
+  body.iu-modal-open #iu-aiOverlay.iu-ai-overlay-root:not([hidden]){
+    height:100dvh;
+    max-height:100dvh;
+    width:100%;
+  }
+  body.iu-modal-open #iu-aiPanel.iu-ai-overlay-root[data-open="1"]:not([hidden]){
+    position:fixed;
+    inset:0;
+    left:0;
+    top:0;
+    transform:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    width:100%;
+    max-width:none;
+    height:100dvh;
+    max-height:100dvh;
+    min-height:0;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+    overflow-x:hidden;
+    box-sizing:border-box;
+    background:rgb(241, 245, 249);
+  }
+  body.iu-modal-open #iu-aiPanel.iu-ai-overlay-root .iu-aiModal{
+    flex:1 1 auto;
+    min-height:0;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    width:min(720px, calc(100vw - 80px));
+    max-width:min(720px, calc(100vw - 80px));
+    align-self:center;
+    height:auto;
+    max-height:none;
+    border-radius:16px;
+    box-shadow:0 24px 48px rgba(0,0,0,.22);
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  body.iu-modal-open #iu-aiPanel.iu-ai-overlay-root .iu-aiPanelHeader{
+    flex:0 0 auto;
+    padding:14px 16px;
+  }
+  body.iu-modal-open #iu-aiPanel.iu-ai-overlay-root .iu-ai-scroll-host{
     flex:1 1 auto;
     min-height:0;
     overflow-y:auto;
