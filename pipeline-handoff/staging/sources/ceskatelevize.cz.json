@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T07:54:36.741461Z",
+  "ingestedAt": "2026-04-19T08:10:22.195230Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Studenti UMPRUM vezou do města módy textilní odpad",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/studenti-umprum-vezou-do-mesta-mody-textilni-odpad-372494",
+      "dt": "2026-04-19T08:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "módy",
+        "města",
+        "odpad",
+        "studenti",
+        "textilní",
+        "umprum",
+        "vezou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,33 +747,6 @@
         "slabin",
         "zatím",
         "řadu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nejméně dvě obchodní lodě zasáhla palba u znovu uzavřeného Hormuzského průlivu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/konvoj-tankeru-proplouva-otevrenym-hormuzskym-prulivem-372516",
-      "dt": "2026-04-18T06:40:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dvě",
-        "hormuzského",
-        "lodě",
-        "nejméně",
-        "obchodní",
-        "palba",
-        "průlivu",
-        "uzavřeného",
-        "zasáhla",
-        "znovu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42048,
+      "bytes": 41791,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,11 +1571,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:42:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 5
+          "other": 6,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1590,6 +1587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Studenti UMPRUM vezou do města módy textilní odpad",
+            "publishedAt": "2026-04-19T08:00:00Z"
+          },
           {
             "title": "Rakouská policie varuje před možná otrávenou kojeneckou výživou HiPP",
             "publishedAt": "2026-04-19T07:42:57Z"
@@ -1617,10 +1618,6 @@
           {
             "title": "WC karta usnadňuje přístup na toaletu dvěma tisícům pacientů",
             "publishedAt": "2026-04-19T05:02:00Z"
-          },
-          {
-            "title": "Obce přibrzdily výstavbu nájemních bytů. Chybí jim státní podpora",
-            "publishedAt": "2026-04-19T04:02:00Z"
           }
         ]
       }
@@ -1726,7 +1723,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77236,
+      "bytes": 77263,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

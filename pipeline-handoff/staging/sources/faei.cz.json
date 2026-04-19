@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-19T07:54:36.741461Z",
+  "ingestedAt": "2026-04-19T08:10:22.195230Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Estée Lauder a Puig mohou změnit rozložení sil v kosmetickém průmyslu",
+      "url": "https://profitonline.cz/estee-lauder-a-puig-mohou-zmenit-rozlozeni-sil-v-kosmetickem-prumyslu/",
+      "dt": "2026-04-19T08:00:01Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "estée",
+        "kosmetickém",
+        "lauder",
+        "průmyslu",
+        "puig",
+        "rozložení",
+        "sil",
+        "změnit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,31 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zlato prudce zlevnilo. Vyplatí se nakupovat, nebo ještě počkat?",
-      "url": "https://profitonline.cz/zlato-prudce-zlevnilo-vyplati-se-nakupovat-nebo-jeste-pockat/",
-      "dt": "2026-04-16T14:00:15Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ještě",
-        "nakupovat",
-        "nebo",
-        "počkat",
-        "prudce",
-        "vyplatí",
-        "zlato",
-        "zlevnilo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19091,
+      "bytes": 19384,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-19T04:00:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:00:01Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -355,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Estée Lauder a Puig mohou změnit rozložení sil v kosmetickém průmyslu",
+            "publishedAt": "2026-04-19T08:00:01Z"
+          },
           {
             "title": "Když české peníze patřily k nejsilnějším měnám střední Evropy",
             "publishedAt": "2026-04-19T04:00:28Z"
@@ -382,10 +386,6 @@
           {
             "title": "Přivede Magyar Maďarsko do eurozóny?",
             "publishedAt": "2026-04-17T15:00:57Z"
-          },
-          {
-            "title": "Jan Krafka řídí obchod Plzeňského Prazdroje",
-            "publishedAt": "2026-04-17T13:00:02Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T07:54:36.741461Z",
+  "ingestedAt": "2026-04-19T08:10:22.195230Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Severní Korea odpálila další balistické střely, dopadly u východního pobřeží",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kldr-severni-korea-kim-cong-un-balisticke-strely-rakety-odpal.A260419_074955_zahranicni_svm",
+      "dt": "2026-04-19T08:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "balistické",
+        "další",
+        "dopadly",
+        "korea",
+        "odpálila",
+        "pobřeží",
+        "severní",
+        "střely",
+        "východního"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -73,32 +99,6 @@
         "stodolní",
         "stopy",
         "vzpomíná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Severní Korea odpálila další balistické střely, dopadly u východního pobřeží",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/kldr-severni-korea-kim-cong-un-balisticke-strely-rakety-odpal.A260419_074955_zahranicni_svm",
-      "dt": "2026-04-19T05:49:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "balistické",
-        "další",
-        "dopadly",
-        "korea",
-        "odpálila",
-        "pobřeží",
-        "severní",
-        "střely",
-        "východního"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -792,7 +792,7 @@
       "contentType": "article",
       "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/rakouska-policie-hipp-vyziva-cesko-slovensko-kojenecka-vyziva-otrava.A260419_092709_eko-zahranicni_aoc",
-      "dt": "2026-04-19T07:38:00Z",
+      "dt": "2026-04-19T08:05:00Z",
       "media_raw": "iDNES / Ekonomika",
       "media_norm": "iDNES / Ekonomika",
       "tokens": [
@@ -1619,11 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
           "zpravy": 21,
+          "finance": 6,
           "other": 3
         },
         "drop_counts": {
@@ -1637,6 +1637,10 @@
         },
         "sample_titles": [
           {
+            "title": "Severní Korea odpálila další balistické střely, dopadly u východního pobřeží",
+            "publishedAt": "2026-04-19T08:01:00Z"
+          },
+          {
             "title": "Z Ceausescovy nádrže unikátní park. Bukurešť má nevídanou městskou divočinu",
             "publishedAt": "2026-04-19T07:00:00Z"
           },
@@ -1647,10 +1651,6 @@
           {
             "title": "Ostravské stopy: Jezdili jsme sem kvůli Stodolní i Mrazíkovi, vzpomíná Dejdar",
             "publishedAt": "2026-04-19T05:56:00Z"
-          },
-          {
-            "title": "Severní Korea odpálila další balistické střely, dopadly u východního pobřeží",
-            "publishedAt": "2026-04-19T05:49:00Z"
           },
           {
             "title": "Flámy v Las Vegas, alkohol, strach z Trumpa. Agenti FBI promluvili o řediteli",
@@ -1678,7 +1678,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45277,
+      "bytes": 45374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1715,7 +1715,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1732,7 +1732,7 @@
         "sample_titles": [
           {
             "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
-            "publishedAt": "2026-04-19T07:38:00Z"
+            "publishedAt": "2026-04-19T08:05:00Z"
           },
           {
             "title": "Dvě stě lidí, 38 národností. Pražský Wargaming ukazuje sílu českého herního průmyslu",
