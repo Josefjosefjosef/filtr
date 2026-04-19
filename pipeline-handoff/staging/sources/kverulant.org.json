@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-04-19T22:17:38.547856Z",
+  "ingestedAt": "2026-04-19T22:34:37.942056Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výrobce, překupník, státní podnik. Marže na kulometech, které úředníky nezajímají",
+      "url": "https://www.kverulant.org/article/vyrobce-prekupnik-statni-podnik-marze-na-kulometech-ktere-uredniky-nezajimaji/",
+      "dt": "2026-04-19T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "kulometech",
+        "marže",
+        "nezajímají",
+        "podnik",
+        "překupník",
+        "státní",
+        "výrobce",
+        "úředníky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -206,27 +231,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Uplynulo 20 let od karlovarské losovačky",
-      "url": "https://www.kverulant.org/article/uplynulo-20-let-od-karlovarske-losovacky/",
-      "dt": "2026-04-05T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "karlovarské",
-        "let",
-        "losovačky",
-        "uplynulo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -237,7 +241,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 134331,
+      "bytes": 139850,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -274,7 +278,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-16T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -289,6 +293,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výrobce, překupník, státní podnik. Marže na kulometech, které úředníky nezajímají",
+            "publishedAt": "2026-04-19T22:07:00Z"
+          },
           {
             "title": "Kverulantův boj o Kalouskovy odměny posílil verdikt Městského soudu",
             "publishedAt": "2026-04-16T22:07:00Z"
@@ -316,10 +324,6 @@
           {
             "title": "V roce 2025 byl pokutován jen autobazar Auto ESA",
             "publishedAt": "2026-04-08T22:07:00Z"
-          },
-          {
-            "title": "Kverulant je na Benevity",
-            "publishedAt": "2026-04-07T22:07:00Z"
           }
         ]
       }
