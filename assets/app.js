@@ -20930,8 +20930,18 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
         } catch (_) {}
       }
+      if (document.body.classList.contains("iu-bakalari-desktop-overlay-open") && keyNorm !== "bakalari") {
+        document.body.classList.remove("iu-bakalari-desktop-overlay-open");
+        iuUndockQuickFeedFromBody(quick);
+        try {
+          iuSetViewportLock(false);
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
+        } catch (_) {}
+      }
     } catch (_) {}
-    try { quick.classList.remove("iu-banking-quickfeed-root"); } catch (_) {}
+    try { quick.classList.remove("iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root"); } catch (_) {}
     try { quick.style.removeProperty("display"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
@@ -20961,6 +20971,7 @@ function buildVideoAsArticleCard(it) {
       const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
       const isNarrowMojeFs = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
       const isBankingDesktop = keyNorm === "banka" && !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+      const isBakalariDesktop = keyNorm === "bakalari" && !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
       stage.setAttribute("data-iu-view", "quick");
       quick.hidden = false;
       try {
@@ -20968,6 +20979,11 @@ function buildVideoAsArticleCard(it) {
           iuDockQuickFeedToBodyForBankingDesktop(quick);
           iuSetViewportLock(true);
           document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-banking-desktop-overlay-open");
+          if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
+        } else if (isBakalariDesktop) {
+          iuDockQuickFeedToBodyForBankingDesktop(quick);
+          iuSetViewportLock(true);
+          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-bakalari-desktop-overlay-open");
           if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
         } else if (isNarrowMojeFs) {
           iuDockQuickFeedToBodyForMojeFullscreen(quick);
@@ -20985,12 +21001,14 @@ function buildVideoAsArticleCard(it) {
         qTitle +
         "</div><div class=\"iuQHeadActions\"><button class=\"iuQClose iu-overlayCloseBtn38\" type=\"button\" id=\"iuQCloseBtn\" aria-label=\"Zavřít\">×</button></div></div>";
       const qCard = "<div class=\"iuQCard\" id=\"iuQuickFeedMojeSluzbyBody\"></div>";
+      const useMojeDesktopDsShell = (isBankingDesktop && keyNorm === "banka") || (isBakalariDesktop && keyNorm === "bakalari");
       quick.innerHTML =
-        isBankingDesktop && keyNorm === "banka"
+        useMojeDesktopDsShell
           ? "<div class=\"iu-banking-ds-modal\">" + qHead + "<div class=\"iu-banking-scroll-host\">" + qCard + "</div></div>"
           : qHead + qCard;
       try {
         if (keyNorm === "banka") quick.classList.add("iu-banking-quickfeed-root");
+        if (keyNorm === "bakalari") quick.classList.add("iu-bakalari-quickfeed-root");
       } catch (_) {}
       const body = document.getElementById("iuQuickFeedMojeSluzbyBody");
       if (body && typeof window.iuRenderMojeSluzbyInQuickFeed === "function") window.iuRenderMojeSluzbyInQuickFeed(keyNorm, body);
@@ -21562,7 +21580,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}
@@ -21586,7 +21604,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open");
     } catch (_) {}
   }
 
@@ -21752,7 +21770,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open");
     } catch (_) {}
   }
 
