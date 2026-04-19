@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T16:30:33.625367Z",
+  "ingestedAt": "2026-04-19T16:49:29.848418Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ženy infarkt prožívají jinak než muži a často kvůli tomu zbytečně umírají. Jak mohou zvýšit své šance na přežití?",
+      "url": "https://zpravy.aktualne.cz/domaci/zeny-infarkt-prozivaji-jinak-nez-muzi-a-casto-kvuli-tomu-zbytecne-umiraji-jak-mohou-zvysit-sve-sance-na-preziti/r~aaa29d788bd45bf5efb2314275eece47/",
+      "dt": "2026-04-19T16:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "infarkt",
+        "jinak",
+        "kvůli",
+        "muži",
+        "než",
+        "prožívají",
+        "přežití",
+        "své",
+        "tomu",
+        "umírají",
+        "zbytečně",
+        "zvýšit",
+        "často",
+        "šance",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -141,22 +173,22 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pardubice - Třinec 2:1. Legenda vrací Třinec do hry svým prvním gólem v play off",
+      "title": "Pardubice - Třinec 2:2. Oceláři pořádně zmáčkli Dynamo a smazali ztrátu dvou branek",
       "url": "https://sport.aktualne.cz/hokej/pardubice-trinec-finale-pokracuje-ocelari-chteji-ve-druhem-zapase-serii-srovnat/r~aaa295d80c5e7be8e799170f7aa42859/",
       "dt": "2026-04-19T14:27:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "gólem",
-        "hry",
-        "legenda",
-        "off",
+        "branek",
+        "dvou",
+        "dynamo",
+        "oceláři",
         "pardubice",
-        "play",
-        "prvním",
-        "svým",
+        "pořádně",
+        "smazali",
         "třinec",
-        "vrací"
+        "zmáčkli",
+        "ztrátu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -519,32 +551,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nevídané: gól, který zařídil postup, dal brankář. A na úplně jiném hřišti",
-      "url": "https://sport.aktualne.cz/fotbal/nevidane-gol-ktery-zaridil-postup-dal-brankar-a-na-uplne-jinem-hristi/r~aaa295b527ad34eb568d99d02f64b27d/",
-      "dt": "2026-04-19T09:20:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brankář",
-        "dal",
-        "gól",
-        "hřišti",
-        "jiném",
-        "nevídané",
-        "postup",
-        "zařídil",
-        "úplně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -555,7 +561,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21454,
+      "bytes": 21762,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -592,12 +598,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T15:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T16:24:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
-          "finance": 2,
-          "zpravy": 10
+          "zpravy": 11,
+          "sport": 7,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -609,6 +615,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ženy infarkt prožívají jinak než muži a často kvůli tomu zbytečně umírají. Jak mohou zvýšit své šance na přežití?",
+            "publishedAt": "2026-04-19T16:24:00Z"
+          },
           {
             "title": "Slavia vybouchla v Hradci, Bořil byl po zkratu vyloučen. Liga dostala novou zápletku",
             "publishedAt": "2026-04-19T15:33:00Z"
@@ -630,16 +640,12 @@
             "publishedAt": "2026-04-19T14:30:00Z"
           },
           {
-            "title": "Pardubice - Třinec 2:1. Legenda vrací Třinec do hry svým prvním gólem v play off",
+            "title": "Pardubice - Třinec 2:2. Oceláři pořádně zmáčkli Dynamo a smazali ztrátu dvou branek",
             "publishedAt": "2026-04-19T14:27:00Z"
           },
           {
             "title": "Podezřelé sklenice dětské výživy v Česku a na Slovensku obsahovaly jed",
             "publishedAt": "2026-04-19T07:56:00Z"
-          },
-          {
-            "title": "Hapalovu premiéru v Sigmě okořenily červené karty. Olomouc po obratu zdolala Slovácko",
-            "publishedAt": "2026-04-19T13:37:00Z"
           }
         ]
       }
