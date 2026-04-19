@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-19T14:29:32.338890Z",
+  "ingestedAt": "2026-04-19T14:50:05.989333Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Bali v září a říjnu z Vídně se Saudia. Letenky od 13 696 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/bali-v-zari-a-rijnu-z-vidne-se-saudia",
+      "dt": "2026-04-19T14:42:08Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "696",
+        "bali",
+        "letenky",
+        "saudia",
+        "vídně",
+        "září",
+        "říjnu"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -477,31 +501,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Palau z Prahy přes Tchaj-pej s China Airlines. Letenky od 21 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/palau-z-prahy-pres-tchaj-pej-s-china-airlines",
-      "dt": "2026-04-13T13:12:46Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "airlines",
-        "china",
-        "letenky",
-        "palau",
-        "pej",
-        "prahy",
-        "tchaj"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 39308,
+      "bytes": 39248,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +548,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-17T18:24:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T14:42:08Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bali v září a říjnu z Vídně se Saudia. Letenky od 13 696 Kč",
+            "publishedAt": "2026-04-19T14:42:08Z"
+          },
           {
             "title": "Týden na Mallorce s all-inclusive z Prahy na přelomu dubna a května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-17T18:24:48Z"
@@ -591,10 +594,6 @@
           {
             "title": "Týden na Tenerife – Puerto de la Cruz s all-inclusive z Prahy. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-16T11:37:44Z"
-          },
-          {
-            "title": "Kapverdy v dubnu z Prahy: 5* hotel s all-inclusive. Zájezd od 20 990 Kč",
-            "publishedAt": "2026-04-16T09:49:27Z"
           }
         ]
       }
