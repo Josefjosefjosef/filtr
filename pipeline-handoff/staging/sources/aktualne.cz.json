@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T04:56:10.675267Z",
+  "ingestedAt": "2026-04-19T05:15:16.236236Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Graffiti na zdech a pomoc vězňů. Příběh muže, který prodal byt a koupil ruinu zámku",
+      "url": "https://magazin.aktualne.cz/graffiti-na-zdech-a-pomoc-veznu-pribeh-muze-ktery-prodal-byt-a-koupil-ruinu-zamku/r~aaa298b80cb6780d4be6e800bde5f285/",
+      "dt": "2026-04-19T04:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "byt",
+        "graffiti",
+        "koupil",
+        "muže",
+        "pomoc",
+        "prodal",
+        "příběh",
+        "ruinu",
+        "vězňů",
+        "zdech",
+        "zámku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
+      "url": "https://zpravy.aktualne.cz/zahranici/pred-valkou-uprchl-starik-se-slepicemi-v-ziguliku-po-viralnim-videu-dostal-nove-auto/r~aaa295c4df79c356659ba47fcafda237/",
+      "dt": "2026-04-18T18:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "auto",
+        "dostal",
+        "nové",
+        "slepicemi",
+        "stařík",
+        "uprchl",
+        "videu",
+        "virálním",
+        "válkou",
+        "žigulíku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,33 +319,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
-      "url": "https://zpravy.aktualne.cz/zahranici/pred-valkou-uprchl-starik-se-slepicemi-v-ziguliku-po-viralnim-videu-dostal-nove-auto/r~aaa295c4df79c356659ba47fcafda237/",
-      "dt": "2026-04-18T18:30:59Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "auto",
-        "dostal",
-        "nové",
-        "slepicemi",
-        "stařík",
-        "uprchl",
-        "videu",
-        "virálním",
-        "válkou",
-        "žigulíku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Baráž bez překvapení. Litvínov doma dvěma výhrami rázně vykročil k záchraně",
@@ -502,34 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na kyjevské ulici začal do lidí pálit 58letý Moskvan. Útok má zatím pět obětí",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "58letý",
-        "kyjevské",
-        "lidí",
-        "moskvan",
-        "obětí",
-        "pálit",
-        "pět",
-        "ulici",
-        "zatím",
-        "začal",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21132,
+      "bytes": 21292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,11 +577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 9,
+          "finance": 1,
           "sport": 8,
           "other": 2
         },
@@ -595,6 +595,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Graffiti na zdech a pomoc vězňů. Příběh muže, který prodal byt a koupil ruinu zámku",
+            "publishedAt": "2026-04-19T04:59:00Z"
+          },
+          {
+            "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
+            "publishedAt": "2026-04-18T18:30:00Z"
+          },
           {
             "title": "Nedává smysl, a proto ho chtějí. Splašený kombík je iracionální sen na čtyřech kolech",
             "publishedAt": "2026-04-19T04:15:00Z"
@@ -618,14 +626,6 @@
           {
             "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
             "publishedAt": "2026-04-18T16:17:00Z"
-          },
-          {
-            "title": "Magnesia Litera zná vítěze. Knihou roku je Mariborská hypnóza od Dory Kaprálové",
-            "publishedAt": "2026-04-18T20:25:00Z"
-          },
-          {
-            "title": "„Vystrašilo mě to.\" Satoranský chyběl Barceloně dva týdny kvůli potížím se srdcem",
-            "publishedAt": "2026-04-18T20:21:00Z"
           }
         ]
       }

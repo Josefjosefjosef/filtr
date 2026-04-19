@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-19T04:56:10.675267Z",
+  "ingestedAt": "2026-04-19T05:15:16.236236Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Cena za úzkost. Devět způsobů, jak strach z létání ždímá vaši peněženku",
+      "url": "https://www.penize.cz/doprava/488137-cena-za-uzkost-devet-zpusobu-jak-strach-z-letani-zdima-vasi-penezenku",
+      "dt": "2026-04-19T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "cena",
+        "devět",
+        "létání",
+        "peněženku",
+        "strach",
+        "vaši",
+        "způsobů",
+        "úzkost",
+        "ždímá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -473,30 +499,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kde je v Česku dostupnější bydlení? Mapa ukazuje velké rozdíly",
-      "url": "https://www.penize.cz/hypoteky/479011-kde-je-v-cesku-dostupnejsi-bydleni-mapa-ukazuje-velke-rozdily",
-      "dt": "2026-04-14T15:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bydlení",
-        "dostupnější",
-        "mapa",
-        "rozdíly",
-        "ukazuje",
-        "velké",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17782,
+      "bytes": 17716,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,11 +546,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
-          "zpravy": 5
+          "zpravy": 6,
+          "finance": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -560,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cena za úzkost. Devět způsobů, jak strach z létání ždímá vaši peněženku",
+            "publishedAt": "2026-04-19T07:00:00Z"
+          },
           {
             "title": "Než nechat bitcoiny kvantovým zlodějům, to je radši navždy zmrazte",
             "publishedAt": "2026-04-18T07:05:00Z"
@@ -587,10 +593,6 @@
           {
             "title": "Termínované vklady mají novou jedničku. Zvedá úrok až ke čtyřce",
             "publishedAt": "2026-04-16T15:00:00Z"
-          },
-          {
-            "title": "Air Bank vylepšila aplikaci. Ukáže Chytrý zůstatek",
-            "publishedAt": "2026-04-16T14:45:00Z"
           }
         ]
       }

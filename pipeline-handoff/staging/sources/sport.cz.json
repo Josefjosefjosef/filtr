@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T04:56:10.675267Z",
+  "ingestedAt": "2026-04-19T05:15:16.236236Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Muchová ve Stuttgartu útočí na třetí titul, ve finále ji čeká světová dvojka",
+      "url": "https://www.sport.cz/clanek/tenis-muchova-ve-stuttgartu-utoci-na-treti-titul-ve-finale-ji-ceka-svetova-dvojka-5439971",
+      "dt": "2026-04-19T05:11:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dvojka",
+        "finále",
+        "muchová",
+        "stuttgartu",
+        "světová",
+        "titul",
+        "třetí",
+        "útočí",
+        "čeká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubicím drásal nervy. Emoce potřebuji, popichování mi pomáhá, říká třinecký talent",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-pardubicim-drasal-nervy-emoce-potrebuji-popichovani-mi-pomaha-rika-trinecky-talent-5439959",
+      "dt": "2026-04-19T05:05:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "drásal",
+        "emoce",
+        "nervy",
+        "pardubicím",
+        "pomáhá",
+        "popichování",
+        "potřebuji",
+        "talent",
+        "třinecký",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -723,58 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Biker Cink i po nemoci jasně vyhrál úvodní závod Českého poháru",
-      "url": "https://www.sport.cz/clanek/cyklistika-biker-cink-i-po-nemoci-jasne-vyhral-uvodni-zavod-ceskeho-poharu-5439859",
-      "dt": "2026-04-18T17:47:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "biker",
-        "cink",
-        "jasně",
-        "nemoci",
-        "poháru",
-        "vyhrál",
-        "závod",
-        "úvodní",
-        "českého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krollis naštvaně zahazoval masku. Zodpovědnost vzal na sebe, prozradil Kováč",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-krollis-nastvane-zahazoval-masku-zodpovednost-vzal-na-sebe-prozradil-kovac-5439797",
-      "dt": "2026-04-18T17:39:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kováč",
-        "krollis",
-        "masku",
-        "naštvaně",
-        "prozradil",
-        "sebe",
-        "vzal",
-        "zahazoval",
-        "zodpovědnost"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49399,
+      "bytes": 49500,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,11 +823,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T04:17:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:11:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -838,6 +838,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muchová ve Stuttgartu útočí na třetí titul, ve finále ji čeká světová dvojka",
+            "publishedAt": "2026-04-19T05:11:01Z"
+          },
+          {
+            "title": "Pardubicím drásal nervy. Emoce potřebuji, popichování mi pomáhá, říká třinecký talent",
+            "publishedAt": "2026-04-19T05:05:38Z"
+          },
           {
             "title": "Vladař slaví v play off výhru nad Pittsburghem, Dallas s Faksou na úvod vyhořel",
             "publishedAt": "2026-04-19T03:51:39Z"
@@ -861,14 +869,6 @@
           {
             "title": "Neapol doma podlehla v Serii A Laziu Řím",
             "publishedAt": "2026-04-18T18:08:02Z"
-          },
-          {
-            "title": "Choupenitch získal v SP v Káhiře stříbro",
-            "publishedAt": "2026-04-18T17:54:24Z"
-          },
-          {
-            "title": "Třinec nás uspával, rýpnul si Sobotka. Finále hraje po dvou dekádách znovu proti Růžičkovi",
-            "publishedAt": "2026-04-18T20:27:36Z"
           }
         ]
       }

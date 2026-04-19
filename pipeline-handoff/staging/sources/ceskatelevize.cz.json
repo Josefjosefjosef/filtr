@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T04:56:10.675267Z",
+  "ingestedAt": "2026-04-19T05:15:16.236236Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "WC karta usnadňuje přístup na toaletu dvěma tisícům pacientů",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/wc-karta-usnadnuje-pristup-na-toaletu-dvema-tisicum-pacientu-372453",
+      "dt": "2026-04-19T05:02:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dvěma",
+        "karta",
+        "pacientů",
+        "přístup",
+        "tisícům",
+        "toaletu",
+        "usnadňuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -734,25 +758,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Babiš lavíruje ohledně závazku zvyšovat rozpočet na obranu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-laviruje-ohledne-zavazku-zvysovat-rozpocet-na-obranu-372509",
-      "dt": "2026-04-17T18:40:15Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Rozebereme si zápas a připravíme se ještě lépe, říká Sobotka",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rozebereme-si-zapas-a-pripravime-se-jeste-lepe-rika-sobotka-156354",
+      "dt": "2026-04-19T05:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "babiš",
-        "lavíruje",
-        "obranu",
-        "ohledně",
-        "rozpočet",
-        "zvyšovat",
-        "závazku"
+        "ještě",
+        "lépe",
+        "připravíme",
+        "rozebereme",
+        "sobotka",
+        "zápas",
+        "říká"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,33 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třemi duely začne v sobotu play-off NHL, obhájce trofeje chybí",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/tremi-duely-zacne-v-sobotu-play-off-nhl-obhajce-trofeje-chybi-156326",
-      "dt": "2026-04-17T10:30:32Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chybí",
-        "duely",
-        "nhl",
-        "obhájce",
-        "off",
-        "play",
-        "sobotu",
-        "trofeje",
-        "třemi",
-        "začne"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42704,
+      "bytes": 42069,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,7 +1564,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T04:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1583,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "WC karta usnadňuje přístup na toaletu dvěma tisícům pacientů",
+            "publishedAt": "2026-04-19T05:02:00Z"
+          },
           {
             "title": "Obce přibrzdily výstavbu nájemních bytů. Chybí jim státní podpora",
             "publishedAt": "2026-04-19T04:02:00Z"
@@ -1610,10 +1611,6 @@
           {
             "title": "Falešní policisté a bankéři obírají své oběti v přibývajících kyberpodvodech",
             "publishedAt": "2026-04-18T19:24:45Z"
-          },
-          {
-            "title": "Pavel navštívil chilskou observatoř. Češi tam mají vybavit největší teleskop světa",
-            "publishedAt": "2026-04-18T18:30:37Z"
           }
         ]
       }
@@ -1625,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36548,
+      "bytes": 36676,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozebereme si zápas a připravíme se ještě lépe, říká Sobotka",
+            "publishedAt": "2026-04-19T05:00:00Z"
+          },
           {
             "title": "Soutěž k cyklistickému závodu Amstel Gold Race",
             "publishedAt": "2026-04-18T22:00:00Z"
@@ -1704,10 +1705,6 @@
           {
             "title": "Krejčí se zranil a Wolverhampton je blízko sestupu. Manchester U. porazil Chelsea",
             "publishedAt": "2026-04-18T16:47:26Z"
-          },
-          {
-            "title": "Schick přidal jedenáctý gól v sezoně, Leverkusen ale prohrál s Augsburgem",
-            "publishedAt": "2026-04-18T16:42:41Z"
           }
         ]
       }
@@ -1719,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77255,
+      "bytes": 77262,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
