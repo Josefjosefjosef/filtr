@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T03:15:22.533538Z",
+  "ingestedAt": "2026-04-19T03:35:28.012329Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trest smrti, vyslechl si fanatik Charles Manson. Popravě masový vrah ale unikl",
+      "url": "https://www.denik.cz/historie/charles-manson-sharon-tateova-sekta-manson-family.html",
+      "dt": "2026-04-19T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "charles",
+        "fanatik",
+        "manson",
+        "masový",
+        "popravě",
+        "smrti",
+        "trest",
+        "unikl",
+        "vrah",
+        "vyslechl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -627,31 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump slíbil další dokumenty o UFO. Zveřejní je prý brzy",
-      "url": "https://www.denik.cz/ze_sveta/trump-ufo-dokumenty-zverejneni-obama.html",
-      "dt": "2026-04-18T04:49:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "brzy",
-        "další",
-        "dokumenty",
-        "prý",
-        "slíbil",
-        "trump",
-        "ufo",
-        "zveřejní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28311,
+      "bytes": 28504,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,11 +702,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 23,
+          "finance": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -716,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trest smrti, vyslechl si fanatik Charles Manson. Popravě masový vrah ale unikl",
+            "publishedAt": "2026-04-19T03:00:00Z"
+          },
           {
             "title": "Jak spořit na důchod: Češi chybují. Hlavní je začít včas, upozorňují odborníci",
             "publishedAt": "2026-04-19T02:00:00Z"
@@ -743,10 +750,6 @@
           {
             "title": "Žhářský útok v Pardubicích: Ženu zadrženou na Slovensku soud poslal do vazby",
             "publishedAt": "2026-04-18T16:09:00Z"
-          },
-          {
-            "title": "Na Slovensku odrodili obří dvojčata i dítě se zubem",
-            "publishedAt": "2026-04-18T15:45:00Z"
           }
         ]
       }
