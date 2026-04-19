@@ -289,7 +289,8 @@ html,body{ height:100%; }
 
 html{
   scrollbar-gutter: stable;
-  overflow-y: scroll;
+  /* P0 desktop: overflow-y:scroll na rootu vždy kreslí lištu; body má kvůli overflow-x:hidden výpočetní overflow-y:auto a stává se skutečným scrollportem → dvojitá pravá lišta. auto na html = lišta jen na aktivním scroll kontejneru. */
+  overflow-y: auto;
 }
 
 body{
@@ -7931,7 +7932,7 @@ html[data-iu-debug="1"] #iuDiagPanel {
 
 @media (min-width: 901px) {
   html{
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] #feed {
     min-height: clamp(50rem, 68vh, 58rem) !important;
