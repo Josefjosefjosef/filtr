@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T20:13:34.781680Z",
+  "ingestedAt": "2026-04-19T20:34:35.998106Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA zaútočily u Ománu na íránskou loď. Ignorovala naši blokádu, prohlásil Trump",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/namornictvo-oman-usa-lod-iran-blokada-trump-teheran.A260419_214954_zahranicni_hock",
+      "dt": "2026-04-19T20:12:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "blokádu",
+        "ignorovala",
+        "loď",
+        "naši",
+        "ománu",
+        "prohlásil",
+        "trump",
+        "usa",
+        "zaútočily",
+        "íránskou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po útoku v Kyjevě zůstává v nemocnici osm lidí. Strážníci před střelbou utekli",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/strelba-kyjev-ukrajina-rusko-moskva-supermarket-staznik.A260419_213104_zahranicni_hock",
+      "dt": "2026-04-19T19:45:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kyjevě",
+        "lidí",
+        "nemocnici",
+        "osm",
+        "strážníci",
+        "střelbou",
+        "utekli",
+        "zůstává",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -738,58 +791,6 @@
         "nadchlo",
         "nové",
         "obrazem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Třebíčsku vzpomněli na výsadkáře. V Aleji parašutistů vysázeli deset lip",
-      "url": "https://www.idnes.cz/jihlava/zpravy/alej-parasutistu-lipy-stromy-pamatka-vysadkari.A260419_115711_jihlava-zpravy_zdo",
-      "dt": "2026-04-19T12:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aleji",
-        "deset",
-        "lip",
-        "parašutistů",
-        "třebíčsku",
-        "vysázeli",
-        "vzpomněli",
-        "výsadkáře"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ve Stardance bych chtěl stepovat, v Klanu Baťa hraju floutka, prozradil Pšenička",
-      "url": "https://www.idnes.cz/kultura/divadlo/tomas-sean-psenicka-stardance-klan-bata-muzikal-rozhovor.A260416_153843_divadlo_lysa",
-      "dt": "2026-04-19T12:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "baťa",
-        "bych",
-        "chtěl",
-        "floutka",
-        "hraju",
-        "klanu",
-        "prozradil",
-        "pšenička",
-        "stardance",
-        "stepovat"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50797,
+      "bytes": 51114,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,12 +1632,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T19:29:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T20:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 4,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1648,6 +1649,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA zaútočily u Ománu na íránskou loď. Ignorovala naši blokádu, prohlásil Trump",
+            "publishedAt": "2026-04-19T20:12:00Z"
+          },
+          {
+            "title": "Po útoku v Kyjevě zůstává v nemocnici osm lidí. Strážníci před střelbou utekli",
+            "publishedAt": "2026-04-19T19:45:00Z"
+          },
           {
             "title": "Trump chce jednat s Íránem a hrozí mu zničením elektráren. Teherán účast odmítá",
             "publishedAt": "2026-04-19T19:29:37Z"
@@ -1671,14 +1680,6 @@
           {
             "title": "„Červenou Červenému.“ Stovky lidí v Praze protestovaly proti Motoristům",
             "publishedAt": "2026-04-19T17:21:00Z"
-          },
-          {
-            "title": "Jižní Korea se kvůli válce odklání od fosilních paliv. Investuje do solárů",
-            "publishedAt": "2026-04-19T17:00:00Z"
-          },
-          {
-            "title": "V brněnském Tesku našli dvě otrávené sklenice HiPP. Obsahovaly jed na krysy",
-            "publishedAt": "2026-04-19T16:58:00Z"
           }
         ]
       }
