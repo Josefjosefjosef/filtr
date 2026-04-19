@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T08:49:59.160012Z",
+  "ingestedAt": "2026-04-19T09:09:58.731849Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Jsme pro válku, jestli díky ní padne režim,“ říká íránský medik, který studuje v Česku",
+      "url": "https://zpravy.aktualne.cz/zahranici/jsme-pro-valku-jestli-diky-ni-padne-rezim-rika-iransky-medik-ktery-studuje-v-cesku/r~aaa2933c7666acb0ac93d4b22104eb68/",
+      "dt": "2026-04-19T08:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "díky",
+        "jestli",
+        "jsme",
+        "medik",
+        "padne",
+        "režim",
+        "studuje",
+        "válku",
+        "íránský",
+        "česku",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -509,31 +537,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Strach o Krejčího. Kapitán repre se zranil, Wolverhampton může už v pondělí sestoupit",
-      "url": "https://sport.aktualne.cz/fotbal/strach-o-krejciho-kapitan-repre-se-zranil-wolverhampton-uz-v-pondeli-muze-padnout/r~aaa2985acd2677486097272af92e7237/",
-      "dt": "2026-04-18T16:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kapitán",
-        "krejčího",
-        "pondělí",
-        "repre",
-        "sestoupit",
-        "strach",
-        "wolverhampton",
-        "zranil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21560,
+      "bytes": 21607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,11 +584,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 9,
-          "sport": 6,
+          "zpravy": 10,
+          "sport": 5,
           "finance": 4,
           "other": 1
         },
@@ -599,6 +602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Jsme pro válku, jestli díky ní padne režim,“ říká íránský medik, který studuje v Česku",
+            "publishedAt": "2026-04-19T08:50:00Z"
+          },
           {
             "title": "Vídeň varuje před výživou HiPP, může být otrávená. Podezřelé skleničky se prý našly i v Česku",
             "publishedAt": "2026-04-19T07:56:00Z"
@@ -626,10 +633,6 @@
           {
             "title": "„Ta je ostrá!“ Magie Muchové dobývá svět, smíchu se neubránily sudí ani Ukrajinka",
             "publishedAt": "2026-04-18T17:08:00Z"
-          },
-          {
-            "title": "The Atlantic o šéfovi FBI: Příliš pije, ochranka má problém ho probudit",
-            "publishedAt": "2026-04-19T06:22:00Z"
           }
         ]
       }

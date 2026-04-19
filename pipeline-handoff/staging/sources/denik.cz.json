@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T08:49:59.160012Z",
+  "ingestedAt": "2026-04-19T09:09:58.731849Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Problémy herce Baldwina nekončí. Kvůli smrti při natáčení musí opět k soudu",
+      "url": "https://www.denik.cz/ze_sveta/alec-baldwin-rust-soud-civilni-zaloba.html",
+      "dt": "2026-04-19T08:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "baldwina",
+        "herce",
+        "kvůli",
+        "musí",
+        "natáčení",
+        "nekončí",
+        "opět",
+        "problémy",
+        "při",
+        "smrti",
+        "soudu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -110,7 +138,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ředitel FBI pije a zmatkuje, trvrdí časopis. Kash Patel hrozí žalobou",
+      "title": "Ředitel FBI pije a zmatkuje, tvrdí časopis. Kash Patel hrozí žalobou",
       "url": "https://www.denik.cz/ze_sveta/kash-patel-reditel-fbi-kritika-atlantic.html",
       "dt": "2026-04-19T05:18:00Z",
       "media_raw": "Deník",
@@ -121,7 +149,7 @@
         "kash",
         "patel",
         "pije",
-        "trvrdí",
+        "tvrdí",
         "zmatkuje",
         "časopis",
         "ředitel",
@@ -618,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Magyar získal další mandáty. Vítěz maďarských voleb má 140 křesel",
-      "url": "https://www.denik.cz/staty-eu/madarsko-volby-tisza-dalsi-mandaty.html",
-      "dt": "2026-04-18T12:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "140",
-        "další",
-        "křesel",
-        "magyar",
-        "mandáty",
-        "maďarských",
-        "voleb",
-        "vítěz",
-        "získal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29342,
+      "bytes": 29254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:42:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -707,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Problémy herce Baldwina nekončí. Kvůli smrti při natáčení musí opět k soudu",
+            "publishedAt": "2026-04-19T08:42:00Z"
+          },
           {
             "title": "Kojenecká výživa HiPP může obsahovat jedovaté přísady. Skleničky jsou prý i v ČR",
             "publishedAt": "2026-04-19T07:57:00Z"
@@ -724,7 +730,7 @@
             "publishedAt": "2026-04-19T05:30:00Z"
           },
           {
-            "title": "Ředitel FBI pije a zmatkuje, trvrdí časopis. Kash Patel hrozí žalobou",
+            "title": "Ředitel FBI pije a zmatkuje, tvrdí časopis. Kash Patel hrozí žalobou",
             "publishedAt": "2026-04-19T05:18:00Z"
           },
           {
@@ -734,10 +740,6 @@
           {
             "title": "Anglie buduje pobřežní stezku. Bude nejdelší na světě",
             "publishedAt": "2026-04-19T04:58:00Z"
-          },
-          {
-            "title": "Severní Korea odpálila několik balistických raket. Dopadly do moře",
-            "publishedAt": "2026-04-19T04:38:00Z"
           }
         ]
       }
