@@ -374,72 +374,91 @@
   }
 }
 
-/* === Desktop ≥1025 + open state: full-page pod #leftStickyHeader, scroll na panelu, 1 sloupec (bez :has()) === */
-/* Nepoužívat selektor na samotné body — sdílené deklarace s backdrop/panelem dříve rozbily layout (position/inset na body). */
-/* Root guard: JS nastavuje #iuQuickFeed.iu-financial-calculators-fullpage + třídy na backdrop/panel — nesahat na jiné overlaye. */
-/* Vrstvení: #leftStickyHeader / .topbar-new mají z-index 1000 (app.css) — overlay musí být NAD (dříve 990/991 kreslil topbar přes overlay). */
+/* === Desktop ≥1025 + projects hub: 1:1 stejný model jako Datovka (app.css #iuDsPanel + .iu-ds-modal + .iu-datovka-scroll-host) === */
+/* Outer host = #iuFinancialCalcPanel; inner card = .iu-financial-overlay-cardShell; scroll = #iuFinancialCalcScrollHost. */
+/* Žádný scroll na outer panelu — jen overflow:hidden na outer; overflow-y:auto jen na scroll hostu (stejně jako Datovka). */
 @media (min-width: 1025px) {
   body.iu-financial-calculators-overlay-open #iuFinancialCalcBackdrop.iu-financial-overlay-backdrop.iu-financial-calculators-fullpage{
-    inset: auto;
-    top: var(--iu-fin-calc-chrome-bottom, 72px);
+    position: fixed;
+    inset: 0;
     left: 0;
+    top: 0;
     right: 0;
     bottom: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+    width: 100%;
     z-index: 10028;
-    background: rgba(15, 23, 42, 0.88);
+    background: rgba(0, 0, 0, 0.35);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage{
-    inset: auto;
     position: fixed;
-    top: var(--iu-fin-calc-chrome-bottom, 72px);
+    inset: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10029;
-    background: rgb(241, 245, 249);
-    align-items: stretch;
+    top: 0;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
     padding: 0;
-    pointer-events: auto;
+    margin: 0;
+    overflow: hidden;
     overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
     box-sizing: border-box;
+    background: rgb(241, 245, 249);
+    z-index: 10029;
+    pointer-events: auto;
   }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-cardShell{
-    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(720px, calc(100vw - 80px));
     max-width: min(720px, calc(100vw - 80px));
+    align-self: center;
+    height: auto;
+    max-height: none;
     margin-left: auto;
     margin-right: auto;
-    /* #iuFinancialCalcPanel je flex row; fullpage má align-items: stretch → cardShell se natáhl na výšku viewportu,
-       zatímco obsah hubu je delší → šedé pozadí panelu prosvítalo pod dalšími sekcemi. align-self zarovná výšku na obsah. */
-    align-self: flex-start;
-    flex: 0 0 auto;
-    min-height: 0;
-    max-height: none !important;
-    height: auto !important;
-    border-radius: 0;
-    box-shadow: none;
-    overflow: visible !important;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
     box-sizing: border-box;
+    overflow: hidden;
+    pointer-events: auto;
   }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-inner{
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-height: 0;
-    max-height: none !important;
-    overflow: visible !important;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: none;
   }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage #iuFinancialCalcScrollHost.iu-financial-overlay-scrollHost{
-    flex: 0 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-    overflow-y: visible !important;
-    touch-action: auto;
-    overscroll-behavior-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    padding: 14px 16px 16px;
+  }
+  body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage .iu-financial-overlay-header{
+    flex: 0 0 auto;
+    padding: 14px 16px;
+    box-sizing: border-box;
   }
   body.iu-financial-calculators-overlay-open #iuFinancialCalcPanel.iu-financial-overlay-panel.iu-financial-calculators-fullpage.iu-financial-overlay-panel--hub .iu-financial-overlay-header{
     position: relative;
