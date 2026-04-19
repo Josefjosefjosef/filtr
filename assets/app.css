@@ -3205,11 +3205,12 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, tři body větve (banking / bakalari / pojistovna). */
+/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna) + Převod Word/PDF (convert): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, čtyři body větve (banking / bakalari / pojistovna / wordpdf). */
 @media (min-width: 1025px){
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]),
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]),
-  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-pojistovna-quickfeed-root:not([hidden]){
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-pojistovna-quickfeed-root:not([hidden]),
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-wordpdf-quickfeed-root:not([hidden]){
     position:fixed;
     inset:0;
     left:0;
@@ -3234,7 +3235,8 @@ button.iu-close-btn-38:focus-visible{
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal,
-  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal{
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal,
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal{
     flex:1 1 auto;
     min-height:0;
     min-width:0;
@@ -3253,7 +3255,8 @@ button.iu-close-btn-38:focus-visible{
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal > .iuQHead,
-  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal > .iuQHead{
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal > .iuQHead,
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal > .iuQHead{
     flex:0 0 auto;
     width:100%;
     margin:0;
@@ -3263,7 +3266,8 @@ button.iu-close-btn-38:focus-visible{
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host,
-  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host{
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host,
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-scroll-host{
     flex:1 1 auto;
     min-height:0;
     overflow-y:auto;
@@ -3275,7 +3279,8 @@ button.iu-close-btn-38:focus-visible{
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host > .iuQCard,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host > .iuQCard,
-  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host > .iuQCard{
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host > .iuQCard,
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-scroll-host > .iuQCard{
     background:transparent;
     border:0;
     border-radius:0;
