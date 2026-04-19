@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T09:09:58.731849Z",
+  "ingestedAt": "2026-04-19T10:10:47.224570Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Slovenský bizár baví sítě. Nová cyklostezka má uprostřed sloupy, lidé kličkují",
+      "url": "https://www.denik.cz/staty-eu/cyklostezka-slovensko-cary-sloupy-vytluky.html",
+      "dt": "2026-04-19T09:41:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "baví",
+        "bizár",
+        "cyklostezka",
+        "kličkují",
+        "lidé",
+        "nová",
+        "sloupy",
+        "slovenský",
+        "sítě",
+        "uprostřed"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -34,18 +61,18 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kojenecká výživa HiPP může obsahovat jedovaté přísady. Skleničky jsou prý i v ČR",
+      "title": "Kojenecká výživa HiPP může obsahovat jed na krysy. Skleničky jsou prý i v ČR",
       "url": "https://www.denik.cz/staty-eu/rakousko-cesko-kojenecka-vyziva-hipp-jed.html",
       "dt": "2026-04-19T07:57:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "hipp",
-        "jedovaté",
+        "jed",
         "kojenecká",
+        "krysy",
         "obsahovat",
         "prý",
-        "přísady",
         "skleničky",
         "výživa"
       ],
@@ -619,33 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Britská policie vyšetřuje žhářský útok na obchod v Londýně, nikdo nebyl zraněn",
-      "url": "https://www.denik.cz/staty-mimo-eu/londyn-zharsky-utok-obchod.html",
-      "dt": "2026-04-18T12:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "britská",
-        "londýně",
-        "nebyl",
-        "nikdo",
-        "obchod",
-        "policie",
-        "vyšetřuje",
-        "zraněn",
-        "útok",
-        "žhářský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29254,
+      "bytes": 29126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T08:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T09:41:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -710,11 +710,15 @@
         },
         "sample_titles": [
           {
+            "title": "Slovenský bizár baví sítě. Nová cyklostezka má uprostřed sloupy, lidé kličkují",
+            "publishedAt": "2026-04-19T09:41:00Z"
+          },
+          {
             "title": "Problémy herce Baldwina nekončí. Kvůli smrti při natáčení musí opět k soudu",
             "publishedAt": "2026-04-19T08:42:00Z"
           },
           {
-            "title": "Kojenecká výživa HiPP může obsahovat jedovaté přísady. Skleničky jsou prý i v ČR",
+            "title": "Kojenecká výživa HiPP může obsahovat jed na krysy. Skleničky jsou prý i v ČR",
             "publishedAt": "2026-04-19T07:57:00Z"
           },
           {
@@ -736,10 +740,6 @@
           {
             "title": "Pomohl Orbán Ficovi k moci migranty? Slovenská opozice žádá vyšetřování",
             "publishedAt": "2026-04-19T05:00:00Z"
-          },
-          {
-            "title": "Anglie buduje pobřežní stezku. Bude nejdelší na světě",
-            "publishedAt": "2026-04-19T04:58:00Z"
           }
         ]
       }

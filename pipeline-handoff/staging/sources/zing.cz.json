@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-19T09:09:58.731849Z",
+  "ingestedAt": "2026-04-19T10:10:47.224570Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Dojmy z hraní KuloNiku: Bowl Up!",
+      "url": "https://zing.cz/article/dojmy-z-hrani-kuloniku-bowl-up",
+      "dt": "2026-04-19T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "bowl",
+        "dojmy",
+        "hraní",
+        "kuloniku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -946,32 +967,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Assassin’s Creed Black Flag Resynced má přinést nové postavy a příběhy",
-      "url": "https://zing.cz/article/assassin-s-creed-black-flag-resynced-ma-prinest-nove-postavy-a-pribehy",
-      "dt": "2026-04-14T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "assassin",
-        "black",
-        "creed",
-        "flag",
-        "nové",
-        "postavy",
-        "přinést",
-        "příběhy",
-        "resynced"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126889,
+      "bytes": 126657,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-18T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1034,6 +1029,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dojmy z hraní KuloNiku: Bowl Up!",
+            "publishedAt": "2026-04-19T10:00:00Z"
+          },
           {
             "title": "Další WoW privátní server zavírá, tentokrát Stormforge",
             "publishedAt": "2026-04-18T18:00:00Z"
@@ -1061,10 +1060,6 @@
           {
             "title": "Asterfel: Vyzkoušejte si duchovního nástupce Gothicu už teď",
             "publishedAt": "2026-04-17T18:00:00Z"
-          },
-          {
-            "title": "LEGO Batman: Legacy of the Dark Knight láká do Batcave",
-            "publishedAt": "2026-04-17T16:00:00Z"
           }
         ]
       }

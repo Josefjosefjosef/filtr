@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-19T09:09:58.731849Z",
+  "ingestedAt": "2026-04-19T10:10:47.224570Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Válka mění hru o plyn: Turecko chce přivést dodávky z Kataru do Evropy",
+      "url": "https://ekonomickydenik.cz/nahradi-hormuz-plynovod-turecko/",
+      "dt": "2026-04-19T10:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chce",
+        "dodávky",
+        "evropy",
+        "hru",
+        "kataru",
+        "mění",
+        "plyn",
+        "přivést",
+        "turecko",
+        "válka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Dětská výživa otrávená jedem na krysy. Podle rakouské policie je i v Česku",
+      "url": "https://ekonomickydenik.cz/detska-vyziva-otravena-jedem-na-krysy-podle-rakouske-policie-je-i-v-cesku/",
+      "dt": "2026-04-19T09:26:17Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dětská",
+        "jedem",
+        "krysy",
+        "otrávená",
+        "podle",
+        "policie",
+        "rakouské",
+        "výživa",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -728,55 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Spor o miliardy pro kraje. S přesměrováním daní ministerstva nesouhlasí",
-      "url": "https://ekonomickydenik.cz/dane-kraje-stat-zmeny/",
-      "dt": "2026-04-16T13:20:12Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "daní",
-        "kraje",
-        "miliardy",
-        "ministerstva",
-        "nesouhlasí",
-        "přesměrováním",
-        "spor"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hubáčkův Creditas předběhl i ČEZ. Získal stavební povolení pro paroplynku",
-      "url": "https://ekonomickydenik.cz/hubackuv-creditas-ma-povoleni-pro-paroplynku/",
-      "dt": "2026-04-16T12:57:42Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "creditas",
-        "hubáčkův",
-        "paroplynku",
-        "povolení",
-        "předběhl",
-        "stavební",
-        "získal",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69452,
+      "bytes": 69306,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,11 +828,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:29:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T10:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 28,
-          "zpravy": 1,
+          "finance": 27,
+          "zpravy": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -841,6 +845,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Válka mění hru o plyn: Turecko chce přivést dodávky z Kataru do Evropy",
+            "publishedAt": "2026-04-19T10:05:00Z"
+          },
+          {
+            "title": "Dětská výživa otrávená jedem na krysy. Podle rakouské policie je i v Česku",
+            "publishedAt": "2026-04-19T09:26:17Z"
+          },
           {
             "title": "Leťte běžnou linkou, vzkázal Babiš Vystrčilovi. Speciál stopl, mluví o ničení byznysu",
             "publishedAt": "2026-04-19T07:29:07Z"
@@ -864,14 +876,6 @@
           {
             "title": "Šibeniční lhůta a tisíc stran změn. Nereálné, zlobí se Kupka",
             "publishedAt": "2026-04-18T08:45:00Z"
-          },
-          {
-            "title": "Jen přes mou mrtvolu. Starostové se bouří proti návrhu zón pro větrné elektrárny",
-            "publishedAt": "2026-04-18T04:05:00Z"
-          },
-          {
-            "title": "Peklo v džungli. Novodobí otroci z lágrů nabízejí kryptoměny nebo seznámení",
-            "publishedAt": "2026-04-17T18:16:00Z"
           }
         ]
       }

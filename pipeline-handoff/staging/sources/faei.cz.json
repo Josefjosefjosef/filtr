@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-19T09:09:58.731849Z",
+  "ingestedAt": "2026-04-19T10:10:47.224570Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Novinky v osobních financích: QR kód šetří čas i peníze. Proč ho Češi ignorují?",
+      "url": "https://profitonline.cz/novinky-v-osobnich-financich-qr-kod-setri-cas-i-penize-proc-ho-cesi-ignoruji/",
+      "dt": "2026-04-19T10:00:50Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "financích",
+        "ignorují",
+        "kód",
+        "novinky",
+        "osobních",
+        "peníze",
+        "proč",
+        "čas",
+        "češi",
+        "šetří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,31 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jedna vteřina na silnici, statisíce na účtu. Odškodnění po nehodě roste",
-      "url": "https://profitonline.cz/jedna-vterina-na-silnici-statisice-na-uctu-odskodneni-po-nehode-roste/",
-      "dt": "2026-04-17T04:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "jedna",
-        "nehodě",
-        "odškodnění",
-        "roste",
-        "silnici",
-        "statisíce",
-        "vteřina",
-        "účtu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19384,
+      "bytes": 19037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-19T08:00:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T10:00:50Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -355,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Novinky v osobních financích: QR kód šetří čas i peníze. Proč ho Češi ignorují?",
+            "publishedAt": "2026-04-19T10:00:50Z"
+          },
           {
             "title": "Estée Lauder a Puig mohou změnit rozložení sil v kosmetickém průmyslu",
             "publishedAt": "2026-04-19T08:00:01Z"
@@ -382,10 +388,6 @@
           {
             "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
             "publishedAt": "2026-04-17T17:00:59Z"
-          },
-          {
-            "title": "Přivede Magyar Maďarsko do eurozóny?",
-            "publishedAt": "2026-04-17T15:00:57Z"
           }
         ]
       }
