@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T06:15:08.558500Z",
+  "ingestedAt": "2026-04-19T06:34:56.591861Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nepiju a vyhazovu se nebojím. Šéf FBI popírá tvrzení časopisu The Atlantic",
+      "url": "https://zpravy.aktualne.cz/zahranici/nepiju-a-vyhazovu-se-nebojim-sef-fbi-popira-tvrzeni-casopisu-the-atlantic/r~aaa2996e4a67c8e8efe7f69a07773d0d/",
+      "dt": "2026-04-19T06:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "atlantic",
+        "fbi",
+        "nebojím",
+        "nepiju",
+        "popírá",
+        "the",
+        "tvrzení",
+        "vyhazovu",
+        "časopisu",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -500,32 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nedorozumění nebo chyba. Tahanice kolem Hormuzského průlivů ubližují všem",
-      "url": "https://zpravy.aktualne.cz/zahranici/nedorozumeni-nebo-chyba-tahanice-kolem-hormuzskeho-prulivu-ublizuji-vsem/r~aaa29127c73ccbe0d43b01931a8e858a/",
-      "dt": "2026-04-18T18:03:31Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chyba",
-        "hormuzského",
-        "kolem",
-        "nebo",
-        "nedorozumění",
-        "průlivů",
-        "tahanice",
-        "ubližují",
-        "všem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21306,
+      "bytes": 21447,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,7 +574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T05:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T06:22:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 8,
@@ -591,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepiju a vyhazovu se nebojím. Šéf FBI popírá tvrzení časopisu The Atlantic",
+            "publishedAt": "2026-04-19T06:22:00Z"
+          },
           {
             "title": "Měla všechno před sebou. Chladnokrevná vražda nadějné závodnice otřásla světem cyklistiky",
             "publishedAt": "2026-04-19T05:59:00Z"
@@ -618,10 +623,6 @@
           {
             "title": "Graffiti na zdech a pomoc vězňů. Příběh muže, který prodal byt a koupil ruinu zámku",
             "publishedAt": "2026-04-19T04:59:00Z"
-          },
-          {
-            "title": "Před válkou uprchl stařík se slepicemi v žigulíku. Po virálním videu dostal nové auto",
-            "publishedAt": "2026-04-18T18:30:00Z"
           }
         ]
       }
