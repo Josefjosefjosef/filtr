@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T19:49:28.828972Z",
+  "ingestedAt": "2026-04-19T20:13:34.781680Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Dcera Karla Gotta Charlotte vydá svůj debutový singl. Natáčela ho v Londýně",
+      "url": "https://magazin.aktualne.cz/kultura/hudba/dcera-karla-gotta-charlotte-vyda-svuj-debutovy-singl-natacela-ho-v-londyne/r~aaa29743f8793348f5fc5573c18e18e8/",
+      "dt": "2026-04-19T19:48:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "charlotte",
+        "dcera",
+        "debutový",
+        "gotta",
+        "karla",
+        "londýně",
+        "natáčela",
+        "singl",
+        "svůj",
+        "vydá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -523,32 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchovou ve finále vyškolila Rybakinová. Překvapivý český triumf se zrodil ve Francii",
-      "url": "https://sport.aktualne.cz/tenis/muchovou-ve-finale-rybakinova-vyskolila-porsche-tak-znovu-zamiri-do-kazachstanu/r~aaa29aede1b472ac09368d509d239a97/",
-      "dt": "2026-04-19T12:35:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "finále",
-        "francii",
-        "muchovou",
-        "překvapivý",
-        "rybakinová",
-        "triumf",
-        "vyškolila",
-        "zrodil",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -559,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21754,
+      "bytes": 21684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -596,10 +597,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T18:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T19:48:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 11,
+          "other": 1,
+          "sport": 10,
           "zpravy": 7,
           "finance": 2
         },
@@ -613,6 +615,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dcera Karla Gotta Charlotte vydá svůj debutový singl. Natáčela ho v Londýně",
+            "publishedAt": "2026-04-19T19:48:00Z"
+          },
           {
             "title": "Plzeň v průšvihu. Padla doma s Pardubicemi a komplikuje si boj o třetí místo",
             "publishedAt": "2026-04-19T18:37:00Z"
@@ -640,10 +646,6 @@
           {
             "title": "Útok na ruský stínový tanker ukazuje na „tajnou“ dohodu. Opuštěná loď může způsobit katastrofu",
             "publishedAt": "2026-04-19T16:59:00Z"
-          },
-          {
-            "title": "Ženy infarkt prožívají jinak než muži a často kvůli tomu zbytečně umírají. Jak mohou zvýšit své šance na přežití?",
-            "publishedAt": "2026-04-19T16:24:00Z"
           }
         ]
       }

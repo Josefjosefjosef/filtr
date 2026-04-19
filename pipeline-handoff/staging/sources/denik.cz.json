@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T19:49:28.828972Z",
+  "ingestedAt": "2026-04-19T20:13:34.781680Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Charlotte Gott jde ve stopách otce. K dvacátinám si nadělí debutový singl",
+      "url": "https://www.denik.cz/hudba/charlotte-gott-predstavi-svuj-debutovy-singl-20280419.html",
+      "dt": "2026-04-19T19:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "charlotte",
+        "debutový",
+        "dvacátinám",
+        "gott",
+        "jde",
+        "nadělí",
+        "otce",
+        "singl",
+        "stopách"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,30 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Necháváte si starý mobil v šuplíku? Chyba, je to časovaná bomba",
-      "url": "https://www.denik.cz/z_domova/stary-mobil-v-supliku-je-casovana-bomba-riziko-pozar.html",
-      "dt": "2026-04-19T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bomba",
-        "chyba",
-        "mobil",
-        "necháváte",
-        "starý",
-        "časovaná",
-        "šuplíku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29464,
+      "bytes": 29481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T17:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T19:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -717,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Charlotte Gott jde ve stopách otce. K dvacátinám si nadělí debutový singl",
+            "publishedAt": "2026-04-19T19:40:00Z"
+          },
           {
             "title": "Bulharské volby vyhrál exprezident Radev. Chce spolupráci s Ruskem",
             "publishedAt": "2026-04-19T17:53:00Z"
@@ -744,10 +750,6 @@
           {
             "title": "Osiřelý kočkodan Yuji vyrůstá s plyšáky. Rodinu mu nahrazuje pes, medvěd a osel",
             "publishedAt": "2026-04-19T15:17:00Z"
-          },
-          {
-            "title": "Influencerka zemřela na Zanzibaru za záhadných okolností. Předcházela hádka",
-            "publishedAt": "2026-04-19T13:15:00Z"
           }
         ]
       }
