@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T13:49:38.538587Z",
+  "ingestedAt": "2026-04-19T14:09:29.293292Z",
   "items": [
     {
       "section": "finance",
@@ -284,7 +284,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Policie našla v Česku dvě kontaminované sklenice s dětskou výživou",
+      "title": "Policie našla v Česku dvě otrávené sklenice s dětskou výživou",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/rakouska-policie-varuje-pred-mozna-otravenou-kojeneckou-vyzivou-hipp-372539",
       "dt": "2026-04-19T07:42:57Z",
       "media_raw": "ČT24 / Domácí",
@@ -292,8 +292,8 @@
       "tokens": [
         "dvě",
         "dětskou",
-        "kontaminované",
         "našla",
+        "otrávené",
         "policie",
         "sklenice",
         "výživou",
@@ -752,6 +752,32 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sigma v premiéře pod Hapalem po obratu udolala Slovácko, hosté dohrávali v devíti",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sigma-v-premiere-pod-hapalem-po-obratu-udolala-slovacko-hoste-dohravali-v-deviti-156362",
+      "dt": "2026-04-19T13:59:10Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "devíti",
+        "dohrávali",
+        "hapalem",
+        "hosté",
+        "obratu",
+        "premiéře",
+        "sigma",
+        "slovácko",
+        "udolala"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1479,28 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová si ve Stuttgartu vyšlápla na Gauffovou. Je v semifinále",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-si-ve-stuttgartu-vyslapla-na-gauffovou-je-v-semifinale-156333",
-      "dt": "2026-04-17T15:27:15Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "gauffovou",
-        "muchová",
-        "semifinále",
-        "stuttgartu",
-        "vyšlápla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42067,
+      "bytes": 42065,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1630,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36925,
+      "bytes": 36675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1671,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T12:41:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T13:59:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1682,6 +1686,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sigma v premiéře pod Hapalem po obratu udolala Slovácko, hosté dohrávali v devíti",
+            "publishedAt": "2026-04-19T13:59:10Z"
+          },
           {
             "title": "Muchová titul ve Stuttgartu nezískala, Malečková a Škoch v Rouenu slavily",
             "publishedAt": "2026-04-19T12:41:35Z"
@@ -1709,10 +1717,6 @@
           {
             "title": "Rozebereme si zápas a připravíme se ještě lépe, říká Sobotka",
             "publishedAt": "2026-04-19T05:00:00Z"
-          },
-          {
-            "title": "Soutěž k cyklistickému závodu Amstel Gold Race",
-            "publishedAt": "2026-04-18T22:00:00Z"
           }
         ]
       }
@@ -1724,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77300,
+      "bytes": 77254,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
