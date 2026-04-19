@@ -515,8 +515,8 @@ export function initIuLegalDocumentsOverlay(deps) {
     applyBodyOpen(true);
     setVis(true);
     try {
-      panel.classList.toggle("iu-legal-overlay-panel--mobile", window.matchMedia("(max-width: 1023px)").matches);
-      panel.classList.toggle("iu-legal-overlay-panel--desktop", window.matchMedia("(min-width: 1024px)").matches);
+      panel.classList.toggle("iu-legal-overlay-panel--mobile", window.matchMedia("(max-width: 1024px)").matches);
+      panel.classList.toggle("iu-legal-overlay-panel--desktop", window.matchMedia("(min-width: 1025px)").matches);
     } catch (_) {}
     renderHub();
     try {

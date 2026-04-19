@@ -10,31 +10,101 @@
   background: rgba(15, 23, 42, 0.48);
   box-sizing: border-box;
 }
-#iuLegalDocsPanel.iu-legal-overlay-panel{
-  position: fixed;
-  inset: 0;
-  z-index: 10032;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  box-sizing: border-box;
-  pointer-events: none;
+/* Rozvržení: ≤1024 mobil/tablet = fullscreen sheet; ≥1025 desktop = 1:1 s Datovkou (#iuDsPanel / .iu-ds-modal / scroll host v app.css). */
+@media (max-width: 1024px){
+  #iuLegalDocsPanel.iu-legal-overlay-panel{
+    position: fixed;
+    inset: 0;
+    z-index: 10032;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-overlay-cardShell{
+    pointer-events: auto;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: #fafafa;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    border: 0;
+  }
+  #iuLegalDocsScrollHost.iu-legal-overlay-scrollHost{
+    padding: 14px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  }
 }
-#iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-overlay-cardShell{
-  pointer-events: auto;
-  width: min(1120px, calc(100vw - 36px));
-  max-width: 100%;
-  max-height: min(86vh, calc(100dvh - 36px));
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: #fafafa;
-  border-radius: 16px;
-  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.22);
-  overflow: hidden;
-  border: 1px solid rgba(136, 19, 55, 0.12);
+@media (min-width: 1025px){
+  body.iu-legal-docs-overlay-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]){
+    position: fixed;
+    inset: 0;
+    left: 0;
+    top: 0;
+    transform: none;
+    z-index: 10032;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background: rgb(241, 245, 249);
+    pointer-events: none;
+  }
+  body.iu-legal-docs-overlay-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]) .iu-legal-overlay-cardShell{
+    pointer-events: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
+    align-self: center;
+    height: auto;
+    max-height: none;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid rgba(136, 19, 55, 0.12);
+    background: #fafafa;
+  }
+  body.iu-legal-docs-overlay-open #iuLegalDocsPanel.iu-legal-overlay-panel:not([hidden]) .iu-legal-overlay-header{
+    flex: 0 0 auto;
+    padding: 14px 16px;
+  }
+  body.iu-legal-docs-overlay-open #iuLegalDocsScrollHost.iu-legal-overlay-scrollHost{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    padding: 14px 16px 16px;
+  }
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-overlay-inner{
   display: flex;
@@ -94,7 +164,6 @@
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   overscroll-behavior-y: contain;
-  padding: 16px 18px 20px;
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-disclaimer{
   margin: 0 0 14px;
@@ -256,7 +325,7 @@
   color: rgba(15, 23, 42, 0.55);
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-detailInner{
-  max-width: 880px;
+  max-width: min(880px, 100%);
   margin: 0 auto;
 }
 #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-metaRow{
@@ -408,25 +477,8 @@
   white-space: nowrap;
   border: 0;
 }
-@media (max-width: 1023px){
-  #iuLegalDocsPanel.iu-legal-overlay-panel.iu-legal-overlay-panel--mobile{
-    padding: 0;
-    align-items: stretch;
-    justify-content: stretch;
-  }
-  #iuLegalDocsPanel.iu-legal-overlay-panel.iu-legal-overlay-panel--mobile .iu-legal-overlay-cardShell{
-    width: 100%;
-    max-width: none;
-    max-height: none;
-    height: 100vh;
-    height: 100svh;
-    height: 100dvh;
-    border-radius: 0;
-  }
-  #iuLegalDocsScrollHost.iu-legal-overlay-scrollHost{
-    padding: 14px 14px calc(18px + env(safe-area-inset-bottom, 0px));
-  }
-  #iuLegalDocsPanel.iu-legal-overlay-panel.iu-legal-overlay-panel--mobile .iu-legal-catGrid{
+@media (max-width: 1024px){
+  #iuLegalDocsPanel.iu-legal-overlay-panel .iu-legal-catGrid{
     grid-template-columns: 1fr;
   }
 }
