@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T11:29:43.394229Z",
+  "ingestedAt": "2026-04-19T11:49:16.043171Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Padesát mrtvých dětí. Policie na Trinidadu vyšetřuje nález těl na hřbitově",
+      "url": "https://www.denik.cz/ze_sveta/trinidad-padest-tel-deti-nalez-vysetrovani.html",
+      "dt": "2026-04-19T10:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětí",
+        "hřbitově",
+        "mrtvých",
+        "nález",
+        "padesát",
+        "policie",
+        "trinidadu",
+        "těl",
+        "vyšetřuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -623,32 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Přání řidičů se vyplní: Jednodenní dálniční známka už nebude končit o půlnoci",
-      "url": "https://www.denik.cz/doprava/doprava-jednodenni-dalnicni-znamka-cena-pravidla-delka-trvani-zmeny.html",
-      "dt": "2026-04-18T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dálniční",
-        "jednodenní",
-        "končit",
-        "nebude",
-        "přání",
-        "půlnoci",
-        "vyplní",
-        "známka",
-        "řidičů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29253,
+      "bytes": 28957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,11 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T10:50:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 23
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Padesát mrtvých dětí. Policie na Trinidadu vyšetřuje nález těl na hřbitově",
+            "publishedAt": "2026-04-19T10:50:00Z"
+          },
           {
             "title": "Nový jízdní řád pro opravy domů: renovační pas je klíčový pro zelenou dotaci",
             "publishedAt": "2026-04-19T10:40:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Hudební novinky hlásí Petra Janů, Michal Pavlíček, Celine Dion i Vojtaano",
             "publishedAt": "2026-04-19T06:00:00Z"
-          },
-          {
-            "title": "Stroj času pro každého. AI kráska provází Titanikem i Pompejemi před zkázou",
-            "publishedAt": "2026-04-19T05:30:00Z"
           }
         ]
       }
