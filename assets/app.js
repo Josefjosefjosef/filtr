@@ -20950,8 +20950,18 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
         } catch (_) {}
       }
+      if (document.body.classList.contains("iu-wordpdf-desktop-overlay-open") && keyNorm !== "convert") {
+        document.body.classList.remove("iu-wordpdf-desktop-overlay-open");
+        iuUndockQuickFeedFromBody(quick);
+        try {
+          iuSetViewportLock(false);
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
+        } catch (_) {}
+      }
     } catch (_) {}
-    try { quick.classList.remove("iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root"); } catch (_) {}
+    try { quick.classList.remove("iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root"); } catch (_) {}
     try { quick.style.removeProperty("display"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
@@ -21056,18 +21066,25 @@ function buildVideoAsArticleCard(it) {
         document.body.classList.add("iu-modal-open", "iu-mobileGateToolsQuickOpen");
       }
     } catch (_) {}
-    /* P0 Word/PDF: same dock + fixed fullscreen layer as Moje služby (≤1023px); avoids overlay under MindMenu. */
+    const isTranslator = String(key || "").toLowerCase() === "deepl";
+    const isConvert = String(key || "").toLowerCase() === "convert";
+    const isWordPdfDesktop = !!(isConvert && window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+    const useFullCard = ["ai", "deepl", "convert"].includes(String(key || "").toLowerCase());
+    /* P0 Word/PDF: desktop ≥1025 = stejný Datovka/banka model (#iuQuickFeed na body + .iu-banking-ds-modal + scroll host); ≤1023 = Moje fullscreen dock. */
     try {
-      if (keyNorm === "convert" && window.matchMedia && window.matchMedia("(max-width: 1023px)").matches) {
+      if (keyNorm === "convert" && isWordPdfDesktop) {
+        iuDockQuickFeedToBodyForBankingDesktop(quick);
+        iuSetViewportLock(true);
+        document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-wordpdf-desktop-overlay-open");
+        if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
+        try { quick.classList.add("iu-wordpdf-quickfeed-root"); } catch (_) {}
+      } else if (keyNorm === "convert" && window.matchMedia && window.matchMedia("(max-width: 1023px)").matches) {
         iuDockQuickFeedToBodyForMojeFullscreen(quick);
         iuSetViewportLock(true);
         document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen");
         if (isMobileOverlayScope) document.body.classList.add("iu-mobileGateToolsQuickOpen");
       }
     } catch (_) {}
-    const isTranslator = String(key || "").toLowerCase() === "deepl";
-    const isConvert = String(key || "").toLowerCase() === "convert";
-    const useFullCard = ["ai", "deepl", "convert"].includes(String(key || "").toLowerCase());
 
     if (isTranslator) {
       quick.innerHTML = `
@@ -21209,27 +21226,33 @@ function buildVideoAsArticleCard(it) {
           iuNakupCenyBootstrap(quick);
           return;
         }
-        quick.innerHTML = `
-          <div class="iuQHead">
-            <div class="iuQTitle">${iuQfEscape(data.title)}</div>
-            <div class="iuQHeadActions">${
-              isConvert
-                ? `<div class="iu-header-actions"><button type="button" class="iu-forward-btn iuAiShareBtn" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button><button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>`
-                : `${shareBtnHtml}<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>`
-            }</div>
-          </div>
-          ${toolsBlock}${
-            isConvert
-              ? '<div class="iu-external-notice">Další převody níže jsou externí služby mimo infoUzel.cz.</div>'
-              : ""
-          }
-          <div class="iuQCard">
-            <div class="iuQGrid">
-              ${renderCards(services || data.items)}
-            </div>
-          </div>
-          ${aiSeoBlock}
-        `;
+        const convertNoticeHtml = isConvert
+          ? '<div class="iu-external-notice">Další převody níže jsou externí služby mimo infoUzel.cz.</div>'
+          : "";
+        const qHeadBlock =
+          '<div class="iuQHead">' +
+          '<div class="iuQTitle">' + iuQfEscape(data.title) + "</div>" +
+          '<div class="iuQHeadActions">' +
+          (isConvert
+            ? '<div class="iu-header-actions"><button type="button" class="iu-forward-btn iuAiShareBtn" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button><button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button></div>'
+            : shareBtnHtml + '<button class="iuQClose iu-overlayCloseBtn38" type="button" id="iuQCloseBtn" aria-label="Zavřít">✕</button>') +
+          "</div></div>";
+        const gridBlock =
+          '<div class="iuQCard"><div class="iuQGrid">' +
+          renderCards(services || data.items) +
+          "</div></div>";
+        const scrollBlock = toolsBlock + convertNoticeHtml + gridBlock;
+        if (isConvert && isWordPdfDesktop) {
+          quick.innerHTML =
+            '<div class="iu-banking-ds-modal">' +
+            qHeadBlock +
+            '<div class="iu-banking-scroll-host">' +
+            scrollBlock +
+            "</div></div>" +
+            aiSeoBlock;
+        } else {
+          quick.innerHTML = qHeadBlock + scrollBlock + aiSeoBlock;
+        }
         if (window.__iuDebugRca && keyNorm === "convert") {
           var hasTools = !!quick.querySelector('[data-iu="pdfconvert-tools"]');
           console.log("[iuShowQuickFeed] afterRender hasTools=", hasTools);
@@ -21600,7 +21623,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}
@@ -21624,7 +21647,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
@@ -21790,7 +21813,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
