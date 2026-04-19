@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T10:10:47.224570Z",
+  "ingestedAt": "2026-04-19T11:09:55.968035Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trinidadská policie našla těla padesáti dětí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trinidadska-policie-nasla-tela-padesati-deti-372543",
+      "dt": "2026-04-19T11:01:28Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dětí",
+        "našla",
+        "padesáti",
+        "policie",
+        "trinidadská",
+        "těla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -79,19 +102,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Jihomoravská policie prověřuje přítomnost otrávené dětské výživy v Česku",
+      "title": "Otrávená dětská výživa se objevila v Česku. Prodejci podle firmy HiPP vše stáhli",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/rakouska-policie-varuje-pred-mozna-otravenou-kojeneckou-vyzivou-hipp-372539",
       "dt": "2026-04-19T07:42:57Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dětské",
-        "jihomoravská",
-        "otrávené",
-        "policie",
-        "prověřuje",
-        "přítomnost",
-        "výživy",
+        "dětská",
+        "firmy",
+        "hipp",
+        "objevila",
+        "otrávená",
+        "podle",
+        "prodejci",
+        "stáhli",
+        "výživa",
+        "vše",
         "česku"
       ],
       "feedCategory": "zpravy",
@@ -722,32 +748,6 @@
         "vazby",
         "útoku",
         "žhářského"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pro Paměť národa se poběží v devatenácti městech, nově v Mimoni, Rtyni a Vimperku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pro-pamet-naroda-se-pobezi-v-devatenacti-mestech-nove-v-mimoni-rtyni-a-vimperku-372486",
-      "dt": "2026-04-18T09:01:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "devatenácti",
-        "mimoni",
-        "městech",
-        "nově",
-        "národa",
-        "paměť",
-        "poběží",
-        "rtyni",
-        "vimperku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1513,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41879,
+      "bytes": 41630,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,7 +1573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T09:41:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:01:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1590,6 +1590,10 @@
         },
         "sample_titles": [
           {
+            "title": "Trinidadská policie našla těla padesáti dětí",
+            "publishedAt": "2026-04-19T11:01:28Z"
+          },
+          {
             "title": "Výstavba tanečního sálu Bílého domu může dočasně pokračovat, rozhodl soud",
             "publishedAt": "2026-04-19T09:41:11Z"
           },
@@ -1602,7 +1606,7 @@
             "publishedAt": "2026-04-19T08:00:00Z"
           },
           {
-            "title": "Jihomoravská policie prověřuje přítomnost otrávené dětské výživy v Česku",
+            "title": "Otrávená dětská výživa se objevila v Česku. Prodejci podle firmy HiPP vše stáhli",
             "publishedAt": "2026-04-19T07:42:57Z"
           },
           {
@@ -1616,10 +1620,6 @@
           {
             "title": "Výbuch na jihu Libanonu zabil izraelského vojáka, další zranil",
             "publishedAt": "2026-04-19T06:36:38Z"
-          },
-          {
-            "title": "„Mlčení je amnestií pachatelům.“ Ukrajinské ženy hovoří o sexuálním násilí ruských vojáků",
-            "publishedAt": "2026-04-19T06:03:00Z"
           }
         ]
       }
@@ -1725,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77296,
+      "bytes": 77232,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

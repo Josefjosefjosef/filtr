@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T10:10:47.224570Z",
+  "ingestedAt": "2026-04-19T11:09:55.968035Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nový jízdní řád pro opravy domů: renovační pas je klíčový pro zelenou dotaci",
+      "url": "https://www.denik.cz/ekonomika/opravy-domu-renovacni-pas-nova-zelena-usporam.html",
+      "dt": "2026-04-19T10:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "domů",
+        "dotaci",
+        "jízdní",
+        "klíčový",
+        "nový",
+        "opravy",
+        "pas",
+        "renovační",
+        "zelenou",
+        "řád"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "HiPP stáhla z prodeje kojeneckou výživu. Lahvičky s jedem objevili i v Česku",
+      "url": "https://www.denik.cz/z_domova/hipp-kojenecka-vyziva-jed-na-krysy-stazeni-z-prodeje.html",
+      "dt": "2026-04-19T10:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hipp",
+        "jedem",
+        "kojeneckou",
+        "lahvičky",
+        "objevili",
+        "prodeje",
+        "stáhla",
+        "výživu",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -596,56 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Video s vráceným perem je virálem. Na Klausovu slávu z Chile zatím ale nemá",
-      "url": "https://www.denik.cz/z_domova/prezident-petr-pavel-pero-chile-vaclav-klaus-video-viral.html",
-      "dt": "2026-04-18T13:25:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "chile",
-        "klausovu",
-        "nemá",
-        "perem",
-        "slávu",
-        "video",
-        "virálem",
-        "vráceným",
-        "zatím"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tip na výlet: Vydejte se na rozhlednu Panorama v Chlebovicích",
-      "url": "https://www.denik.cz/ctenar-reporter/rozhledna-panorama-v-chlebovicich-20260416.html",
-      "dt": "2026-04-18T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chlebovicích",
-        "panorama",
-        "rozhlednu",
-        "tip",
-        "vydejte",
-        "výlet"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29126,
+      "bytes": 29253,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T09:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T10:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -709,6 +712,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový jízdní řád pro opravy domů: renovační pas je klíčový pro zelenou dotaci",
+            "publishedAt": "2026-04-19T10:40:00Z"
+          },
+          {
+            "title": "HiPP stáhla z prodeje kojeneckou výživu. Lahvičky s jedem objevili i v Česku",
+            "publishedAt": "2026-04-19T10:36:00Z"
+          },
           {
             "title": "Slovenský bizár baví sítě. Nová cyklostezka má uprostřed sloupy, lidé kličkují",
             "publishedAt": "2026-04-19T09:41:00Z"
@@ -732,14 +743,6 @@
           {
             "title": "Stroj času pro každého. AI kráska provází Titanikem i Pompejemi před zkázou",
             "publishedAt": "2026-04-19T05:30:00Z"
-          },
-          {
-            "title": "Ředitel FBI pije a zmatkuje, tvrdí časopis. Kash Patel hrozí žalobou",
-            "publishedAt": "2026-04-19T05:18:00Z"
-          },
-          {
-            "title": "Pomohl Orbán Ficovi k moci migranty? Slovenská opozice žádá vyšetřování",
-            "publishedAt": "2026-04-19T05:00:00Z"
           }
         ]
       }

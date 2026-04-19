@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-19T10:10:47.224570Z",
+  "ingestedAt": "2026-04-19T11:09:55.968035Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "HiPP stahuje dětské výživy. Ve sklenicích našli jed na krysy",
+      "url": "https://www.penize.cz/nakupy/488536-hipp-stahuje-detske-vyzivy-ve-sklenicich-nasli-jed-na-krysy",
+      "dt": "2026-04-19T12:54:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dětské",
+        "hipp",
+        "jed",
+        "krysy",
+        "našli",
+        "sklenicích",
+        "stahuje",
+        "výživy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -473,32 +498,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Známe největší slídily. Své páníčky šmírují i auta známé značky",
-      "url": "https://www.penize.cz/spotrebitel/488282-zname-nejvetsi-slidily-sve-panicky-smiruji-i-auta-zname-znacky",
-      "dt": "2026-04-14T20:33:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "auta",
-        "největší",
-        "páníčky",
-        "slídily",
-        "své",
-        "značky",
-        "známe",
-        "známé",
-        "šmírují"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17716,
+      "bytes": 17768,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,11 +545,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:54:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 6,
-          "finance": 14
+          "finance": 14,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +561,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "HiPP stahuje dětské výživy. Ve sklenicích našli jed na krysy",
+            "publishedAt": "2026-04-19T12:54:00Z"
+          },
           {
             "title": "Cena za úzkost. Devět způsobů, jak strach z létání ždímá vaši peněženku",
             "publishedAt": "2026-04-19T07:00:00Z"
@@ -589,10 +592,6 @@
           {
             "title": "Raiffeisenbank opět vypne bankovnictví na část víkendu",
             "publishedAt": "2026-04-17T05:00:00Z"
-          },
-          {
-            "title": "Termínované vklady mají novou jedničku. Zvedá úrok až ke čtyřce",
-            "publishedAt": "2026-04-16T15:00:00Z"
           }
         ]
       }
