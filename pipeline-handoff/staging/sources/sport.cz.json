@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T07:14:56.421629Z",
+  "ingestedAt": "2026-04-19T07:35:00.932394Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalisté Lakers či Denveru zahájili play off NBA vítězně",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbaliste-lakers-ci-denveru-zahajili-play-off-nba-vitezne-5439974",
+      "dt": "2026-04-19T07:13:24Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalisté",
+        "denveru",
+        "lakers",
+        "nba",
+        "off",
+        "play",
+        "vítězně",
+        "zahájili"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,29 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "České fotbalistky vyhrály jasně v Černé Hoře",
-      "url": "https://www.sport.cz/clanek/fotbal-ceske-fotbalistky-vyhraly-jasne-v-cerne-hore-5439624",
-      "dt": "2026-04-18T16:09:32Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fotbalistky",
-        "hoře",
-        "jasně",
-        "vyhrály",
-        "černé",
-        "české"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 48716,
+      "bytes": 48989,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T06:07:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:13:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Basketbalisté Lakers či Denveru zahájili play off NBA vítězně",
+            "publishedAt": "2026-04-19T07:13:24Z"
+          },
           {
             "title": "Messi zařídil výhru fotbalistů Miami v Denveru i úspěšnou premiéru kouče Hoyose",
             "publishedAt": "2026-04-19T06:07:25Z"
@@ -867,10 +873,6 @@
           {
             "title": "Slavia míří za titulem, jede do Hradce. Plzeň hostí Pardubice",
             "publishedAt": "2026-04-19T04:02:04Z"
-          },
-          {
-            "title": "Španělský pohár získal Real Sociedad",
-            "publishedAt": "2026-04-18T22:00:12Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T07:14:56.421629Z",
+  "ingestedAt": "2026-04-19T07:35:00.932394Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kompetence porodních asistentek se zvětšuje, roste jejich samostatnost",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kompetence-porodnich-asistentek-se-zvetsuje-roste-jejich-samostatnost-372524",
+      "dt": "2026-04-19T07:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "asistentek",
+        "jejich",
+        "kompetence",
+        "porodních",
+        "roste",
+        "samostatnost",
+        "zvětšuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -735,27 +759,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "PŘEHLEDNĚ: Takhle mění nový Dvorecký most tramvajovou dopravu v Praze",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/prehledne-takhle-meni-novy-dvorecky-most-tramvajovou-dopravu-v-praze-372489",
-      "dt": "2026-04-18T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "James dotáhl Lakers k první výhře nad Houstonem, Jokič zapsal další triple",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/james-dotahl-lakers-k-prvni-vyhre-nad-houstonem-jokic-zapsal-dalsi-triple-156358",
+      "dt": "2026-04-19T07:20:55Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dopravu",
-        "dvorecký",
-        "most",
-        "mění",
-        "nový",
-        "praze",
-        "přehledně",
-        "takhle",
-        "tramvajovou"
+        "další",
+        "dotáhl",
+        "houstonem",
+        "james",
+        "jokič",
+        "lakers",
+        "první",
+        "triple",
+        "výhře",
+        "zapsal"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1479,28 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lidé se naposledy rozloučili s Imrichem Bugárem",
-      "url": "https://sport.ceskatelevize.cz/clanek/atletika/lide-se-naposledy-rozloucily-s-imrichem-bugarem-156330",
-      "dt": "2026-04-17T12:43:52Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bugárem",
-        "imrichem",
-        "lidé",
-        "naposledy",
-        "rozloučili"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1511,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41625,
+      "bytes": 41892,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1571,11 +1574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
-          "zpravy": 25
+          "zpravy": 25,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1587,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kompetence porodních asistentek se zvětšuje, roste jejich samostatnost",
+            "publishedAt": "2026-04-19T07:30:00Z"
+          },
           {
             "title": "KVÍZ: Poznáte česká města podle mapy jejich tramvajových tratí?",
             "publishedAt": "2026-04-19T07:00:00Z"
@@ -1614,10 +1621,6 @@
           {
             "title": "Jednání s USA pokročila, k dohodě je však daleko, tvrdí šéf íránského parlamentu",
             "publishedAt": "2026-04-19T03:25:27Z"
-          },
-          {
-            "title": "KLDR odpálila několik balistických střel, oznámily sousední země",
-            "publishedAt": "2026-04-18T23:03:42Z"
           }
         ]
       }
@@ -1629,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36543,
+      "bytes": 36945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1666,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T06:35:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:20:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1681,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "James dotáhl Lakers k první výhře nad Houstonem, Jokič zapsal další triple",
+            "publishedAt": "2026-04-19T07:20:55Z"
+          },
           {
             "title": "Vladař patnácti zákroky vychytal svoji první výhru v play-off",
             "publishedAt": "2026-04-19T06:35:03Z"
@@ -1708,10 +1715,6 @@
           {
             "title": "Litvínov urval i druhé vítězství a nakročil k záchraně mezi elitou",
             "publishedAt": "2026-04-18T18:16:29Z"
-          },
-          {
-            "title": "Dukla házenkáře Plzně v semifinále extraligy nezastavila, Zubří porazilo Karvinou",
-            "publishedAt": "2026-04-18T17:22:20Z"
           }
         ]
       }
@@ -1723,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77232,
+      "bytes": 77236,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

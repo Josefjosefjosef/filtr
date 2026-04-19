@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-19T07:14:56.421629Z",
+  "ingestedAt": "2026-04-19T07:35:00.932394Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jednání s USA pokročila, k dohodě je však daleko, zní z Íránu. Režim má stále téměř polovinu útočných dronů z předválečného stavu",
+      "url": "https://zahranicni.hn.cz/c1-67868530-jednani-s-usa-pokrocila-k-dohode-je-vsak-daleko-zni-z-iranu-rezim-ma-stale-temer-polovinu-utocnych-dronu-z-predvalecneho-stavu",
+      "dt": "2026-04-19T07:12:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "daleko",
+        "dohodě",
+        "dronů",
+        "jednání",
+        "pokročila",
+        "polovinu",
+        "předválečného",
+        "režim",
+        "stavu",
+        "stále",
+        "téměř",
+        "usa",
+        "však",
+        "zní",
+        "íránu",
+        "útočných"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1080,26 +1113,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "#jídlove Lukáše Hejlíka",
-      "url": "https://procne.hn.cz/c1-67866960-jidlove-lukase-hejlika",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "hejlíka",
-        "jídlove",
-        "lukáše"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1110,7 +1123,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 179151,
+      "bytes": 179062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,13 +1160,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-17T17:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:12:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "zdravi": 2,
+          "finance": 33,
           "zpravy": 4,
-          "sport": 1,
-          "zdravi": 1
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1165,6 +1178,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jednání s USA pokročila, k dohodě je však daleko, zní z Íránu. Režim má stále téměř polovinu útočných dronů z předválečného stavu",
+            "publishedAt": "2026-04-19T07:12:00Z"
+          },
           {
             "title": "Ministr obrany Zůna ruší důležitou sekci, která &bdquo;umí&ldquo; zahraniční zakázky a spolupráci. Firmy jsou z toho nervózní",
             "publishedAt": "2026-04-17T17:13:00Z"
@@ -1192,10 +1209,6 @@
           {
             "title": "Ryanair jde proti proudu: letecké palivo zdražuje a hrozí jeho nedostatek, firma zlevňuje letenky. Třeba i z Prahy",
             "publishedAt": "2026-04-17T12:55:00Z"
-          },
-          {
-            "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
-            "publishedAt": "2026-04-17T12:31:00Z"
           }
         ]
       }
