@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T13:09:54.448929Z",
+  "ingestedAt": "2026-04-19T13:29:28.452773Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Olomouc uhájila těsné vedení, Slovácko dostalo dvě červené. Slavia vyzve Hradec",
+      "title": "FOTBAL ONLINE: Slavia vyzve Hradec. Olomouc uhájila těsné vedení, Slovácko dostalo dvě červené",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-miri-za-titulem-jede-do-hradce-plzen-hosti-pardubice-5439967",
       "dt": "2026-04-19T04:02:04Z",
       "media_raw": "Sport.cz",
@@ -25,6 +25,30 @@
         "vedení",
         "vyzve",
         "červené"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tenistky Malečková a Škoch mají první společný titul",
+      "url": "https://www.sport.cz/clanek/tenis-tenistky-maleckova-a-skoch-maji-prvni-spolecny-titul-5440269",
+      "dt": "2026-04-19T12:59:08Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "mají",
+        "malečková",
+        "první",
+        "společný",
+        "tenistky",
+        "titul",
+        "škoch"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -746,35 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třinec nás uspával, rýpnul si Sobotka. Finále hraje po dvou dekádách znovu proti Růžičkovi",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-trinec-nas-uspaval-rypnul-si-sobotka-finale-hraje-po-dvou-dekadach-znovu-proti-ruzickovi-5439954",
-      "dt": "2026-04-18T20:27:36Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dekádách",
-        "dvou",
-        "finále",
-        "hraje",
-        "nás",
-        "proti",
-        "rýpnul",
-        "růžičkovi",
-        "sobotka",
-        "třinec",
-        "uspával",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43333,
+      "bytes": 42607,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,8 +834,12 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Olomouc uhájila těsné vedení, Slovácko dostalo dvě červené. Slavia vyzve Hradec",
+            "title": "FOTBAL ONLINE: Slavia vyzve Hradec. Olomouc uhájila těsné vedení, Slovácko dostalo dvě červené",
             "publishedAt": "2026-04-19T04:02:04Z"
+          },
+          {
+            "title": "Tenistky Malečková a Škoch mají první společný titul",
+            "publishedAt": "2026-04-19T12:59:08Z"
           },
           {
             "title": "Olomouc těsně vyhrála, Slovácko dohrávalo o devíti",
@@ -865,10 +864,6 @@
           {
             "title": "Fotbalisté Žižkova zachránili v nastavení remízu s Ostravou B",
             "publishedAt": "2026-04-19T10:33:17Z"
-          },
-          {
-            "title": "Pět sekund před koncem zabouchl dveře. Flyers díky Vladařovi přežili infarktový závěr",
-            "publishedAt": "2026-04-19T10:30:14Z"
           }
         ]
       }

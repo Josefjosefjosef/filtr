@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T13:09:54.448929Z",
+  "ingestedAt": "2026-04-19T13:29:28.452773Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Červenou Červenému.“ Stovky lidí v Praze protestují proti Motoristům",
+      "url": "https://www.idnes.cz/zpravy/domaci/protest-motoriste-ministerstvo-zivotni-prostredi-hnuti-duha.A260419_144223_domaci_hock",
+      "dt": "2026-04-19T13:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "lidí",
+        "motoristům",
+        "praze",
+        "protestují",
+        "proti",
+        "stovky",
+        "červenou",
+        "červenému"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,33 +784,6 @@
         "stodolní",
         "stopy",
         "vzpomíná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Flámy v Las Vegas, alkohol, strach z Trumpa. Agenti FBI promluvili o řediteli",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/sef-fbi-kash-patel-vyhazov-strach-bezpecnost-alkohol-flamy-usa-donald-trump.A260419_072412_domaci_svm",
-      "dt": "2026-04-19T05:24:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "agenti",
-        "alkohol",
-        "fbi",
-        "flámy",
-        "las",
-        "promluvili",
-        "strach",
-        "trumpa",
-        "vegas",
-        "řediteli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1589,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50754,
+      "bytes": 50673,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,11 +1624,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T13:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
           "zpravy": 23,
+          "finance": 6,
           "other": 1
         },
         "drop_counts": {
@@ -1643,6 +1641,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Červenou Červenému.“ Stovky lidí v Praze protestují proti Motoristům",
+            "publishedAt": "2026-04-19T13:15:00Z"
+          },
           {
             "title": "Konflikt na Blízkém východě zdražuje plasty. Krize nahrává alternativám",
             "publishedAt": "2026-04-19T13:00:00Z"
@@ -1670,10 +1672,6 @@
           {
             "title": "Na Třebíčsku vzpomněli na výsadkáře. V Aleji parašutistů vysázeli deset lip",
             "publishedAt": "2026-04-19T12:06:00Z"
-          },
-          {
-            "title": "Trinidadská policie našla těla 50 malých dětí, někdo se jich nezákonně zbavil",
-            "publishedAt": "2026-04-19T11:39:00Z"
           }
         ]
       }
