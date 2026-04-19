@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T03:35:28.012329Z",
+  "ingestedAt": "2026-04-19T03:55:54.062182Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař slaví v play off výhru nad Pittsburghem, Dallas s Faksou na úvod vyhořel",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-slavi-v-play-off-vyhru-nad-pittsburghem-dallas-s-faksou-na-uvod-vyhorel-5439969",
+      "dt": "2026-04-19T03:51:39Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dallas",
+        "faksou",
+        "off",
+        "pittsburghem",
+        "play",
+        "slaví",
+        "vladař",
+        "vyhořel",
+        "výhru",
+        "úvod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,35 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ostuda Baníku, křičeli fandové v Ostravě. Musíme být ostřejší, hnusnější, drzejší, říkal Smetana",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-ostuda-baniku-kriceli-fandove-v-ostrave-musime-byt-ostrejsi-hnusnejsi-drzejsi-rikal-smetana-5439769",
-      "dt": "2026-04-18T17:25:01Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "baníku",
-        "být",
-        "drzejší",
-        "fandové",
-        "hnusnější",
-        "křičeli",
-        "musíme",
-        "ostravě",
-        "ostuda",
-        "ostřejší",
-        "smetana",
-        "říkal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49159,
+      "bytes": 48294,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T22:00:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T03:51:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -841,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař slaví v play off výhru nad Pittsburghem, Dallas s Faksou na úvod vyhořel",
+            "publishedAt": "2026-04-19T03:51:39Z"
+          },
           {
             "title": "Španělský pohár získal Real Sociedad",
             "publishedAt": "2026-04-18T22:00:12Z"
@@ -868,10 +870,6 @@
           {
             "title": "Jihlavský brankář vysvětlil neobvyklý rituál. Ani ten však jeho týmu výhru nepřinesl",
             "publishedAt": "2026-04-18T20:07:31Z"
-          },
-          {
-            "title": "Pardubice tvrdě narazily. V hledišti zůstaly stovky volných míst",
-            "publishedAt": "2026-04-18T20:00:31Z"
           }
         ]
       }

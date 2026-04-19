@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T03:35:28.012329Z",
+  "ingestedAt": "2026-04-19T03:55:54.062182Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Necháváte si starý mobil v šuplíku? Chyba, je to časovaná bomba",
+      "url": "https://www.denik.cz/z_domova/stary-mobil-v-supliku-je-casovana-bomba-riziko-pozar.html",
+      "dt": "2026-04-19T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bomba",
+        "chyba",
+        "mobil",
+        "necháváte",
+        "starý",
+        "časovaná",
+        "šuplíku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -111,20 +135,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Knihou roku je Mariborská hypnóza. Magnesia Litera rozdala ceny",
+      "title": "Ceny Magnesia Litera 2026: Knihou roku je Mariborská hypnóza",
       "url": "https://www.denik.cz/film-a-televize/magnesia-litera-knizni-ceny-mariborska-hypnoza-rok-2025.html",
       "dt": "2026-04-18T19:40:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "2026",
         "ceny",
         "hypnóza",
         "knihou",
         "litera",
         "magnesia",
         "mariborská",
-        "roku",
-        "rozdala"
+        "roku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -627,34 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Čas strávený v lese pomáhá zlepšit imunitu proti rakovině, říká světový imunolog",
-      "url": "https://www.denik.cz/zdravotnictvi/zdravi-les-rakovina-lesni-terapie-sinrin-joku-qing-li.html",
-      "dt": "2026-04-18T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "imunitu",
-        "imunolog",
-        "lese",
-        "pomáhá",
-        "proti",
-        "rakovině",
-        "strávený",
-        "světový",
-        "zlepšit",
-        "čas",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28504,
+      "bytes": 28202,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,12 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
-          "zdravi": 1
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -719,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Necháváte si starý mobil v šuplíku? Chyba, je to časovaná bomba",
+            "publishedAt": "2026-04-19T03:30:00Z"
+          },
           {
             "title": "Trest smrti, vyslechl si fanatik Charles Manson. Popravě masový vrah ale unikl",
             "publishedAt": "2026-04-19T03:00:00Z"
@@ -736,7 +735,7 @@
             "publishedAt": "2026-04-18T20:24:00Z"
           },
           {
-            "title": "Knihou roku je Mariborská hypnóza. Magnesia Litera rozdala ceny",
+            "title": "Ceny Magnesia Litera 2026: Knihou roku je Mariborská hypnóza",
             "publishedAt": "2026-04-18T19:40:00Z"
           },
           {
@@ -746,10 +745,6 @@
           {
             "title": "Muž zabil na ulici v Kyjevě šest lidí, ohrožoval rukojmí. Policie ho zastřelila",
             "publishedAt": "2026-04-18T17:57:00Z"
-          },
-          {
-            "title": "Žhářský útok v Pardubicích: Ženu zadrženou na Slovensku soud poslal do vazby",
-            "publishedAt": "2026-04-18T16:09:00Z"
           }
         ]
       }

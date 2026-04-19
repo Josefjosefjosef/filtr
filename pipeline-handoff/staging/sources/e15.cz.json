@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-19T03:35:28.012329Z",
+  "ingestedAt": "2026-04-19T03:55:54.062182Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Američané začínají brojit proti datovým centrům a AI. Hatí tak firmám burzovní plány",
+      "url": "https://www.e15.cz/byznys/technologie-a-media/americane-zacinaji-brojit-proti-datovym-centrum-a-ai-hati-tak-firmam-burzovni-plany-1432218",
+      "dt": "2026-04-19T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "američané",
+        "brojit",
+        "burzovní",
+        "centrům",
+        "datovým",
+        "firmám",
+        "hatí",
+        "plány",
+        "proti",
+        "tak",
+        "začínají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1029,34 +1057,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "CPI upevnila pozici v Bratislavě. Vítkova skupina ovládla kancelářský komplex za stovky milionů",
-      "url": "https://www.e15.cz/byznys/cpi-upevnila-pozici-v-bratislave-vitkova-skupina-ovladla-kancelarsky-komplex-za-stovky-milionu-1432201",
-      "dt": "2026-04-16T16:24:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bratislavě",
-        "cpi",
-        "kancelářský",
-        "komplex",
-        "milionů",
-        "ovládla",
-        "pozici",
-        "skupina",
-        "stovky",
-        "upevnila",
-        "vítkova"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1067,7 +1067,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54299,
+      "bytes": 54419,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1104,11 +1104,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T03:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 33
+          "finance": 33,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1120,6 +1120,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Američané začínají brojit proti datovým centrům a AI. Hatí tak firmám burzovní plány",
+            "publishedAt": "2026-04-19T03:30:00Z"
+          },
           {
             "title": "Šéfové letišť vyhlížejí skvělý rok. Podmínkou ale je, že bude benzín do letadel",
             "publishedAt": "2026-04-19T03:00:00Z"
@@ -1147,10 +1151,6 @@
           {
             "title": "Investoři vyhlašují válku Evropě. Drahá ropa a inflace spustily sázky na pokles akcií",
             "publishedAt": "2026-04-18T03:30:00Z"
-          },
-          {
-            "title": "USA šílí po dlouhověkosti, objem trhu vyskočí až ke dvěma bilionům dolarů",
-            "publishedAt": "2026-04-18T03:00:00Z"
           }
         ]
       }
