@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T18:29:49.808358Z",
+  "ingestedAt": "2026-04-19T18:50:08.578705Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc těsně vyhrála",
+      "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc přetlačila Slovácko",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-miri-za-titulem-jede-do-hradce-plzen-hosti-pardubice-5439967",
       "dt": "2026-04-19T04:02:04Z",
       "media_raw": "Sport.cz",
@@ -17,10 +17,10 @@
         "plzeň",
         "poprvé",
         "prohrála",
+        "přetlačila",
         "sezoně",
         "slavia",
-        "těsně",
-        "vyhrála",
+        "slovácko",
         "šokovaly"
       ],
       "feedCategory": "sport",
@@ -33,18 +33,46 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Fotbalisté Žižkova zachránili v nastavení remízu s Ostravou B",
+      "title": "Plzeň s Pardubicemi totálně vyhořela. Po přestávce jí dal mat Tanko",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-plzen-s-pardubicemi-totalne-vyhorela-po-prestavce-ji-dal-mat-tanko-5440627",
+      "dt": "2026-04-19T18:29:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dal",
+        "mat",
+        "pardubicemi",
+        "plzeň",
+        "přestávce",
+        "tanko",
+        "totálně",
+        "vyhořela"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisté Zbrojovky Brno se výhrou v Jihlavě přiblížili postupu do první ligy",
       "url": "https://www.sport.cz/clanek/fotbal-fotbaliste-zizkova-zachranili-v-nastaveni-remizu-s-ostravou-b-5439988",
       "dt": "2026-04-19T10:33:17Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "brno",
         "fotbalisté",
-        "nastavení",
-        "ostravou",
-        "remízu",
-        "zachránili",
-        "žižkova"
+        "jihlavě",
+        "ligy",
+        "postupu",
+        "první",
+        "přiblížili",
+        "výhrou",
+        "zbrojovky"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -751,34 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po vyřazení Kopřivy se italský tenista dozvěděl o velké tragédii. Postup do finále na kurtu oplakal",
-      "url": "https://www.sport.cz/clanek/tenis-po-vyrazeni-koprivy-se-italsky-tenista-dozvedel-o-velke-tragedii-postup-do-finale-na-kurtu-oplakal-5439976",
-      "dt": "2026-04-19T08:23:30Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dozvěděl",
-        "finále",
-        "italský",
-        "kopřivy",
-        "kurtu",
-        "oplakal",
-        "postup",
-        "tenista",
-        "tragédii",
-        "velké",
-        "vyřazení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45254,
+      "bytes": 45543,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T18:01:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T18:29:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -843,11 +843,15 @@
         },
         "sample_titles": [
           {
-            "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc těsně vyhrála",
+            "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc přetlačila Slovácko",
             "publishedAt": "2026-04-19T04:02:04Z"
           },
           {
-            "title": "Fotbalisté Žižkova zachránili v nastavení remízu s Ostravou B",
+            "title": "Plzeň s Pardubicemi totálně vyhořela. Po přestávce jí dal mat Tanko",
+            "publishedAt": "2026-04-19T18:29:34Z"
+          },
+          {
+            "title": "Fotbalisté Zbrojovky Brno se výhrou v Jihlavě přiblížili postupu do první ligy",
             "publishedAt": "2026-04-19T10:33:17Z"
           },
           {
@@ -869,10 +873,6 @@
           {
             "title": "Hotovo. Bayern Mnichov slaví titul",
             "publishedAt": "2026-04-19T16:17:42Z"
-          },
-          {
-            "title": "Bláznivý závěr v Hradci: Červená, penalta a běsnění Bořila. Nesmyslná rozhodnutí, zlobil se Trpišovský",
-            "publishedAt": "2026-04-19T17:28:43Z"
           }
         ]
       }
