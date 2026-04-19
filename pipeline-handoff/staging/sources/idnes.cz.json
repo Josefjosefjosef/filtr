@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T07:35:00.932394Z",
+  "ingestedAt": "2026-04-19T07:54:36.741461Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Z Ceausescovy nádrže unikátní park. Bukurešť má nevídanou městskou divočinu",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/z-ceausescovy-nadrze-unikatni-park-bukurest-ma-nevidanou-mestskou-divocinu.A260414_103652_eko-zahranicni_jadv",
+      "dt": "2026-04-19T07:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bukurešť",
+        "ceausescovy",
+        "divočinu",
+        "městskou",
+        "nevídanou",
+        "nádrže",
+        "park",
+        "unikátní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -763,28 +788,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Historici zabránili demolici bývalé věznice, Chrastava nabídne cely k pronájmu",
-      "url": "https://www.idnes.cz/liberec/zpravy/veznice-chrastava-cely-demolice-nebude-pronajem-cel.A260417_152559_liberec-zpravy_jape",
-      "dt": "2026-04-18T14:14:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
+      "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/rakouska-policie-hipp-vyziva-cesko-slovensko-kojenecka-vyziva-otrava.A260419_092709_eko-zahranicni_aoc",
+      "dt": "2026-04-19T07:38:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
       "tokens": [
-        "bývalé",
-        "cely",
-        "chrastava",
-        "demolici",
-        "historici",
-        "nabídne",
-        "pronájmu",
-        "věznice",
-        "zabránili"
+        "dětskou",
+        "hipp",
+        "objevila",
+        "otrávenou",
+        "policie",
+        "rakouská",
+        "varuje",
+        "výživou",
+        "česku"
       ],
-      "feedCategory": "zpravy",
+      "feedCategory": "finance",
       "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
     },
@@ -1547,32 +1572,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pohonné hmoty o víkendu zdraží. Cenový strop ministerstva vzrostl o haléře",
-      "url": "https://www.idnes.cz/ekonomika/domaci/pohonne-hmoty-o-vikendu-zdrazi-cenovy-strop-ministerstva-vzrostl-o-halere.A260410_140232_ekonomika_vebe",
-      "dt": "2026-04-10T12:21:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "cenový",
-        "haléře",
-        "hmoty",
-        "ministerstva",
-        "pohonné",
-        "strop",
-        "vzrostl",
-        "víkendu",
-        "zdraží"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48744,
+      "bytes": 49049,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1619,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T06:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 5,
+          "finance": 6,
+          "zpravy": 21,
           "other": 3
         },
         "drop_counts": {
@@ -1637,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Ceausescovy nádrže unikátní park. Bukurešť má nevídanou městskou divočinu",
+            "publishedAt": "2026-04-19T07:00:00Z"
+          },
           {
             "title": "Pracuje s problémovými psy. Největší chybou je jejich polidšťování, říká žena",
             "publishedAt": "2026-04-19T06:35:00Z"
@@ -1664,10 +1667,6 @@
           {
             "title": "Žijeme v 21. století, ale firmy často řídíme jako ve středověku",
             "publishedAt": "2026-04-18T22:00:00Z"
-          },
-          {
-            "title": "Jen ať to Amerika vidí. Fotka zlynčovaného kluka zažehla boj za práva černochů",
-            "publishedAt": "2026-04-18T22:00:00Z"
           }
         ]
       }
@@ -1679,7 +1678,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45678,
+      "bytes": 45277,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1716,7 +1715,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1731,6 +1730,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
+            "publishedAt": "2026-04-19T07:38:00Z"
+          },
           {
             "title": "Dvě stě lidí, 38 národností. Pražský Wargaming ukazuje sílu českého herního průmyslu",
             "publishedAt": "2026-04-18T07:00:00Z"
@@ -1758,10 +1761,6 @@
           {
             "title": "Čínská ekonomika v prvním čtvrtletí vzrostla o pět procent, nad odhady",
             "publishedAt": "2026-04-16T04:04:00Z"
-          },
-          {
-            "title": "Já na prvním místě: Češi utrácejí jinak než dřív. Na jakém zboží se to nejvíc projevuje",
-            "publishedAt": "2026-04-15T22:00:00Z"
           }
         ]
       }

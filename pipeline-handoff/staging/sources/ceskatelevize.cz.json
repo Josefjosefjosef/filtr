@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T07:35:00.932394Z",
+  "ingestedAt": "2026-04-19T07:54:36.741461Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rakouská policie varuje před možná otrávenou kojeneckou výživou HiPP",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/rakouska-policie-varuje-pred-mozna-otravenou-kojeneckou-vyzivou-hipp-372539",
+      "dt": "2026-04-19T07:42:57Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hipp",
+        "kojeneckou",
+        "možná",
+        "otrávenou",
+        "policie",
+        "rakouská",
+        "varuje",
+        "výživou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,31 +750,6 @@
         "uzavřeného",
         "zasáhla",
         "znovu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tchajwanským průlivem proplul japonský torpédoborec, Čína ostře protestuje",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/tchajwanskym-prulivem-proplul-japonsky-torpedoborec-cina-ostre-protestuje-372515",
-      "dt": "2026-04-18T06:22:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "japonský",
-        "ostře",
-        "proplul",
-        "protestuje",
-        "průlivem",
-        "tchajwanským",
-        "torpédoborec",
-        "čína"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41892,
+      "bytes": 42048,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,7 +1574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:42:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1590,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakouská policie varuje před možná otrávenou kojeneckou výživou HiPP",
+            "publishedAt": "2026-04-19T07:42:57Z"
+          },
           {
             "title": "Kompetence porodních asistentek se zvětšuje, roste jejich samostatnost",
             "publishedAt": "2026-04-19T07:30:00Z"
@@ -1617,10 +1621,6 @@
           {
             "title": "Obce přibrzdily výstavbu nájemních bytů. Chybí jim státní podpora",
             "publishedAt": "2026-04-19T04:02:00Z"
-          },
-          {
-            "title": "Jednání s USA pokročila, k dohodě je však daleko, tvrdí šéf íránského parlamentu",
-            "publishedAt": "2026-04-19T03:25:27Z"
           }
         ]
       }
