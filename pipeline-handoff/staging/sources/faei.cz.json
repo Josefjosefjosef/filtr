@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-19T12:49:20.413885Z",
+  "ingestedAt": "2026-04-19T13:09:54.448929Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi budou tankovat levněji",
+      "url": "https://profitonline.cz/cesi-budou-tankovat-levneji/",
+      "dt": "2026-04-19T13:00:16Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "levněji",
+        "tankovat",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,31 +288,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konflikt na Blízkém východě zdraží nové domy a byty v Česku",
-      "url": "https://profitonline.cz/konflikt-na-blizkem-vychode-zdrazi-nove-domy-a-byty-v-cesku/",
-      "dt": "2026-04-17T06:00:46Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "blízkém",
-        "byty",
-        "domy",
-        "konflikt",
-        "nové",
-        "východě",
-        "zdraží",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19037,
+      "bytes": 18730,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:00:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T13:00:16Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -357,6 +352,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi budou tankovat levněji",
+            "publishedAt": "2026-04-19T13:00:16Z"
+          },
           {
             "title": "Novinky v osobních financích: QR kód šetří čas i peníze. Proč ho Češi ignorují?",
             "publishedAt": "2026-04-19T10:00:50Z"
@@ -384,10 +383,6 @@
           {
             "title": "Okamžiky dějin: Jak Evropané objevovali nejmenší kontinent",
             "publishedAt": "2026-04-18T04:00:12Z"
-          },
-          {
-            "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
-            "publishedAt": "2026-04-17T17:00:59Z"
           }
         ]
       }
