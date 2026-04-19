@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T12:29:55.868633Z",
+  "ingestedAt": "2026-04-19T12:49:20.413885Z",
   "items": [
     {
       "section": "aktualne",
@@ -764,6 +764,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Muchová nestačila na Rybakinovou a titul ve Stuttgartu nezískala",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-nestacila-na-rybakinovou-a-titul-ve-stuttgartu-neziskala-156361",
+      "dt": "2026-04-19T12:41:35Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "muchová",
+        "nestačila",
+        "nezískala",
+        "rybakinovou",
+        "stuttgartu",
+        "titul"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Krpálek zabojuje o titul. Ve finále ME vyzve Tušišvila",
       "url": "https://sport.ceskatelevize.cz/clanek/judo/krpalek-zabojuje-o-titul-v-tbilisi-postoupil-do-finale-156360",
       "dt": "2026-04-19T09:40:00Z",
@@ -1481,33 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Národní tým zvládl i druhou německou zkoušku, znovu se činil Tomáškův útok",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-nemecko-156327",
-      "dt": "2026-04-17T14:43:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "druhou",
-        "národní",
-        "německou",
-        "tomáškův",
-        "tým",
-        "zkoušku",
-        "znovu",
-        "zvládl",
-        "útok",
-        "činil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1637,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36850,
+      "bytes": 36767,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1674,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T09:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:41:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muchová nestačila na Rybakinovou a titul ve Stuttgartu nezískala",
+            "publishedAt": "2026-04-19T12:41:35Z"
+          },
           {
             "title": "Krpálek zabojuje o titul. Ve finále ME vyzve Tušišvila",
             "publishedAt": "2026-04-19T09:40:00Z"
@@ -1716,10 +1716,6 @@
           {
             "title": "Soutěž k cyklistickému závodu Amstel Gold Race",
             "publishedAt": "2026-04-18T22:00:00Z"
-          },
-          {
-            "title": "Opava a Děčín míří do čtvrtfinále, Písek musí do předkola",
-            "publishedAt": "2026-04-18T20:18:30Z"
           }
         ]
       }
@@ -1731,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77280,
+      "bytes": 77288,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

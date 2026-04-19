@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T12:29:55.868633Z",
+  "ingestedAt": "2026-04-19T12:49:20.413885Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/rakouska-policie-hipp-vyziva-cesko-slovensko-kojenecka-vyziva-otrava.A260419_092709_eko-zahranicni_aoc",
+      "dt": "2026-04-19T12:41:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dětskou",
+        "hipp",
+        "objevila",
+        "otrávenou",
+        "policie",
+        "rakouská",
+        "varuje",
+        "výživou",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -191,7 +217,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Babiš se chce zapojit do Macronovy iniciativy jaderného deštníku",
+      "title": "Babiš chce ČR pod Macronův jaderný deštník. Řešíme to, potvrdil Macinka",
       "url": "https://www.idnes.cz/zpravy/domaci/babis-se-chce-zapojit-do-macronovy-iniciativy-jaderneho-destniku.A260419_122359_domaci_aoc",
       "dt": "2026-04-19T11:24:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -199,11 +225,12 @@
       "tokens": [
         "babiš",
         "chce",
-        "deštníku",
-        "iniciativy",
-        "jaderného",
-        "macronovy",
-        "zapojit"
+        "deštník",
+        "jaderný",
+        "macinka",
+        "macronův",
+        "potvrdil",
+        "řešíme"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -287,32 +314,6 @@
         "statisíce",
         "studia",
         "začíná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/rakouska-policie-hipp-vyziva-cesko-slovensko-kojenecka-vyziva-otrava.A260419_092709_eko-zahranicni_aoc",
-      "dt": "2026-04-19T09:50:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dětskou",
-        "hipp",
-        "objevila",
-        "otrávenou",
-        "policie",
-        "rakouská",
-        "varuje",
-        "výživou",
-        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -800,7 +801,7 @@
       "contentType": "article",
       "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
       "url": "https://www.idnes.cz/ekonomika/zahranicni/rakouska-policie-hipp-vyziva-cesko-slovensko-kojenecka-vyziva-otrava.A260419_092709_eko-zahranicni_aoc",
-      "dt": "2026-04-19T09:50:00Z",
+      "dt": "2026-04-19T12:41:00Z",
       "media_raw": "iDNES / Ekonomika",
       "media_norm": "iDNES / Ekonomika",
       "tokens": [
@@ -1590,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51335,
+      "bytes": 51342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1628,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T12:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:41:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
           "finance": 6,
+          "zpravy": 23,
           "other": 1
         },
         "drop_counts": {
@@ -1644,6 +1645,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
+            "publishedAt": "2026-04-19T12:41:00Z"
+          },
           {
             "title": "Evropu rozděluje „zelená propast“. Bohatší lidé žijí blíže k přírodě, tvrdí studie",
             "publishedAt": "2026-04-19T12:18:00Z"
@@ -1671,10 +1676,6 @@
           {
             "title": "Mise na Tchaj-wan je zbytečná, míní Vondráček. Babišův truc, kritizuje Lipavský",
             "publishedAt": "2026-04-19T11:26:00Z"
-          },
-          {
-            "title": "Babiš se chce zapojit do Macronovy iniciativy jaderného deštníku",
-            "publishedAt": "2026-04-19T11:24:00Z"
           }
         ]
       }
@@ -1686,7 +1687,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 45853,
+      "bytes": 45848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1723,7 +1724,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T09:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:41:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1740,7 +1741,7 @@
         "sample_titles": [
           {
             "title": "Rakouská policie varuje před otrávenou dětskou výživou HiPP. Objevila se i v Česku",
-            "publishedAt": "2026-04-19T09:50:00Z"
+            "publishedAt": "2026-04-19T12:41:00Z"
           },
           {
             "title": "Ve sběru skončily spotřebiče o váze šesti žižkovských věží, potvrzuje firma",
