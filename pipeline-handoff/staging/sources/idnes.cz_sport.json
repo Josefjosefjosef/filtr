@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-19T21:54:46.939673Z",
+  "ingestedAt": "2026-04-19T22:17:38.547856Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sledujete cyklistiku? Poznejte známé závodníky podle fotky",
+      "url": "https://www.idnes.cz/sport/sledujete-cyklistiku-poznejte-zname-zavodniky-podle-fotky.Q260415_143444_sport_ipet",
+      "dt": "2026-04-19T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cyklistiku",
+        "fotky",
+        "podle",
+        "poznejte",
+        "sledujete",
+        "známé",
+        "závodníky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vencl: Že mi pod ledem odumřely mozkové buňky? Maximálně jako po dvou pivech",
+      "url": "https://www.idnes.cz/sport/ostatni/vencl-david-svetovy-rekord-pod-ledem-finsko-neuspesny-blackout-bezvedomi.A260417_104449_sporty_pbi",
+      "dt": "2026-04-19T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "buňky",
+        "dvou",
+        "jako",
+        "ledem",
+        "maximálně",
+        "mozkové",
+        "odumřely",
+        "pivech",
+        "vencl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,62 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obránce Kindl slaví další titul v Evropě, vyhrál francouzskou ligu s Bordeaux",
-      "url": "https://www.idnes.cz/hokej/evropske-ligy/jakub-kindl-francouzska-liga-bordeaux-titul.A260419_113515_evropa_jrv",
-      "dt": "2026-04-19T10:03:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bordeaux",
-        "další",
-        "evropě",
-        "francouzskou",
-        "kindl",
-        "ligu",
-        "obránce",
-        "slaví",
-        "titul",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vrbovi jsme občas volali ve tři ráno, směje se Kolář. Na titul mysleli rok dopředu",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/daniel-kolar-rozhovor-plzen-15-let-od-titulu-vrba-horvath.A260417_083028_fotbal_pkr",
-      "dt": "2026-04-19T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dopředu",
-        "jsme",
-        "kolář",
-        "mysleli",
-        "občas",
-        "rok",
-        "ráno",
-        "směje",
-        "titul",
-        "tři",
-        "volali",
-        "vrbovi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47514,
+      "bytes": 47574,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T21:08:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sledujete cyklistiku? Poznejte známé závodníky podle fotky",
+            "publishedAt": "2026-04-19T22:00:00Z"
+          },
+          {
+            "title": "Vencl: Že mi pod ledem odumřely mozkové buňky? Maximálně jako po dvou pivech",
+            "publishedAt": "2026-04-19T22:00:00Z"
+          },
           {
             "title": "Vondráčková si v Ostravě zastřílela a Královopolanky míří pro ligový bronz",
             "publishedAt": "2026-04-19T21:08:03Z"
@@ -875,14 +877,6 @@
           {
             "title": "Zuberští házenkáři porazili Karvinou doma i podruhé a vynutili si páté semifinále",
             "publishedAt": "2026-04-19T19:43:00Z"
-          },
-          {
-            "title": "Liberecké volejbalistky uspěly i ve druhém finále se Šelmami a jsou krok od titulu",
-            "publishedAt": "2026-04-19T19:40:00Z"
-          },
-          {
-            "title": "Play off hokejové extraligy 2026: program, systém, finálová dvojice, kde sledovat",
-            "publishedAt": "2026-04-19T19:17:00Z"
           }
         ]
       }
