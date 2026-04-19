@@ -311,6 +311,23 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
+/* P0 desktop ≥1025px: šířka root = viewport (scroll na pravém kraji), explicitní overflow-y na body = stejné chování jako po přepočtu z overflow-x:hidden — méně transientních odchylek při načítání CSS (navazuje na PR #2900). */
+@media (min-width: 1025px){
+  html{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  body{
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    min-height: 0;
+  }
+}
+
 #page{
   overflow-x: hidden;
 }

@@ -32,6 +32,24 @@ style-src 'self' 'unsafe-inline' https:;
         background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
         background-color: #e5eef6;
       }
+      /* P0 desktop: stejné root overflow + scrollbar-gutter jako assets/app.css ještě před síťovým načtením app.css — omezí transient double-track / UA default vs. loaded CSS (PR #2900+). */
+      @media (min-width: 1025px) {
+        html {
+          overflow-x: hidden;
+          overflow-y: auto;
+          scrollbar-gutter: stable;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        body {
+          overflow-x: hidden;
+          overflow-y: auto;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+      }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
       /*
