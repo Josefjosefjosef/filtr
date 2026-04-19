@@ -3137,10 +3137,11 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (key banka) + Bakaláři (key bakalari): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, dvě body větvě (banking vs bakalari). */
+/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, tři body větve (banking / bakalari / pojistovna). */
 @media (min-width: 1025px){
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]),
-  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]){
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]),
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-pojistovna-quickfeed-root:not([hidden]){
     position:fixed;
     inset:0;
     left:0;
@@ -3164,7 +3165,8 @@ button.iu-close-btn-38:focus-visible{
     z-index:10040;
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal,
-  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal{
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal,
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal{
     flex:1 1 auto;
     min-height:0;
     min-width:0;
@@ -3182,7 +3184,8 @@ button.iu-close-btn-38:focus-visible{
     background:#fff;
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead,
-  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal > .iuQHead{
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal > .iuQHead,
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal > .iuQHead{
     flex:0 0 auto;
     width:100%;
     margin:0;
@@ -3191,7 +3194,8 @@ button.iu-close-btn-38:focus-visible{
     border-bottom:1px solid rgba(0,0,0,.08);
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host,
-  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host{
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host,
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host{
     flex:1 1 auto;
     min-height:0;
     overflow-y:auto;
@@ -3202,13 +3206,20 @@ button.iu-close-btn-38:focus-visible{
     box-sizing:border-box;
   }
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host > .iuQCard,
-  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host > .iuQCard{
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host > .iuQCard,
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host > .iuQCard{
     background:transparent;
     border:0;
     border-radius:0;
     box-shadow:none;
     padding:0;
     margin:0;
+  }
+  /* Zdravotní pojišťovna: šířka vnitřního obsahu = stejný budget jako .iu-ds-modal na desktopu (min 720px / 100vw−80px). */
+  body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-health-root{
+    max-width: min(720px, 100%);
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
