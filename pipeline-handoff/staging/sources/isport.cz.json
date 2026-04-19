@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-19T18:09:43.102301Z",
+  "ingestedAt": "2026-04-19T18:29:49.808358Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Plzeň - Pardubice 0:1. Doski vyloučen! Zahrál rukou jako poslední hráč",
+      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474587/online-plzen-pardubice-0-1-doski-vyloucen-zahral-rukou-jako-posledni-hrac.html",
+      "dt": "2026-04-19T18:11:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "doski",
+        "hráč",
+        "jako",
+        "pardubice",
+        "plzeň",
+        "poslední",
+        "rukou",
+        "vyloučen",
+        "zahrál"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -76,32 +102,6 @@
         "střídat",
         "ztrátu",
         "šlágr"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Plzeň - Pardubice 0:1. Rýsuje se další šok? Tanko poslal hosty do vedení",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474587/online-plzen-pardubice-0-1-rysuje-se-dalsi-sok-tanko-poslal-hosty-do-vedeni.html",
-      "dt": "2026-04-19T17:12:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "další",
-        "hosty",
-        "pardubice",
-        "plzeň",
-        "poslal",
-        "rýsuje",
-        "tanko",
-        "vedení",
-        "šok"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1101,7 +1101,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 57929,
+      "bytes": 57882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1138,7 +1138,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T18:11:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1154,6 +1154,10 @@
         },
         "sample_titles": [
           {
+            "title": "ONLINE: Plzeň - Pardubice 0:1. Doski vyloučen! Zahrál rukou jako poslední hráč",
+            "publishedAt": "2026-04-19T18:11:00Z"
+          },
+          {
             "title": "Trpišovský o Bořilovi: Naprostá zbytečnost, přenáší se to na tým. Co musí Slavia zlepšit?",
             "publishedAt": "2026-04-19T17:45:00Z"
           },
@@ -1164,10 +1168,6 @@
           {
             "title": "SESTŘIHY: šlágr jara pro City! Krejčí musel při prohře střídat, Kinský kousal ztrátu",
             "publishedAt": "2026-04-19T17:35:00Z"
-          },
-          {
-            "title": "ONLINE: Plzeň - Pardubice 0:1. Rýsuje se další šok? Tanko poslal hosty do vedení",
-            "publishedAt": "2026-04-19T17:12:00Z"
           },
           {
             "title": "Žižkov zachraňoval bod v závěru. Příbram porazila rezervu Sparty a je na dohled baráže",

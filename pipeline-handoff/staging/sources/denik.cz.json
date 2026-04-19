@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T18:09:43.102301Z",
+  "ingestedAt": "2026-04-19T18:29:49.808358Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bulharské volby vyhrál exprezident Radev. Chce spolupráci s Ruskem",
+      "url": "https://www.denik.cz/staty-eu/bulharsko-volby-exprezident-radev.html",
+      "dt": "2026-04-19T17:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bulharské",
+        "chce",
+        "exprezident",
+        "radev",
+        "ruskem",
+        "spolupráci",
+        "volby",
+        "vyhrál"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,34 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trest smrti, vyslechl si fanatik Charles Manson. Popravě masový vrah ale unikl",
-      "url": "https://www.denik.cz/historie/charles-manson-sharon-tateova-sekta-manson-family.html",
-      "dt": "2026-04-19T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "charles",
-        "fanatik",
-        "manson",
-        "masový",
-        "popravě",
-        "smrti",
-        "trest",
-        "unikl",
-        "vrah",
-        "vyslechl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29498,
+      "bytes": 29464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T17:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T17:53:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -720,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bulharské volby vyhrál exprezident Radev. Chce spolupráci s Ruskem",
+            "publishedAt": "2026-04-19T17:53:00Z"
+          },
           {
             "title": "Záchranáři spěchají s uvolněním Timmyho. Velryba má pořád šanci, tvrdí skupina",
             "publishedAt": "2026-04-19T17:50:00Z"
@@ -747,10 +748,6 @@
           {
             "title": "Influencerka zemřela na Zanzibaru za záhadných okolností. Předcházela hádka",
             "publishedAt": "2026-04-19T13:15:00Z"
-          },
-          {
-            "title": "Žháři napadli další synagogu v Londýně, policie pátrá po pachatelích",
-            "publishedAt": "2026-04-19T13:03:00Z"
           }
         ]
       }

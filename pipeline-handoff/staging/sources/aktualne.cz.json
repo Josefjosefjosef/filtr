@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T18:09:43.102301Z",
+  "ingestedAt": "2026-04-19T18:29:49.808358Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V Německu je hotovo. Bayern čtyři kola před koncem ligy slaví svůj 35. titul",
+      "url": "https://sport.aktualne.cz/fotbal/v-nemecku-je-hotovo-bayern-ctyri-kola-pred-koncem-ligy-slavi-svuj-35-titul/r~aaa2939e41b4626d1b46054623c55fd7/",
+      "dt": "2026-04-19T18:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bayern",
+        "hotovo",
+        "kola",
+        "koncem",
+        "ligy",
+        "německu",
+        "slaví",
+        "svůj",
+        "titul",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -522,36 +549,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš chce pragmatickou politiku, Vystrčilovi kvůli Číně letadlo nedá. Trapná malost, reagoval Fiala",
-      "url": "https://zpravy.aktualne.cz/domaci/budeme-delat-pragmatickou-zahranicni-politiku-ta-hodnotova-jen-poskodila-nase-firmy-rekl-babis/r~aaa29274f1344ec8206db83e1c3962f4/",
-      "dt": "2026-04-19T09:07:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiš",
-        "chce",
-        "fiala",
-        "kvůli",
-        "letadlo",
-        "malost",
-        "nedá",
-        "politiku",
-        "pragmatickou",
-        "reagoval",
-        "trapná",
-        "vystrčilovi",
-        "číně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -562,7 +559,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21858,
+      "bytes": 21825,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,11 +596,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T17:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T18:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 9,
-          "zpravy": 9,
+          "sport": 10,
+          "zpravy": 8,
           "finance": 2
         },
         "drop_counts": {
@@ -616,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Německu je hotovo. Bayern čtyři kola před koncem ligy slaví svůj 35. titul",
+            "publishedAt": "2026-04-19T18:03:00Z"
+          },
           {
             "title": "Bitva o anglický trůn slibuje parádní drama. Citizens porazili Arsenal a zle dotírají",
             "publishedAt": "2026-04-19T17:55:00Z"
@@ -643,10 +644,6 @@
           {
             "title": "Slavia vybouchla v Hradci, Bořil byl po zkratu vyloučen. Liga dostala novou zápletku",
             "publishedAt": "2026-04-19T15:33:00Z"
-          },
-          {
-            "title": "Udržitelnost dává smysl, říká jihočeský farmář. Dodává sýry na nejlepší smažák v Praze",
-            "publishedAt": "2026-04-17T17:13:00Z"
           }
         ]
       }
