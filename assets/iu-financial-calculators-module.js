@@ -1329,6 +1329,7 @@ export function initIuFinancialCalculatorsOverlay(deps) {
         b.classList.contains("iu-quickFeedMojeFullscreen") ||
         b.classList.contains("iu-mobileGateToolsQuickOpen") ||
         b.classList.contains("iu-nakup-online-overlay-open") ||
+        b.classList.contains("iu-grocery-desktop-overlay-open") ||
         b.classList.contains("iu-ds-overlay-open") ||
         b.classList.contains("iu-legal-docs-overlay-open") ||
         b.classList.contains("iu-ai-narrow-fullscreen")

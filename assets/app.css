@@ -3205,12 +3205,13 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna) + Převod Word/PDF (convert): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, čtyři body větve (banking / bakalari / pojistovna / wordpdf). */
+/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna) + Převod Word/PDF (convert) + Nákup potravin online (naceneni): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel. */
 @media (min-width: 1025px){
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]),
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]),
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-pojistovna-quickfeed-root:not([hidden]),
-  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-wordpdf-quickfeed-root:not([hidden]){
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-wordpdf-quickfeed-root:not([hidden]),
+  body.iu-grocery-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-grocery-quickfeed-root:not([hidden]){
     position:fixed;
     inset:0;
     left:0;
@@ -3236,7 +3237,8 @@ button.iu-close-btn-38:focus-visible{
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal,
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal,
-  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal{
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal,
+  body.iu-grocery-desktop-overlay-open #iuQuickFeed.iu-grocery-quickfeed-root .iu-banking-ds-modal{
     flex:1 1 auto;
     min-height:0;
     min-width:0;
@@ -3256,7 +3258,8 @@ button.iu-close-btn-38:focus-visible{
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal > .iuQHead,
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-ds-modal > .iuQHead,
-  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal > .iuQHead{
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-ds-modal > .iuQHead,
+  body.iu-grocery-desktop-overlay-open #iuQuickFeed.iu-grocery-quickfeed-root .iu-banking-ds-modal > .iuQHead{
     flex:0 0 auto;
     width:100%;
     margin:0;
@@ -3267,7 +3270,8 @@ button.iu-close-btn-38:focus-visible{
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host,
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host,
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-banking-scroll-host,
-  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-scroll-host{
+  body.iu-wordpdf-desktop-overlay-open #iuQuickFeed.iu-wordpdf-quickfeed-root .iu-banking-scroll-host,
+  body.iu-grocery-desktop-overlay-open #iuQuickFeed.iu-grocery-quickfeed-root .iu-banking-scroll-host{
     flex:1 1 auto;
     min-height:0;
     overflow-y:auto;
@@ -3287,6 +3291,17 @@ button.iu-close-btn-38:focus-visible{
     box-shadow:none;
     padding:0;
     margin:0;
+  }
+  /* Nákup potravin online: scroll host = Datovka-like; vnitřní .iu-nakup-online-outerCard není .iuQCard — vlastní bílý „list“ blok uvnitř modalu. */
+  body.iu-grocery-desktop-overlay-open #iuQuickFeed.iu-grocery-quickfeed-root .iu-banking-scroll-host > .iu-nakup-online-outerCard{
+    width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    margin:0;
+    flex:0 0 auto;
+    min-height:auto;
+    overflow:visible;
+    max-height:none;
   }
   /* Zdravotní pojišťovna: šířka vnitřního obsahu = stejný budget jako .iu-ds-modal na desktopu (min 720px / 100vw−80px). */
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-health-root{
@@ -11949,7 +11964,7 @@ body.iu-quickFeedOpen{
   color: inherit;
 }
 
-/* Nákup potravin online — .iu-nakup-online-feed-root + desktop: .iu-nakup-online--desktop-fit .iu-nakup-online-single-column */
+/* Nákup potravin online — mobil/tablet: .iu-nakup-online-premiumShell; desktop ≥1025: .iu-grocery-quickfeed-root + .iu-banking-ds-modal (stejný model jako Datovka, app.css výše). */
 .iuQuickFeed.iu-nakup-online-feed-root{
   background: transparent;
 }
@@ -11970,34 +11985,14 @@ body.iu-quickFeedOpen{
   margin-bottom: 5px;
 }
 /* Mobile/tablet: sjednotit horní rytmus (inline margin z iuApplyMobileQuickFeedLayout jen zde přebijeme) */
-.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-nakup-online--desktop-fit) .iuQHead{
+.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-grocery-quickfeed-root) .iuQHead{
   margin: 2px 0 5px !important;
-}
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-premiumShell{
-  padding: 10px 28px 18px;
-  width: min(100%, 1080px);
-  max-width: 1080px;
-}
-/* Desktop ≥1024px + guard: jeden vycentrovaný sloupec, bez vnitřního scrollu v kartě — scroll drží #iuQuickFeed (app.js). */
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column .iu-nakup-online-premiumShell{
-  width: min(100%, 720px);
-  max-width: 720px;
-  padding: 10px 20px 24px;
-  flex: 0 0 auto;
-  min-height: auto;
-}
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iuQHead{
-  margin-bottom: 12px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-fill{
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
-}
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column .iu-nakup-online-fill{
-  flex: 0 0 auto;
-  min-height: auto;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-outerCard{
   flex: 1 1 auto;
@@ -12011,37 +12006,21 @@ body.iu-quickFeedOpen{
   background: #fff;
   box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-outerCard{
-  margin-top: 2px;
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-outerCard{
+  margin-top: 0;
   padding: 16px 18px 18px;
   border-radius: 18px;
   box-shadow: 0 12px 40px rgba(15, 23, 42, 0.09);
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column .iu-nakup-online-outerCard{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online-single-column:not(.iu-grocery-quickfeed-root) .iu-nakup-online-fill{
+  flex: 0 0 auto;
+  min-height: auto;
+}
+.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online-single-column:not(.iu-grocery-quickfeed-root) .iu-nakup-online-outerCard{
   flex: 0 0 auto;
   min-height: auto;
   overflow: visible;
   max-height: none;
-}
-/* Desktop ≥1024px: jednoznačný scrollport na #iuQuickFeed (guard třída z app.js — bez :has()). Inner karta zůstává bez vlastního scrollu. */
-@media (min-width: 1024px) {
-  body.iu-nakup-online-overlay-open #iuQuickFeed.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column.iu-nakup-online-root-scrollport{
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    min-height: 0 !important;
-    overscroll-behavior-y: contain;
-  }
-  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-outerCard,
-  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-feed{
-    overflow: visible !important;
-    max-height: none !important;
-    /* Flex řetězec: zabránit min-width:auto rozšíření karty přes šířku scrollportu (žádný inner scroll). */
-    min-width: 0 !important;
-  }
-  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-premiumShell,
-  body.iu-nakup-online-overlay-open #iuQuickFeed.iu-nakup-online-root-scrollport .iu-nakup-online-fill{
-    min-width: 0 !important;
-  }
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-feed{
   flex: 1 1 auto;
@@ -12051,10 +12030,7 @@ body.iu-quickFeedOpen{
   gap: 12px;
   overflow: visible;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-feed{
-  gap: 0;
-}
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column .iu-nakup-online-feed{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-feed{
   flex: 0 0 auto;
   min-height: auto;
   gap: 0;
@@ -12069,7 +12045,7 @@ body.iu-quickFeedOpen{
   width: 100%;
   min-width: 0;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit.iu-nakup-online-single-column .iu-nakup-online-singleColShell{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-singleColShell{
   gap: 20px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-group{
@@ -12084,10 +12060,10 @@ body.iu-quickFeedOpen{
   color: #475569;
   line-height: 1.25;
 }
-.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-nakup-online--desktop-fit) .iu-nakup-online-group + .iu-nakup-online-group .iu-nakup-online-h3{
+.iuQuickFeed.iu-nakup-online-feed-root:not(.iu-grocery-quickfeed-root) .iu-nakup-online-group + .iu-nakup-online-group .iu-nakup-online-h3{
   margin-top: 1px;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-h3{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-h3{
   margin: 0 0 9px;
   font-size: 0.78rem;
   letter-spacing: 0.04em;
@@ -12100,7 +12076,7 @@ body.iu-quickFeedOpen{
   padding: 0;
   list-style: none;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-grid{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-grid{
   gap: 9px;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-card{
@@ -12123,7 +12099,7 @@ body.iu-quickFeedOpen{
   min-width: 0;
   box-sizing: border-box;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-cardInner{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-cardInner{
   min-height: 48px;
   padding: 10px 14px 10px 16px;
   border-radius: 12px;
@@ -12148,7 +12124,7 @@ body.iu-quickFeedOpen{
   line-height: 1.3;
   color: #0f172a;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-name{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-name{
   font-size: 0.95rem;
 }
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-cta{
@@ -12166,7 +12142,7 @@ body.iu-quickFeedOpen{
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
-.iuQuickFeed.iu-nakup-online-feed-root.iu-nakup-online--desktop-fit .iu-nakup-online-cta{
+.iuQuickFeed.iu-nakup-online-feed-root.iu-grocery-quickfeed-root .iu-nakup-online-cta{
   padding: 8px 14px;
   font-size: 13px;
   border-radius: 12px;
