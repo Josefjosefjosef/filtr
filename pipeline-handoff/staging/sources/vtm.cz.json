@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-19T17:09:38.791498Z",
+  "ingestedAt": "2026-04-19T18:09:43.102301Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,33 @@
         "stalo",
         "tohle",
         "událostí"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "iPhone Air už stojí jen 20 tisíc. Od uvedení zlevnil o třetinu, cena spadla pod iPhone 17",
+      "url": "https://mobilmania.zive.cz/clanky/iphone-air-je-v-nevidane-sleve-za-pul-roku-klesla-jeho-cena-o-ctvrtinu-ted-stoji-jako-zakladni-iphone-17-202604/sc-3-a-1364590/default.aspx",
+      "dt": "2026-04-19T17:25:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "air",
+        "cena",
+        "iphone",
+        "jen",
+        "spadla",
+        "stojí",
+        "tisíc",
+        "třetinu",
+        "uvedení",
+        "zlevnil"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -926,34 +953,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "WhatsApp od září odřízne staré Androidy. I další komunikační aplikace zvyšují své nároky",
-      "url": "https://mobilmania.zive.cz/clanky/whatsapp-od-zari-odrizne-stare-androidy-i-dalsi-komunikacni-aplikace-zvysuji-sve-naroky/sc-3-a-1364564/default.aspx",
-      "dt": "2026-04-16T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "androidy",
-        "aplikace",
-        "další",
-        "komunikační",
-        "nároky",
-        "odřízne",
-        "staré",
-        "své",
-        "whatsapp",
-        "zvyšují",
-        "září"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -964,7 +963,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22432,
+      "bytes": 22662,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1001,7 +1000,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-19T16:44:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T17:25:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1019,6 +1018,10 @@
           {
             "title": "Tohle se fakt stalo. Nejlepší filmy podle skutečných událostí, kterým prostě neuvěříte",
             "publishedAt": "2026-04-19T15:45:00Z"
+          },
+          {
+            "title": "iPhone Air už stojí jen 20 tisíc. Od uvedení zlevnil o třetinu, cena spadla pod iPhone 17",
+            "publishedAt": "2026-04-19T17:25:00Z"
           },
           {
             "title": "Recenze telefonu Honor Magic8 Pro. Špičkový výkon a zvuk, který jinde neuslyšíte",
@@ -1043,10 +1046,6 @@
           {
             "title": "Nejlepší tahová RPG. Promýšlejte taktiku a zachraňujte světy. Od Falloutu po slovenskou jednohubku",
             "publishedAt": "2026-04-19T06:45:00Z"
-          },
-          {
-            "title": "Pohodlí místo bezpečnosti. Šest z deseti moderních telefonů odemknete vytištěnou fotografií",
-            "publishedAt": "2026-04-19T08:45:00Z"
           }
         ]
       }
