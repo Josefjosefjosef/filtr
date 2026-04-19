@@ -1,36 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T08:10:22.195230Z",
+  "ingestedAt": "2026-04-19T08:30:07.593665Z",
   "items": [
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Story bronzové senzace. Ve Steaue bez teplé vody, po Francii šlapal Číp dlouhé štreky",
-      "url": "https://sport.aktualne.cz/hokej/story-bronzove-senzace-ve-steaue-bez-teple-vody-po-francii-slapal-cip-dlouhe-streky/r~aaa294e2bcaf68fc8d72eaa5b0d91b40/",
-      "dt": "2026-04-19T08:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bronzové",
-        "dlouhé",
-        "francii",
-        "senzace",
-        "steaue",
-        "story",
-        "teplé",
-        "vody",
-        "číp",
-        "šlapal",
-        "štreky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -51,6 +23,34 @@
         "vídeň",
         "výživou",
         "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Story bronzové senzace. Ve Steaue bez teplé vody, po Francii šlapal Číp dlouhé štreky",
+      "url": "https://sport.aktualne.cz/hokej/story-bronzove-senzace-ve-steaue-bez-teple-vody-po-francii-slapal-cip-dlouhe-streky/r~aaa294e2bcaf68fc8d72eaa5b0d91b40/",
+      "dt": "2026-04-19T08:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bronzové",
+        "dlouhé",
+        "francii",
+        "senzace",
+        "steaue",
+        "story",
+        "teplé",
+        "vody",
+        "číp",
+        "šlapal",
+        "štreky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -89,22 +89,23 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Jeden velký byrokratický zmatek. Potravináři a obchodníci kritizují nové nařízení EU o obalech",
+      "title": "Úmysl dobrý, provedení nikoliv. Potravináři a obchodníci tvrdě kritizují nové nařízení EU o obalech",
       "url": "https://zpravy.aktualne.cz/ekonomika/jeden-velky-byrokraticky-zmatek-potravinari-a-obchodnici-kritizuji-nove-narizeni-eu-o-obalech/r~aaa296446a9c5be8f60cd4314114248d/",
       "dt": "2026-04-19T07:22:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "byrokratický",
-        "jeden",
+        "dobrý",
         "kritizují",
         "nařízení",
+        "nikoliv",
         "nové",
         "obalech",
         "obchodníci",
         "potravináři",
-        "velký",
-        "zmatek"
+        "provedení",
+        "tvrdě",
+        "úmysl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -543,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21553,
+      "bytes": 21560,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,8 +584,8 @@
         "raw_feed_latest_publishedAt": "2026-04-19T08:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 6,
           "zpravy": 9,
+          "sport": 6,
           "finance": 4,
           "other": 1
         },
@@ -599,19 +600,19 @@
         },
         "sample_titles": [
           {
-            "title": "Story bronzové senzace. Ve Steaue bez teplé vody, po Francii šlapal Číp dlouhé štreky",
-            "publishedAt": "2026-04-19T08:00:00Z"
-          },
-          {
             "title": "Vídeň varuje před výživou HiPP, může být otrávená. Podezřelé skleničky se prý našly i v Česku",
             "publishedAt": "2026-04-19T07:56:00Z"
+          },
+          {
+            "title": "Story bronzové senzace. Ve Steaue bez teplé vody, po Francii šlapal Číp dlouhé štreky",
+            "publishedAt": "2026-04-19T08:00:00Z"
           },
           {
             "title": "Nový pokrok v medicíně. Umělá inteligence předpovídá selhání srdce roky dopředu",
             "publishedAt": "2026-04-19T07:28:00Z"
           },
           {
-            "title": "Jeden velký byrokratický zmatek. Potravináři a obchodníci kritizují nové nařízení EU o obalech",
+            "title": "Úmysl dobrý, provedení nikoliv. Potravináři a obchodníci tvrdě kritizují nové nařízení EU o obalech",
             "publishedAt": "2026-04-19T07:22:00Z"
           },
           {

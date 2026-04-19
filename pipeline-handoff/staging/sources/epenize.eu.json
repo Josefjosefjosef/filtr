@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-19T08:10:22.195230Z",
+  "ingestedAt": "2026-04-19T08:30:07.593665Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Babišovo zakázané letadlo pro Vystrčila jako ekonomický blud",
+      "url": "https://www.epenize.eu/babisovo-zakazane-letadlo-pro-vystrcila-jako-ekonomicky-blud/",
+      "dt": "2026-04-19T08:07:53Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "babišovo",
+        "blud",
+        "ekonomický",
+        "jako",
+        "letadlo",
+        "vystrčila",
+        "zakázané"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -475,30 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slovensko padá ke dnu. Fico to prostě zase zvládl",
-      "url": "https://www.epenize.eu/slovensko-pada-ke-dnu-fico-to-proste-zase-zvladl/",
-      "dt": "2026-04-11T07:48:32Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "dnu",
-        "fico",
-        "padá",
-        "prostě",
-        "slovensko",
-        "zase",
-        "zvládl"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 105084,
+      "bytes": 105755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,12 +546,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-18T23:00:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T08:07:53Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "sport": 1,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 16,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -563,6 +563,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babišovo zakázané letadlo pro Vystrčila jako ekonomický blud",
+            "publishedAt": "2026-04-19T08:07:53Z"
+          },
           {
             "title": "Trump se bojí Rogana víc než Íránu. A Rogan to moc dobře ví",
             "publishedAt": "2026-04-18T23:00:19Z"
@@ -590,10 +594,6 @@
           {
             "title": "Telička na síti: Macinka potvrdil, že je politický hulvát",
             "publishedAt": "2026-04-16T08:00:49Z"
-          },
-          {
-            "title": "Vondráčkovy prázdné řeči: Veřejnoprávní zpravodajství nemusí nikomu chybět",
-            "publishedAt": "2026-04-16T07:00:59Z"
           }
         ]
       }
