@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T20:34:35.998106Z",
+  "ingestedAt": "2026-04-19T20:54:51.481539Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalistky Fenerbahce vyhrály Euroligu, Voráčková slaví se Zaragozou bronz",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbalistky-fenerbahce-vyhraly-euroligu-vorackova-slavi-se-zaragozou-bronz-5440643",
+      "dt": "2026-04-19T20:36:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalistky",
+        "bronz",
+        "euroligu",
+        "fenerbahce",
+        "slaví",
+        "voráčková",
+        "vyhrály",
+        "zaragozou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,34 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pět sekund před koncem zabouchl dveře. Flyers díky Vladařovi přežili infarktový závěr",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-pet-sekund-pred-koncem-zabouchl-dvere-flyers-diky-vladarovi-prezili-infarktovy-zaver-5439987",
-      "dt": "2026-04-19T10:30:14Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dveře",
-        "díky",
-        "flyers",
-        "infarktový",
-        "koncem",
-        "pět",
-        "přežili",
-        "sekund",
-        "vladařovi",
-        "zabouchl",
-        "závěr"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47654,
+      "bytes": 47729,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T20:18:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T20:36:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -845,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Basketbalistky Fenerbahce vyhrály Euroligu, Voráčková slaví se Zaragozou bronz",
+            "publishedAt": "2026-04-19T20:36:07Z"
+          },
           {
             "title": "Ostuda, katastrofa, zoufalost! Zdrcený Hyský se omluvil fanouškům Plzně za kolaps s Pardubicemi",
             "publishedAt": "2026-04-19T20:18:10Z"
@@ -872,10 +873,6 @@
           {
             "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc přetlačila Slovácko",
             "publishedAt": "2026-04-19T04:02:04Z"
-          },
-          {
-            "title": "Nechutný závěr v Pardubicích. Fanoušci trefili Růžičku, reakce kouče Žabky byla za hranou",
-            "publishedAt": "2026-04-19T19:04:52Z"
           }
         ]
       }
