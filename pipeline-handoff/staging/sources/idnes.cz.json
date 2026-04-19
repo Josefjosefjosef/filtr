@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T11:09:55.968035Z",
+  "ingestedAt": "2026-04-19T11:29:43.394229Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mise na Tchaj-wan je zbytečná, míní Vondráček. Babišův truc, kritizuje Lipavský",
+      "url": "https://www.idnes.cz/zpravy/domaci/nedelni-debata-ct-radek-vondracek-cina-tchaj-wan-summit-nato.A260419_115548_domaci_herp",
+      "dt": "2026-04-19T11:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babišův",
+        "kritizuje",
+        "lipavský",
+        "mise",
+        "míní",
+        "tchaj",
+        "truc",
+        "vondráček",
+        "wan",
+        "zbytečná"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,34 +789,6 @@
         "sečteno",
         "týdnu",
         "voleb"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Magnesii Literu za knihu roku získala Dora Kaprálová, cenu čtenářů má Cyril Děckař",
-      "url": "https://www.idnes.cz/kultura/literatura/magnesia-litera-2026-dora-kapralova-cyril-deckar-radovan-jursa-jaroslava-haladova-mariborska-hypnoza.A260418_154050_literatura_nh",
-      "dt": "2026-04-18T19:45:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cenu",
-        "cyril",
-        "dora",
-        "děckař",
-        "kaprálová",
-        "knihu",
-        "literu",
-        "magnesii",
-        "roku",
-        "získala",
-        "čtenářů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1593,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51535,
+      "bytes": 51207,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1630,12 +1629,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "zpravy": 22,
           "finance": 7,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1647,6 +1646,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mise na Tchaj-wan je zbytečná, míní Vondráček. Babišův truc, kritizuje Lipavský",
+            "publishedAt": "2026-04-19T11:13:00Z"
+          },
           {
             "title": "Babiš se chce zapojit do Macronovy iniciativy jaderného deštníku",
             "publishedAt": "2026-04-19T11:01:00Z"
@@ -1674,10 +1677,6 @@
           {
             "title": "Soud vyhověl stížnosti Trumpa a dočasně povolil výstavbu tančírny Bílého domu",
             "publishedAt": "2026-04-19T09:38:00Z"
-          },
-          {
-            "title": "Osmé parlamentní volby za pět let. V Bulharsku se dere k moci proruský favorit",
-            "publishedAt": "2026-04-19T09:31:00Z"
           }
         ]
       }

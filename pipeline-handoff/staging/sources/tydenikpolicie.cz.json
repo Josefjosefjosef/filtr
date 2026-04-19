@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-19T11:09:55.968035Z",
+  "ingestedAt": "2026-04-19T11:29:43.394229Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sobota se v Plzeňském kraji nesla ve znamení nehod motorkářů",
+      "url": "https://tydenikpolicie.cz/sobota-se-v-plzenskem-kraji-nesla-ve-znameni-nehod-motorkaru/",
+      "dt": "2026-04-19T11:18:22Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kraji",
+        "motorkářů",
+        "nehod",
+        "nesla",
+        "plzeňském",
+        "sobota",
+        "znamení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,35 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž spadl v pražské zoo z menší výšky z lanovky. S lehkým zraněním skončil v péči záchranářů",
-      "url": "https://tydenikpolicie.cz/muz-spadl-v-prazske-zoo-z-mensi-vysky-z-lanovky-s-lehkym-zranenim-skoncil-v-peci-zachranaru/",
-      "dt": "2026-04-18T14:47:32Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "lanovky",
-        "lehkým",
-        "menší",
-        "muž",
-        "pražské",
-        "péči",
-        "skončil",
-        "spadl",
-        "výšky",
-        "zoo",
-        "zraněním",
-        "záchranářů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16695,
+      "bytes": 16619,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:24:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:18:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -328,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sobota se v Plzeňském kraji nesla ve znamení nehod motorkářů",
+            "publishedAt": "2026-04-19T11:18:22Z"
+          },
           {
             "title": "Na cyklostezce u Děhylova havaroval řidič na elektrickém terénním motocyklu",
             "publishedAt": "2026-04-19T10:24:38Z"
@@ -355,10 +354,6 @@
           {
             "title": "Při přistávání na letišti ve Strakonicích havarovala žena s motorovým paraglidem. Zraněná skončila v nemocnici",
             "publishedAt": "2026-04-19T09:18:28Z"
-          },
-          {
-            "title": "Při srážce tří aut v Mostě zemřeli dva lidé",
-            "publishedAt": "2026-04-18T15:41:22Z"
           }
         ]
       }
