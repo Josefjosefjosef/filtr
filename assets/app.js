@@ -20749,34 +20749,12 @@ function buildVideoAsArticleCard(it) {
   ];
   function iuNakupOnlineIsDesktopViewport() {
     try {
-      return !!(window.matchMedia && window.matchMedia("(min-width: 1024px)").matches);
+      return !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
     } catch (_) {
       return false;
     }
   }
-  /** Desktop ≥1024px: začátek overlaye pod horní lištou s vyhledáváním (#topbarWrap / Silver composer). Fallback: --iuTopbarHeight. */
-  function iuMeasureNakupOnlineDesktopOverlayTopPx() {
-    try {
-      var tb = document.getElementById("topbarWrap");
-      if (tb) {
-        var r = tb.getBoundingClientRect();
-        if (r && r.height > 4 && r.bottom > 0) return Math.max(0, Math.ceil(r.bottom));
-      }
-      var lh = document.getElementById("leftStickyHeader");
-      if (lh) {
-        var r2 = lh.getBoundingClientRect();
-        if (r2 && r2.bottom > 0) return Math.max(0, Math.ceil(r2.bottom));
-      }
-    } catch (_) {}
-    try {
-      var cs = window.getComputedStyle ? window.getComputedStyle(document.documentElement) : null;
-      var v = cs && cs.getPropertyValue("--iuTopbarHeight");
-      var n = v ? parseFloat(String(v).trim()) : NaN;
-      if (!isNaN(n) && n > 0) return Math.round(n);
-    } catch (_) {}
-    return 72;
-  }
-  /** P0: Nákup potravin online — fullscreen vrstva. Desktop: pod topbarem, jednosloupec (CSS), scroll celé vrstvy; mobile/tablet beze změny chování. */
+  /** P0: Nákup potravin online — mobile/tablet: fixed fullscreen na #iuQuickFeed. Desktop ≥1025 řeší stejný model jako Datovka (CSS + .iu-banking-ds-modal), ne tento layer. */
   function iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, on) {
     try {
       if (!quick) return;
@@ -20790,12 +20768,12 @@ function buildVideoAsArticleCard(it) {
           quick.__iuNakupOnlineResizeBound = false;
           quick.__iuNakupOnlineOnResize = null;
         } catch (_) {}
-        try { quick.classList.remove("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
         for (var ni = 0; ni < __iuNakupOnlineFsProps.length; ni++) {
           try { quick.style.removeProperty(__iuNakupOnlineFsProps[ni]); } catch (_) {}
         }
         return;
       }
+      if (iuNakupOnlineIsDesktopViewport()) return;
       quick.style.setProperty("position", "fixed", "important");
       quick.style.setProperty("margin", "0", "important");
       quick.style.setProperty("z-index", "10170", "important");
@@ -20804,57 +20782,38 @@ function buildVideoAsArticleCard(it) {
       quick.style.setProperty("display", "flex", "important");
       quick.style.setProperty("flex-direction", "column", "important");
       quick.style.setProperty("min-height", "0", "important");
-      var desk = iuNakupOnlineIsDesktopViewport();
-      if (desk) {
-        try { quick.classList.add("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
-        var topPx = iuMeasureNakupOnlineDesktopOverlayTopPx();
+      quick.style.setProperty("inset", "0", "important");
+      quick.style.setProperty("left", "0", "important");
+      quick.style.setProperty("top", "0", "important");
+      try { quick.style.removeProperty("right"); } catch (_) {}
+      try { quick.style.removeProperty("bottom"); } catch (_) {}
+      quick.style.setProperty("width", "100vw", "important");
+      quick.style.setProperty("height", "100dvh", "important");
+      quick.style.setProperty("max-width", "100vw", "important");
+      quick.style.setProperty("max-height", "100dvh", "important");
+      quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 4px) 6px calc(env(safe-area-inset-bottom, 0px) + 4px)", "important");
+      quick.style.setProperty("overflow-x", "hidden", "important");
+      quick.style.setProperty("overflow-y", "auto", "important");
+      try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
+      try { quick.style.removeProperty("overscroll-behavior"); } catch (_) {}
+      try { quick.style.removeProperty("touch-action"); } catch (_) {}
+    } catch (_) {}
+  }
+
+  /** Při změně šířky okna znovu složí Nákup potravin (desktop ↔ mobile) jednou finální cestou. */
+  function iuBindNakupOnlineViewportReconcile(quick) {
+    try {
+      if (!quick) return;
+      if (quick.__iuNakupOnlineResizeBound) return;
+      quick.__iuNakupOnlineOnResize = function() {
         try {
-          quick.style.setProperty("--iu-nakup-online-overlay-top", topPx + "px");
+          if (quick.hidden || !quick.classList.contains("iu-nakup-online-feed-root")) return;
+          if (String(quick.getAttribute("data-iu-qf-key") || "") !== "naceneni") return;
+          iuShowQuickFeedCore("naceneni");
         } catch (_) {}
-        try { quick.style.removeProperty("inset"); } catch (_) {}
-        quick.style.setProperty("left", "0", "important");
-        quick.style.setProperty("right", "0", "important");
-        quick.style.setProperty("top", topPx + "px", "important");
-        quick.style.setProperty("bottom", "0", "important");
-        try { quick.style.removeProperty("width"); } catch (_) {}
-        try { quick.style.removeProperty("height"); } catch (_) {}
-        try { quick.style.removeProperty("max-width"); } catch (_) {}
-        try { quick.style.removeProperty("max-height"); } catch (_) {}
-        quick.style.setProperty("padding", "10px 12px calc(env(safe-area-inset-bottom, 0px) + 16px)", "important");
-        quick.style.setProperty("overflow-x", "hidden", "important");
-        quick.style.setProperty("overflow-y", "auto", "important");
-        try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
-        try { quick.style.setProperty("overscroll-behavior", "auto"); } catch (_) {}
-        try { quick.style.removeProperty("overflow"); } catch (_) {}
-        try { quick.style.removeProperty("touch-action"); } catch (_) {}
-      } else {
-        try { quick.classList.remove("iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport"); } catch (_) {}
-        quick.style.setProperty("inset", "0", "important");
-        quick.style.setProperty("left", "0", "important");
-        quick.style.setProperty("top", "0", "important");
-        try { quick.style.removeProperty("right"); } catch (_) {}
-        try { quick.style.removeProperty("bottom"); } catch (_) {}
-        quick.style.setProperty("width", "100vw", "important");
-        quick.style.setProperty("height", "100dvh", "important");
-        quick.style.setProperty("max-width", "100vw", "important");
-        quick.style.setProperty("max-height", "100dvh", "important");
-        quick.style.setProperty("padding", "calc(env(safe-area-inset-top, 0px) + 4px) 6px calc(env(safe-area-inset-bottom, 0px) + 4px)", "important");
-        quick.style.setProperty("overflow-x", "hidden", "important");
-        quick.style.setProperty("overflow-y", "auto", "important");
-        try { quick.style.setProperty("-webkit-overflow-scrolling", "touch"); } catch (_) {}
-        try { quick.style.removeProperty("overscroll-behavior"); } catch (_) {}
-        try { quick.style.removeProperty("touch-action"); } catch (_) {}
-      }
-      if (!quick.__iuNakupOnlineResizeBound) {
-        quick.__iuNakupOnlineOnResize = function() {
-          try {
-            if (quick.hidden || !quick.classList.contains("iu-nakup-online-feed-root")) return;
-            iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, true);
-          } catch (_) {}
-        };
-        window.addEventListener("resize", quick.__iuNakupOnlineOnResize);
-        quick.__iuNakupOnlineResizeBound = true;
-      }
+      };
+      window.addEventListener("resize", quick.__iuNakupOnlineOnResize);
+      quick.__iuNakupOnlineResizeBound = true;
     } catch (_) {}
   }
 
@@ -20868,7 +20827,7 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
-  function iuRenderNakupOnlineQuickFeedHtml(data) {
+  function iuRenderNakupOnlineQuickFeedHtml(data, useDesktopDatovkaShell) {
     const groups = (data && Array.isArray(data.groups)) ? data.groups : [];
     const head =
       '<div class="iuQHead">' +
@@ -20901,6 +20860,17 @@ function buildVideoAsArticleCard(it) {
       '<div class="iu-nakup-online-singleColShell" data-iu-nakup-online-layout="single">' +
       sectionParts.join("") +
       "</div>";
+    if (useDesktopDatovkaShell) {
+      return (
+        '<div class="iu-banking-ds-modal">' +
+        head +
+        '<div class="iu-banking-scroll-host">' +
+        '<div class="iu-nakup-online-outerCard">' +
+        '<div class="iu-nakup-online-feed" role="region" aria-label="' + iuQfEscape(data.title || "Nákup potravin online") + '">' +
+        sections +
+        "</div></div></div></div>"
+      );
+    }
     return (
       '<div class="iu-nakup-online-premiumShell">' +
       head +
@@ -20919,6 +20889,22 @@ function buildVideoAsArticleCard(it) {
     const stage = document.getElementById("iuCenterStage");
     const quick = document.getElementById("iuQuickFeed");
     if (!stage || !quick) return;
+    if (keyNorm !== "naceneni") {
+      try {
+        iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false);
+      } catch (_) {}
+      try {
+        if (quick.classList && (quick.classList.contains("iu-nakup-online-feed-root") || quick.classList.contains("iu-grocery-quickfeed-root"))) {
+          iuUndockQuickFeedFromBody(quick);
+        }
+      } catch (_) {}
+      try {
+        document.body.classList.remove("iu-nakup-online-overlay-open", "iu-quickFeedMojeFullscreen", "iu-grocery-desktop-overlay-open");
+      } catch (_) {}
+      try {
+        quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online-single-column", "iu-grocery-quickfeed-root");
+      } catch (_) {}
+    }
     try {
       if (document.body.classList.contains("iu-banking-desktop-overlay-open") && keyNorm !== "banka") {
         document.body.classList.remove("iu-banking-desktop-overlay-open");
@@ -20960,8 +20946,21 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
         } catch (_) {}
       }
+      if (document.body.classList.contains("iu-grocery-desktop-overlay-open") && keyNorm !== "naceneni") {
+        document.body.classList.remove("iu-grocery-desktop-overlay-open");
+        iuUndockQuickFeedFromBody(quick);
+        try {
+          iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false);
+        } catch (_) {}
+        try {
+          iuSetViewportLock(false);
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen");
+        } catch (_) {}
+      }
     } catch (_) {}
-    try { quick.classList.remove("iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root"); } catch (_) {}
+    try { quick.classList.remove("iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root", "iu-grocery-quickfeed-root"); } catch (_) {}
     try { quick.style.removeProperty("display"); } catch (_) {}
     const isMobileGateToolsOpen = (() => {
       try {
@@ -21055,10 +21054,23 @@ function buildVideoAsArticleCard(it) {
     try {
       document.body.classList.add("iu-quickFeedOpen");
       if (keyNorm === "naceneni") {
-        iuDockQuickFeedToBodyForced(quick);
-        iuSetViewportLock(true);
-        document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open");
-        try { quick.classList.add("iu-nakup-online-feed-root", "iu-nakup-online-single-column"); } catch (_) {}
+        const nacDesk = !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+        try {
+          document.body.classList.remove("iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open");
+        } catch (_) {}
+        if (nacDesk) {
+          iuDockQuickFeedToBodyForBankingDesktop(quick);
+          iuSetViewportLock(true);
+          document.body.classList.add("iu-modal-open", "iu-quickFeedOpen", "iu-grocery-desktop-overlay-open");
+          try { quick.classList.remove("iu-nakup-online-single-column"); } catch (_) {}
+          try { quick.classList.add("iu-nakup-online-feed-root", "iu-grocery-quickfeed-root"); } catch (_) {}
+        } else {
+          iuDockQuickFeedToBodyForced(quick);
+          iuSetViewportLock(true);
+          document.body.classList.add("iu-modal-open", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open");
+          try { quick.classList.remove("iu-grocery-quickfeed-root"); } catch (_) {}
+          try { quick.classList.add("iu-nakup-online-feed-root", "iu-nakup-online-single-column"); } catch (_) {}
+        }
         try { quick.setAttribute("data-iu-qf-key", "naceneni"); } catch (_) {}
       }
       if (isMobileOverlayScope) {
@@ -21222,7 +21234,8 @@ function buildVideoAsArticleCard(it) {
       const toolsBlock = isNaceneni ? "" : ((data.toolsHtml != null && data.toolsHtml !== "") ? data.toolsHtml : "");
       const doRender = (services) => {
         if (isNaceneni) {
-          quick.innerHTML = iuRenderNakupOnlineQuickFeedHtml(data);
+          const groceryDs = !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+          quick.innerHTML = iuRenderNakupOnlineQuickFeedHtml(data, groceryDs);
           iuNakupCenyBootstrap(quick);
           return;
         }
@@ -21275,7 +21288,6 @@ function buildVideoAsArticleCard(it) {
           try { renderAiVideos(quick); } catch (e) { console.warn("renderAiVideos", e); }
         }
         if (isConvert) iuPdfConvertToolsBootstrap(quick);
-        if (keyNorm === "naceneni") iuNakupCenyBootstrap(quick);
       };
       if (isAi) {
         doRender(data.items);
@@ -21309,7 +21321,10 @@ function buildVideoAsArticleCard(it) {
         iuApplyMojeQuickFeedFullscreenLayer(quick, true);
       }
       if (keyNorm === "naceneni") {
-        iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, true);
+        if (!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches)) {
+          iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, true);
+        }
+        iuBindNakupOnlineViewportReconcile(quick);
       }
     } catch (_) {}
     if (closeBtn) closeBtn.addEventListener("click", iuHideQuickFeed, { once: true });
@@ -21623,7 +21638,7 @@ function buildVideoAsArticleCard(it) {
     if (quick) {
       try { iuApplyMojeQuickFeedFullscreenLayer(quick, false); } catch (_) {}
       try { iuApplyNakupOnlineQuickFeedFullscreenLayer(quick, false); } catch (_) {}
-      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online--desktop-fit", "iu-nakup-online-root-scrollport", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root"); } catch (_) {}
+      try { quick.classList.remove("iu-nakup-online-feed-root", "iu-nakup-online-single-column", "iu-banking-quickfeed-root", "iu-bakalari-quickfeed-root", "iu-pojistovna-quickfeed-root", "iu-wordpdf-quickfeed-root", "iu-grocery-quickfeed-root"); } catch (_) {}
       try { quick.removeAttribute("data-iu-qf-key"); } catch (_) {}
       quick.hidden = true;
       try { quick.style.display = "none"; } catch (_) {}
@@ -21647,7 +21662,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
@@ -21813,7 +21828,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
