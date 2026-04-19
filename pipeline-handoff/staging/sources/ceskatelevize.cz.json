@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-19T11:49:16.043171Z",
+  "ingestedAt": "2026-04-19T12:09:42.908713Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko má podle Havlíčka smluvně zajištěny dodávky leteckého paliva na celou sezonu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/cesko-ma-podle-havlicka-smluvne-zajisteny-dodavky-leteckeho-paliva-na-celou-sezonu-372544",
+      "dt": "2026-04-19T11:49:33Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "celou",
+        "dodávky",
+        "havlíčka",
+        "leteckého",
+        "paliva",
+        "podle",
+        "sezonu",
+        "smluvně",
+        "zajištěny",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -723,32 +750,6 @@
         "prostory",
         "reprezentační",
         "zpřístupnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izraelská armáda vytvořila žlutou linii v Libanonu. Podobně jako v Gaze",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izraelska-armada-vytvorila-zlutou-linii-v-libanonu-podobne-jako-v-gaze-372520",
-      "dt": "2026-04-18T12:04:51Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "armáda",
-        "gaze",
-        "izraelská",
-        "jako",
-        "libanonu",
-        "linii",
-        "podobně",
-        "vytvořila",
-        "žlutou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41846,
+      "bytes": 41768,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,10 +1575,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:49:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "finance": 1,
+          "zpravy": 24,
           "other": 5
         },
         "drop_counts": {
@@ -1590,6 +1592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko má podle Havlíčka smluvně zajištěny dodávky leteckého paliva na celou sezonu",
+            "publishedAt": "2026-04-19T11:49:33Z"
+          },
           {
             "title": "Díky nové technologii má při lékařských zákrocích stačit méně radiace",
             "publishedAt": "2026-04-19T11:07:00Z"
@@ -1617,10 +1623,6 @@
           {
             "title": "Otrávená dětská výživa se objevila v Česku. Prodejci podle firmy HiPP vše stáhli",
             "publishedAt": "2026-04-19T07:42:57Z"
-          },
-          {
-            "title": "Kompetence porodních asistentek se zvětšuje, roste jejich samostatnost",
-            "publishedAt": "2026-04-19T07:30:00Z"
           }
         ]
       }
@@ -1726,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77226,
+      "bytes": 77284,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-19T11:49:16.043171Z",
+  "ingestedAt": "2026-04-19T12:09:42.908713Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Škola, drogy i mrtvoly. Trailer na českých 6 gramů slibuje šílenou černou komedii",
+      "url": "https://www.kinobox.cz/clanky/filmy/52770-skola-drogy-a-asi-i-mrtvoly-trailer-na-komedii-6-gramu-slibuje-cernou-komedii",
+      "dt": "2026-04-19T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "drogy",
+        "gramů",
+        "komedii",
+        "mrtvoly",
+        "slibuje",
+        "trailer",
+        "černou",
+        "českých",
+        "škola",
+        "šílenou"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -523,35 +550,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Říkají mi Lars nabízí místo drsné kriminálky jen utahanou křeč. Nezachrání ji ani skvělý Hofmann",
-      "url": "https://www.kinobox.cz/clanky/recenze/52764-rikaji-mi-lars-nabizi-misto-drsne-kriminalky-jen-utahanou-krec-nezachrani-ji-ani-skvely-hofmann",
-      "dt": "2026-04-16T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "drsné",
-        "hofmann",
-        "jen",
-        "kriminálky",
-        "křeč",
-        "lars",
-        "místo",
-        "nabízí",
-        "nezachrání",
-        "skvělý",
-        "utahanou",
-        "říkají"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -562,7 +560,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27992,
+      "bytes": 27640,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,7 +597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 19,
@@ -615,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Škola, drogy i mrtvoly. Trailer na českých 6 gramů slibuje šílenou černou komedii",
+            "publishedAt": "2026-04-19T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Od dealera k agentovi 007. Daniel Craig po krk v extázi",
             "publishedAt": "2026-04-19T10:00:00Z"
@@ -642,10 +644,6 @@
           {
             "title": "Kinobox Daily: Drsný historický opus Maso a krev přivedl do Hollywoodu ikonického režiséra",
             "publishedAt": "2026-04-18T10:00:00Z"
-          },
-          {
-            "title": "Při noční jízdě si vás stopne démon. Horor Pasažér dorazil se znepokojivým trailerem",
-            "publishedAt": "2026-04-18T09:00:00Z"
           }
         ]
       }

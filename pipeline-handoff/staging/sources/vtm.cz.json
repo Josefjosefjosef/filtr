@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-19T11:49:16.043171Z",
+  "ingestedAt": "2026-04-19T12:09:42.908713Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Windows 11 25H2 míří na všechny domácí počítače. Řízená distribuce skončila",
+      "url": "https://www.zive.cz/clanky/windows-11-25h2-miri-na-vsechny-domaci-pocitace-rizena-distribuce-skoncila/sc-3-a-240635/default.aspx",
+      "dt": "2026-04-19T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "25h2",
+        "distribuce",
+        "domácí",
+        "míří",
+        "počítače",
+        "skončila",
+        "všechny",
+        "windows",
+        "řízená"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -929,32 +955,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hororový captcha test v katastru nemovitostí znovu odolává automatickému řešení",
-      "url": "https://www.zive.cz/clanky/do-katastru-nemovitosti-uz-se-zase-podivate-anonymne-novy-captcha-test-ale-muze-byt-horor/sc-3-a-240554/default.aspx",
-      "dt": "2026-04-15T07:57:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "automatickému",
-        "captcha",
-        "hororový",
-        "katastru",
-        "nemovitostí",
-        "odolává",
-        "test",
-        "znovu",
-        "řešení"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -965,7 +965,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22015,
+      "bytes": 22031,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1002,7 +1002,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-19T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1017,6 +1017,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Windows 11 25H2 míří na všechny domácí počítače. Řízená distribuce skončila",
+            "publishedAt": "2026-04-19T11:45:00Z"
+          },
           {
             "title": "Android 17 je skoro hotový, my už jsme ho vyzkoušeli. Neplýtvá místem a víc šetří baterii",
             "publishedAt": "2026-04-19T10:45:00Z"
@@ -1044,10 +1048,6 @@
           {
             "title": "Dřív pár milionů, dnes padesát. Český trh drtí nedostatek pamětí, dodavatelé ruší objednávky",
             "publishedAt": "2026-04-19T07:45:00Z"
-          },
-          {
-            "title": "Zasponzorovali daňoví poplatníci EU americké firmě vývoj? Co znamená, že Onsemi kupuje čipovou firmu z Brna",
-            "publishedAt": "2026-04-18T07:45:00Z"
           }
         ]
       }

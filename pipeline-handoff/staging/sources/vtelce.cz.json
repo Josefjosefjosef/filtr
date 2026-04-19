@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-19T11:49:16.043171Z",
+  "ingestedAt": "2026-04-19T12:09:42.908713Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Hogo fogo Homolka: Zničené záběry, ledová voda a vlastní vůz",
+      "url": "https://www.vtelce.cz/hogo-fogo-homolka-znicene-zabery-ledova-voda-a-vlastni-vuz/",
+      "dt": "2026-04-19T11:47:37Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "fogo",
+        "hogo",
+        "homolka",
+        "ledová",
+        "vlastní",
+        "voda",
+        "vůz",
+        "zničené",
+        "záběry"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -262,32 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Příští týden v Prostřeno: Rada kadeřnice, vojenská minulost, zranění a zkouška",
-      "url": "https://www.vtelce.cz/pristi-tyden-v-prostreno-rada-kadernice-vojenska-minulost-zraneni-a-zkouska/",
-      "dt": "2026-04-17T15:28:53Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "kadeřnice",
-        "minulost",
-        "prostřeno",
-        "příští",
-        "rada",
-        "týden",
-        "vojenská",
-        "zkouška",
-        "zranění"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,8 +298,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 76575,
-      "reason": "",
+      "bytes": 77466,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -335,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-18T17:56:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:47:37Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -351,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hogo fogo Homolka: Zničené záběry, ledová voda a vlastní vůz",
+            "publishedAt": "2026-04-19T11:47:37Z"
+          },
           {
             "title": "Klub rváčů: Opilí herci, oběti pro roli, líčení levou rukou a televizní skandál v den premiéry",
             "publishedAt": "2026-04-18T17:56:37Z"
@@ -378,10 +382,6 @@
           {
             "title": "Rambo III: Rekordní honorář, vyhazov režiséra a uražené Stalloneho ego po hádce s dětským hercem",
             "publishedAt": "2026-04-17T17:11:58Z"
-          },
-          {
-            "title": "Příští týden v Ulici: Soniny drsné politické intriky, krize v polyamorním vztahu, stěhování a Lukáš musí změnit plány",
-            "publishedAt": "2026-04-17T16:56:39Z"
           }
         ]
       }

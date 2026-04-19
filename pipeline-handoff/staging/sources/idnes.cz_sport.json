@@ -1,14 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-19T11:49:16.043171Z",
+  "ingestedAt": "2026-04-19T12:09:42.908713Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Sigma - Slovácko 1:1, hosté hrají v deseti, červenou pro domácí ruší video",
+      "title": "Chybí urputnost. Bídné výkony Baníku trápí i první šampiony klubu z roku 1976",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/banik-ostrava-bidne-vykony-setkani-sampionu-1976.A260419_124616_fotbal_jsl",
+      "dt": "2026-04-19T11:56:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "1976",
+        "baníku",
+        "bídné",
+        "chybí",
+        "klubu",
+        "první",
+        "roku",
+        "trápí",
+        "urputnost",
+        "výkony",
+        "šampiony"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Sigma - Slovácko 2:1, hosté hrají v deseti, penaltu proměňuje domácí Janošek",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-sigma-olomouc-slovacko-online-vysledek.A260417_152107_fotbal_duff",
-      "dt": "2026-04-19T11:43:00Z",
+      "dt": "2026-04-19T11:48:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -16,11 +44,11 @@
         "domácí",
         "hosté",
         "hrají",
-        "ruší",
+        "janošek",
+        "penaltu",
+        "proměňuje",
         "sigma",
-        "slovácko",
-        "video",
-        "červenou"
+        "slovácko"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -781,33 +809,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ofsajd, nebo ne? Finále rozhodl sporný gól. Žabka si stěžoval: Ovlivnění výsledku",
-      "url": "https://www.idnes.cz/hokej/extraliga/pardubice-trinec-play-off-finala-sporny-moment-ofsajd-boris-zabka.A260418_194739_hokej_ivt",
-      "dt": "2026-04-18T19:08:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finále",
-        "gól",
-        "nebo",
-        "ofsajd",
-        "ovlivnění",
-        "rozhodl",
-        "sporný",
-        "stěžoval",
-        "výsledku",
-        "žabka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -818,7 +819,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46673,
+      "bytes": 47223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -855,7 +856,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T11:56:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -871,8 +872,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Sigma - Slovácko 1:1, hosté hrají v deseti, červenou pro domácí ruší video",
-            "publishedAt": "2026-04-19T11:43:00Z"
+            "title": "Chybí urputnost. Bídné výkony Baníku trápí i první šampiony klubu z roku 1976",
+            "publishedAt": "2026-04-19T11:56:00Z"
+          },
+          {
+            "title": "ONLINE: Sigma - Slovácko 2:1, hosté hrají v deseti, penaltu proměňuje domácí Janošek",
+            "publishedAt": "2026-04-19T11:48:00Z"
           },
           {
             "title": "Žižkov ve druhé lize zachránil až v nastavení remízu s béčkem Baníku Ostrava",
@@ -897,10 +902,6 @@
           {
             "title": "Vrbovi jsme občas volali ve tři ráno, směje se Kolář. Na titul mysleli rok dopředu",
             "publishedAt": "2026-04-19T10:00:00Z"
-          },
-          {
-            "title": "Brankoviště? Beran v Litvínově bránil úklidu: Ve Vsetíně mi dělali díry",
-            "publishedAt": "2026-04-19T09:25:11Z"
           }
         ]
       }
