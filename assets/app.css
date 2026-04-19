@@ -3137,9 +3137,10 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (key banka): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; žádný center-column 100% hack. */
+/* Internetové bankovnictví (key banka) + Bakaláři (key bakalari): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel, dvě body větvě (banking vs bakalari). */
 @media (min-width: 1025px){
-  body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]){
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]),
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]){
     position:fixed;
     inset:0;
     left:0;
@@ -3162,7 +3163,8 @@ button.iu-close-btn-38:focus-visible{
     background:rgb(241, 245, 249);
     z-index:10040;
   }
-  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal{
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal,
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal{
     flex:1 1 auto;
     min-height:0;
     min-width:0;
@@ -3179,7 +3181,8 @@ button.iu-close-btn-38:focus-visible{
     overflow:hidden;
     background:#fff;
   }
-  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead{
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-ds-modal > .iuQHead,
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-ds-modal > .iuQHead{
     flex:0 0 auto;
     width:100%;
     margin:0;
@@ -3187,7 +3190,8 @@ button.iu-close-btn-38:focus-visible{
     box-sizing:border-box;
     border-bottom:1px solid rgba(0,0,0,.08);
   }
-  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host{
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host,
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host{
     flex:1 1 auto;
     min-height:0;
     overflow-y:auto;
@@ -3197,7 +3201,8 @@ button.iu-close-btn-38:focus-visible{
     padding:14px 16px 16px;
     box-sizing:border-box;
   }
-  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host > .iuQCard{
+  body.iu-banking-desktop-overlay-open #iuQuickFeed.iu-banking-quickfeed-root .iu-banking-scroll-host > .iuQCard,
+  body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iu-bakalari-quickfeed-root .iu-banking-scroll-host > .iuQCard{
     background:transparent;
     border:0;
     border-radius:0;
