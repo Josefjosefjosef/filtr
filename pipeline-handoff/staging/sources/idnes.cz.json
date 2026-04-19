@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-19T19:30:05.353769Z",
+  "ingestedAt": "2026-04-19T19:49:28.828972Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump chce jednat s Íránem a hrozí mu zničením elektráren. Teherán účast odmítá",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/primeri-iran-islamabad-americane-usa-trump.A260419_145019_zahranicni_berr",
+      "dt": "2026-04-19T19:29:37Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chce",
+        "elektráren",
+        "hrozí",
+        "jednat",
+        "odmítá",
+        "teherán",
+        "trump",
+        "zničením",
+        "íránem",
+        "účast"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -283,33 +310,6 @@
         "putinovi",
         "systému",
         "umíme"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump chce jednat s Íránem a hrozí mu zničením elektráren. Teherán účast odmítá",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/primeri-iran-islamabad-americane-usa-trump.A260419_145019_zahranicni_berr",
-      "dt": "2026-04-19T15:50:30Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "elektráren",
-        "hrozí",
-        "jednat",
-        "odmítá",
-        "teherán",
-        "trump",
-        "zničením",
-        "íránem",
-        "účast"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1594,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50796,
+      "bytes": 50797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1631,7 +1631,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T19:29:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1648,6 +1648,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump chce jednat s Íránem a hrozí mu zničením elektráren. Teherán účast odmítá",
+            "publishedAt": "2026-04-19T19:29:37Z"
+          },
           {
             "title": "Tuzemské lázeňství zažívá nečekaný boom. Pojišťovny šetří, ale hostů i procedur je víc",
             "publishedAt": "2026-04-19T18:00:00Z"
@@ -1675,10 +1679,6 @@
           {
             "title": "V brněnském Tesku našli dvě otrávené sklenice HiPP. Obsahovaly jed na krysy",
             "publishedAt": "2026-04-19T16:58:00Z"
-          },
-          {
-            "title": "Útočník v Louisianě po domácí hádce zastřelil osm dětí, policisté ho pak zabili",
-            "publishedAt": "2026-04-19T16:36:00Z"
           }
         ]
       }
