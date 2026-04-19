@@ -1002,8 +1002,6 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     return true;
   }
 
-  let __iuFinCalcResizeBound = null;
-
   function iuFinCalcIsDesktopFullpageGuards() {
     try {
       if (typeof document === "undefined" || !document.body) return false;
@@ -1024,43 +1022,13 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     }
   }
 
-  function iuFinCalcSyncChromeBottom() {
-    try {
-      if (!document.documentElement) return;
-      const el = document.getElementById("leftStickyHeader");
-      const vh = typeof window !== "undefined" && window.innerHeight ? window.innerHeight : 0;
-      let px = 72;
-      if (el) {
-        const r = el.getBoundingClientRect();
-        const raw = Math.max(0, Math.round(r.bottom * 1000) / 1000);
-        if (raw > 0 && (vh <= 0 || raw < vh - 32)) {
-          px = raw;
-        }
-      }
-      document.documentElement.style.setProperty("--iu-fin-calc-chrome-bottom", px + "px");
-    } catch (_) {}
-  }
-
   function iuFinCalcClearDesktopFullpageLayout() {
-    try {
-      const qf = document.getElementById("iuQuickFeed");
-      if (qf) qf.classList.remove("iu-financial-calculators-fullpage");
-    } catch (_) {}
     try {
       if (backdrop) backdrop.classList.remove("iu-financial-calculators-fullpage");
     } catch (_) {}
     try {
       if (panel) panel.classList.remove("iu-financial-calculators-fullpage");
     } catch (_) {}
-    try {
-      if (document.documentElement) document.documentElement.style.removeProperty("--iu-fin-calc-chrome-bottom");
-    } catch (_) {}
-    try {
-      if (__iuFinCalcResizeBound && typeof window !== "undefined" && typeof window.removeEventListener === "function") {
-        window.removeEventListener("resize", __iuFinCalcResizeBound, { passive: true });
-      }
-    } catch (_) {}
-    __iuFinCalcResizeBound = null;
   }
 
   function iuFinCalcApplyDesktopFullpageLayout(active) {
@@ -1069,23 +1037,10 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       return;
     }
     try {
-      const qf = document.getElementById("iuQuickFeed");
-      if (qf) qf.classList.add("iu-financial-calculators-fullpage");
-    } catch (_) {}
-    try {
       if (backdrop) backdrop.classList.add("iu-financial-calculators-fullpage");
     } catch (_) {}
     try {
       if (panel) panel.classList.add("iu-financial-calculators-fullpage");
-    } catch (_) {}
-    iuFinCalcSyncChromeBottom();
-    try {
-      if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
-        __iuFinCalcResizeBound = function () {
-          iuFinCalcSyncChromeBottom();
-        };
-        window.addEventListener("resize", __iuFinCalcResizeBound, { passive: true });
-      }
     } catch (_) {}
   }
 
@@ -1286,9 +1241,6 @@ export function initIuFinancialCalculatorsOverlay(deps) {
     try {
       scrollHost.scrollTop = 0;
     } catch (_) {}
-    try {
-      if (panel) panel.scrollTop = 0;
-    } catch (_) {}
   }
 
   function openSurface(extra) {
@@ -1333,9 +1285,6 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       renderHub();
       try {
         scrollHost.scrollTop = 0;
-      } catch (_) {}
-      try {
-        if (panel) panel.scrollTop = 0;
       } catch (_) {}
     });
   }
