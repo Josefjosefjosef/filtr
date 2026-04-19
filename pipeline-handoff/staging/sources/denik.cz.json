@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-19T08:30:07.593665Z",
+  "ingestedAt": "2026-04-19T08:49:59.160012Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kojenecká výživa HiPP může obsahovat jedovaté přísady. Skleničky jsou prý i v ČR",
+      "url": "https://www.denik.cz/staty-eu/rakousko-cesko-kojenecka-vyziva-hipp-jed.html",
+      "dt": "2026-04-19T07:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hipp",
+        "jedovaté",
+        "kojenecká",
+        "obsahovat",
+        "prý",
+        "přísady",
+        "skleničky",
+        "výživa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,33 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lenka Filipová se zotavuje po vážném zranění. Koncert v Kutné Hoře opět odložen",
-      "url": "https://www.denik.cz/hudba/kutna-hora-tylovo-divadlo-koncert-zpevacka-lenka-filipova-zraneni-odlozeno-2026.html",
-      "dt": "2026-04-18T11:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "filipová",
-        "hoře",
-        "koncert",
-        "kutné",
-        "lenka",
-        "odložen",
-        "opět",
-        "vážném",
-        "zotavuje",
-        "zranění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29394,
+      "bytes": 29342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-19T07:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T07:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kojenecká výživa HiPP může obsahovat jedovaté přísady. Skleničky jsou prý i v ČR",
+            "publishedAt": "2026-04-19T07:57:00Z"
+          },
           {
             "title": "Do centra Olomouce láká vůně tvarůžků. Tradiční sýr nechybí v dortech či sushi",
             "publishedAt": "2026-04-19T07:35:00Z"
@@ -736,10 +738,6 @@
           {
             "title": "Severní Korea odpálila několik balistických raket. Dopadly do moře",
             "publishedAt": "2026-04-19T04:38:00Z"
-          },
-          {
-            "title": "Necháváte si starý mobil v šuplíku? Chyba, je to časovaná bomba",
-            "publishedAt": "2026-04-19T03:30:00Z"
           }
         ]
       }
