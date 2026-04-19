@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-19T14:09:29.293292Z",
+  "ingestedAt": "2026-04-19T14:29:32.338890Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Takhle vypadal sovětský Starship. Připomíná sérii Red Alert a není divu, že pokaždé explodoval jako malá atomovka",
+      "url": "https://www.e15.cz/byznys/technologie-a-media/takhle-vypadal-sovetsky-starship-pripomina-serii-red-alert-a-neni-divu-ze-pokazde-explodoval-jako-mala-atomovka-1432237",
+      "dt": "2026-04-19T14:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "alert",
+        "atomovka",
+        "divu",
+        "explodoval",
+        "jako",
+        "malá",
+        "pokaždé",
+        "připomíná",
+        "red",
+        "sovětský",
+        "starship",
+        "sérii",
+        "takhle",
+        "vypadal"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1033,33 +1064,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Putin vypíná internet a vytváří v Rusku vlastní komunikační prostor. Ekonomika trpí",
-      "url": "https://www.e15.cz/byznys/technologie-a-media/putin-vypina-internet-a-vytvari-v-rusku-vlastni-komunikacni-prostor-ekonomika-trpi-1432188",
-      "dt": "2026-04-17T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "ekonomika",
-        "internet",
-        "komunikační",
-        "prostor",
-        "putin",
-        "rusku",
-        "trpí",
-        "vlastní",
-        "vypíná",
-        "vytváří"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1070,7 +1074,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54688,
+      "bytes": 54840,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1107,7 +1111,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1124,6 +1128,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Takhle vypadal sovětský Starship. Připomíná sérii Red Alert a není divu, že pokaždé explodoval jako malá atomovka",
+            "publishedAt": "2026-04-19T14:00:00Z"
+          },
           {
             "title": "Česko pod Macronovým deštníkem? Babiš se chce zapojit do iniciativy jaderného odstrašení",
             "publishedAt": "2026-04-19T11:35:00Z"
@@ -1151,10 +1159,6 @@
           {
             "title": "Šéfové letišť vyhlížejí skvělý rok. Podmínkou ale je, že bude benzín do letadel",
             "publishedAt": "2026-04-19T03:00:00Z"
-          },
-          {
-            "title": "Sedmdesát procent ročně z dividend? Wall Street ukazuje své démonické tváře",
-            "publishedAt": "2026-04-18T15:00:00Z"
           }
         ]
       }
