@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-19T03:55:54.062182Z",
+  "ingestedAt": "2026-04-19T04:56:10.675267Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Když české peníze patřily k nejsilnějším měnám střední Evropy",
+      "url": "https://profitonline.cz/kdyz-ceske-penize-patrily-k-nejsilnejsim-menam-stredni-evropy/",
+      "dt": "2026-04-19T04:00:28Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "evropy",
+        "když",
+        "měnám",
+        "nejsilnějším",
+        "patřily",
+        "peníze",
+        "střední",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -266,31 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Neprodáváme auta po havárii, tvrdí inzeráty. Realita je zcela jiná",
-      "url": "https://profitonline.cz/neprodavame-auta-po-havarii-tvrdi-inzeraty-realita-je-zcela-jina/",
-      "dt": "2026-04-16T10:00:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "auta",
-        "havárii",
-        "inzeráty",
-        "jiná",
-        "neprodáváme",
-        "realita",
-        "tvrdí",
-        "zcela"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19062,
+      "bytes": 19091,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-18T13:00:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:00:28Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -355,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Když české peníze patřily k nejsilnějším měnám střední Evropy",
+            "publishedAt": "2026-04-19T04:00:28Z"
+          },
           {
             "title": "Biometan je plyn budoucnosti, jeho podíl se ztrojnásobil",
             "publishedAt": "2026-04-18T13:00:05Z"
@@ -382,10 +386,6 @@
           {
             "title": "Jan Krafka řídí obchod Plzeňského Prazdroje",
             "publishedAt": "2026-04-17T13:00:02Z"
-          },
-          {
-            "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
-            "publishedAt": "2026-04-17T10:00:22Z"
           }
         ]
       }

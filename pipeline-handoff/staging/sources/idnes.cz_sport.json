@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-19T03:55:54.062182Z",
+  "ingestedAt": "2026-04-19T04:56:10.675267Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dostál spasil Zlín: Alespoň jsem něco chytil, v našich zápasech je to jak na hokeji",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/stanislav-dostal-fotbal-chance-liga-zlin-teplice.A260418_204239_fotbal_epfoj",
+      "dt": "2026-04-19T04:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alespoň",
+        "chytil",
+        "dostál",
+        "hokeji",
+        "jsem",
+        "našich",
+        "něco",
+        "spasil",
+        "zlín",
+        "zápasech"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,32 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vzhůru na finále! Liberecké volejbalistky v sérii vedou a doufají v nabitou halu",
-      "url": "https://www.idnes.cz/sport/ostatni/volejbal-extraliga-zen-finale-dukla-liberec-selmy-brno.A260418_900163_sporty_jrv",
-      "dt": "2026-04-18T11:59:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "doufají",
-        "finále",
-        "halu",
-        "liberecké",
-        "nabitou",
-        "sérii",
-        "vedou",
-        "volejbalistky",
-        "vzhůru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46279,
+      "bytes": 46412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T22:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dostál spasil Zlín: Alespoň jsem něco chytil, v našich zápasech je to jak na hokeji",
+            "publishedAt": "2026-04-19T04:17:00Z"
+          },
           {
             "title": "Real Sociedad počtvrté ovládl Copa del Rey, Atlético porazil na penalty",
             "publishedAt": "2026-04-18T22:11:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "Po čtyřech letech ve finále? Titul je blízko, ale zároveň hrozně daleko, říká Sobotka",
             "publishedAt": "2026-04-18T20:04:00Z"
-          },
-          {
-            "title": "Satoranského vyděsily srdeční potíže. Museli jsme být opatrní, přiznal po návratu",
-            "publishedAt": "2026-04-18T19:35:00Z"
           }
         ]
       }

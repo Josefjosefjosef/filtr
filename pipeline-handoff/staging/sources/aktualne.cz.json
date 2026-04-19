@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T03:55:54.062182Z",
+  "ingestedAt": "2026-04-19T04:56:10.675267Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nedává smysl, a proto ho chtějí. Splašený kombík je iracionální sen na čtyřech kolech",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/redakcni-testy/nedava-smysl-a-proto-ho-chteji-splaseny-kombik-je-iracionalni-sen-na-ctyrech-kolech/r~aaa293d377b6f6b862ac94b79ac4b7c7/",
+      "dt": "2026-04-19T04:15:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chtějí",
+        "iracionální",
+        "kolech",
+        "kombík",
+        "nedává",
+        "proto",
+        "sen",
+        "smysl",
+        "splašený",
+        "čtyřech"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,35 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mají být další Putinův cíl. V zemi přitvrzují proti Rusům, kolaborantů je čím dál víc",
-      "url": "https://zpravy.aktualne.cz/zahranici/maji-byt-dalsi-putinuv-cil-v-zemi-pritvrzuji-proti-rusum-kolaborantu-je-cim-dal-vic/r~aaa29e08c965f79888f8fa1a267a5d46/",
-      "dt": "2026-04-18T15:49:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "být",
-        "cíl",
-        "další",
-        "kolaborantů",
-        "mají",
-        "proti",
-        "putinův",
-        "přitvrzují",
-        "rusům",
-        "víc",
-        "zemi",
-        "čím"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21393,
+      "bytes": 21132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,10 +577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
+          "finance": 1,
+          "zpravy": 9,
           "sport": 8,
           "other": 2
         },
@@ -596,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nedává smysl, a proto ho chtějí. Splašený kombík je iracionální sen na čtyřech kolech",
+            "publishedAt": "2026-04-19T04:15:00Z"
+          },
           {
             "title": "Krok od katastrofy. Rusové zasypali přehradu bombami, když bylo nejvíc vody",
             "publishedAt": "2026-04-19T03:30:00Z"
@@ -623,10 +626,6 @@
           {
             "title": "„Vystrašilo mě to.\" Satoranský chyběl Barceloně dva týdny kvůli potížím se srdcem",
             "publishedAt": "2026-04-18T20:21:00Z"
-          },
-          {
-            "title": "Tragédie na Nürburgringu. Při hromadné nehodě zemřel jeden z pilotů",
-            "publishedAt": "2026-04-18T20:18:00Z"
           }
         ]
       }

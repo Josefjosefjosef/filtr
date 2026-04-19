@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-19T03:55:54.062182Z",
+  "ingestedAt": "2026-04-19T04:56:10.675267Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Estonsko zaskočilo spojence: Místo obrněnců nakupuje drony",
+      "url": "https://ekonomickydenik.cz/estonsko-zaskocilo-spojence-obrnencu-drony/",
+      "dt": "2026-04-19T04:10:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "drony",
+        "estonsko",
+        "místo",
+        "nakupuje",
+        "obrněnců",
+        "spojence",
+        "zaskočilo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -749,32 +773,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Účetnictví podle pravidel z devadesátek končí. Živnostníkům hrozí složité povinnosti",
-      "url": "https://ekonomickydenik.cz/velka-zmena-ucetnictvi-se-blizi/",
-      "dt": "2026-04-16T12:07:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "devadesátek",
-        "hrozí",
-        "končí",
-        "podle",
-        "povinnosti",
-        "pravidel",
-        "složité",
-        "účetnictví",
-        "živnostníkům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70066,
+      "bytes": 69864,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-18T14:53:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -839,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Estonsko zaskočilo spojence: Místo obrněnců nakupuje drony",
+            "publishedAt": "2026-04-19T04:10:00Z"
+          },
           {
             "title": "Úspěch českých vývojářů: Kingdom Come získal cenu za nejlepší příběh",
             "publishedAt": "2026-04-18T14:53:17Z"
@@ -866,10 +868,6 @@
           {
             "title": "Hormuz propouští tankery. Zlevnění paliv má však své „ale“",
             "publishedAt": "2026-04-17T16:46:43Z"
-          },
-          {
-            "title": "„Ruské energie přinášejí korupci a válku.“ Nová maďarská vláda nechce nic slibovat",
-            "publishedAt": "2026-04-17T15:50:00Z"
           }
         ]
       }

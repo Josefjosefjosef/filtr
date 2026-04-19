@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T03:55:54.062182Z",
+  "ingestedAt": "2026-04-19T04:56:10.675267Z",
   "items": [
     {
       "section": "sport",
@@ -22,6 +22,55 @@
         "vyhořel",
         "výhru",
         "úvod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Exkluzivní, parádní. Akce jak od Realu Madrid zaskočila Letnou",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-exkluzivni-paradni-akce-jak-od-realu-madrid-zaskocila-letnou-5439940",
+      "dt": "2026-04-19T04:17:59Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "akce",
+        "exkluzivní",
+        "letnou",
+        "madrid",
+        "parádní",
+        "realu",
+        "zaskočila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slavia míří za titulem, jede do Hradce. Plzeň hostí Pardubice",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-miri-za-titulem-jede-do-hradce-plzen-hosti-pardubice-5439967",
+      "dt": "2026-04-19T04:02:04Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hostí",
+        "hradce",
+        "jede",
+        "míří",
+        "pardubice",
+        "plzeň",
+        "slavia",
+        "titulem"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -726,56 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejoví junioři Třince získali titul v extralize",
-      "url": "https://www.sport.cz/clanek/hokej-hokejovi-juniori-trince-ziskali-titul-v-extralize-5439814",
-      "dt": "2026-04-18T17:29:49Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "extralize",
-        "hokejoví",
-        "junioři",
-        "titul",
-        "třince",
-        "získali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Davidová po operaci zad. Dostala implantát, šest týdnů musí být v klidu",
-      "url": "https://www.sport.cz/clanek/zimni-sporty-biatlon-davidova-po-operaci-zad-i-pres-berle-rozdava-usmevy-5438946",
-      "dt": "2026-04-18T10:48:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "být",
-        "davidová",
-        "dostala",
-        "implantát",
-        "klidu",
-        "musí",
-        "operaci",
-        "týdnů",
-        "zad",
-        "šest"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 48294,
+      "bytes": 49399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,11 +822,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T03:51:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T04:17:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 28,
-          "zdravi": 2
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -842,6 +841,14 @@
           {
             "title": "Vladař slaví v play off výhru nad Pittsburghem, Dallas s Faksou na úvod vyhořel",
             "publishedAt": "2026-04-19T03:51:39Z"
+          },
+          {
+            "title": "Exkluzivní, parádní. Akce jak od Realu Madrid zaskočila Letnou",
+            "publishedAt": "2026-04-19T04:17:59Z"
+          },
+          {
+            "title": "Slavia míří za titulem, jede do Hradce. Plzeň hostí Pardubice",
+            "publishedAt": "2026-04-19T04:02:04Z"
           },
           {
             "title": "Španělský pohár získal Real Sociedad",
@@ -862,14 +869,6 @@
           {
             "title": "Třinec nás uspával, rýpnul si Sobotka. Finále hraje po dvou dekádách znovu proti Růžičkovi",
             "publishedAt": "2026-04-18T20:27:36Z"
-          },
-          {
-            "title": "Při hromadné nehodě na Nürburgringu zemřel jeden z pilotů",
-            "publishedAt": "2026-04-18T20:23:11Z"
-          },
-          {
-            "title": "Jihlavský brankář vysvětlil neobvyklý rituál. Ani ten však jeho týmu výhru nepřinesl",
-            "publishedAt": "2026-04-18T20:07:31Z"
           }
         ]
       }
