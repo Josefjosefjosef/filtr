@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-19T13:29:28.452773Z",
+  "ingestedAt": "2026-04-19T13:49:38.538587Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hapalovu premiéru v Sigmě okořenily červené karty. Olomouc po obratu zdolala Slovácko",
+      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/hapalovu-premieru-v-sigme-okorenily-cervene-karty-olomouc-po-obratu-zdolala-slovacko/r~aaa2916b7823fa18177007bf9c6a6d7f/",
+      "dt": "2026-04-19T13:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hapalovu",
+        "karty",
+        "obratu",
+        "okořenily",
+        "olomouc",
+        "premiéru",
+        "sigmě",
+        "slovácko",
+        "zdolala",
+        "červené"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -62,7 +89,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Hradec Králové - Slavia. Další krůček k titulové jistotě může Slavia udělat v Hradci",
+      "title": "Hradec Králové - Slavia 0:0. Další krok k jistotě titulu může Slavia udělat v Hradci",
       "url": "https://sport.aktualne.cz/fotbal/ceska-liga/hradec-kralove-slavia-dalsi-krucek-k-titulove-jistote-muze-slavia-udelat-v-hradci/r~aaa29d5f38069e3db62fa8bbc321c873/",
       "dt": "2026-04-19T13:02:00Z",
       "media_raw": "Aktuálně",
@@ -72,10 +99,10 @@
         "hradci",
         "hradec",
         "jistotě",
+        "krok",
         "králové",
-        "krůček",
         "slavia",
-        "titulové",
+        "titulu",
         "udělat"
       ],
       "feedCategory": "zpravy",
@@ -119,21 +146,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Muchovou ve finále Rybakinová vyškolila, Porsche tak znovu zamíří do Kazachstánu",
+      "title": "Muchovou ve finále vyškolila Rybakinová. Překvapivý český triumf se zrodil ve Francii",
       "url": "https://sport.aktualne.cz/tenis/muchovou-ve-finale-rybakinova-vyskolila-porsche-tak-znovu-zamiri-do-kazachstanu/r~aaa29aede1b472ac09368d509d239a97/",
       "dt": "2026-04-19T12:35:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
         "finále",
-        "kazachstánu",
+        "francii",
         "muchovou",
-        "porsche",
+        "překvapivý",
         "rybakinová",
-        "tak",
+        "triumf",
         "vyškolila",
-        "zamíří",
-        "znovu"
+        "zrodil",
+        "český"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -520,30 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař zářil v Pittsburghu, dovedl Philadelphii k první výhře",
-      "url": "https://sport.aktualne.cz/hokej/vladar-zaril-v-pittsburghu-dovedl-philadelphii-k-prvni-vyhre/r~aaa29dd44dad8760a8240cf7a8c3bb97/",
-      "dt": "2026-04-19T05:10:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dovedl",
-        "philadelphii",
-        "pittsburghu",
-        "první",
-        "vladař",
-        "výhře",
-        "zářil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21354,
+      "bytes": 21550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,12 +594,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-19T13:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T13:37:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 7,
           "zpravy": 10,
-          "finance": 3,
-          "sport": 7
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -609,6 +612,10 @@
         },
         "sample_titles": [
           {
+            "title": "Hapalovu premiéru v Sigmě okořenily červené karty. Olomouc po obratu zdolala Slovácko",
+            "publishedAt": "2026-04-19T13:37:00Z"
+          },
+          {
             "title": "Pokud nepřijmete dohodu, zničíme vám všechny elektrárny a mosty, hrozí Trump Íránu",
             "publishedAt": "2026-02-28T14:04:00Z"
           },
@@ -617,7 +624,7 @@
             "publishedAt": "2026-04-19T13:15:00Z"
           },
           {
-            "title": "Hradec Králové - Slavia. Další krůček k titulové jistotě může Slavia udělat v Hradci",
+            "title": "Hradec Králové - Slavia 0:0. Další krok k jistotě titulu může Slavia udělat v Hradci",
             "publishedAt": "2026-04-19T13:02:00Z"
           },
           {
@@ -625,7 +632,7 @@
             "publishedAt": "2026-04-19T13:00:00Z"
           },
           {
-            "title": "Muchovou ve finále Rybakinová vyškolila, Porsche tak znovu zamíří do Kazachstánu",
+            "title": "Muchovou ve finále vyškolila Rybakinová. Překvapivý český triumf se zrodil ve Francii",
             "publishedAt": "2026-04-19T12:35:00Z"
           },
           {
@@ -635,10 +642,6 @@
           {
             "title": "Podezřelé sklenice dětské výživy v Česku a na Slovensku obsahovaly jed",
             "publishedAt": "2026-04-19T07:56:00Z"
-          },
-          {
-            "title": "Babiš chce pragmatickou politiku, Vystrčilovi kvůli Číně letadlo nedá. Trapná malost, reagoval Fiala",
-            "publishedAt": "2026-04-19T09:07:00Z"
           }
         ]
       }
