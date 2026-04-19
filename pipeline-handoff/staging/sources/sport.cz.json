@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-19T18:50:08.578705Z",
+  "ingestedAt": "2026-04-19T19:09:22.089002Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nechutný závěr v Pardubicích. Fanoušci trefili Růžičku, reakce kouče Žabky byla za hranou",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-nechutny-zaver-v-pardubicich-fanousci-trefili-ruzicku-reakce-kouce-zabky-byla-za-hranou-5440633",
+      "dt": "2026-04-19T19:04:52Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fanoušci",
+        "hranou",
+        "kouče",
+        "nechutný",
+        "pardubicích",
+        "reakce",
+        "růžičku",
+        "trefili",
+        "závěr",
+        "žabky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -84,22 +111,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "SESTŘIH: Pardubice mají druhou výhru, ve vyhroceném závěru létaly vzduchem pěsti i lahve ze střídačky",
+      "title": "SESTŘIH: Pardubice mají druhou výhru, ve vyhroceném závěru létaly pěsti",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-je-tu-prvni-finalova-odveta-pardubicim-bude-chybet-strelec-5439989",
       "dt": "2026-04-19T11:22:24Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "druhou",
-        "lahve",
         "létaly",
         "mají",
         "pardubice",
         "pěsti",
         "sestřih",
-        "střídačky",
         "vyhroceném",
-        "vzduchem",
         "výhru",
         "závěru"
       ],
@@ -755,30 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubický Kaut má zastavenou činnost, v neděli hrát nebude",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-pardubicky-kaut-ma-zastavenou-cinnost-v-nedeli-hrat-nebude-5439980",
-      "dt": "2026-04-19T08:12:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hrát",
-        "kaut",
-        "nebude",
-        "neděli",
-        "pardubický",
-        "zastavenou",
-        "činnost"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45543,
+      "bytes": 45694,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T18:29:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-19T19:04:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -843,6 +843,10 @@
         },
         "sample_titles": [
           {
+            "title": "Nechutný závěr v Pardubicích. Fanoušci trefili Růžičku, reakce kouče Žabky byla za hranou",
+            "publishedAt": "2026-04-19T19:04:52Z"
+          },
+          {
             "title": "Slavia poprvé v sezoně prohrála. Pardubice šokovaly Plzeň. Olomouc přetlačila Slovácko",
             "publishedAt": "2026-04-19T04:02:04Z"
           },
@@ -855,7 +859,7 @@
             "publishedAt": "2026-04-19T10:33:17Z"
           },
           {
-            "title": "SESTŘIH: Pardubice mají druhou výhru, ve vyhroceném závěru létaly vzduchem pěsti i lahve ze střídačky",
+            "title": "SESTŘIH: Pardubice mají druhou výhru, ve vyhroceném závěru létaly pěsti",
             "publishedAt": "2026-04-19T11:22:24Z"
           },
           {
@@ -869,10 +873,6 @@
           {
             "title": "Manchester City ve šlágru porazil Arsenal. Bitva o titul se dramatizuje",
             "publishedAt": "2026-04-19T15:04:57Z"
-          },
-          {
-            "title": "Hotovo. Bayern Mnichov slaví titul",
-            "publishedAt": "2026-04-19T16:17:42Z"
           }
         ]
       }
