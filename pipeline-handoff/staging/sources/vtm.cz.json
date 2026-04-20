@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,29 @@
         "router",
         "skvělou",
         "výbavu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "ChatGPT ani Codex nefungují, problém není jen u vás",
+      "url": "https://www.zive.cz/clanky/chatgpt-ani-codex-nefunguji-problem-neni-jen-u-vas/sc-3-a-240792/default.aspx",
+      "dt": "2026-04-20T16:00:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chatgpt",
+        "codex",
+        "jen",
+        "nefungují",
+        "problém",
+        "vás"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -930,35 +953,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Lidlovský šéfkuchař dosud nebyl levnější. Chytrý robot Monsieur Cuisine stojí devět tisíc",
-      "url": "https://www.zive.cz/clanky/nejlevnejsi-varny-robot-lidl-monsieur-cuisine-smart/sc-3-a-240733/default.aspx",
-      "dt": "2026-04-17T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chytrý",
-        "cuisine",
-        "devět",
-        "dosud",
-        "levnější",
-        "lidlovský",
-        "monsieur",
-        "nebyl",
-        "robot",
-        "stojí",
-        "tisíc",
-        "šéfkuchař"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -969,7 +963,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22726,
+      "bytes": 22689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1006,7 +1000,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:00:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1024,6 +1018,10 @@
           {
             "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
             "publishedAt": "2026-04-20T10:45:00Z"
+          },
+          {
+            "title": "ChatGPT ani Codex nefungují, problém není jen u vás",
+            "publishedAt": "2026-04-20T16:00:00Z"
           },
           {
             "title": "Vytvořili přeplácaný prohlížeč, teď chtějí peníze za čistou verzi. Brave Origin stojí 1300 Kč",
@@ -1048,10 +1046,6 @@
           {
             "title": "Nejlepší displej není ten nejjasnější. V noci potřebujeme opak, v tom mají navrch iPhony",
             "publishedAt": "2026-04-20T08:45:00Z"
-          },
-          {
-            "title": "Velká alzácká podložka pod myš a klávesnici zlevnila na 224 Kč. Dobře vypadá a nekroutí se",
-            "publishedAt": "2026-04-20T07:45:00Z"
           }
         ]
       }

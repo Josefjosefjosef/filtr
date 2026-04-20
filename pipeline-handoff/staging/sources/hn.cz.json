@@ -1,8 +1,65 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Geniální hudebník i muž s řadou démonů. Film o Davidu Stypkovi nechá svou otevřeností málokoho chladným",
+      "url": "https://vikend.hn.cz/c1-67868910-genialni-hudebnik-i-muz-s-radou-demonu-film-o-davidu-stypkovi-necha-svou-otevrenosti-malokoho-chladnym",
+      "dt": "2026-04-20T16:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chladným",
+        "davidu",
+        "démonů",
+        "film",
+        "geniální",
+        "hudebník",
+        "muž",
+        "málokoho",
+        "nechá",
+        "otevřeností",
+        "stypkovi",
+        "svou",
+        "řadou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z bílých límečků jsou modré. Přibývá vysokoškoláků, kteří se rekvalifikují na řemeslníky, na kurzy jsou pořadníky",
+      "url": "https://domaci.hn.cz/c1-67868800-z-bilych-limecku-jsou-modre-pribyva-vysokoskolaku-kteri-se-rekvalifikuji-na-remeslniky-na-kurzy-jsou-poradniky",
+      "dt": "2026-04-20T15:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bílých",
+        "kteří",
+        "kurzy",
+        "límečků",
+        "modré",
+        "pořadníky",
+        "přibývá",
+        "rekvalifikují",
+        "vysokoškoláků",
+        "řemeslníky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1132,61 +1189,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Praha má nový most přes Vltavu, první skoro po 12 letech. Proč je z něj i pomník boje proti automobilismu?",
-      "url": "https://archiv.hn.cz/c1-67868270-praha-ma-novy-most-pres-vltavu-prvni-skoro-po-12-letech-proc-je-z-nej-i-pomnik-boje-proti-automobilismu",
-      "dt": "2026-04-17T15:39:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "automobilismu",
-        "boje",
-        "letech",
-        "most",
-        "nový",
-        "něj",
-        "pomník",
-        "praha",
-        "proti",
-        "proč",
-        "první",
-        "skoro",
-        "vltavu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Je zdanění prázdných nemovitostí levičáckým výmyslem, nebo odpovědnou politikou?",
-      "url": "https://archiv.hn.cz/c1-67868420-je-zdaneni-prazdnych-nemovitosti-levicackym-vymyslem-nebo-odpovednou-politikou",
-      "dt": "2026-04-17T13:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "levičáckým",
-        "nebo",
-        "nemovitostí",
-        "odpovědnou",
-        "politikou",
-        "prázdných",
-        "výmyslem",
-        "zdanění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1197,7 +1199,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181089,
+      "bytes": 181246,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1234,11 +1236,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
-          "zpravy": 4,
+          "sport": 1,
+          "zpravy": 3,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1251,6 +1254,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Geniální hudebník i muž s řadou démonů. Film o Davidu Stypkovi nechá svou otevřeností málokoho chladným",
+            "publishedAt": "2026-04-20T16:00:00Z"
+          },
+          {
+            "title": "Z bílých límečků jsou modré. Přibývá vysokoškoláků, kteří se rekvalifikují na řemeslníky, na kurzy jsou pořadníky",
+            "publishedAt": "2026-04-20T15:57:00Z"
+          },
           {
             "title": "Kdo nabízí nejlepší dluhopisy? Unikátní model srovnává, kde dostane investor dobře zaplaceno",
             "publishedAt": "2026-04-20T15:49:00Z"
@@ -1274,14 +1285,6 @@
           {
             "title": "Schwarzenbergův zámek Dřevíč má nového majitele. Koupil ho tajemný miliardář z Berouna",
             "publishedAt": "2026-04-20T13:19:00Z"
-          },
-          {
-            "title": "Tohle už tady jednou bylo. AI burzovní šílenství kolem neúspěšného prodejce bot vyvolalo ozvěny dotcom bubliny",
-            "publishedAt": "2026-04-20T13:09:00Z"
-          },
-          {
-            "title": "Správce spustil prodej Bílinské kyselky. O její restart se stará zkušený nápojářský manažer, který chtěl šéfovat českému fotbalu",
-            "publishedAt": "2026-04-20T12:46:00Z"
           }
         ]
       }

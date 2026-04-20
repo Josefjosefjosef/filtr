@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ECHO BUNDESLIGY: Neuer na tenkém ledě. Může končit na vrcholu, nebo být terčem posměchu",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-echo-bundesligy-neuer-na-tenkem-lede-muze-koncit-na-vrcholu-nebo-byt-tercem-posmechu-5440889",
+      "dt": "2026-04-20T16:06:53Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bundesligy",
+        "být",
+        "echo",
+        "končit",
+        "ledě",
+        "nebo",
+        "neuer",
+        "posměchu",
+        "tenkém",
+        "terčem",
+        "vrcholu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -22,6 +50,30 @@
         "také",
         "velmi",
         "zraněného"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bostonský maraton ovládl Keňan Korir v traťovém rekordu",
+      "url": "https://www.sport.cz/clanek/atletika-bostonsky-maraton-ovladl-kenan-korir-v-tratovem-rekordu-5440910",
+      "dt": "2026-04-20T15:57:57Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bostonský",
+        "keňan",
+        "korir",
+        "maraton",
+        "ovládl",
+        "rekordu",
+        "traťovém"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -729,50 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová v Madridu nenastoupí",
-      "url": "https://www.sport.cz/clanek/tenis-muchova-v-madridu-nenastoupi-5440673",
-      "dt": "2026-04-20T09:36:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "madridu",
-        "muchová",
-        "nenastoupí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Skok mezi fanoušky. Donnarumma divoce slavil triumf nad Arsenalem",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-skok-mezi-fanousky-donnarumma-divoce-slavil-triumf-nad-arsenalem-5440668",
-      "dt": "2026-04-20T09:32:44Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "arsenalem",
-        "divoce",
-        "donnarumma",
-        "fanoušky",
-        "skok",
-        "slavil",
-        "triumf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44622,
+      "bytes": 44774,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:55:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:06:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -837,8 +845,16 @@
         },
         "sample_titles": [
           {
+            "title": "ECHO BUNDESLIGY: Neuer na tenkém ledě. Může končit na vrcholu, nebo být terčem posměchu",
+            "publishedAt": "2026-04-20T16:06:53Z"
+          },
+          {
             "title": "Problém pro reprezentaci před MS. Velmi nejistý je start zraněného Chlapíka, mimo je také Krejčík",
             "publishedAt": "2026-04-20T15:55:41Z"
+          },
+          {
+            "title": "Bostonský maraton ovládl Keňan Korir v traťovém rekordu",
+            "publishedAt": "2026-04-20T15:57:57Z"
           },
           {
             "title": "Hagi se po 25 letech vrátil k rumunské reprezentaci, nahradil zesnulého Lucesca",
@@ -859,14 +875,6 @@
           {
             "title": "Reportéři si utahovali z Coufala, že nerozumí německy. Zase tak blbej nejsem, smál se",
             "publishedAt": "2026-04-20T14:40:48Z"
-          },
-          {
-            "title": "Žabka se omluvil za zkrat v Pardubicích: Neuhlídal jsem se",
-            "publishedAt": "2026-04-20T14:05:49Z"
-          },
-          {
-            "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
-            "publishedAt": "2026-04-20T14:18:17Z"
           }
         ]
       }

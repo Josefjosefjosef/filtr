@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Brit oživuje v Rusku tradici výroby luxusních hodinek. Nosí je i Putin",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/brit-ozivuje-v-rusku-tradici-vyroby-luxusnich-hodinek-nosi-je-i-putin.A260420_145757_eko-zahranicni_ven",
+      "dt": "2026-04-20T16:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "brit",
+        "hodinek",
+        "luxusních",
+        "nosí",
+        "oživuje",
+        "putin",
+        "rusku",
+        "tradici",
+        "výroby"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čápi vzali na milost sloup, když jim Madonu zakryli. Broumov pro ně hledá jména",
+      "url": "https://www.idnes.cz/hradec-kralove/zpravy/capi-mariansky-sloup-pamatka-broumov-namesti-hnizdo-chko.A260420_142204_hradec-zpravy_tuu",
+      "dt": "2026-04-20T16:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "broumov",
+        "hledá",
+        "jim",
+        "jména",
+        "když",
+        "madonu",
+        "milost",
+        "sloup",
+        "vzali",
+        "zakryli",
+        "čápi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,57 +779,6 @@
         "ukrajinci",
         "vše",
         "zdecimovali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Paliva v úterý opět zlevní, strop na naftu klesne na 40,86 Kč",
-      "url": "https://www.idnes.cz/ekonomika/domaci/ceny-benzin-nafta.A260420_142644_ekonomika_ven",
-      "dt": "2026-04-20T12:49:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "klesne",
-        "naftu",
-        "opět",
-        "paliva",
-        "strop",
-        "zlevní",
-        "úterý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Nemít důstojný stánek je ostuda.“ Kraj podpořil stavbu multifunkční haly v Olomouci",
-      "url": "https://www.idnes.cz/olomouc/zpravy/multifunkcni-hala-hc-olomouc-moravek-richard.A260420_135715_olomouc-zpravy_hava",
-      "dt": "2026-04-20T12:44:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "důstojný",
-        "haly",
-        "kraj",
-        "multifunkční",
-        "nemít",
-        "olomouci",
-        "ostuda",
-        "podpořil",
-        "stavbu",
-        "stánek"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47946,
+      "bytes": 48063,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,12 +1617,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:44:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 28,
-          "other": 1,
-          "finance": 1
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1631,6 +1634,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brit oživuje v Rusku tradici výroby luxusních hodinek. Nosí je i Putin",
+            "publishedAt": "2026-04-20T16:00:00Z"
+          },
+          {
+            "title": "Čápi vzali na milost sloup, když jim Madonu zakryli. Broumov pro ně hledá jména",
+            "publishedAt": "2026-04-20T16:00:00Z"
+          },
           {
             "title": "Žádná obyčejná propiska, Pavel nechal v Chile pero plné granátů. Můžete ho mít taky",
             "publishedAt": "2026-04-20T15:44:00Z"
@@ -1654,14 +1665,6 @@
           {
             "title": "Extrémy počasí v Evropě: podívejte, kde teploty vyskočí i o 15 stupňů nad normál",
             "publishedAt": "2026-04-20T15:06:00Z"
-          },
-          {
-            "title": "Vás tu je, divil se pianista. Zkolaboval při hraní, zachránili ho pohotoví svědci",
-            "publishedAt": "2026-04-20T14:56:00Z"
-          },
-          {
-            "title": "Statisíce imigrantů ve Španělsku jsou na nohou: země jim legalizuje jejich pobyt",
-            "publishedAt": "2026-04-20T14:56:00Z"
           }
         ]
       }

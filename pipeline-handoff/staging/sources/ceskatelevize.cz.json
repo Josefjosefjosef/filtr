@@ -1,24 +1,49 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Demokraté ztrácí v Kalifornii. Mohou přijít o šanci na zisk guvernéra",
+      "title": "Státní zástupce obžaloval policistu, který sváděl k sexu domnělou nezletilou dívku",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/statni-zastupce-obzaloval-policistu-ktery-svadel-k-sexu-domnelou-nezletilou-divku-372595",
+      "dt": "2026-04-20T16:09:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "domnělou",
+        "dívku",
+        "nezletilou",
+        "obžaloval",
+        "policistu",
+        "sexu",
+        "státní",
+        "sváděl",
+        "zástupce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kalifornský marast může demokraty připravit o zdánlivou jistotu",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/demokrate-ztraci-v-kalifornii-mohou-prijit-o-sanci-na-zisk-guvernera-372591",
       "dt": "2026-04-20T15:34:06Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "demokraté",
-        "guvernéra",
-        "kalifornii",
-        "přijít",
-        "zisk",
-        "ztrácí",
-        "šanci"
+        "demokraty",
+        "jistotu",
+        "kalifornský",
+        "marast",
+        "připravit",
+        "zdánlivou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -713,31 +738,6 @@
         "oddálit",
         "svalovou",
         "ztrátu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Výrobců obuvi ubývá, trendy i návyky zákazníků mění trh",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/vyrobcu-obuvi-ubyva-trh-meni-trendy-i-navyky-zakazniku-372551",
-      "dt": "2026-04-20T04:27:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "mění",
-        "návyky",
-        "obuvi",
-        "trendy",
-        "trh",
-        "ubývá",
-        "výrobců",
-        "zákazníků"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1514,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42450,
+      "bytes": 42547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,12 +1574,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:34:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:09:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 19,
+          "zpravy": 20,
           "other": 9,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1592,7 +1592,11 @@
         },
         "sample_titles": [
           {
-            "title": "Demokraté ztrácí v Kalifornii. Mohou přijít o šanci na zisk guvernéra",
+            "title": "Státní zástupce obžaloval policistu, který sváděl k sexu domnělou nezletilou dívku",
+            "publishedAt": "2026-04-20T16:09:30Z"
+          },
+          {
+            "title": "Kalifornský marast může demokraty připravit o zdánlivou jistotu",
             "publishedAt": "2026-04-20T15:34:06Z"
           },
           {
@@ -1618,10 +1622,6 @@
           {
             "title": "Paliva v úterý opět zlevní, strop pro naftu klesne o více než dvě koruny",
             "publishedAt": "2026-04-20T12:50:04Z"
-          },
-          {
-            "title": "Gruzie zahájila obnovu lužních lesů u hranic s Arménií a Ázerbájdžánem",
-            "publishedAt": "2026-04-20T12:21:18Z"
           }
         ]
       }
@@ -1727,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77180,
+      "bytes": 77309,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Limit pro pojištění právní ochrany výrazně roste. Pomohly dvě novinky",
+      "url": "https://www.penize.cz/pojisteni-pravni-ochrany/488571-limit-pro-pojisteni-pravni-ochrany-vyrazne-roste-pomohly-dve-novinky",
+      "dt": "2026-04-20T17:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dvě",
+        "limit",
+        "novinky",
+        "ochrany",
+        "pojištění",
+        "pomohly",
+        "právní",
+        "roste",
+        "výrazně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -482,31 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nezaviněná dopravní nehoda? Jak v trestním řízení získat náhradu škody",
-      "url": "https://www.penize.cz/spotrebitel/488345-nezavinena-dopravni-nehoda-jak-v-trestnim-rizeni-ziskat-nahradu-skody",
-      "dt": "2026-04-16T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dopravní",
-        "nehoda",
-        "nezaviněná",
-        "náhradu",
-        "trestním",
-        "získat",
-        "řízení",
-        "škody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -517,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18084,
+      "bytes": 18023,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -554,11 +555,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 15
+          "finance": 16,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -570,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Limit pro pojištění právní ochrany výrazně roste. Pomohly dvě novinky",
+            "publishedAt": "2026-04-20T17:30:00Z"
+          },
           {
             "title": "Nový týden, nový strop. Maximální ceny benzinu a nafty na úterý 21. dubna",
             "publishedAt": "2026-04-20T14:02:00Z"
@@ -597,10 +602,6 @@
           {
             "title": "Brigádníci v zemědělství můžou letos vydělat víc díky nové slevě",
             "publishedAt": "2026-04-20T05:00:00Z"
-          },
-          {
-            "title": "HiPP stahuje dětské výživy. Ve sklenicích našli jed na krysy",
-            "publishedAt": "2026-04-19T12:54:00Z"
           }
         ]
       }

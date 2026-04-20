@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-20T16:00:00.110788Z",
+  "ingestedAt": "2026-04-20T16:20:15.439748Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po nehodě fabie utekla z místa fenka. Zatímco řidičku transportovali záchranáři do nemocnice vrtulníkem, zvíře odchytil jeden z policistů",
+      "url": "https://tydenikpolicie.cz/po-nehode-fabie-utekla-z-mista-fenka-zatimco-ridicku-transportovali-zachranari-do-nemocnice-vrtulnikem-zvire-odchytil-jeden-z-policistu/",
+      "dt": "2026-04-20T16:00:16Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "fabie",
+        "fenka",
+        "jeden",
+        "místa",
+        "nehodě",
+        "nemocnice",
+        "odchytil",
+        "policistů",
+        "transportovali",
+        "utekla",
+        "vrtulníkem",
+        "zatímco",
+        "zvíře",
+        "záchranáři",
+        "řidičku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,32 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Žena bez domova měla v Pardubicích ze žárlivosti zbít a pobodat svou známou",
-      "url": "https://tydenikpolicie.cz/zena-bez-domova-mela-v-pardubicich-ze-zarlivosti-zbit-a-pobodat-svou-znamou/",
-      "dt": "2026-04-20T12:36:50Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "domova",
-        "měla",
-        "pardubicích",
-        "pobodat",
-        "svou",
-        "zbít",
-        "známou",
-        "žena",
-        "žárlivosti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15926,
+      "bytes": 16034,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:22:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:00:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po nehodě fabie utekla z místa fenka. Zatímco řidičku transportovali záchranáři do nemocnice vrtulníkem, zvíře odchytil jeden z policistů",
+            "publishedAt": "2026-04-20T16:00:16Z"
+          },
           {
             "title": "Opilý muž vyhrožoval v Dubí policistovi s tím, že ho svlíkne z uniformy, počká si na něj a zbije ho jako psa",
             "publishedAt": "2026-04-20T15:22:53Z"
@@ -346,10 +356,6 @@
           {
             "title": "Falešný lékař z Jemenu připravil ženu o 100 tisíc korun",
             "publishedAt": "2026-04-20T13:22:36Z"
-          },
-          {
-            "title": "Policistům na Prostějovsku ujížděl řidič škodovky",
-            "publishedAt": "2026-04-20T13:19:35Z"
           }
         ]
       }
