@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T05:55:37.099622Z",
+  "ingestedAt": "2026-04-20T06:15:06.820356Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ceny ropy prudce rostou po opětovném uzavření Hormuzského průlivu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-ropy-prudce-rostou-po-opetovnem-uzavreni-hormuzskeho-prulivu-372564",
+      "dt": "2026-04-20T05:54:09Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ceny",
+        "hormuzského",
+        "opětovném",
+        "prudce",
+        "průlivu",
+        "ropy",
+        "rostou",
+        "uzavření"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,27 +762,30 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "KVÍZ: Poznáte česká města podle mapy jejich tramvajových tratí?",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/kviz-poznate-ceska-mesta-podle-mapy-jejich-tramvajovych-trati-372479",
-      "dt": "2026-04-19T07:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Pastrňák zapsal dva body, Boston však začal porážkou. Slavili Dobeš, Nečas i Hertl",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pastrnak-zapsal-dva-body-boston-vsak-zacal-porazkou-slavili-dobes-necas-i-hertl-156373",
+      "dt": "2026-04-20T06:08:39Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "jejich",
-        "kvíz",
-        "mapy",
-        "města",
-        "podle",
-        "poznáte",
-        "tramvajových",
-        "tratí",
-        "česká"
+        "body",
+        "boston",
+        "dobeš",
+        "dva",
+        "hertl",
+        "nečas",
+        "pastrňák",
+        "porážkou",
+        "slavili",
+        "však",
+        "zapsal",
+        "začal"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1485,32 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Úvodní finálový bod berou Pardubice, pod obrat se podepsali Červenka se Smejkalem",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-extraligy-dynamo-pardubice-ocelari-trinec-156344",
-      "dt": "2026-04-18T14:58:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "berou",
-        "bod",
-        "finálový",
-        "obrat",
-        "pardubice",
-        "podepsali",
-        "smejkalem",
-        "úvodní",
-        "červenka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1521,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43085,
+      "bytes": 43240,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,12 +1583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:54:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 4,
           "zpravy": 24,
-          "finance": 3,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1598,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ceny ropy prudce rostou po opětovném uzavření Hormuzského průlivu",
+            "publishedAt": "2026-04-20T05:54:09Z"
+          },
           {
             "title": "Kultura cestování vlakem se od devadesátých let transformovala pomalu",
             "publishedAt": "2026-04-20T05:32:00Z"
@@ -1625,10 +1631,6 @@
           {
             "title": "Mapa demarkační linie v Libanonu přisuzuje Izraeli kontrolu nad desítkami měst",
             "publishedAt": "2026-04-19T20:13:57Z"
-          },
-          {
-            "title": "Írán obvinil USA z porušení příměří a slíbil odvetu",
-            "publishedAt": "2026-04-19T20:00:56Z"
           }
         ]
       }
@@ -1640,7 +1642,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39196,
+      "bytes": 39455,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1677,7 +1679,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:08:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1692,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák zapsal dva body, Boston však začal porážkou. Slavili Dobeš, Nečas i Hertl",
+            "publishedAt": "2026-04-20T06:08:39Z"
+          },
           {
             "title": "Devalvovali jsme tím výkon na hřišti, mrzel Trpišovského nezvládnutý závěr v Hradci",
             "publishedAt": "2026-04-20T05:00:00Z"
@@ -1719,10 +1725,6 @@
           {
             "title": "Evenepoel se dočkal, premiérově vyhrál Amstel Gold Race",
             "publishedAt": "2026-04-19T15:55:11Z"
-          },
-          {
-            "title": "Bayern otočil zápas se Stuttgartem a už si zajistil titul",
-            "publishedAt": "2026-04-19T15:48:27Z"
           }
         ]
       }
@@ -1734,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77234,
+      "bytes": 77192,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

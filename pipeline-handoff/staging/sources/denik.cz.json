@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T05:55:37.099622Z",
+  "ingestedAt": "2026-04-20T06:15:06.820356Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česko má nový rekord. Motorka se v Mošnově řítila rychlostí 321 kilometrů",
+      "url": "https://www.denik.cz/regiony/mosnov-rekord-moto-rychlost-motocykl-pokus-letiste-roman-staroba.html",
+      "dt": "2026-04-20T05:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "321",
+        "kilometrů",
+        "motorka",
+        "mošnově",
+        "nový",
+        "rekord",
+        "rychlostí",
+        "česko",
+        "řítila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -608,49 +634,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Do centra Olomouce láká vůně tvarůžků. Tradiční sýr nechybí v dortech či sushi",
+      "title": "Do Olomouce lákala vůně tvarůžků. Tradiční sýr nechyběl v dortech či sushi",
       "url": "https://www.denik.cz/regiony/tvaruzkovy-festival-olomouc-cukrarna-tatarak-langose-sushi.html",
       "dt": "2026-04-19T07:35:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "centra",
         "dortech",
-        "láká",
-        "nechybí",
+        "lákala",
+        "nechyběl",
         "olomouce",
         "sushi",
         "sýr",
         "tradiční",
         "tvarůžků",
         "vůně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hudební novinky hlásí Petra Janů, Michal Pavlíček, Celine Dion i Vojtaano",
-      "url": "https://www.denik.cz/hudba/hudebni-novinky-hlasi-petra-janu-michal-pavlicek-celine-dion-i-vojtaano-20280417.html",
-      "dt": "2026-04-19T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "celine",
-        "dion",
-        "hlásí",
-        "hudební",
-        "janů",
-        "michal",
-        "novinky",
-        "pavlíček",
-        "petra",
-        "vojtaano"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -668,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29344,
+      "bytes": 29317,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -722,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko má nový rekord. Motorka se v Mošnově řítila rychlostí 321 kilometrů",
+            "publishedAt": "2026-04-20T05:40:00Z"
+          },
           {
             "title": "První letošní tornádo? Bouřka u Nymburka přinesla neobvyklý jev",
             "publishedAt": "2026-04-20T05:30:00Z"
@@ -749,10 +751,6 @@
           {
             "title": "Bulharské volby vyhrál exprezident Radev. Chce spolupráci s Ruskem",
             "publishedAt": "2026-04-19T17:53:00Z"
-          },
-          {
-            "title": "Záchranáři spěchají s uvolněním Timmyho. Velryba má pořád šanci, tvrdí skupina",
-            "publishedAt": "2026-04-19T17:50:00Z"
           }
         ]
       }

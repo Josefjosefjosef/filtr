@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-20T05:55:37.099622Z",
+  "ingestedAt": "2026-04-20T06:15:06.820356Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Charlotte už není Gottová, změnila si jméno a mnohé zklamala. „Češka jak vyšitá, chudák táta,“ míní lidé",
+      "url": "https://www.vlasta.cz/celebrity/charlotte-gottova-dnes-zmena-jmena-nova-deska-pisnicka/",
+      "dt": "2026-04-20T06:02:39Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "charlotte",
+        "chudák",
+        "gottová",
+        "jméno",
+        "lidé",
+        "mnohé",
+        "míní",
+        "táta",
+        "vyšitá",
+        "zklamala",
+        "změnila",
+        "češka"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1100,35 +1129,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zapomeňte na nudné túje. Tyhle rychlerostoucí varianty jsou jako živý plot mnohem hezčí a nenáročnější",
-      "url": "https://www.vlasta.cz/inspirace/jak-vybrat-zivy-plot-habr-jim-hloh-ptaci-zob-bobkovisen-tuje/",
-      "dt": "2026-04-15T05:02:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "hezčí",
-        "jako",
-        "mnohem",
-        "nenáročnější",
-        "nudné",
-        "plot",
-        "rychlerostoucí",
-        "tyhle",
-        "túje",
-        "varianty",
-        "zapomeňte",
-        "živý"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1139,7 +1139,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 63618,
+      "bytes": 63454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1176,7 +1176,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:02:39Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1192,6 +1192,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Charlotte už není Gottová, změnila si jméno a mnohé zklamala. „Češka jak vyšitá, chudák táta,“ míní lidé",
+            "publishedAt": "2026-04-20T06:02:39Z"
+          },
           {
             "title": "Lukáš Rous jako Adam Kokeš z Ulice nastínil děj: „Bude to drama, postava nabere nečekaný spád“",
             "publishedAt": "2026-04-20T05:31:00Z"
@@ -1219,10 +1223,6 @@
           {
             "title": "Kukuřičné tacos podle Lely Vémoly: Rychle hotové a jednoduché, povedou se každému",
             "publishedAt": "2026-04-19T06:04:00Z"
-          },
-          {
-            "title": "Malíř Jiří Anderle: Chtěl být obecním bubeníkem. První honorář dostal za obrázky myslivců",
-            "publishedAt": "2026-04-19T05:35:00Z"
           }
         ]
       }

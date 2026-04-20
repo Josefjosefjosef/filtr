@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T05:55:37.099622Z",
+  "ingestedAt": "2026-04-20T06:15:06.820356Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Opakovaná vyšetření stojí miliardy. Systém je zatím nedokáže zastavit",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pojistovny-tezko-odhaluji-duplicitni-vykony/",
+      "dt": "2026-04-20T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "miliardy",
+        "nedokáže",
+        "opakovaná",
+        "stojí",
+        "systém",
+        "vyšetření",
+        "zastavit",
+        "zatím"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,35 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Válka do správní rady VZP protlačíme, věří TOP 09. Současná situace je bizarní, míní Benda",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/valek-spravni-rada-vzp-benda/",
-      "dt": "2026-04-17T13:04:56Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "benda",
-        "bizarní",
-        "míní",
-        "protlačíme",
-        "rady",
-        "situace",
-        "současná",
-        "správní",
-        "top",
-        "vzp",
-        "válka",
-        "věří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104535,
+      "bytes": 109874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -334,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opakovaná vyšetření stojí miliardy. Systém je zatím nedokáže zastavit",
+            "publishedAt": "2026-04-20T06:00:00Z"
+          },
           {
             "title": "Přístrojová komise pod palbou: Administrativní překážka, nebo pojistka kvality?",
             "publishedAt": "2026-04-20T05:00:00Z"
@@ -361,10 +361,6 @@
           {
             "title": "Bouře kolem škrtů ve zdravotnictví: Německá ministryně čelila palbě otázek i z vlastních řad",
             "publishedAt": "2026-04-18T05:00:00Z"
-          },
-          {
-            "title": "Týden ve zdravotnictví: Unikátní operace dítěte, miliardové investice i politické spory",
-            "publishedAt": "2026-04-17T15:00:00Z"
           }
         ]
       }
