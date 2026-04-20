@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T04:34:57.202863Z",
+  "ingestedAt": "2026-04-20T04:55:07.742812Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hradec Králové do Evropy? Zatím mám letenky jen na dovolenou, smál se Horejš",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-hradec-kralove-do-evropy-zatim-mam-letenky-jen-na-dovolenou-smal-se-horejs-5440641",
+      "dt": "2026-04-20T04:37:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dovolenou",
+        "evropy",
+        "horejš",
+        "hradec",
+        "jen",
+        "králové",
+        "letenky",
+        "mám",
+        "smál",
+        "zatím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Divočák Galvas se zabydluje v reprezentaci a zkusil i drzou fintu. Teď sní o mistrovství",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-divocak-galvas-se-zabydluje-v-reprezentaci-a-zkusil-i-drzou-fintu-ted-sni-o-mistrovstvi-5439975",
+      "dt": "2026-04-20T04:32:55Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "divočák",
+        "drzou",
+        "fintu",
+        "galvas",
+        "mistrovství",
+        "reprezentaci",
+        "sní",
+        "zabydluje",
+        "zkusil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -720,60 +773,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Krpálek přiveze stříbro. Už nepokračuj, zaskočila ho ve finále prosba soupeře",
-      "url": "https://www.sport.cz/clanek/ostatni-krpalek-ma-osmou-medaili-z-me-jistou-o-titul-si-to-rozda-s-domacim-tusisvilim-5439984",
-      "dt": "2026-04-19T09:34:59Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "finále",
-        "krpálek",
-        "nepokračuj",
-        "prosba",
-        "přiveze",
-        "soupeře",
-        "stříbro",
-        "zaskočila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová na třetí titul v kariéře nedosáhla, ztracený první set při finále ve Stuttgartu ji nahlodal",
-      "url": "https://www.sport.cz/clanek/tenis-muchova-ve-stuttgartu-utoci-na-treti-titul-ve-finale-ji-ceka-svetova-dvojka-5439971",
-      "dt": "2026-04-19T05:11:01Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "finále",
-        "kariéře",
-        "muchová",
-        "nahlodal",
-        "nedosáhla",
-        "první",
-        "při",
-        "set",
-        "stuttgartu",
-        "titul",
-        "třetí",
-        "ztracený"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47613,
+      "bytes": 48403,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,11 +820,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:30:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:37:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -837,6 +835,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hradec Králové do Evropy? Zatím mám letenky jen na dovolenou, smál se Horejš",
+            "publishedAt": "2026-04-20T04:37:56Z"
+          },
+          {
+            "title": "Divočák Galvas se zabydluje v reprezentaci a zkusil i drzou fintu. Teď sní o mistrovství",
+            "publishedAt": "2026-04-20T04:32:55Z"
+          },
           {
             "title": "Spoluhráči smekají před Červenkou: Neskutečný borec, pánbůh mu nadělil",
             "publishedAt": "2026-04-20T04:30:03Z"
@@ -860,14 +866,6 @@
           {
             "title": "Basketbalistky Fenerbahce vyhrály Euroligu, Voráčková slaví se Zaragozou bronz",
             "publishedAt": "2026-04-19T20:36:07Z"
-          },
-          {
-            "title": "Ostuda, katastrofa, zoufalost! Zdrcený Hyský se omluvil fanouškům Plzně za kolaps s Pardubicemi",
-            "publishedAt": "2026-04-19T20:18:10Z"
-          },
-          {
-            "title": "Program finále play off Tipsport extraligy. Třinec hraje o titul s pardubickým Dynamem",
-            "publishedAt": "2026-04-18T04:18:00Z"
           }
         ]
       }

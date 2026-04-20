@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T04:34:57.202863Z",
+  "ingestedAt": "2026-04-20T04:55:07.742812Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České naděje, smolařka a další nové tváře pro Ameriku. Kdo může prorazit mezi elitu?",
+      "url": "https://www.idnes.cz/sport/basket/wnba-nove-tvare-cechova-hamzova-condeova-astierova.A260416_132313_sport-basket_czo/foto",
+      "dt": "2026-04-20T04:23:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ameriku",
+        "další",
+        "elitu",
+        "naděje",
+        "nové",
+        "prorazit",
+        "smolařka",
+        "tváře",
+        "české"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,34 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Patera zavřel branku Abbotsfordu a vychytal své první čisté konto sezony v AHL",
-      "url": "https://www.idnes.cz/hokej/nhl/patera-abbotsfordu-ahl-ciste-konto.A260419_121657_nhl_jrv",
-      "dt": "2026-04-19T10:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "abbotsfordu",
-        "ahl",
-        "branku",
-        "konto",
-        "patera",
-        "první",
-        "sezony",
-        "své",
-        "vychytal",
-        "zavřel",
-        "čisté"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47574,
+      "bytes": 47958,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "České naděje, smolařka a další nové tváře pro Ameriku. Kdo může prorazit mezi elitu?",
+            "publishedAt": "2026-04-20T04:23:00Z"
+          },
           {
             "title": "Sledujete cyklistiku? Poznejte známé závodníky podle fotky",
             "publishedAt": "2026-04-19T22:00:00Z"
@@ -873,10 +875,6 @@
           {
             "title": "Bayern získal 35. německý titul čtyři kola před koncem, nastřílel už 109 gólů",
             "publishedAt": "2026-04-19T20:08:15Z"
-          },
-          {
-            "title": "Zuberští házenkáři porazili Karvinou doma i podruhé a vynutili si páté semifinále",
-            "publishedAt": "2026-04-19T19:43:00Z"
           }
         ]
       }
