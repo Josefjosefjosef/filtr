@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T13:55:12.913470Z",
+  "ingestedAt": "2026-04-20T14:14:52.734425Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Končí Ďaloga, Holland, Krošelj i další. Hokejová Kometa hlásí sedm odchodů",
+      "url": "https://www.idnes.cz/hokej/extraliga/s-kometou-se-louci-sedm-hokejistu-vcetne-bartejse-dalogy-hollanda-a-stranskeho.A260420_154456_hokej_tit",
+      "dt": "2026-04-20T13:49:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "další",
+        "hlásí",
+        "hokejová",
+        "holland",
+        "kometa",
+        "končí",
+        "krošelj",
+        "odchodů",
+        "sedm",
+        "ďaloga"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,34 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bojíme se snad úspěchu? ptá se ostravská kapitánka. Její tým zase musí dohánět",
-      "url": "https://www.idnes.cz/sport/basket/sbs-ostrava-kp-brno-serie-o-bronz-prvn-zapas-ohlas-chance-zbl.A260419_214838_sport-basket_jsl",
-      "dt": "2026-04-20T06:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bojíme",
-        "dohánět",
-        "její",
-        "kapitánka",
-        "musí",
-        "ostravská",
-        "ptá",
-        "snad",
-        "tým",
-        "zase",
-        "úspěchu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47178,
+      "bytes": 46905,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Končí Ďaloga, Holland, Krošelj i další. Hokejová Kometa hlásí sedm odchodů",
+            "publishedAt": "2026-04-20T13:49:00Z"
+          },
           {
             "title": "Bayern slavil titul s papouškem pro štěstí. Zakončí rekordní jízdu ziskem treble?",
             "publishedAt": "2026-04-20T13:10:00Z"
@@ -884,10 +887,6 @@
           {
             "title": "Krásné gesto. V dešti povzbuzoval Slavii jediný fanoušek. Hráči se mu odvděčili",
             "publishedAt": "2026-04-20T11:36:00Z"
-          },
-          {
-            "title": "Písecký rozehrávač Sýkora: Fanoušky nám závidí i ti, kteří to nepřiznají",
-            "publishedAt": "2026-04-20T11:27:00Z"
           }
         ]
       }
