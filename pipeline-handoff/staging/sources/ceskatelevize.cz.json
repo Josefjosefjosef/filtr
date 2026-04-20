@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nepřípustné. Resort zahraničí plísnil ruského velvyslance kvůli výhrůžkám firmám",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nepripustne-resort-zahranici-plisnil-ruskeho-velvyslance-kvuli-vyhruzkam-firmam-372580",
+      "dt": "2026-04-20T11:53:23Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "firmám",
+        "kvůli",
+        "nepřípustné",
+        "plísnil",
+        "resort",
+        "ruského",
+        "velvyslance",
+        "výhrůžkám",
+        "zahraničí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -224,13 +250,16 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Po silném zemětřesení zasáhly Japonsko první vlny tsunami",
+      "title": "Po silném zemětřesení zasáhly Japonsko první vlny tsunami, hrozí další otřesy",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/japonsko-zasahlo-silne-zemetreseni-urady-varuji-pred-tsunami-372572",
       "dt": "2026-04-20T08:30:55Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
+        "další",
+        "hrozí",
         "japonsko",
+        "otřesy",
         "první",
         "silném",
         "tsunami",
@@ -715,33 +744,6 @@
         "prvního",
         "ražba",
         "úseku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vojtěchův resort chce omezit alkohol. Opatření by mířila na noční prodej či reklamu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vojtechuv-resort-chce-omezit-alkohol-opatreni-by-mirila-na-nocni-prodej-ci-reklamu-372552",
-      "dt": "2026-04-19T18:46:11Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "alkohol",
-        "chce",
-        "mířila",
-        "noční",
-        "omezit",
-        "opatření",
-        "prodej",
-        "reklamu",
-        "resort",
-        "vojtěchův"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1519,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43350,
+      "bytes": 43337,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,11 +1581,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T11:15:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:53:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 6,
           "zpravy": 22,
+          "other": 6,
           "finance": 2
         },
         "drop_counts": {
@@ -1596,6 +1598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nepřípustné. Resort zahraničí plísnil ruského velvyslance kvůli výhrůžkám firmám",
+            "publishedAt": "2026-04-20T11:53:23Z"
+          },
           {
             "title": "Vědci rozplétají komplikovaný kočičí apetit",
             "publishedAt": "2026-04-20T11:15:22Z"
@@ -1623,10 +1629,6 @@
           {
             "title": "Předběžná škoda u požáru skladu plastů v Brně je 50 milionů",
             "publishedAt": "2026-04-20T09:10:38Z"
-          },
-          {
-            "title": "Satelity ukázaly památky UNESCO z vesmíru",
-            "publishedAt": "2026-04-20T08:57:50Z"
           }
         ]
       }
@@ -1732,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77384,
+      "bytes": 77502,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

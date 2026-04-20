@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,32 @@
         "router",
         "skvělou",
         "výbavu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Apple a Google neuhlídaly aplikace, které pomocí AI svlékají lidi. Doporučovaly je i nezletilým",
+      "url": "https://mobilmania.zive.cz/clanky/apple-a-google-neuhlidaly-aplikace-ktere-pomoci-ai-svlekaji-lidi-doporucovaly-je-i-nezletilym/sc-3-a-1364581/default.aspx",
+      "dt": "2026-04-20T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aplikace",
+        "apple",
+        "doporučovaly",
+        "google",
+        "lidi",
+        "neuhlídaly",
+        "nezletilým",
+        "pomocí",
+        "svlékají"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -926,31 +952,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Gemini opustilo prohlížeč a je rovnou na ploše. Google na Macy vpustil AI",
-      "url": "https://www.zive.cz/clanky/gemini-opustilo-prohlizec-a-je-rovnou-na-plose-google-na-macy-vpustil-ai/sc-3-a-240726/default.aspx",
-      "dt": "2026-04-16T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "gemini",
-        "google",
-        "macy",
-        "opustilo",
-        "ploše",
-        "prohlížeč",
-        "rovnou",
-        "vpustil"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -961,7 +962,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22471,
+      "bytes": 22533,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -998,7 +999,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1016,6 +1017,10 @@
           {
             "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
             "publishedAt": "2026-04-20T10:45:00Z"
+          },
+          {
+            "title": "Apple a Google neuhlídaly aplikace, které pomocí AI svlékají lidi. Doporučovaly je i nezletilým",
+            "publishedAt": "2026-04-20T11:45:00Z"
           },
           {
             "title": "Tohle se fakt stalo. Nejlepší filmy podle skutečných událostí, kterým prostě neuvěříte",
@@ -1040,10 +1045,6 @@
           {
             "title": "Dřív pár milionů, dnes padesát. Český trh drtí nedostatek pamětí, dodavatelé ruší objednávky",
             "publishedAt": "2026-04-19T07:45:00Z"
-          },
-          {
-            "title": "iPhone Air už stojí jen 20 tisíc. Od uvedení zlevnil o třetinu, cena spadla pod iPhone 17",
-            "publishedAt": "2026-04-19T17:25:00Z"
           }
         ]
       }

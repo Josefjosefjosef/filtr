@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nový týden, nový strop. Maximální ceny benzinu a nafty na úterý 21. dubna",
+      "url": "https://www.penize.cz/doprava/488563-novy-tyden-novy-strop-maximalni-ceny-benzinu-a-nafty-na-utery-21-dubna",
+      "dt": "2026-04-20T14:02:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "maximální",
+        "nafty",
+        "nový",
+        "strop",
+        "týden",
+        "úterý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -59,7 +85,7 @@
       "section": "finance",
       "contentType": "article",
       "title": "Novou daňovou úlevu využije skoro čtvrt milionu Čechů. Pomůže s penězi na stáří",
-      "url": "https://www.penize.cz/dlouhodoby-investicni-produkt-dip/488555-novou-danovou-vyhodu-vyuzije-uz-ctvrt-milionu-cechu-pomuze-s-penezi-na-stari",
+      "url": "https://www.penize.cz/dlouhodoby-investicni-produkt-dip/488555-novou-danovou-ulevu-vyuzije-skoro-ctvrt-milionu-cechu-pomuze-s-penezi-na-stari",
       "dt": "2026-04-20T13:00:00Z",
       "media_raw": "Peníze.cz",
       "media_norm": "Peníze.cz",
@@ -481,30 +507,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Oneplay se připojí k programu výhod Unity s Air Bank a O2",
-      "url": "https://www.penize.cz/slevy/488358-oneplay-se-pripoji-k-programu-vyhod-unity-s-air-bank-a-o2",
-      "dt": "2026-04-15T18:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "air",
-        "bank",
-        "oneplay",
-        "programu",
-        "připojí",
-        "unity",
-        "výhod"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17906,
+      "bytes": 18072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +554,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:02:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
-          "zpravy": 4
+          "zpravy": 5,
+          "finance": 15
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +570,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový týden, nový strop. Maximální ceny benzinu a nafty na úterý 21. dubna",
+            "publishedAt": "2026-04-20T14:02:00Z"
+          },
           {
             "title": "Kotva odhalila první značky. Obchodní dům vsadil na italský luxus",
             "publishedAt": "2026-04-20T13:42:00Z"
@@ -595,10 +601,6 @@
           {
             "title": "HiPP stahuje dětské výživy. Ve sklenicích našli jed na krysy",
             "publishedAt": "2026-04-19T12:54:00Z"
-          },
-          {
-            "title": "Cena za úzkost. Devět způsobů, jak strach z létání ždímá vaši peněženku",
-            "publishedAt": "2026-04-19T07:00:00Z"
           }
         ]
       }

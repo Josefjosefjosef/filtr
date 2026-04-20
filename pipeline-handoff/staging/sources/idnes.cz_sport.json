@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slafkovského show. Hattrickem napodobil legendu a slyšel chválu: Těžko se zastavuje",
+      "url": "https://www.idnes.cz/hokej/nhl/juraj-slafkovsky-montreal-tampa-play-off.A260420_095315_nhl_ivt",
+      "dt": "2026-04-20T11:40:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chválu",
+        "hattrickem",
+        "legendu",
+        "napodobil",
+        "show",
+        "slafkovského",
+        "slyšel",
+        "těžko",
+        "zastavuje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Krásné gesto. V dešti povzbuzoval Slavii jediný fanoušek. Hráči se mu odvděčili",
+      "url": "https://www.idnes.cz/sport/trendy/krasne-gesto-v-desti-povzbuzoval-slavii-jediny-fanousek-hraci-se-mu-odvdecili.A260420_110538_trendy_blah",
+      "dt": "2026-04-20T11:36:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dešti",
+        "fanoušek",
+        "gesto",
+        "hráči",
+        "jediný",
+        "krásné",
+        "odvděčili",
+        "povzbuzoval",
+        "slavii"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -745,56 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sledujete cyklistiku? Poznejte známé závodníky podle fotky",
-      "url": "https://www.idnes.cz/sport/sledujete-cyklistiku-poznejte-zname-zavodniky-podle-fotky.Q260415_143444_sport_ipet",
-      "dt": "2026-04-19T22:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cyklistiku",
-        "fotky",
-        "podle",
-        "poznejte",
-        "sledujete",
-        "známé",
-        "závodníky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vencl: Že mi pod ledem odumřely mozkové buňky? Maximálně jako po dvou pivech",
-      "url": "https://www.idnes.cz/sport/ostatni/vencl-david-svetovy-rekord-pod-ledem-finsko-neuspesny-blackout-bezvedomi.A260417_104449_sporty_pbi",
-      "dt": "2026-04-19T22:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "buňky",
-        "dvou",
-        "jako",
-        "ledem",
-        "maximálně",
-        "mozkové",
-        "odumřely",
-        "pivech",
-        "vencl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47197,
+      "bytes": 47110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T11:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +859,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slafkovského show. Hattrickem napodobil legendu a slyšel chválu: Těžko se zastavuje",
+            "publishedAt": "2026-04-20T11:40:00Z"
+          },
+          {
+            "title": "Krásné gesto. V dešti povzbuzoval Slavii jediný fanoušek. Hráči se mu odvděčili",
+            "publishedAt": "2026-04-20T11:36:00Z"
+          },
           {
             "title": "Písecký rozehrávač Sýkora: Fanoušky nám závidí i ti, kteří to nepřiznají",
             "publishedAt": "2026-04-20T11:27:00Z"
@@ -880,14 +890,6 @@
           {
             "title": "Šílenství v Buffalu: play off po 15 letech a snová otočka. Hala se třásla, smál se kouč",
             "publishedAt": "2026-04-20T10:12:00Z"
-          },
-          {
-            "title": "Zdravá a řítí se do top 10. Pro Muchovou nastává ideální čas k útoku na grandslam",
-            "publishedAt": "2026-04-20T10:00:00Z"
-          },
-          {
-            "title": "Moravčík: Baráž? Byl jsem nervóznější než na šampionátu proti Rusům v plné palbě",
-            "publishedAt": "2026-04-20T09:54:00Z"
           }
         ]
       }

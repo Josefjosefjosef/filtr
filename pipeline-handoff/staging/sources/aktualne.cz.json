@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
     {
       "section": "aktualne",
@@ -25,6 +25,63 @@
         "zuří",
         "záběry",
         "íránskou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Třinec se nechává zesměšnit. Na co toho hráče mají?\" Expert řeší dohru krvavé bitky",
+      "url": "https://sport.aktualne.cz/hokej/trinec-se-nechava-zesmesnit-na-co-toho-hrace-maji-expert-resi-dohru-krvave-bitky/r~aaa29c4a88ccf6e0f9ca501613d56672/",
+      "dt": "2026-04-20T12:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bitky",
+        "dohru",
+        "expert",
+        "hráče",
+        "krvavé",
+        "mají",
+        "nechává",
+        "toho",
+        "třinec",
+        "zesměšnit",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po válce sem ukryli třaskavé dědictví. Než aby ho někdo získal, vyhodili celý ostrov do povětří",
+      "url": "https://magazin.aktualne.cz/po-valce-sem-ukryli-traskave-dedictvi-nez-aby-ho-nekdo-ziskal-vyhodili-cely-ostrov-do-povetri/r~aaa294978a51676cd320caf2cbe3c36c/",
+      "dt": "2026-04-20T11:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "celý",
+        "dědictví",
+        "než",
+        "někdo",
+        "ostrov",
+        "povětří",
+        "sem",
+        "třaskavé",
+        "ukryli",
+        "vyhodili",
+        "válce",
+        "získal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -481,61 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ten, který kdysi slavnostně pohřbil své jméno. Zpěvák Prince zemřel před deseti lety",
-      "url": "https://magazin.aktualne.cz/kultura/hudba/ten-ktery-kdysi-slavnostne-pohrbil-sve-jmeno-zpevak-prince-zemrel-pred-deseti-lety/r~aaa298c64d7c90c21a60fb5a8e69ad03/",
-      "dt": "2026-04-20T08:33:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "deseti",
-        "jméno",
-        "kdysi",
-        "lety",
-        "pohřbil",
-        "prince",
-        "slavnostně",
-        "své",
-        "ten",
-        "zemřel",
-        "zpěvák"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Děsivý symbol dneška: statisíce zohavených dětí. Viník je jasný, shodují se experti",
-      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/desivy-symbol-dneska-statisice-zohavenych-deti-vinik-je-jasny-shoduji-se-experti/r~aaa29bef9f31a1697192056ad826950b/",
-      "dt": "2026-04-20T08:19:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dneška",
-        "děsivý",
-        "dětí",
-        "experti",
-        "jasný",
-        "shodují",
-        "statisíce",
-        "symbol",
-        "viník",
-        "zohavených"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21961,
+      "bytes": 21876,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,14 +585,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T11:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T12:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "other": 3,
-          "sport": 2,
-          "finance": 2,
-          "zdravi": 1
+          "zpravy": 13,
+          "sport": 3,
+          "other": 2,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -605,6 +606,14 @@
           {
             "title": "Porušili jste příměří, zuří Teherán. USA ukázaly záběry mariňáků, kteří obsadili íránskou loď",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "„Třinec se nechává zesměšnit. Na co toho hráče mají?\" Expert řeší dohru krvavé bitky",
+            "publishedAt": "2026-04-20T12:03:00Z"
+          },
+          {
+            "title": "Po válce sem ukryli třaskavé dědictví. Než aby ho někdo získal, vyhodili celý ostrov do povětří",
+            "publishedAt": "2026-04-20T11:56:00Z"
           },
           {
             "title": "Argentina si připomněla úmrtí papeže Františka. DJ Padre zmixoval jeho promluvy s technem",
@@ -625,14 +634,6 @@
           {
             "title": "Pozor na sklenice s bílou nálepkou. Jak poznat otrávenou dětskou výživu",
             "publishedAt": "2026-04-20T10:52:00Z"
-          },
-          {
-            "title": "Drama na moři. Mariňáci sedli do vrtulníků a \"zajali\" loď. Íránci už vyhrožují",
-            "publishedAt": "2026-04-20T10:48:00Z"
-          },
-          {
-            "title": "Dcera Karla Gotta Charlotte vydá svůj debutový singl. Natáčela ho v Londýně",
-            "publishedAt": "2026-04-19T19:48:00Z"
           }
         ]
       }

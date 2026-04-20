@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TV sledovanost: Buldok z Poděbrad ničí všechny okolo. Novinky Primy stále více tápou",
+      "url": "https://www.kinobox.cz/clanky/tema/52863-tv-sledovanost-buldok-z-podebrad-nici-vsechny-okolo-novinky-primy-stale-vice-tapou",
+      "dt": "2026-04-20T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "buldok",
+        "ničí",
+        "novinky",
+        "okolo",
+        "poděbrad",
+        "primy",
+        "sledovanost",
+        "stále",
+        "tápou",
+        "všechny"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,33 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Nicolas Cage se vrátí do své nejděsivější role. Chystá se pokračování úspěšného hororu",
-      "url": "https://www.kinobox.cz/clanky/filmy/52736-vrazdici-nicolas-cage-se-vrati-chysta-se-pokracovani-hororu-sekac",
-      "dt": "2026-04-17T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "cage",
-        "chystá",
-        "hororu",
-        "nejděsivější",
-        "nicolas",
-        "pokračování",
-        "role",
-        "své",
-        "vrátí",
-        "úspěšného"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -564,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28115,
+      "bytes": 27974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -601,7 +601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -616,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TV sledovanost: Buldok z Poděbrad ničí všechny okolo. Novinky Primy stále více tápou",
+            "publishedAt": "2026-04-20T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Lovcova noc připomíná první film nového žánru, který nikdy nevznikl",
             "publishedAt": "2026-04-20T10:00:00Z"
@@ -643,10 +647,6 @@
           {
             "title": "Kinobox Daily: Od dealera k agentovi 007. Daniel Craig po krk v extázi",
             "publishedAt": "2026-04-19T10:00:00Z"
-          },
-          {
-            "title": "Kultovní akční béčko 80. let se dočká remaku. Drsňák Kurt Russell dostane mladší verzi",
-            "publishedAt": "2026-04-19T09:00:00Z"
           }
         ]
       }

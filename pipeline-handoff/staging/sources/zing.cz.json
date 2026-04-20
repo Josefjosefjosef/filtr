@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-20T11:54:34.533493Z",
+  "ingestedAt": "2026-04-20T12:14:26.766121Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Chystaná hororová hra na Unreal Enginu 5 vás vezme do bohnické léčebny",
+      "url": "https://zing.cz/article/chystana-hororova-hra-vas-vezme-do-bohnicke-lecebny",
+      "dt": "2026-04-20T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "bohnické",
+        "chystaná",
+        "enginu",
+        "hororová",
+        "hra",
+        "léčebny",
+        "unreal",
+        "vezme",
+        "vás"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -946,27 +972,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Bloodborne dostane filmovou adaptaci",
-      "url": "https://zing.cz/article/bloodborne-obdrzi-filmovou-adaptaci",
-      "dt": "2026-04-14T13:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "adaptaci",
-        "bloodborne",
-        "dostane",
-        "filmovou"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +982,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126536,
+      "bytes": 126585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1019,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1029,6 +1034,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chystaná hororová hra na Unreal Enginu 5 vás vezme do bohnické léčebny",
+            "publishedAt": "2026-04-20T12:00:00Z"
+          },
           {
             "title": "Kingdom Come: Deliverance 2 získalo prestižní ocenění za nejlepší příběh",
             "publishedAt": "2026-04-20T10:00:00Z"
@@ -1056,10 +1065,6 @@
           {
             "title": "Dimraeth: když Skyrim a Diablo zplodí pixel-artové RPG",
             "publishedAt": "2026-04-18T16:00:00Z"
-          },
-          {
-            "title": "Carmack: Quake Arena byl můj oblíbený projekt od id Software",
-            "publishedAt": "2026-04-18T14:00:00Z"
           }
         ]
       }
