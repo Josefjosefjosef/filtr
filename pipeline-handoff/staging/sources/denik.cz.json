@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T07:34:30.790163Z",
+  "ingestedAt": "2026-04-20T07:54:29.483783Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zatím není pozdě. Do sbírky pro nemocného Vašíka přišly statisíce, i díky Deníku",
+      "url": "https://www.denik.cz/regiony/jeste-neni-pozde-zivotni-boj-maly-kluk-z-benesovska-snad-diky-nam-vyhraje-202604.html",
+      "dt": "2026-04-20T07:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "deníku",
+        "díky",
+        "nemocného",
+        "pozdě",
+        "přišly",
+        "sbírky",
+        "statisíce",
+        "vašíka",
+        "zatím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -631,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "HiPP stáhla z prodeje dětskou výživu. Skleničky s jedem objevili i v Česku",
-      "url": "https://www.denik.cz/z_domova/hipp-kojenecka-vyziva-jed-na-krysy-stazeni-z-prodeje.html",
-      "dt": "2026-04-19T10:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětskou",
-        "hipp",
-        "jedem",
-        "objevili",
-        "prodeje",
-        "skleničky",
-        "stáhla",
-        "výživu",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29208,
+      "bytes": 29354,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -721,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zatím není pozdě. Do sbírky pro nemocného Vašíka přišly statisíce, i díky Deníku",
+            "publishedAt": "2026-04-20T07:10:00Z"
+          },
           {
             "title": "Výhra 27 milionů může propadnout. Loterie hledá majitele tiketu, zbývají jen dny",
             "publishedAt": "2026-04-20T06:57:00Z"
@@ -748,10 +752,6 @@
           {
             "title": "Hrady a zámky představí unikátní prostory: Úkryt před nacisty i hradní kapli",
             "publishedAt": "2026-04-20T05:00:00Z"
-          },
-          {
-            "title": "Tajné sklady i špioni v akci. Rusko tiše buduje síť nemovitostí u základen NATO",
-            "publishedAt": "2026-04-20T02:30:00Z"
           }
         ]
       }
