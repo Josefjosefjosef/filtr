@@ -1,24 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T14:14:52.734425Z",
+  "ingestedAt": "2026-04-20T14:35:19.422848Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Žabka se omluvil za hozenou lahev do hlediště: Neuhlídal jsem se",
+      "title": "Žabka se omluvil za zkrat v Pardubicích: Neuhlídal jsem se",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-zabka-se-omluvil-za-hozenou-lahev-do-hlediste-neuhlidal-jsem-se-5440894",
       "dt": "2026-04-20T14:05:49Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "hlediště",
-        "hozenou",
         "jsem",
-        "lahev",
         "neuhlídal",
         "omluvil",
+        "pardubicích",
+        "zkrat",
         "žabka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
+      "url": "https://www.sport.cz/clanek/hokej-ms-2026-u18-cesi-program-vysledky-tabulka-5440665",
+      "dt": "2026-04-20T14:18:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2026",
+        "bratislavě",
+        "hokeji",
+        "let",
+        "mladíci",
+        "program",
+        "trenčíně",
+        "u18",
+        "čeští",
+        "šampionátu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -748,32 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Exkluzivní gól bývalého sparťana z poloviny hřiště. Brankář skončil na kolenou",
-      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-exkluzivni-gol-byvaleho-spartana-z-poloviny-hriste-brankar-skoncil-na-kolenou-5440653",
-      "dt": "2026-04-20T07:42:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brankář",
-        "bývalého",
-        "exkluzivní",
-        "gól",
-        "hřiště",
-        "kolenou",
-        "poloviny",
-        "skončil",
-        "sparťana"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43495,
+      "bytes": 43927,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:05:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:18:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -838,8 +838,12 @@
         },
         "sample_titles": [
           {
-            "title": "Žabka se omluvil za hozenou lahev do hlediště: Neuhlídal jsem se",
+            "title": "Žabka se omluvil za zkrat v Pardubicích: Neuhlídal jsem se",
             "publishedAt": "2026-04-20T14:05:49Z"
+          },
+          {
+            "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
+            "publishedAt": "2026-04-20T14:18:17Z"
           },
           {
             "title": "Svaz formát baráže změnit nemůže, Hadamczik žádá veřejnost o tlak na extraligu",
@@ -864,10 +868,6 @@
           {
             "title": "Legendám chybí v Baníku bojovníci. Musíme věřit, že se probudí nějaký živel, burcuje Vojáček",
             "publishedAt": "2026-04-20T13:00:34Z"
-          },
-          {
-            "title": "Kyrgios se chystá startovat na wimbledonské generálce v Halle",
-            "publishedAt": "2026-04-20T12:53:22Z"
           }
         ]
       }

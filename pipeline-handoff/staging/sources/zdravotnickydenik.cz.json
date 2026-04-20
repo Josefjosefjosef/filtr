@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T14:14:52.734425Z",
+  "ingestedAt": "2026-04-20T14:35:19.422848Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ve společném podniku Olomouckého kraje a Agelu bude další nemocnice. Jediná v horském okrese",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/spolecny-podnik-olomoucky-kraj-agelu-jesenik/",
+      "dt": "2026-04-20T14:19:24Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "agelu",
+        "další",
+        "horském",
+        "jediná",
+        "kraje",
+        "nemocnice",
+        "okrese",
+        "olomouckého",
+        "podniku",
+        "společném"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "20 let se o tom mluvilo, já to udělám. Babiš slíbil Brnu porodnici i laboratorní centrum",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/20-let-se-o-tom-mluvilo-ja-to-udelam-babis-slibil-brnu-porodnici-i-laboratorni-centrum/",
-      "dt": "2026-04-19T09:23:50Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babiš",
-        "brnu",
-        "centrum",
-        "laboratorní",
-        "let",
-        "mluvilo",
-        "porodnici",
-        "slíbil",
-        "tom",
-        "udělám"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 117156,
+      "bytes": 116603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:42:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:19:24Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve společném podniku Olomouckého kraje a Agelu bude další nemocnice. Jediná v horském okrese",
+            "publishedAt": "2026-04-20T14:19:24Z"
+          },
           {
             "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
             "publishedAt": "2026-04-20T13:42:54Z"
@@ -359,10 +363,6 @@
           {
             "title": "Opakovaná vyšetření stojí miliardy. Systém je zatím nedokáže zastavit",
             "publishedAt": "2026-04-20T06:00:00Z"
-          },
-          {
-            "title": "Přístrojová komise pod palbou: Administrativní překážka, nebo pojistka kvality?",
-            "publishedAt": "2026-04-20T05:00:00Z"
           }
         ]
       }
