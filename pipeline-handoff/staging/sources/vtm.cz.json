@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Velká alzácká podložka pod myš a klávesnici zlevnila na 224 Kč. Dobře vypadá a nekroutí se",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-podlozka-alza-rapture-respawn/sc-3-a-240776/default.aspx",
+      "dt": "2026-04-20T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "224",
+        "alzácká",
+        "dobře",
+        "klávesnici",
+        "myš",
+        "nekroutí",
+        "podložka",
+        "velká",
+        "vypadá",
+        "zlevnila"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -925,34 +952,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "T-Mobile pokryl další venkovská sídla mobilní 5G sítí. Doba výstavby se zkrátila na polovinu",
-      "url": "https://mobilmania.zive.cz/clanky/t-mobile-pokryl-dalsi-venkovska-sidla-mobilni-5g-siti-doba-vystavby-se-zkratila-na-polovinu/sc-3-a-1364576/default.aspx",
-      "dt": "2026-04-16T18:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "další",
-        "doba",
-        "mobile",
-        "mobilní",
-        "pokryl",
-        "polovinu",
-        "sídla",
-        "sítí",
-        "venkovská",
-        "výstavby",
-        "zkrátila"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -963,7 +962,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22224,
+      "bytes": 22351,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1000,7 +999,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1015,6 +1014,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká alzácká podložka pod myš a klávesnici zlevnila na 224 Kč. Dobře vypadá a nekroutí se",
+            "publishedAt": "2026-04-20T07:45:00Z"
+          },
           {
             "title": "Windows 11 25H2 míří na všechny domácí počítače. Řízená distribuce skončila",
             "publishedAt": "2026-04-19T11:45:00Z"
@@ -1042,10 +1045,6 @@
           {
             "title": "Dřív pár milionů, dnes padesát. Český trh drtí nedostatek pamětí, dodavatelé ruší objednávky",
             "publishedAt": "2026-04-19T07:45:00Z"
-          },
-          {
-            "title": "Android 17 je skoro hotový, my už jsme ho vyzkoušeli. Neplýtvá místem a víc šetří baterii",
-            "publishedAt": "2026-04-19T10:45:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hosté Událostí, komentářů týdne rozebrali návštěvu šéfa NATO v Česku",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hoste-udalosti-komentaru-tydne-rozebrali-navstevu-sefa-nato-v-cesku-372560",
+      "dt": "2026-04-20T08:04:36Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hosté",
+        "komentářů",
+        "nato",
+        "návštěvu",
+        "rozebrali",
+        "týdne",
+        "událostí",
+        "česku",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -731,29 +757,6 @@
         "víceméně",
         "wan",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trinidadská policie našla těla padesáti dětí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trinidadska-policie-nasla-tela-padesati-deti-372543",
-      "dt": "2026-04-19T11:01:28Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dětí",
-        "našla",
-        "padesáti",
-        "policie",
-        "trinidadská",
-        "těla"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1528,7 +1531,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43431,
+      "bytes": 43789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,11 +1591,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:20:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:04:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 2,
           "zpravy": 24,
+          "other": 2,
           "finance": 4
         },
         "drop_counts": {
@@ -1605,6 +1608,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hosté Událostí, komentářů týdne rozebrali návštěvu šéfa NATO v Česku",
+            "publishedAt": "2026-04-20T08:04:36Z"
+          },
           {
             "title": "Houby jsou podle afrických vědců základem života na Zemi",
             "publishedAt": "2026-04-20T07:20:55Z"
@@ -1632,10 +1639,6 @@
           {
             "title": "Kultura cestování vlakem se od devadesátých let transformovala pomalu",
             "publishedAt": "2026-04-20T05:32:00Z"
-          },
-          {
-            "title": "Nový lék může dětem s Duchennovou svalovou dystrofií oddálit ztrátu chůze",
-            "publishedAt": "2026-04-20T05:02:00Z"
           }
         ]
       }
@@ -1647,7 +1650,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39443,
+      "bytes": 39444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1741,7 +1744,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77384,
+      "bytes": 77479,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

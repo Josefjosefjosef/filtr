@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rovnítko mezi ordinací a monitorem: Vojtěch i šéf MEDDI Hubu chtějí jasná pravidla pro telemedicínu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/vojtech-sef-meddi-hub-jasna-pravidla-pro-telemedicinu/",
+      "dt": "2026-04-20T08:05:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chtějí",
+        "hubu",
+        "jasná",
+        "meddi",
+        "monitorem",
+        "ordinací",
+        "pravidla",
+        "rovnítko",
+        "telemedicínu",
+        "vojtěch",
+        "šéf"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Týden ve zdravotnictví: Unikátní operace dítěte, miliardové investice i politické spory",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnictvi-v-regionech-treti-dubnovy-tyden/",
-      "dt": "2026-04-17T15:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dítěte",
-        "investice",
-        "miliardové",
-        "operace",
-        "politické",
-        "spory",
-        "týden",
-        "unikátní",
-        "zdravotnictví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 130966,
+      "bytes": 119440,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:05:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -331,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rovnítko mezi ordinací a monitorem: Vojtěch i šéf MEDDI Hubu chtějí jasná pravidla pro telemedicínu",
+            "publishedAt": "2026-04-20T08:05:02Z"
+          },
           {
             "title": "Nejhorší místo pro stáří je nemocniční lůžko. Křehký pacient v centru pozornosti Prague IHS",
             "publishedAt": "2026-04-20T07:00:00Z"
@@ -358,10 +364,6 @@
           {
             "title": "Zabiják, o kterém se nemluví: Světem se šíří superhouby, na které přestává fungovat léčba",
             "publishedAt": "2026-04-18T15:45:48Z"
-          },
-          {
-            "title": "37 tisíc nakažených a dva mrtví kojenci. Proč moderní vakcíny proti černému kašli ztrácí dech?",
-            "publishedAt": "2026-04-18T11:20:53Z"
           }
         ]
       }

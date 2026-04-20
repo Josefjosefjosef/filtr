@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Google pro rodiče zavádí možnost výrazně dětem omezit Youtube Shorts. Krátká videa už ovlivnila celou generaci",
+      "title": "Google pro rodiče zavádí možnost výrazně dětem omezit YouTube Shorts. Krátká videa už ovlivnila celou generaci",
       "url": "https://tech.hn.cz/c1-67868640-google-pro-rodice-zavadi-moznost-vyrazne-detem-omezit-youtube-shorts-kratka-videa-uz-ovlivnila-celou-generaci",
       "dt": "2026-04-20T07:25:00Z",
       "media_raw": "HN / Ekonomika",
@@ -26,6 +26,33 @@
         "výrazně",
         "youtube",
         "zavádí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bitva o financování veřejnoprávních médií je součástí kulturní války o podobu českého státu",
+      "url": "https://archiv.hn.cz/c1-67868390-bitva-o-financovani-verejnopravnich-medii-je-soucasti-kulturni-valky-o-podobu-ceskeho-statu",
+      "dt": "2026-04-20T06:11:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bitva",
+        "financování",
+        "kulturní",
+        "médií",
+        "podobu",
+        "součástí",
+        "státu",
+        "veřejnoprávních",
+        "války",
+        "českého"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1177,35 +1204,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ani Pixel, ani iPhone. Nejlepší fotomobil vymysleli v Číně, Vivo X300 Ultra je navíc nekompromisní i ve výkonu",
-      "url": "https://tech.hn.cz/c1-67868100-ani-pixel-ani-iphone-nejlepsi-fotomobil-vymysleli-v-cine-vivo-x300-ultra-je-navic-nekompromisni-i-ve-vykonu",
-      "dt": "2026-04-17T03:46:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "fotomobil",
-        "iphone",
-        "navíc",
-        "nejlepší",
-        "nekompromisní",
-        "pixel",
-        "ultra",
-        "vivo",
-        "vymysleli",
-        "výkonu",
-        "x300",
-        "číně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1216,7 +1214,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180242,
+      "bytes": 180205,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1256,8 +1254,8 @@
         "raw_feed_latest_publishedAt": "2026-04-20T07:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 30,
+          "zpravy": 6,
+          "finance": 31,
           "zdravi": 2,
           "sport": 1
         },
@@ -1272,8 +1270,12 @@
         },
         "sample_titles": [
           {
-            "title": "Google pro rodiče zavádí možnost výrazně dětem omezit Youtube Shorts. Krátká videa už ovlivnila celou generaci",
+            "title": "Google pro rodiče zavádí možnost výrazně dětem omezit YouTube Shorts. Krátká videa už ovlivnila celou generaci",
             "publishedAt": "2026-04-20T07:25:00Z"
+          },
+          {
+            "title": "Bitva o financování veřejnoprávních médií je součástí kulturní války o podobu českého státu",
+            "publishedAt": "2026-04-20T06:11:00Z"
           },
           {
             "title": "Fico chce znovu do Moskvy na oslavy vítězství ve druhé světové válce. Pobaltské státy mu přelet nedovolí",
@@ -1297,10 +1299,6 @@
           },
           {
             "title": "Je to šikanózní žaloba, řekl soud zastupiteli ODS ve sporu o dávno zmizelou skládku. Vyhrabání odpadu by způsobilo katastrofu",
-            "publishedAt": "2026-04-19T22:00:00Z"
-          },
-          {
-            "title": "Příliv čínských aut je teprve začátek. Jak vypadá v čase válek provoz v přístavu, který je klíčový i pro Česko",
             "publishedAt": "2026-04-19T22:00:00Z"
           }
         ]

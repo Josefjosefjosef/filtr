@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Je libo koňský hnůj? Prodejní „automat“ na Táborsku láká na netradiční sortiment",
+      "url": "https://www.denik.cz/regiony/bobkobar-stanek-konsky-hnuj-mlada-vozice.html",
+      "dt": "2026-04-20T07:42:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "automat",
+        "hnůj",
+        "koňský",
+        "libo",
+        "láká",
+        "netradiční",
+        "prodejní",
+        "sortiment",
+        "táborsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Ahoj mami, mám se dobře, napsal domů voják Bugár a vystřílel motorest",
+      "url": "https://www.denik.cz/krimi/plac-u-kadrnozky-masakr-nevinnych-lidi-nemel-motiv-ani-logiku.html",
+      "dt": "2026-04-20T07:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ahoj",
+        "bugár",
+        "dobře",
+        "domů",
+        "mami",
+        "motorest",
+        "mám",
+        "napsal",
+        "voják",
+        "vystřílel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -603,60 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Trinidadu se někdo nezákonně zbavil mrtvých těl, policie šetří nález 50 dětí",
-      "url": "https://www.denik.cz/ze_sveta/trinidad-padest-tel-deti-nalez-vysetrovani.html",
-      "dt": "2026-04-19T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětí",
-        "mrtvých",
-        "nezákonně",
-        "nález",
-        "někdo",
-        "policie",
-        "trinidadu",
-        "těl",
-        "zbavil",
-        "šetří"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nový jízdní řád pro opravy domů: renovační pas je klíčový pro zelenou dotaci",
-      "url": "https://www.denik.cz/ekonomika/opravy-domu-renovacni-pas-nova-zelena-usporam.html",
-      "dt": "2026-04-19T10:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domů",
-        "dotaci",
-        "jízdní",
-        "klíčový",
-        "nový",
-        "opravy",
-        "pas",
-        "renovační",
-        "zelenou",
-        "řád"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29354,
+      "bytes": 29055,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,12 +703,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:42:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "zpravy": 22,
           "zdravi": 2,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -721,6 +720,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je libo koňský hnůj? Prodejní „automat“ na Táborsku láká na netradiční sortiment",
+            "publishedAt": "2026-04-20T07:42:00Z"
+          },
+          {
+            "title": "Ahoj mami, mám se dobře, napsal domů voják Bugár a vystřílel motorest",
+            "publishedAt": "2026-04-20T07:30:00Z"
+          },
           {
             "title": "Zatím není pozdě. Do sbírky pro nemocného Vašíka přišly statisíce, i díky Deníku",
             "publishedAt": "2026-04-20T07:10:00Z"
@@ -744,14 +751,6 @@
           {
             "title": "První letošní tornádo? Bouřka na Jičínsku přinesla neobvyklý jev",
             "publishedAt": "2026-04-20T05:30:00Z"
-          },
-          {
-            "title": "V Brně hoří sklad plastů: Na místě je i chemická laboratoř, lidé nemají větrat",
-            "publishedAt": "2026-04-20T05:24:00Z"
-          },
-          {
-            "title": "Hrady a zámky představí unikátní prostory: Úkryt před nacisty i hradní kapli",
-            "publishedAt": "2026-04-20T05:00:00Z"
           }
         ]
       }

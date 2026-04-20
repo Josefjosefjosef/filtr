@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Volejte záchranku! Hráči hromadně utíkali ze hřiště, zápas je po hrozivém momentu přestal zajímat",
+      "url": "https://www.sport.cz/clanek/fotbal-volejte-zachranku-hraci-hromadne-utikali-ze-hriste-zapas-je-po-hrozivem-momentu-prestal-zajimat-5440658",
+      "dt": "2026-04-20T07:55:21Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hromadně",
+        "hrozivém",
+        "hráči",
+        "hřiště",
+        "momentu",
+        "přestal",
+        "utíkali",
+        "volejte",
+        "zajímat",
+        "záchranku",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -111,20 +139,26 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Fitzpatrick podruhé triumfoval v Hilton Head, i tentokrát slavil v rozstřelu",
+      "title": "Fitzpatrick podruhé triumfoval v Hilton Head. Hrubý vybojoval třetí místo na PGA Tour Americas v Riu de Janeiro",
       "url": "https://www.sport.cz/clanek/golf-fitzpatrick-podruhe-triumfoval-v-hilton-head-i-tentokrat-slavil-v-rozstrelu-5440655",
       "dt": "2026-04-20T07:09:28Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "americas",
         "fitzpatrick",
         "head",
         "hilton",
+        "hrubý",
+        "janeiro",
+        "místo",
+        "pga",
         "podruhé",
-        "rozstřelu",
-        "slavil",
-        "tentokrát",
-        "triumfoval"
+        "riu",
+        "tour",
+        "triumfoval",
+        "třetí",
+        "vybojoval"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -752,34 +786,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bláznivý závěr v Hradci: Červená, penalta a běsnění Bořila. Nesmyslná rozhodnutí, zlobil se Trpišovský",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-blaznivy-zaver-v-hradci-cervena-penalta-a-besneni-borila-nesmyslna-rozhodnuti-zlobil-se-trpisovsky-5440534",
-      "dt": "2026-04-19T17:28:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bláznivý",
-        "bořila",
-        "běsnění",
-        "hradci",
-        "nesmyslná",
-        "penalta",
-        "rozhodnutí",
-        "trpišovský",
-        "zlobil",
-        "závěr",
-        "červená"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47364,
+      "bytes": 46826,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:48:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:55:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Volejte záchranku! Hráči hromadně utíkali ze hřiště, zápas je po hrozivém momentu přestal zajímat",
+            "publishedAt": "2026-04-20T07:55:21Z"
+          },
           {
             "title": "Čtyři a půl minuty hrůzy. Pastrňák se snažil vysvětlit bostonský kolaps",
             "publishedAt": "2026-04-20T07:48:11Z"
@@ -859,7 +869,7 @@
             "publishedAt": "2026-04-20T06:33:07Z"
           },
           {
-            "title": "Fitzpatrick podruhé triumfoval v Hilton Head, i tentokrát slavil v rozstřelu",
+            "title": "Fitzpatrick podruhé triumfoval v Hilton Head. Hrubý vybojoval třetí místo na PGA Tour Americas v Riu de Janeiro",
             "publishedAt": "2026-04-20T07:09:28Z"
           },
           {
@@ -869,10 +879,6 @@
           {
             "title": "Muchová si díky finále ve Stuttgartu polepšila ve světovém žebříčku",
             "publishedAt": "2026-04-20T06:38:05Z"
-          },
-          {
-            "title": "Návrat domů a velká výzva. Bouzková chce uspět při obhajobě",
-            "publishedAt": "2026-04-20T05:33:35Z"
           }
         ]
       }

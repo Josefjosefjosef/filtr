@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-20T07:54:29.483783Z",
+  "ingestedAt": "2026-04-20T08:14:37.275506Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
+      "url": "https://profitonline.cz/hrisnici-bez-eura-proc-petice-zemi-vcetne-ceska-otali-s-prijetim-spolecne-evropske-meny/",
+      "dt": "2026-04-20T08:00:18Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "eura",
+        "evropské",
+        "hříšníci",
+        "měny",
+        "otálí",
+        "proč",
+        "pětice",
+        "přijetím",
+        "společné",
+        "včetně",
+        "zemí",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,27 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přivede Magyar Maďarsko do eurozóny?",
-      "url": "https://profitonline.cz/privede-magyar-madarsko-do-eurozony/",
-      "dt": "2026-04-17T15:00:57Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "eurozóny",
-        "magyar",
-        "maďarsko",
-        "přivede"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18996,
+      "bytes": 19334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -337,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:00:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:00:18Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -354,6 +362,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
+            "publishedAt": "2026-04-20T08:00:18Z"
+          },
           {
             "title": "Hormuz je opět uzavřen, ale nafta zlevní o dvě koruny. Jak je to možné?",
             "publishedAt": "2026-04-20T06:00:54Z"
@@ -381,10 +393,6 @@
           {
             "title": "Biometan je plyn budoucnosti, jeho podíl se ztrojnásobil",
             "publishedAt": "2026-04-18T13:00:05Z"
-          },
-          {
-            "title": "Fotbal a dovolená. Češi horečně nakupují letenky do Ameriky",
-            "publishedAt": "2026-04-18T10:00:10Z"
           }
         ]
       }
