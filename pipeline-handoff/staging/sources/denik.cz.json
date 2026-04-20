@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T06:55:04.242661Z",
+  "ingestedAt": "2026-04-20T07:14:23.554488Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výhra 27 milionů může propadnout. Loterie hledá majitele tiketu, zbývají jen dny",
+      "url": "https://www.denik.cz/staty-mimo-eu/britska-loterie-vyhra-miliony.html",
+      "dt": "2026-04-20T06:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dny",
+        "hledá",
+        "jen",
+        "loterie",
+        "majitele",
+        "milionů",
+        "propadnout",
+        "tiketu",
+        "výhra",
+        "zbývají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,33 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slovenský bizár baví sítě. Nová cyklostezka má uprostřed sloupy, lidé kličkují",
-      "url": "https://www.denik.cz/staty-eu/cyklostezka-slovensko-cary-sloupy-vytluky.html",
-      "dt": "2026-04-19T09:41:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "baví",
-        "bizár",
-        "cyklostezka",
-        "kličkují",
-        "lidé",
-        "nová",
-        "sloupy",
-        "slovenský",
-        "sítě",
-        "uprostřed"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29034,
+      "bytes": 29208,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -721,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výhra 27 milionů může propadnout. Loterie hledá majitele tiketu, zbývají jen dny",
+            "publishedAt": "2026-04-20T06:57:00Z"
+          },
           {
             "title": "Timmy je volný. Uvázlá velryba se dokázala osvobodit a plave zátokou",
             "publishedAt": "2026-04-20T06:10:00Z"
@@ -748,10 +752,6 @@
           {
             "title": "Tajné sklady i špioni v akci. Rusko tiše buduje síť nemovitostí u základen NATO",
             "publishedAt": "2026-04-20T02:30:00Z"
-          },
-          {
-            "title": "Erasmus v Římě: Slavkovské studentky získávaly cenné zkušenosti",
-            "publishedAt": "2026-04-20T02:20:00Z"
           }
         ]
       }

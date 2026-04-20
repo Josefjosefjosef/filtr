@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T06:55:04.242661Z",
+  "ingestedAt": "2026-04-20T07:14:23.554488Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velryba uvázlá na severu Německa se dokázala osvobodit a plave zátokou",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/velryba-uvazla-na-severu-nemecka-se-dokazala-osvobodit-a-plave-zatokou-372567",
+      "dt": "2026-04-20T07:03:38Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dokázala",
+        "německa",
+        "osvobodit",
+        "plave",
+        "severu",
+        "uvázlá",
+        "velryba",
+        "zátokou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -52,7 +77,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Ceny ropy prudce rostou po opětovném uzavření Hormuzského průlivu",
+      "title": "Ceny ropy a plynu prudce rostou po opětovném uzavření Hormuzského průlivu",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-ropy-prudce-rostou-po-opetovnem-uzavreni-hormuzskeho-prulivu-372564",
       "dt": "2026-04-20T05:54:09Z",
       "media_raw": "ČT24 / Domácí",
@@ -61,6 +86,7 @@
         "ceny",
         "hormuzského",
         "opětovném",
+        "plynu",
         "prudce",
         "průlivu",
         "ropy",
@@ -735,25 +761,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
+      "section": "sport",
       "contentType": "article",
-      "title": "Studenti UMPRUM vezou do města módy textilní odpad",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/studenti-umprum-vezou-do-mesta-mody-textilni-odpad-372494",
-      "dt": "2026-04-19T08:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Wembanyama debutoval v play-off pětatřiceti body. Krejčí se na palubovce jen mihnul",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/wembanyama-debutoval-v-play-off-petatriceti-body-krejci-se-na-palubovce-jen-mihnul-156374",
+      "dt": "2026-04-20T06:56:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "módy",
-        "města",
-        "odpad",
-        "studenti",
-        "textilní",
-        "umprum",
-        "vezou"
+        "body",
+        "debutoval",
+        "jen",
+        "krejčí",
+        "mihnul",
+        "off",
+        "palubovce",
+        "play",
+        "pětatřiceti",
+        "wembanyama"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1485,31 +1514,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta si poradila s Jabloncem, Baník dál tápe, Dukla zůstává u dna",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/banik-dal-tape-dukla-podlehla-karvine-a-zustava-u-dna-zlin-prestrilel-teplice-156345",
-      "dt": "2026-04-18T15:15:04Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "baník",
-        "dna",
-        "dukla",
-        "jabloncem",
-        "poradila",
-        "sparta",
-        "tápe",
-        "zůstává"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1520,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42625,
+      "bytes": 42985,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1580,11 +1584,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:35:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:03:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 3,
+          "zpravy": 24,
+          "other": 2,
           "finance": 4
         },
         "drop_counts": {
@@ -1598,6 +1602,10 @@
         },
         "sample_titles": [
           {
+            "title": "Velryba uvázlá na severu Německa se dokázala osvobodit a plave zátokou",
+            "publishedAt": "2026-04-20T07:03:38Z"
+          },
+          {
             "title": "Začátek týdne bude chladnější a deštivější, od čtvrtka se oteplí",
             "publishedAt": "2026-04-20T06:35:47Z"
           },
@@ -1606,7 +1614,7 @@
             "publishedAt": "2026-04-20T06:14:12Z"
           },
           {
-            "title": "Ceny ropy prudce rostou po opětovném uzavření Hormuzského průlivu",
+            "title": "Ceny ropy a plynu prudce rostou po opětovném uzavření Hormuzského průlivu",
             "publishedAt": "2026-04-20T05:54:09Z"
           },
           {
@@ -1624,10 +1632,6 @@
           {
             "title": "Těla dětí nalezená na hřbitově nepatřila obětem zločinů, uvedla trinidadská premiérka",
             "publishedAt": "2026-04-20T04:16:47Z"
-          },
-          {
-            "title": "Z Prahy téměř zmizeli pouliční umělci se zvířaty. Někteří se přesunuli do jiných měst",
-            "publishedAt": "2026-04-20T04:02:00Z"
           }
         ]
       }
@@ -1639,7 +1643,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39455,
+      "bytes": 39465,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1680,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:08:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:56:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1691,6 +1695,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Wembanyama debutoval v play-off pětatřiceti body. Krejčí se na palubovce jen mihnul",
+            "publishedAt": "2026-04-20T06:56:41Z"
+          },
           {
             "title": "Pastrňák zapsal dva body, Boston však začal porážkou. Slavili Dobeš, Nečas i Hertl",
             "publishedAt": "2026-04-20T06:08:39Z"
@@ -1718,10 +1726,6 @@
           {
             "title": "Jihlava trápila vedoucí Zbrojovku, rezerva Baníku sahala na Žižkově po výhře",
             "publishedAt": "2026-04-19T16:21:58Z"
-          },
-          {
-            "title": "Evenepoel se dočkal, premiérově vyhrál Amstel Gold Race",
-            "publishedAt": "2026-04-19T15:55:11Z"
           }
         ]
       }
@@ -1733,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77192,
+      "bytes": 77205,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

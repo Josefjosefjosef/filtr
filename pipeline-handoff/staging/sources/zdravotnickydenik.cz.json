@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T06:55:04.242661Z",
+  "ingestedAt": "2026-04-20T07:14:23.554488Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nejhorší místo pro stáří je nemocniční lůžko. Křehký pacient v centru pozornosti Prague IHS",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/stari-nemocnicni-luzko-krehky-pacient-prague-ihs/",
+      "dt": "2026-04-20T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "centru",
+        "ihs",
+        "křehký",
+        "lůžko",
+        "místo",
+        "nejhorší",
+        "nemocniční",
+        "pacient",
+        "pozornosti",
+        "prague",
+        "stáří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,33 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vojtěch chystá 3 velké změny. Ve Sněmovně představil plán resortu pro nejbližší měsíce",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/hygieny-nelekari-uhrady-legislativni-priority-zdravotnictvi-adam-vojtech/",
-      "dt": "2026-04-17T14:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chystá",
-        "měsíce",
-        "nejbližší",
-        "plán",
-        "představil",
-        "resortu",
-        "sněmovně",
-        "velké",
-        "vojtěch",
-        "změny"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 109874,
+      "bytes": 132469,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -330,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejhorší místo pro stáří je nemocniční lůžko. Křehký pacient v centru pozornosti Prague IHS",
+            "publishedAt": "2026-04-20T07:00:00Z"
+          },
           {
             "title": "Opakovaná vyšetření stojí miliardy. Systém je zatím nedokáže zastavit",
             "publishedAt": "2026-04-20T06:00:00Z"
@@ -357,10 +362,6 @@
           {
             "title": "37 tisíc nakažených a dva mrtví kojenci. Proč moderní vakcíny proti černému kašli ztrácí dech?",
             "publishedAt": "2026-04-18T11:20:53Z"
-          },
-          {
-            "title": "Bouře kolem škrtů ve zdravotnictví: Německá ministryně čelila palbě otázek i z vlastních řad",
-            "publishedAt": "2026-04-18T05:00:00Z"
           }
         ]
       }

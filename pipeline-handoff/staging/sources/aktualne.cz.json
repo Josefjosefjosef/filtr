@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T06:55:04.242661Z",
+  "ingestedAt": "2026-04-20T07:14:23.554488Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Komentář: Proč bychom někdy měli pacientům vyhovět a umožnit jim ze života důstojně odejít",
+      "url": "https://nazory.aktualne.cz/komentar-proc-bychom-nekdy-meli-pacientum-vyhovet-a-umoznit-jim-ze-zivota-dustojne-odejit/r~aaa29d582b150cc1d09746c4da798a46/",
+      "dt": "2026-04-20T06:57:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bychom",
+        "důstojně",
+        "jim",
+        "komentář",
+        "měli",
+        "někdy",
+        "odejít",
+        "pacientům",
+        "proč",
+        "umožnit",
+        "vyhovět",
+        "života"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -509,33 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V Německu je hotovo. Bayern čtyři kola před koncem ligy slaví svůj 35. titul",
-      "url": "https://sport.aktualne.cz/fotbal/v-nemecku-je-hotovo-bayern-ctyri-kola-pred-koncem-ligy-slavi-svuj-35-titul/r~aaa2939e41b4626d1b46054623c55fd7/",
-      "dt": "2026-04-19T18:03:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bayern",
-        "hotovo",
-        "kola",
-        "koncem",
-        "ligy",
-        "německu",
-        "slaví",
-        "svůj",
-        "titul",
-        "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22645,
+      "bytes": 22741,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,12 +585,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:57:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "finance": 1,
-          "sport": 5,
+          "sport": 4,
           "other": 2
         },
         "drop_counts": {
@@ -601,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Proč bychom někdy měli pacientům vyhovět a umožnit jim ze života důstojně odejít",
+            "publishedAt": "2026-04-20T06:57:00Z"
+          },
           {
             "title": "Velryba Timmy se po měsíci vyprostila z mělčiny. Plave zátokou na severu Německa",
             "publishedAt": "2026-04-20T06:38:00Z"
@@ -628,10 +634,6 @@
           {
             "title": "Použitý motor z eBay přímo od výrobce? Automobilky prodávají díly z vyřazených aut se zárukou",
             "publishedAt": "2026-04-20T05:10:00Z"
-          },
-          {
-            "title": "Fico musí letět oklikou na oslavy do Moskvy. Pobaltské země mu staví hráz",
-            "publishedAt": "2026-04-20T05:03:00Z"
           }
         ]
       }
