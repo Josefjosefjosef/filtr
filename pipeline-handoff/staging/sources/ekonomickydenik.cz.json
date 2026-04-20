@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-20T04:15:03.899323Z",
+  "ingestedAt": "2026-04-20T04:34:57.202863Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konkurence na trhu s energiemi houstne. ČEZ spadl pod 40 %, innogy ztrácí",
+      "url": "https://ekonomickydenik.cz/na-energetickem-trhu-ztraci-cez-a-innogy/",
+      "dt": "2026-04-20T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "energiemi",
+        "houstne",
+        "innogy",
+        "konkurence",
+        "spadl",
+        "trhu",
+        "ztrácí",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,33 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Šest týdnů a dost? Evropě dochází letecké palivo, hrozí rušení letů",
-      "url": "https://ekonomickydenik.cz/sest-tydnu-evrope-dochazi-letecke-palivo-ruseni-letu/",
-      "dt": "2026-04-16T14:26:59Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dochází",
-        "dost",
-        "evropě",
-        "hrozí",
-        "letecké",
-        "letů",
-        "palivo",
-        "rušení",
-        "týdnů",
-        "šest"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68992,
+      "bytes": 68611,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T12:16:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -844,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konkurence na trhu s energiemi houstne. ČEZ spadl pod 40 %, innogy ztrácí",
+            "publishedAt": "2026-04-20T04:30:00Z"
+          },
           {
             "title": "Blíží se další zdražování paliv, kerosinu pro letadla je podle Havlíčka dost",
             "publishedAt": "2026-04-19T12:16:46Z"
@@ -871,10 +873,6 @@
           {
             "title": "Víc funkcí, méně peněz. Vláda chystá vlastní návrh krácení odměn zastupitelům",
             "publishedAt": "2026-04-18T12:05:00Z"
-          },
-          {
-            "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
-            "publishedAt": "2026-04-18T10:05:00Z"
           }
         ]
       }

@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T04:15:03.899323Z",
+  "ingestedAt": "2026-04-20T04:34:57.202863Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jak jeden nadnárodní koncern donutil Slovince vařit si vlastní pivo a proč by z toho měl radost Jára Cimrman",
+      "url": "https://podcasty.hn.cz/c1-67868570-jak-jeden-nadnarodni-koncern-donutil-slovince-varit-si-vlastni-pivo-a-proc-by-z-toho-mel-radost-jara-cimrman",
+      "dt": "2026-04-20T04:26:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cimrman",
+        "donutil",
+        "jeden",
+        "jára",
+        "koncern",
+        "měl",
+        "nadnárodní",
+        "pivo",
+        "proč",
+        "radost",
+        "slovince",
+        "toho",
+        "vařit",
+        "vlastní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1174,36 +1205,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kulturní tipy: Koncerty světové hudby nejen ze seriálů, originální film Slepice či inscenace Aktivní zálohy",
-      "url": "https://vikend.hn.cz/c1-67867760-kulturni-tipy-koncerty-svetove-hudby-nejen-ze-serialu-originalni-film-slepice-ci-inscenace-aktivni-zalohy",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "aktivní",
-        "film",
-        "hudby",
-        "inscenace",
-        "koncerty",
-        "kulturní",
-        "nejen",
-        "originální",
-        "seriálů",
-        "slepice",
-        "světové",
-        "tipy",
-        "zálohy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1214,7 +1215,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180335,
+      "bytes": 180370,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1251,11 +1252,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:26:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 31,
+          "zpravy": 6,
           "zdravi": 2,
           "sport": 1
         },
@@ -1269,6 +1270,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak jeden nadnárodní koncern donutil Slovince vařit si vlastní pivo a proč by z toho měl radost Jára Cimrman",
+            "publishedAt": "2026-04-20T04:26:00Z"
+          },
           {
             "title": "Razie policie proti Mironetu před čtvrt stoletím byla nezákonná, má nárok na odškodné, tvrdí soud. Výši ještě určí",
             "publishedAt": "2026-04-19T22:00:00Z"
@@ -1295,10 +1300,6 @@
           },
           {
             "title": "Finanční trhy (20. 4. 2026)",
-            "publishedAt": "2026-04-19T22:00:00Z"
-          },
-          {
-            "title": "Leželi jsme v žaludku vlivným lidem i jiným neziskovkám, říká dodavatel dronů pro Skupinu D, kterou policie viní z podvodů",
             "publishedAt": "2026-04-19T22:00:00Z"
           }
         ]

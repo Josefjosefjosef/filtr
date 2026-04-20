@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-20T04:15:03.899323Z",
+  "ingestedAt": "2026-04-20T04:34:57.202863Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Helena Vondráčková bojovala u soudu o zvýšení důchodu. „Vyloženě nám chtěli ublížit,“ myslí si manžel",
+      "url": "https://www.vlasta.cz/celebrity/helena-vondrackova-bojovala-u-soudu-o-zvyseni-duchodu/",
+      "dt": "2026-04-20T04:28:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "bojovala",
+        "chtěli",
+        "důchodu",
+        "helena",
+        "manžel",
+        "myslí",
+        "nám",
+        "soudu",
+        "ublížit",
+        "vondráčková",
+        "vyloženě",
+        "zvýšení"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1093,36 +1122,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Vlastní Podcast s Darinou Křivánkovou o radosti z vaření, když jste doma sólo. Je to péče o sebe sama",
-      "url": "https://www.vlasta.cz/podcast/vlastni-podcast-s-darinou-krivankovou-vareni-solo-jen-pro-sebe-kucharka/",
-      "dt": "2026-04-14T11:59:09Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "darinou",
-        "doma",
-        "jste",
-        "když",
-        "křivánkovou",
-        "podcast",
-        "péče",
-        "radosti",
-        "sama",
-        "sebe",
-        "sólo",
-        "vaření",
-        "vlastní"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1132,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 63627,
+      "bytes": 63634,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,10 +1169,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1185,6 +1185,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Helena Vondráčková bojovala u soudu o zvýšení důchodu. „Vyloženě nám chtěli ublížit,“ myslí si manžel",
+            "publishedAt": "2026-04-20T04:28:00Z"
+          },
           {
             "title": "Horoskop na 20.–26. dubna: Lvi, přichází láska jako trám, Býci, připravte se na změny",
             "publishedAt": "2026-04-20T04:04:00Z"
@@ -1212,10 +1216,6 @@
           {
             "title": "Režisérka Alexandra Bolfová: Samotná žena je vnímána negativně. Žít v páru je dnes stále norma",
             "publishedAt": "2026-04-19T04:33:00Z"
-          },
-          {
-            "title": "Rapper z Clashe Leo Beránek je v maléru. V Bohnicích surově zbil pacienta, hrozí mu 12 let natvrdo",
-            "publishedAt": "2026-04-18T07:03:00Z"
           }
         ]
       }
