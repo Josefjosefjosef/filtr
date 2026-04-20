@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-20T16:20:15.439748Z",
+  "ingestedAt": "2026-04-20T16:39:38.436102Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté pátrají po vězni, který odjel z nestřeženého pracoviště v Jirnech",
+      "url": "https://tydenikpolicie.cz/policiste-patraji-po-vezni-ktery-odjel-z-nestrezeneho-pracoviste-v-jirnech/",
+      "dt": "2026-04-20T16:32:14Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jirnech",
+        "nestřeženého",
+        "odjel",
+        "policisté",
+        "pracoviště",
+        "pátrají",
+        "vězni"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,30 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při práci s cirkulárkou si senior na Novojičínsku amputoval ruku",
-      "url": "https://tydenikpolicie.cz/pri-praci-s-cirkularkou-si-senior-na-novojicinsku-amputoval-ruku/",
-      "dt": "2026-04-20T13:16:03Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "amputoval",
-        "cirkulárkou",
-        "novojičínsku",
-        "práci",
-        "při",
-        "ruku",
-        "senior"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16034,
+      "bytes": 16053,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:00:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:32:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté pátrají po vězni, který odjel z nestřeženého pracoviště v Jirnech",
+            "publishedAt": "2026-04-20T16:32:14Z"
+          },
           {
             "title": "Po nehodě fabie utekla z místa fenka. Zatímco řidičku transportovali záchranáři do nemocnice vrtulníkem, zvíře odchytil jeden z policistů",
             "publishedAt": "2026-04-20T16:00:16Z"
@@ -352,10 +356,6 @@
           {
             "title": "Policisté hledají svědky tragické nehody, při které v Mostě zemřeli dva lidé",
             "publishedAt": "2026-04-20T14:21:40Z"
-          },
-          {
-            "title": "Falešný lékař z Jemenu připravil ženu o 100 tisíc korun",
-            "publishedAt": "2026-04-20T13:22:36Z"
           }
         ]
       }

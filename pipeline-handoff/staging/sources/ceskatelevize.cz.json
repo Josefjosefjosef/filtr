@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T16:20:15.439748Z",
+  "ingestedAt": "2026-04-20T16:39:38.436102Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události pondělí 20. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-pondeli-20-dubna-372590",
+      "dt": "2026-04-20T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "pondělí",
+        "souhrn",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -400,18 +422,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Předběžná škoda u požáru skladu plastů v Brně je 50 milionů",
+      "title": "Předběžná škoda u požáru skladu plastů v Brně je 50 milionů. Likvidace potrvá do úterý",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/predbezna-skoda-u-pozaru-skladu-plastu-v-brne-je-50-milionu-372573",
       "dt": "2026-04-20T09:10:38Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "brně",
+        "likvidace",
         "milionů",
         "plastů",
+        "potrvá",
         "požáru",
         "předběžná",
         "skladu",
+        "úterý",
         "škoda"
       ],
       "feedCategory": "zpravy",
@@ -721,27 +746,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Nový lék může dětem s Duchennovou svalovou dystrofií oddálit ztrátu chůze",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/novy-lek-muze-detem-s-duchennovou-svalovou-dystrofii-oddalit-ztratu-chuze-372555",
-      "dt": "2026-04-20T05:02:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Reprezentace poprvé v Horácké aréně. Rulík na ledě přivítal čtyři nové hráče",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentace-poprve-v-horacke-arene-rulik-na-lede-privital-i-ctyri-nove-hrace-156380",
+      "dt": "2026-04-20T16:26:08Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "chůze",
-        "duchennovou",
-        "dystrofií",
-        "dětem",
-        "lék",
-        "nový",
-        "oddálit",
-        "svalovou",
-        "ztrátu"
+        "aréně",
+        "horácké",
+        "hráče",
+        "ledě",
+        "nové",
+        "poprvé",
+        "přivítal",
+        "reprezentace",
+        "rulík",
+        "čtyři"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1478,32 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dukla házenkáře Plzně v semifinále extraligy nezastavila, Zubří porazilo Karvinou",
-      "url": "https://sport.ceskatelevize.cz/clanek/hazena/dukla-hazenkare-plzne-v-semifinale-extraligy-nezastavila-156351",
-      "dt": "2026-04-18T17:22:20Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dukla",
-        "extraligy",
-        "házenkáře",
-        "karvinou",
-        "nezastavila",
-        "plzně",
-        "porazilo",
-        "semifinále",
-        "zubří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1514,7 +1514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42547,
+      "bytes": 42639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,7 +1574,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:09:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -1591,6 +1591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události pondělí 20. dubna",
+            "publishedAt": "2026-04-20T16:29:00Z"
+          },
           {
             "title": "Státní zástupce obžaloval policistu, který sváděl k sexu domnělou nezletilou dívku",
             "publishedAt": "2026-04-20T16:09:30Z"
@@ -1618,10 +1622,6 @@
           {
             "title": "Kubáník vyhořel a napsal o tom hru. Na Terapii chodí k Boudové",
             "publishedAt": "2026-04-20T14:12:39Z"
-          },
-          {
-            "title": "Paliva v úterý opět zlevní, strop pro naftu klesne o více než dvě koruny",
-            "publishedAt": "2026-04-20T12:50:04Z"
           }
         ]
       }
@@ -1633,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38955,
+      "bytes": 39124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:53:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:26:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1685,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reprezentace poprvé v Horácké aréně. Rulík na ledě přivítal čtyři nové hráče",
+            "publishedAt": "2026-04-20T16:26:08Z"
+          },
           {
             "title": "Přerov otočil bitvu v Brně, Znojmo dominovalo proti Ostravě",
             "publishedAt": "2026-04-20T13:53:40Z"
@@ -1712,10 +1716,6 @@
           {
             "title": "Pastrňák zapsal dva body, Boston však začal porážkou. Slavili Dobeš, Nečas i Hertl",
             "publishedAt": "2026-04-20T06:08:39Z"
-          },
-          {
-            "title": "Devalvovali jsme tím výkon na hřišti, mrzel Trpišovského nezvládnutý závěr v Hradci",
-            "publishedAt": "2026-04-20T05:00:00Z"
           }
         ]
       }
@@ -1727,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77309,
+      "bytes": 77293,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T16:20:15.439748Z",
+  "ingestedAt": "2026-04-20T16:39:38.436102Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Chci 50 milionů nebo dám do výživy jed.“ Vyděračská hrozba přišla firmě v e-mailu",
+      "url": "https://www.idnes.cz/zpravy/domaci/detska-vyziva-hipp-jed-na-krysy-vydirani.A260420_131153_domaci_mls",
+      "dt": "2026-04-20T16:32:37Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chci",
+        "dám",
+        "firmě",
+        "hrozba",
+        "jed",
+        "mailu",
+        "milionů",
+        "nebo",
+        "přišla",
+        "vyděračská",
+        "výživy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -254,33 +282,6 @@
         "statisíce",
         "země",
         "španělsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Chci 50 milionů nebo dám do výživy jed.“ Vyděračského e-mailu si firma nevšimla",
-      "url": "https://www.idnes.cz/zpravy/domaci/detska-vyziva-hipp-jed-na-krysy-vydirani.A260420_131153_domaci_mls",
-      "dt": "2026-04-20T14:51:17Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chci",
-        "dám",
-        "firma",
-        "jed",
-        "mailu",
-        "milionů",
-        "nebo",
-        "nevšimla",
-        "vyděračského",
-        "výživy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48063,
+      "bytes": 48049,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,11 +1618,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:32:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 28,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -1634,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Chci 50 milionů nebo dám do výživy jed.“ Vyděračská hrozba přišla firmě v e-mailu",
+            "publishedAt": "2026-04-20T16:32:37Z"
+          },
           {
             "title": "Brit oživuje v Rusku tradici výroby luxusních hodinek. Nosí je i Putin",
             "publishedAt": "2026-04-20T16:00:00Z"
@@ -1661,10 +1666,6 @@
           {
             "title": "Vlak v Praze srazil muže. Spoje jezdily odklonem",
             "publishedAt": "2026-04-20T15:12:00Z"
-          },
-          {
-            "title": "Extrémy počasí v Evropě: podívejte, kde teploty vyskočí i o 15 stupňů nad normál",
-            "publishedAt": "2026-04-20T15:06:00Z"
           }
         ]
       }

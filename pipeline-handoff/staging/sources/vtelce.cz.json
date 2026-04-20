@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-20T16:20:15.439748Z",
+  "ingestedAt": "2026-04-20T16:39:38.436102Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Zde žijí duchové: Alice a Kuba budují hotel. Plány jim kazí postavy z dějin",
+      "url": "https://www.vtelce.cz/zde-ziji-duchove-alice-a-kuba-buduji-hotel-plany-jim-kazi-postavy-z-dejin/",
+      "dt": "2026-04-20T16:24:23Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "alice",
+        "budují",
+        "duchové",
+        "dějin",
+        "hotel",
+        "jim",
+        "kazí",
+        "kuba",
+        "plány",
+        "postavy",
+        "zde",
+        "žijí"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -254,36 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sully: Zázrak na řece Hudson – Hněv vyšetřovatelů, nákup reálných letadel a přísné veto skutečného pilota",
-      "url": "https://www.vtelce.cz/sully-zazrak-na-rece-hudson-hnev-vysetrovatelu-nakup-realnych-letadel-a-prisne-veto-skutecneho-pilota/",
-      "dt": "2026-04-18T15:55:12Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "hněv",
-        "hudson",
-        "letadel",
-        "nákup",
-        "pilota",
-        "přísné",
-        "reálných",
-        "skutečného",
-        "sully",
-        "veto",
-        "vyšetřovatelů",
-        "zázrak",
-        "řece"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,8 +293,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 85851,
-      "reason": "fetch_timeout",
+      "bytes": 78528,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -331,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:11:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:24:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -347,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zde žijí duchové: Alice a Kuba budují hotel. Plány jim kazí postavy z dějin",
+            "publishedAt": "2026-04-20T16:24:23Z"
+          },
           {
             "title": "Zápasnice Alexa Throat v nahé seznamce: Nápadníky nešetřila, rande pak skončilo odvážnými plány",
             "publishedAt": "2026-04-20T16:11:17Z"
@@ -374,10 +377,6 @@
           {
             "title": "Hogo fogo Homolka: Zničené záběry, ledová voda a vlastní vůz",
             "publishedAt": "2026-04-19T11:47:37Z"
-          },
-          {
-            "title": "Klub rváčů: Opilí herci, oběti pro roli, líčení levou rukou a televizní skandál v den premiéry",
-            "publishedAt": "2026-04-18T17:56:37Z"
           }
         ]
       }
