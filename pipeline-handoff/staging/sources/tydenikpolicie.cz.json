@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-20T15:14:54.121060Z",
+  "ingestedAt": "2026-04-20T15:36:04.091707Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Opilý muž vyhrožoval v Dubí policistovi s tím, že ho svlíkne z uniformy, počká si na něj a zbije ho jako psa",
+      "url": "https://tydenikpolicie.cz/opily-muz-vyhrozoval-v-dubi-policistovi-s-tim-ze-ho-svlikne-z-uniformy-pocka-si-na-nej-a-zbije-ho-jako-psa/",
+      "dt": "2026-04-20T15:22:53Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dubí",
+        "jako",
+        "muž",
+        "něj",
+        "opilý",
+        "policistovi",
+        "počká",
+        "psa",
+        "svlíkne",
+        "tím",
+        "uniformy",
+        "vyhrožoval",
+        "zbije"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -225,30 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čtyři zranění po srážce dvou volkswagenu na Frýdecko-Místecku",
-      "url": "https://tydenikpolicie.cz/ctyri-zraneni-po-srazce-dvou-volkswagenu-na-frydecko-mistecku/",
-      "dt": "2026-04-20T11:59:30Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dvou",
-        "frýdecko",
-        "místecku",
-        "srážce",
-        "volkswagenu",
-        "zranění",
-        "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -259,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15753,
+      "bytes": 15913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -296,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:52:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:22:53Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -311,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opilý muž vyhrožoval v Dubí policistovi s tím, že ho svlíkne z uniformy, počká si na něj a zbije ho jako psa",
+            "publishedAt": "2026-04-20T15:22:53Z"
+          },
           {
             "title": "Opilý muž se chtěl vyhnout hněvu přítelkyně, přespal proto ve sklepě",
             "publishedAt": "2026-04-20T14:52:03Z"
@@ -338,10 +348,6 @@
           {
             "title": "Policistům na Prostějovsku ujížděl řidič škodovky",
             "publishedAt": "2026-04-20T13:19:35Z"
-          },
-          {
-            "title": "Při práci s cirkulárkou si senior na Novojičínsku amputoval ruku",
-            "publishedAt": "2026-04-20T13:16:03Z"
           }
         ]
       }

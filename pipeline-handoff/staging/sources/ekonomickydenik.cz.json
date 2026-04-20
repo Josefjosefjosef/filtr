@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-20T15:14:54.121060Z",
+  "ingestedAt": "2026-04-20T15:36:04.091707Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Stát ukázal, kam povede vysokorychlostní železnice. Které tratě mají smůlu?",
+      "url": "https://ekonomickydenik.cz/vysokorychlostni-zeleznice-priority-vlada/",
+      "dt": "2026-04-20T15:25:25Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "kam",
+        "mají",
+        "povede",
+        "smůlu",
+        "stát",
+        "tratě",
+        "ukázal",
+        "vysokorychlostní",
+        "železnice"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,33 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Miliardová past na emise? Auditoři cupují unijní fond, který měl zachránit oceláře",
-      "url": "https://ekonomickydenik.cz/auditori-cupuji-unijni-fond-ocelari-emise/",
-      "dt": "2026-04-17T13:02:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "auditoři",
-        "cupují",
-        "emise",
-        "fond",
-        "miliardová",
-        "měl",
-        "oceláře",
-        "past",
-        "unijní",
-        "zachránit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69891,
+      "bytes": 69882,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,11 +833,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:04:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:25:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 26,
           "zdravi": 1
         },
         "drop_counts": {
@@ -851,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stát ukázal, kam povede vysokorychlostní železnice. Které tratě mají smůlu?",
+            "publishedAt": "2026-04-20T15:25:25Z"
+          },
           {
             "title": "Bulharsko ovládl generál stíhaček. Kreml slaví, Brusel je zaražený",
             "publishedAt": "2026-04-20T15:04:40Z"
@@ -878,10 +881,6 @@
           {
             "title": "Nenechám se zastrašit, vzkazuje Decroix. Tejce vyzvala ke zveřejnění dokumentů o bitcoinech",
             "publishedAt": "2026-04-20T12:10:42Z"
-          },
-          {
-            "title": "Nobelista kritizuje Trumpa. Komunistický Peking je solidnější partner, tvrdí ekonom",
-            "publishedAt": "2026-04-20T12:07:13Z"
           }
         ]
       }

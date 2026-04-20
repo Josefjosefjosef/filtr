@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T15:14:54.121060Z",
+  "ingestedAt": "2026-04-20T15:36:04.091707Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sorry, holky, není to můj den, hlásila. Pak si Španělka dojela pro historický triumf",
+      "url": "https://www.idnes.cz/sport/cyklistika/amstel-gold-race-zeny-vysledek-paula-blasiova-pribeh.A260420_104855_cyklistika_ipet",
+      "dt": "2026-04-20T15:17:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "den",
+        "dojela",
+        "historický",
+        "hlásila",
+        "holky",
+        "můj",
+        "pak",
+        "sorry",
+        "triumf",
+        "španělka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -769,30 +796,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nevděčnost i privilegium. Pruša o Žabinách, reprezentaci i odchodech do WNBA",
-      "url": "https://www.idnes.cz/sport/basket/viktor-prusa-rozhovor-o-zabinach-a-reprezentaci-u-20.A260420_082906_sport-basket_ald",
-      "dt": "2026-04-20T07:15:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "nevděčnost",
-        "odchodech",
-        "privilegium",
-        "pruša",
-        "reprezentaci",
-        "wnba",
-        "žabinách"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46805,
+      "bytes": 46875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sorry, holky, není to můj den, hlásila. Pak si Španělka dojela pro historický triumf",
+            "publishedAt": "2026-04-20T15:17:00Z"
+          },
           {
             "title": "Hitchcockovi Ptáci po australsku. Fotbalový zápas přerušilo hejno racků",
             "publishedAt": "2026-04-20T14:02:00Z"
@@ -882,10 +889,6 @@
           {
             "title": "Červená pro Mbodjiho správně. Komise rozhodčích řešila i situace z Olomouce",
             "publishedAt": "2026-04-20T12:21:00Z"
-          },
-          {
-            "title": "Návrat po 23 letech. Russell vzpomínal na dětství, zatímco fandil synovi svého šéfa",
-            "publishedAt": "2026-04-20T12:19:00Z"
           }
         ]
       }

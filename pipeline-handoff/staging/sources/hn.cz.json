@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T15:14:54.121060Z",
+  "ingestedAt": "2026-04-20T15:36:04.091707Z",
   "items": [
     {
       "section": "finance",
@@ -28,6 +28,35 @@
         "ztrácí",
         "říká",
         "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Před deseti lety hájil Babiš setkání ministra s dalajlamou, dnes jde Číně hodně naproti. Co se změnilo?",
+      "url": "https://archiv.hn.cz/c1-67869010-pred-deseti-lety-hajil-babis-setkani-ministra-s-dalajlamou-dnes-jde-cine-hodne-naproti-co-se-zmenilo",
+      "dt": "2026-04-20T13:53:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiš",
+        "dalajlamou",
+        "deseti",
+        "hodně",
+        "hájil",
+        "jde",
+        "lety",
+        "ministra",
+        "naproti",
+        "setkání",
+        "změnilo",
+        "číně"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1168,36 +1197,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejsem rasista, ale... Jak maturant a &bdquo;český Charlie Kirk&ldquo; oživuje ultra konzervativní scénu",
-      "url": "https://archiv.hn.cz/c1-67867900-nejsem-rasista-ale-jak-maturant-a-bdquo-cesky-charlie-kirk-ldquo-ozivuje-ultra-konzervativni-scenu",
-      "dt": "2026-04-17T12:31:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bdquo",
-        "charlie",
-        "kirk",
-        "konzervativní",
-        "ldquo",
-        "maturant",
-        "nejsem",
-        "oživuje",
-        "rasista",
-        "scénu",
-        "ultra",
-        "český"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1208,7 +1207,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181080,
+      "bytes": 181044,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1267,6 +1266,10 @@
             "publishedAt": "2026-04-20T14:03:00Z"
           },
           {
+            "title": "Před deseti lety hájil Babiš setkání ministra s dalajlamou, dnes jde Číně hodně naproti. Co se změnilo?",
+            "publishedAt": "2026-04-20T13:53:00Z"
+          },
+          {
             "title": "Žižkov 3.0. Penta Real Estate a Sudop začínají stavět obytný blok s 550 byty. Vznikající čtvrť celkem pojme až 20 tisíc lidí",
             "publishedAt": "2026-04-20T13:20:00Z"
           },
@@ -1289,10 +1292,6 @@
           {
             "title": "Bezpečnost Evropy zhoršila ruská válka proti Ukrajině. Česká pomoc je v souladu s mezinárodním právem, vyslechl si ruský velvyslanec v Praze",
             "publishedAt": "2026-04-20T11:45:00Z"
-          },
-          {
-            "title": "Bulharské volby ovládl exprezident Radev. Získal přes 40 procent hlasů a má tak šanci ukončit nestabilitu v zemi",
-            "publishedAt": "2026-04-20T11:25:00Z"
           }
         ]
       }
