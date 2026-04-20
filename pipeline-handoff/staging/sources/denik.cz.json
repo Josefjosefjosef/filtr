@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T14:54:53.170974Z",
+  "ingestedAt": "2026-04-20T15:14:54.121060Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Timmy se po vyproštění opět zastavil, velryba ale prý odpočívá. Potíž je i vítr",
+      "url": "https://www.denik.cz/staty-eu/keporkak-veltyba-timmy-baltske-more-neuvazl-ted-odpociva-zachrana-pokracuje.html",
+      "dt": "2026-04-20T14:55:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "odpočívá",
+        "opět",
+        "potíž",
+        "prý",
+        "timmy",
+        "velryba",
+        "vyproštění",
+        "vítr",
+        "zastavil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,33 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Ahoj mami, mám se dobře, napsal domů voják Bugár a vystřílel motorest",
-      "url": "https://www.denik.cz/krimi/plac-u-kadrnozky-masakr-nevinnych-lidi-nemel-motiv-ani-logiku.html",
-      "dt": "2026-04-20T07:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ahoj",
-        "bugár",
-        "dobře",
-        "domů",
-        "mami",
-        "motorest",
-        "mám",
-        "napsal",
-        "voják",
-        "vystřílel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30007,
+      "bytes": 30244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:55:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Timmy se po vyproštění opět zastavil, velryba ale prý odpočívá. Potíž je i vítr",
+            "publishedAt": "2026-04-20T14:55:00Z"
+          },
           {
             "title": "Těžaři v létě otevřou stezku bývalým lomem ČSA. Bude pro pěší i cyklisty",
             "publishedAt": "2026-04-20T14:00:00Z"
@@ -736,10 +740,6 @@
           {
             "title": "Tragédie v Louisianě: Otec zabil osm dětí. Nesrovnal se s rozvodem, tvrdí rodina",
             "publishedAt": "2026-04-20T12:46:00Z"
-          },
-          {
-            "title": "Najde nový domov? Zachráněný Blek čeká v broumovském útulku na lepší život",
-            "publishedAt": "2026-04-20T12:30:00Z"
           }
         ]
       }

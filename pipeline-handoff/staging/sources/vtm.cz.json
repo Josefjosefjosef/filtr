@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-20T14:54:53.170974Z",
+  "ingestedAt": "2026-04-20T15:14:54.121060Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "router",
         "skvělou",
         "výbavu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vytvořili přeplácaný prohlížeč, teď chtějí peníze za čistou verzi. Brave Origin stojí 1300 Kč",
+      "url": "https://www.zive.cz/clanky/vytvorili-preplacany-prohlizec-ted-chteji-penize-za-cistou-verzi-brave-origin-stoji-1300-kc/sc-3-a-240786/default.aspx",
+      "dt": "2026-04-20T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "1300",
+        "brave",
+        "chtějí",
+        "origin",
+        "peníze",
+        "prohlížeč",
+        "přeplácaný",
+        "stojí",
+        "verzi",
+        "vytvořili",
+        "čistou"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -930,32 +958,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Metro 2039 se vrací do tunelů. Temnější pokračování dorazí už letos v zimě",
-      "url": "https://doupe.zive.cz/metro-2039-datum-vydani-platformy-trailer",
-      "dt": "2026-04-17T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2039",
-        "dorazí",
-        "letos",
-        "metro",
-        "pokračování",
-        "temnější",
-        "tunelů",
-        "vrací",
-        "zimě"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -966,7 +968,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22632,
+      "bytes": 22906,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1003,7 +1005,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1021,6 +1023,10 @@
           {
             "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
             "publishedAt": "2026-04-20T10:45:00Z"
+          },
+          {
+            "title": "Vytvořili přeplácaný prohlížeč, teď chtějí peníze za čistou verzi. Brave Origin stojí 1300 Kč",
+            "publishedAt": "2026-04-20T14:45:00Z"
           },
           {
             "title": "Supervyhledávač Raycast pro Windows nabírá funkce. Ukáže náhled souboru a připne okno tam, kde ho potřebujete",
@@ -1045,10 +1051,6 @@
           {
             "title": "Windows 11 25H2 míří na všechny domácí počítače. Řízená distribuce skončila",
             "publishedAt": "2026-04-19T11:45:00Z"
-          },
-          {
-            "title": "Kamionem do Turecka. Český Euro Truck Simulator 2 po Islandu a Irsku představuje další rozšíření světa",
-            "publishedAt": "2026-04-20T06:45:00Z"
           }
         ]
       }

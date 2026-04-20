@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-20T14:54:53.170974Z",
+  "ingestedAt": "2026-04-20T15:14:54.121060Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bulharsko ovládl generál stíhaček. Kreml slaví, Brusel je zaražený",
+      "url": "https://ekonomickydenik.cz/bulharsko-ovladl-general-stihacek-kreml-slavi-brusel-je-zarazeny/",
+      "dt": "2026-04-20T15:04:40Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "brusel",
+        "bulharsko",
+        "generál",
+        "kreml",
+        "ovládl",
+        "slaví",
+        "stíhaček",
+        "zaražený"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,32 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Boj o každou kapku: Stát pošle stovky milionů na nové vodovody",
-      "url": "https://ekonomickydenik.cz/sucho-stat-vodovody-rozpocet/",
-      "dt": "2026-04-17T11:59:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "boj",
-        "kapku",
-        "každou",
-        "milionů",
-        "nové",
-        "pošle",
-        "stovky",
-        "stát",
-        "vodovody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69474,
+      "bytes": 69891,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:20:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:04:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -852,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bulharsko ovládl generál stíhaček. Kreml slaví, Brusel je zaražený",
+            "publishedAt": "2026-04-20T15:04:40Z"
+          },
           {
             "title": "Odklad povolenek na vytápění? Jen plané sliby Nerudové, varuje svaz tepláren",
             "publishedAt": "2026-04-20T14:20:53Z"
@@ -879,10 +882,6 @@
           {
             "title": "Nobelista kritizuje Trumpa. Komunistický Peking je solidnější partner, tvrdí ekonom",
             "publishedAt": "2026-04-20T12:07:13Z"
-          },
-          {
-            "title": "Levná auta pro Evropany. Můžou „emisní odpustky“ nakopnout trh?",
-            "publishedAt": "2026-04-20T11:38:40Z"
           }
         ]
       }
