@@ -123,6 +123,32 @@ style-src 'self' 'unsafe-inline' https:;
 
   <body class="iuTopbarFlushRight">
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
+    <!-- P0 desktop: šířka klasického svislého scrollbaru pro fixed #topbarWrap (CSS --iuDesktopVScrollbarPx); app.js je defer → bez tohoto první frame může krátce sahát přes track. -->
+    <script>
+    (function(){
+      function iuSyncDesktopVScrollbarPx(){
+        try {
+          if (typeof window.matchMedia !== "function" || !window.matchMedia("(min-width: 1025px)").matches) {
+            document.documentElement.style.removeProperty("--iuDesktopVScrollbarPx");
+            return;
+          }
+          var w = typeof window.innerWidth === "number" ? window.innerWidth : 0;
+          var root = document.documentElement;
+          var b = document.body;
+          if (!w || !root || !b) return;
+          var gap = 0;
+          if (b.scrollHeight > b.clientHeight + 1) gap = Math.max(0, Math.round(w - b.clientWidth));
+          else if (root.scrollHeight > root.clientHeight + 1) gap = Math.max(0, Math.round(w - root.clientWidth));
+          if (gap > 0) root.style.setProperty("--iuDesktopVScrollbarPx", gap + "px");
+          else root.style.removeProperty("--iuDesktopVScrollbarPx");
+        } catch (e) {}
+      }
+      iuSyncDesktopVScrollbarPx();
+      window.addEventListener("resize", iuSyncDesktopVScrollbarPx, { passive: true });
+      document.addEventListener("DOMContentLoaded", iuSyncDesktopVScrollbarPx, { once: true });
+      window.addEventListener("load", iuSyncDesktopVScrollbarPx, { once: true });
+    })();
+    </script>
     <!-- P0 CLS: desktop sekční grid — stejný guard jako iuDesktopHomeSectionGridGuardApply v assets/app.js; modul app.js je defer → bez tohoto by první paint tall viewportu byl scroll stack, pak přepnutí na grid. -->
     <script>
     (function(){
