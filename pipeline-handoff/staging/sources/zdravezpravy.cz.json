@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-20T17:00:14.822197Z",
+  "ingestedAt": "2026-04-20T17:23:04.963968Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Doktor Google končí. Nemoci lidé už řeší hlavně s chytrými chatboty",
+      "url": "https://www.zdravezpravy.cz/2026/04/20/doktor-google-konci-nemoci-lide-uz-resi-hlavne-s-chytrymi-chatboty/",
+      "dt": "2026-04-20T15:59:51Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "chatboty",
+        "chytrými",
+        "doktor",
+        "google",
+        "hlavně",
+        "končí",
+        "lidé",
+        "nemoci",
+        "řeší"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -469,32 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Poskytnout první pomoc ženě je pro Čechy větší problém než muži",
-      "url": "https://www.zdravezpravy.cz/2026/04/10/poskytnout-prvni-pomoc-zene-je-pro-cechy-vetsi-problem-nez-muzi/",
-      "dt": "2026-04-10T14:00:14Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "muži",
-        "než",
-        "pomoc",
-        "poskytnout",
-        "problém",
-        "první",
-        "větší",
-        "čechy",
-        "ženě"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 219530,
+      "bytes": 223130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:05:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:59:51Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Doktor Google končí. Nemoci lidé už řeší hlavně s chytrými chatboty",
+            "publishedAt": "2026-04-20T15:59:51Z"
+          },
           {
             "title": "Ke křtům se přiklání stále více dospívajících i dospělých osob",
             "publishedAt": "2026-04-20T12:05:27Z"
@@ -584,10 +588,6 @@
           {
             "title": "Nemoci srdce a cév řeší premiér Babiš investicemi. Ale je to dost?",
             "publishedAt": "2026-04-16T10:44:41Z"
-          },
-          {
-            "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
-            "publishedAt": "2026-04-16T07:09:53Z"
           }
         ]
       }

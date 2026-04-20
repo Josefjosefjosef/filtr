@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T17:00:14.822197Z",
+  "ingestedAt": "2026-04-20T17:23:04.963968Z",
   "items": [
     {
       "section": "aktualne",
@@ -748,6 +748,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Zbrojovka je po třech letech prvoligová. Artis se rozešel s Táborskem smírně",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/zbrojovka-je-po-trech-letech-prvoligova-artis-se-rozesel-s-taborskem-smirne-156381",
+      "dt": "2026-04-20T16:59:15Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "artis",
+        "letech",
+        "prvoligová",
+        "rozešel",
+        "smírně",
+        "táborskem",
+        "třech",
+        "zbrojovka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Reprezentace poprvé v Horácké aréně. Rulík na ledě přivítal čtyři nové hráče",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentace-poprve-v-horacke-arene-rulik-na-lede-privital-i-ctyri-nove-hrace-156380",
       "dt": "2026-04-20T16:26:08Z",
@@ -1480,30 +1505,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Litvínov urval i druhé vítězství a nakročil k záchraně mezi elitou",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/litvinov-urval-i-druhe-vitezstvi-a-nakrocil-k-zachrane-mezi-elitou-156352",
-      "dt": "2026-04-18T18:16:29Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "druhé",
-        "elitou",
-        "litvínov",
-        "nakročil",
-        "urval",
-        "vítězství",
-        "záchraně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1633,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39124,
+      "bytes": 39257,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1671,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:26:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:59:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1685,6 +1686,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zbrojovka je po třech letech prvoligová. Artis se rozešel s Táborskem smírně",
+            "publishedAt": "2026-04-20T16:59:15Z"
+          },
           {
             "title": "Reprezentace poprvé v Horácké aréně. Rulík na ledě přivítal čtyři nové hráče",
             "publishedAt": "2026-04-20T16:26:08Z"
@@ -1712,10 +1717,6 @@
           {
             "title": "Wembanyama debutoval v play-off pětatřiceti body. Krejčí se na palubovce jen mihnul",
             "publishedAt": "2026-04-20T06:56:41Z"
-          },
-          {
-            "title": "Pastrňák zapsal dva body, Boston však začal porážkou. Slavili Dobeš, Nečas i Hertl",
-            "publishedAt": "2026-04-20T06:08:39Z"
           }
         ]
       }
@@ -1727,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77299,
+      "bytes": 77268,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

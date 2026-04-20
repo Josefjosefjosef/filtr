@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T17:00:14.822197Z",
+  "ingestedAt": "2026-04-20T17:23:04.963968Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Péče o Toničku po transplantaci je náročná. Rodina z Merboltic hledá podporu",
+      "url": "https://www.denik.cz/regiony/sbirka-tonicka-transplantace-srdce-merboltice-20260420.html",
+      "dt": "2026-04-20T16:24:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hledá",
+        "merboltic",
+        "náročná",
+        "podporu",
+        "péče",
+        "rodina",
+        "toničku",
+        "transplantaci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,31 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jičínsko překvapilo tornádo. Vzniklo bez výrazné bouřky, potvrdili meteorologové",
-      "url": "https://www.denik.cz/regiony/zvlastni-ukaz-mezi-ulibicemi-a-radimi-mohlo-jit-o-slabe-tornado-20260420.html",
-      "dt": "2026-04-20T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bouřky",
-        "jičínsko",
-        "meteorologové",
-        "potvrdili",
-        "překvapilo",
-        "tornádo",
-        "vzniklo",
-        "výrazné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29997,
+      "bytes": 30131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T16:24:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -707,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Péče o Toničku po transplantaci je náročná. Rodina z Merboltic hledá podporu",
+            "publishedAt": "2026-04-20T16:24:00Z"
+          },
           {
             "title": "Tragédie v Indii: Nejméně 21 lidí zahynulo při nehodě autobusu",
             "publishedAt": "2026-04-20T15:12:00Z"
@@ -734,10 +738,6 @@
           {
             "title": "Exposlanec Feri se u soudu zodpovídal z dalšího znásilnění. Svědek nepřišel",
             "publishedAt": "2026-04-20T13:02:00Z"
-          },
-          {
-            "title": "Hasičina není jen o požárech, nejčastěji vyrážíme k nehodám, říká hasič",
-            "publishedAt": "2026-04-20T13:00:00Z"
           }
         ]
       }

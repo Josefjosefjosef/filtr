@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-20T17:00:14.822197Z",
+  "ingestedAt": "2026-04-20T17:23:04.963968Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TV tipy: Očekávaná novinka Jiřího Stracha, válečná Valkýra i nestárnoucí M*A*S*H",
+      "url": "https://www.kinobox.cz/clanky/tema/52864-tv-tipy-ocekavana-novinka-jiriho-stracha-valecna-valkyra-i-nestarnouci-mash",
+      "dt": "2026-04-20T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "jiřího",
+        "nestárnoucí",
+        "novinka",
+        "očekávaná",
+        "stracha",
+        "tipy",
+        "valkýra",
+        "válečná"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,31 +555,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "VOD tipy: Návrat Euforie, romantický hit i seriál o OnlyFans",
-      "url": "https://www.kinobox.cz/clanky/vod/52799-vod-tipy-navrat-euforie-romanticky-hit-i-serial-o-onlyfans",
-      "dt": "2026-04-17T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "euforie",
-        "hit",
-        "návrat",
-        "onlyfans",
-        "romantický",
-        "seriál",
-        "tipy",
-        "vod"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -565,7 +565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28096,
+      "bytes": 28101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -602,7 +602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -617,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TV tipy: Očekávaná novinka Jiřího Stracha, válečná Valkýra i nestárnoucí M*A*S*H",
+            "publishedAt": "2026-04-20T17:00:00Z"
+          },
           {
             "title": "Chyby z Účastníků zájezdu, kteří slaví 20 let od premiéry: Mizející ruka, lehátka a špatný večírek",
             "publishedAt": "2026-04-20T15:00:00Z"
@@ -644,10 +648,6 @@
           {
             "title": "„S člověkem to opravdu zamává,“ říká Sandra Nováková o stalkerovi z Ulice a vlastních zkušenostech",
             "publishedAt": "2026-04-20T06:00:00Z"
-          },
-          {
-            "title": "Hayden Christensen slaví 45 let. Hvězda Star Wars za roli Anakina tvrdě zaplatila",
-            "publishedAt": "2026-04-19T17:00:00Z"
           }
         ]
       }
