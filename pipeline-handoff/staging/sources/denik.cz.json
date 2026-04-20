@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T08:54:47.739643Z",
+  "ingestedAt": "2026-04-20T09:14:51.177830Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Předpověď počasí hlásí týden zvratů: Dorazí déšť i sníh. Sledujte změny na mapě",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-cesko-kraje-radar-dest-vyrazne-rozdily-teplot-bude-i-snezit.html",
+      "dt": "2026-04-20T08:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dorazí",
+        "déšť",
+        "hlásí",
+        "mapě",
+        "počasí",
+        "předpověď",
+        "sledujte",
+        "sníh",
+        "týden",
+        "změny",
+        "zvratů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -631,33 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Osiřelý kočkodan Yuji vyrůstá s plyšáky. Rodinu mu nahrazuje pes, medvěd a osel",
-      "url": "https://www.denik.cz/ze_sveta/yuji-kockodan-plysak-zoo-mexiko-guadalajara.html",
-      "dt": "2026-04-19T15:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kočkodan",
-        "medvěd",
-        "nahrazuje",
-        "osel",
-        "osiřelý",
-        "pes",
-        "plyšáky",
-        "rodinu",
-        "vyrůstá",
-        "yuji"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29045,
+      "bytes": 29345,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +706,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -722,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předpověď počasí hlásí týden zvratů: Dorazí déšť i sníh. Sledujte změny na mapě",
+            "publishedAt": "2026-04-20T08:45:00Z"
+          },
           {
             "title": "Japonsko zasáhlo zemětřesení o síle 7,4 stupně. Úřady varují před vlnou tsunami",
             "publishedAt": "2026-04-20T08:27:00Z"
@@ -749,10 +754,6 @@
           {
             "title": "Zatím není pozdě. Do sbírky pro nemocného Vašíka přišly statisíce, i díky Deníku",
             "publishedAt": "2026-04-20T07:10:00Z"
-          },
-          {
-            "title": "Výhra 27 milionů může propadnout. Loterie hledá majitele tiketu, zbývají jen dny",
-            "publishedAt": "2026-04-20T06:57:00Z"
           }
         ]
       }

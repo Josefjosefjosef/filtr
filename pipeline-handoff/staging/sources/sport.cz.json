@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T08:54:47.739643Z",
+  "ingestedAt": "2026-04-20T09:14:51.177830Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nejlepším hráčem sezony NBA bude Wembanyama, Jokič, nebo Gilgeous-Alexander",
+      "url": "https://www.sport.cz/clanek/basketbal-nejlepsim-hracem-sezony-nba-bude-wembanyama-jokic-nebo-gilgeous-alexander-5440662",
+      "dt": "2026-04-20T09:00:37Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "alexander",
+        "gilgeous",
+        "hráčem",
+        "jokič",
+        "nba",
+        "nebo",
+        "nejlepším",
+        "sezony",
+        "wembanyama"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,32 +791,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Pardubice mají druhou výhru, ve vyhroceném závěru létaly pěsti",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-je-tu-prvni-finalova-odveta-pardubicim-bude-chybet-strelec-5439989",
-      "dt": "2026-04-19T11:22:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "druhou",
-        "létaly",
-        "mají",
-        "pardubice",
-        "pěsti",
-        "sestřih",
-        "vyhroceném",
-        "výhru",
-        "závěru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46716,
+      "bytes": 46060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:11:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T09:00:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejlepším hráčem sezony NBA bude Wembanyama, Jokič, nebo Gilgeous-Alexander",
+            "publishedAt": "2026-04-20T09:00:37Z"
+          },
           {
             "title": "Aktuální tabulka nejlepších střelců Chance Ligy v sezoně 2025/2026",
             "publishedAt": "2026-04-07T04:03:00Z"
@@ -880,10 +884,6 @@
           {
             "title": "Předzápasová show se proměnila v pořádné drama. Do akce musel jeřáb",
             "publishedAt": "2026-04-20T06:33:07Z"
-          },
-          {
-            "title": "Fitzpatrick podruhé triumfoval v Hilton Head. Hrubý vybojoval třetí místo na PGA Tour Americas v Riu de Janeiro",
-            "publishedAt": "2026-04-20T07:09:28Z"
           }
         ]
       }
