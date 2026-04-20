@@ -28694,7 +28694,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuNotesOverlay";
-    ov.className = "iu-notesOverlay iuNotesRoot";
+    ov.className = "iu-notesOverlay iuNotesRoot iu-tools-overlay-fullscreen-desktop";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     ov.innerHTML =
@@ -29558,7 +29558,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuTasksOverlay";
-    ov.className = "iu-tasksOverlay";
+    ov.className = "iu-tasksOverlay iu-tools-overlay-fullscreen-desktop";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     ov.innerHTML =
