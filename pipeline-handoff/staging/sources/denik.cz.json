@@ -1,17 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T10:14:31.625534Z",
+  "ingestedAt": "2026-04-20T10:34:31.551019Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ultimátum vypršelo. Skupina zveřejnila údajné spisy z pardubické haly",
+      "title": "Armáda zveřejnila diskutovaný rozhovor s prezidentem Pavlem",
+      "url": "https://www.denik.cz/z_domova/petr-pavel-rozhovor-armada.html",
+      "dt": "2026-04-20T10:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "armáda",
+        "diskutovaný",
+        "pavlem",
+        "prezidentem",
+        "rozhovor",
+        "zveřejnila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ultimátum vypršelo. Skupina extrémistů zveřejnila údajné spisy z pardubické haly",
       "url": "https://www.denik.cz/regiony/pardubice-pozar-terorismus-20260420.html",
       "dt": "2026-04-20T09:39:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "extrémistů",
         "haly",
         "pardubické",
         "skupina",
@@ -84,21 +108,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Japonsko zasáhlo zemětřesení o síle 7,4 stupně. Úřady varují před vlnou tsunami",
+      "title": "Japonsko po silném zemětřesení zasáhly první vlny tsunami",
       "url": "https://www.denik.cz/ze_sveta/japonsko-zemetreseni-tsunami.html",
       "dt": "2026-04-20T08:27:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "japonsko",
-        "stupně",
-        "síle",
+        "první",
+        "silném",
         "tsunami",
-        "varují",
-        "vlnou",
-        "zasáhlo",
-        "zemětřesení",
-        "úřady"
+        "vlny",
+        "zasáhly",
+        "zemětřesení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -628,33 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž v Louisianě po domácí hádce zastřelil osm dětí, zahynul po honičce s policií",
-      "url": "https://www.denik.cz/ze_sveta/strelba-louisiana-osm-deti-domaci-hadka.html",
-      "dt": "2026-04-19T16:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domácí",
-        "dětí",
-        "honičce",
-        "hádce",
-        "louisianě",
-        "muž",
-        "osm",
-        "policií",
-        "zahynul",
-        "zastřelil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28938,
+      "bytes": 28734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T09:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T10:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -720,7 +715,11 @@
         },
         "sample_titles": [
           {
-            "title": "Ultimátum vypršelo. Skupina zveřejnila údajné spisy z pardubické haly",
+            "title": "Armáda zveřejnila diskutovaný rozhovor s prezidentem Pavlem",
+            "publishedAt": "2026-04-20T10:10:00Z"
+          },
+          {
+            "title": "Ultimátum vypršelo. Skupina extrémistů zveřejnila údajné spisy z pardubické haly",
             "publishedAt": "2026-04-20T09:39:00Z"
           },
           {
@@ -732,7 +731,7 @@
             "publishedAt": "2026-04-20T08:45:00Z"
           },
           {
-            "title": "Japonsko zasáhlo zemětřesení o síle 7,4 stupně. Úřady varují před vlnou tsunami",
+            "title": "Japonsko po silném zemětřesení zasáhly první vlny tsunami",
             "publishedAt": "2026-04-20T08:27:00Z"
           },
           {
@@ -746,10 +745,6 @@
           {
             "title": "Musela zemřít tříletá holčička? Straníme rodičům před dětmi, varuje šéf pěstounů",
             "publishedAt": "2026-04-20T08:00:00Z"
-          },
-          {
-            "title": "Je libo koňský hnůj? Prodejní „automat“ na Táborsku láká na netradiční sortiment",
-            "publishedAt": "2026-04-20T07:42:00Z"
           }
         ]
       }
