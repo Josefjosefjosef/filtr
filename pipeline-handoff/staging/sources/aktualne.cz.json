@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T06:35:56.071667Z",
+  "ingestedAt": "2026-04-20T06:55:04.242661Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velryba Timmy se po měsíci vyprostila z mělčiny. Plave zátokou na severu Německa",
+      "url": "https://zpravy.aktualne.cz/zahranici/velryba-timmy-se-po-mesici-vyprostila-z-melciny-plave-zatokou-na-severu-nemecka/r~aaa2912862bc99e5ee798ca0d10cc35f/",
+      "dt": "2026-04-20T06:38:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "mělčiny",
+        "měsíci",
+        "německa",
+        "plave",
+        "severu",
+        "timmy",
+        "velryba",
+        "vyprostila",
+        "zátokou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -510,34 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bitva o anglický trůn slibuje parádní drama. Citizens porazili Arsenal a zle dotírají",
-      "url": "https://sport.aktualne.cz/fotbal/bitva-o-anglicky-trun-slibuje-paradni-drama-citizens-porazili-arsenal-a-zle-dotiraji/r~aaa2977a478a44d135ca129ef3740730/",
-      "dt": "2026-04-19T17:55:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anglický",
-        "arsenal",
-        "bitva",
-        "citizens",
-        "dotírají",
-        "drama",
-        "parádní",
-        "porazili",
-        "slibuje",
-        "trůn",
-        "zle"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22540,
+      "bytes": 22645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,12 +583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:38:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
+          "zpravy": 12,
           "finance": 1,
-          "sport": 6,
+          "sport": 5,
           "other": 2
         },
         "drop_counts": {
@@ -603,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velryba Timmy se po měsíci vyprostila z mělčiny. Plave zátokou na severu Německa",
+            "publishedAt": "2026-04-20T06:38:00Z"
+          },
           {
             "title": "Porušili jste příměří, zuří Teherán. Slíbil Američanům odvetu. Ropa prudce zdražuje",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -630,10 +632,6 @@
           {
             "title": "Fico musí letět oklikou na oslavy do Moskvy. Pobaltské země mu staví hráz",
             "publishedAt": "2026-04-20T05:03:00Z"
-          },
-          {
-            "title": "Kolik stojí bydlení u metra? Přinášíme mapu cen bytů u všech stanic",
-            "publishedAt": "2026-04-20T03:30:00Z"
           }
         ]
       }

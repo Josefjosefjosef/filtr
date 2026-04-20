@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T06:35:56.071667Z",
+  "ingestedAt": "2026-04-20T06:55:04.242661Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Začátek týdne bude chladnější a deštivější, od čtvrtka se oteplí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zacatek-tydne-bude-chladnejsi-a-destivejsi-od-ctvrtka-se-otepli-372565",
+      "dt": "2026-04-20T06:35:47Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chladnější",
+        "deštivější",
+        "oteplí",
+        "týdne",
+        "začátek",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -727,31 +750,6 @@
         "textilní",
         "umprum",
         "vezou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie našla v Česku dvě otrávené sklenice s dětskou výživou",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/rakouska-policie-varuje-pred-mozna-otravenou-kojeneckou-vyzivou-hipp-372539",
-      "dt": "2026-04-19T07:42:57Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dvě",
-        "dětskou",
-        "našla",
-        "otrávené",
-        "policie",
-        "sklenice",
-        "výživou",
-        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1522,7 +1520,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42741,
+      "bytes": 42625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1582,12 +1580,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:14:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:35:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "other": 3,
-          "finance": 4,
-          "zpravy": 23
+          "finance": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1599,6 +1597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Začátek týdne bude chladnější a deštivější, od čtvrtka se oteplí",
+            "publishedAt": "2026-04-20T06:35:47Z"
+          },
           {
             "title": "Černobyl dnes: o život jde na místech, kde to voní jarem",
             "publishedAt": "2026-04-20T06:14:12Z"
@@ -1626,10 +1628,6 @@
           {
             "title": "Z Prahy téměř zmizeli pouliční umělci se zvířaty. Někteří se přesunuli do jiných měst",
             "publishedAt": "2026-04-20T04:02:00Z"
-          },
-          {
-            "title": "Vláda projedná návrh o rok odložit používání geoportálu územního plánování",
-            "publishedAt": "2026-04-20T02:55:09Z"
           }
         ]
       }
@@ -1735,7 +1733,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77180,
+      "bytes": 77192,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

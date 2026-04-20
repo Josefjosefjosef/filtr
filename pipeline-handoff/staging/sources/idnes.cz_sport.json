@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T06:35:56.071667Z",
+  "ingestedAt": "2026-04-20T06:55:04.242661Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tři slávistické hlouposti. A najednou je to o pět! Souboj o titul znovu slibuje drama",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/tri-slavisticke-hlouposti-a-najednou-je-to-o-pet-jeste-to-bude-drama-fotbalova-slavia-behem-tydne-zt.A260419_201656_fotbal_mama",
+      "dt": "2026-04-20T06:13:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "drama",
+        "hlouposti",
+        "najednou",
+        "pět",
+        "slibuje",
+        "slávistické",
+        "souboj",
+        "titul",
+        "tři",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,31 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Olomouc - Slovácko 2:1, úspěšná Hapalova premiéra, hosté dohrávali v devíti",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-sigma-olomouc-slovacko-online-vysledek.A260417_152107_fotbal_duff",
-      "dt": "2026-04-19T13:32:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "devíti",
-        "dohrávali",
-        "hapalova",
-        "hosté",
-        "olomouc",
-        "premiéra",
-        "slovácko",
-        "úspěšná"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47292,
+      "bytes": 47691,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:08:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři slávistické hlouposti. A najednou je to o pět! Souboj o titul znovu slibuje drama",
+            "publishedAt": "2026-04-20T06:13:00Z"
+          },
           {
             "title": "Tři body Pastrňáka Bostonu nestačily, Dobeš vstoupil do play off vítězně",
             "publishedAt": "2026-04-20T06:08:55Z"
@@ -872,10 +878,6 @@
           {
             "title": "Vondráčková si v Ostravě zastřílela a Královopolanky míří pro ligový bronz",
             "publishedAt": "2026-04-19T21:08:03Z"
-          },
-          {
-            "title": "Fenerbahce lepší Galatasaraye. Voráčková slaví další euroligovou medaili",
-            "publishedAt": "2026-04-19T20:55:25Z"
           }
         ]
       }
