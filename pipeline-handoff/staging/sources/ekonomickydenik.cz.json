@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-20T13:15:10.508353Z",
+  "ingestedAt": "2026-04-20T13:35:06.632426Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Převrat v českém zbrojení: Kdo bere obraně důležitou agendu?",
+      "url": "https://ekonomickydenik.cz/prevrat-ceske-zbrojeni/",
+      "dt": "2026-04-20T13:29:54Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "agendu",
+        "bere",
+        "důležitou",
+        "obraně",
+        "převrat",
+        "zbrojení",
+        "českém"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,32 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Agresor s kriminálním chováním.“ Evropa se vysmála ruským hrozbám bombardovat fabriky",
-      "url": "https://ekonomickydenik.cz/agresor-kriminalnim-chovanim-rusko-hrozby/",
-      "dt": "2026-04-17T10:35:11Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "agresor",
-        "bombardovat",
-        "chováním",
-        "evropa",
-        "fabriky",
-        "hrozbám",
-        "kriminálním",
-        "ruským",
-        "vysmála"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69338,
+      "bytes": 68972,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:59:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:29:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -849,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Převrat v českém zbrojení: Kdo bere obraně důležitou agendu?",
+            "publishedAt": "2026-04-20T13:29:54Z"
+          },
           {
             "title": "Končí ruské symboly. Nová uniforma vrací vojákům noblesu i lva",
             "publishedAt": "2026-04-20T12:59:50Z"
@@ -876,10 +878,6 @@
           {
             "title": "Digitální ostuda Komise. Aplikace za 100 milionů korun padla po dvou minutách",
             "publishedAt": "2026-04-20T10:46:16Z"
-          },
-          {
-            "title": "Drony a AI v akci: Čeští vojáci, policisté a hasiči zkoušejí spojení ve válečném stavu",
-            "publishedAt": "2026-04-20T07:08:26Z"
           }
         ]
       }
