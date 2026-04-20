@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-20T19:12:51.622971Z",
+  "ingestedAt": "2026-04-20T19:35:08.269337Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Severní Makedonie z Bratislavy v červnu. Letenky od 688 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/severni-makedonie-z-bratislavy-v-cervnu",
+      "dt": "2026-04-20T19:18:31Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "688",
+        "bratislavy",
+        "letenky",
+        "makedonie",
+        "severní",
+        "červnu"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -479,31 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Z Prahy na termální ostrov Ischia do 4* hotelu se snídaní. Zájezd od 12 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-na-termalni-ostrov-ischia-do-4-hotelu-se-snodani",
-      "dt": "2026-04-14T18:13:54Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "hotelu",
-        "ischia",
-        "ostrov",
-        "prahy",
-        "snídaní",
-        "termální",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 42002,
+      "bytes": 41149,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:38:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T19:18:31Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -566,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Severní Makedonie z Bratislavy v červnu. Letenky od 688 Kč",
+            "publishedAt": "2026-04-20T19:18:31Z"
+          },
           {
             "title": "Z Prahy na termální ostrov Ischia do 4* hotelu s all-inclusive soft. Zájezd od 13 990 Kč",
             "publishedAt": "2026-04-20T16:38:10Z"
@@ -593,10 +595,6 @@
           {
             "title": "Nová linka z Prahy do Vilniusu s Wizz Air. Letenky od 1 568 Kč",
             "publishedAt": "2026-04-17T11:57:59Z"
-          },
-          {
-            "title": "Malta z Prahy přímým letem v květnu a červnu. Letenky od 3 676 Kč",
-            "publishedAt": "2026-04-17T10:00:00Z"
           }
         ]
       }
