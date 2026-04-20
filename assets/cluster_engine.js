@@ -111,19 +111,43 @@ export function detectTopic(title) {
   return bestScore >= 1 ? bestTopic : null;
 }
 
+/** LRU: extractKeywords(title) is pure; semantic path repeats same title vs many clusters. */
+const IU_EXTRACT_KW_CACHE_MAX = 8192;
+const extractKeywordsCache = new Map();
+
 /** @param {string} title */
 export function extractKeywords(title) {
+  const key = String(title || "");
+  const hit = extractKeywordsCache.get(key);
+  if (hit !== undefined) return hit.slice();
   const words = normalizeTitle(title)
     .split(" ")
     .filter((w) => w.length > 3);
-  return normalizeEntities(words);
+  const out = normalizeEntities(words);
+  if (extractKeywordsCache.size >= IU_EXTRACT_KW_CACHE_MAX) {
+    extractKeywordsCache.delete(extractKeywordsCache.keys().next().value);
+  }
+  extractKeywordsCache.set(key, out);
+  return out.slice();
 }
+
+/** LRU: extractEntities(title) is pure; same repeat pattern as extractKeywords. */
+const IU_EXTRACT_ENT_CACHE_MAX = 8192;
+const extractEntitiesCache = new Map();
 
 /** @param {string} title */
 export function extractEntities(title) {
   if (!title || typeof title !== "string") return [];
+  const key = String(title);
+  const hit = extractEntitiesCache.get(key);
+  if (hit !== undefined) return hit.slice();
   const words = title.split(" ").filter((w) => w.length > 2);
-  return normalizeEntities(words);
+  const out = normalizeEntities(words);
+  if (extractEntitiesCache.size >= IU_EXTRACT_ENT_CACHE_MAX) {
+    extractEntitiesCache.delete(extractEntitiesCache.keys().next().value);
+  }
+  extractEntitiesCache.set(key, out);
+  return out.slice();
 }
 
 /**
