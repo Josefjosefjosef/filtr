@@ -32,11 +32,11 @@ style-src 'self' 'unsafe-inline' https:;
         background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
         background-color: #e5eef6;
       }
-      /* P0 desktop: stejné root overflow + scrollbar-gutter jako assets/app.css ještě před síťovým načtením app.css — omezí transient double-track / UA default vs. loaded CSS (PR #2900+). */
+      /* P0 desktop: shodně s assets/app.css @1025px před načtením app.css — html bez vertikálního scrollu, jen body (jedna lišta, žádný transient double-track). */
       @media (min-width: 1025px) {
         html {
           overflow-x: hidden;
-          overflow-y: auto;
+          overflow-y: hidden;
           scrollbar-gutter: auto;
           width: 100%;
           max-width: 100%;
@@ -123,7 +123,7 @@ style-src 'self' 'unsafe-inline' https:;
 
   <body class="iuTopbarFlushRight">
     <noscript>Pro zobrazení obsahu je potřeba JavaScript.</noscript>
-    <!-- P0 desktop: šířka klasického svislého scrollbaru pro fixed #topbarWrap (CSS --iuDesktopVScrollbarPx); app.js je defer → bez tohoto první frame může krátce sahát přes track. -->
+    <!-- P0 desktop: --iuDesktopVScrollbarPx = innerWidth − body.clientWidth (stable gutter už zúží body před overflow); bez scrollHeight gate + rAF = správný inset od prvních framů. -->
     <script>
     (function(){
       function iuSyncDesktopVScrollbarPx(){
@@ -136,17 +136,21 @@ style-src 'self' 'unsafe-inline' https:;
           var root = document.documentElement;
           var b = document.body;
           if (!w || !root || !b) return;
-          var gap = 0;
-          if (b.scrollHeight > b.clientHeight + 1) gap = Math.max(0, Math.round(w - b.clientWidth));
-          else if (root.scrollHeight > root.clientHeight + 1) gap = Math.max(0, Math.round(w - root.clientWidth));
+          var gap = Math.max(0, Math.round(w - b.clientWidth));
           if (gap > 0) root.style.setProperty("--iuDesktopVScrollbarPx", gap + "px");
           else root.style.removeProperty("--iuDesktopVScrollbarPx");
         } catch (e) {}
       }
-      iuSyncDesktopVScrollbarPx();
+      function iuSyncDesktopVScrollbarPxTwice(){
+        iuSyncDesktopVScrollbarPx();
+        try {
+          requestAnimationFrame(iuSyncDesktopVScrollbarPx);
+        } catch (e1) {}
+      }
+      iuSyncDesktopVScrollbarPxTwice();
       window.addEventListener("resize", iuSyncDesktopVScrollbarPx, { passive: true });
-      document.addEventListener("DOMContentLoaded", iuSyncDesktopVScrollbarPx, { once: true });
-      window.addEventListener("load", iuSyncDesktopVScrollbarPx, { once: true });
+      document.addEventListener("DOMContentLoaded", iuSyncDesktopVScrollbarPxTwice, { once: true });
+      window.addEventListener("load", iuSyncDesktopVScrollbarPxTwice, { once: true });
     })();
     </script>
     <!-- P0 CLS: desktop sekční grid — stejný guard jako iuDesktopHomeSectionGridGuardApply v assets/app.js; modul app.js je defer → bez tohoto by první paint tall viewportu byl scroll stack, pak přepnutí na grid. -->

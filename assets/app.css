@@ -311,18 +311,14 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-/* P0 desktop ≥1025px: šířka root = viewport (scroll na pravém kraji), explicitní overflow-y na body = stejné chování jako po přepočtu z overflow-x:hidden — méně transientních odchylek při načítání CSS (navazuje na PR #2900). */
+/* P0 desktop ≥1025px: jeden vertikální scrollport na <body> — <html> overflow-y:hidden zabraňuje transient dvojité liště (html+body oba auto). Gutter jen na body (stable). */
 @media (min-width: 1025px){
-  /*
-    P0 desktop: `scrollbar-gutter: stable` na <html> rezervuje gutter i když root není aktivní scrollport (scroll je na body).
-    Výsledek: layout box končí ~šířku lišty před fyzickým pravým okrajem viewportu + zmatečný / dvojitý track při přepočtu při reloadu.
-    Gutter patří na skutečný scrollport → `auto` na html, `stable` na body (CLS na body).
-  */
   html{
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     scrollbar-gutter: auto;
+    overflow-y: hidden;
   }
   body{
     width: 100%;
@@ -332,6 +328,7 @@ body{
     box-sizing: border-box;
     min-height: 0;
     scrollbar-gutter: stable;
+    scroll-padding-top: var(--topbarStackH);
   }
 }
 
