@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-20T12:14:26.766121Z",
+  "ingestedAt": "2026-04-20T13:15:10.508353Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ke křtům se přiklání stále více dospívajících i dospělých osob",
+      "url": "https://www.zdravezpravy.cz/2026/04/20/ke-krtum-se-priklani-stale-vice-dospivajicich-i-dospelych-osob/",
+      "dt": "2026-04-20T12:05:27Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dospívajících",
+        "dospělých",
+        "křtům",
+        "osob",
+        "přiklání",
+        "stále"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,31 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Eli Lilly rozjela v USA prodej tablet na obezitu a nadváhu",
-      "url": "https://www.zdravezpravy.cz/2026/04/10/eli-lilly-rozjela-v-usa-prodej-tablet-na-obezitu-a-nadvahu/",
-      "dt": "2026-04-10T11:00:01Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "eli",
-        "lilly",
-        "nadváhu",
-        "obezitu",
-        "prodej",
-        "rozjela",
-        "tablet",
-        "usa"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 220577,
+      "bytes": 219529,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:00:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T12:05:27Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -559,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ke křtům se přiklání stále více dospívajících i dospělých osob",
+            "publishedAt": "2026-04-20T12:05:27Z"
+          },
           {
             "title": "Komentář: Majetkový test pro domácí pečující? Asi se zbláznili",
             "publishedAt": "2026-04-20T10:00:51Z"
@@ -586,10 +588,6 @@
           {
             "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
             "publishedAt": "2026-04-16T07:09:53Z"
-          },
-          {
-            "title": "Zdravotní dotazník: Nejhorší je, když žadatel musí něco hledat, přemýšlet",
-            "publishedAt": "2026-04-15T15:30:28Z"
           }
         ]
       }
