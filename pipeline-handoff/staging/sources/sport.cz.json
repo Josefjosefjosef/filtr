@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T03:55:05.233014Z",
+  "ingestedAt": "2026-04-20T04:15:03.899323Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák zapsal tři body, Bostonu to na výhru nestačilo. Montreal rozjásalo slovenské eso",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-zapsal-tri-body-bostonu-to-na-vyhru-nestacilo-montreal-rozjasalo-slovenske-eso-5440647",
+      "dt": "2026-04-20T04:05:33Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "body",
+        "bostonu",
+        "eso",
+        "montreal",
+        "nestačilo",
+        "pastrňák",
+        "rozjásalo",
+        "slovenské",
+        "tři",
+        "výhru",
+        "zapsal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,32 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po bronzové sezoně končí v Karlových Varech asistent Moravec a pět hokejistů",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-po-bronzove-sezone-konci-v-karlovych-varech-asistent-moravec-a-pet-hokejistu-5440001",
-      "dt": "2026-04-19T11:05:46Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "asistent",
-        "bronzové",
-        "hokejistů",
-        "karlových",
-        "končí",
-        "moravec",
-        "pět",
-        "sezoně",
-        "varech"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47908,
+      "bytes": 48027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T20:53:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:05:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -839,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák zapsal tři body, Bostonu to na výhru nestačilo. Montreal rozjásalo slovenské eso",
+            "publishedAt": "2026-04-20T04:05:33Z"
+          },
           {
             "title": "AC Milán je po výhře ve Veroně druhý, Juventus si upevnil čtvrté místo",
             "publishedAt": "2026-04-19T15:25:36Z"
@@ -866,10 +872,6 @@
           {
             "title": "Hotovo. Bayern Mnichov slaví titul",
             "publishedAt": "2026-04-19T16:17:42Z"
-          },
-          {
-            "title": "Pěsti a krvavá louže, koncovka druhého finále se vyostřila. Stránský: Oba týmy si měří pinďoury",
-            "publishedAt": "2026-04-19T19:38:58Z"
           }
         ]
       }

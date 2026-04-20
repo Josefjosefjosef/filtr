@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T03:55:05.233014Z",
+  "ingestedAt": "2026-04-20T04:15:03.899323Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jsou emoce chybou v systému? Dvojnásobný držitel Litery napsal skvělý román",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/jsou-emoce-chybou-v-systemu-dvojnasobny-drzitel-litery-napsal-skvely-roman/r~aaa293e826dbc2a9e2ec9009a00965d3/",
+      "dt": "2026-04-20T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chybou",
+        "držitel",
+        "dvojnásobný",
+        "emoce",
+        "litery",
+        "napsal",
+        "román",
+        "skvělý",
+        "systému"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -518,32 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice - Třinec 4:2. Vřava na konci, z třineckého mladíka Sikory crčela krev",
-      "url": "https://sport.aktualne.cz/hokej/pardubice-trinec-finale-pokracuje-ocelari-chteji-ve-druhem-zapase-serii-srovnat/r~aaa295d80c5e7be8e799170f7aa42859/",
-      "dt": "2026-04-19T14:27:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "crčela",
-        "konci",
-        "krev",
-        "mladíka",
-        "pardubice",
-        "sikory",
-        "třinec",
-        "třineckého",
-        "vřava"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22082,
+      "bytes": 22268,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,12 +591,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 2,
           "zpravy": 9,
-          "sport": 9,
-          "other": 1,
+          "sport": 8,
           "finance": 1
         },
         "drop_counts": {
@@ -609,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jsou emoce chybou v systému? Dvojnásobný držitel Litery napsal skvělý román",
+            "publishedAt": "2026-04-20T04:00:00Z"
+          },
           {
             "title": "Známe se od školy, říkám mu Péťo. Zůna o prezidentovi a sporech s armádou",
             "publishedAt": "2026-04-20T03:30:00Z"
@@ -636,10 +640,6 @@
           {
             "title": "Plzeň v průšvihu. Padla doma s Pardubicemi a komplikuje si boj o třetí místo",
             "publishedAt": "2026-04-19T18:37:00Z"
-          },
-          {
-            "title": "V Německu je hotovo. Bayern čtyři kola před koncem ligy slaví svůj 35. titul",
-            "publishedAt": "2026-04-19T18:03:00Z"
           }
         ]
       }

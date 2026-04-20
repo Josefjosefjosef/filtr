@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-20T03:55:05.233014Z",
+  "ingestedAt": "2026-04-20T04:15:03.899323Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kilogramy vyhozených léků ohrožují děti. Pokládají je za bonbony",
+      "url": "https://profitonline.cz/kilogramy-vyhozenych-leku-ohrozuji-deti-pokladaji-je-za-bonbony/",
+      "dt": "2026-04-20T04:00:15Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bonbony",
+        "děti",
+        "kilogramy",
+        "léků",
+        "ohrožují",
+        "pokládají",
+        "vyhozených"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -263,31 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Stačí píchnutí špendlíkem, aby vykrvácel. Vážná nemoc se dědí po generace",
-      "url": "https://profitonline.cz/staci-pichnuti-spendlikem-aby-vykrvacel-vazna-nemoc-se-dedi-po-generace/",
-      "dt": "2026-04-17T10:00:22Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dědí",
-        "generace",
-        "nemoc",
-        "píchnutí",
-        "stačí",
-        "vykrvácel",
-        "vážná",
-        "špendlíkem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -298,7 +297,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18730,
+      "bytes": 18703,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -335,12 +334,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-19T13:00:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:00:15Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "finance": 10,
-          "sport": 1,
-          "zdravi": 1
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -352,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kilogramy vyhozených léků ohrožují děti. Pokládají je za bonbony",
+            "publishedAt": "2026-04-20T04:00:15Z"
+          },
           {
             "title": "Češi budou tankovat levněji",
             "publishedAt": "2026-04-19T13:00:16Z"
@@ -379,10 +382,6 @@
           {
             "title": "Statisíce Čechů přichází o peníze ve starém penzijním připojištění",
             "publishedAt": "2026-04-18T08:00:38Z"
-          },
-          {
-            "title": "Okamžiky dějin: Jak Evropané objevovali nejmenší kontinent",
-            "publishedAt": "2026-04-18T04:00:12Z"
           }
         ]
       }
