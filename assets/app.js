@@ -9305,11 +9305,11 @@ function buildVideoAsArticleCard(it) {
     try{ if (!iuIsProdHost()) window.iuScienceHistoryPreviewRegressionAudit = iuScienceHistoryPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuEducationPreviewRegressionAudit = iuEducationPreviewRegressionAudit; }catch(_){}
     try{ if (!iuIsProdHost()) window.iuSilverTallMediaPreviewsRefresh = iuSilverTallMediaPreviewsRefresh; }catch(_){}
-    /* P0: avoid painting placeholder titles before feed loadData() populates cache (late swap / flicker). */
+    /* P0 click path: mount preview cards + click handlers immediately (EnsureDom in each *PreviewRefresh).
+       Waiting only for loadData() left first viewport without homecard targets — late “doskok” + blocked taps.
+       Titles still refresh when state.cachedItems fills (loadData calls iuSilverTallMediaPreviewsRefresh again). */
     try{
-      if (typeof state !== "undefined" && state && state.hasLoadedData) {
-        iuSilverTallMediaPreviewsRefresh();
-      }
+      iuSilverTallMediaPreviewsRefresh();
     }catch(_){}
     try{ setInterval(() => { try{ iuSilverTallMediaPreviewsRefresh(); }catch{} }, 30000); }catch(_){}
     try{
