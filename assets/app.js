@@ -1783,6 +1783,21 @@ try {
     } catch (_) {}
   }
 
+  /** One animation frame yield — breaks sync stacks between heavy filter work and DOM render. */
+  async function iuYieldOneRaf() {
+    return new Promise((resolve) => {
+      try {
+        if (typeof requestAnimationFrame === "function") {
+          requestAnimationFrame(() => resolve());
+        } else {
+          setTimeout(resolve, 0);
+        }
+      } catch (_) {
+        setTimeout(resolve, 0);
+      }
+    });
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -4682,6 +4697,7 @@ try {
   // Druhá render cesta je zakázaná.
   async function renderFeed(target, items) {
     iuBootTracePhase("renderFeed_start");
+    let rfPassForTrace = 0;
     try {
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
@@ -4703,6 +4719,9 @@ try {
       persistLastError("Invariant breach: invalid render target");
       return;
     }
+    state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
+    rfPassForTrace = state.__iuRenderFeedPassSeq;
+    iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
     const safeTarget = insideTarget(target, feedEl);
     if (emptyBox) {
       emptyBox.style.display = "none";
@@ -5146,6 +5165,11 @@ try {
     }
     feedEl.setAttribute("data-feed-ready", "true");
     } finally {
+      try {
+        if (rfPassForTrace > 0) {
+          iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_end");
+        }
+      } catch (_) {}
       iuBootTracePhase("renderFeed_end");
     }
   }
@@ -11816,6 +11840,11 @@ function buildVideoAsArticleCard(it) {
       function iuHomeFullPublicationClusterIdle() {
         try {
           if (!state.hasLoadedData) return;
+          /* P0: never re-enter applyFilter during loadData() — was nesting void applyFilter inside terminal applyFilter/renderFeed and inflating long tasks. */
+          if (state.isLoadingData) return;
+          try {
+            if (state.__iuLoadDataMainApplyFilterDone === false) return;
+          } catch (_) {}
           // Router helper lives in a later IIFE — bare name threw ReferenceError and was swallowed (no idle full pass).
           const hubFn = typeof window !== "undefined" ? window.iuGlobalArticleHubFromNav : null;
           if (typeof hubFn !== "function" || !hubFn()) return;
@@ -11973,6 +12002,7 @@ function buildVideoAsArticleCard(it) {
     const resetPage = options.resetPage !== false; // default: reset
     const doRender = options.render !== false;     // default: render
     let auditRun = null;
+    let afPass = 0;
     try {
       try {
         if (window.__IU_APPLYFILTER_AUDIT__ === true) {
@@ -11986,7 +12016,26 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       if (!state.hasLoadedData) return;
-      iuBootTracePhase("applyFilter_start");
+      if (state.__iuApplyFilterBusy) {
+        try {
+          queueMicrotask(function () {
+            try {
+              void applyFilter(opts);
+            } catch (_) {}
+          });
+        } catch (_) {
+          setTimeout(function () {
+            try {
+              void applyFilter(opts);
+            } catch (_) {}
+          }, 0);
+        }
+        return;
+      }
+      state.__iuApplyFilterBusy = true;
+      state.__iuApplyFilterPassSeq = (state.__iuApplyFilterPassSeq || 0) + 1;
+      afPass = state.__iuApplyFilterPassSeq;
+      iuBootTracePhase("applyFilter_pass_" + afPass + "_start");
       state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
       // paging reset on any filter/search change (render-only)
       if (resetPage) state.page = 1;
@@ -12041,7 +12090,17 @@ function buildVideoAsArticleCard(it) {
         }
         const tRi0 =
           auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
-        if (doRender) await renderItems(state.filteredItems);
+        if (doRender) {
+          const needPreRenderYield =
+            afPass >= 2 ||
+            (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+          if (needPreRenderYield) {
+            iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
+            await iuYieldOneRaf();
+            await iuYieldOneRaf();
+          }
+          await renderItems(state.filteredItems);
+        }
         if (auditRun) {
           auditRun.phases.renderItemsMs =
             (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tRi0;
@@ -12152,6 +12211,13 @@ function buildVideoAsArticleCard(it) {
 
     if (doRender) {
       hideSearchModal();
+      const needPreRenderYield2 =
+        afPass >= 2 || (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+      if (needPreRenderYield2) {
+        iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
+        await iuYieldOneRaf();
+        await iuYieldOneRaf();
+      }
       await renderItems(filtered);
       setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
     }
@@ -12167,7 +12233,15 @@ function buildVideoAsArticleCard(it) {
     iuUpdateSectionDataUpdatedAtEl();
     } finally {
       try {
-        if (state.hasLoadedData) iuBootTracePhase("applyFilter_end");
+        state.__iuApplyFilterBusy = false;
+      } catch (_) {}
+      try {
+        state.__iuYieldBeforeNextApplyFilterRender = false;
+      } catch (_) {}
+      try {
+        if (state.hasLoadedData && afPass > 0) {
+          iuBootTracePhase("applyFilter_pass_" + afPass + "_end");
+        }
       } catch (_) {}
       if (auditRun) {
         try {
@@ -13016,6 +13090,9 @@ function buildVideoAsArticleCard(it) {
       window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
+    state.__iuApplyFilterPassSeq = 0;
+    state.__iuRenderFeedPassSeq = 0;
+    state.__iuLoadDataMainApplyFilterDone = false;
     iuBootTracePhase("loadData_start");
     iuPreviewFeedProbeTick("loadDataStart");
     const requestToken = ++state.loadRequestId;
@@ -13504,6 +13581,7 @@ function buildVideoAsArticleCard(it) {
       // Niche sections: articles often live only in older day-shards. Index + shards must load before
       // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
       if (navNeedsShardMerge) {
+        iuBootTracePhase("retention_nav_shard_merge_start");
         await initRetentionIndex();
         await applyFilter({ resetPage: true, render: false });
         try {
@@ -13513,9 +13591,12 @@ function buildVideoAsArticleCard(it) {
             state.retentionDays.length > 0 &&
             state.retentionCursor < state.retentionDays.length;
           if (fi === 0 && hasRetention) {
+            iuBootTracePhase("retention_load_until_visible_start");
             await loadRetentionUntilVisibleCount(pageSizeNav);
+            iuBootTracePhase("retention_load_until_visible_end");
           }
         } catch (_) {}
+        iuBootTracePhase("retention_nav_shard_merge_end");
       } else if (silverStackPreviewsLikelyVisible) {
         // P0: Do not block first homepage settle on sequential day-shard retention (was ~21–23s before first applyFilter).
         // Retention boost runs after first applyFilter + status; second applyFilter + preview refresh when merge completes.
@@ -13524,15 +13605,29 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
         void (async function iuSilverRetentionBoostDeferred() {
           try {
+            iuBootTracePhase("retention_deferred_start");
             await initRetentionIndex();
             if (!isLatestLoadRequest(requestToken)) return;
             await loadRetentionForSilverHomePreviews();
             if (!isLatestLoadRequest(requestToken)) return;
             try {
+              const tWaitMainAf = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              while (!state.__iuLoadDataMainApplyFilterDone) {
+                if (!isLatestLoadRequest(requestToken)) return;
+                if (
+                  typeof performance !== "undefined" &&
+                  performance.now &&
+                  performance.now() - tWaitMainAf > 30000
+                ) {
+                  break;
+                }
+                await iuYieldOneRaf();
+              }
+              if (!isLatestLoadRequest(requestToken)) return;
               await applyFilter({ resetPage: false });
             } catch (_) {}
             try {
-              iuSilverTallMediaPreviewsRefresh();
+              await iuSilverTallMediaPreviewsRefreshYielded();
             } catch (_) {}
             try {
               const ca2 = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
@@ -13591,13 +13686,19 @@ function buildVideoAsArticleCard(it) {
             try {
               iuHomeLoadAuditNotify("loadData:afterRetentionBoost");
             } catch (_) {}
+            iuBootTracePhase("retention_deferred_end");
           } catch (_) {}
         })();
       } else {
         initRetentionIndex();
       }
+      iuBootTracePhase("loadData_main_terminal_applyFilter_before");
+      state.__iuYieldBeforeNextApplyFilterRender = true;
+      await iuYieldOneRaf();
+      await iuYieldOneRaf();
       iuHomeLoadAuditNotify("loadData:beforeApplyFilter");
       await applyFilter();
+      state.__iuLoadDataMainApplyFilterDone = true;
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
@@ -13772,6 +13873,9 @@ function buildVideoAsArticleCard(it) {
         }
       }, delay);
     } finally {
+      try {
+        state.__iuLoadDataMainApplyFilterDone = true;
+      } catch (_) {}
       state.isLoadingData = false;
     }
   }
