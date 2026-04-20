@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T19:54:47.971576Z",
+  "ingestedAt": "2026-04-20T20:55:39.508123Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Střelba u pyramid: V mexické archeologické oblasti Teotihuacán zemřela žena",
+      "url": "https://www.denik.cz/ze_sveta/strelba-u-pyramid-v-mexicke-archeologicke-oblasti-teotihuacan-zemrela-zena.html",
+      "dt": "2026-04-20T20:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "archeologické",
+        "mexické",
+        "oblasti",
+        "pyramid",
+        "střelba",
+        "teotihuacán",
+        "zemřela",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -617,31 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tvarůžkový festival přilákal do Olomouce davy lidí. Padaly rekordy",
-      "url": "https://www.denik.cz/regiony/tvaruzkovy-festival-olomouc-rekord-navsteva.html",
-      "dt": "2026-04-20T09:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "davy",
-        "festival",
-        "lidí",
-        "olomouce",
-        "padaly",
-        "přilákal",
-        "rekordy",
-        "tvarůžkový"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29706,
+      "bytes": 29910,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,11 +689,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T20:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 23
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -705,6 +705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střelba u pyramid: V mexické archeologické oblasti Teotihuacán zemřela žena",
+            "publishedAt": "2026-04-20T20:10:00Z"
+          },
           {
             "title": "Rostoucí ceny ropy zdraží i oblíbené sportovní oblečení Čechů",
             "publishedAt": "2026-04-20T18:00:00Z"
@@ -732,10 +736,6 @@
           {
             "title": "Timmy se po vyproštění opět zastavil, velryba ale prý odpočívá. Potíž je i vítr",
             "publishedAt": "2026-04-20T14:55:00Z"
-          },
-          {
-            "title": "Těžaři v létě otevřou stezku bývalým lomem ČSA. Bude pro pěší i cyklisty",
-            "publishedAt": "2026-04-20T14:00:00Z"
           }
         ]
       }

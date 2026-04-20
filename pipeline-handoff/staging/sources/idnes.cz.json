@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T19:54:47.971576Z",
+  "ingestedAt": "2026-04-20T20:55:39.508123Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hodně pije a má nevysvětlitelné absence. Rozlícený šéf FBI žaluje list pro pomluvu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/fbi-kash-patel-zaloba-casopis-the-atlantic-pomluva.A260420_212837_zahranicni_tmps",
+      "dt": "2026-04-20T19:41:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "absence",
+        "fbi",
+        "hodně",
+        "list",
+        "nevysvětlitelné",
+        "pije",
+        "pomluvu",
+        "rozlícený",
+        "šéf",
+        "žaluje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -111,20 +138,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Nepřípustné.“ Česko si předvolalo ruského velvyslance kvůli výhrůžkám firmám",
+      "title": "Česko si předvolalo ruského velvyslance. To vy porušujete mezinárodní právo, řekl",
       "url": "https://www.idnes.cz/zpravy/domaci/ministerstvo-zahranici-velvyslanci-predvolani-firmy-petr-macinka.A260420_131648_domaci_ikro",
       "dt": "2026-04-20T18:50:07Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "firmám",
-        "kvůli",
-        "nepřípustné",
+        "mezinárodní",
+        "porušujete",
+        "právo",
         "předvolalo",
         "ruského",
         "velvyslance",
-        "výhrůžkám",
-        "česko"
+        "česko",
+        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -753,32 +780,6 @@
         "pokračuje",
         "práci",
         "tankeru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Prášky na spaní i nemrznoucí směs. Dětské výživy už byly otráveny v minulosti",
-      "url": "https://www.idnes.cz/zpravy/domaci/otraveni-potravin-vyhruzky-vydirani-drivejsi-pripady.A260420_150533_domaci_mls",
-      "dt": "2026-04-20T13:48:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "byly",
-        "dětské",
-        "minulosti",
-        "nemrznoucí",
-        "otráveny",
-        "prášky",
-        "směs",
-        "spaní",
-        "výživy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48501,
+      "bytes": 49030,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1621,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T19:29:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T19:41:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1636,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hodně pije a má nevysvětlitelné absence. Rozlícený šéf FBI žaluje list pro pomluvu",
+            "publishedAt": "2026-04-20T19:41:00Z"
+          },
           {
             "title": "Čeká nás spolupráce na jaderném odstrašování, oznámil Macron v Polsku",
             "publishedAt": "2026-04-20T19:29:15Z"
@@ -1653,7 +1658,7 @@
             "publishedAt": "2026-04-20T18:59:11Z"
           },
           {
-            "title": "„Nepřípustné.“ Česko si předvolalo ruského velvyslance kvůli výhrůžkám firmám",
+            "title": "Česko si předvolalo ruského velvyslance. To vy porušujete mezinárodní právo, řekl",
             "publishedAt": "2026-04-20T18:50:07Z"
           },
           {
@@ -1662,10 +1667,6 @@
           },
           {
             "title": "Od aut až po plechovky. Jak válka s Íránem ovlivňuje světové dodávky hliníku",
-            "publishedAt": "2026-04-20T18:00:00Z"
-          },
-          {
-            "title": "Trumpův TRIPP. Turecko se chopilo šance, světu nabízí místo Hormuzu svůj koridor",
             "publishedAt": "2026-04-20T18:00:00Z"
           }
         ]

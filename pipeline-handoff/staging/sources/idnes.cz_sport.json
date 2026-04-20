@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T19:54:47.971576Z",
+  "ingestedAt": "2026-04-20T20:55:39.508123Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kratochvílovi cena Laureus unikla. Hlavní kategorie ovládli Alcaraz a Sabalenková",
+      "url": "https://www.idnes.cz/sport/ostatni/kratochvilovi-cena-laureus-unikla-hlavni-kategorie-ovladli-alcaraz-a-sabalenkova.A260420_215911_sporty_tit",
+      "dt": "2026-04-20T20:03:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alcaraz",
+        "cena",
+        "hlavní",
+        "kategorie",
+        "kratochvílovi",
+        "laureus",
+        "ovládli",
+        "sabalenková",
+        "unikla"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,31 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová po finálovém tažení v Německu volí odpočinek, v Madridu nenastoupí",
-      "url": "https://www.idnes.cz/sport/tenis/karolina-muchova-madrid-odhlaseni.A260420_113440_tenis_kazdt",
-      "dt": "2026-04-20T09:48:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finálovém",
-        "madridu",
-        "muchová",
-        "nenastoupí",
-        "německu",
-        "odpočinek",
-        "tažení",
-        "volí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46482,
+      "bytes": 46683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T19:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T20:03:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kratochvílovi cena Laureus unikla. Hlavní kategorie ovládli Alcaraz a Sabalenková",
+            "publishedAt": "2026-04-20T20:03:00Z"
+          },
           {
             "title": "USK vykročil za šestnáctým titulem v řadě. Žabiny se držely jen v první půli",
             "publishedAt": "2026-04-20T19:22:00Z"
@@ -879,10 +884,6 @@
           {
             "title": "Vezmeš si mě? Děčínský bubeník při největším zápase NBL poklekl",
             "publishedAt": "2026-04-20T16:40:00Z"
-          },
-          {
-            "title": "Slavia se červená, je důvod k zneklidnění? Sparta i Plzeň měly titul i nejvíc vyloučení",
-            "publishedAt": "2026-04-20T15:45:00Z"
           }
         ]
       }
