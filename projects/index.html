@@ -109,6 +109,19 @@ style-src 'self' 'unsafe-inline' https:;
           display: none !important;
         }
       }
+      /* MindMenu top tiles (Kalendář / Poznámky / Úkoly): image contain; inline = app.css size guard */
+      .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile{gap:0;overflow:hidden;background:transparent!important;color:inherit!important}
+      .accordionCol .mindMenu .iu-mmTopTool--notes.iu-mmTopTool--imageTile{background:transparent!important;color:inherit!important}
+      .mindMenu .iu-mmTopTool--cal.iuMindMenuButton.iu-mmTopTool--imageTile,
+      body .layout > aside.accordionCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton.iu-mmTopTool--imageTile,
+      body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton.iu-mmTopTool--imageTile{background:transparent!important;color:inherit!important}
+      .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn.iu-mmTopTool--imageTile,
+      body .layout > aside.accordionCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn.iu-mmTopTool--imageTile,
+      body .rightCol .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn.iu-mmTopTool--imageTile{background:transparent!important;color:inherit!important}
+      .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap{display:flex;align-items:center;justify-content:center;flex:1 1 auto;align-self:stretch;min-width:0;min-height:0;width:100%}
+      .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTile{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:center;pointer-events:none;display:block}
+      #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile{gap:0!important}
+      #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap{flex:1 1 auto!important;align-self:stretch!important;min-height:0!important;min-width:0!important;width:100%!important}
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=silver-address-slot-class-no-empty" />
@@ -1746,17 +1759,20 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
                     <!-- Top tools: Kalendář, Poznámky, Úkoly -->
                     <div class="iu-mmTopTools" role="group" aria-label="Nástroje">
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--cal iuMindMenuButton" aria-label="Kalendář">
-                        <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M7 4v4M17 4v4"/></svg></span>
-                        <span class="iu-mmTopToolText">Kalendář</span>
+                      <button type="button" class="iu-mmTopTool iu-mmTopTool--cal iuMindMenuButton iu-mmTopTool--imageTile" aria-label="Kalendář">
+                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                          <img class="iu-mmTopToolImageTile" src="/assets/images/calendar-tile.jpg" alt="" decoding="async" />
+                        </span>
                       </button>
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--notes" aria-label="Poznámky">
-                        <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 9h8M8 13h6M8 17h5"/></svg></span>
-                        <span class="iu-mmTopToolText">Poznámky</span>
+                      <button type="button" class="iu-mmTopTool iu-mmTopTool--notes iu-mmTopTool--imageTile" aria-label="Poznámky">
+                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                          <img class="iu-mmTopToolImageTile" src="/assets/images/notes-tile.jpg" alt="" decoding="async" />
+                        </span>
                       </button>
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn" aria-label="Úkoly" data-iu-tasks-trigger="1">
-                        <span class="iu-mmTopToolIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M3 5h2v2H3V5zm4 0h14v2H7V5zm0 6h14v2H7v-2zm0 6h14v2H7v-2zm-4-6h2v2H3v-2zm0 6h2v2H3v-2z"/></svg></span>
-                        <span class="iu-mmTopToolText">Úkoly</span>
+                      <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn iu-mmTopTool--imageTile" aria-label="Úkoly" data-iu-tasks-trigger="1">
+                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                          <img class="iu-mmTopToolImageTile" src="/assets/images/tasks-tile.jpg" alt="" decoding="async" />
+                        </span>
                       </button>
                     </div>
                     <!-- Rychlé odkazy -->
