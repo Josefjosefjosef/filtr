@@ -1694,6 +1694,95 @@ try {
     } catch (_) {}
   }
 
+  /**
+   * Dev-only: correlate PerformanceObserver("longtask") entries with coarse pipeline phases (?iuBootTrace=1).
+   * Never activates on production host; read window.__IU_BOOT_TRACE__ from Playwright in %TEMP% proof scripts.
+   */
+  var __iuBootTraceObj = null;
+  function iuBootTracePhaseAtTime(tAbs) {
+    try {
+      if (!__iuBootTraceObj || !Array.isArray(__iuBootTraceObj.marks)) return "unknown";
+      const marks = __iuBootTraceObj.marks;
+      let phase = "bootstrap_pre_mark";
+      for (let i = 0; i < marks.length; i++) {
+        if (marks[i].t <= tAbs) phase = marks[i].n;
+      }
+      return phase;
+    } catch (_) {
+      return "unknown";
+    }
+  }
+  function iuBootTraceInitOnce() {
+    if (__iuBootTraceObj) return;
+    try {
+      if (typeof iuIsProdHost === "function" && iuIsProdHost()) return;
+      const q = String(typeof location !== "undefined" ? location.search || "" : "");
+      if (q.indexOf("iuBootTrace=1") === -1) return;
+      const t0 = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      __iuBootTraceObj = {
+        t0,
+        marks: [],
+        longTasks: [],
+        idleTasks: [],
+        activePhase: "bootstrap",
+      };
+      try {
+        if (typeof window !== "undefined") window.__IU_BOOT_TRACE__ = __iuBootTraceObj;
+      } catch (_) {}
+      if (typeof PerformanceObserver !== "undefined") {
+        try {
+          const po = new PerformanceObserver((list) => {
+            try {
+              const entries = list.getEntries();
+              for (let j = 0; j < entries.length; j++) {
+                const e = entries[j];
+                if (!e || e.entryType !== "longtask") continue;
+                const st = typeof e.startTime === "number" ? e.startTime : 0;
+                const dur = typeof e.duration === "number" ? e.duration : 0;
+                const ph = iuBootTracePhaseAtTime(st + 0.001);
+                __iuBootTraceObj.longTasks.push({
+                  startTime: st,
+                  duration: dur,
+                  phaseAtStart: ph,
+                });
+              }
+            } catch (_) {}
+          });
+          po.observe({ type: "longtask", buffered: true });
+        } catch (_) {}
+      }
+      try {
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(
+            (deadline) => {
+              try {
+                const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+                __iuBootTraceObj.idleTasks.push({
+                  t,
+                  didTimeout: Boolean(deadline && deadline.didTimeout),
+                });
+              } catch (_) {}
+            },
+            { timeout: 2500 },
+          );
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+  function iuBootTracePhase(name) {
+    try {
+      if (typeof iuIsProdHost === "function" && iuIsProdHost()) return;
+      const q = String(typeof location !== "undefined" ? location.search || "" : "");
+      if (q.indexOf("iuBootTrace=1") === -1) return;
+      iuBootTraceInitOnce();
+      if (!__iuBootTraceObj) return;
+      const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      const n = String(name || "");
+      __iuBootTraceObj.marks.push({ n, t });
+      __iuBootTraceObj.activePhase = n;
+    } catch (_) {}
+  }
+
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
   window.iuSetDataStatus = function(articlesCount, videosCount){
     const el = document.getElementById("dataStatus");
@@ -4592,6 +4681,8 @@ try {
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
   async function renderFeed(target, items) {
+    iuBootTracePhase("renderFeed_start");
+    try {
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
     const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
@@ -4808,6 +4899,7 @@ try {
     let renderedCount = 0;
     let pos = 0;
     let firstDomBatch = true;
+    let firstFeedBatchMarked = false;
     while (pos < visibleItems.length) {
       const batchMax = firstDomBatch ? IU_FEED_FIRST_DOM_BATCH : IU_FEED_DOM_APPEND_CHUNK;
       firstDomBatch = false;
@@ -4873,6 +4965,10 @@ try {
         }
         if (frag.childNodes.length > 0) {
           safeTarget.appendChild(frag);
+          if (!firstFeedBatchMarked) {
+            firstFeedBatchMarked = true;
+            iuBootTracePhase("renderFeed_first_batch_committed");
+          }
         }
       }
       if (pos < visibleItems.length) {
@@ -5049,6 +5145,9 @@ try {
       }
     }
     feedEl.setAttribute("data-feed-ready", "true");
+    } finally {
+      iuBootTracePhase("renderFeed_end");
+    }
   }
 
   function renderInlineError(message) {
@@ -5060,8 +5159,13 @@ try {
   }
 
   async function renderItems(items) {
-    const target = getFeedTarget();
-    await renderFeed(target, items);
+    iuBootTracePhase("renderItems_start");
+    try {
+      const target = getFeedTarget();
+      await renderFeed(target, items);
+    } finally {
+      iuBootTracePhase("renderItems_end");
+    }
   }
 
   function renderFeedItemHtml(item) {
@@ -9347,6 +9451,75 @@ function buildVideoAsArticleCard(it) {
     try{ iuEducationPreviewRefresh(); }catch(_){}
   }
 
+  /** P0: same work as iuSilverTallMediaPreviewsRefresh but yields between rails so one task does not stack 9× DOM+scan work. */
+  async function iuSilverTallMediaPreviewsRefreshYielded() {
+    const runners = [
+      () => {
+        try {
+          iuNewsPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuSportPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuFinancePreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuHealthPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuTravelPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuGamesPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuCulturePreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuScienceHistoryPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuEducationPreviewRefresh();
+        } catch (_) {}
+      },
+    ];
+    const yieldOnce = () =>
+      new Promise((resolve) => {
+        try {
+          if (typeof requestAnimationFrame === "function") {
+            requestAnimationFrame(() => resolve());
+          } else {
+            setTimeout(resolve, 0);
+          }
+        } catch (_) {
+          setTimeout(resolve, 0);
+        }
+      });
+    for (let i = 0; i < runners.length; i++) {
+      runners[i]();
+      if (i + 1 < runners.length) {
+        await yieldOnce();
+      }
+    }
+  }
+
   function iuNewsPreviewInit(){
     try{
       if (window.__iuNewsPreviewInit) return;
@@ -11813,6 +11986,7 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       if (!state.hasLoadedData) return;
+      iuBootTracePhase("applyFilter_start");
       state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
       // paging reset on any filter/search change (render-only)
       if (resetPage) state.page = 1;
@@ -11992,6 +12166,9 @@ function buildVideoAsArticleCard(it) {
     }
     iuUpdateSectionDataUpdatedAtEl();
     } finally {
+      try {
+        if (state.hasLoadedData) iuBootTracePhase("applyFilter_end");
+      } catch (_) {}
       if (auditRun) {
         try {
           const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
@@ -12343,6 +12520,31 @@ function buildVideoAsArticleCard(it) {
       }
       return hasTitle && validLink;
     });
+  }
+
+  /** P0: split URL validation across frames so one long sync pass does not monopolize the main thread. */
+  const IU_NORMALIZE_ARTICLE_CHUNK = 800;
+  async function normalizeArticleListBatched(items) {
+    if (!Array.isArray(items) || items.length === 0) return [];
+    const out = [];
+    for (let i = 0; i < items.length; i += IU_NORMALIZE_ARTICLE_CHUNK) {
+      const slice = items.slice(i, Math.min(i + IU_NORMALIZE_ARTICLE_CHUNK, items.length));
+      out.push(...normalizeArticleList(slice));
+      if (i + IU_NORMALIZE_ARTICLE_CHUNK < items.length) {
+        await new Promise((resolve) => {
+          try {
+            if (typeof requestAnimationFrame === "function") {
+              requestAnimationFrame(() => resolve());
+            } else {
+              setTimeout(resolve, 0);
+            }
+          } catch (_) {
+            setTimeout(resolve, 0);
+          }
+        });
+      }
+    }
+    return out;
   }
 
   async function fetchArticlesStatus(attempt = 1) {
@@ -12814,6 +13016,7 @@ function buildVideoAsArticleCard(it) {
       window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
+    iuBootTracePhase("loadData_start");
     iuPreviewFeedProbeTick("loadDataStart");
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
@@ -12882,6 +13085,7 @@ function buildVideoAsArticleCard(it) {
         articlesOk: Boolean(articlesData),
         videosOk: Boolean(videosData),
       });
+      iuBootTracePhase("loadData_fetch_end");
 
       const articlesArr = Array.isArray(articlesData)
         ? articlesData
@@ -12962,7 +13166,10 @@ function buildVideoAsArticleCard(it) {
         debugLog("[LOADDATA] safeArticlesArray isArray=", Array.isArray(safeArticlesArray), "len=", safeArticlesArray.length);
       }
       const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
-      let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
+      const rawArticleInput = Array.isArray(safeArticlesArray) ? safeArticlesArray : [];
+      const normalizedArticlePass = await normalizeArticleListBatched(rawArticleInput);
+      iuBootTracePhase("normalize_articles_end");
+      let sanitizedArticles = normalizedArticlePass.map((item) => ({
         ...item,
         contentType: "article",
         suspiciousTitle: isSuspiciousTitle(item.title),
@@ -13013,6 +13220,7 @@ function buildVideoAsArticleCard(it) {
         }catch{}
       }
       let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
+      iuBootTracePhase("normalize_videos_end");
       if (iuDbg()) {
         try{
           IU_VIDEO_DBG.counts.normalized_count = Array.isArray(videoItems) ? videoItems.length : 0;
@@ -13102,7 +13310,9 @@ function buildVideoAsArticleCard(it) {
         typeof iuIsProjectsRoute === "function" && iuIsProjectsRoute();
       if (ENABLE_CLUSTER_DEDUP && !skipClusterForProjectsFullPool) {
         try {
+          iuBootTracePhase("cluster_dedup_start");
           const out = clusterAndPickFinalArticles(sanitizedArticles);
+          iuBootTracePhase("cluster_dedup_end");
           articlesForFeed = out.final;
           try {
             if (typeof window !== "undefined") {
@@ -13215,17 +13425,21 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      iuBootTracePhase("combined_sort_cached_ready");
       iuPreviewFeedProbeTick("combinedFeedReady", {
         cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
         sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
       });
       /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
+      iuBootTracePhase("pre_silver_preview_refresh");
       try {
-        iuSilverTallMediaPreviewsRefresh();
+        await iuSilverTallMediaPreviewsRefreshYielded();
       } catch (_) {}
+      iuBootTracePhase("post_silver_preview_refresh");
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
       iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
       await renderItems(state.filteredItems);
+      iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (isDebugLogging) {
