@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-20T14:35:19.422848Z",
+  "ingestedAt": "2026-04-20T14:54:53.170974Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Game Pass odhalil nabídku her pro druhou půlku dubna",
+      "url": "https://zing.cz/article/game-pass-odhalil-nabidku-her-pro-druhou-pulku-dubna-3",
+      "dt": "2026-04-20T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "druhou",
+        "dubna",
+        "game",
+        "her",
+        "nabídku",
+        "odhalil",
+        "pass",
+        "půlku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -950,28 +975,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Overwatch vychází na Switch 2, poběží v 60 FPS",
-      "url": "https://zing.cz/article/overwatch-vychazi-na-switch-2-pobezi-v-60-fps",
-      "dt": "2026-04-14T15:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "fps",
-        "overwatch",
-        "poběží",
-        "switch",
-        "vychází"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126585,
+      "bytes": 126459,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,7 +1022,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1034,6 +1037,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Game Pass odhalil nabídku her pro druhou půlku dubna",
+            "publishedAt": "2026-04-20T14:00:00Z"
+          },
           {
             "title": "Chystaná hororová hra na Unreal Enginu 5 vás vezme do bohnické léčebny",
             "publishedAt": "2026-04-20T12:00:00Z"
@@ -1061,10 +1068,6 @@
           {
             "title": "Další WoW privátní server zavírá, tentokrát Stormforge",
             "publishedAt": "2026-04-18T18:00:00Z"
-          },
-          {
-            "title": "Dimraeth: když Skyrim a Diablo zplodí pixel-artové RPG",
-            "publishedAt": "2026-04-18T16:00:00Z"
           }
         ]
       }

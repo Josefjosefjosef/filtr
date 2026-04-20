@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T14:35:19.422848Z",
+  "ingestedAt": "2026-04-20T14:54:53.170974Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Reportéři si utahovali z Coufala, že nerozumí německy. Zase tak blbej nejsem, smál se",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-reporteri-si-utahovali-z-coufala-ze-nerozumi-nemecky-zase-tak-blbej-nejsem-smal-se-5440666",
+      "dt": "2026-04-20T14:40:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "blbej",
+        "coufala",
+        "nejsem",
+        "nerozumí",
+        "německy",
+        "reportéři",
+        "smál",
+        "tak",
+        "utahovali",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -748,32 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čtyři a půl minuty hrůzy. Pastrňák se snažil vysvětlit bostonský kolaps",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-ctyri-a-pul-minuty-hruzy-pastrnak-se-snazil-vysvetlit-bostonsky-kolaps-5440657",
-      "dt": "2026-04-20T07:48:11Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bostonský",
-        "hrůzy",
-        "kolaps",
-        "minuty",
-        "pastrňák",
-        "půl",
-        "snažil",
-        "vysvětlit",
-        "čtyři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43927,
+      "bytes": 44165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:18:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T14:40:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -837,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Reportéři si utahovali z Coufala, že nerozumí německy. Zase tak blbej nejsem, smál se",
+            "publishedAt": "2026-04-20T14:40:48Z"
+          },
           {
             "title": "Žabka se omluvil za zkrat v Pardubicích: Neuhlídal jsem se",
             "publishedAt": "2026-04-20T14:05:49Z"
@@ -864,10 +869,6 @@
           {
             "title": "Kde mám chytat? Dobeš před prodloužením bloudil",
             "publishedAt": "2026-04-20T13:15:36Z"
-          },
-          {
-            "title": "Legendám chybí v Baníku bojovníci. Musíme věřit, že se probudí nějaký živel, burcuje Vojáček",
-            "publishedAt": "2026-04-20T13:00:34Z"
           }
         ]
       }
