@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T17:23:04.963968Z",
+  "ingestedAt": "2026-04-20T17:44:23.361833Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MADE IN ENGLAND: Boj o titul bude krásný a napínavý, Tottenham potřebuje zázrak",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-made-in-england-boj-o-titul-bude-krasny-a-napinavy-tottenham-potrebuje-zazrak-5440906",
+      "dt": "2026-04-20T17:19:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boj",
+        "england",
+        "krásný",
+        "made",
+        "napínavý",
+        "potřebuje",
+        "titul",
+        "tottenham",
+        "zázrak"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,32 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ŤUKES: Ohavná scéna v zápase Slavie. Hrozila kontumace, upozorňuje Karoch",
-      "url": "https://www.sport.cz/clanek/podcasty-tukes-tukes-borila-navstivili-demoni-uplne-za-hranou-pali-karoch-do-kapitana-slavie-5440661",
-      "dt": "2026-04-20T09:48:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hrozila",
-        "karoch",
-        "kontumace",
-        "ohavná",
-        "scéna",
-        "slavie",
-        "upozorňuje",
-        "zápase",
-        "ťukes"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44315,
+      "bytes": 43973,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:10:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:19:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -835,6 +835,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MADE IN ENGLAND: Boj o titul bude krásný a napínavý, Tottenham potřebuje zázrak",
+            "publishedAt": "2026-04-20T17:19:47Z"
+          },
           {
             "title": "Bournemouth s předstihem oznámil trenéra pro příští sezonu",
             "publishedAt": "2026-04-20T17:10:44Z"
@@ -862,10 +866,6 @@
           {
             "title": "ECHO BUNDESLIGY: Neuer na tenkém ledě. Může končit na vrcholu, nebo být terčem posměchu",
             "publishedAt": "2026-04-20T16:06:53Z"
-          },
-          {
-            "title": "Problém pro reprezentaci před MS. Velmi nejistý je start Chlapíka, mimo také další sparťan",
-            "publishedAt": "2026-04-20T15:55:41Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T17:23:04.963968Z",
+  "ingestedAt": "2026-04-20T17:44:23.361833Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výrazný znak: potetovaná pravá paže. Policie pátrá po uprchlém vězni",
+      "url": "https://www.idnes.cz/praha/zpravy/policie-patrani-uprchly-vezen-ktery-uprchl-volne-pracoviste-jirny-zdenek-balada.A260420_182819_praha-zpravy_lysa",
+      "dt": "2026-04-20T17:10:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "paže",
+        "policie",
+        "potetovaná",
+        "pravá",
+        "pátrá",
+        "uprchlém",
+        "výrazný",
+        "vězni",
+        "znak"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,34 +784,6 @@
         "přelet",
         "zase",
         "zbytek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jedu zabít příbuzného, volal na linku 158 rozzuřený muž. Začal závod s časem",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/operacni-dustojnik-linka-pribuzny-vrazda-zabuju-policie-dacice.A260420_141955_budejovice-zpravy_khr",
-      "dt": "2026-04-20T13:11:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "158",
-        "jedu",
-        "linku",
-        "muž",
-        "příbuzného",
-        "rozzuřený",
-        "volal",
-        "zabít",
-        "začal",
-        "závod",
-        "časem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48729,
+      "bytes": 48723,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:07:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1644,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výrazný znak: potetovaná pravá paže. Policie pátrá po uprchlém vězni",
+            "publishedAt": "2026-04-20T17:10:00Z"
+          },
           {
             "title": "Trump pochybuje o prodloužení příměří. Cesta Vance do Pákistánu vzbuzuje otázky",
             "publishedAt": "2026-04-20T17:07:36Z"
@@ -1671,10 +1673,6 @@
           {
             "title": "Žádná obyčejná propiska, Pavel nechal v Chile pero plné granátů. Můžete ho mít taky",
             "publishedAt": "2026-04-20T15:44:00Z"
-          },
-          {
-            "title": "Nebude rezervace v hotelu? Nebude ani kolaudace, popsala policie v dotační kauze",
-            "publishedAt": "2026-04-20T15:39:00Z"
           }
         ]
       }

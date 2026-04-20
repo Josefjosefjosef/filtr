@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T17:23:04.963968Z",
+  "ingestedAt": "2026-04-20T17:44:23.361833Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Zbrojovka se vrací do první ligy! Po remíze Artisu s Táborskem má o postupu jasno",
       "url": "https://www.idnes.cz/fotbal/domaci-souteze/zbrojovka-se-vraci-do-prvni-ligy-po-remize-artisu-s-taborskem-ma-o-postupu-jasno.A260420_190104_fot_dsouteze_tit",
-      "dt": "2026-04-20T17:10:00Z",
+      "dt": "2026-04-20T17:37:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -21,6 +21,30 @@
         "táborskem",
         "vrací",
         "zbrojovka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Přípravné zápasy a aktuální soupiska českých hokejistů před MS 2026",
+      "url": "https://www.idnes.cz/hokej/ms-2026/pripravne-zapasy-ceskych-hokejistu-pred-ms.A260415_214600_ms-hokej-2026_ald",
+      "dt": "2026-04-20T17:22:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "aktuální",
+        "hokejistů",
+        "přípravné",
+        "soupiska",
+        "zápasy",
+        "českých"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -766,33 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NEJ Z LIGY: Bořilův výlev i další šance pro Mihelaka. A Matoušek by neměl přemýšlet!",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-30-kolo-nej-z-ligy-momenta-kola-vyber-souhrn.A260418_215950_fotbal_tals",
-      "dt": "2026-04-20T09:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bořilův",
-        "další",
-        "ligy",
-        "matoušek",
-        "mihelaka",
-        "nej",
-        "neměl",
-        "přemýšlet",
-        "výlev",
-        "šance"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46599,
+      "bytes": 46237,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,7 +854,11 @@
         "sample_titles": [
           {
             "title": "Zbrojovka se vrací do první ligy! Po remíze Artisu s Táborskem má o postupu jasno",
-            "publishedAt": "2026-04-20T17:10:00Z"
+            "publishedAt": "2026-04-20T17:37:00Z"
+          },
+          {
+            "title": "Přípravné zápasy a aktuální soupiska českých hokejistů před MS 2026",
+            "publishedAt": "2026-04-20T17:22:00Z"
           },
           {
             "title": "Keňská dominance na Bostonském maratonu. Obhájce Korir zaběhl traťový rekord",
@@ -882,10 +883,6 @@
           {
             "title": "Hitchcockovi Ptáci po australsku. Fotbalový zápas přerušilo hejno racků",
             "publishedAt": "2026-04-20T14:02:00Z"
-          },
-          {
-            "title": "Sever Evropy ostře odmítá návrat Rusů s hymnou. Zacharovová: Jste nacističtí hadi",
-            "publishedAt": "2026-04-20T14:00:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T17:23:04.963968Z",
+  "ingestedAt": "2026-04-20T17:44:23.361833Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Školáka v Melbourne táhl autobus stovky metrů. Řidič přišel o práci",
+      "url": "https://www.denik.cz/ze_sveta/skolaka-v-melbourne-tahl-autobus-stovky-metru-ridic-prisel-o-praci.html",
+      "dt": "2026-04-20T17:14:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autobus",
+        "melbourne",
+        "metrů",
+        "práci",
+        "přišel",
+        "stovky",
+        "táhl",
+        "řidič",
+        "školáka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,32 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šéf BIS Koudelka: Za požárem v Pardubicích podle mě stojí levicoví extremisté",
-      "url": "https://www.denik.cz/z_domova/michal-koudelka-bis-pardubice-lpp-holding.html",
-      "dt": "2026-04-20T08:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bis",
-        "extremisté",
-        "koudelka",
-        "levicoví",
-        "pardubicích",
-        "podle",
-        "požárem",
-        "stojí",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30131,
+      "bytes": 29904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:14:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -707,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Školáka v Melbourne táhl autobus stovky metrů. Řidič přišel o práci",
+            "publishedAt": "2026-04-20T17:14:00Z"
+          },
           {
             "title": "Péče o Toničku po transplantaci je náročná. Rodina z Merboltic hledá podporu",
             "publishedAt": "2026-04-20T16:24:00Z"
@@ -734,10 +738,6 @@
           {
             "title": "V ČR padl Superjackpot 187 milionů. Pokud ale výherce nesplní podmínky, má smůlu",
             "publishedAt": "2026-04-20T13:15:00Z"
-          },
-          {
-            "title": "Exposlanec Feri se u soudu zodpovídal z dalšího znásilnění. Svědek nepřišel",
-            "publishedAt": "2026-04-20T13:02:00Z"
           }
         ]
       }
