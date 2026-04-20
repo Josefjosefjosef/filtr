@@ -876,6 +876,12 @@ try {
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
+  /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
+  const IU_FEED_FIRST_DOM_BATCH = 12;
+  const IU_FEED_DOM_APPEND_CHUNK = 18;
+  /** P0 reload-only: smaller batches so each frame does less innerHTML+layout work (cold path unchanged). */
+  const IU_FEED_RELOAD_FIRST_DOM_BATCH = 8;
+  const IU_FEED_RELOAD_APPEND_CHUNK = 10;
   const IU_VIDEO_PICK_WINDOW = 240;
   const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
   const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
@@ -1689,6 +1695,131 @@ try {
         window.__iuHomeLoadAuditHook(String(phase || ""));
       }
     } catch (_) {}
+  }
+
+  /**
+   * Dev-only: correlate PerformanceObserver("longtask") entries with coarse pipeline phases (?iuBootTrace=1).
+   * Never activates on production host; read window.__IU_BOOT_TRACE__ from Playwright in %TEMP% proof scripts.
+   */
+  var __iuBootTraceObj = null;
+  function iuBootTracePhaseAtTime(tAbs) {
+    try {
+      if (!__iuBootTraceObj || !Array.isArray(__iuBootTraceObj.marks)) return "unknown";
+      const marks = __iuBootTraceObj.marks;
+      let phase = "bootstrap_pre_mark";
+      for (let i = 0; i < marks.length; i++) {
+        if (marks[i].t <= tAbs) phase = marks[i].n;
+      }
+      return phase;
+    } catch (_) {
+      return "unknown";
+    }
+  }
+  function iuBootTraceInitOnce() {
+    if (__iuBootTraceObj) return;
+    try {
+      if (typeof iuIsProdHost === "function" && iuIsProdHost()) return;
+      const q = String(typeof location !== "undefined" ? location.search || "" : "");
+      if (q.indexOf("iuBootTrace=1") === -1) return;
+      const t0 = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      __iuBootTraceObj = {
+        t0,
+        marks: [],
+        longTasks: [],
+        idleTasks: [],
+        activePhase: "bootstrap",
+      };
+      try {
+        if (typeof window !== "undefined") window.__IU_BOOT_TRACE__ = __iuBootTraceObj;
+      } catch (_) {}
+      if (typeof PerformanceObserver !== "undefined") {
+        try {
+          const po = new PerformanceObserver((list) => {
+            try {
+              const entries = list.getEntries();
+              for (let j = 0; j < entries.length; j++) {
+                const e = entries[j];
+                if (!e || e.entryType !== "longtask") continue;
+                const st = typeof e.startTime === "number" ? e.startTime : 0;
+                const dur = typeof e.duration === "number" ? e.duration : 0;
+                const ph = iuBootTracePhaseAtTime(st + 0.001);
+                __iuBootTraceObj.longTasks.push({
+                  startTime: st,
+                  duration: dur,
+                  phaseAtStart: ph,
+                });
+              }
+            } catch (_) {}
+          });
+          po.observe({ type: "longtask", buffered: true });
+        } catch (_) {}
+      }
+      try {
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(
+            (deadline) => {
+              try {
+                const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+                __iuBootTraceObj.idleTasks.push({
+                  t,
+                  didTimeout: Boolean(deadline && deadline.didTimeout),
+                });
+              } catch (_) {}
+            },
+            { timeout: 2500 },
+          );
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+  function iuBootTracePhase(name) {
+    try {
+      if (typeof iuIsProdHost === "function" && iuIsProdHost()) return;
+      const q = String(typeof location !== "undefined" ? location.search || "" : "");
+      if (q.indexOf("iuBootTrace=1") === -1) return;
+      iuBootTraceInitOnce();
+      if (!__iuBootTraceObj) return;
+      const t = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+      const n = String(name || "");
+      __iuBootTraceObj.marks.push({ n, t });
+      __iuBootTraceObj.activePhase = n;
+    } catch (_) {}
+  }
+
+  /** One animation frame yield — breaks sync stacks between heavy filter work and DOM render. */
+  async function iuYieldOneRaf() {
+    return new Promise((resolve) => {
+      try {
+        if (typeof requestAnimationFrame === "function") {
+          requestAnimationFrame(() => resolve());
+        } else {
+          setTimeout(resolve, 0);
+        }
+      } catch (_) {
+        setTimeout(resolve, 0);
+      }
+    });
+  }
+
+  /** True only for full page reload (not soft nav). Used to tighten feed DOM batching without affecting cold first paint. */
+  function iuFeedReloadDomTightenP() {
+    try {
+      if (typeof performance !== "undefined" && performance.getEntriesByType) {
+        const list = performance.getEntriesByType("navigation");
+        const navEntry = list && list.length ? list[0] : null;
+        if (navEntry && navEntry.type === "reload") return true;
+      }
+    } catch (_) {}
+    try {
+      if (
+        typeof performance !== "undefined" &&
+        performance.navigation &&
+        Number(performance.navigation.type) === 1
+      ) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
   }
 
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
@@ -4588,7 +4719,10 @@ try {
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
-  function renderFeed(target, items) {
+  async function renderFeed(target, items) {
+    iuBootTracePhase("renderFeed_start");
+    let rfPassForTrace = 0;
+    try {
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
     const feedChildrenBefore = feedEl ? feedEl.childElementCount : 0;
@@ -4609,6 +4743,9 @@ try {
       persistLastError("Invariant breach: invalid render target");
       return;
     }
+    state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
+    rfPassForTrace = state.__iuRenderFeedPassSeq;
+    iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
     const safeTarget = insideTarget(target, feedEl);
     if (emptyBox) {
       emptyBox.style.display = "none";
@@ -4657,9 +4794,7 @@ try {
       };
     }catch{}
 
-    // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
-    // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
-    const nextNodes = [];
+    // CLS: první zápis = atomicky nechat jen #sectionsBar, pak appendovat dávky (žádný replaceChildren(...celý feed)).
     const iuAlertDemo = Boolean(location.search.includes("debug=1") && location.search.includes("alertDemo=1"));
     const isHome = Boolean(document.body && document.body.classList && document.body.classList.contains("iu-home"));
     const hasVideoSection = Array.isArray(activeSections) && activeSections.includes("video");
@@ -4719,7 +4854,9 @@ try {
       }catch{}
     }
 
-    // Optional visual gate: inject 3 demo alert titles only in debug mode (never in normal prod view)
+    // Optional visual gate: demo cards (debug only) — append with first feed DOM write.
+    const demoFrag = document.createDocumentFragment();
+    let demoRendered = 0;
     if (iuAlertDemo) {
       const demos = [
         {
@@ -4772,49 +4909,121 @@ try {
           const node = template.content.firstElementChild;
           if (!node || !(node instanceof HTMLElement)) continue;
           iuApplyAlertTitle(node, demo);
-          nextNodes.push(node);
+          demoFrag.appendChild(node);
+          demoRendered += 1;
         } catch {}
       }
     }
 
-    for (let i = 0; i < visibleItems.length; i++) {
-      const item = visibleItems[i];
-      const kind = String(item.contentType || "").toLowerCase();
-      if (!ALLOWED_CONTENT_TYPES.has(kind)) {
-        feedEl.setAttribute("data-feed-ready", "true");
-        persistLastError("Invariant breach: neznámý contentType");
-        renderInlineError("Obsah dočasně nedostupný.");
-        return;
-      }
+    const iuYieldForFeedDomChunk = () =>
+      new Promise((resolve) => {
+        try {
+          if (typeof requestAnimationFrame === "function") {
+            requestAnimationFrame(() => {
+              resolve();
+            });
+          } else {
+            setTimeout(resolve, 0);
+          }
+        } catch (_) {
+          setTimeout(resolve, 0);
+        }
+      });
 
-      // Ve standardním feedu jsou video karty povolené pouze přes pevné sloty po 8 článcích.
-      // Pipeline contentType=video položky tedy nesmí být renderované "kdekoliv" (jinak by video nebylo přesně po 8).
-      if (shouldInjectVideos && kind === "video") {
-        continue;
-      }
-
-      const markup = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
-      if (!markup) {
-        persistLastError("Invariant breach: builder returned falsy markup");
-        renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
-        continue;
-      }
-      const template = document.createElement("template");
-      template.innerHTML = markup.trim();
-      const node = template.content.firstElementChild;
-      if (!node || !(node instanceof HTMLElement)) {
-        persistLastError("Invariant breach: builder returned invalid node");
-        renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
-        continue;
-      }
-
-      // ALERT TITLES: only for middle feed (#feed), only for article cards.
-      // Apply before insertion to avoid CLS.
+    const auditRf = (() => {
       try {
-        if (safeTarget && safeTarget.id === "feed") iuApplyAlertTitle(node, item);
-      } catch {}
+        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
+      } catch (_) {
+        return null;
+      }
+    })();
+    let tDomPatch0 = 0;
+    let domPatchStarted = false;
+    let renderedCount = 0;
+    let pos = 0;
+    let firstDomBatch = true;
+    let firstFeedBatchMarked = false;
+    const reloadDomTight = iuFeedReloadDomTightenP();
+    while (pos < visibleItems.length) {
+      const batchMax = firstDomBatch
+        ? reloadDomTight
+          ? IU_FEED_RELOAD_FIRST_DOM_BATCH
+          : IU_FEED_FIRST_DOM_BATCH
+        : reloadDomTight
+          ? IU_FEED_RELOAD_APPEND_CHUNK
+          : IU_FEED_DOM_APPEND_CHUNK;
+      firstDomBatch = false;
+      const frag = document.createDocumentFragment();
+      const batchEnd = Math.min(pos + batchMax, visibleItems.length);
+      for (; pos < batchEnd; pos++) {
+        const item = visibleItems[pos];
+        const kind = String(item.contentType || "").toLowerCase();
+        if (!ALLOWED_CONTENT_TYPES.has(kind)) {
+          feedEl.setAttribute("data-feed-ready", "true");
+          persistLastError("Invariant breach: neznámý contentType");
+          renderInlineError("Obsah dočasně nedostupný.");
+          return;
+        }
 
-      nextNodes.push(node);
+        // Ve standardním feedu jsou video karty povolené pouze přes pevné sloty po 8 článcích.
+        // Pipeline contentType=video položky tedy nesmí být renderované "kdekoliv" (jinak by video nebylo přesně po 8).
+        if (shouldInjectVideos && kind === "video") {
+          continue;
+        }
+
+        const markup = kind === "video" ? buildVideoAsArticleCard(item) : buildArticleHtml(item);
+        if (!markup) {
+          persistLastError("Invariant breach: builder returned falsy markup");
+          renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          continue;
+        }
+        const template = document.createElement("template");
+        template.innerHTML = markup.trim();
+        const node = template.content.firstElementChild;
+        if (!node || !(node instanceof HTMLElement)) {
+          persistLastError("Invariant breach: builder returned invalid node");
+          renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          continue;
+        }
+
+        // ALERT TITLES: only for middle feed (#feed), only for article cards.
+        // Apply before insertion to avoid CLS.
+        try {
+          if (safeTarget && safeTarget.id === "feed") iuApplyAlertTitle(node, item);
+        } catch {}
+
+        frag.appendChild(node);
+        renderedCount += 1;
+      }
+
+      const hasDemoPending = iuAlertDemo && demoFrag.childNodes.length > 0;
+      if (frag.childNodes.length > 0 || hasDemoPending) {
+        if (!domPatchStarted) {
+          if (auditRf && typeof performance !== "undefined" && performance.now) {
+            tDomPatch0 = performance.now();
+          }
+          if (sectionsBar) {
+            safeTarget.replaceChildren(sectionsBar);
+          } else {
+            safeTarget.replaceChildren();
+          }
+          domPatchStarted = true;
+          if (hasDemoPending) {
+            safeTarget.appendChild(demoFrag);
+            renderedCount += demoRendered;
+          }
+        }
+        if (frag.childNodes.length > 0) {
+          safeTarget.appendChild(frag);
+          if (!firstFeedBatchMarked) {
+            firstFeedBatchMarked = true;
+            iuBootTracePhase("renderFeed_first_batch_committed");
+          }
+        }
+      }
+      if (pos < visibleItems.length) {
+        await iuYieldForFeedDomChunk();
+      }
     }
 
     // "Load more" button (no infinite auto-load)
@@ -4840,27 +5049,29 @@ try {
       loadMoreWrap = wrap;
     }
 
-    const auditRf = (() => {
-      try {
-        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
-      } catch (_) {
-        return null;
+    if (!domPatchStarted) {
+      if (auditRf && typeof performance !== "undefined" && performance.now) {
+        tDomPatch0 = performance.now();
       }
-    })();
-    const tDomPatch0 =
-      auditRf && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
-    if (sectionsBar) {
-      if (loadMoreWrap) safeTarget.replaceChildren(sectionsBar, ...nextNodes, loadMoreWrap);
-      else safeTarget.replaceChildren(sectionsBar, ...nextNodes);
-    } else {
-      if (loadMoreWrap) safeTarget.replaceChildren(...nextNodes, loadMoreWrap);
-      else safeTarget.replaceChildren(...nextNodes);
+      if (sectionsBar) {
+        safeTarget.replaceChildren(sectionsBar);
+      } else {
+        safeTarget.replaceChildren();
+      }
+      domPatchStarted = true;
+      if (iuAlertDemo && demoFrag.childNodes.length > 0) {
+        safeTarget.appendChild(demoFrag);
+        renderedCount += demoRendered;
+      }
+    }
+    if (loadMoreWrap) {
+      safeTarget.appendChild(loadMoreWrap);
     }
     if (auditRf) {
       try {
         const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
-        auditRf.phases.domPatchMs = t1 - tDomPatch0;
-        auditRf.itemCountRendered = nextNodes.length;
+        auditRf.phases.domPatchMs = domPatchStarted && tDomPatch0 ? t1 - tDomPatch0 : 0;
+        auditRf.itemCountRendered = renderedCount;
       } catch (_) {}
     }
 
@@ -4873,7 +5084,6 @@ try {
     } catch {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
-    const renderedCount = nextNodes.length;
     const typeCounts = visibleItems.reduce(
       (acc, entry) => {
         const kind = String(entry.contentType || "").toLowerCase();
@@ -4965,7 +5175,7 @@ try {
               btn.disabled = false;
               btn.textContent = prevText;
             }
-            renderFeed(safeTarget, state.filteredItems);
+            await renderFeed(safeTarget, state.filteredItems);
           })();
         });
       }
@@ -4985,6 +5195,14 @@ try {
       }
     }
     feedEl.setAttribute("data-feed-ready", "true");
+    } finally {
+      try {
+        if (rfPassForTrace > 0) {
+          iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_end");
+        }
+      } catch (_) {}
+      iuBootTracePhase("renderFeed_end");
+    }
   }
 
   function renderInlineError(message) {
@@ -4995,9 +5213,14 @@ try {
     inline.style.opacity = "1";
   }
 
-  function renderItems(items) {
-    const target = getFeedTarget();
-    renderFeed(target, items);
+  async function renderItems(items) {
+    iuBootTracePhase("renderItems_start");
+    try {
+      const target = getFeedTarget();
+      await renderFeed(target, items);
+    } finally {
+      iuBootTracePhase("renderItems_end");
+    }
   }
 
   function renderFeedItemHtml(item) {
@@ -9283,6 +9506,75 @@ function buildVideoAsArticleCard(it) {
     try{ iuEducationPreviewRefresh(); }catch(_){}
   }
 
+  /** P0: same work as iuSilverTallMediaPreviewsRefresh but yields between rails so one task does not stack 9× DOM+scan work. */
+  async function iuSilverTallMediaPreviewsRefreshYielded() {
+    const runners = [
+      () => {
+        try {
+          iuNewsPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuSportPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuFinancePreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuHealthPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuTravelPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuGamesPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuCulturePreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuScienceHistoryPreviewRefresh();
+        } catch (_) {}
+      },
+      () => {
+        try {
+          iuEducationPreviewRefresh();
+        } catch (_) {}
+      },
+    ];
+    const yieldOnce = () =>
+      new Promise((resolve) => {
+        try {
+          if (typeof requestAnimationFrame === "function") {
+            requestAnimationFrame(() => resolve());
+          } else {
+            setTimeout(resolve, 0);
+          }
+        } catch (_) {
+          setTimeout(resolve, 0);
+        }
+      });
+    for (let i = 0; i < runners.length; i++) {
+      runners[i]();
+      if (i + 1 < runners.length) {
+        await yieldOnce();
+      }
+    }
+  }
+
   function iuNewsPreviewInit(){
     try{
       if (window.__iuNewsPreviewInit) return;
@@ -11579,12 +11871,17 @@ function buildVideoAsArticleCard(it) {
       function iuHomeFullPublicationClusterIdle() {
         try {
           if (!state.hasLoadedData) return;
+          /* P0: never re-enter applyFilter during loadData() — was nesting void applyFilter inside terminal applyFilter/renderFeed and inflating long tasks. */
+          if (state.isLoadingData) return;
+          try {
+            if (state.__iuLoadDataMainApplyFilterDone === false) return;
+          } catch (_) {}
           // Router helper lives in a later IIFE — bare name threw ReferenceError and was swallowed (no idle full pass).
           const hubFn = typeof window !== "undefined" ? window.iuGlobalArticleHubFromNav : null;
           if (typeof hubFn !== "function" || !hubFn()) return;
           state.__iuFullPublicationClusterPass = true;
           state.__iuHomeFullPubClusterIdleScheduled = false;
-          applyFilter({ resetPage: false, render: true });
+          void applyFilter({ resetPage: false, render: true }).catch(() => {});
         } catch (_) {}
       },
       { timeout: 5000 }
@@ -11731,11 +12028,12 @@ function buildVideoAsArticleCard(it) {
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
-  function applyFilter(opts) {
+  async function applyFilter(opts) {
     const options = opts && typeof opts === "object" ? opts : {};
     const resetPage = options.resetPage !== false; // default: reset
     const doRender = options.render !== false;     // default: render
     let auditRun = null;
+    let afPass = 0;
     try {
       try {
         if (window.__IU_APPLYFILTER_AUDIT__ === true) {
@@ -11749,6 +12047,26 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       if (!state.hasLoadedData) return;
+      if (state.__iuApplyFilterBusy) {
+        try {
+          queueMicrotask(function () {
+            try {
+              void applyFilter(opts);
+            } catch (_) {}
+          });
+        } catch (_) {
+          setTimeout(function () {
+            try {
+              void applyFilter(opts);
+            } catch (_) {}
+          }, 0);
+        }
+        return;
+      }
+      state.__iuApplyFilterBusy = true;
+      state.__iuApplyFilterPassSeq = (state.__iuApplyFilterPassSeq || 0) + 1;
+      afPass = state.__iuApplyFilterPassSeq;
+      iuBootTracePhase("applyFilter_pass_" + afPass + "_start");
       state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
       // paging reset on any filter/search change (render-only)
       if (resetPage) state.page = 1;
@@ -11803,7 +12121,17 @@ function buildVideoAsArticleCard(it) {
         }
         const tRi0 =
           auditRun && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
-        if (doRender) renderItems(state.filteredItems);
+        if (doRender) {
+          const needPreRenderYield =
+            afPass >= 2 ||
+            (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+          if (needPreRenderYield) {
+            iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
+            await iuYieldOneRaf();
+            await iuYieldOneRaf();
+          }
+          await renderItems(state.filteredItems);
+        }
         if (auditRun) {
           auditRun.phases.renderItemsMs =
             (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tRi0;
@@ -11890,7 +12218,7 @@ function buildVideoAsArticleCard(it) {
           renderInlineError("Filtry nenašly žádné články.");
           // Clear stale DOM from loadData's pre-filter renderItems(cachedItems) pass.
           try {
-            renderItems([]);
+            await renderItems([]);
           } catch (_) {}
         }
       }
@@ -11914,7 +12242,14 @@ function buildVideoAsArticleCard(it) {
 
     if (doRender) {
       hideSearchModal();
-      renderItems(filtered);
+      const needPreRenderYield2 =
+        afPass >= 2 || (afPass === 1 && state.__iuYieldBeforeNextApplyFilterRender === true);
+      if (needPreRenderYield2) {
+        iuBootTracePhase("applyFilter_yield_before_renderItems_pass_" + afPass);
+        await iuYieldOneRaf();
+        await iuYieldOneRaf();
+      }
+      await renderItems(filtered);
       setStatus(`Stav dat: OK (zobrazeno: ${filtered.length} / celkem: ${state.cachedItems.length})`);
     }
     if (isDebugOn()) {
@@ -11928,6 +12263,17 @@ function buildVideoAsArticleCard(it) {
     }
     iuUpdateSectionDataUpdatedAtEl();
     } finally {
+      try {
+        state.__iuApplyFilterBusy = false;
+      } catch (_) {}
+      try {
+        state.__iuYieldBeforeNextApplyFilterRender = false;
+      } catch (_) {}
+      try {
+        if (state.hasLoadedData && afPass > 0) {
+          iuBootTracePhase("applyFilter_pass_" + afPass + "_end");
+        }
+      } catch (_) {}
       if (auditRun) {
         try {
           const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
@@ -12279,6 +12625,31 @@ function buildVideoAsArticleCard(it) {
       }
       return hasTitle && validLink;
     });
+  }
+
+  /** P0: split URL validation across frames so one long sync pass does not monopolize the main thread. */
+  const IU_NORMALIZE_ARTICLE_CHUNK = 800;
+  async function normalizeArticleListBatched(items) {
+    if (!Array.isArray(items) || items.length === 0) return [];
+    const out = [];
+    for (let i = 0; i < items.length; i += IU_NORMALIZE_ARTICLE_CHUNK) {
+      const slice = items.slice(i, Math.min(i + IU_NORMALIZE_ARTICLE_CHUNK, items.length));
+      out.push(...normalizeArticleList(slice));
+      if (i + IU_NORMALIZE_ARTICLE_CHUNK < items.length) {
+        await new Promise((resolve) => {
+          try {
+            if (typeof requestAnimationFrame === "function") {
+              requestAnimationFrame(() => resolve());
+            } else {
+              setTimeout(resolve, 0);
+            }
+          } catch (_) {
+            setTimeout(resolve, 0);
+          }
+        });
+      }
+    }
+    return out;
   }
 
   async function fetchArticlesStatus(attempt = 1) {
@@ -12750,6 +13121,10 @@ function buildVideoAsArticleCard(it) {
       window.__IU_SOURCE_LABEL_MISMATCH_DROPS__ = 0;
     } catch (_) {}
     state.isLoadingData = true;
+    state.__iuApplyFilterPassSeq = 0;
+    state.__iuRenderFeedPassSeq = 0;
+    state.__iuLoadDataMainApplyFilterDone = false;
+    iuBootTracePhase("loadData_start");
     iuPreviewFeedProbeTick("loadDataStart");
     const requestToken = ++state.loadRequestId;
     state.cachedItems = [];
@@ -12818,6 +13193,7 @@ function buildVideoAsArticleCard(it) {
         articlesOk: Boolean(articlesData),
         videosOk: Boolean(videosData),
       });
+      iuBootTracePhase("loadData_fetch_end");
 
       const articlesArr = Array.isArray(articlesData)
         ? articlesData
@@ -12898,7 +13274,10 @@ function buildVideoAsArticleCard(it) {
         debugLog("[LOADDATA] safeArticlesArray isArray=", Array.isArray(safeArticlesArray), "len=", safeArticlesArray.length);
       }
       const totalArticles = Array.isArray(safeArticlesArray) ? safeArticlesArray.length : 0;
-      let sanitizedArticles = normalizeArticleList(Array.isArray(safeArticlesArray) ? safeArticlesArray : []).map((item) => ({
+      const rawArticleInput = Array.isArray(safeArticlesArray) ? safeArticlesArray : [];
+      const normalizedArticlePass = await normalizeArticleListBatched(rawArticleInput);
+      iuBootTracePhase("normalize_articles_end");
+      let sanitizedArticles = normalizedArticlePass.map((item) => ({
         ...item,
         contentType: "article",
         suspiciousTitle: isSuspiciousTitle(item.title),
@@ -12949,6 +13328,7 @@ function buildVideoAsArticleCard(it) {
         }catch{}
       }
       let videoItems = normalizeVideoList(Array.isArray(normalizedVideoSource) ? normalizedVideoSource : []);
+      iuBootTracePhase("normalize_videos_end");
       if (iuDbg()) {
         try{
           IU_VIDEO_DBG.counts.normalized_count = Array.isArray(videoItems) ? videoItems.length : 0;
@@ -13038,7 +13418,9 @@ function buildVideoAsArticleCard(it) {
         typeof iuIsProjectsRoute === "function" && iuIsProjectsRoute();
       if (ENABLE_CLUSTER_DEDUP && !skipClusterForProjectsFullPool) {
         try {
+          iuBootTracePhase("cluster_dedup_start");
           const out = clusterAndPickFinalArticles(sanitizedArticles);
+          iuBootTracePhase("cluster_dedup_end");
           articlesForFeed = out.final;
           try {
             if (typeof window !== "undefined") {
@@ -13151,17 +13533,21 @@ function buildVideoAsArticleCard(it) {
       state.hasLoadedData = true;
       state.consecutiveLoadFailures = 0;
       state.filteredItems = Array.isArray(state.cachedItems) ? state.cachedItems.slice() : [];
+      iuBootTracePhase("combined_sort_cached_ready");
       iuPreviewFeedProbeTick("combinedFeedReady", {
         cachedLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
         sanitizedArticles: Array.isArray(sanitizedArticles) ? sanitizedArticles.length : 0,
       });
       /* Preview cards read state.cachedItems only — refresh before heavy feed DOM so titles are not blocked behind renderFeed(). */
+      iuBootTracePhase("pre_silver_preview_refresh");
       try {
-        iuSilverTallMediaPreviewsRefresh();
+        await iuSilverTallMediaPreviewsRefreshYielded();
       } catch (_) {}
+      iuBootTracePhase("post_silver_preview_refresh");
       iuPreviewFeedProbeTick("earlyPreviewRefreshDone");
       iuHomeLoadAuditNotify("loadData:earlyPreviewRefreshDone");
-      renderItems(state.filteredItems);
+      await renderItems(state.filteredItems);
+      iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
       if (isDebugLogging) {
@@ -13226,8 +13612,9 @@ function buildVideoAsArticleCard(it) {
       // Niche sections: articles often live only in older day-shards. Index + shards must load before
       // first filter, or the feed stays empty until "Načíst další stránku" (retention was never tied to first paint).
       if (navNeedsShardMerge) {
+        iuBootTracePhase("retention_nav_shard_merge_start");
         await initRetentionIndex();
-        applyFilter({ resetPage: true, render: false });
+        await applyFilter({ resetPage: true, render: false });
         try {
           const fi = Array.isArray(state.filteredItems) ? state.filteredItems.length : 0;
           const hasRetention =
@@ -13235,9 +13622,12 @@ function buildVideoAsArticleCard(it) {
             state.retentionDays.length > 0 &&
             state.retentionCursor < state.retentionDays.length;
           if (fi === 0 && hasRetention) {
+            iuBootTracePhase("retention_load_until_visible_start");
             await loadRetentionUntilVisibleCount(pageSizeNav);
+            iuBootTracePhase("retention_load_until_visible_end");
           }
         } catch (_) {}
+        iuBootTracePhase("retention_nav_shard_merge_end");
       } else if (silverStackPreviewsLikelyVisible) {
         // P0: Do not block first homepage settle on sequential day-shard retention (was ~21–23s before first applyFilter).
         // Retention boost runs after first applyFilter + status; second applyFilter + preview refresh when merge completes.
@@ -13246,15 +13636,29 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
         void (async function iuSilverRetentionBoostDeferred() {
           try {
+            iuBootTracePhase("retention_deferred_start");
             await initRetentionIndex();
             if (!isLatestLoadRequest(requestToken)) return;
             await loadRetentionForSilverHomePreviews();
             if (!isLatestLoadRequest(requestToken)) return;
             try {
-              applyFilter({ resetPage: false });
+              const tWaitMainAf = typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+              while (!state.__iuLoadDataMainApplyFilterDone) {
+                if (!isLatestLoadRequest(requestToken)) return;
+                if (
+                  typeof performance !== "undefined" &&
+                  performance.now &&
+                  performance.now() - tWaitMainAf > 30000
+                ) {
+                  break;
+                }
+                await iuYieldOneRaf();
+              }
+              if (!isLatestLoadRequest(requestToken)) return;
+              await applyFilter({ resetPage: false });
             } catch (_) {}
             try {
-              iuSilverTallMediaPreviewsRefresh();
+              await iuSilverTallMediaPreviewsRefreshYielded();
             } catch (_) {}
             try {
               const ca2 = state.cachedItems.filter((entry) => entry?.contentType === "article").length;
@@ -13313,13 +13717,19 @@ function buildVideoAsArticleCard(it) {
             try {
               iuHomeLoadAuditNotify("loadData:afterRetentionBoost");
             } catch (_) {}
+            iuBootTracePhase("retention_deferred_end");
           } catch (_) {}
         })();
       } else {
         initRetentionIndex();
       }
+      iuBootTracePhase("loadData_main_terminal_applyFilter_before");
+      state.__iuYieldBeforeNextApplyFilterRender = true;
+      await iuYieldOneRaf();
+      await iuYieldOneRaf();
       iuHomeLoadAuditNotify("loadData:beforeApplyFilter");
-      applyFilter();
+      await applyFilter();
+      state.__iuLoadDataMainApplyFilterDone = true;
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
@@ -13494,6 +13904,9 @@ function buildVideoAsArticleCard(it) {
         }
       }, delay);
     } finally {
+      try {
+        state.__iuLoadDataMainApplyFilterDone = true;
+      } catch (_) {}
       state.isLoadingData = false;
     }
   }
