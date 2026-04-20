@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T08:34:51.014972Z",
+  "ingestedAt": "2026-04-20T08:54:47.739643Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ten, který kdysi slavnostně pohřbil své jméno. Zpěvák Prince zemřel před deseti lety",
+      "url": "https://magazin.aktualne.cz/kultura/hudba/ten-ktery-kdysi-slavnostne-pohrbil-sve-jmeno-zpevak-prince-zemrel-pred-deseti-lety/r~aaa298c64d7c90c21a60fb5a8e69ad03/",
+      "dt": "2026-04-20T08:33:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "deseti",
+        "jméno",
+        "kdysi",
+        "lety",
+        "pohřbil",
+        "prince",
+        "slavnostně",
+        "své",
+        "ten",
+        "zemřel",
+        "zpěvák"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -511,32 +539,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Říkám mu Péťo.“ Zůna se zná s prezidentem od školy. Hovoří i o „cenzurovaném“ videu",
-      "url": "https://zpravy.aktualne.cz/domaci/zname-se-od-skoly-rikam-mu-peto-zuna-o-prezidentovi-a-sporech-s-armadou/r~aaa2940a2b7d8a567c3170ae1a05c347/",
-      "dt": "2026-04-20T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cenzurovaném",
-        "hovoří",
-        "prezidentem",
-        "péťo",
-        "videu",
-        "zná",
-        "zůna",
-        "říkám",
-        "školy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23129,
+      "bytes": 23028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,14 +586,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 2,
           "zdravi": 1,
-          "zpravy": 14,
+          "zpravy": 13,
           "sport": 3,
-          "finance": 1,
-          "other": 1
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -603,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ten, který kdysi slavnostně pohřbil své jméno. Zpěvák Prince zemřel před deseti lety",
+            "publishedAt": "2026-04-20T08:33:00Z"
+          },
           {
             "title": "Děsivý symbol dneška: statisíce zohavených dětí. Viník je jasný, shodují se experti",
             "publishedAt": "2026-04-20T08:19:00Z"
@@ -630,10 +636,6 @@
           {
             "title": "Muchová dotírá na elitní společnost. Chybí jí už jen jediná příčka",
             "publishedAt": "2026-04-20T07:53:00Z"
-          },
-          {
-            "title": "Pastrňák třikrát bodoval, ale Boston přesto prohrál, Dobeš slavil proti Tampě",
-            "publishedAt": "2026-04-20T04:14:00Z"
           }
         ]
       }
