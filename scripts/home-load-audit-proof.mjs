@@ -14,11 +14,19 @@ const BASE =
   process.env.HOME_AUDIT_URL ||
   "http://127.0.0.1:8890/projects/?iuHomeAudit=1&section=media";
 
-const VIEWPORTS = [
+const ALL_VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
   { name: "tablet", width: 768, height: 1024 },
   { name: "desktop", width: 1366, height: 768 },
 ];
+const VP_FILTER = (process.env.HOME_AUDIT_VIEWPORT || "").trim().toLowerCase();
+const VIEWPORTS = VP_FILTER
+  ? ALL_VIEWPORTS.filter((v) => v.name === VP_FILTER)
+  : ALL_VIEWPORTS;
+if (!VIEWPORTS.length) {
+  console.error("HOME_AUDIT_VIEWPORT must match one of: mobile, tablet, desktop");
+  process.exit(1);
+}
 
 const RUNS = Math.max(1, parseInt(process.env.HOME_AUDIT_RUNS || "5", 10));
 
@@ -29,6 +37,37 @@ function stats(arr) {
   const median = a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
   const p95i = Math.min(a.length - 1, Math.ceil(a.length * 0.95) - 1);
   return { median, p95: a[Math.max(0, p95i)], max: a[a.length - 1] };
+}
+
+function auditPick(rep) {
+  if (!rep) return null;
+  return {
+    navigationType: rep.navigationType,
+    timeToFirstRenderMs: rep.timeToFirstRenderMs,
+    timeToFirstCardVisibleMs: rep.timeToFirstCardVisibleMs,
+    timeToPreviewTitlesReadyMs: rep.timeToPreviewTitlesReadyMs,
+    timeToWeatherReadyMs: rep.timeToWeatherReadyMs,
+    timeToHomepageSettledMs: rep.timeToHomepageSettledMs,
+    firstShellVisibleMs: rep.firstShellVisibleMs,
+    firstUsableMs: rep.firstUsableMs,
+    firstRightRailVisibleMs: rep.firstRightRailVisibleMs,
+    firstViewportStableMs: rep.firstViewportStableMs,
+    firstSuccessfulClickHandledMs: rep.firstSuccessfulClickHandledMs,
+    clickHandledDelayMs: rep.clickHandledDelayMs,
+    requestsDuringLoad: rep.requestsDuringLoad,
+    domNodeCount: rep.domNodeCount,
+    domMutationsFirst10s: rep.domMutationsFirst10s,
+    longTaskCount: rep.longTaskCount,
+    maxLongTaskMs: rep.maxLongTaskMs,
+    totalBlockedMsDuringLoad: rep.totalBlockedMsDuringLoad,
+    consoleErrorsCount: rep.consoleErrorsCount,
+    appErrorsCount: rep.appErrorsCount,
+    cls: rep.cls,
+    overflowX: rep.overflowX,
+    railShift: rep.railShift,
+    responseBytesTotal: rep.responseBytesTotal,
+    hookTimestamps: rep.hookTimestamps,
+  };
 }
 
 async function oneRun(browser, vw) {
@@ -45,21 +84,24 @@ async function oneRun(browser, vw) {
   });
   await page.setExtraHTTPHeaders({ "Cache-Control": "no-cache" });
   await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
-  await page.waitForTimeout(28000);
+  await page.waitForTimeout(24000);
+  let repCold = await page.evaluate(() => window.__IU_HOME_LOAD_AUDIT_REPORT__ || null);
   try {
     const hb = await page.$(".iuHamburger");
     if (hb) await hb.click({ timeout: 2000 });
   } catch (e) {}
   await page.waitForTimeout(400);
-  const rep = await page.evaluate(() => {
-    const r = window.__IU_HOME_LOAD_AUDIT_REPORT__;
-    return r || null;
-  });
+  repCold = await page.evaluate(() => window.__IU_HOME_LOAD_AUDIT_REPORT__ || null);
+
+  await page.reload({ waitUntil: "load", timeout: 120000 });
+  await page.waitForTimeout(18000);
+  const repReload = await page.evaluate(() => window.__IU_HOME_LOAD_AUDIT_REPORT__ || null);
+
   const fixProbe = await page.evaluate(() => ({
     retentionDeferred: typeof window.__iuSilverRetentionDeferredScheduled !== "undefined" ? window.__iuSilverRetentionDeferredScheduled : null,
   }));
   const dbg =
-    rep == null
+    repCold == null
       ? await page.evaluate(() => ({
           flag: window.__IU_HOME_LOAD_AUDIT__,
           href: location.href,
@@ -70,36 +112,53 @@ async function oneRun(browser, vw) {
         }))
       : null;
   await page.close();
-  if (!rep) {
+  if (!repCold) {
     return {
-      error: "no __IU_HOME_LOAD_AUDIT_REPORT__",
+      error: "no __IU_HOME_LOAD_AUDIT_REPORT__ (cold)",
       consoleErrorsCount: consoleErrors.length,
       debug: dbg,
     };
   }
+  const cold = auditPick(repCold);
+  const reload = auditPick(repReload);
+  const consErr = Math.max(cold.consoleErrorsCount || 0, reload ? reload.consoleErrorsCount || 0 : 0);
+  const pwCons = consoleErrors.length;
   return {
     viewport: vw.name,
-    timeToFirstRenderMs: rep.timeToFirstRenderMs,
-    timeToFirstCardVisibleMs: rep.timeToFirstCardVisibleMs,
-    timeToPreviewTitlesReadyMs: rep.timeToPreviewTitlesReadyMs,
-    timeToWeatherReadyMs: rep.timeToWeatherReadyMs,
-    timeToHomepageSettledMs: rep.timeToHomepageSettledMs,
-    firstSuccessfulClickHandledMs: rep.firstSuccessfulClickHandledMs,
-    clickHandledDelayMs: rep.clickHandledDelayMs,
-    requestsDuringLoad: rep.requestsDuringLoad,
-    domNodeCount: rep.domNodeCount,
-    domMutationsFirst10s: rep.domMutationsFirst10s,
-    longTaskCount: rep.longTaskCount,
-    maxLongTaskMs: rep.maxLongTaskMs,
-    totalBlockedMsDuringLoad: rep.totalBlockedMsDuringLoad,
-    consoleErrorsCount: rep.consoleErrorsCount + consoleErrors.length,
-    appErrorsCount: rep.appErrorsCount,
-    cls: rep.cls,
-    overflowX: rep.overflowX,
-    railShift: rep.railShift,
-    responseBytesTotal: rep.responseBytesTotal,
-    hookTimestamps: rep.hookTimestamps,
+    timeToFirstRenderMs: cold.timeToFirstRenderMs,
+    timeToFirstCardVisibleMs: cold.timeToFirstCardVisibleMs,
+    timeToPreviewTitlesReadyMs: cold.timeToPreviewTitlesReadyMs,
+    timeToWeatherReadyMs: cold.timeToWeatherReadyMs,
+    timeToHomepageSettledMs: cold.timeToHomepageSettledMs,
+    firstShellVisibleMs: cold.firstShellVisibleMs,
+    firstUsableMs: cold.firstUsableMs,
+    firstRightRailVisibleMs: cold.firstRightRailVisibleMs,
+    firstViewportStableMs: cold.firstViewportStableMs,
+    firstSuccessfulClickHandledMs: cold.firstSuccessfulClickHandledMs,
+    clickHandledDelayMs: cold.clickHandledDelayMs,
+    requestsDuringLoad: cold.requestsDuringLoad,
+    domNodeCount: cold.domNodeCount,
+    domMutationsFirst10s: cold.domMutationsFirst10s,
+    longTaskCount: cold.longTaskCount,
+    maxLongTaskMs: cold.maxLongTaskMs,
+    totalBlockedMsDuringLoad: cold.totalBlockedMsDuringLoad,
+    consoleErrorsCount: consErr,
+    playwrightConsoleErrorsCount: pwCons,
+    appErrorsCount: (cold.appErrorsCount || 0) + (reload ? reload.appErrorsCount || 0 : 0),
+    cls: Math.max(cold.cls || 0, reload ? reload.cls || 0 : 0),
+    overflowX: cold.overflowX === true || (reload && reload.overflowX === true),
+    railShift: Math.max(cold.railShift || 0, reload ? reload.railShift || 0 : 0),
+    responseBytesTotal: cold.responseBytesTotal,
+    hookTimestamps: cold.hookTimestamps,
+    reloadFirstShellVisibleMs: reload ? reload.firstShellVisibleMs : null,
+    reloadFirstUsableMs: reload ? reload.firstUsableMs : null,
+    reloadFirstRightRailVisibleMs: reload ? reload.firstRightRailVisibleMs : null,
+    reloadFirstViewportStableMs: reload ? reload.firstViewportStableMs : null,
+    reloadTimeToFirstCardVisibleMs: reload ? reload.timeToFirstCardVisibleMs : null,
+    reloadNavigationType: reload ? reload.navigationType : null,
     fixProbe,
+    coldAudit: cold,
+    reloadAudit: reload,
   };
 }
 
@@ -126,6 +185,10 @@ async function main() {
     "timeToPreviewTitlesReadyMs",
     "timeToWeatherReadyMs",
     "timeToHomepageSettledMs",
+    "firstShellVisibleMs",
+    "firstUsableMs",
+    "firstRightRailVisibleMs",
+    "firstViewportStableMs",
     "firstSuccessfulClickHandledMs",
     "clickHandledDelayMs",
     "requestsDuringLoad",
@@ -138,6 +201,11 @@ async function main() {
     "appErrorsCount",
     "cls",
     "responseBytesTotal",
+    "reloadFirstShellVisibleMs",
+    "reloadFirstUsableMs",
+    "reloadFirstRightRailVisibleMs",
+    "reloadFirstViewportStableMs",
+    "reloadTimeToFirstCardVisibleMs",
   ];
   const agg = {};
   for (const vw of VIEWPORTS) {
