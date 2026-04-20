@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-20T09:54:35.015686Z",
+  "ingestedAt": "2026-04-20T10:14:31.625534Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Šumpersku spadl z kola podnapilý cyklista",
+      "url": "https://tydenikpolicie.cz/na-sumpersku-spadl-z-kola-podnapily-cyklista/",
+      "dt": "2026-04-20T09:54:35Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "cyklista",
+        "kola",
+        "podnapilý",
+        "spadl",
+        "šumpersku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,34 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neznámý řidič srazil v Třinci chodce a z místa nehody odjel. Pátrají po něm policisté",
-      "url": "https://tydenikpolicie.cz/neznamy-ridic-srazil-v-trinci-chodce-a-z-mista-nehody-odjel-patraji-po-nem-policiste/",
-      "dt": "2026-04-20T06:19:49Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chodce",
-        "místa",
-        "nehody",
-        "neznámý",
-        "něm",
-        "odjel",
-        "policisté",
-        "pátrají",
-        "srazil",
-        "třinci",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16351,
+      "bytes": 16028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T09:50:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T09:54:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Šumpersku spadl z kola podnapilý cyklista",
+            "publishedAt": "2026-04-20T09:54:35Z"
+          },
           {
             "title": "Silniční kontrola v Prostějově skončila použitím donucovacích prostředků vůči řidiči BMW. V noci ho zastavili znovu, tentokrát opilého",
             "publishedAt": "2026-04-20T09:50:01Z"
@@ -356,10 +354,6 @@
           {
             "title": "Podezřelého z krádeží v domech na Litoměřicku dopadli kriminalisté díky stopám, které zanechal na místech činů",
             "publishedAt": "2026-04-20T07:06:14Z"
-          },
-          {
-            "title": "Strážníci chtěli v Brně vyřešit se dvěma cyklisty porušení předpisů. V tom se do nich vulgárně pustil náhodný kolemjdoucí",
-            "publishedAt": "2026-04-20T07:00:51Z"
           }
         ]
       }

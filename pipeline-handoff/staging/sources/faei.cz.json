@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-20T09:54:35.015686Z",
+  "ingestedAt": "2026-04-20T10:14:31.625534Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: S jakým Íránem vlastně Amerika jedná a co může zmařit příměří",
+      "url": "https://profitonline.cz/the-economist-s-jakym-iranem-vlastne-amerika-jedna-a-co-muze-zmarit-primeri/",
+      "dt": "2026-04-20T10:00:07Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "amerika",
+        "economist",
+        "jakým",
+        "jedná",
+        "příměří",
+        "the",
+        "vlastně",
+        "zmařit",
+        "íránem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,32 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Silný závěr týdne díky uzavřenému příměří",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-silny-zaver-tydne-diky-uzavrenemu-primeri/",
-      "dt": "2026-04-17T17:00:59Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "díky",
-        "příměří",
-        "silný",
-        "trzích",
-        "týden",
-        "týdne",
-        "uzavřenému",
-        "závěr"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19334,
+      "bytes": 19544,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:00:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T10:00:07Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -362,6 +362,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: S jakým Íránem vlastně Amerika jedná a co může zmařit příměří",
+            "publishedAt": "2026-04-20T10:00:07Z"
+          },
           {
             "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
             "publishedAt": "2026-04-20T08:00:18Z"
@@ -389,10 +393,6 @@
           {
             "title": "Když české peníze patřily k nejsilnějším měnám střední Evropy",
             "publishedAt": "2026-04-19T04:00:28Z"
-          },
-          {
-            "title": "Biometan je plyn budoucnosti, jeho podíl se ztrojnásobil",
-            "publishedAt": "2026-04-18T13:00:05Z"
           }
         ]
       }

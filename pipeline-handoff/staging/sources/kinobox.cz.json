@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-20T09:54:35.015686Z",
+  "ingestedAt": "2026-04-20T10:14:31.625534Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Lovcova noc připomíná první film nového žánru, který nikdy nevznikl",
+      "url": "https://www.kinobox.cz/clanky/daily/52829-kinobox-daily-lovcova-noc-pripomina-prvni-film-noveho-zanru-ktery-nikdy-nevznikl",
+      "dt": "2026-04-20T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "film",
+        "kinobox",
+        "lovcova",
+        "nevznikl",
+        "nikdy",
+        "noc",
+        "nového",
+        "první",
+        "připomíná",
+        "žánru"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -526,33 +554,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kinobox Daily: New York 50. let, jak ho neznáte. Kdo stojí za vraždou Bruce Willise?",
-      "url": "https://www.kinobox.cz/clanky/daily/52796-kinobox-daily-new-york-50-let-jak-ho-neznate-kdo-stoji-za-vrazdou-bruce-willise",
-      "dt": "2026-04-17T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "bruce",
-        "daily",
-        "kinobox",
-        "let",
-        "new",
-        "neznáte",
-        "stojí",
-        "vraždou",
-        "willise",
-        "york"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -563,7 +564,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28013,
+      "bytes": 28115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -600,11 +601,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 1
+          "other": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -616,6 +616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Lovcova noc připomíná první film nového žánru, který nikdy nevznikl",
+            "publishedAt": "2026-04-20T10:00:00Z"
+          },
           {
             "title": "Ridley Scott útočí s dalším sci-fi blockbusterem. Vzhlížet ke hvězdám můžete v traileru na akční nářez",
             "publishedAt": "2026-04-20T09:00:00Z"
@@ -643,10 +647,6 @@
           {
             "title": "Kultovní akční béčko 80. let se dočká remaku. Drsňák Kurt Russell dostane mladší verzi",
             "publishedAt": "2026-04-19T09:00:00Z"
-          },
-          {
-            "title": "Digitální Val Kilmer v hlavní roli. Revoluční western se zesnulou hvězdou má první trailer",
-            "publishedAt": "2026-04-19T07:00:00Z"
           }
         ]
       }
