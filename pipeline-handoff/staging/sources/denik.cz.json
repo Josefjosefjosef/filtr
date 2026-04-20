@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T08:14:37.275506Z",
+  "ingestedAt": "2026-04-20T08:34:51.014972Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nad Jičínskem se točilo tornádo. Meteorologové upřesnili detaily",
+      "url": "https://www.denik.cz/regiony/zvlastni-ukaz-mezi-ulibicemi-a-radimi-mohlo-jit-o-slabe-tornado-20260420.html",
+      "dt": "2026-04-20T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "detaily",
+        "jičínskem",
+        "meteorologové",
+        "tornádo",
+        "točilo",
+        "upřesnili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Musela zemřít tříletá holčička? Straníme rodičům před dětmi, varuje šéf pěstounů",
+      "url": "https://www.denik.cz/z_domova/umrti-holcicky-praha-branik-pestounka-mpsv-policie-ombudsman.html",
+      "dt": "2026-04-20T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětmi",
+        "holčička",
+        "musela",
+        "pěstounů",
+        "rodičům",
+        "straníme",
+        "tříletá",
+        "varuje",
+        "zemřít",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -603,59 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Švédský úder na Odře. Kniha odhaluje zlomové roky třicetileté války",
-      "url": "https://www.denik.cz/ctenar-reporter/svedsky-uder-na-odre-kniha-odhaluje-zlomove-roky-tricetilete-valky-20260417.html",
-      "dt": "2026-04-19T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kniha",
-        "odhaluje",
-        "odře",
-        "roky",
-        "třicetileté",
-        "války",
-        "zlomové",
-        "úder",
-        "švédský"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Důležitý lék ulevuje lidem se vzácnou nemocí. V Česku ho ale nedostanou všichni",
-      "url": "https://www.denik.cz/zdravotnictvi/nemoc-friedreichova-ataxe-lek-ulevuje-v-cesku-ho-nedostanou-vsichni-pacienti.html",
-      "dt": "2026-04-19T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "důležitý",
-        "lidem",
-        "lék",
-        "nedostanou",
-        "nemocí",
-        "ulevuje",
-        "vzácnou",
-        "všichni",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29055,
+      "bytes": 28767,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,11 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "zdravi": 2,
+          "zpravy": 23,
+          "zdravi": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -720,6 +717,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nad Jičínskem se točilo tornádo. Meteorologové upřesnili detaily",
+            "publishedAt": "2026-04-20T08:00:00Z"
+          },
+          {
+            "title": "Musela zemřít tříletá holčička? Straníme rodičům před dětmi, varuje šéf pěstounů",
+            "publishedAt": "2026-04-20T08:00:00Z"
+          },
           {
             "title": "Je libo koňský hnůj? Prodejní „automat“ na Táborsku láká na netradiční sortiment",
             "publishedAt": "2026-04-20T07:42:00Z"
@@ -743,14 +748,6 @@
           {
             "title": "Pivo lidé vařili už v době mamutů. Možná právě ono stálo u zrodu civilizace",
             "publishedAt": "2026-04-20T06:00:00Z"
-          },
-          {
-            "title": "Česko má nový rekord. Motorka se v Mošnově řítila rychlostí 321 kilometrů",
-            "publishedAt": "2026-04-20T05:40:00Z"
-          },
-          {
-            "title": "První letošní tornádo? Bouřka na Jičínsku přinesla neobvyklý jev",
-            "publishedAt": "2026-04-20T05:30:00Z"
           }
         ]
       }
