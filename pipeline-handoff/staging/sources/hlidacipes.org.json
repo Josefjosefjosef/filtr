@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-20T11:14:32.103160Z",
+  "ingestedAt": "2026-04-20T11:35:15.916739Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jan Vávra: Čím větší populista, tím větší iluze suverenity národního státu",
+      "url": "https://hlidacipes.org/jan-vavra-cim-vetsi-populista-tim-vetsi-iluze-suverenity-narodniho-statu/",
+      "dt": "2026-04-20T11:30:07Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "iluze",
+        "jan",
+        "národního",
+        "populista",
+        "státu",
+        "suverenity",
+        "tím",
+        "vávra",
+        "větší",
+        "čím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,31 +268,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jan Palaščák: Zachrání energetiku malé jaderné elektrárny? Možnosti tu jsou",
-      "url": "https://hlidacipes.org/jan-palascak-zachrani-energetiku-male-jaderne-elektrarny-moznosti-tu-jsou/",
-      "dt": "2026-04-15T09:30:41Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "elektrárny",
-        "energetiku",
-        "jaderné",
-        "jan",
-        "malé",
-        "možnosti",
-        "palaščák",
-        "zachrání"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,9 +276,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17354,
+      "bytes": 17410,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:30:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:30:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -328,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jan Vávra: Čím větší populista, tím větší iluze suverenity národního státu",
+            "publishedAt": "2026-04-20T11:30:07Z"
+          },
           {
             "title": "Agentka GRU se brání u soudu. Sudlianková žaluje Česko kvůli sankcím",
             "publishedAt": "2026-04-20T04:30:51Z"
@@ -355,10 +361,6 @@
           {
             "title": "Investor Brůna: Přijímací zkoušky, stres pro celou rodinu i důkaz chyb v systému",
             "publishedAt": "2026-04-16T14:00:07Z"
-          },
-          {
-            "title": "Matrix Milana Rokytky: ČTK ovládá Korte a zbrojaři. Inuité vám to řeknou",
-            "publishedAt": "2026-04-16T09:30:59Z"
           }
         ]
       }

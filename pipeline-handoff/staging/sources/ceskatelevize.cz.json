@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T11:14:32.103160Z",
+  "ingestedAt": "2026-04-20T11:35:15.916739Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vědci rozplétají komplikovaný kočičí apetit",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-rozpletaji-komplikovany-kocici-apetit-372578",
+      "dt": "2026-04-20T11:15:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "apetit",
+        "komplikovaný",
+        "kočičí",
+        "rozplétají",
+        "vědci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -555,21 +577,15 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Vláda projedná návrh o rok odložit používání geoportálu územního plánování",
+      "title": "Brífink po jednání vlády",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-projedna-navrh-o-rok-odlozit-pouzivani-geoportalu-uzemniho-planovani-372562",
       "dt": "2026-04-20T02:55:09Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "geoportálu",
-        "návrh",
-        "odložit",
-        "plánování",
-        "používání",
-        "projedná",
-        "rok",
-        "vláda",
-        "územního"
+        "brífink",
+        "jednání",
+        "vlády"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -729,26 +745,29 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Prymula hájí širší očkování, Sílovi tlak na vakcinaci vadí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/prymula-haji-sirsi-ockovani-silovi-tlak-na-vakcinaci-vadi-372548",
-      "dt": "2026-04-19T17:22:34Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Máme lídra Tomka, ale naší silou bude týmovost, říká trenér Tomajko před MS osmnáctek",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/mame-lidra-tomka-ale-nasi-silou-bude-tymovost-rika-trener-tomajko-pred-ms-osmnactek-156376",
+      "dt": "2026-04-20T11:20:28Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "hájí",
-        "očkování",
-        "prymula",
-        "sílovi",
-        "tlak",
-        "vadí",
-        "vakcinaci",
-        "širší"
+        "ale",
+        "lídra",
+        "máme",
+        "naší",
+        "osmnáctek",
+        "silou",
+        "tomajko",
+        "tomka",
+        "trenér",
+        "týmovost",
+        "říká"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,31 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Davidová je po další operaci, čeká ji šest týdnů klidového režimu",
-      "url": "https://sport.ceskatelevize.cz/clanek/biatlon/davidova-je-po-dalsi-operaci-ceka-ji-sest-tydnu-klidoveho-rezimu-156347",
-      "dt": "2026-04-18T16:32:19Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "další",
-        "davidová",
-        "klidového",
-        "operaci",
-        "režimu",
-        "týdnů",
-        "čeká",
-        "šest"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1519,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43479,
+      "bytes": 43217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,11 +1573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:57:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:15:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 5,
+          "other": 6,
+          "zpravy": 22,
           "finance": 2
         },
         "drop_counts": {
@@ -1596,6 +1590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vědci rozplétají komplikovaný kočičí apetit",
+            "publishedAt": "2026-04-20T11:15:22Z"
+          },
           {
             "title": "ČT a ČRo: Vládní návrh zasahuje do fungování a svobody veřejnoprávních médií",
             "publishedAt": "2026-04-20T10:57:14Z"
@@ -1623,10 +1621,6 @@
           {
             "title": "Satelity ukázaly památky UNESCO z vesmíru",
             "publishedAt": "2026-04-20T08:57:50Z"
-          },
-          {
-            "title": "Bulharské volby vyhrála strana exprezidenta Radeva, míří k absolutní většině",
-            "publishedAt": "2026-04-20T08:51:43Z"
           }
         ]
       }
@@ -1638,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39443,
+      "bytes": 39558,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T07:43:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:20:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Máme lídra Tomka, ale naší silou bude týmovost, říká trenér Tomajko před MS osmnáctek",
+            "publishedAt": "2026-04-20T11:20:28Z"
+          },
           {
             "title": "Začínáme od začátku, burcuje Arsenal jeho trenér Arteta",
             "publishedAt": "2026-04-20T07:43:05Z"
@@ -1717,10 +1715,6 @@
           {
             "title": "Zubří vyrovnalo semifinále s Karvinou, rozhodne pátý zápas",
             "publishedAt": "2026-04-19T20:02:54Z"
-          },
-          {
-            "title": "Démon Červenka rozhodl třemi body o druhé finálové výhře Pardubic",
-            "publishedAt": "2026-04-19T17:45:07Z"
           }
         ]
       }
