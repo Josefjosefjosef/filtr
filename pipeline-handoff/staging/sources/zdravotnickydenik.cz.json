@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T04:55:07.742812Z",
+  "ingestedAt": "2026-04-20T05:15:12.263431Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přístrojová komise pod palbou: Administrativní překážka, nebo pojistka kvality?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pristrojova-komise-administrativni-prekazka-pojistka-kvality/",
+      "dt": "2026-04-20T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "administrativní",
+        "komise",
+        "kvality",
+        "nebo",
+        "palbou",
+        "pojistka",
+        "překážka",
+        "přístrojová"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nebezpečí v kojenecké výživě: Inspekce zakázala tyto tři produkty s toxinem",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/kojenecka-vyziva-inspekce-zakaz-tri-produkty-s-toxinem/",
-      "dt": "2026-04-17T11:14:41Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "inspekce",
-        "kojenecké",
-        "nebezpečí",
-        "produkty",
-        "toxinem",
-        "tyto",
-        "tři",
-        "výživě",
-        "zakázala"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97685,
+      "bytes": 104535,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:37:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -335,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přístrojová komise pod palbou: Administrativní překážka, nebo pojistka kvality?",
+            "publishedAt": "2026-04-20T05:00:00Z"
+          },
           {
             "title": "Jed na krysy v přesnídávkách HiPP: Ministerstvo varuje rodiče nakupující v Rakousku",
             "publishedAt": "2026-04-19T11:37:43Z"
@@ -362,10 +365,6 @@
           {
             "title": "Týden ve zdravotnictví: Unikátní operace dítěte, miliardové investice i politické spory",
             "publishedAt": "2026-04-17T15:00:00Z"
-          },
-          {
-            "title": "Vojtěch chystá 3 velké změny. Ve Sněmovně představil plán resortu pro nejbližší měsíce",
-            "publishedAt": "2026-04-17T14:00:00Z"
           }
         ]
       }

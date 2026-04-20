@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T04:55:07.742812Z",
+  "ingestedAt": "2026-04-20T05:15:12.263431Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pomsta Plzni. Krása, ale Viktorce jsem nesmírně vděčný, řekl pardubický kouč Trousil",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-pomsta-plzni-krasa-ale-viktorce-jsem-nesmirne-vdecny-rekl-pardubicky-kouc-trousil-5440639",
+      "dt": "2026-04-20T04:59:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "jsem",
+        "kouč",
+        "krása",
+        "nesmírně",
+        "pardubický",
+        "plzni",
+        "pomsta",
+        "trousil",
+        "vděčný",
+        "viktorce",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,30 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tenistky Malečková a Škoch mají první společný titul",
-      "url": "https://www.sport.cz/clanek/tenis-tenistky-maleckova-a-skoch-maji-prvni-spolecny-titul-5440269",
-      "dt": "2026-04-19T12:59:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "mají",
-        "malečková",
-        "první",
-        "společný",
-        "tenistky",
-        "titul",
-        "škoch"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 48403,
+      "bytes": 49038,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:37:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T04:59:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -835,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pomsta Plzni. Krása, ale Viktorce jsem nesmírně vděčný, řekl pardubický kouč Trousil",
+            "publishedAt": "2026-04-20T04:59:47Z"
+          },
           {
             "title": "Hradec Králové do Evropy? Zatím mám letenky jen na dovolenou, smál se Horejš",
             "publishedAt": "2026-04-20T04:37:56Z"
@@ -862,10 +871,6 @@
           {
             "title": "Změnilo se klima. Už je to o nás, ne o věcech kolem, tvrdil Sejk",
             "publishedAt": "2026-04-19T20:53:37Z"
-          },
-          {
-            "title": "Basketbalistky Fenerbahce vyhrály Euroligu, Voráčková slaví se Zaragozou bronz",
-            "publishedAt": "2026-04-19T20:36:07Z"
           }
         ]
       }
