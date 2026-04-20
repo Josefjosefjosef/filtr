@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T13:35:06.632426Z",
+  "ingestedAt": "2026-04-20T13:55:12.913470Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/mrna-vakcina-nadeje-pro-lecbu-rakoviny-slinivky/",
+      "dt": "2026-04-20T13:42:54Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "delší",
+        "dává",
+        "léčbě",
+        "mrna",
+        "naději",
+        "nemocným",
+        "průlom",
+        "rakoviny",
+        "slinivky",
+        "vakcína",
+        "výrazně",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,31 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Raději vlasy než erekci. Muži propadají estetickému šílenství",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/muzi-propadaji-estetickemu-silenstvi/",
-      "dt": "2026-04-19T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "erekci",
-        "estetickému",
-        "muži",
-        "než",
-        "propadají",
-        "raději",
-        "vlasy",
-        "šílenství"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 117079,
+      "bytes": 117156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:56:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:42:54Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
+            "publishedAt": "2026-04-20T13:42:54Z"
+          },
           {
             "title": "Fiasko Bruselu: Aplikaci na ochranu dětí prolomili hackeři za dvě minuty. Stála 100 milionů",
             "publishedAt": "2026-04-20T12:56:30Z"
@@ -355,10 +363,6 @@
           {
             "title": "Přístrojová komise pod palbou: Administrativní překážka, nebo pojistka kvality?",
             "publishedAt": "2026-04-20T05:00:00Z"
-          },
-          {
-            "title": "Jed na krysy v přesnídávkách HiPP: Ministerstvo varuje rodiče nakupující v Rakousku",
-            "publishedAt": "2026-04-19T11:37:43Z"
           }
         ]
       }

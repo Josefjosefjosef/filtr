@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T13:35:06.632426Z",
+  "ingestedAt": "2026-04-20T13:55:12.913470Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Goretzka slavil titul s ptákem na rameni. Po roce jsme ho zase vypustili z klece, smála se hvězda Bayernu",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-goretzka-slavil-titul-s-ptakem-na-rameni-po-roce-jsme-ho-zase-vypustili-z-klece-smala-se-hvezda-bayernu-5440699",
+      "dt": "2026-04-20T13:40:36Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bayernu",
+        "goretzka",
+        "hvězda",
+        "jsme",
+        "klece",
+        "ptákem",
+        "rameni",
+        "roce",
+        "slavil",
+        "smála",
+        "titul",
+        "vypustili",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -745,37 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fitzpatrick podruhé triumfoval v Hilton Head. Hrubý vybojoval třetí místo na PGA Tour Americas v Riu de Janeiro",
-      "url": "https://www.sport.cz/clanek/golf-fitzpatrick-podruhe-triumfoval-v-hilton-head-i-tentokrat-slavil-v-rozstrelu-5440655",
-      "dt": "2026-04-20T07:09:28Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "americas",
-        "fitzpatrick",
-        "head",
-        "hilton",
-        "hrubý",
-        "janeiro",
-        "místo",
-        "pga",
-        "podruhé",
-        "riu",
-        "tour",
-        "triumfoval",
-        "třetí",
-        "vybojoval"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42977,
+      "bytes": 43005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:25:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:40:36Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -839,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Goretzka slavil titul s ptákem na rameni. Po roce jsme ho zase vypustili z klece, smála se hvězda Bayernu",
+            "publishedAt": "2026-04-20T13:40:36Z"
+          },
           {
             "title": "Kometa zahájila rekonstrukci, končí sedm hráčů včetně dlouholetých beků i brankáře",
             "publishedAt": "2026-04-20T13:25:23Z"
@@ -866,10 +869,6 @@
           {
             "title": "V nominaci českých mladíků na mistrovství světa nechybí ani největší hvězda",
             "publishedAt": "2026-04-20T11:59:11Z"
-          },
-          {
-            "title": "Komise řešila sporné situace. Posvítila si na červenou kartu pro slávistu Mbodjiho a podivné dění v Olomouci",
-            "publishedAt": "2026-04-20T11:54:07Z"
           }
         ]
       }

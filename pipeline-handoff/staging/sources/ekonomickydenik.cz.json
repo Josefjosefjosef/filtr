@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-20T13:35:06.632426Z",
+  "ingestedAt": "2026-04-20T13:55:12.913470Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš stopl miliardy pro kraje: O penězích se nejdříve musíte dohodnout mezi sebou, vzkázal",
+      "url": "https://ekonomickydenik.cz/babis-stopl-miliardy-pro-kraje/",
+      "dt": "2026-04-20T13:45:17Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "dohodnout",
+        "kraje",
+        "miliardy",
+        "musíte",
+        "nejdříve",
+        "penězích",
+        "sebou",
+        "stopl",
+        "vzkázal"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,32 +784,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vysvobození pro 150 tisíc důchodců: Penzijní spoření půjde ukončit bez sankcí",
-      "url": "https://ekonomickydenik.cz/penzijni-sporeni-pujde-ukoncit-bez-sankci/",
-      "dt": "2026-04-17T11:16:34Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "150",
-        "důchodců",
-        "penzijní",
-        "půjde",
-        "sankcí",
-        "spoření",
-        "tisíc",
-        "ukončit",
-        "vysvobození"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 68972,
+      "bytes": 69384,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:29:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:45:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -847,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš stopl miliardy pro kraje: O penězích se nejdříve musíte dohodnout mezi sebou, vzkázal",
+            "publishedAt": "2026-04-20T13:45:17Z"
+          },
           {
             "title": "Převrat v českém zbrojení: Kdo bere obraně důležitou agendu?",
             "publishedAt": "2026-04-20T13:29:54Z"
@@ -874,10 +879,6 @@
           {
             "title": "Výplatní páska už nebude tabu. Nová pravidla odhalí výplaty kolegů a usnadní žaloby",
             "publishedAt": "2026-04-20T10:56:09Z"
-          },
-          {
-            "title": "Digitální ostuda Komise. Aplikace za 100 milionů korun padla po dvou minutách",
-            "publishedAt": "2026-04-20T10:46:16Z"
           }
         ]
       }
