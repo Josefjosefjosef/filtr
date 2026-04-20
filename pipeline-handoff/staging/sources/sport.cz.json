@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T20:55:39.508123Z",
+  "ingestedAt": "2026-04-20T21:14:48.294385Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hotovo. Wolves s Krejčím sestupují, rozhodla o tom remíza Součkova West Hamu",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-hotovo-wolves-s-krejcim-sestupuji-rozhodla-o-tom-remiza-souckova-west-hamu-5440938",
+      "dt": "2026-04-20T20:55:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hamu",
+        "hotovo",
+        "krejčím",
+        "remíza",
+        "rozhodla",
+        "sestupují",
+        "součkova",
+        "tom",
+        "west",
+        "wolves"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,33 +792,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Krpálka chtěli horkokrevní fanoušci po finále svléknout. Vítěz respektuje jen jeho",
-      "url": "https://www.sport.cz/clanek/ostatni-krpalka-chteli-horkokrevni-fanousci-po-finale-svleknout-vitez-respektuje-jen-jeho-5440887",
-      "dt": "2026-04-20T13:22:19Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chtěli",
-        "fanoušci",
-        "finále",
-        "horkokrevní",
-        "jeho",
-        "jen",
-        "krpálka",
-        "respektuje",
-        "svléknout",
-        "vítěz"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43206,
+      "bytes": 43111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,11 +839,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T20:42:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T20:55:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -855,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hotovo. Wolves s Krejčím sestupují, rozhodla o tom remíza Součkova West Hamu",
+            "publishedAt": "2026-04-20T20:55:12Z"
+          },
           {
             "title": "Čechová chce s USK vybojovat titul co nejdříve, už vyhlíží boj o WNBA",
             "publishedAt": "2026-04-20T20:42:22Z"
@@ -882,10 +885,6 @@
           {
             "title": "Vedení formule 1 odsouhlasilo změny pravidel od Velké ceny Miami",
             "publishedAt": "2026-04-20T19:04:22Z"
-          },
-          {
-            "title": "Korir zaběhl rekord Bostonského maratonu, představila se také Strýcová",
-            "publishedAt": "2026-04-20T15:57:57Z"
           }
         ]
       }
