@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-20T10:54:33.239059Z",
+  "ingestedAt": "2026-04-20T11:14:32.103160Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Přímé lety z Brna do Tivatu s odbaveným zavazadlem. Letenky od 4 252 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/prime-lety-z-brna-do-tivatu-s-odbavenym-zavazadlem",
+      "dt": "2026-04-20T11:02:18Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "252",
+        "brna",
+        "letenky",
+        "lety",
+        "odbaveným",
+        "přímé",
+        "tivatu",
+        "zavazadlem"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -475,33 +500,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Marsa Matrouh na týden z Českých Budějovic s all-inclusive soft. Zájezd od 9 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/marsa-matrouh-na-tyden-z-ceskych-budejovic-s-all-inclusive-soft",
-      "dt": "2026-04-14T09:48:03Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "budějovic",
-        "inclusive",
-        "marsa",
-        "matrouh",
-        "soft",
-        "týden",
-        "zájezd",
-        "českých"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 40244,
+      "bytes": 39433,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +547,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:24:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T11:02:18Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přímé lety z Brna do Tivatu s odbaveným zavazadlem. Letenky od 4 252 Kč",
+            "publishedAt": "2026-04-20T11:02:18Z"
+          },
           {
             "title": "Týden na ostrově Porto Santo v 5* resortu s all-inclusive. Zájezd od 13 790 Kč",
             "publishedAt": "2026-04-20T08:24:27Z"
@@ -591,10 +593,6 @@
           {
             "title": "Z Prahy do Říma od středy do neděle s odbaveným zavazadlem. Letenky od 1 990 Kč",
             "publishedAt": "2026-04-17T07:13:12Z"
-          },
-          {
-            "title": "Varšava z Bratislavy i na prodloužené víkendy. Letenky od 732 Kč",
-            "publishedAt": "2026-04-16T14:21:51Z"
           }
         ]
       }

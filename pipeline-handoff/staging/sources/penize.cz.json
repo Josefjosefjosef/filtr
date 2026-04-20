@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-20T10:54:33.239059Z",
+  "ingestedAt": "2026-04-20T11:14:32.103160Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Blízký východ hoří. Proč evropské komerční nemovitosti zůstávají v klidu",
+      "url": "https://www.penize.cz/investice/488542-blizky-vychod-hori-proc-evropske-komercni-nemovitosti-zustavaji-v-klidu",
+      "dt": "2026-04-20T13:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "blízký",
+        "evropské",
+        "hoří",
+        "klidu",
+        "komerční",
+        "nemovitosti",
+        "proč",
+        "východ",
+        "zůstávají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -475,33 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Vláda si nechala schválit snazší regulaci cen benzinu a nafty. Může trvat rok",
-      "url": "https://www.penize.cz/doprava/488279-vlada-si-nechala-schvalit-snazsi-regulaci-cen-benzinu-a-nafty-muze-trvat-rok",
-      "dt": "2026-04-15T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "cen",
-        "nafty",
-        "nechala",
-        "regulaci",
-        "rok",
-        "schválit",
-        "snazší",
-        "trvat",
-        "vláda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17789,
+      "bytes": 17993,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,11 +548,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T12:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zpravy": 6
+          "finance": 15,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -565,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blízký východ hoří. Proč evropské komerční nemovitosti zůstávají v klidu",
+            "publishedAt": "2026-04-20T13:00:00Z"
+          },
           {
             "title": "ČNB vydala desatero pro půjčky. Varuje i před úvěry na IČO",
             "publishedAt": "2026-04-20T12:51:00Z"
@@ -592,10 +595,6 @@
           {
             "title": "Kdy natankovat plnou? Maximální ceny benzinu a nafty na víkend",
             "publishedAt": "2026-04-17T13:59:00Z"
-          },
-          {
-            "title": "Luxusní symbol Dubaje se na rok a půl uzavře. Burdž al-Arab čeká rekonstrukce",
-            "publishedAt": "2026-04-17T09:00:00Z"
           }
         ]
       }
