@@ -876,8 +876,9 @@ try {
   const IU_FEED_VIDEO_ENABLED = true;
   const IU_FEED_VIDEO_EVERY = 8;
   const IU_FEED_VIDEO_MAX_PER_PAGE = 25;
-  /** P0 UI: split feed card DOM construction so long tasks yield between batches (first chunk = first viewport). */
-  const IU_FEED_DOM_BUILD_CHUNK = 16;
+  /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
+  const IU_FEED_FIRST_DOM_BATCH = 12;
+  const IU_FEED_DOM_APPEND_CHUNK = 18;
   const IU_VIDEO_PICK_WINDOW = 240;
   const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
   const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
@@ -4659,9 +4660,7 @@ try {
       };
     }catch{}
 
-    // CLS mitigation: žádný mezistav "prázdný feed" (clear + append v cyklu).
-    // Postav nový obsah mimo DOM a jednorázově ho vyměň přes replaceChildren().
-    const nextNodes = [];
+    // CLS: první zápis = atomicky nechat jen #sectionsBar, pak appendovat dávky (žádný replaceChildren(...celý feed)).
     const iuAlertDemo = Boolean(location.search.includes("debug=1") && location.search.includes("alertDemo=1"));
     const isHome = Boolean(document.body && document.body.classList && document.body.classList.contains("iu-home"));
     const hasVideoSection = Array.isArray(activeSections) && activeSections.includes("video");
@@ -4721,7 +4720,9 @@ try {
       }catch{}
     }
 
-    // Optional visual gate: inject 3 demo alert titles only in debug mode (never in normal prod view)
+    // Optional visual gate: demo cards (debug only) — append with first feed DOM write.
+    const demoFrag = document.createDocumentFragment();
+    let demoRendered = 0;
     if (iuAlertDemo) {
       const demos = [
         {
@@ -4774,7 +4775,8 @@ try {
           const node = template.content.firstElementChild;
           if (!node || !(node instanceof HTMLElement)) continue;
           iuApplyAlertTitle(node, demo);
-          nextNodes.push(node);
+          demoFrag.appendChild(node);
+          demoRendered += 1;
         } catch {}
       }
     }
@@ -4794,10 +4796,25 @@ try {
         }
       });
 
-    for (let i = 0; i < visibleItems.length; ) {
-      const chunkEnd = Math.min(i + IU_FEED_DOM_BUILD_CHUNK, visibleItems.length);
-      for (let idx = i; idx < chunkEnd; idx++) {
-        const item = visibleItems[idx];
+    const auditRf = (() => {
+      try {
+        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
+      } catch (_) {
+        return null;
+      }
+    })();
+    let tDomPatch0 = 0;
+    let domPatchStarted = false;
+    let renderedCount = 0;
+    let pos = 0;
+    let firstDomBatch = true;
+    while (pos < visibleItems.length) {
+      const batchMax = firstDomBatch ? IU_FEED_FIRST_DOM_BATCH : IU_FEED_DOM_APPEND_CHUNK;
+      firstDomBatch = false;
+      const frag = document.createDocumentFragment();
+      const batchEnd = Math.min(pos + batchMax, visibleItems.length);
+      for (; pos < batchEnd; pos++) {
+        const item = visibleItems[pos];
         const kind = String(item.contentType || "").toLowerCase();
         if (!ALLOWED_CONTENT_TYPES.has(kind)) {
           feedEl.setAttribute("data-feed-ready", "true");
@@ -4833,10 +4850,32 @@ try {
           if (safeTarget && safeTarget.id === "feed") iuApplyAlertTitle(node, item);
         } catch {}
 
-        nextNodes.push(node);
+        frag.appendChild(node);
+        renderedCount += 1;
       }
-      i = chunkEnd;
-      if (i < visibleItems.length) {
+
+      const hasDemoPending = iuAlertDemo && demoFrag.childNodes.length > 0;
+      if (frag.childNodes.length > 0 || hasDemoPending) {
+        if (!domPatchStarted) {
+          if (auditRf && typeof performance !== "undefined" && performance.now) {
+            tDomPatch0 = performance.now();
+          }
+          if (sectionsBar) {
+            safeTarget.replaceChildren(sectionsBar);
+          } else {
+            safeTarget.replaceChildren();
+          }
+          domPatchStarted = true;
+          if (hasDemoPending) {
+            safeTarget.appendChild(demoFrag);
+            renderedCount += demoRendered;
+          }
+        }
+        if (frag.childNodes.length > 0) {
+          safeTarget.appendChild(frag);
+        }
+      }
+      if (pos < visibleItems.length) {
         await iuYieldForFeedDomChunk();
       }
     }
@@ -4864,31 +4903,29 @@ try {
       loadMoreWrap = wrap;
     }
 
-    const auditRf = (() => {
-      try {
-        return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
-      } catch (_) {
-        return null;
+    if (!domPatchStarted) {
+      if (auditRf && typeof performance !== "undefined" && performance.now) {
+        tDomPatch0 = performance.now();
       }
-    })();
-    const tDomPatch0 =
-      auditRf && typeof performance !== "undefined" && performance.now ? performance.now() : 0;
-    /* Yield once before the large replaceChildren spread so input/scroll can run after DOM build. */
-    if (nextNodes.length > IU_FEED_DOM_BUILD_CHUNK) {
-      await iuYieldForFeedDomChunk();
+      if (sectionsBar) {
+        safeTarget.replaceChildren(sectionsBar);
+      } else {
+        safeTarget.replaceChildren();
+      }
+      domPatchStarted = true;
+      if (iuAlertDemo && demoFrag.childNodes.length > 0) {
+        safeTarget.appendChild(demoFrag);
+        renderedCount += demoRendered;
+      }
     }
-    if (sectionsBar) {
-      if (loadMoreWrap) safeTarget.replaceChildren(sectionsBar, ...nextNodes, loadMoreWrap);
-      else safeTarget.replaceChildren(sectionsBar, ...nextNodes);
-    } else {
-      if (loadMoreWrap) safeTarget.replaceChildren(...nextNodes, loadMoreWrap);
-      else safeTarget.replaceChildren(...nextNodes);
+    if (loadMoreWrap) {
+      safeTarget.appendChild(loadMoreWrap);
     }
     if (auditRf) {
       try {
         const t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
-        auditRf.phases.domPatchMs = t1 - tDomPatch0;
-        auditRf.itemCountRendered = nextNodes.length;
+        auditRf.phases.domPatchMs = domPatchStarted && tDomPatch0 ? t1 - tDomPatch0 : 0;
+        auditRf.itemCountRendered = renderedCount;
       } catch (_) {}
     }
 
@@ -4901,7 +4938,6 @@ try {
     } catch {}
 
     const feedChildrenAfter = safeTarget.childElementCount;
-    const renderedCount = nextNodes.length;
     const typeCounts = visibleItems.reduce(
       (acc, entry) => {
         const kind = String(entry.contentType || "").toLowerCase();
