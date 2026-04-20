@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-20T21:14:48.294385Z",
+  "ingestedAt": "2026-04-20T21:35:26.381660Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec éry Tima Cooka. Apple od září povede John Ternus s vizí zaměřenou na hardware",
+      "url": "https://www.e15.cz/byznys/technologie-a-media/konec-ery-tima-cooka-apple-od-zari-povede-john-ternus-s-vizi-zamerenou-na-hardware-1432276",
+      "dt": "2026-04-20T21:02:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "apple",
+        "cooka",
+        "hardware",
+        "john",
+        "konec",
+        "povede",
+        "ternus",
+        "tima",
+        "vizí",
+        "zaměřenou",
+        "září",
+        "éry"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1067,34 +1096,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jeden z mála vítězů války v Zálivu: Britská robotická věž proti íránským dronům",
-      "url": "https://www.e15.cz/zahranicni/jeden-z-mala-vitezu-valky-v-zalivu-britska-roboticka-vez-proti-iranskym-dronum-1432233",
-      "dt": "2026-04-18T08:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "britská",
-        "dronům",
-        "jeden",
-        "mála",
-        "proti",
-        "robotická",
-        "války",
-        "vítězů",
-        "věž",
-        "zálivu",
-        "íránským"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1105,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 58179,
+      "bytes": 58002,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1142,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T21:02:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1159,6 +1160,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec éry Tima Cooka. Apple od září povede John Ternus s vizí zaměřenou na hardware",
+            "publishedAt": "2026-04-20T21:02:00Z"
+          },
           {
             "title": "Evropu před čtyřmi lety zachránil, Asii teď zklamal. Výsadní postavení LNG se kvůli válce v Íránu hroutí",
             "publishedAt": "2026-04-20T18:00:00Z"
@@ -1186,10 +1191,6 @@
           {
             "title": "Vydavatel Desmond prohrál spor o britskou Národní loterii. Soud dal za pravdu Komárkovu Allwynu",
             "publishedAt": "2026-04-20T13:45:00Z"
-          },
-          {
-            "title": "Stát a ČEZ uzavřou memorandum o malých modulárních reaktorech",
-            "publishedAt": "2026-04-20T13:00:00Z"
           }
         ]
       }
