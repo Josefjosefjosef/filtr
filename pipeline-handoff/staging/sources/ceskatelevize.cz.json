@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T18:49:38.461080Z",
+  "ingestedAt": "2026-04-20T19:12:51.622971Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Případ otrávené dětské výživy řeší kriminalisté ze tří zemí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pripad-otravene-detske-vyzivy-resi-kriminaliste-ze-tri-zemi-372596",
+      "dt": "2026-04-20T19:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dětské",
+        "kriminalisté",
+        "otrávené",
+        "případ",
+        "tří",
+        "výživy",
+        "zemí",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,31 +746,6 @@
         "válce",
         "írán",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Velryba uvázlá na severu Německa se dokázala osvobodit a plave zátokou",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/velryba-uvazla-na-severu-nemecka-se-dokazala-osvobodit-a-plave-zatokou-372567",
-      "dt": "2026-04-20T07:03:38Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dokázala",
-        "německa",
-        "osvobodit",
-        "plave",
-        "severu",
-        "uvázlá",
-        "velryba",
-        "zátokou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42831,
+      "bytes": 43315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,7 +1587,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T18:26:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T19:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1603,6 +1603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Případ otrávené dětské výživy řeší kriminalisté ze tří zemí",
+            "publishedAt": "2026-04-20T19:00:00Z"
+          },
           {
             "title": "Za zpoplatnění dálniční známky pro elektroauta Česku mohou hrozit sankce",
             "publishedAt": "2026-04-20T18:26:06Z"
@@ -1630,10 +1634,6 @@
           {
             "title": "Kalifornský marast může demokraty připravit o zdánlivou jistotu",
             "publishedAt": "2026-04-20T15:34:06Z"
-          },
-          {
-            "title": "Zhypnotizovala jsem se během psaní, přiznává autorka nejlepší loňské prózy",
-            "publishedAt": "2026-04-20T15:29:00Z"
           }
         ]
       }
@@ -1739,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77137,
+      "bytes": 77145,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
