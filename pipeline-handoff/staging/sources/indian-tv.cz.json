@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-20T10:34:31.551019Z",
+  "ingestedAt": "2026-04-20T10:54:33.239059Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "THQ Nordic má sedm neoznámených titulů pro Nintendo Switch 2 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/thq-nordic-ma-sedm-neoznamenych-titulu-pro-switch-2",
+      "dt": "2026-04-20T10:37:31Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "indian",
+        "neoznámených",
+        "nintendo",
+        "nordic",
+        "sedm",
+        "switch",
+        "thq",
+        "titulů"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1062,33 +1087,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Konzolové verze Euro a American Truck Simulatoru doplácejí na technologický dluh - INDIAN",
-      "url": "https://indian-tv.cz/clanek/konzolove-verze-euro-a-american-truck-simulatoru-doplaceji-xhlicz",
-      "dt": "2026-04-15T10:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "american",
-        "dluh",
-        "doplácejí",
-        "euro",
-        "indian",
-        "konzolové",
-        "simulatoru",
-        "technologický",
-        "truck",
-        "verze"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1099,7 +1097,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 197837,
+      "bytes": 196844,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1136,7 +1134,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:02:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T10:37:31Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1151,6 +1149,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "THQ Nordic má sedm neoznámených titulů pro Nintendo Switch 2 - INDIAN",
+            "publishedAt": "2026-04-20T10:37:31Z"
+          },
           {
             "title": "Krize je nová realita. Autoři portů The Last of Us na PC propouštějí a upozorňují na situaci - INDIAN",
             "publishedAt": "2026-04-20T08:02:12Z"
@@ -1178,10 +1180,6 @@
           {
             "title": "Pokračuje oprava městské akce Samson na PC. Poté hra vyjde na konzole - INDIAN",
             "publishedAt": "2026-04-19T11:32:14Z"
-          },
-          {
-            "title": "Nova Roma: Římská říše pod tlakem bohů i vody - INDIAN",
-            "publishedAt": "2026-04-19T10:05:43Z"
           }
         ]
       }

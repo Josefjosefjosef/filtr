@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-20T10:34:31.551019Z",
+  "ingestedAt": "2026-04-20T10:54:33.239059Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "ČNB vydala desatero pro půjčky. Varuje i před úvěry na IČO",
+      "url": "https://www.penize.cz/pujcky/488557-cnb-vydala-desatero-pro-pujcky-varuje-i-pred-uvery-na-ico",
+      "dt": "2026-04-20T12:51:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "desatero",
+        "ičo",
+        "půjčky",
+        "varuje",
+        "vydala",
+        "úvěry",
+        "čnb"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,29 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Důchodci si přilepší. Juchelka má první balíček změn",
-      "url": "https://www.penize.cz/starobni-duchod/488285-zmeny-v-duchodech-vekova-valorizace-pracujici-duchodci",
-      "dt": "2026-04-15T05:10:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "balíček",
-        "důchodci",
-        "juchelka",
-        "první",
-        "přilepší",
-        "změn"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17758,
+      "bytes": 17789,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T12:51:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -564,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČNB vydala desatero pro půjčky. Varuje i před úvěry na IČO",
+            "publishedAt": "2026-04-20T12:51:00Z"
+          },
           {
             "title": "Kolik si můžete vybrat z bankomatu a jaké hodnoty? Přehled podle bank",
             "publishedAt": "2026-04-20T05:05:00Z"
@@ -591,10 +596,6 @@
           {
             "title": "Luxusní symbol Dubaje se na rok a půl uzavře. Burdž al-Arab čeká rekonstrukce",
             "publishedAt": "2026-04-17T09:00:00Z"
-          },
-          {
-            "title": "Vinted jako nejlevnější kurýr? Evropou koluje trik, který platforma vidí nerada",
-            "publishedAt": "2026-04-17T05:05:00Z"
           }
         ]
       }
