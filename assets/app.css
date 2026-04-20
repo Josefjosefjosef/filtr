@@ -10847,7 +10847,7 @@ header#topbarWrap.topbar-new.iuTopbar::before{
   height: 100% !important;
   background: #ECEFF3 !important;
   border-radius: 0 !important;
-  pointer-events: auto !important;
+  pointer-events: none !important;
 }
 
 main#content .layout{
@@ -16185,6 +16185,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (min-width: 1025px){
+  header#topbarWrap.topbar-new.iuTopbar{
+    inset: 0 var(--iuDesktopVScrollbarPx, 0px) auto 0 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
   .silver-weather-line1,
   .silver-weather-line2{
     white-space: nowrap;
