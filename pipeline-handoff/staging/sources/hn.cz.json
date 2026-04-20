@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T07:14:23.554488Z",
+  "ingestedAt": "2026-04-20T07:34:30.790163Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Google pro rodiče zavádí možnost výrazně dětem omezit Youtube Shorts. Krátká videa už ovlivnila celou generaci",
+      "url": "https://tech.hn.cz/c1-67868640-google-pro-rodice-zavadi-moznost-vyrazne-detem-omezit-youtube-shorts-kratka-videa-uz-ovlivnila-celou-generaci",
+      "dt": "2026-04-20T07:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "celou",
+        "dětem",
+        "generaci",
+        "google",
+        "krátká",
+        "možnost",
+        "omezit",
+        "ovlivnila",
+        "rodiče",
+        "shorts",
+        "videa",
+        "výrazně",
+        "youtube",
+        "zavádí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1175,38 +1206,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Motorkou přes památku UNESCO, Češi v zapomenuté válce a běžecké botky za šest stovek. Několik tipů na Vietnam skoro bez turistů",
-      "url": "https://vikend.hn.cz/c1-67867980-motorkou-pres-pamatku-unesco-cesi-v-zapomenute-valce-a-bezecke-botky-za-sest-stovek-nekolik-tipu-na-vietnam-skoro-bez-turistu",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "botky",
-        "běžecké",
-        "motorkou",
-        "několik",
-        "památku",
-        "skoro",
-        "stovek",
-        "tipů",
-        "turistů",
-        "unesco",
-        "vietnam",
-        "válce",
-        "zapomenuté",
-        "češi",
-        "šest"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1217,7 +1216,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180366,
+      "bytes": 180242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1254,11 +1253,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 31,
-          "zpravy": 6,
+          "zpravy": 7,
+          "finance": 30,
           "zdravi": 2,
           "sport": 1
         },
@@ -1272,6 +1271,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Google pro rodiče zavádí možnost výrazně dětem omezit Youtube Shorts. Krátká videa už ovlivnila celou generaci",
+            "publishedAt": "2026-04-20T07:25:00Z"
+          },
           {
             "title": "Fico chce znovu do Moskvy na oslavy vítězství ve druhé světové válce. Pobaltské státy mu přelet nedovolí",
             "publishedAt": "2026-04-20T05:49:00Z"
@@ -1298,10 +1301,6 @@
           },
           {
             "title": "Příliv čínských aut je teprve začátek. Jak vypadá v čase válek provoz v přístavu, který je klíčový i pro Česko",
-            "publishedAt": "2026-04-19T22:00:00Z"
-          },
-          {
-            "title": "ČNB chce pro finanční poradce pevné odměny, slibuje si od toho konec nevýhodných investic. Podle poradců k tomu není důvod",
             "publishedAt": "2026-04-19T22:00:00Z"
           }
         ]

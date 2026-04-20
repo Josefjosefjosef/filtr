@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-20T07:14:23.554488Z",
+  "ingestedAt": "2026-04-20T07:34:30.790163Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "V polovině května dorazí do Prahy přes 20 vinařů. Dovezou sedm tisíc lahví růžového vína",
+      "url": "https://www.svetcestovatele.cz/v-polovine-kvetna-dorazi-do-prahy-pres-20-vinaru-dovezou-sedm-tisic-lahvi-ruzoveho-vina/",
+      "dt": "2026-04-20T07:30:09Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "dorazí",
+        "dovezou",
+        "května",
+        "lahví",
+        "polovině",
+        "prahy",
+        "růžového",
+        "sedm",
+        "tisíc",
+        "vinařů",
+        "vína"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -505,33 +533,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Jak zatočit s klíštětem, když nemáte po ruce pinzetu? Hlavně žádnou paniku a sádlo na to!",
-      "url": "https://www.svetcestovatele.cz/jak-zatocit-s-klistetem-kdyz-nemate-po-ruce-pinzetu-hlavne-zadnou-paniku-a-sadlo-na-to/",
-      "dt": "2026-04-09T04:00:04Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "hlavně",
-        "když",
-        "klíštětem",
-        "nemáte",
-        "paniku",
-        "pinzetu",
-        "ruce",
-        "sádlo",
-        "zatočit",
-        "žádnou"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 131372,
+      "bytes": 130860,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,7 +580,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:30:09Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -594,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V polovině května dorazí do Prahy přes 20 vinařů. Dovezou sedm tisíc lahví růžového vína",
+            "publishedAt": "2026-04-20T07:30:09Z"
+          },
           {
             "title": "Kolega nesnáší svoje děti. Kvůli tomu je pořád v práci a ohrožuje nevinné lidi",
             "publishedAt": "2026-04-20T04:00:37Z"
@@ -621,10 +626,6 @@
           {
             "title": "Absurdní dohadování s australským úředním šimlem: Za synem mě nechtěli pustit dva roky, pomohla cestovatelka",
             "publishedAt": "2026-04-16T04:00:33Z"
-          },
-          {
-            "title": "Smrťák v kelímku: Letuška si lokla kávy z automatu a okamžitě oslepla. Nebyla první",
-            "publishedAt": "2026-04-15T04:00:15Z"
           }
         ]
       }

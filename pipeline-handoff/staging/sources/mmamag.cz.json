@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-20T07:14:23.554488Z",
+  "ingestedAt": "2026-04-20T07:34:30.790163Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bez rukavic, bez slitování: Rus sestřelil soupeře za 11 sekund, pak se o něj bál",
+      "url": "https://www.mmamag.cz/rus-ko-knokaut-box-bez-rukavic/",
+      "dt": "2026-04-20T07:25:50Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bál",
+        "něj",
+        "pak",
+        "rukavic",
+        "rus",
+        "sekund",
+        "sestřelil",
+        "slitování",
+        "soupeře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1065,32 +1091,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vémola zvažuje návrat. Do klece by šel jen kvůli jednomu jménu",
-      "url": "https://www.mmamag.cz/vemola-navrat-oktagon-putz/",
-      "dt": "2026-04-13T07:55:37Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "jednomu",
-        "jen",
-        "jménu",
-        "klece",
-        "kvůli",
-        "návrat",
-        "vémola",
-        "zvažuje",
-        "šel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1101,7 +1101,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77857,
+      "bytes": 77865,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1138,7 +1138,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T12:35:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:25:50Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1153,6 +1153,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bez rukavic, bez slitování: Rus sestřelil soupeře za 11 sekund, pak se o něj bál",
+            "publishedAt": "2026-04-20T07:25:50Z"
+          },
           {
             "title": "Rusové se na šampionát v judu vrátili se svou vlajkou. Fanoušci je během hymny vypískali",
             "publishedAt": "2026-04-19T12:35:57Z"
@@ -1180,10 +1184,6 @@
           {
             "title": "Krištofič po posledním rozhovoru s Novotným: Do Oktagonu mě už nic netáhne, je konec",
             "publishedAt": "2026-04-18T08:48:47Z"
-          },
-          {
-            "title": "Procházkův přemožitel má koleno na maděru. Návrat do klece je v nedohlednu",
-            "publishedAt": "2026-04-18T08:35:18Z"
           }
         ]
       }

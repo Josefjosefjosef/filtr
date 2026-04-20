@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T07:14:23.554488Z",
+  "ingestedAt": "2026-04-20T07:34:30.790163Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lidé budou moci pozorovat zvláštní meteorický roj. Astronomové radí kdy a odkud",
+      "url": "https://zpravy.aktualne.cz/domaci/lide-budou-moci-pozorovat-zvlastni-meteoricky-roj-astronomove-radi-kdy-a-odkud/r~aaa297bf21e362f00fe99161fbe4e56e/",
+      "dt": "2026-04-20T07:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "astronomové",
+        "lidé",
+        "meteorický",
+        "moci",
+        "odkud",
+        "pozorovat",
+        "radí",
+        "roj",
+        "zvláštní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -512,32 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Plzeň v průšvihu. Padla doma s Pardubicemi a komplikuje si boj o třetí místo",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/plzen-v-potizich-padla-doma-s-pardubicemi-a-komplikuje-si-boj-o-treti-misto/r~aaa29da107d12b42c592b38fdfd47bcf/",
-      "dt": "2026-04-19T18:37:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "boj",
-        "doma",
-        "komplikuje",
-        "místo",
-        "padla",
-        "pardubicemi",
-        "plzeň",
-        "průšvihu",
-        "třetí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22741,
+      "bytes": 22614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,12 +585,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T06:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T07:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "zpravy": 14,
           "finance": 1,
-          "sport": 4,
+          "sport": 3,
           "other": 2
         },
         "drop_counts": {
@@ -603,6 +603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidé budou moci pozorovat zvláštní meteorický roj. Astronomové radí kdy a odkud",
+            "publishedAt": "2026-04-20T07:14:00Z"
+          },
           {
             "title": "Komentář: Proč bychom někdy měli pacientům vyhovět a umožnit jim ze života důstojně odejít",
             "publishedAt": "2026-04-20T06:57:00Z"
@@ -630,10 +634,6 @@
           {
             "title": "Na kyjevské ulici začal do lidí pálit 58letý Moskvan. Útok má šest obětí",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Použitý motor z eBay přímo od výrobce? Automobilky prodávají díly z vyřazených aut se zárukou",
-            "publishedAt": "2026-04-20T05:10:00Z"
           }
         ]
       }
