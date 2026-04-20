@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-20T06:15:06.820356Z",
+  "ingestedAt": "2026-04-20T06:35:56.071667Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Zemřel hlas Zoltana Chivaye z herní série Zaklínač od CD Projektu RED - INDIAN",
+      "url": "https://indian-tv.cz/clanek/zemrel-hlas-zoltana-chivaye-z-herni-serie-zaklinac-jsp59j",
+      "dt": "2026-04-20T06:29:36Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chivaye",
+        "herní",
+        "hlas",
+        "indian",
+        "projektu",
+        "red",
+        "série",
+        "zaklínač",
+        "zemřel",
+        "zoltana"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1061,33 +1088,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vyšla kyberpunková pixel art akce Replaced. Dostupná je i v Game Passu - INDIAN",
-      "url": "https://indian-tv.cz/clanek/vysla-kyberpunkova-pixel-art-akce-replaced-2hx21t",
-      "dt": "2026-04-15T06:49:40Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "akce",
-        "art",
-        "dostupná",
-        "game",
-        "indian",
-        "kyberpunková",
-        "passu",
-        "pixel",
-        "replaced",
-        "vyšla"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1098,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 199632,
+      "bytes": 199454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,7 +1135,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-19T11:44:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:29:36Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1150,6 +1150,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel hlas Zoltana Chivaye z herní série Zaklínač od CD Projektu RED - INDIAN",
+            "publishedAt": "2026-04-20T06:29:36Z"
+          },
           {
             "title": "Nejlepší herní příběh roku 2025 má český klenot Kingdom Come: Deliverance 2 - INDIAN",
             "publishedAt": "2026-04-19T11:44:21Z"
@@ -1177,10 +1181,6 @@
           {
             "title": "Warhammer 40,000: Space Marine 2 nalákal velké množství hráčů - INDIAN",
             "publishedAt": "2026-04-18T14:40:21Z"
-          },
-          {
-            "title": "Odpočinková kooperační hra Outbound se mírně opozdí - INDIAN",
-            "publishedAt": "2026-04-18T07:43:11Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T06:15:06.820356Z",
+  "ingestedAt": "2026-04-20T06:35:56.071667Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Černobyl dnes: o život jde na místech, kde to voní jarem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/cernobyl-dnes-o-zivot-jde-na-mistech-kde-to-voni-jarem-372487",
+      "dt": "2026-04-20T06:14:12Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jarem",
+        "jde",
+        "místech",
+        "voní",
+        "černobyl",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -729,30 +752,6 @@
         "sklenice",
         "výživou",
         "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kompetence porodních asistentek se zvětšuje, roste jejich samostatnost",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/kompetence-porodnich-asistentek-se-zvetsuje-roste-jejich-samostatnost-372524",
-      "dt": "2026-04-19T07:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "asistentek",
-        "jejich",
-        "kompetence",
-        "porodních",
-        "roste",
-        "samostatnost",
-        "zvětšuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1523,7 +1522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43240,
+      "bytes": 42741,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,12 +1582,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:54:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T06:14:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 3,
           "finance": 4,
-          "zpravy": 24,
-          "other": 2
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1600,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černobyl dnes: o život jde na místech, kde to voní jarem",
+            "publishedAt": "2026-04-20T06:14:12Z"
+          },
           {
             "title": "Ceny ropy prudce rostou po opětovném uzavření Hormuzského průlivu",
             "publishedAt": "2026-04-20T05:54:09Z"
@@ -1627,10 +1630,6 @@
           {
             "title": "Vláda projedná návrh o rok odložit používání geoportálu územního plánování",
             "publishedAt": "2026-04-20T02:55:09Z"
-          },
-          {
-            "title": "Mapa demarkační linie v Libanonu přisuzuje Izraeli kontrolu nad desítkami měst",
-            "publishedAt": "2026-04-19T20:13:57Z"
           }
         ]
       }
@@ -1736,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77192,
+      "bytes": 77180,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
