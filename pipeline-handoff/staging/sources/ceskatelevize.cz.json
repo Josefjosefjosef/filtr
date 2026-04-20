@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-20T21:54:23.430696Z",
+  "ingestedAt": "2026-04-20T22:09:58.976437Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tim Cook opustí post generálního ředitele společnosti Apple",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/tim-cook-opusti-post-generalniho-reditele-spolecnosti-apple-372601",
+      "dt": "2026-04-20T22:02:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "apple",
+        "cook",
+        "generálního",
+        "opustí",
+        "post",
+        "společnosti",
+        "tim",
+        "ředitele"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,30 +746,6 @@
         "událostí",
         "česku",
         "šéfa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Houby jsou podle afrických vědců základem života na Zemi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/houby-jsou-podle-africkych-vedcu-zakladem-zivota-na-zemi-372566",
-      "dt": "2026-04-20T07:20:55Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "afrických",
-        "houby",
-        "podle",
-        "vědců",
-        "zemi",
-        "základem",
-        "života"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1530,7 +1531,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43017,
+      "bytes": 43234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,11 +1591,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T20:46:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T22:02:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 8
+          "zpravy": 23,
+          "other": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1606,6 +1607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tim Cook opustí post generálního ředitele společnosti Apple",
+            "publishedAt": "2026-04-20T22:02:53Z"
+          },
           {
             "title": "Konec bojů, nebo jen pauza? Libanonci se vracejí domů s obavami z další eskalace",
             "publishedAt": "2026-04-20T20:46:04Z"
@@ -1633,10 +1638,6 @@
           {
             "title": "SOUHRN: Zásadní události pondělí 20. dubna",
             "publishedAt": "2026-04-20T16:29:00Z"
-          },
-          {
-            "title": "Státní zástupce obžaloval policistu, který sváděl k sexu domnělou nezletilou dívku",
-            "publishedAt": "2026-04-20T16:09:30Z"
           }
         ]
       }
@@ -1742,7 +1743,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77069,
+      "bytes": 77020,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

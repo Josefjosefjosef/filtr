@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T21:54:23.430696Z",
+  "ingestedAt": "2026-04-20T22:09:58.976437Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Finanční trhy (21. 4. 2026)",
+      "url": "https://archiv.hn.cz/c1-67868620-financni-trhy-21-4-2026",
+      "dt": "2026-04-20T22:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "2026",
+        "finanční",
+        "trhy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1156,35 +1176,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ale on mi rozšlapal hranatou bábovičku! Bránit prezidentovi v cestě na summit je zabedněnost. Takto by mohl vládě pomoci",
-      "url": "https://archiv.hn.cz/c1-67868540-ale-on-mi-rozslapal-hranatou-babovicku-branit-prezidentovi-v-ceste-na-summit-je-zabednenost-takto-by-mohl-vlade-pomoci",
-      "dt": "2026-04-19T08:50:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "bránit",
-        "bábovičku",
-        "cestě",
-        "hranatou",
-        "pomoci",
-        "prezidentovi",
-        "rozšlapal",
-        "summit",
-        "takto",
-        "vládě",
-        "zabedněnost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1195,7 +1186,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181254,
+      "bytes": 180697,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1232,7 +1223,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T22:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1250,6 +1241,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Finanční trhy (21. 4. 2026)",
+            "publishedAt": "2026-04-20T22:00:00Z"
+          },
           {
             "title": "Šmejcova Premier Energy míří do Rumunska. Za 17 miliard korun chce koupit tamního distributora elektřiny",
             "publishedAt": "2026-04-20T17:26:00Z"
@@ -1277,10 +1272,6 @@
           {
             "title": "Plyn zlevnil, vyčerpané zásobníky se plní. Rezerva na příští zimu však stále roste příliš pomalu",
             "publishedAt": "2026-04-20T15:37:00Z"
-          },
-          {
-            "title": "100 dní po masakru protestujících: Íránci zůstávají chudí a nejistí. Režim přežil, k moci se derou gardisté",
-            "publishedAt": "2026-04-20T14:44:00Z"
           }
         ]
       }
