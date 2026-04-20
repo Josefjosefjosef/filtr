@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-20T22:49:43.555148Z",
+  "ingestedAt": "2026-04-20T23:12:49.230608Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Bolí vás po jídle žaludek? Na vině může být potravinová intolerance",
+      "url": "https://www.plnezdravi.cz/boli-vas-po-jidle-zaludek-na-vine-muze-byt-potravinova-intolerance/",
+      "dt": "2026-04-20T23:00:46Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "bolí",
+        "být",
+        "intolerance",
+        "jídle",
+        "potravinová",
+        "vině",
+        "vás",
+        "žaludek"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -479,29 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vysoký cholesterol prozradí typické změny v obličeji",
-      "url": "https://www.plnezdravi.cz/vysoky-cholesterol-prozradi-typicke-zmeny-v-obliceji/",
-      "dt": "2026-04-03T23:00:50Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "cholesterol",
-        "obličeji",
-        "prozradí",
-        "typické",
-        "vysoký",
-        "změny"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 132816,
+      "bytes": 132732,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:04:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T23:00:46Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -564,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bolí vás po jídle žaludek? Na vině může být potravinová intolerance",
+            "publishedAt": "2026-04-20T23:00:46Z"
+          },
           {
             "title": "Věk rodiček se zvyšuje. Češi mylně spoléhají na to, že medicína obejde biologické limity, říká lékařka",
             "publishedAt": "2026-04-20T08:04:13Z"
@@ -591,10 +597,6 @@
           {
             "title": "Sacharidy nejsou špatné. Jen je třeba rozlišovat ty zdravé",
             "publishedAt": "2026-04-15T07:00:45Z"
-          },
-          {
-            "title": "Zelené kiwi získalo první zdravotní tvrzení pro čerstvé ovoce v EU",
-            "publishedAt": "2026-04-14T15:44:06Z"
           }
         ]
       }

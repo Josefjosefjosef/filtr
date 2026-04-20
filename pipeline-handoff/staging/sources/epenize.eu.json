@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-20T22:49:43.555148Z",
+  "ingestedAt": "2026-04-20T23:12:49.230608Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpův energetický náčelník je prý „úplně mimo“ a benzín za stovku je prý jen demokratický hoax",
+      "url": "https://www.epenize.eu/trumpuv-energeticky-nacelnik-je-pry-uplne-mimo-a-benzin-za-stovku-je-pry-jen-demokraticky-hoax/",
+      "dt": "2026-04-20T23:00:35Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "benzín",
+        "demokratický",
+        "energetický",
+        "hoax",
+        "jen",
+        "mimo",
+        "náčelník",
+        "prý",
+        "stovku",
+        "trumpův",
+        "úplně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,30 +500,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zruší vláda opatření a omluví se? Kalousek si nedělá iluze",
-      "url": "https://www.epenize.eu/zrusi-vlada-opatreni-a-omluvi-se-kalousek-si-nedela-iluze/",
-      "dt": "2026-04-13T06:16:38Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "iluze",
-        "kalousek",
-        "nedělá",
-        "omluví",
-        "opatření",
-        "vláda",
-        "zruší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 107450,
+      "bytes": 108192,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,11 +547,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T09:58:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T23:00:35Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 15,
+          "zdravi": 1,
           "zpravy": 3,
           "sport": 1
         },
@@ -561,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trumpův energetický náčelník je prý „úplně mimo“ a benzín za stovku je prý jen demokratický hoax",
+            "publishedAt": "2026-04-20T23:00:35Z"
+          },
           {
             "title": "Na elektronické daňové přiznání zbývají živnostníkům už jen dva týdny",
             "publishedAt": "2026-04-20T09:58:42Z"
@@ -588,10 +596,6 @@
           {
             "title": "Umění miliardového obchodu: Trumpova cesta k míru s Íránem",
             "publishedAt": "2026-04-17T23:00:45Z"
-          },
-          {
-            "title": "Andrej nás nezavleče do války. Ruttemu ale zřejmě nasliboval hory doly",
-            "publishedAt": "2026-04-17T13:30:05Z"
           }
         ]
       }
