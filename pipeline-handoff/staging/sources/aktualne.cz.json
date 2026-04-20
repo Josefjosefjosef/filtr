@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T17:44:23.361833Z",
+  "ingestedAt": "2026-04-20T18:05:08.619343Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zbraně jako zábavný spektákl: lobby majitelů zbraní v USA ukazuje svůj vliv",
+      "url": "https://zpravy.aktualne.cz/galerie-a-videa/zbrane-jako-zabavny-spektakl-lobby-majitelu-zbrani-v-usa-ukazuje-svuj-vliv/r~aaa2916fd5bf3a5902e6f273053ef300/",
+      "dt": "2026-04-20T17:44:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jako",
+        "lobby",
+        "majitelů",
+        "spektákl",
+        "svůj",
+        "ukazuje",
+        "usa",
+        "vliv",
+        "zbraní",
+        "zbraně",
+        "zábavný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podnikatel Fischer nemá podle šéfa firmy Dertour s Fischer Air šanci",
+      "url": "https://zpravy.aktualne.cz/ekonomika/podnikatel-fischer-nema-podle-sefa-firmy-dertour-s-fischer-air-sanci/r~aaa29940a93a5909b399598d1c18ed62/",
+      "dt": "2026-04-20T17:41:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "air",
+        "dertour",
+        "firmy",
+        "fischer",
+        "nemá",
+        "podle",
+        "podnikatel",
+        "šanci",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -479,57 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babiš se sejde se šéfem ČT, odmítl, že by chtěla vláda veřejnoprávní média ničit",
-      "url": "https://zpravy.aktualne.cz/domaci/babis-se-sejde-se-sefem-ct-odmitl-ze-by-chtela-vlada-verejnopravni-media-nicit/r~aaa291b7be8f04f1dca83d9fe41b06d0/",
-      "dt": "2026-04-20T12:49:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiš",
-        "chtěla",
-        "média",
-        "ničit",
-        "odmítl",
-        "sejde",
-        "veřejnoprávní",
-        "vláda",
-        "šéfem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Japonsko zasáhlo zemětřesení, tamní média už spatřila vlny tsunami",
-      "url": "https://zpravy.aktualne.cz/zahranici/japonsko-zasahlo-zemetreseni-tamni-media-uz-spatrily-vlny-tsunami/r~aaa29d8822cef5460657514898d127d4/",
-      "dt": "2026-04-20T08:48:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "japonsko",
-        "média",
-        "spatřila",
-        "tamní",
-        "tsunami",
-        "vlny",
-        "zasáhlo",
-        "zemětřesení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22719,
+      "bytes": 22760,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,12 +580,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T17:44:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 3,
-          "zpravy": 15,
-          "finance": 2
+          "zpravy": 14,
+          "finance": 3,
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -594,6 +597,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zbraně jako zábavný spektákl: lobby majitelů zbraní v USA ukazuje svůj vliv",
+            "publishedAt": "2026-04-20T17:44:00Z"
+          },
+          {
+            "title": "Podnikatel Fischer nemá podle šéfa firmy Dertour s Fischer Air šanci",
+            "publishedAt": "2026-04-20T17:41:00Z"
+          },
           {
             "title": "Brno slaví velký postup. Zbrojovka už má jistotu, že se vrátí do fotbalové ligy",
             "publishedAt": "2026-04-20T17:33:00Z"
@@ -617,14 +628,6 @@
           {
             "title": "Rvačka mezi mladými lidmi v Severní Karolíně vyústila v hromadnou střelbu",
             "publishedAt": "2026-04-20T16:50:00Z"
-          },
-          {
-            "title": "ŽIVĚ: Aktuálně z Knihovny Václava Havla: Jsou dnešní děti sněhové vločky?",
-            "publishedAt": "2026-04-20T16:50:00Z"
-          },
-          {
-            "title": "I z vás může být Guardiola. Expert odhaluje recept superúspěšných trenérů",
-            "publishedAt": "2026-04-20T16:31:00Z"
           }
         ]
       }
