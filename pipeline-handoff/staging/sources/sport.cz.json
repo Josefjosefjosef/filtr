@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T09:14:51.177830Z",
+  "ingestedAt": "2026-04-20T09:34:12.674647Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cyklista Jorgenson po drsném pádu přijde o zbývající Ardenské klasiky",
+      "url": "https://www.sport.cz/clanek/cyklistika-cyklista-jorgenson-po-drsnem-padu-prijde-o-zbyvajici-ardenske-klasiky-5440667",
+      "dt": "2026-04-20T09:19:48Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ardenské",
+        "cyklista",
+        "drsném",
+        "jorgenson",
+        "klasiky",
+        "pádu",
+        "přijde",
+        "zbývající"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,32 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalisté Zbrojovky Brno se výhrou v Jihlavě přiblížili postupu do první ligy",
-      "url": "https://www.sport.cz/clanek/fotbal-fotbaliste-zizkova-zachranili-v-nastaveni-remizu-s-ostravou-b-5439988",
-      "dt": "2026-04-19T10:33:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brno",
-        "fotbalisté",
-        "jihlavě",
-        "ligy",
-        "postupu",
-        "první",
-        "přiblížili",
-        "výhrou",
-        "zbrojovky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46060,
+      "bytes": 45991,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T09:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T09:19:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cyklista Jorgenson po drsném pádu přijde o zbývající Ardenské klasiky",
+            "publishedAt": "2026-04-20T09:19:48Z"
+          },
           {
             "title": "Nejlepším hráčem sezony NBA bude Wembanyama, Jokič, nebo Gilgeous-Alexander",
             "publishedAt": "2026-04-20T09:00:37Z"
@@ -880,10 +883,6 @@
           {
             "title": "Haaland v ráži. Zařídil drama, málem se pral, televize přispěchala s omluvou za jeho sprosťárnu",
             "publishedAt": "2026-04-20T06:46:47Z"
-          },
-          {
-            "title": "Předzápasová show se proměnila v pořádné drama. Do akce musel jeřáb",
-            "publishedAt": "2026-04-20T06:33:07Z"
           }
         ]
       }

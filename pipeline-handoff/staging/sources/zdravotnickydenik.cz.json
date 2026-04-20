@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-20T09:14:51.177830Z",
+  "ingestedAt": "2026-04-20T09:34:12.674647Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přísnější tresty za útoky na zdravotníky? Advokátka má k návrhu ČLK zásadní výhrady",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnici-uredni-osoby-advokatka-vyhrady/",
+      "dt": "2026-04-20T09:32:05Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "advokátka",
+        "návrhu",
+        "přísnější",
+        "tresty",
+        "výhrady",
+        "zdravotníky",
+        "zásadní",
+        "útoky",
+        "člk"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,34 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Bouře kolem škrtů ve zdravotnictví: Německá ministryně čelila palbě otázek i z vlastních řad",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/boure-kolem-skrtu-ve-zdravotnictvi-nemecko/",
-      "dt": "2026-04-18T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bouře",
-        "kolem",
-        "ministryně",
-        "německá",
-        "otázek",
-        "palbě",
-        "vlastních",
-        "zdravotnictví",
-        "čelila",
-        "řad",
-        "škrtů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 119440,
+      "bytes": 119133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,11 +315,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:05:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T09:32:05Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -333,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přísnější tresty za útoky na zdravotníky? Advokátka má k návrhu ČLK zásadní výhrady",
+            "publishedAt": "2026-04-20T09:32:05Z"
+          },
           {
             "title": "Rovnítko mezi ordinací a monitorem: Vojtěch i šéf MEDDI Hubu chtějí jasná pravidla pro telemedicínu",
             "publishedAt": "2026-04-20T08:05:02Z"
@@ -360,10 +361,6 @@
           {
             "title": "Raději vlasy než erekci. Muži propadají estetickému šílenství",
             "publishedAt": "2026-04-19T05:00:00Z"
-          },
-          {
-            "title": "Zabiják, o kterém se nemluví: Světem se šíří superhouby, na které přestává fungovat léčba",
-            "publishedAt": "2026-04-18T15:45:48Z"
           }
         ]
       }
