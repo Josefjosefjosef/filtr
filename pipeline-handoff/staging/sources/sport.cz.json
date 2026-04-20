@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T05:35:04.414053Z",
+  "ingestedAt": "2026-04-20T05:55:37.099622Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Návrat domů a velká výzva. Bouzková chce uspět při obhajobě",
+      "url": "https://www.sport.cz/clanek/tenis-navrat-domu-a-velka-vyzva-bouzkova-chce-uspet-pri-obhajobe-5438059",
+      "dt": "2026-04-20T05:33:35Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bouzková",
+        "chce",
+        "domů",
+        "návrat",
+        "obhajobě",
+        "při",
+        "uspět",
+        "velká",
+        "výzva"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,34 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Odbouraný Šádek, hladový Horváth, vysmátý Vrba. Plzeň slaví 15 let od prvního titulu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-odbourany-sadek-hladovy-horvath-vysmaty-vrba-plzen-slavi-15-let-od-prvniho-titulu-5440360",
-      "dt": "2026-04-19T15:14:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hladový",
-        "horváth",
-        "let",
-        "odbouraný",
-        "plzeň",
-        "prvního",
-        "slaví",
-        "titulu",
-        "vrba",
-        "vysmátý",
-        "šádek"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 49156,
+      "bytes": 48868,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:59:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:33:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +838,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrat domů a velká výzva. Bouzková chce uspět při obhajobě",
+            "publishedAt": "2026-04-20T05:33:35Z"
+          },
           {
             "title": "Pastrňák zapsal tři body, Bostonu to na výhru nestačilo. Montreal rozjásalo slovenské eso",
             "publishedAt": "2026-04-20T04:05:33Z"
@@ -867,10 +869,6 @@
           {
             "title": "AC Milán je po výhře ve Veroně druhý, Juventus si upevnil čtvrté místo",
             "publishedAt": "2026-04-19T15:25:36Z"
-          },
-          {
-            "title": "Změnilo se klima. Už je to o nás, ne o věcech kolem, tvrdil Sejk",
-            "publishedAt": "2026-04-19T20:53:37Z"
           }
         ]
       }

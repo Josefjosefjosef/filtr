@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-20T05:35:04.414053Z",
+  "ingestedAt": "2026-04-20T05:55:37.099622Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Americké námořnictvo zadrželo íránskou loď. Teherán znovu uzavřel Hormuzský průliv a ceny ropy prudce rostou",
+      "url": "https://zahranicni.hn.cz/c1-67868650-americke-namornictvo-zadrzelo-iranskou-lod-teheran-znovu-uzavrel-hormuzsky-pruliv-a-ceny-ropy-prudce-rostou",
+      "dt": "2026-04-20T05:27:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "americké",
+        "ceny",
+        "hormuzský",
+        "loď",
+        "námořnictvo",
+        "prudce",
+        "průliv",
+        "ropy",
+        "rostou",
+        "teherán",
+        "uzavřel",
+        "zadrželo",
+        "znovu",
+        "íránskou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1177,36 +1208,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden s technologiemi: Přichází ještě barevnější televize, nová technologie ale nemění zavádějící praktiky výrobců",
-      "url": "https://archiv.hn.cz/c1-67867940-tyden-s-technologiemi-prichazi-jeste-barevnejsi-televize-nova-technologie-ale-nemeni-zavadejici-praktiky-vyrobcu",
-      "dt": "2026-04-16T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "barevnější",
-        "ještě",
-        "nemění",
-        "nová",
-        "praktiky",
-        "přichází",
-        "technologie",
-        "technologiemi",
-        "televize",
-        "týden",
-        "výrobců",
-        "zavádějící"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1217,7 +1218,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180375,
+      "bytes": 180379,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1254,7 +1255,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T04:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:27:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 31,
@@ -1272,6 +1273,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Americké námořnictvo zadrželo íránskou loď. Teherán znovu uzavřel Hormuzský průliv a ceny ropy prudce rostou",
+            "publishedAt": "2026-04-20T05:27:00Z"
+          },
           {
             "title": "Jak jeden nadnárodní koncern donutil Slovince vařit si vlastní pivo a proč by z toho měl radost Jára Cimrman",
             "publishedAt": "2026-04-20T04:26:00Z"
@@ -1298,10 +1303,6 @@
           },
           {
             "title": "Jako Merkelová za migrační krize. Trump je v Česku rekordně nepopulární, dosavadní zastánce ztrácí v celé Evropě",
-            "publishedAt": "2026-04-19T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (20. 4. 2026)",
             "publishedAt": "2026-04-19T22:00:00Z"
           }
         ]

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T05:35:04.414053Z",
+  "ingestedAt": "2026-04-20T05:55:37.099622Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "První letošní tornádo? Bouřka u Nymburka přinesla neobvyklý jev",
+      "url": "https://www.denik.cz/regiony/nymburk-tornado-pocasi-bourka-lovci-foto-jicinsko.html",
+      "dt": "2026-04-20T05:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bouřka",
+        "jev",
+        "letošní",
+        "neobvyklý",
+        "nymburka",
+        "první",
+        "přinesla",
+        "tornádo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,31 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stroj času pro každého. AI kráska provází Titanikem i Pompejemi před zkázou",
-      "url": "https://www.denik.cz/ze_sveta/stroj-casu-pro-kazdeho-umela-kraska-provazi-po-titaniku-i-pompejemi-pred-zkazou.html",
-      "dt": "2026-04-19T05:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "každého",
-        "kráska",
-        "pompejemi",
-        "provází",
-        "stroj",
-        "titanikem",
-        "zkázou",
-        "času"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29927,
+      "bytes": 29344,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T05:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -722,6 +722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První letošní tornádo? Bouřka u Nymburka přinesla neobvyklý jev",
+            "publishedAt": "2026-04-20T05:30:00Z"
+          },
           {
             "title": "Hrady a zámky představí unikátní prostory: Úkryt před nacisty i hradní kapli",
             "publishedAt": "2026-04-20T05:00:00Z"
@@ -749,10 +753,6 @@
           {
             "title": "Záchranáři spěchají s uvolněním Timmyho. Velryba má pořád šanci, tvrdí skupina",
             "publishedAt": "2026-04-19T17:50:00Z"
-          },
-          {
-            "title": "Ochrání úspory před inflací? Stát spustí prodej nových dluhopisů před létem",
-            "publishedAt": "2026-04-19T17:20:00Z"
           }
         ]
       }
