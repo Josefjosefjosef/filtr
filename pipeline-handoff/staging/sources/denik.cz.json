@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T18:05:08.619343Z",
+  "ingestedAt": "2026-04-20T18:28:05.858412Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rostoucí ceny ropy zdraží i oblíbené sportovní oblečení Čechů",
+      "url": "https://www.denik.cz/ekonomika/ekonimika-cesko-ropa-zdrazeni-sportovni-obleceni-obuv.html",
+      "dt": "2026-04-20T18:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ceny",
+        "oblečení",
+        "oblíbené",
+        "ropy",
+        "rostoucí",
+        "sportovní",
+        "zdraží",
+        "čechů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Drama v Severní Karolíně: Rvačka mezi mladými vyústila v hromadnou střelbu",
+      "url": "https://www.denik.cz/ze_sveta/drama-v-severni-karoline-rvacka-mezi-mladymi-vyustila-v-hromadnou-strelbu.html",
+      "dt": "2026-04-20T17:44:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "drama",
+        "hromadnou",
+        "karolíně",
+        "mladými",
+        "rvačka",
+        "severní",
+        "střelbu",
+        "vyústila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -592,58 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Předpověď počasí hlásí týden zvratů: Dorazí déšť i sníh. Sledujte změny na mapě",
-      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-cesko-kraje-radar-dest-vyrazne-rozdily-teplot-bude-i-snezit.html",
-      "dt": "2026-04-20T08:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dorazí",
-        "déšť",
-        "hlásí",
-        "mapě",
-        "počasí",
-        "předpověď",
-        "sledujte",
-        "sníh",
-        "týden",
-        "změny",
-        "zvratů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Japonsko po silném zemětřesení zasáhly první vlny tsunami",
-      "url": "https://www.denik.cz/ze_sveta/japonsko-zemetreseni-tsunami.html",
-      "dt": "2026-04-20T08:27:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "japonsko",
-        "první",
-        "silném",
-        "tsunami",
-        "vlny",
-        "zasáhly",
-        "zemětřesení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29904,
+      "bytes": 29706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,11 +689,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T18:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -707,6 +705,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rostoucí ceny ropy zdraží i oblíbené sportovní oblečení Čechů",
+            "publishedAt": "2026-04-20T18:00:00Z"
+          },
+          {
+            "title": "Drama v Severní Karolíně: Rvačka mezi mladými vyústila v hromadnou střelbu",
+            "publishedAt": "2026-04-20T17:44:00Z"
+          },
           {
             "title": "Školáka v Melbourne táhl autobus stovky metrů. Řidič přišel o práci",
             "publishedAt": "2026-04-20T17:14:00Z"
@@ -730,14 +736,6 @@
           {
             "title": "Těžaři v létě otevřou stezku bývalým lomem ČSA. Bude pro pěší i cyklisty",
             "publishedAt": "2026-04-20T14:00:00Z"
-          },
-          {
-            "title": "Pachatel před otrávením dětské výživy HiPP varoval. Email si ale nikdo nepřečetl",
-            "publishedAt": "2026-04-20T13:26:00Z"
-          },
-          {
-            "title": "V ČR padl Superjackpot 187 milionů. Pokud ale výherce nesplní podmínky, má smůlu",
-            "publishedAt": "2026-04-20T13:15:00Z"
           }
         ]
       }

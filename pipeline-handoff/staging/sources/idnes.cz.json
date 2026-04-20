@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T18:05:08.619343Z",
+  "ingestedAt": "2026-04-20T18:28:05.858412Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Od aut až po plechovky. Jak válka s Íránem ovlivňuje světové dodávky hliníku",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/hlinik-valka-iran-persky-zaliv.A260420_093723_eko-zahranicni_ven",
+      "dt": "2026-04-20T18:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "aut",
+        "dodávky",
+        "hliníku",
+        "ovlivňuje",
+        "plechovky",
+        "světové",
+        "válka",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -756,32 +781,6 @@
         "požáru",
         "provoz",
         "zruší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Skupina žhářů zveřejnila údajné spisy z pardubické haly. Vyhrožuje dalším",
-      "url": "https://www.idnes.cz/zpravy/domaci/pozar-zhari-pardubice-elbit-izrael-dokumenty-ultimatum.A260420_101701_domaci_dyn",
-      "dt": "2026-04-20T13:27:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dalším",
-        "haly",
-        "pardubické",
-        "skupina",
-        "spisy",
-        "vyhrožuje",
-        "zveřejnila",
-        "údajné",
-        "žhářů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48217,
+      "bytes": 47641,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,11 +1622,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T18:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 2,
+          "finance": 3,
+          "zpravy": 26,
           "other": 1
         },
         "drop_counts": {
@@ -1640,6 +1639,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od aut až po plechovky. Jak válka s Íránem ovlivňuje světové dodávky hliníku",
+            "publishedAt": "2026-04-20T18:00:00Z"
+          },
           {
             "title": "Čeká nás spolupráce na jaderném odstrašování, oznámil Macron v Polsku",
             "publishedAt": "2026-04-20T17:41:00Z"
@@ -1666,10 +1669,6 @@
           },
           {
             "title": "Brit oživuje v Rusku tradici výroby luxusních hodinek. Nosí je i Putin",
-            "publishedAt": "2026-04-20T16:00:00Z"
-          },
-          {
-            "title": "Čápi vzali na milost sloup, když jim Madonu zakryli. Broumov pro ně hledá jména",
             "publishedAt": "2026-04-20T16:00:00Z"
           }
         ]
