@@ -17778,8 +17778,6 @@ function buildVideoAsArticleCard(it) {
       });
     }
 
-    fetchArticlesStatus();
-    fetchVideosStatus();
     // Home view must not run feed pipeline on entry (UI-only).
     // If user navigates to a feed section later, data will load via visibility/focus/refresh.
     let initialIsHome = false;
@@ -17787,16 +17785,53 @@ function buildVideoAsArticleCard(it) {
       const params = new URLSearchParams(window.location.search);
       initialIsHome = String(params.get("section") || "").trim().toLowerCase() === "home";
     }catch{}
+
+    /* P0 first paint / reload: loadData() already GET+parse articles.json+videos.json on the critical path.
+       fetchArticlesStatus + fetchVideosStatus duplicated the same payloads concurrently (CPU+connection contention).
+       feed_health + audit snapshots are non-critical → idle after first frames. */
+    const iuDeferNonCriticalInit =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback
+        : function (cb, opt) {
+            return setTimeout(function () {
+              try {
+                cb({ didTimeout: true, timeRemaining: function () { return 5; } });
+              } catch (_) {}
+            }, opt && opt.timeout ? Math.min(opt.timeout, 48) : 1);
+          };
+    iuDeferNonCriticalInit(
+      function () {
+        try {
+          fetchArticlesStatus();
+        } catch (_) {}
+        try {
+          fetchVideosStatus();
+        } catch (_) {}
+        try {
+          fetchFeedHealth();
+        } catch (_) {}
+        try {
+          auditLog();
+        } catch (_) {}
+        try {
+          finalStateReport();
+        } catch (_) {}
+      },
+      { timeout: 4000 }
+    );
+
     if (!initialIsHome) {
-      loadData();
-      startAutoRefresh();
+      try {
+        loadData();
+      } catch (_) {}
+      try {
+        startAutoRefresh();
+      } catch (_) {}
     }
+
     watchForSWUpdates();
     updateSwStatusLabel();
-    auditLog();
-    fetchFeedHealth();
     updateEventsUI();
-    finalStateReport();
 
   }
 

@@ -57,6 +57,7 @@
     var rep = {
       enabled: true,
       href: String(location.href || ""),
+      navigationType: "",
       viewport: { w: typeof window.innerWidth === "number" ? window.innerWidth : 0, h: typeof window.innerHeight === "number" ? window.innerHeight : 0 },
       t0Ms: t0,
       navigationStartMs: 0,
@@ -65,6 +66,10 @@
       timeToPreviewTitlesReadyMs: null,
       timeToWeatherReadyMs: null,
       timeToHomepageSettledMs: null,
+      firstShellVisibleMs: null,
+      firstUsableMs: null,
+      firstRightRailVisibleMs: null,
+      firstViewportStableMs: null,
       firstClickableTimeMs: null,
       firstSuccessfulClickHandledMs: null,
       clickHandledDelayMs: null,
@@ -271,8 +276,39 @@
 
     var rafI = 0;
     var rafMax = 9000;
+    var stableSigPrev = null;
+    var stableSameCount = 0;
+
+    function viewportLayoutSignature() {
+      try {
+        var parts = [];
+        var ids = ["topbarWrap", "iuSilverWelcomeCard", "iuSilverTallScrollSection"];
+        for (var si = 0; si < ids.length; si++) {
+          var el = document.getElementById(ids[si]);
+          if (!el) return null;
+          var r = el.getBoundingClientRect();
+          parts.push(Math.round(r.top) + ":" + Math.round(r.height) + ":" + Math.round(r.width));
+        }
+        var rail = document.querySelector(".layout > aside.accordionCol");
+        if (rail) {
+          var rR = rail.getBoundingClientRect();
+          parts.push(Math.round(rR.top) + ":" + Math.round(rR.height) + ":" + Math.round(rR.width));
+        }
+        return parts.join("|");
+      } catch (eSig) {
+        return null;
+      }
+    }
+
     function rafLoop() {
       rafI += 1;
+      try {
+        if (!rep.navigationType) {
+          var navE = performance.getEntriesByType("navigation")[0];
+          rep.navigationType = navE && navE.type ? String(navE.type) : "";
+        }
+      } catch (eNavLate) {}
+
       try {
         if (rep.timeToFirstRenderMs == null) {
           var fcp = performance.getEntriesByName("first-contentful-paint")[0];
@@ -316,11 +352,62 @@
         }
       } catch (e27) {}
 
+      try {
+        if (rep.firstShellVisibleMs == null) {
+          var tb = document.getElementById("topbarWrap");
+          var ap = document.getElementById("app");
+          if (tb && ap) {
+            var rt = tb.getBoundingClientRect();
+            var ra = ap.getBoundingClientRect();
+            if (rt.height >= 32 && ra.width > 200) rep.firstShellVisibleMs = relMs();
+          }
+        }
+      } catch (eShell) {}
+
+      try {
+        if (rep.firstUsableMs == null) {
+          var inp = document.getElementById("iuSilverHomeInput");
+          if (inp && !inp.disabled) {
+            var ri = inp.getBoundingClientRect();
+            if (ri.width >= 80 && ri.height >= 20) rep.firstUsableMs = relMs();
+          }
+        }
+      } catch (eUsa) {}
+
+      try {
+        if (rep.firstRightRailVisibleMs == null) {
+          var ac = document.querySelector(".layout > aside.accordionCol");
+          if (ac) {
+            var rac = ac.getBoundingClientRect();
+            var vh = typeof window.innerHeight === "number" ? window.innerHeight : 0;
+            if (rac.height >= 48 && rac.top < vh && rac.width >= 40) {
+              rep.firstRightRailVisibleMs = relMs();
+            }
+          }
+        }
+      } catch (eRail) {}
+
+      try {
+        if (rep.firstViewportStableMs == null) {
+          var sig = viewportLayoutSignature();
+          if (sig) {
+            if (sig === stableSigPrev) {
+              stableSameCount += 1;
+            } else {
+              stableSigPrev = sig;
+              stableSameCount = 1;
+            }
+            if (stableSameCount >= 3) rep.firstViewportStableMs = relMs();
+          }
+        }
+      } catch (eStab) {}
+
       if (
         rep.timeToFirstCardVisibleMs != null &&
         rep.timeToPreviewTitlesReadyMs != null &&
         rep.timeToWeatherReadyMs != null &&
-        rep.timeToHomepageSettledMs != null
+        rep.timeToHomepageSettledMs != null &&
+        rep.firstViewportStableMs != null
       ) {
         return;
       }
