@@ -13,10 +13,16 @@ const DEFAULT_SIMILARITY = 0.6;
 const DEFAULT_HOURS = 6;
 const DEFAULT_MAX_CLUSTER = 10;
 
+/** LRU cap: normalizeTitle is pure; cache only shrinks CPU, never changes outputs. */
+const IU_NORMALIZE_TITLE_CACHE_MAX = 16384;
+const normalizeTitleCache = new Map();
+
 /** @param {string} title */
 export function normalizeTitle(title) {
   if (!title || typeof title !== "string") return "";
-  return title
+  const hit = normalizeTitleCache.get(title);
+  if (hit !== undefined) return hit;
+  const out = title
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
     .replace(/\d+/g, "")
@@ -26,6 +32,12 @@ export function normalizeTitle(title) {
     )
     .replace(/\s+/g, " ")
     .trim();
+  if (normalizeTitleCache.size >= IU_NORMALIZE_TITLE_CACHE_MAX) {
+    const firstKey = normalizeTitleCache.keys().next().value;
+    normalizeTitleCache.delete(firstKey);
+  }
+  normalizeTitleCache.set(title, out);
+  return out;
 }
 
 /** @param {string} a @param {string} b */
