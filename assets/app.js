@@ -879,6 +879,9 @@ try {
   /** P0 UI: first DOM append batch ≈ first viewport; follow-up batches keep main-thread slices small. */
   const IU_FEED_FIRST_DOM_BATCH = 12;
   const IU_FEED_DOM_APPEND_CHUNK = 18;
+  /** P0 reload-only: smaller batches so each frame does less innerHTML+layout work (cold path unchanged). */
+  const IU_FEED_RELOAD_FIRST_DOM_BATCH = 8;
+  const IU_FEED_RELOAD_APPEND_CHUNK = 10;
   const IU_VIDEO_PICK_WINDOW = 240;
   const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
   const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
@@ -1796,6 +1799,27 @@ try {
         setTimeout(resolve, 0);
       }
     });
+  }
+
+  /** True only for full page reload (not soft nav). Used to tighten feed DOM batching without affecting cold first paint. */
+  function iuFeedReloadDomTightenP() {
+    try {
+      if (typeof performance !== "undefined" && performance.getEntriesByType) {
+        const list = performance.getEntriesByType("navigation");
+        const navEntry = list && list.length ? list[0] : null;
+        if (navEntry && navEntry.type === "reload") return true;
+      }
+    } catch (_) {}
+    try {
+      if (
+        typeof performance !== "undefined" &&
+        performance.navigation &&
+        Number(performance.navigation.type) === 1
+      ) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
   }
 
   // === STATUS HELPERS EXTENSION (maintenance-safe) ===
@@ -4919,8 +4943,15 @@ try {
     let pos = 0;
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
+    const reloadDomTight = iuFeedReloadDomTightenP();
     while (pos < visibleItems.length) {
-      const batchMax = firstDomBatch ? IU_FEED_FIRST_DOM_BATCH : IU_FEED_DOM_APPEND_CHUNK;
+      const batchMax = firstDomBatch
+        ? reloadDomTight
+          ? IU_FEED_RELOAD_FIRST_DOM_BATCH
+          : IU_FEED_FIRST_DOM_BATCH
+        : reloadDomTight
+          ? IU_FEED_RELOAD_APPEND_CHUNK
+          : IU_FEED_DOM_APPEND_CHUNK;
       firstDomBatch = false;
       const frag = document.createDocumentFragment();
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
