@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-20T15:36:04.091707Z",
+  "ingestedAt": "2026-04-20T16:00:00.110788Z",
   "items": [
     {
       "section": "veda",
@@ -49,6 +49,35 @@
         "verzi",
         "vytvořili",
         "čistou"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "T-Mobile škrtí předplacenky. Při dobití pod 500 Kč má kredit platnost nově už jen půl roku",
+      "url": "https://mobilmania.zive.cz/clanky/t-mobile-skrti-predplacenky-pri-dobiti-pod-500kc-ma-kredit-platnost-nove-uz-jen-pul-roku/sc-3-a-1364592/default.aspx",
+      "dt": "2026-04-20T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "500",
+        "dobití",
+        "jen",
+        "kredit",
+        "mobile",
+        "nově",
+        "platnost",
+        "předplacenky",
+        "při",
+        "půl",
+        "roku",
+        "škrtí"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -930,34 +959,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hry zadarmo, nebo se slevou: Výprodej klasik Warhammeru a plížení španělským klášterem zdarma",
-      "url": "https://doupe.zive.cz/hry-zadarmo-nebo-se-slevou-vyprodej-klasik-warhammeru-a-plizeni-spanelskym-klasterem-zdarma",
-      "dt": "2026-04-17T05:10:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "hry",
-        "klasik",
-        "klášterem",
-        "nebo",
-        "plížení",
-        "slevou",
-        "výprodej",
-        "warhammeru",
-        "zadarmo",
-        "zdarma",
-        "španělským"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -968,7 +969,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22906,
+      "bytes": 22726,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1005,7 +1006,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1030,10 @@
             "publishedAt": "2026-04-20T14:45:00Z"
           },
           {
+            "title": "T-Mobile škrtí předplacenky. Při dobití pod 500 Kč má kredit platnost nově už jen půl roku",
+            "publishedAt": "2026-04-20T15:45:00Z"
+          },
+          {
             "title": "Supervyhledávač Raycast pro Windows nabírá funkce. Ukáže náhled souboru a připne okno tam, kde ho potřebujete",
             "publishedAt": "2026-04-20T12:45:00Z"
           },
@@ -1047,10 +1052,6 @@
           {
             "title": "Velká alzácká podložka pod myš a klávesnici zlevnila na 224 Kč. Dobře vypadá a nekroutí se",
             "publishedAt": "2026-04-20T07:45:00Z"
-          },
-          {
-            "title": "Windows 11 25H2 míří na všechny domácí počítače. Řízená distribuce skončila",
-            "publishedAt": "2026-04-19T11:45:00Z"
           }
         ]
       }

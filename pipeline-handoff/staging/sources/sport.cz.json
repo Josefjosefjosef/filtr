@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-20T15:36:04.091707Z",
+  "ingestedAt": "2026-04-20T16:00:00.110788Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Problém pro reprezentaci před MS. Velmi nejistý je start zraněného Chlapíka, mimo je také Krejčík",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-problem-pro-reprezentaci-pred-ms-velmi-nejisty-je-start-zraneneho-chlapika-mimo-je-take-krejcik-5440908",
+      "dt": "2026-04-20T15:55:41Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chlapíka",
+        "krejčík",
+        "mimo",
+        "nejistý",
+        "problém",
+        "reprezentaci",
+        "start",
+        "také",
+        "velmi",
+        "zraněného"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,31 +773,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Cyklista Jorgenson po drsném pádu přijde o zbývající Ardenské klasiky",
-      "url": "https://www.sport.cz/clanek/cyklistika-cyklista-jorgenson-po-drsnem-padu-prijde-o-zbyvajici-ardenske-klasiky-5440667",
-      "dt": "2026-04-20T09:19:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ardenské",
-        "cyklista",
-        "drsném",
-        "jorgenson",
-        "klasiky",
-        "pádu",
-        "přijde",
-        "zbývající"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44355,
+      "bytes": 44622,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:19:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:55:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -834,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Problém pro reprezentaci před MS. Velmi nejistý je start zraněného Chlapíka, mimo je také Krejčík",
+            "publishedAt": "2026-04-20T15:55:41Z"
+          },
           {
             "title": "Hagi se po 25 letech vrátil k rumunské reprezentaci, nahradil zesnulého Lucesca",
             "publishedAt": "2026-04-20T15:19:57Z"
@@ -861,10 +867,6 @@
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-20T14:18:17Z"
-          },
-          {
-            "title": "Svaz formát baráže změnit nemůže, Hadamczik žádá veřejnost o tlak na extraligu",
-            "publishedAt": "2026-04-20T14:02:04Z"
           }
         ]
       }

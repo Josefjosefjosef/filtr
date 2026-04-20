@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-20T15:36:04.091707Z",
+  "ingestedAt": "2026-04-20T16:00:00.110788Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slavia se červená, je důvod k zneklidnění? Sparta i Plzeň měly titul i nejvíc vyloučení",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-cervene-karty-chory-boril-sparta-plzen.A260420_143501_fotbal_min",
+      "dt": "2026-04-20T15:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "důvod",
+        "měly",
+        "nejvíc",
+        "plzeň",
+        "slavia",
+        "sparta",
+        "titul",
+        "vyloučení",
+        "zneklidnění",
+        "červená"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Legendu střídá legenda. K rumunské reprezentaci se po čtvrtstoletí vrací Hagi",
+      "url": "https://www.idnes.cz/fotbal/reprezentace/legendu-strida-legenda-k-rumunske-reprezentaci-se-po-ctvrtstoleti-vraci-hagi.A260420_171659_fot_reprez_tit",
+      "dt": "2026-04-20T15:32:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hagi",
+        "legenda",
+        "legendu",
+        "reprezentaci",
+        "rumunské",
+        "střídá",
+        "vrací",
+        "čtvrtstoletí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -745,57 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hradecký kouč Horejš: Poháry? Mám teď jen letenky na dovolenou",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/david-horejs-rozhovor-po-slavii.A260420_092327_fotbal_ald",
-      "dt": "2026-04-20T07:56:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dovolenou",
-        "horejš",
-        "hradecký",
-        "jen",
-        "kouč",
-        "letenky",
-        "mám",
-        "poháry"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Seemanová překonala zranění, návrat po dlouhé pauze oslavila splněným limitem",
-      "url": "https://www.idnes.cz/sport/ostatni/plavani-velka-cena-ostravy-barbora-seemanova-jan-cejka.A260419_221347_sporty_jsl",
-      "dt": "2026-04-20T07:47:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dlouhé",
-        "limitem",
-        "návrat",
-        "oslavila",
-        "pauze",
-        "překonala",
-        "seemanová",
-        "splněným",
-        "zranění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46875,
+      "bytes": 46640,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T15:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -858,6 +859,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slavia se červená, je důvod k zneklidnění? Sparta i Plzeň měly titul i nejvíc vyloučení",
+            "publishedAt": "2026-04-20T15:45:00Z"
+          },
+          {
+            "title": "Legendu střídá legenda. K rumunské reprezentaci se po čtvrtstoletí vrací Hagi",
+            "publishedAt": "2026-04-20T15:32:00Z"
+          },
           {
             "title": "Sorry, holky, není to můj den, hlásila. Pak si Španělka dojela pro historický triumf",
             "publishedAt": "2026-04-20T15:17:00Z"
@@ -881,14 +890,6 @@
           {
             "title": "Zemřel hokejista Příplata. Mladému obránci Karlových Varů bylo 19 let",
             "publishedAt": "2026-04-20T12:52:00Z"
-          },
-          {
-            "title": "„Nemít důstojný stánek je ostuda.“ Kraj podpořil stavbu multifunkční haly v Olomouci",
-            "publishedAt": "2026-04-20T12:44:00Z"
-          },
-          {
-            "title": "Červená pro Mbodjiho správně. Komise rozhodčích řešila i situace z Olomouce",
-            "publishedAt": "2026-04-20T12:21:00Z"
           }
         ]
       }
