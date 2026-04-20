@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-20T03:15:24.554209Z",
+  "ingestedAt": "2026-04-20T03:35:29.560356Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vláda projedná novelu stavebního zákona po potížích s digitalizací",
+      "url": "https://www.idnes.cz/zpravy/domaci/vlada-novela-stavebniho-zakona-narodni-geoportal-uzemniho-planovani.A260420_021905_domaci_kop",
+      "dt": "2026-04-20T03:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "digitalizací",
+        "novelu",
+        "potížích",
+        "projedná",
+        "stavebního",
+        "vláda",
+        "zákona"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -765,33 +789,6 @@
         "zvonů",
         "zvuky",
         "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "GLOSA: Krásný, ale nikoliv ztráty. Michal Prokop stále drží krok",
-      "url": "https://www.idnes.cz/kultura/hudba/michal-prokop-glosa.A260417_135913_hudba_jgo",
-      "dt": "2026-04-19T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "drží",
-        "glosa",
-        "krok",
-        "krásný",
-        "michal",
-        "nikoliv",
-        "prokop",
-        "stále",
-        "ztráty"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1595,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49866,
+      "bytes": 49810,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,12 +1629,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-19T22:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T03:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 6,
-          "other": 1
+          "zpravy": 24,
+          "finance": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1649,6 +1645,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vláda projedná novelu stavebního zákona po potížích s digitalizací",
+            "publishedAt": "2026-04-20T03:15:00Z"
+          },
           {
             "title": "Írán obvinil USA po útoku na jeho loď z porušení příměří. Slíbil odvetu",
             "publishedAt": "2026-04-19T22:22:00Z"
@@ -1676,10 +1676,6 @@
           {
             "title": "Útočník v Louisianě po domácí hádce zastřelil osm dětí, policisté ho pak zabili",
             "publishedAt": "2026-04-19T20:48:04Z"
-          },
-          {
-            "title": "USA zaútočily u Ománu na íránskou loď. Ignorovala naši blokádu, prohlásil Trump",
-            "publishedAt": "2026-04-19T20:12:00Z"
           }
         ]
       }
