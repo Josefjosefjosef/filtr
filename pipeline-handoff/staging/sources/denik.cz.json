@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-20T02:35:20.008946Z",
+  "ingestedAt": "2026-04-20T02:54:49.464751Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Erasmus v Římě: Slavkovské studentky získávaly cenné zkušenosti",
+      "url": "https://vyskovsky.denik.cz/ctenar-reporter/rim-florencie-erasmus-stredni-skola-slavkov-austerlitz-gastronomie-baristika.html",
+      "dt": "2026-04-20T02:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cenné",
+        "erasmus",
+        "slavkovské",
+        "studentky",
+        "zkušenosti",
+        "získávaly",
+        "římě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -633,29 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Anglie buduje pobřežní stezku. Bude nejdelší na světě",
-      "url": "https://www.denik.cz/staty-mimo-eu/anglie-stezka-pobrezi-karel-ii.html",
-      "dt": "2026-04-19T04:58:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "anglie",
-        "buduje",
-        "nejdelší",
-        "pobřežní",
-        "stezku",
-        "světě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29614,
+      "bytes": 29641,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,11 +704,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-20T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T02:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "zpravy": 21,
+          "zdravi": 2,
           "finance": 2
         },
         "drop_counts": {
@@ -720,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Erasmus v Římě: Slavkovské studentky získávaly cenné zkušenosti",
+            "publishedAt": "2026-04-20T02:20:00Z"
+          },
           {
             "title": "Pozor na pilulky z internetu: Senior zaplatil tisíce, přišel pochybný výrobek",
             "publishedAt": "2026-04-20T02:00:00Z"
@@ -747,10 +752,6 @@
           {
             "title": "Protesty v Praze rozvířily Hradčany. Motoristé čelí vlně nesouhlasu demonstrantů",
             "publishedAt": "2026-04-19T16:00:00Z"
-          },
-          {
-            "title": "Kauza jedovaté dětské výživy HiPP: Před čím úřady varují, co mají lidé dělat",
-            "publishedAt": "2026-04-19T15:45:00Z"
           }
         ]
       }
