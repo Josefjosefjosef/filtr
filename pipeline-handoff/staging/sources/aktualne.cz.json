@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-20T21:35:26.381660Z",
+  "ingestedAt": "2026-04-20T21:54:23.430696Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Souček s West Hamem zpečetil sestup Krejčího Wolverhamptonu",
+      "url": "https://sport.aktualne.cz/fotbal/soucek-s-west-hamem-zpecetil-sestup-krejciho-wolverhamptonu/r~aaa2902ae1d30b94c1c284f303c44214/",
+      "dt": "2026-04-20T21:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hamem",
+        "krejčího",
+        "sestup",
+        "souček",
+        "west",
+        "wolverhamptonu",
+        "zpečetil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -505,32 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Musíme Trumpa nějak přežít. Experti debatovali o dopadech války s Íránem",
-      "url": "https://zpravy.aktualne.cz/zahranici/musime-trumpa-nejak-prezit-experti-debatovali-o-dopadech-valky-s-iranem/r~aaa29b7e5957702ad658bcc790ec57d4/",
-      "dt": "2026-04-20T14:51:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "debatovali",
-        "dopadech",
-        "experti",
-        "musíme",
-        "nějak",
-        "přežít",
-        "trumpa",
-        "války",
-        "íránem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22828,
+      "bytes": 22526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,11 +576,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T18:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-20T21:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 13,
           "finance": 2
         },
         "drop_counts": {
@@ -595,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Souček s West Hamem zpečetil sestup Krejčího Wolverhamptonu",
+            "publishedAt": "2026-04-20T21:45:00Z"
+          },
           {
             "title": "Po ukrajinském útoku na ruský terminál se v Černém moři objevila ropná skvrna",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -622,10 +624,6 @@
           {
             "title": "Americký zpěvák D4vd byl obviněn z vraždy 14leté dívky, tělo bylo v jeho autě",
             "publishedAt": "2026-04-20T18:10:00Z"
-          },
-          {
-            "title": "Osudové dny na Annapurně. Partnerka nechala Čecha nahoře, prý neměl šanci",
-            "publishedAt": "2026-04-20T18:01:00Z"
           }
         ]
       }
