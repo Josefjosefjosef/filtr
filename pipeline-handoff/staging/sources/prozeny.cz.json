@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-21T12:59:57.461690Z",
+  "ingestedAt": "2026-04-21T13:59:34.178091Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chcete, aby vám lidé věřili a měli vás rádi? Spolehněte se na pár psychologických triků",
+      "url": "https://www.prozeny.cz/clanek/zdravi-psychika-chcete-aby-vam-lide-verili-a-meli-vas-radi-spolehnete-se-na-par-psychologickych-triku-98505",
+      "dt": "2026-04-21T12:59:46Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "chcete",
+        "lidé",
+        "měli",
+        "psychologických",
+        "pár",
+        "rádi",
+        "spolehněte",
+        "triků",
+        "vám",
+        "vás",
+        "věřili"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -810,34 +838,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "5 znaků, jak rozpoznat negativní a toxické lidi. Věčné stížnosti, kritika a závist. Nikdy je nezměníte!",
-      "url": "https://www.prozeny.cz/clanek/5-znaku-jak-rozpoznat-negativni-lidi-77903",
-      "dt": "2026-04-19T12:21:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "kritika",
-        "lidi",
-        "negativní",
-        "nezměníte",
-        "nikdy",
-        "rozpoznat",
-        "stížnosti",
-        "toxické",
-        "věčné",
-        "znaků",
-        "závist"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -848,7 +848,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39596,
+      "bytes": 39537,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -885,7 +885,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T11:50:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T12:59:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -900,6 +900,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chcete, aby vám lidé věřili a měli vás rádi? Spolehněte se na pár psychologických triků",
+            "publishedAt": "2026-04-21T12:59:46Z"
+          },
           {
             "title": "Premiéra filmu Michael: Jedna sestra krále popu zářila, druhá nepřišla. Rozdělil snímek rodinu?",
             "publishedAt": "2026-04-21T11:50:03Z"
@@ -926,10 +930,6 @@
           },
           {
             "title": "Proužky jsou letos odvážnější než kdy dřív. Schvaluje je i princezna Kate a slušet budou i vám!",
-            "publishedAt": "2026-04-21T03:00:00Z"
-          },
-          {
-            "title": "Myslíte pořád na jídlo? Pak vás trápí jídelní šum. Jak se ho zbavit a konečně svobodně jíst i žít",
             "publishedAt": "2026-04-21T03:00:00Z"
           }
         ]
