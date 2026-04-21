@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T05:25:27.443544Z",
+  "ingestedAt": "2026-04-21T05:45:22.476949Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bezchybný Vladař vychytal Pittsburgh, Dostál v play off čelil McDavidovi",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dostal.A260421_071140_nhl_mkr",
+      "dt": "2026-04-21T05:33:35Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bezchybný",
+        "dostál",
+        "mcdavidovi",
+        "off",
+        "pittsburgh",
+        "play",
+        "vladař",
+        "vychytal",
+        "čelil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kdybych spadl, dostane červenou. Haaland rozhodl šlágr, pak se pozastavil nad sudím",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-city-arsenal-erling-haaland-gol-rozhodci.A260420_103311_fot_zahranici_tals",
-      "dt": "2026-04-20T10:44:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dostane",
-        "haaland",
-        "kdybych",
-        "pak",
-        "pozastavil",
-        "rozhodl",
-        "spadl",
-        "sudím",
-        "červenou",
-        "šlágr"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46249,
+      "bytes": 46132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:33:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezchybný Vladař vychytal Pittsburgh, Dostál v play off čelil McDavidovi",
+            "publishedAt": "2026-04-21T05:33:35Z"
+          },
           {
             "title": "Bořilův úlet zastínil i první porážku. Jaký trest mu hrozí? Ve hře i drastická varianta",
             "publishedAt": "2026-04-21T05:14:00Z"
@@ -874,10 +877,6 @@
           {
             "title": "Kratochvílovi cena Laureus unikla. Hlavní kategorie ovládli Alcaraz a Sabalenková",
             "publishedAt": "2026-04-20T20:03:00Z"
-          },
-          {
-            "title": "USK vykročil za šestnáctým titulem v řadě. Žabiny se držely jen v první půli",
-            "publishedAt": "2026-04-20T19:22:00Z"
           }
         ]
       }

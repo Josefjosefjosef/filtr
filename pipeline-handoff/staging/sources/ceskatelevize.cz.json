@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T05:25:27.443544Z",
+  "ingestedAt": "2026-04-21T05:45:22.476949Z",
   "items": [
     {
       "section": "aktualne",
@@ -755,6 +755,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokej-bez-cervene-jak-muze-fungovat-spojeni-motaka-a-grosse-u-reprezentace-156387",
+      "dt": "2026-04-21T05:30:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "fungovat",
+        "grosse",
+        "hokej",
+        "motáka",
+        "reprezentace",
+        "spojení",
+        "červené"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Vladař 27 zákroky vychytal Pittsburgh a nulou pomohl Philadelphii ke druhé výhře",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-27-zakroky-vychytal-pittsburgh-a-nulou-pomohl-philadelphii-ke-druhe-vyhre-156388",
       "dt": "2026-04-21T05:13:39Z",
@@ -1491,33 +1515,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "James dotáhl Lakers k první výhře nad Houstonem, Jokič zapsal další triple",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/james-dotahl-lakers-k-prvni-vyhre-nad-houstonem-jokic-zapsal-dalsi-triple-156358",
-      "dt": "2026-04-19T07:20:55Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "další",
-        "dotáhl",
-        "houstonem",
-        "james",
-        "jokič",
-        "lakers",
-        "první",
-        "triple",
-        "výhře",
-        "zapsal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1528,7 +1525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43051,
+      "bytes": 43063,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1646,7 +1643,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40291,
+      "bytes": 40143,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1683,7 +1680,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:13:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1698,6 +1695,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
+            "publishedAt": "2026-04-21T05:30:00Z"
+          },
           {
             "title": "Vladař 27 zákroky vychytal Pittsburgh a nulou pomohl Philadelphii ke druhé výhře",
             "publishedAt": "2026-04-21T05:13:39Z"
@@ -1725,10 +1726,6 @@
           {
             "title": "Zbrojovka je po třech letech prvoligová. Artis se rozešel s Táborskem smírně",
             "publishedAt": "2026-04-20T16:59:15Z"
-          },
-          {
-            "title": "Reprezentace poprvé v Horácké aréně. Rulík na ledě přivítal čtyři nové hráče",
-            "publishedAt": "2026-04-20T16:26:08Z"
           }
         ]
       }
