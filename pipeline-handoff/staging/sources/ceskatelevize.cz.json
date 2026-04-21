@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T10:41:17.667501Z",
+  "ingestedAt": "2026-04-21T11:01:39.795790Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Festival ve Varech ocení Magdu Vášáryovou, červený koberec je ale pro všechny",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/festival-ve-varech-oceni-magdu-vasaryovou-cerveny-koberec-je-ale-pro-vsechny-372619",
+      "dt": "2026-04-21T10:52:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ale",
+        "festival",
+        "koberec",
+        "magdu",
+        "ocení",
+        "varech",
+        "vášáryovou",
+        "všechny",
+        "červený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -384,20 +410,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Otrávených balení s dětskou výživou by mohlo být podle médií až dvanáct",
+      "title": "Státní zastupitelství: Nic nenasvědčuje tomu, že by otrávených sklenic výživy HiPP bylo víc",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/otravenych-baleni-s-detskou-vyzivou-by-mohlo-byt-podle-medii-az-dvanact-372604",
       "dt": "2026-04-21T00:32:16Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "balení",
-        "být",
-        "dvanáct",
-        "dětskou",
-        "médií",
+        "hipp",
+        "nenasvědčuje",
+        "nic",
         "otrávených",
-        "podle",
-        "výživou"
+        "sklenic",
+        "státní",
+        "tomu",
+        "víc",
+        "výživy",
+        "zastupitelství"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -724,32 +752,6 @@
         "ruské",
         "ukrajinská",
         "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Svět se změnil, prohlásil Tusk. S Macronem chce spolupráci na jaderném odstrašování",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/tiskova-konference-po-jednani-macrona-a-tuska-372584",
-      "dt": "2026-04-20T14:30:40Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chce",
-        "jaderném",
-        "macronem",
-        "odstrašování",
-        "prohlásil",
-        "spolupráci",
-        "svět",
-        "tusk",
-        "změnil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1534,7 +1536,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44015,
+      "bytes": 43950,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1594,11 +1596,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:55:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:52:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
+          "other": 5,
+          "zpravy": 24,
           "finance": 1
         },
         "drop_counts": {
@@ -1611,6 +1613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Festival ve Varech ocení Magdu Vášáryovou, červený koberec je ale pro všechny",
+            "publishedAt": "2026-04-21T10:52:59Z"
+          },
           {
             "title": "Maďarský zákon proti LGBTQ+ porušuje právo EU, rozhodl soud",
             "publishedAt": "2026-04-21T09:55:49Z"
@@ -1638,10 +1644,6 @@
           {
             "title": "Fremr v kauze Dozimetr obviněn není. Jeho roli v případu zkoumali Reportéři ČT",
             "publishedAt": "2026-04-21T07:03:41Z"
-          },
-          {
-            "title": "„Jeho činy by vydaly za tři laureáty.“ Lustigovu cenu získá Vetchý",
-            "publishedAt": "2026-04-21T06:40:00Z"
           }
         ]
       }
@@ -1747,7 +1749,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76779,
+      "bytes": 77328,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

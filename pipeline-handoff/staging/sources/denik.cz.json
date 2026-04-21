@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T10:41:17.667501Z",
+  "ingestedAt": "2026-04-21T11:01:39.795790Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlna hrozeb v Chorvatsku: Někdo ohlásil bomby ve školách od Záhřebu po Dubrovník",
+      "url": "https://www.denik.cz/staty-eu/chorvatsko-hrozba-bomba-zahreb-dubrovnik.html",
+      "dt": "2026-04-21T10:26:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bomby",
+        "chorvatsku",
+        "dubrovník",
+        "hrozeb",
+        "někdo",
+        "ohlásil",
+        "vlna",
+        "záhřebu",
+        "školách"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,31 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tragédie v Indii: Nejméně 21 lidí zahynulo při nehodě autobusu",
-      "url": "https://www.denik.cz/ze_sveta/tragedie-v-indii-nejmene-21-lidi-zahynulo-pri-nehode-autobusu.html",
-      "dt": "2026-04-20T15:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "autobusu",
-        "indii",
-        "lidí",
-        "nehodě",
-        "nejméně",
-        "při",
-        "tragédie",
-        "zahynulo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29233,
+      "bytes": 29344,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:26:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlna hrozeb v Chorvatsku: Někdo ohlásil bomby ve školách od Záhřebu po Dubrovník",
+            "publishedAt": "2026-04-21T10:26:00Z"
+          },
           {
             "title": "Cenu prezidenta MFF Karlovy Vary letos převezme herečka Magda Vášáryová",
             "publishedAt": "2026-04-21T10:07:00Z"
@@ -742,10 +747,6 @@
           {
             "title": "Žlutá, kam oko dohlédne. U Olomouce vykvetly tisíce půvabných petrklíčů",
             "publishedAt": "2026-04-21T08:10:00Z"
-          },
-          {
-            "title": "Tankovací stojany zmizely. Brněnská benzinka zavřela, již brzy ji čeká demolice",
-            "publishedAt": "2026-04-21T07:00:00Z"
           }
         ]
       }

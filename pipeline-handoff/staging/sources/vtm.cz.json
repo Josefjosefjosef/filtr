@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T10:41:17.667501Z",
+  "ingestedAt": "2026-04-21T11:01:39.795790Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "umí",
         "zneužívá",
         "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Výkonný aku šroubovák je za 620 Kč. Mova se nabíjí pomocí USB-C a v krabičce má 24 bitů",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-aku-sroubovak-mova/sc-3-a-240798/default.aspx",
+      "dt": "2026-04-21T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "620",
+        "aku",
+        "bitů",
+        "krabičce",
+        "mova",
+        "nabíjí",
+        "pomocí",
+        "usb",
+        "výkonný",
+        "šroubovák"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -942,31 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Která expanze pro World of Warcraft je nejlepší? Seřadili jsme všechna rozšíření",
-      "url": "https://doupe.zive.cz/nejlepsi-expanze-world-of-warcraft-wow-2026",
-      "dt": "2026-04-18T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "expanze",
-        "jsme",
-        "nejlepší",
-        "rozšíření",
-        "seřadili",
-        "všechna",
-        "warcraft",
-        "world"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22565,
+      "bytes": 22544,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1034,10 @@
           {
             "title": "Nebezpečný malware umí překrýt displej Androidu. V Česku zneužívá i přihlašování Komerční banky",
             "publishedAt": "2026-04-21T08:45:00Z"
+          },
+          {
+            "title": "Výkonný aku šroubovák je za 620 Kč. Mova se nabíjí pomocí USB-C a v krabičce má 24 bitů",
+            "publishedAt": "2026-04-21T10:45:00Z"
           },
           {
             "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
@@ -1056,10 +1062,6 @@
           {
             "title": "iPhone dnes vypadá jinak. Během posledních let z něj zmizela spousta výbavy i funkcí",
             "publishedAt": "2026-04-20T19:15:00Z"
-          },
-          {
-            "title": "Vypadá jako iPhone a vůbec se za to nestydí. Řada telefonů Honor 600 míří do Česka",
-            "publishedAt": "2026-04-21T07:45:00Z"
           }
         ]
       }
