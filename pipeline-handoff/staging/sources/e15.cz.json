@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-21T07:39:50.622169Z",
+  "ingestedAt": "2026-04-21T08:00:02.573733Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "INVESTIČNÍ ONLINE: Ceny ropy kvůli naději na mírová jednání mezi USA a Íránem klesají",
+      "url": "https://www.e15.cz/investice/investicni-online-ceny-ropy-kvuli-nadeji-na-mirova-jednani-mezi-usa-a-iranem-klesaji-1424330",
+      "dt": "2026-04-21T07:40:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ceny",
+        "investiční",
+        "jednání",
+        "klesají",
+        "kvůli",
+        "mírová",
+        "naději",
+        "online",
+        "ropy",
+        "usa",
+        "íránem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -640,34 +668,6 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "INVESTIČNÍ ONLINE: Cena plynu pro evropský trh roste po opětovném uzavření Hormuzského průlivu",
-      "url": "https://www.e15.cz/investice/investicni-online-cena-plynu-pro-evropsky-trh-roste-po-opetovnem-uzavreni-hormuzskeho-prulivu-1424330",
-      "dt": "2026-04-20T08:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "cena",
-        "evropský",
-        "hormuzského",
-        "investiční",
-        "online",
-        "opětovném",
-        "plynu",
-        "průlivu",
-        "roste",
-        "trh",
-        "uzavření"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
       "title": "Družba se vrací do hry. Zelenskyj u kancléře Merze oznámil obnovení dodávek ropy",
       "url": "https://www.e15.cz/byznys/prumysl-a-energetika/druzba-se-vraci-do-hry-zelenskyj-u-kanclere-merze-oznamil-obnoveni-dodavek-ropy-1432245",
       "dt": "2026-04-20T07:51:00Z",
@@ -1110,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56754,
+      "bytes": 56722,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1147,7 +1147,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1163,6 +1163,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "INVESTIČNÍ ONLINE: Ceny ropy kvůli naději na mírová jednání mezi USA a Íránem klesají",
+            "publishedAt": "2026-04-21T07:40:00Z"
+          },
           {
             "title": "Babiš neříká pravdu. Tchaj-wan si z Česka udělal technologickou základnu pro část světa",
             "publishedAt": "2026-04-21T06:54:00Z"
@@ -1190,10 +1194,6 @@
           {
             "title": "Šmejcova Premier Energy míří na velkou akvizici v Rumunsku, za distributora nabízí 17 miliard",
             "publishedAt": "2026-04-20T17:15:00Z"
-          },
-          {
-            "title": "Soud uznal nárok Mironetu. Po zásahu kvůli Microsoftu může získat stovky milionů",
-            "publishedAt": "2026-04-20T17:00:00Z"
           }
         ]
       }

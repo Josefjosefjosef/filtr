@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T07:39:50.622169Z",
+  "ingestedAt": "2026-04-21T08:00:02.573733Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "timu",
         "vymění",
         "šéfa"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vypadá jako iPhone a vůbec se za to nestydí. Řada telefonů Honor 600 míří do Česka",
+      "url": "https://mobilmania.zive.cz/clanky/vypada-jako-iphone-a-vubec-se-za-to-nestydi-rada-telefonu-honor-600-miri-do-ceska/sc-3-a-1364595/default.aspx",
+      "dt": "2026-04-21T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "600",
+        "honor",
+        "iphone",
+        "jako",
+        "míří",
+        "nestydí",
+        "telefonů",
+        "vypadá",
+        "vůbec",
+        "česka",
+        "řada"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,32 +969,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Star Wars se vrací do kin. Mandalorian a Grogu mají finální trailer",
-      "url": "https://avmania.zive.cz/star-wars-se-vraci-do-kin-mandalorian-a-grogu-maji-finalni-trailer",
-      "dt": "2026-04-17T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "finální",
-        "grogu",
-        "kin",
-        "mají",
-        "mandalorian",
-        "star",
-        "trailer",
-        "vrací",
-        "wars"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +979,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22486,
+      "bytes": 22557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1016,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1034,10 @@
           {
             "title": "Apple po 15 letech vymění šéfa. Otěže po Timu Cookovi převezme hardwarový guru John Ternus",
             "publishedAt": "2026-04-21T06:45:00Z"
+          },
+          {
+            "title": "Vypadá jako iPhone a vůbec se za to nestydí. Řada telefonů Honor 600 míří do Česka",
+            "publishedAt": "2026-04-21T07:45:00Z"
           },
           {
             "title": "11 věcí, které nás štvou na Windows 11 a bohužel asi jen tak nepřestanou",
@@ -1056,10 +1062,6 @@
           {
             "title": "T-Mobile škrtí předplacenky. Při dobití pod 500 Kč má kredit platnost nově už jen půl roku",
             "publishedAt": "2026-04-20T15:45:00Z"
-          },
-          {
-            "title": "Tohle se fakt stalo. Nejlepší filmy podle skutečných událostí, kterým prostě neuvěříte",
-            "publishedAt": "2026-04-19T15:45:00Z"
           }
         ]
       }
