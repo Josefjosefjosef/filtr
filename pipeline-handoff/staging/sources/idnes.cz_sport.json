@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T18:59:34.667761Z",
+  "ingestedAt": "2026-04-21T19:19:35.336787Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Jihlava - Litvínov 1:4, hosté se blíží k cenné výhře. Další gól přidal Sukeľ",
-      "url": "https://www.idnes.cz/hokej/extraliga/baraz-3-zapas-jihlava-litvinov-online-zpravodajstvi.A260421_115441_hokej_drev",
-      "dt": "2026-04-21T18:54:55Z",
+      "title": "ONLINE: Trápení Chelsea trvá. Od úvodu předehrávky prohrává na půdě Brightonu",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-34-kolo-brighton-chelsea-online-vysledek.A260421_130504_fot_zahranici_tals",
+      "dt": "2026-04-21T19:05:08Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
+        "brightonu",
+        "chelsea",
+        "prohrává",
+        "předehrávky",
+        "půdě",
+        "trvá",
+        "trápení",
+        "úvodu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Jihlava - Litvínov 1:5, zdá se být hotovo. Hosté se blíží třetí barážové výhře",
+      "url": "https://www.idnes.cz/hokej/extraliga/baraz-3-zapas-jihlava-litvinov-online-zpravodajstvi.A260421_115441_hokej_drev",
+      "dt": "2026-04-21T19:00:25Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "barážové",
         "blíží",
-        "cenné",
-        "další",
-        "gól",
+        "být",
         "hosté",
+        "hotovo",
         "jihlava",
         "litvínov",
-        "přidal",
-        "sukeľ",
-        "výhře"
+        "třetí",
+        "výhře",
+        "zdá"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -47,30 +72,6 @@
         "poločas",
         "semifinále",
         "skončí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ONLINE: Předehrávka anglické ligy, trápící se Chelsea hraje na Brightonu",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-34-kolo-brighton-chelsea-online-vysledek.A260421_130504_fot_zahranici_tals",
-      "dt": "2026-04-21T18:50:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "anglické",
-        "brightonu",
-        "chelsea",
-        "hraje",
-        "ligy",
-        "předehrávka",
-        "trápící"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -797,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47252,
+      "bytes": 47247,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:54:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T19:05:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,16 +851,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Jihlava - Litvínov 1:4, hosté se blíží k cenné výhře. Další gól přidal Sukeľ",
-            "publishedAt": "2026-04-21T18:54:55Z"
+            "title": "ONLINE: Trápení Chelsea trvá. Od úvodu předehrávky prohrává na půdě Brightonu",
+            "publishedAt": "2026-04-21T19:05:08Z"
+          },
+          {
+            "title": "ONLINE: Jihlava - Litvínov 1:5, zdá se být hotovo. Hosté se blíží třetí barážové výhře",
+            "publishedAt": "2026-04-21T19:00:25Z"
           },
           {
             "title": "ONLINE: Karviná - Baník 0:0, poločas bez branek. Jak skončí semifinále MOL Cupu?",
             "publishedAt": "2026-04-21T18:50:55Z"
-          },
-          {
-            "title": "ONLINE: Předehrávka anglické ligy, trápící se Chelsea hraje na Brightonu",
-            "publishedAt": "2026-04-21T18:50:00Z"
           },
           {
             "title": "Bronzový obrat. KP Brno si pro další medaili došlo díky famóznímu finiši",
