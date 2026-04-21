@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-21T11:40:54.119527Z",
+  "ingestedAt": "2026-04-21T12:40:21.186806Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
+      "url": "https://profitonline.cz/levna-koupe-draha-chyba-cesko-se-stava-vrakovistem-evropy/",
+      "dt": "2026-04-21T12:00:49Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "chyba",
+        "drahá",
+        "evropy",
+        "koupě",
+        "levná",
+        "stává",
+        "vrakovištěm",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,33 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Novinky v osobních financích: QR kód šetří čas i peníze. Proč ho Češi ignorují?",
-      "url": "https://profitonline.cz/novinky-v-osobnich-financich-qr-kod-setri-cas-i-penize-proc-ho-cesi-ignoruji/",
-      "dt": "2026-04-19T10:00:50Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "financích",
-        "ignorují",
-        "kód",
-        "novinky",
-        "osobních",
-        "peníze",
-        "proč",
-        "čas",
-        "češi",
-        "šetří"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19286,
+      "bytes": 19454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T12:00:49Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -360,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
+            "publishedAt": "2026-04-21T12:00:49Z"
+          },
           {
             "title": "Gruzínská vláda se mstí studentům, omezuje veřejné univerzity",
             "publishedAt": "2026-04-21T10:00:29Z"
@@ -387,10 +389,6 @@
           {
             "title": "The Economist: S jakým Íránem vlastně Amerika jedná a co může zmařit příměří",
             "publishedAt": "2026-04-20T10:00:07Z"
-          },
-          {
-            "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
-            "publishedAt": "2026-04-20T08:00:18Z"
           }
         ]
       }

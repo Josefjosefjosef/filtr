@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T11:40:54.119527Z",
+  "ingestedAt": "2026-04-21T12:40:21.186806Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Předvedli velkou a suverénní jízdu. Zbrojovce k postupu gratulují i rivalové",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/zbrojovka-brno-martin-jiranek-postup-oslavy.A260421_102728_fot_dsouteze_ppol",
+      "dt": "2026-04-21T12:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "gratulují",
+        "jízdu",
+        "postupu",
+        "předvedli",
+        "rivalové",
+        "suverénní",
+        "velkou",
+        "zbrojovce"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jiráček o éře Plzně: Hlavy se nastavovaly v hospodě, lepší partu jsem nezažil",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/petr-jiracek-viktoria-plzen.A260421_122153_fotbal_kazdt",
+      "dt": "2026-04-21T11:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hlavy",
+        "hospodě",
+        "jiráček",
+        "jsem",
+        "lepší",
+        "nastavovaly",
+        "nezažil",
+        "partu",
+        "plzně",
+        "éře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -732,58 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vezmeš si mě? Děčínský bubeník při největším zápase NBL poklekl",
-      "url": "https://www.idnes.cz/sport/trendy/basketbal-decin-valecnici-armex-zadost-o-ruku-fanousek-bubenik.A260420_125842_trendy_pbi",
-      "dt": "2026-04-20T16:40:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bubeník",
-        "děčínský",
-        "nbl",
-        "největším",
-        "poklekl",
-        "při",
-        "vezmeš",
-        "zápase"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia se červená, je důvod k zneklidnění? Sparta i Plzeň měly titul i nejvíc vyloučení",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-cervene-karty-chory-boril-sparta-plzen.A260420_143501_fotbal_min",
-      "dt": "2026-04-20T15:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "důvod",
-        "měly",
-        "nejvíc",
-        "plzeň",
-        "slavia",
-        "sparta",
-        "titul",
-        "vyloučení",
-        "zneklidnění",
-        "červená"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47101,
+      "bytes": 46744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T11:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T12:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předvedli velkou a suverénní jízdu. Zbrojovce k postupu gratulují i rivalové",
+            "publishedAt": "2026-04-21T12:00:00Z"
+          },
+          {
+            "title": "Jiráček o éře Plzně: Hlavy se nastavovaly v hospodě, lepší partu jsem nezažil",
+            "publishedAt": "2026-04-21T11:30:00Z"
+          },
           {
             "title": "Samson postoupila v Madridu do 2. kola, porazila o dvacet let starší soupeřku",
             "publishedAt": "2026-04-21T11:08:00Z"
@@ -869,14 +877,6 @@
           {
             "title": "Myslel jsem si, že tě zatkli. Trenér si dobíral fotbalistku Lehmannovou",
             "publishedAt": "2026-04-21T10:14:00Z"
-          },
-          {
-            "title": "Horváthovi: Tati, Spartu i Slavii bys mohl trénovat! Showbyznys mi cestu zavřel",
-            "publishedAt": "2026-04-21T10:00:00Z"
-          },
-          {
-            "title": "Hrozí, že Alcaraz nenastoupí na Roland Garros. Další test je klíčový, říká obhájce",
-            "publishedAt": "2026-04-21T09:26:00Z"
           }
         ]
       }

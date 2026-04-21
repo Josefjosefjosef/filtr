@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T11:40:54.119527Z",
+  "ingestedAt": "2026-04-21T12:40:21.186806Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "umí",
         "zneužívá",
         "česku"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Oneplay a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na bývalém Voyo nejvíc sledují",
+      "url": "https://avmania.zive.cz/oneplay-nejoblibenejsi-filmy-a-serialy-202604",
+      "dt": "2026-04-21T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "2026",
+        "bývalém",
+        "dubnu",
+        "filmů",
+        "nejoblíbenějších",
+        "nejvíc",
+        "oneplay",
+        "seriálů",
+        "sledují",
+        "tohle",
+        "voyo",
+        "češi"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,34 +970,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Bez Face ID a bez PINu. Zamknutý iPhone s kartou Visa může bezkontaktně zaplatit i 200 tisíc korun",
-      "url": "https://mobilmania.zive.cz/clanky/bez-face-id-a-bez-pinu-zamknuty-iphone-s-kartou-visa-muze-bezkontaktne-zaplatit-i-200-tisic-korun/sc-3-a-1364573/default.aspx",
-      "dt": "2026-04-17T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "200",
-        "bezkontaktně",
-        "face",
-        "iphone",
-        "kartou",
-        "korun",
-        "pinu",
-        "tisíc",
-        "visa",
-        "zamknutý",
-        "zaplatit"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -979,7 +980,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22544,
+      "bytes": 22678,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1016,7 +1017,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1034,6 +1035,10 @@
           {
             "title": "Nebezpečný malware umí překrýt displej Androidu. V Česku zneužívá i přihlašování Komerční banky",
             "publishedAt": "2026-04-21T08:45:00Z"
+          },
+          {
+            "title": "Oneplay a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na bývalém Voyo nejvíc sledují",
+            "publishedAt": "2026-04-21T11:45:00Z"
           },
           {
             "title": "Výkonný aku šroubovák je za 620 Kč. Mova se nabíjí pomocí USB-C a v krabičce má 24 bitů",
@@ -1058,10 +1063,6 @@
           {
             "title": "Vytvořili přeplácaný prohlížeč, teď chtějí peníze za čistou verzi. Brave Origin stojí 1300 Kč",
             "publishedAt": "2026-04-20T14:45:00Z"
-          },
-          {
-            "title": "iPhone dnes vypadá jinak. Během posledních let z něj zmizela spousta výbavy i funkcí",
-            "publishedAt": "2026-04-20T19:15:00Z"
           }
         ]
       }

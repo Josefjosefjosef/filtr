@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T11:40:54.119527Z",
+  "ingestedAt": "2026-04-21T12:40:21.186806Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Jako na houpačce. Maximální ceny benzinu a nafty na středu 22. dubna",
+      "url": "https://www.penize.cz/doprava/488601-jako-na-houpacce-maximalni-ceny-benzinu-a-nafty-na-stredu-22-dubna",
+      "dt": "2026-04-21T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "houpačce",
+        "jako",
+        "maximální",
+        "nafty",
+        "středu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -488,29 +513,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Raiffeisenbank opět vypne bankovnictví na část víkendu",
-      "url": "https://www.penize.cz/osobni-ucty/488442-raiffeisenbank-opet-vypne-bankovnictvi-na-cast-vikendu",
-      "dt": "2026-04-17T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bankovnictví",
-        "opět",
-        "raiffeisenbank",
-        "vypne",
-        "víkendu",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18165,
+      "bytes": 18363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,11 +560,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T13:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 3
+          "zpravy": 4,
+          "finance": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -574,6 +576,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jako na houpačce. Maximální ceny benzinu a nafty na středu 22. dubna",
+            "publishedAt": "2026-04-21T13:59:00Z"
+          },
           {
             "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
             "publishedAt": "2026-04-21T13:23:00Z"
@@ -601,10 +607,6 @@
           {
             "title": "Kotva odhalila první značky. Obchodní dům vsadil na italský luxus",
             "publishedAt": "2026-04-20T13:42:00Z"
-          },
-          {
-            "title": "Blízký východ hoří. Proč evropské komerční nemovitosti zůstávají v klidu",
-            "publishedAt": "2026-04-20T13:00:00Z"
           }
         ]
       }
