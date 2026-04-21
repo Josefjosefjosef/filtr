@@ -173,8 +173,7 @@
   --iuRailGlow: rgba(27,36,48,.18);
   --iuContainerMax: 1200px;
   --iuContainerPad: 20px;
-  /* Desktop hub: must match .layout column gap — unified top inset under fixed topbar (≥1025px). */
-  --iu-layout-col-gap: 20px;
+  --iu-hub-top-extra: 0px;
   --iuLeftRailW: 136px;
   --iu-bank-accent: #3db3ff;
   --iu-gold: #d4af37;
@@ -315,6 +314,7 @@ body{
 
 /* P0 desktop ≥1025px: jeden vertikální scrollport na <body> — <html> overflow-y:hidden zabraňuje transient dvojité liště (html+body oba auto). Gutter jen na body (stable). */
 @media (min-width: 1025px){
+  :root{--iu-hub-top-extra:20px}
   html{
     width: 100%;
     max-width: 100%;
@@ -332,6 +332,7 @@ body{
     scrollbar-gutter: stable;
     scroll-padding-top: var(--topbarStackH);
   }
+  .mainCol #iuSilverTopCardsStack{margin-top:20px}
 }
 
 #page{
@@ -7783,7 +7784,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 .layout{
   display: grid;
   grid-template-columns: 1fr 360px;
-  gap: var(--iu-layout-col-gap);
+  gap: 20px;
   align-items: start;
   width: 100%;
   
@@ -7835,7 +7836,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 @media (max-width: 768px){
   .layout{
     grid-template-columns: 1fr;
-    gap: var(--iu-layout-col-gap);
+    gap: 20px;
     display: flex;
     flex-direction: column;
   }
@@ -12543,7 +12544,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   
   .layout:has(#leftStickyHeader) > aside.accordionCol{
     padding-top: 0 !important;
-    margin-top: var(--iuTopbarHeight) !important;
+    margin-top: calc(var(--iuTopbarHeight) + var(--iu-hub-top-extra)) !important;
     box-sizing: border-box;
   }
 
@@ -12551,16 +12552,6 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   .mindMenu{
     align-self: start;
     margin-top: 0 !important;
-  }
-}
-
-/* P0 desktop ≥1025px: horní mezera pod topbarem = stejná hodnota jako column-gap (.layout gap). Guard class — bez :has(). */
-@media (min-width: 1025px){
-  main#content .layout.iu-hub-desktop-col-gap #iuSilverTopCardsStack{
-    margin-top: var(--iu-layout-col-gap);
-  }
-  main#content .layout.iu-hub-desktop-col-gap > aside.accordionCol{
-    margin-top: calc(var(--iuTopbarHeight) + var(--iu-layout-col-gap)) !important;
   }
 }
 
