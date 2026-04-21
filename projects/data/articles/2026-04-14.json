@@ -1,6 +1,6 @@
 {
   "date": "2026-04-14",
-  "generatedAt": "2026-04-21T21:41:46.518465Z",
+  "generatedAt": "2026-04-21T22:01:51.666376Z",
   "items": [
     {
       "topic": "doprava",
@@ -23,7 +23,7 @@
       "feedId": "fin_epenize",
       "url": "https://www.epenize.eu/konec-velke-italske-romance-trump-pali-mosty-i-s-meloniovou/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.02778473549605989,
+      "displayScore": 0.02773078704497875,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -96,8 +96,8 @@
       }
     },
     {
-      "topic": "veda",
-      "section": "veda",
+      "topic": "aktualne",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Malá rozměry. Velká výkonem. To jsou Mini PC BARBONE",
       "publishedAt": "2026-04-14T22:01:00Z",
@@ -116,14 +116,13 @@
       "feedId": "ved_technet",
       "url": "https://www.idnes.cz/technet/pc-mac/mini-pc-barbone-od-t-s-bohemia-nezaberou-misto-a-maji-vykon.A260409_103912_hardware_vok",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.034533079571453504,
-      "iuReleaseAt": "2026-04-21T21:41:54.518465Z",
+      "displayScore": 0.034466409356490015,
       "iuFeedClassification": {
         "v": 1,
-        "mediaTopicKey": "veda",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "veda",
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -149,6 +148,37 @@
       "url": "https://www.idnes.cz/zpravy/zahranicni/tri-divky-zemrely-zbytecne-vrazdam-v-southportu-slo-zabranit.A260414_201019_zahranicni_Ichuc",
       "duplicatePenalty": 1.0,
       "displayScore": 0.5484589150409053,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bluetooth reprák z Ikea stojí méně než porce masových koulí. Jak hraje",
+      "publishedAt": "2026-04-14T22:00:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Technet",
+          "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-c-tech-spk-08-levne-reproduktory-reprosoustavy-bluetooth-129-kc.A260413_120320_audio-foto-video_nyv/foto"
+        }
+      ],
+      "primaryCategory": "veda",
+      "topicHash": "0ceb240907e70374",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "veda",
+      "sourceLabel": "iDNES / Technet",
+      "feedId": "ved_technet",
+      "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-c-tech-spk-08-levne-reproduktory-reprosoustavy-bluetooth-129-kc.A260413_120320_audio-foto-video_nyv/foto",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.03446310985707165,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -310,38 +340,6 @@
         "reason": "url_strong_vertical",
         "confidence": 0.94,
         "railSectionKey": "sport",
-        "guardFlags": []
-      }
-    },
-    {
-      "topic": "veda",
-      "section": "veda",
-      "contentType": "article",
-      "title": "Bluetooth reprák z Ikea stojí méně než porce masových koulí. Jak hraje",
-      "publishedAt": "2026-04-14T22:00:00Z",
-      "sources": [
-        {
-          "name": "iDNES / Technet",
-          "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-c-tech-spk-08-levne-reproduktory-reprosoustavy-bluetooth-129-kc.A260413_120320_audio-foto-video_nyv/foto"
-        }
-      ],
-      "primaryCategory": "veda",
-      "topicHash": "0ceb240907e70374",
-      "feedType": "rubric",
-      "sourceDisplayWeight": 1.0,
-      "sectionPrimary": "veda",
-      "sourceLabel": "iDNES / Technet",
-      "feedId": "ved_technet",
-      "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-c-tech-spk-08-levne-reproduktory-reprosoustavy-bluetooth-129-kc.A260413_120320_audio-foto-video_nyv/foto",
-      "duplicatePenalty": 1.0,
-      "displayScore": 0.0400026781969361,
-      "iuReleaseAt": "2026-04-20T21:55:38.234260Z",
-      "iuFeedClassification": {
-        "v": 1,
-        "mediaTopicKey": "veda",
-        "reason": "topic_field",
-        "confidence": 0.95,
-        "railSectionKey": "veda",
         "guardFlags": []
       }
     },
@@ -1542,7 +1540,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/recenze/iam-jesus-christ-proboha-proc-2f7gjt",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.030435289366998197,
+      "displayScore": 0.030377746567834894,
       "iuReleaseAt": "2026-04-19T16:50:48.205370Z",
       "iuFeedClassification": {
         "v": 1,
@@ -2865,7 +2863,7 @@
       "feedId": "vzd_seznam",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-rubio-prijal-velvyslance-izraele-a-libanonu-k-prvnim-mirovym-rozhovorum-304063",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03506129114407915,
+      "displayScore": 0.03499583423960186,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -2989,7 +2987,7 @@
       "feedId": "hry_zing",
       "url": "https://zing.cz/article/marvel-s-spider-man-3-na-obzoru-herec-mozna-naznacil-navrat-pavouciho-muze",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.028370669574501448,
+      "displayScore": 0.02831772645242942,
       "iuReleaseAt": "2026-04-21T12:41:49.101446Z",
       "iuFeedClassification": {
         "v": 1,
@@ -3211,7 +3209,7 @@
       "feedId": "zpr_idnes_zpravy",
       "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-penize-kraj-mesto-vypoved-stadion.A260414_095917_budejovice-zpravy_pkr",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03665720695954345,
+      "displayScore": 0.03658890759929321,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -5954,7 +5952,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/disney-a-epic-maji-chystat-novou-strilecku-ve-stylu-arc-8wojil",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.029546442853556718,
+      "displayScore": 0.029492208995173325,
       "iuReleaseAt": "2026-04-19T08:51:11.679632Z",
       "iuFeedClassification": {
         "v": 1,
@@ -6526,7 +6524,7 @@
       "feedId": "fin_sz_byznys",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-trump-rozhneval-i-vlastni-priznivce-nekteri-zpochybnuji-jeho-dusevni-zdravi-303997",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.037640685346518876,
+      "displayScore": 0.03757180073734349,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -7032,7 +7030,7 @@
       "feedId": "kul_kinobox",
       "url": "https://www.kinobox.cz/clanky/filmy/52669-kdy-uvidime-noveho-wonku-v-kinech-se-utka-s-legendarni-fantasy",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.031018193880142715,
+      "displayScore": 0.030961567819261727,
       "iuReleaseAt": "2026-04-21T08:01:12.913933Z",
       "iuFeedClassification": {
         "v": 1,
@@ -10141,8 +10139,8 @@
       "feedId": "ces_novinky_cestovani",
       "url": "https://www.novinky.cz/clanek/krimi-adoruje-vrahy-kluk-ktery-chtel-zabijet-spoluzaky-skoncil-v-ustavu-spravne-rekl-us-40573210",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03216740286040098,
-      "iuReleaseAt": "2026-04-21T21:41:53.518465Z",
+      "displayScore": 0.032109546558061815,
+      "iuReleaseAt": "2026-04-21T22:01:58.666376Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -10235,7 +10233,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/zahranicni-evropa-migranti-proti-migrantum-recka-policie-zkousi-drsnou-praktiku-40573206",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.035340775531523066,
+      "displayScore": 0.03527728936541644,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -10456,8 +10454,8 @@
       "feedId": "zpr_novinky_domaci",
       "url": "https://www.novinky.cz/clanek/cestovani-turistka-natocila-posmesne-video-o-italske-kave-ostra-odezva-byla-okamzita-40573209",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03692213171277307,
-      "iuReleaseAt": "2026-04-21T21:41:52.518465Z",
+      "displayScore": 0.03685584967407855,
+      "iuReleaseAt": "2026-04-21T22:01:57.666376Z",
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "cestovani",
@@ -13495,7 +13493,7 @@
       "feedId": "kul_vlasta",
       "url": "https://www.vlasta.cz/celebrity/renne-dang-natalie-halouzkova-vztah-nenavist-komentare-andele/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.022026456660541545,
+      "displayScore": 0.021987701732148975,
       "iuReleaseAt": "2026-04-21T04:26:57.022534Z",
       "iuFeedClassification": {
         "v": 1,
@@ -14529,7 +14527,7 @@
       "feedId": "ved_novinky",
       "url": "https://www.novinky.cz/clanek/zahranicni-evropa-valka-roseovych-po-madarsku-manzelstvi-politiku-magyara-a-vargove-se-nepovedlo-40573157",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03284732316430997,
+      "displayScore": 0.032789865123087965,
       "iuReleaseAt": "2026-04-16T08:21:08.065374Z",
       "iuFeedClassification": {
         "v": 1,
@@ -14561,7 +14559,7 @@
       "feedId": "fin_novinky_ekonomika",
       "url": "https://www.novinky.cz/clanek/domaci-zpravy-hlavni-mesto-praha-kvuli-umele-marihuane-v-praze-rychle-pribyva-vyjezdu-sanitek-nejmladsim-pacientum-je-11-let-40572047",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.03440186537068266,
+      "displayScore": 0.03434170483978491,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
