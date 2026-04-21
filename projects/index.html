@@ -1805,21 +1805,31 @@ style-src 'self' 'unsafe-inline' https:;
                     </section>
                     <!-- Top tools: Kalendář, Poznámky, Úkoly -->
                     <div class="iu-mmTopTools" role="group" aria-label="Nástroje">
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--cal iuMindMenuButton iu-mmTopTool--imageTile" aria-label="Kalendář">
-                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
-                          <img class="iu-mmTopToolImageTile" src="/assets/images/calendar-tile.jpg" alt="" decoding="async" />
-                        </span>
-                      </button>
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--notes iu-mmTopTool--imageTile" aria-label="Poznámky">
-                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
-                          <img class="iu-mmTopToolImageTile" src="/assets/images/notes-tile.jpg" alt="" decoding="async" />
-                        </span>
-                      </button>
-                      <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn iu-mmTopTool--imageTile" aria-label="Úkoly" data-iu-tasks-trigger="1">
-                        <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
-                          <img class="iu-mmTopToolImageTile" src="/assets/images/tasks-tile.jpg" alt="" decoding="async" />
-                        </span>
-                      </button>
+                      <div class="iu-mmTopToolHoverHost iu-hover-summary-host" id="iuMmHoverSummaryHostCalendar">
+                        <button type="button" class="iu-mmTopTool iu-mmTopTool--cal iuMindMenuButton iu-mmTopTool--imageTile" aria-label="Kalendář">
+                          <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                            <img class="iu-mmTopToolImageTile" src="/assets/images/calendar-tile.jpg" alt="" decoding="async" />
+                          </span>
+                        </button>
+                        <div class="iu-mmHoverSummaryBridge" id="iuMmHoverSummaryBridgeCalendar" hidden aria-hidden="true"></div>
+                        <div class="iu-mmHoverSummaryPanelShell iu-mmHoverSummaryPanelShell--closed" id="iuMmHoverSummaryPanelShellCalendar" data-iu-hover-summary-panel="calendar" aria-hidden="true"></div>
+                      </div>
+                      <div class="iu-mmTopToolHoverHost iu-hover-summary-host" id="iuMmHoverSummaryHostNotes">
+                        <button type="button" class="iu-mmTopTool iu-mmTopTool--notes iu-mmTopTool--imageTile" aria-label="Poznámky">
+                          <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                            <img class="iu-mmTopToolImageTile" src="/assets/images/notes-tile.jpg" alt="" decoding="async" />
+                          </span>
+                        </button>
+                      </div>
+                      <div class="iu-mmTopToolHoverHost iu-hover-summary-host" id="iuMmHoverSummaryHostTasks">
+                        <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn iu-mmTopTool--imageTile" aria-label="Úkoly" data-iu-tasks-trigger="1">
+                          <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
+                            <img class="iu-mmTopToolImageTile" src="/assets/images/tasks-tile.jpg" alt="" decoding="async" />
+                          </span>
+                        </button>
+                        <div class="iu-mmHoverSummaryBridge" id="iuMmHoverSummaryBridgeTasks" hidden aria-hidden="true"></div>
+                        <div class="iu-mmHoverSummaryPanelShell iu-mmHoverSummaryPanelShell--closed" id="iuMmHoverSummaryPanelShellTasks" data-iu-hover-summary-panel="tasks" aria-hidden="true"></div>
+                      </div>
                     </div>
                     <!-- Rychlé odkazy -->
                     <section class="iu-mmQuickLinks" aria-label="Rychlé odkazy">
