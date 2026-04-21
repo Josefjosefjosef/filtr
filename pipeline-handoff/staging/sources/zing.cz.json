@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-21T15:59:59.796311Z",
+  "ingestedAt": "2026-04-21T16:19:36.757083Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "GOG nabízí po čase hru zdarma",
+      "url": "https://zing.cz/article/gog-nabizi-po-case-hru-zdarma",
+      "dt": "2026-04-21T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "gog",
+        "hru",
+        "nabízí",
+        "zdarma",
+        "čase"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -957,30 +979,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Mod Keizaal Online mění Skyrim v živé MMO",
-      "url": "https://zing.cz/article/mod-keizaal-online-meni-skyrim-v-zive-mmo",
-      "dt": "2026-04-15T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "keizaal",
-        "mmo",
-        "mod",
-        "mění",
-        "online",
-        "skyrim",
-        "živé"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -991,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126406,
+      "bytes": 126350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1028,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1044,6 +1042,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "GOG nabízí po čase hru zdarma",
+            "publishedAt": "2026-04-21T16:00:00Z"
+          },
           {
             "title": "Far Cry 7 mělo projít vývojovým peklem, k vydání dojde nejdříve v roce 2027",
             "publishedAt": "2026-04-21T14:00:00Z"
@@ -1071,10 +1073,6 @@
           {
             "title": "EA poodhalilo budoucnost Battlefieldu 6",
             "publishedAt": "2026-04-20T18:00:00Z"
-          },
-          {
-            "title": "Pragmata oslavila první milion, na Steamu jde o jednu z nejlépe hodnocených her",
-            "publishedAt": "2026-04-20T16:00:00Z"
           }
         ]
       }
