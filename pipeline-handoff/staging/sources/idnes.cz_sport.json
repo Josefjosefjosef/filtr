@@ -1,26 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T16:40:00.690033Z",
+  "ingestedAt": "2026-04-21T16:59:30.652571Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, druhá půle začala. Finále domácím přiblížil Jawo",
+      "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, stále o gól. Jawův druhý zásah neplatí pro ofsajd",
       "url": "https://www.idnes.cz/fotbal/domaci-souteze/mol-cup-semifinale-jablonec-mlada-boleslav-online-vysledek.A260421_121423_fot_dsouteze_tals",
-      "dt": "2026-04-21T16:12:15Z",
+      "dt": "2026-04-21T16:38:14Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "boleslav",
-        "domácím",
-        "druhá",
-        "finále",
+        "druhý",
+        "gól",
         "jablonec",
-        "jawo",
-        "přiblížil",
-        "půle",
-        "začala"
+        "jawův",
+        "neplatí",
+        "ofsajd",
+        "stále",
+        "zásah"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Malinin ohromuje třemi salty v řadě. Moje svěřenkyně udělá čtyři, tvrdí Pljuščenko",
+      "url": "https://www.idnes.cz/sport/trendy/malinin-ohromuje-tremi-salty-v-rade-moje-sverenkyne-udela-ctyri-tvrdi-pljuscenko.A260421_145858_trendy_subt",
+      "dt": "2026-04-21T16:33:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "malinin",
+        "moje",
+        "ohromuje",
+        "pljuščenko",
+        "salty",
+        "svěřenkyně",
+        "tvrdí",
+        "třemi",
+        "udělá",
+        "čtyři",
+        "řadě"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -763,32 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bezchybný Vladař vychytal Pittsburgh, Dostál v play off čelil McDavidovi",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dostal.A260421_071140_nhl_mkr",
-      "dt": "2026-04-21T06:25:01Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bezchybný",
-        "dostál",
-        "mcdavidovi",
-        "off",
-        "pittsburgh",
-        "play",
-        "vladař",
-        "vychytal",
-        "čelil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47162,
+      "bytes": 47423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:12:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:38:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,8 +854,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, druhá půle začala. Finále domácím přiblížil Jawo",
-            "publishedAt": "2026-04-21T16:12:15Z"
+            "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, stále o gól. Jawův druhý zásah neplatí pro ofsajd",
+            "publishedAt": "2026-04-21T16:38:14Z"
+          },
+          {
+            "title": "Malinin ohromuje třemi salty v řadě. Moje svěřenkyně udělá čtyři, tvrdí Pljuščenko",
+            "publishedAt": "2026-04-21T16:33:00Z"
           },
           {
             "title": "Yamal, Sabalenková i česká hvězda. Kdo zazářil na sportovních Oscarech?",
@@ -878,10 +884,6 @@
           {
             "title": "Hronek, Klapka a Chmelař. První posily ze zámoří mají doplnit českou reprezentaci",
             "publishedAt": "2026-04-21T13:45:00Z"
-          },
-          {
-            "title": "V taxíku s Beckerem a šaty na poslední chvíli. Kratochvíl zažil sportovní Oscary",
-            "publishedAt": "2026-04-21T13:41:00Z"
           }
         ]
       }

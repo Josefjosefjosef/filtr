@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-21T16:40:00.690033Z",
+  "ingestedAt": "2026-04-21T16:59:30.652571Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výměna za miliardy: Družba je opravena, míč je teď na straně Orbána",
+      "url": "https://ekonomickydenik.cz/druzba-je-opravena-mic-je-ted-na-strane-orbana/",
+      "dt": "2026-04-21T16:50:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "družba",
+        "miliardy",
+        "míč",
+        "opravena",
+        "orbána",
+        "straně",
+        "výměna"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -758,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Drony a AI v akci: Čeští vojáci, policisté a hasiči zkoušejí spojení ve válečném stavu",
-      "url": "https://ekonomickydenik.cz/sifry-drony-ai-v-akci-vojaci-policiste-hasici-valka/",
-      "dt": "2026-04-20T07:08:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "akci",
-        "drony",
-        "hasiči",
-        "policisté",
-        "spojení",
-        "stavu",
-        "vojáci",
-        "válečném",
-        "zkoušejí",
-        "čeští"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72366,
+      "bytes": 72020,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:25:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:50:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -849,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výměna za miliardy: Družba je opravena, míč je teď na straně Orbána",
+            "publishedAt": "2026-04-21T16:50:33Z"
+          },
           {
             "title": "Zrada na Balkáně? Zdechovský se bojí vývoje v Bulharsku: Nebezpečný posun k Rusku",
             "publishedAt": "2026-04-21T15:25:52Z"
@@ -876,10 +877,6 @@
           {
             "title": "Fico oznámil, že chce Magyar řešit Benešovy dekrety. Extrémně citlivé téma i pro Čechy",
             "publishedAt": "2026-04-21T12:09:11Z"
-          },
-          {
-            "title": "Havlíček: Pokud elektřina kvůli válce zdraží, zasáhneme do cen",
-            "publishedAt": "2026-04-21T11:43:47Z"
           }
         ]
       }

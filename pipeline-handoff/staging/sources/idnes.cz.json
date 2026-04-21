@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T16:40:00.690033Z",
+  "ingestedAt": "2026-04-21T16:59:30.652571Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prosím, neubližujte jim! Trump orodoval za propuštění žen, které Írán chce popravit",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-iran-vyzva-propusteni-veznu.A260421_175711_zahranicni_meli",
+      "dt": "2026-04-21T16:39:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chce",
+        "jim",
+        "neubližujte",
+        "orodoval",
+        "popravit",
+        "propuštění",
+        "prosím",
+        "trump",
+        "írán",
+        "žen"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Senior hrozil bombou na ministerstvu, před příjezdem zásahovky se nechtěl vzdát",
+      "url": "https://www.idnes.cz/praha/zpravy/muz-vyhrozoval-bombou-na-ministerstvu-vnitra-policie-ho-zadrzela.A260421_182126_praha-zpravy_ichuc",
+      "dt": "2026-04-21T16:29:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bombou",
+        "hrozil",
+        "ministerstvu",
+        "nechtěl",
+        "příjezdem",
+        "senior",
+        "vzdát",
+        "zásahovky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,60 +784,6 @@
         "skladu",
         "stále",
         "zasahují"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Alles Gute Česká sabijačka! Šteindler se vrátil jako legendární Kárl z České sody",
-      "url": "https://www.idnes.cz/kultura/divadlo/milan-steindler-ceska-zabjacka-alles-gute-ceska-soda.A260421_135913_divadlo_ts",
-      "dt": "2026-04-21T13:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "alles",
-        "gute",
-        "jako",
-        "kárl",
-        "legendární",
-        "sabijačka",
-        "sody",
-        "vrátil",
-        "česká",
-        "české",
-        "šteindler"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zámek Dřevíč na Rakovnicku, kde žil kníže Schwarzenberg, našel nového majitele",
-      "url": "https://www.idnes.cz/ekonomika/domaci/hn-zamek-drevic-na-rakovnicku-kde-zil-schwarzenberg-zmenil-vlastnika.A260421_150913_ekonomika_jadv",
-      "dt": "2026-04-21T13:09:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dřevíč",
-        "kníže",
-        "majitele",
-        "našel",
-        "nového",
-        "rakovnicku",
-        "schwarzenberg",
-        "zámek",
-        "žil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47945,
+      "bytes": 47149,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,13 +1625,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 3,
-          "sport": 1,
-          "other": 1
+          "zpravy": 27,
+          "finance": 2,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1645,6 +1642,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prosím, neubližujte jim! Trump orodoval za propuštění žen, které Írán chce popravit",
+            "publishedAt": "2026-04-21T16:39:00Z"
+          },
+          {
+            "title": "Senior hrozil bombou na ministerstvu, před příjezdem zásahovky se nechtěl vzdát",
+            "publishedAt": "2026-04-21T16:29:00Z"
+          },
           {
             "title": "Změna trestního zákoníku by mohla opět přitvrdit za neplacení výživného",
             "publishedAt": "2026-04-21T16:15:00Z"
@@ -1668,14 +1673,6 @@
           {
             "title": "Zablokujeme Sněmovnu, aby nedošlo k volbě členů Rady ČT,  slibuje opozice",
             "publishedAt": "2026-04-21T15:58:27Z"
-          },
-          {
-            "title": "Ukrajina dokončila opravu Družby, lze obnovit provoz, oznámil Zelenskyj",
-            "publishedAt": "2026-04-21T15:45:59Z"
-          },
-          {
-            "title": "Poletím běžnou linkou, ale je to nůž do zad, řekl Vystrčil k cestě na Tchaj-wan",
-            "publishedAt": "2026-04-21T15:08:10Z"
           }
         ]
       }

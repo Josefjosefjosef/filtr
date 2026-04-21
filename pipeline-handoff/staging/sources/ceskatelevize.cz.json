@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T16:40:00.690033Z",
+  "ingestedAt": "2026-04-21T16:59:30.652571Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šéf antimonopolního úřadu vyhověl stížnosti na rekonstrukci náměstí v Hradci Králové",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/kralovehradecky-kraj/sef-antimonopolniho-uradu-vyhovel-stiznosti-na-rekonstrukci-namesti-v-hradci-kralove-372641",
+      "dt": "2026-04-21T16:40:18Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "antimonopolního",
+        "hradci",
+        "králové",
+        "náměstí",
+        "rekonstrukci",
+        "stížnosti",
+        "vyhověl",
+        "úřadu",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -357,18 +383,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci řeší program schůze. Mohou jednat do noci",
+      "title": "Opozice neprosadila úplné vyškrtnutí volby radních ČT z programu schůze sněmovny",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/poslanci-by-meli-projednat-rozsireni-trestneho-cinu-neplaceni-vyzivneho-372608",
       "dt": "2026-04-21T12:01:07Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "jednat",
-        "noci",
-        "poslanci",
-        "program",
+        "neprosadila",
+        "opozice",
+        "programu",
+        "radních",
         "schůze",
-        "řeší"
+        "sněmovny",
+        "volby",
+        "vyškrtnutí",
+        "úplné"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -730,43 +759,21 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Americkým lodím na Blízkém východě docházejí základní zásoby. Doručení trvá i přes měsíc",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/americkym-lodim-na-blizkem-vychode-dochazeji-zakladni-zasoby-doruceni-trva-i-pres-mesic-372587",
-      "dt": "2026-04-21T05:10:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "americkým",
-        "blízkém",
-        "docházejí",
-        "doručení",
-        "lodím",
-        "měsíc",
-        "trvá",
-        "východě",
-        "základní",
-        "zásoby"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "Los MS basketbalistek",
+      "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/los-ms-basketbalistek-156393",
       "dt": "2026-04-21T15:55:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "basketbalistek",
-        "los"
+        "itálii",
+        "narazí",
+        "obhájkyně",
+        "titulu",
+        "usa",
+        "češky",
+        "čínu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1528,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43852,
+      "bytes": 43407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,7 +1595,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:40:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 19,
@@ -1605,6 +1612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf antimonopolního úřadu vyhověl stížnosti na rekonstrukci náměstí v Hradci Králové",
+            "publishedAt": "2026-04-21T16:40:18Z"
+          },
           {
             "title": "SOUHRN: Zásadní události úterý 21. dubna",
             "publishedAt": "2026-04-21T16:29:00Z"
@@ -1632,10 +1643,6 @@
           {
             "title": "Počet obyvatel Estonska klesá už druhý rok po sobě",
             "publishedAt": "2026-04-21T14:43:37Z"
-          },
-          {
-            "title": "Šéf Senátu Vystrčil: Odmítnutí vládního letounu pro misi na Tchaj-wan je podraz",
-            "publishedAt": "2026-04-21T14:33:17Z"
           }
         ]
       }
@@ -1647,7 +1654,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40205,
+      "bytes": 40299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1700,7 +1707,7 @@
         },
         "sample_titles": [
           {
-            "title": "Los MS basketbalistek",
+            "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
             "publishedAt": "2026-04-21T15:55:00Z"
           },
           {
@@ -1741,7 +1748,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77345,
+      "bytes": 77351,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

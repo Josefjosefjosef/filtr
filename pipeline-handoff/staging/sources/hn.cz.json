@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T16:40:00.690033Z",
+  "ingestedAt": "2026-04-21T16:59:30.652571Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko je odolnější, než jsme očekávali, zaznívá od německých firem. Doma je drtí rostoucí náklady na energie i lidi",
+      "url": "https://archiv.hn.cz/c1-67869580-cesko-je-odolnejsi-nez-jsme-ocekavali-zazniva-od-nemeckych-firem-doma-je-drti-rostouci-naklady-na-energie-i-lidi",
+      "dt": "2026-04-21T16:52:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "doma",
+        "drtí",
+        "energie",
+        "firem",
+        "jsme",
+        "lidi",
+        "než",
+        "náklady",
+        "německých",
+        "odolnější",
+        "očekávali",
+        "rostoucí",
+        "zaznívá",
+        "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1141,40 +1172,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Žižkov 3.0. Penta Real Estate a Sudop začínají stavět obytný blok s 550 byty. Vznikající čtvrť celkem pojme až 20 tisíc lidí",
-      "url": "https://archiv.hn.cz/c1-67868900-zizkov-3-0-penta-real-estate-a-sudop-zacinaji-stavet-obytny-blok-s-550-byty-vznikajici-ctvrt-celkem-pojme-az-20-tisic-lidi",
-      "dt": "2026-04-20T13:20:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "550",
-        "blok",
-        "byty",
-        "celkem",
-        "estate",
-        "lidí",
-        "obytný",
-        "penta",
-        "pojme",
-        "real",
-        "stavět",
-        "sudop",
-        "tisíc",
-        "vznikající",
-        "začínají",
-        "čtvrť",
-        "žižkov"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1185,7 +1182,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180820,
+      "bytes": 180897,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1222,11 +1219,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:52:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 34,
+          "zpravy": 3,
           "zdravi": 2,
           "sport": 1
         },
@@ -1240,6 +1237,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko je odolnější, než jsme očekávali, zaznívá od německých firem. Doma je drtí rostoucí náklady na energie i lidi",
+            "publishedAt": "2026-04-21T16:52:00Z"
+          },
           {
             "title": "S tajně nasypanou drogou v pití má zkušenost až třetina mladých v Praze, takzvaný drink spiking má být trestný",
             "publishedAt": "2026-04-21T16:13:00Z"
@@ -1267,10 +1268,6 @@
           {
             "title": "J&T startuje svůj největší současný rezidenční projekt v Česku. V Brně postaví 1700 bytů",
             "publishedAt": "2026-04-21T14:20:00Z"
-          },
-          {
-            "title": "Vládní politici o nás šíří lži a manipulace. Stávce rozumím, ticho v éteru ale nebude, říká šéf Českého rozhlasu Zavoral",
-            "publishedAt": "2026-04-21T13:57:00Z"
           }
         ]
       }
