@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-21T09:19:53.977494Z",
+  "ingestedAt": "2026-04-21T09:39:24.882922Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Macinka se má omluvit za teroristy. Vyzývá ho Hnutí Duha",
+      "url": "https://ekonomickydenik.cz/macinka-omluvit-teroristy-hnuti-duha/",
+      "dt": "2026-04-21T09:19:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "duha",
+        "hnutí",
+        "macinka",
+        "omluvit",
+        "teroristy",
+        "vyzývá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -764,31 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Po rychlotrati do Drážďan. Jaké jsou milníky Krušnohorského tunelu za 125 miliard",
-      "url": "https://ekonomickydenik.cz/krusnohorsky-tunel-vysokorychlostni-zeleznice-projekt/",
-      "dt": "2026-04-18T10:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "125",
-        "drážďan",
-        "jaké",
-        "krušnohorského",
-        "miliard",
-        "milníky",
-        "rychlotrati",
-        "tunelu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70546,
+      "bytes": 70939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,11 +834,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:21:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:19:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zpravy": 3
+          "finance": 28,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -852,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Macinka se má omluvit za teroristy. Vyzývá ho Hnutí Duha",
+            "publishedAt": "2026-04-21T09:19:57Z"
+          },
           {
             "title": "Bitva o umělou inteligenci vrcholí: hraje se o desítky miliard. Byznysu hrozí zklamání",
             "publishedAt": "2026-04-21T08:21:12Z"
@@ -879,10 +881,6 @@
           {
             "title": "Stát ukázal, kam povede vysokorychlostní železnice. Které tratě mají smůlu?",
             "publishedAt": "2026-04-20T15:25:25Z"
-          },
-          {
-            "title": "Bulharsko ovládl generál stíhaček. Kreml slaví, Brusel je zaražený",
-            "publishedAt": "2026-04-20T15:04:40Z"
           }
         ]
       }
