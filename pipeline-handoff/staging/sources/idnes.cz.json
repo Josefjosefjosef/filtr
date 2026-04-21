@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T19:39:55.893090Z",
+  "ingestedAt": "2026-04-21T20:00:15.566728Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Střelba v Šestajovicích se zraněním. Policie zasahuje kvůli drogám",
+      "url": "https://www.idnes.cz/praha/zpravy/kriminalni-drogova-trestna-cinnost-policie-vrtulnik.A260421_212244_praha-zpravy_votr",
+      "dt": "2026-04-21T19:44:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "drogám",
+        "kvůli",
+        "policie",
+        "střelba",
+        "zasahuje",
+        "zraněním",
+        "šestajovicích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Volkswagen prohlubuje ústup ze slávy. Plánuje další drastické omezení výroby",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/volkswagen-omezeni-vyroby-kapacita-automobily-prumysl.A260421_211642_eko-zahranicni_meli",
+      "dt": "2026-04-21T19:33:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "další",
+        "drastické",
+        "omezení",
+        "plánuje",
+        "prohlubuje",
+        "slávy",
+        "volkswagen",
+        "výroby",
+        "ústup"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,58 +780,6 @@
         "opravu",
         "vlakového",
         "čtyřech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Asi mě polil kyselinou, vběhla vyděšená žena do školky a volala o pomoc",
-      "url": "https://www.idnes.cz/plzen/zpravy/utok-polil-zena-materska-skola-plzen-osetreni-zachranka-policie.A260421_123721_plzen-zpravy_vb",
-      "dt": "2026-04-21T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "asi",
-        "kyselinou",
-        "polil",
-        "pomoc",
-        "vběhla",
-        "volala",
-        "vyděšená",
-        "školky",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Děláte z města zábavní park. Obyvatelé Yorku už mají po krk pottermánie",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/delate-z-mesta-zabavni-park-obyvatele-yorku-uz-maji-po-krk-pottermanie.A260421_102733_eko-zahranicni_jadv",
-      "dt": "2026-04-21T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "děláte",
-        "krk",
-        "mají",
-        "města",
-        "obyvatelé",
-        "park",
-        "pottermánie",
-        "yorku",
-        "zábavní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46869,
+      "bytes": 46675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T19:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T19:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1639,6 +1637,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střelba v Šestajovicích se zraněním. Policie zasahuje kvůli drogám",
+            "publishedAt": "2026-04-21T19:44:00Z"
+          },
+          {
+            "title": "Volkswagen prohlubuje ústup ze slávy. Plánuje další drastické omezení výroby",
+            "publishedAt": "2026-04-21T19:33:00Z"
+          },
           {
             "title": "Vietnam i Irák bych jako prezident porazil hned, řekl Trump, který se vyhýbal odvodu",
             "publishedAt": "2026-04-21T19:23:00Z"
@@ -1662,14 +1668,6 @@
           {
             "title": "Z části Donbasu může být „Donnyland“. Už by měla vlajku i hymnu, píšou v USA",
             "publishedAt": "2026-04-21T18:10:00Z"
-          },
-          {
-            "title": "Když příměří, tak expanze. Izrael zabírá jih Libanonu, vznikla zóna volné střelby",
-            "publishedAt": "2026-04-21T18:00:00Z"
-          },
-          {
-            "title": "Nový šéf Applu to nebude mít jednoduché. Kdo je muž, který nahradí Tima Cooka",
-            "publishedAt": "2026-04-21T18:00:00Z"
           }
         ]
       }

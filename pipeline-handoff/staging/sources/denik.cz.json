@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T19:39:55.893090Z",
+  "ingestedAt": "2026-04-21T20:00:15.566728Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Policie zadržela muže, který vyhrožoval bombovým útokem na objekt ministerstva",
+      "url": "https://www.denik.cz/krimi/vyhruzka-vybusnina-ministerstvo-vnitra-senior-policie-melnik.html",
+      "dt": "2026-04-21T19:13:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bombovým",
+        "ministerstva",
+        "muže",
+        "objekt",
+        "policie",
+        "vyhrožoval",
+        "zadržela",
+        "útokem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,34 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dvorecký most v Praze čelí vlně kritiky: Zrušení linky 14 či vysoká cena stavby",
-      "url": "https://www.denik.cz/regiony/praha-dvorecky-most-kritika-mhd-zruseni-linky-14-draha-stavba.html",
-      "dt": "2026-04-21T09:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cena",
-        "dvorecký",
-        "kritiky",
-        "linky",
-        "most",
-        "praze",
-        "stavby",
-        "vlně",
-        "vysoká",
-        "zrušení",
-        "čelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29763,
+      "bytes": 29797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T19:13:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -722,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie zadržela muže, který vyhrožoval bombovým útokem na objekt ministerstva",
+            "publishedAt": "2026-04-21T19:13:00Z"
+          },
           {
             "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
             "publishedAt": "2026-04-21T18:18:00Z"
@@ -749,10 +750,6 @@
           {
             "title": "Média nedáme! Studenti vyrazí v Česku do ulic. Na protest proti návrhu Klempíře",
             "publishedAt": "2026-04-21T14:30:00Z"
-          },
-          {
-            "title": "Timmy opět bojuje o život. Podle expertů už záchranáři mají velrybu nechat být",
-            "publishedAt": "2026-04-21T14:22:00Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-04-21T19:39:55.893090Z",
+  "ingestedAt": "2026-04-21T20:00:15.566728Z",
   "items": [
     {
       "section": "aktualne",
@@ -4522,6 +4522,28 @@
       "_dt_serialized": true
     },
     {
+      "section": "vzdelavani",
+      "contentType": "article",
+      "title": "Ceny nafty v březnu stouply o čtvrtinu",
+      "url": "https://www.novinky.cz/clanek/ekonomika-ceny-nafty-v-breznu-stouply-o-ctvrtinu-40574672",
+      "dt": "2026-04-21T19:57:26Z",
+      "media_raw": "Novinky / Škola",
+      "media_norm": "Novinky / Škola",
+      "tokens": [
+        "březnu",
+        "ceny",
+        "nafty",
+        "stouply",
+        "čtvrtinu"
+      ],
+      "feedCategory": "vzdelavani",
+      "feedType": "rubric",
+      "feedId": "vzd_novinky_skola",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Brit znásilnil ženu, protože si myslel, že je muslimka",
@@ -5249,30 +5271,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "vzdelavani",
-      "contentType": "article",
-      "title": "Požár bytu ve Strakonicích. V nemocnici skončili dva lidé",
-      "url": "https://www.novinky.cz/clanek/krimi-pozar-bytu-ve-strakonicich-v-nemocnici-skoncili-dva-lide-40574600",
-      "dt": "2026-04-21T13:10:06Z",
-      "media_raw": "Novinky / Škola",
-      "media_norm": "Novinky / Škola",
-      "tokens": [
-        "bytu",
-        "dva",
-        "lidé",
-        "nemocnici",
-        "požár",
-        "skončili",
-        "strakonicích"
-      ],
-      "feedCategory": "vzdelavani",
-      "feedType": "rubric",
-      "feedId": "vzd_novinky_skola",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -5854,7 +5852,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/skola",
-      "bytes": 42366,
+      "bytes": 42225,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5891,11 +5889,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:51:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T19:57:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "other": 19
+          "other": 19,
+          "zpravy": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -5907,6 +5905,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ceny nafty v březnu stouply o čtvrtinu",
+            "publishedAt": "2026-04-21T19:57:26Z"
+          },
           {
             "title": "Brit znásilnil ženu, protože si myslel, že je muslimka",
             "publishedAt": "2026-04-21T18:51:51Z"
@@ -5934,10 +5936,6 @@
           {
             "title": "Na vývěsku SPD v Jindřichově Hradci zaútočil už podruhé vandal sprejem a kladivem",
             "publishedAt": "2026-04-21T17:44:22Z"
-          },
-          {
-            "title": "Slovenská ministryně kultury po protestech obrátila, institucím vrátí peníze",
-            "publishedAt": "2026-04-21T17:41:55Z"
           }
         ]
       }
