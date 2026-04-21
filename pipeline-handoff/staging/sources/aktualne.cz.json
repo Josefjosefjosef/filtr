@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T17:19:51.601623Z",
+  "ingestedAt": "2026-04-21T17:42:44.681600Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Prvním finalistou poháru je Jablonec, na Mladou Boleslav stačila jediná branka",
+      "url": "https://sport.aktualne.cz/fotbal/prvnim-finalistou-poharu-je-jablonec-na-mladou-boleslav-stacila-jedina-branka/r~aaa29ad8cc8e1b8b57d1775bc4c287ea/",
+      "dt": "2026-04-21T17:15:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "boleslav",
+        "branka",
+        "finalistou",
+        "jablonec",
+        "jediná",
+        "mladou",
+        "poháru",
+        "prvním",
+        "stačila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -497,31 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Není to důvěryhodný zdroj.“ Macinka a spol. reagují na podezření z korupce v Radě ČT",
-      "url": "https://zpravy.aktualne.cz/domaci/neni-to-duveryhodny-zdroj-macinka-a-spol-reaguji-na-podezreni-z-korupce-v-rade-ct/r~aaa2970a6e2f4a5c7added58ab31ece7/",
-      "dt": "2026-04-21T12:15:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "důvěryhodný",
-        "korupce",
-        "macinka",
-        "podezření",
-        "radě",
-        "reagují",
-        "spol",
-        "zdroj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22368,
+      "bytes": 22189,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,11 +570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 4,
+          "sport": 5,
+          "zpravy": 12,
           "finance": 2,
           "other": 1
         },
@@ -587,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prvním finalistou poháru je Jablonec, na Mladou Boleslav stačila jediná branka",
+            "publishedAt": "2026-04-21T17:15:00Z"
+          },
           {
             "title": "Orbánův zákon proti LGBT+ narazil. Evropský soudní dvůr ho označil za diskriminační",
             "publishedAt": "2026-04-21T13:56:00Z"
@@ -614,10 +619,6 @@
           {
             "title": "Maďarsko a Slovensko podpoří půjčku pro Kyjev, pokud poteče ruská ropa, uvedl Macinka",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Havlíček jednal se šéfem rozhlasu, změny chce dotáhnout",
-            "publishedAt": "2026-04-21T15:36:00Z"
           }
         ]
       }

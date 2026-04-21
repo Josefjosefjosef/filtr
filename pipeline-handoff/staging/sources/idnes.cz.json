@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T17:19:51.601623Z",
+  "ingestedAt": "2026-04-21T17:42:44.681600Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kavárny v ulicích Teheránu jsou plné, hrozba nové války je však za dveřmi",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/kavarny-v-ulicich-teheranu-jsou-plne-hrozba-nove-valky-je-vsak-za-dvermi.A260421_190638_zahranicni_meli",
+      "dt": "2026-04-21T17:22:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dveřmi",
+        "hrozba",
+        "kavárny",
+        "nové",
+        "plné",
+        "teheránu",
+        "ulicích",
+        "války",
+        "však"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -757,33 +783,6 @@
         "vraha",
         "vraždy",
         "zaznělo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hasiči pořád zasahují u požáru ve skladu plastů, stále nachází nová ohniska",
-      "url": "https://www.idnes.cz/brno/zpravy/pozar-plasty-prizrenice-pokracuje-nova-ohniska-hasici.A260421_091024_brno-zpravy_mos1",
-      "dt": "2026-04-21T13:13:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "hasiči",
-        "nachází",
-        "nová",
-        "ohniska",
-        "plastů",
-        "pořád",
-        "požáru",
-        "skladu",
-        "stále",
-        "zasahují"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1587,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47149,
+      "bytes": 47113,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1624,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:22:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1642,6 +1641,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kavárny v ulicích Teheránu jsou plné, hrozba nové války je však za dveřmi",
+            "publishedAt": "2026-04-21T17:22:00Z"
+          },
           {
             "title": "Prosím, neubližujte jim! Trump orodoval za propuštění žen, které Írán chce popravit",
             "publishedAt": "2026-04-21T16:39:00Z"
@@ -1669,10 +1672,6 @@
           {
             "title": "Radost střídá smutek. Co potkalo Maroko po rekordních zimních záplavách",
             "publishedAt": "2026-04-21T16:00:00Z"
-          },
-          {
-            "title": "Zablokujeme Sněmovnu, aby nedošlo k volbě členů Rady ČT,  slibuje opozice",
-            "publishedAt": "2026-04-21T15:58:27Z"
           }
         ]
       }
