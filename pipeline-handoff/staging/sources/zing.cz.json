@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-21T10:00:08.486945Z",
+  "ingestedAt": "2026-04-21T10:19:27.650707Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "El Presidente se hlásí o slovo, Tropico 7 ukázalo premiérový gameplay trailer",
+      "url": "https://zing.cz/article/el-presidente-se-hlasi-o-slovo-tropico-7-ukazalo-premierovy-gameplay-trailer",
+      "dt": "2026-04-21T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "gameplay",
+        "hlásí",
+        "premiérový",
+        "presidente",
+        "slovo",
+        "trailer",
+        "tropico",
+        "ukázalo"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -950,30 +975,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "YouTuber už nechtěl čekat a postavil vlastní Steam Machine",
-      "url": "https://zing.cz/article/youtuber-uz-nechtel-cekat-a-postavil-vlastni-steam-machine",
-      "dt": "2026-04-15T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "machine",
-        "nechtěl",
-        "postavil",
-        "steam",
-        "vlastní",
-        "youtuber",
-        "čekat"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -984,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126416,
+      "bytes": 126408,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1021,10 +1022,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1036,6 +1038,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "El Presidente se hlásí o slovo, Tropico 7 ukázalo premiérový gameplay trailer",
+            "publishedAt": "2026-04-21T10:00:00Z"
+          },
           {
             "title": "Hráči nečekali na otálející Ubisoft a místo toho dali šanci jiné pirátské hře",
             "publishedAt": "2026-04-21T08:00:00Z"
@@ -1063,10 +1069,6 @@
           {
             "title": "Chystaná hororová hra na Unreal Enginu 5 vás vezme do bohnické léčebny",
             "publishedAt": "2026-04-20T12:00:00Z"
-          },
-          {
-            "title": "Kingdom Come: Deliverance 2 získalo prestižní ocenění za nejlepší příběh",
-            "publishedAt": "2026-04-20T10:00:00Z"
           }
         ]
       }

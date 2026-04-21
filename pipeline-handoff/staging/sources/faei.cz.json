@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-21T10:00:08.486945Z",
+  "ingestedAt": "2026-04-21T10:19:27.650707Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Gruzínská vláda se mstí studentům, omezuje veřejné univerzity",
+      "url": "https://profitonline.cz/gruzinska-vlada-se-msti-studentum-omezuje-verejne-univerzity/",
+      "dt": "2026-04-21T10:00:29Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "gruzínská",
+        "mstí",
+        "omezuje",
+        "studentům",
+        "univerzity",
+        "veřejné",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,31 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Estée Lauder a Puig mohou změnit rozložení sil v kosmetickém průmyslu",
-      "url": "https://profitonline.cz/estee-lauder-a-puig-mohou-zmenit-rozlozeni-sil-v-kosmetickem-prumyslu/",
-      "dt": "2026-04-19T08:00:01Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "estée",
-        "kosmetickém",
-        "lauder",
-        "průmyslu",
-        "puig",
-        "rozložení",
-        "sil",
-        "změnit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19520,
+      "bytes": 19286,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:00:29Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -361,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gruzínská vláda se mstí studentům, omezuje veřejné univerzity",
+            "publishedAt": "2026-04-21T10:00:29Z"
+          },
           {
             "title": "Blízkovýchodní šok zasahuje českou ekonomiku v příznivou chvíli",
             "publishedAt": "2026-04-21T09:00:34Z"
@@ -388,10 +391,6 @@
           {
             "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
             "publishedAt": "2026-04-20T08:00:18Z"
-          },
-          {
-            "title": "Hormuz je opět uzavřen, ale nafta zlevní o dvě koruny. Jak je to možné?",
-            "publishedAt": "2026-04-20T06:00:54Z"
           }
         ]
       }

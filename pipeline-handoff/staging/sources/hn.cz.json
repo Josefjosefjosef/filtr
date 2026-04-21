@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T10:00:08.486945Z",
+  "ingestedAt": "2026-04-21T10:19:27.650707Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Práci vám nevezme umělá inteligence, ale kolega, který se ji naučí lépe využívat, říká makroekonom Aleš Maršál",
+      "url": "https://byznys.hn.cz/c1-67864580-praci-vam-nevezme-umela-inteligence-ale-kolega-ktery-se-ji-nauci-lepe-vyuzivat-rika-makroekonom-ales-marsal",
+      "dt": "2026-04-21T10:03:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "aleš",
+        "inteligence",
+        "kolega",
+        "lépe",
+        "makroekonom",
+        "maršál",
+        "naučí",
+        "nevezme",
+        "práci",
+        "umělá",
+        "využívat",
+        "vám",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1140,37 +1171,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jak jeden nadnárodní koncern donutil Slovince vařit si vlastní pivo a proč by z toho měl radost Jára Cimrman",
-      "url": "https://podcasty.hn.cz/c1-67868570-jak-jeden-nadnarodni-koncern-donutil-slovince-varit-si-vlastni-pivo-a-proc-by-z-toho-mel-radost-jara-cimrman",
-      "dt": "2026-04-20T04:26:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "cimrman",
-        "donutil",
-        "jeden",
-        "jára",
-        "koncern",
-        "měl",
-        "nadnárodní",
-        "pivo",
-        "proč",
-        "radost",
-        "slovince",
-        "toho",
-        "vařit",
-        "vlastní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1181,7 +1181,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181243,
+      "bytes": 181014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1218,7 +1218,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:03:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1236,6 +1236,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Práci vám nevezme umělá inteligence, ale kolega, který se ji naučí lépe využívat, říká makroekonom Aleš Maršál",
+            "publishedAt": "2026-04-21T10:03:00Z"
+          },
           {
             "title": "Křišťálová koule, nebo platforma pro podvodníky? Polymarket mění důvěrné informace v peníze pro zasvěcené",
             "publishedAt": "2026-04-21T09:09:00Z"
@@ -1263,10 +1267,6 @@
           {
             "title": "Hodně prachů, hodně holek,  ale... Jak těžké je být &bdquo;povoláním&ldquo; syn slavného otce, vysvětluje hudebník Mat213",
             "publishedAt": "2026-04-21T06:55:00Z"
-          },
-          {
-            "title": "Dánsko má za sebou zajímavé volby. Kdo vyhrál a proč to může znovu prověřit vztahy s USA",
-            "publishedAt": "2026-04-21T06:53:00Z"
           }
         ]
       }

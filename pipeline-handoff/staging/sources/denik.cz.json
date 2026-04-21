@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T10:00:08.486945Z",
+  "ingestedAt": "2026-04-21T10:19:27.650707Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Karlovarský festival uvede digitálně restaurovaný film Kopytem sem kopytem tam",
+      "url": "https://www.denik.cz/film-a-televize/karlovarsky-festival-kopytem-sem-kopytem-tam.html",
+      "dt": "2026-04-21T09:59:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "digitálně",
+        "festival",
+        "film",
+        "karlovarský",
+        "kopytem",
+        "restaurovaný",
+        "sem",
+        "tam",
+        "uvede"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -625,33 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Timmy se po vyproštění opět zastavil, velryba ale prý odpočívá. Potíž je i vítr",
-      "url": "https://www.denik.cz/staty-eu/keporkak-veltyba-timmy-baltske-more-neuvazl-ted-odpociva-zachrana-pokracuje.html",
-      "dt": "2026-04-20T14:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "odpočívá",
-        "opět",
-        "potíž",
-        "prý",
-        "timmy",
-        "velryba",
-        "vyproštění",
-        "vítr",
-        "zastavil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28809,
+      "bytes": 28931,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:59:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karlovarský festival uvede digitálně restaurovaný film Kopytem sem kopytem tam",
+            "publishedAt": "2026-04-21T09:59:00Z"
+          },
           {
             "title": "Pečovatel pořádal sexuální orgie s dětmi. Budu se léčit, slíbil u soudu",
             "publishedAt": "2026-04-21T09:30:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Hnutí Duha žádá po Macinkovi veřejnou omluvu za výrok o terorismu",
             "publishedAt": "2026-04-21T06:43:00Z"
-          },
-          {
-            "title": "Apple mění šéfa. Na postu generálního ředitele končí Cook, střídá ho Ternus",
-            "publishedAt": "2026-04-21T06:32:00Z"
           }
         ]
       }
