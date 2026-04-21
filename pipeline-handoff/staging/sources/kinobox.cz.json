@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-21T08:20:16.050087Z",
+  "ingestedAt": "2026-04-21T09:19:53.977494Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Který Harry Potter je nejlepší? Daniel Radcliffe vybral filmového favorita a šel proti fanouškům",
+      "url": "https://www.kinobox.cz/clanky/filmy/52862-ktery-harry-potter-je-nejlepsi-daniel-radcliffe-vybral-filmoveho-favorita-a-sel-proti-lidu",
+      "dt": "2026-04-21T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daniel",
+        "fanouškům",
+        "favorita",
+        "filmového",
+        "harry",
+        "nejlepší",
+        "potter",
+        "proti",
+        "radcliffe",
+        "vybral",
+        "šel"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,34 +555,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Drsný historický opus Maso a krev přivedl do Hollywoodu ikonického režiséra",
-      "url": "https://www.kinobox.cz/clanky/daily/52800-kinobox-daily-drsny-historicky-opus-maso-a-krev-privedl-rezisera-paula-verheovena-do-hollywoodu",
-      "dt": "2026-04-18T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "daily",
-        "drsný",
-        "historický",
-        "hollywoodu",
-        "ikonického",
-        "kinobox",
-        "krev",
-        "maso",
-        "opus",
-        "přivedl",
-        "režiséra"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -565,7 +565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27796,
+      "bytes": 28010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -602,7 +602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -617,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Který Harry Potter je nejlepší? Daniel Radcliffe vybral filmového favorita a šel proti fanouškům",
+            "publishedAt": "2026-04-21T09:00:00Z"
+          },
           {
             "title": "Klasické velkofilmy i aktuální oscarovky. Festivalu KRRR! má za sebou vyprodaný ročník",
             "publishedAt": "2026-04-21T08:00:00Z"
@@ -644,10 +648,6 @@
           {
             "title": "Kinobox Daily: Lovcova noc připomíná první film nového žánru, který nikdy nevznikl",
             "publishedAt": "2026-04-20T10:00:00Z"
-          },
-          {
-            "title": "Ridley Scott útočí s dalším sci-fi blockbusterem. Vzhlížet ke hvězdám můžete v traileru na akční nářez",
-            "publishedAt": "2026-04-20T09:00:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T08:20:16.050087Z",
+  "ingestedAt": "2026-04-21T09:19:53.977494Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/prezije-interna-ve-znojemske-nemocnici-novy-reditel-odhalil-sve-plany/",
+      "dt": "2026-04-21T09:15:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "interna",
+        "nemocnici",
+        "nový",
+        "odhalil",
+        "plány",
+        "přežije",
+        "své",
+        "znojemské",
+        "ředitel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přísnější tresty za útoky na zdravotníky? Advokátka má k návrhu ČLK zásadní výhrady",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnici-uredni-osoby-advokatka-vyhrady/",
-      "dt": "2026-04-20T09:32:05Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "advokátka",
-        "návrhu",
-        "přísnější",
-        "tresty",
-        "výhrady",
-        "zdravotníky",
-        "zásadní",
-        "útoky",
-        "člk"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97299,
+      "bytes": 95620,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:15:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
+            "publishedAt": "2026-04-21T09:15:51Z"
+          },
           {
             "title": "Trumpova léková politika ohrožuje Evropu: Česko se připravuje na „sanitární akci“ k ochraně cen",
             "publishedAt": "2026-04-21T08:00:00Z"
@@ -362,10 +366,6 @@
           {
             "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
             "publishedAt": "2026-04-20T13:42:54Z"
-          },
-          {
-            "title": "Fiasko Bruselu: Aplikaci na ochranu dětí prolomili hackeři za dvě minuty. Stála 100 milionů",
-            "publishedAt": "2026-04-20T12:56:30Z"
           }
         ]
       }

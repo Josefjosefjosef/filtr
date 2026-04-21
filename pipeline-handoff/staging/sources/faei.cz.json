@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-21T08:20:16.050087Z",
+  "ingestedAt": "2026-04-21T09:19:53.977494Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Blízkovýchodní šok zasahuje českou ekonomiku v příznivou chvíli",
+      "url": "https://profitonline.cz/blizkovychodni-sok-zasahuje-ceskou-ekonomiku-v-priznivou-chvili/",
+      "dt": "2026-04-21T09:00:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "blízkovýchodní",
+        "chvíli",
+        "ekonomiku",
+        "příznivou",
+        "zasahuje",
+        "českou",
+        "šok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,31 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když české peníze patřily k nejsilnějším měnám střední Evropy",
-      "url": "https://profitonline.cz/kdyz-ceske-penize-patrily-k-nejsilnejsim-menam-stredni-evropy/",
-      "dt": "2026-04-19T04:00:28Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "evropy",
-        "když",
-        "měnám",
-        "nejsilnějším",
-        "patřily",
-        "peníze",
-        "střední",
-        "české"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19510,
+      "bytes": 19520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:00:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:00:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -362,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blízkovýchodní šok zasahuje českou ekonomiku v příznivou chvíli",
+            "publishedAt": "2026-04-21T09:00:34Z"
+          },
           {
             "title": "Dražší energie vyvíjejí tlak na ceny v českém průmyslu",
             "publishedAt": "2026-04-21T08:00:44Z"
@@ -389,10 +392,6 @@
           {
             "title": "Hormuz je opět uzavřen, ale nafta zlevní o dvě koruny. Jak je to možné?",
             "publishedAt": "2026-04-20T06:00:54Z"
-          },
-          {
-            "title": "Kilogramy vyhozených léků ohrožují děti. Pokládají je za bonbony",
-            "publishedAt": "2026-04-20T04:00:15Z"
           }
         ]
       }

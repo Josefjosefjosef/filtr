@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-04-21T08:20:16.050087Z",
+  "ingestedAt": "2026-04-21T09:19:53.977494Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Španělsko: podrobný praktický průvodce pro každou dovolenou",
+      "url": "https://travelbible.cz/spanelsko/",
+      "dt": "2026-04-21T07:25:00Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "dovolenou",
+        "každou",
+        "podrobný",
+        "praktický",
+        "průvodce",
+        "španělsko"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -215,31 +238,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Luxusní bydlení zdarma po celém světě? Zkuste house sitting",
-      "url": "https://travelbible.cz/housesitting/",
-      "dt": "2026-03-13T07:26:00Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "bydlení",
-        "celém",
-        "house",
-        "luxusní",
-        "sitting",
-        "světě",
-        "zdarma",
-        "zkuste"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -250,7 +248,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13264,
+      "bytes": 13383,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -287,11 +285,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-14T11:10:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:25:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 5,
-          "zpravy": 5
+          "cestovani": 6,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -303,6 +301,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Španělsko: podrobný praktický průvodce pro každou dovolenou",
+            "publishedAt": "2026-04-21T07:25:00Z"
+          },
           {
             "title": "Nomádíte, podnikáte a nevíte jak s českou adresou pro úřady? Řešení je jednoduché",
             "publishedAt": "2026-04-14T11:10:20Z"
@@ -330,10 +332,6 @@
           {
             "title": "Průvodce Poznaň: 21 tipů, co dělat, vidět i ochutnat",
             "publishedAt": "2026-03-15T04:30:03Z"
-          },
-          {
-            "title": "Průvodce Mae Salong: Čajové plantáže, čínská kultura i etnické vesnice",
-            "publishedAt": "2026-03-14T05:24:05Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-21T08:20:16.050087Z",
+  "ingestedAt": "2026-04-21T09:19:53.977494Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Z Prahy do Sofie na jednu noc ze soboty na neděli. Letenky od 1 423 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-sofie-na-jednu-noc-ze-soboty-na-nedeli",
+      "dt": "2026-04-21T08:18:16Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "423",
+        "jednu",
+        "letenky",
+        "neděli",
+        "noc",
+        "prahy",
+        "soboty",
+        "sofie"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -477,31 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Mallorca na týden z Prahy s polopenzí – až 2 děti za polovinu. Zájezd od 9 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/mallorca-na-tyden-s-polopenzi-2-deti-zdarma",
-      "dt": "2026-04-15T07:43:21Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "děti",
-        "mallorca",
-        "polopenzí",
-        "polovinu",
-        "prahy",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 41149,
+      "bytes": 40433,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T19:18:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T08:18:16Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Prahy do Sofie na jednu noc ze soboty na neděli. Letenky od 1 423 Kč",
+            "publishedAt": "2026-04-21T08:18:16Z"
+          },
           {
             "title": "Severní Makedonie z Bratislavy v červnu. Letenky od 688 Kč",
             "publishedAt": "2026-04-20T19:18:31Z"
@@ -591,10 +595,6 @@
           {
             "title": "Týden na Mallorce s all-inclusive z Prahy na přelomu dubna a května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-17T18:24:48Z"
-          },
-          {
-            "title": "Nová linka z Prahy do Vilniusu s Wizz Air. Letenky od 1 568 Kč",
-            "publishedAt": "2026-04-17T11:57:59Z"
           }
         ]
       }
