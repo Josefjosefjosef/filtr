@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T20:39:51.495788Z",
+  "ingestedAt": "2026-04-21T21:00:18.335690Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jsme kompletní a měli jsme dlouhou dobu na přípravu, přiznává v baráži kouč Litvínova",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-jsme-kompletni-a-meli-jsme-dlouhou-dobu-na-pripravu-priznava-v-barazi-kouc-litvinova-5441366",
+      "dt": "2026-04-21T20:51:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "baráži",
+        "dlouhou",
+        "dobu",
+        "jsme",
+        "kompletní",
+        "kouč",
+        "litvínova",
+        "měli",
+        "přiznává",
+        "přípravu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,33 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V příštích letech může Zbrojovka postoupit do Evropy, věří po návratu mezi elitu klubová legenda",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-2-liga-v-pristich-letech-muze-zbrojovka-postoupit-do-evropy-veri-po-navratu-mezi-elitu-klubova-legenda-5440964",
-      "dt": "2026-04-21T12:14:40Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "elitu",
-        "evropy",
-        "klubová",
-        "legenda",
-        "letech",
-        "návratu",
-        "postoupit",
-        "příštích",
-        "věří",
-        "zbrojovka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41888,
+      "bytes": 42581,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T19:20:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T20:51:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jsme kompletní a měli jsme dlouhou dobu na přípravu, přiznává v baráži kouč Litvínova",
+            "publishedAt": "2026-04-21T20:51:34Z"
+          },
           {
             "title": "Historický postup. Karviná je druhým finalistou MOL Cupu, v napínavém slezském derby udolala Baník",
             "publishedAt": "2026-04-21T09:28:45Z"
@@ -863,10 +867,6 @@
           {
             "title": "Basketbalisté Písku porazili v úvodním utkání předkola doma USK Praha",
             "publishedAt": "2026-04-21T17:39:52Z"
-          },
-          {
-            "title": "Pekelný los! Češky čeká v Berlíně šílená skupina",
-            "publishedAt": "2026-04-21T16:48:41Z"
           }
         ]
       }

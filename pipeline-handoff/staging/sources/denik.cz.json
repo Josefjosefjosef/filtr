@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T20:39:51.495788Z",
+  "ingestedAt": "2026-04-21T21:00:18.335690Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Donnyland? Ukrajinští vyjednavači navrhli přejmenovat část Donbasu po Trumpovi",
+      "url": "https://www.denik.cz/staty-mimo-eu/valka-na-ukrajine-donbas-donald-trump-donnyland.html",
+      "dt": "2026-04-21T20:43:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "donbasu",
+        "donnyland",
+        "navrhli",
+        "přejmenovat",
+        "trumpovi",
+        "ukrajinští",
+        "vyjednavači",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -631,32 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Pečovatel pořádal sexuální orgie s dětmi. Budu se léčit, slíbil u soudu",
-      "url": "https://www.denik.cz/krimi/plzen-soud-fotograf-sexualni-zlocin-chlapci-orgie.html",
-      "dt": "2026-04-21T09:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "budu",
-        "dětmi",
-        "léčit",
-        "orgie",
-        "pečovatel",
-        "pořádal",
-        "sexuální",
-        "slíbil",
-        "soudu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29797,
+      "bytes": 29595,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T19:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T20:43:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -719,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Donnyland? Ukrajinští vyjednavači navrhli přejmenovat část Donbasu po Trumpovi",
+            "publishedAt": "2026-04-21T20:43:00Z"
+          },
           {
             "title": "Policie zadržela muže, který vyhrožoval bombovým útokem na objekt ministerstva",
             "publishedAt": "2026-04-21T19:13:00Z"
@@ -746,10 +749,6 @@
           {
             "title": "V Británii si lidé narození po roce 2008 nezakouří. Prošel přelomový zákon",
             "publishedAt": "2026-04-21T14:46:00Z"
-          },
-          {
-            "title": "Média nedáme! Studenti vyrazí v Česku do ulic. Na protest proti návrhu Klempíře",
-            "publishedAt": "2026-04-21T14:30:00Z"
           }
         ]
       }
