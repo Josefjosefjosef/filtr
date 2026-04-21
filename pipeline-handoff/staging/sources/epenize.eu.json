@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-21T23:21:24.754584Z",
+  "ingestedAt": "2026-04-21T23:40:31.114104Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump v CNBC: Válku ve Vietnamu bych vyhrál rychle",
+      "url": "https://www.epenize.eu/trump-v-cnbc-valku-ve-vietnamu-bych-vyhral-rychle/",
+      "dt": "2026-04-21T23:00:04Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bych",
+        "cnbc",
+        "rychle",
+        "trump",
+        "vietnamu",
+        "vyhrál",
+        "válku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,31 +500,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Konec velké italské romance: Trump pálí mosty i s Meloniovou",
-      "url": "https://www.epenize.eu/konec-velke-italske-romance-trump-pali-mosty-i-s-meloniovou/",
-      "dt": "2026-04-14T23:00:23Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "italské",
-        "konec",
-        "meloniovou",
-        "mosty",
-        "pálí",
-        "romance",
-        "trump",
-        "velké"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 111671,
+      "bytes": 110466,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,12 +547,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:51:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T23:00:04Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
+          "finance": 17,
           "zdravi": 1,
-          "zpravy": 2,
+          "zpravy": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -566,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump v CNBC: Válku ve Vietnamu bych vyhrál rychle",
+            "publishedAt": "2026-04-21T23:00:04Z"
+          },
           {
             "title": "Když dochází finance: Je životní pojištění opravdu výdaj, na kterém šetřit?",
             "publishedAt": "2026-04-21T09:51:56Z"
@@ -593,10 +596,6 @@
           {
             "title": "Babišovo zakázané letadlo pro Vystrčila jako ekonomický blud",
             "publishedAt": "2026-04-19T08:07:53Z"
-          },
-          {
-            "title": "Trump se bojí Rogana víc než Íránu. A Rogan to moc dobře ví",
-            "publishedAt": "2026-04-18T23:00:19Z"
           }
         ]
       }
