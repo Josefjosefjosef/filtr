@@ -11088,6 +11088,51 @@ main#content .layout:has(#leftStickyHeader){
   margin-bottom: 8px;
   min-width: 0;
 }
+
+/* MindMenu: host obaluje dlaždici + desktop hover mount (≥1025px aktivuje JS třídu body.iu-desktop-hover-summary-enabled). */
+.accordionCol .mindMenu .iu-mmTopToolHoverHost.iu-hover-summary-host{
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.accordionCol .mindMenu .iu-mmTopToolHoverHost.iu-hover-summary-host > .iu-mmTopTool{
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  align-self: stretch;
+}
+.iu-mmHoverSummaryBridge{
+  flex: 0 0 auto;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+}
+@media (min-width: 1025px){
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryBridge:not([hidden]){
+    height: 10px;
+    pointer-events: auto;
+  }
+}
+
+/* Hover panel zavřený stav: ne display:none (proof + computed styles na kartách); mimo viewport + neinteraktivní. */
+@media (min-width: 1025px){
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell.iu-mmHoverSummaryPanelShell--closed{
+    position: fixed !important;
+    left: -12000px !important;
+    top: 0 !important;
+    width: min(380px, calc(100vw - 20px)) !important;
+    max-height: min(72vh, 560px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    overflow: hidden !important;
+  }
+}
+
 .accordionCol .mindMenu .iu-mmTopTool{
   display: flex;
   flex-direction: column;
@@ -16908,6 +16953,63 @@ Porušení = regres + CLS risk
     max-height: 172px;
     box-sizing: border-box;
     overflow: visible;
+  }
+
+  /* Kalendář/Úkoly souhrny přesunuté do MindMenu hover: skrýt separátory mezi starými sloty (žádná mrtvá mezera). */
+  #silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,
+  #silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorTasks{
+    display: none !important;
+  }
+
+  /* Hover panel: fixed pozici doplňuje app.js (viewport clamp); zde vizuál + scroll + čitelnost delšího textu. */
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){
+    box-sizing: border-box;
+    max-height: min(72vh, 560px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 35, 55, 0.16);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 16px 44px rgba(7, 12, 19, 0.22);
+    padding: 10px 10px 12px;
+    color: #0b1f33;
+  }
+  .dark body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){
+    background: rgba(15, 23, 42, 0.96);
+    border-color: rgba(148, 163, 184, 0.28);
+    color: rgba(241, 245, 249, 0.95);
+  }
+  body.iu-desktop-hover-summary-enabled .iu-mmTopToolHoverHost.iu-has-hover-summary{
+    position: relative;
+    z-index: 10058;
+  }
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-card{
+    border-radius: 10px;
+  }
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-text{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-line2main{
+    white-space: normal;
+  }
+
+  /*
+   * MindMenu mount (≥1025px): karty jsou mimo #silver-slot — explicitní accent lock (!important přes .mindMenu color + subtřídy).
+   */
+  .mindMenu #iuSilverCalendarSummaryCard .iuCalendarSummary__label{
+    color: var(--iu-calendar-accent) !important;
+  }
+  .mindMenu #iuSilverCalendarSummaryCard .iuCalendarSummary__icon{
+    color: var(--iu-calendar-accent) !important;
+  }
+  .mindMenu #iuSilverTasksSummaryCard .iuTasksLabel{
+    color: var(--iuTasksAccent, #8b5cf6) !important;
+  }
+  .mindMenu #iuSilverTasksSummaryCard .iuTasksIcon{
+    color: var(--iuTasksAccent, #8b5cf6) !important;
   }
 }
 

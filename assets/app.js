@@ -10198,6 +10198,270 @@ function buildVideoAsArticleCard(it) {
     try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 1500); }catch{}
   }
 
+  /**
+   * Desktop ≥1025px: přesun Silver souhrnů Kalendář/Úkoly pod MindMenu dlaždice + hover panel (stejné DOM uzly, stejná refresh logika).
+   * ≤1024px: beze změny (karty zůstávají ve stacku).
+   */
+  function iuDesktopMindMenuSilverSummaryHoverInit(){
+    try{
+      if (window.__iuDesktopMindMenuSilverSummaryHoverInit) return;
+      window.__iuDesktopMindMenuSilverSummaryHoverInit = 1;
+    }catch{}
+
+    const mqDesk = window.matchMedia ? window.matchMedia("(min-width: 1025px)") : null;
+    const silverSlot = document.getElementById("silver-slot");
+    const calCard = document.getElementById("iuSilverCalendarSummaryCard");
+    const tasksCard = document.getElementById("iuSilverTasksSummaryCard");
+    const sepTasks = document.getElementById("iuSilverWelcomeStackSeparatorTasks");
+    const insertTasksBefore = document.getElementById("iuSilverWelcomeStackSeparatorBeforeSilver");
+    const stack = calCard && calCard.parentNode ? calCard.parentNode : null;
+    const hostCal = document.getElementById("iuMmHoverSummaryHostCalendar");
+    const hostTasks = document.getElementById("iuMmHoverSummaryHostTasks");
+    const shellCal = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
+    const shellTasks = document.getElementById("iuMmHoverSummaryPanelShellTasks");
+    const bridgeCal = document.getElementById("iuMmHoverSummaryBridgeCalendar");
+    const bridgeTasks = document.getElementById("iuMmHoverSummaryBridgeTasks");
+    if (!calCard || !tasksCard || !stack || !hostCal || !hostTasks || !shellCal || !shellTasks || !insertTasksBefore) return;
+
+    function mqDesktopMatches(){
+      try{
+        return mqDesk ? !!mqDesk.matches : window.innerWidth >= 1025;
+      }catch{
+        return window.innerWidth >= 1025;
+      }
+    }
+
+    function setDesktopMode(on){
+      try{
+        if (silverSlot) silverSlot.classList.toggle("iu-silver-slot--mm-summary-desktop", !!on);
+      }catch{}
+      try{
+        document.body.classList.toggle("iu-desktop-hover-summary-enabled", !!on);
+      }catch{}
+    }
+
+    function relocateSummaries(toDesktop){
+      if (toDesktop){
+        try{ shellCal.appendChild(calCard); }catch{}
+        try{ shellTasks.appendChild(tasksCard); }catch{}
+        setDesktopMode(true);
+      } else {
+        try{
+          if (sepTasks && sepTasks.parentNode === stack) stack.insertBefore(calCard, sepTasks);
+          else stack.insertBefore(calCard, insertTasksBefore);
+        }catch{}
+        try{ stack.insertBefore(tasksCard, insertTasksBefore); }catch{}
+        setDesktopMode(false);
+      }
+      try{ if (typeof iuSilverMobileStackFitSchedule === "function") iuSilverMobileStackFitSchedule(); }catch{}
+      try{ if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh(); }catch{}
+      try{ if (typeof window.iuSilverTasksSummaryRefresh === "function") window.iuSilverTasksSummaryRefresh(); }catch{}
+    }
+
+    function applyMqRelocate(){
+      relocateSummaries(mqDesktopMatches());
+    }
+
+    try{
+      if (mqDesk && mqDesk.addEventListener) mqDesk.addEventListener("change", applyMqRelocate);
+      else if (mqDesk && mqDesk.addListener) mqDesk.addListener(applyMqRelocate);
+    }catch{}
+    let resizeT = null;
+    try{
+      window.addEventListener(
+        "resize",
+        function (){
+          try{
+            if (resizeT) clearTimeout(resizeT);
+          }catch{}
+          resizeT = setTimeout(function (){
+            resizeT = null;
+            applyMqRelocate();
+            try{ iuMmHoverSummaryCloseAll(); }catch{}
+          }, 160);
+        },
+        { passive: true }
+      );
+    }catch{}
+
+    applyMqRelocate();
+    try{
+      requestAnimationFrame(function (){
+        try{ applyMqRelocate(); }catch{}
+      });
+    }catch{}
+
+    function positionShell(shell, host){
+      if (!shell || !host) return;
+      try{
+        const r = host.getBoundingClientRect();
+        const vw = window.innerWidth || 0;
+        const pad = 10;
+        const maxW = Math.min(380, Math.max(240, vw - 2 * pad));
+        shell.style.boxSizing = "border-box";
+        shell.style.width = maxW + "px";
+        shell.style.maxWidth = maxW + "px";
+        let left = r.left;
+        if (left + maxW > vw - pad) left = Math.max(pad, vw - pad - maxW);
+        if (left < pad) left = pad;
+        const topPx = Math.round(r.bottom + 6);
+        const leftPx = Math.round(left);
+        shell.style.position = "fixed";
+        shell.style.top = topPx + "px";
+        shell.style.left = leftPx + "px";
+        shell.style.right = "auto";
+        shell.style.zIndex = "10060";
+      }catch{}
+    }
+
+    function clearShellInline(shell){
+      if (!shell) return;
+      try{
+        shell.style.position = "";
+        shell.style.top = "";
+        shell.style.left = "";
+        shell.style.right = "";
+        shell.style.width = "";
+        shell.style.maxWidth = "";
+        shell.style.zIndex = "";
+      }catch{}
+    }
+
+    const hoverState = { openHosts: [] };
+
+    function iuMmHoverSummaryCloseAll(){
+      try{
+        const hosts = hoverState.openHosts.slice();
+        for (let i = 0; i < hosts.length; i++){
+          const h = hosts[i];
+          if (h && typeof h.__iuForceHide === "function") h.__iuForceHide();
+        }
+      }catch{}
+      hoverState.openHosts.length = 0;
+    }
+
+    try{
+      window.addEventListener(
+        "scroll",
+        function (){
+          try{
+            if (!mqDesktopMatches()) return;
+          }catch{}
+          try{ iuMmHoverSummaryCloseAll(); }catch{}
+        },
+        { passive: true, capture: true }
+      );
+    }catch{}
+
+    function wireHover(host, shell, bridge){
+      if (!host || !shell) return;
+      let showTimer = null;
+      let hideTimer = null;
+      let open = false;
+
+      function clearShow(){
+        if (showTimer !== null){
+          try{ clearTimeout(showTimer); }catch{}
+          showTimer = null;
+        }
+      }
+      function clearHide(){
+        if (hideTimer !== null){
+          try{ clearTimeout(hideTimer); }catch{}
+          hideTimer = null;
+        }
+      }
+
+      function forceHide(){
+        clearShow();
+        clearHide();
+        open = false;
+        try{ host.classList.remove("iu-has-hover-summary"); }catch{}
+        try{ shell.classList.add("iu-mmHoverSummaryPanelShell--closed"); shell.setAttribute("aria-hidden", "true"); }catch{}
+        if (bridge){
+          try{ bridge.setAttribute("hidden", ""); bridge.setAttribute("aria-hidden", "true"); }catch{}
+        }
+        clearShellInline(shell);
+        try{
+          const ix = hoverState.openHosts.indexOf(host);
+          if (ix >= 0) hoverState.openHosts.splice(ix, 1);
+        }catch{}
+      }
+      host.__iuForceHide = forceHide;
+
+      function showNow(){
+        clearHide();
+        if (!mqDesktopMatches()) return;
+        if (!host.contains(shell)) return;
+        try{
+          if (host === hostCal && hostTasks && typeof hostTasks.__iuForceHide === "function") hostTasks.__iuForceHide();
+          if (host === hostTasks && hostCal && typeof hostCal.__iuForceHide === "function") hostCal.__iuForceHide();
+        }catch{}
+        open = true;
+        try{ host.classList.add("iu-has-hover-summary"); }catch{}
+        if (bridge){
+          try{ bridge.removeAttribute("hidden"); bridge.setAttribute("aria-hidden", "false"); }catch{}
+        }
+        try{ shell.classList.remove("iu-mmHoverSummaryPanelShell--closed"); shell.setAttribute("aria-hidden", "false"); }catch{}
+        try{
+          if (hoverState.openHosts.indexOf(host) < 0) hoverState.openHosts.push(host);
+        }catch{}
+        try{
+          requestAnimationFrame(function (){
+            try{ positionShell(shell, host); }catch{}
+            try{
+              requestAnimationFrame(function (){
+                try{
+                  const br = shell.getBoundingClientRect();
+                  const vh = window.innerHeight || 0;
+                  const pad = 8;
+                  if (br.bottom > vh - pad){
+                    const over = br.bottom - (vh - pad);
+                    const curTop = parseFloat(shell.style.top) || 0;
+                    shell.style.top = Math.max(pad, Math.round(curTop - over)) + "px";
+                  }
+                }catch{}
+              });
+            }catch{}
+          });
+        }catch{}
+      }
+
+      function scheduleShow(){
+        clearShow();
+        clearHide();
+        showTimer = setTimeout(function (){
+          showTimer = null;
+          showNow();
+        }, 70);
+      }
+
+      function scheduleHide(){
+        clearShow();
+        clearHide();
+        hideTimer = setTimeout(function (){
+          hideTimer = null;
+          forceHide();
+        }, 240);
+      }
+
+      try{
+        host.addEventListener("mouseenter", function (){
+          if (!mqDesktopMatches()) return;
+          scheduleShow();
+        });
+      }catch{}
+      try{
+        host.addEventListener("mouseleave", function (){
+          scheduleHide();
+        });
+      }catch{}
+    }
+
+    wireHover(hostCal, shellCal, bridgeCal);
+    wireHover(hostTasks, shellTasks, bridgeTasks);
+  }
+
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
   function iuNamedayWishInit(){
     try{
@@ -18147,6 +18411,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuNewsPreviewInit(); }catch{}
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
+    try{ iuDesktopMindMenuSilverSummaryHoverInit(); }catch{}
     try{ iuNamedayWishInit(); }catch{}
 
     if (btnToggleDebug) {
