@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-21T08:00:02.573733Z",
+  "ingestedAt": "2026-04-21T08:20:16.050087Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Naked Attraction: Nahá zápasnice Alexandra se netají svou prací a rovnou chce vědět, zda to není problém",
+      "url": "https://www.betterlife.cz/naked-attraction-naha-zapasnice-alexandra-se-netaji-svou-praci-a-rovnou-chce-vedet-zda-to-neni-problem/",
+      "dt": "2026-04-21T07:58:32Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "alexandra",
+        "attraction",
+        "chce",
+        "nahá",
+        "naked",
+        "netají",
+        "prací",
+        "problém",
+        "rovnou",
+        "svou",
+        "vědět",
+        "zda",
+        "zápasnice"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -258,32 +288,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Napětí v Perském zálivu srazilo cenu zlata. Zájem investorů roste",
-      "url": "https://www.betterlife.cz/napeti-v-perskem-zalivu-srazilo-cenu-zlata-zajem-investoru-roste/",
-      "dt": "2026-04-16T09:55:04Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "cenu",
-        "investorů",
-        "napětí",
-        "perském",
-        "roste",
-        "srazilo",
-        "zlata",
-        "zájem",
-        "zálivu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 71889,
+      "bytes": 72921,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -354,10 +358,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T10:11:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:58:32Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "sport": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -369,6 +374,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naked Attraction: Nahá zápasnice Alexandra se netají svou prací a rovnou chce vědět, zda to není problém",
+            "publishedAt": "2026-04-21T07:58:32Z"
+          },
           {
             "title": "Sekání trávy jako přežitek. Češi na zahradách stále častěji ruší klasické trávníky a nahrazují je přírodním řešením",
             "publishedAt": "2026-04-20T10:11:47Z"
@@ -396,10 +405,6 @@
           {
             "title": "Hannibal: Panický strach z krav, herecká hvězda, která chybí na vlastní žádost v titulcích a odmítnutí Julie Foster",
             "publishedAt": "2026-04-17T17:58:19Z"
-          },
-          {
-            "title": "Historie penzí je překvapivě krátká. První důchodci měli pracovat do 70 let, málokdo se ale dožil",
-            "publishedAt": "2026-04-17T09:01:57Z"
           }
         ]
       }

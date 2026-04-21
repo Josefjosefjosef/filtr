@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T08:00:02.573733Z",
+  "ingestedAt": "2026-04-21T08:20:16.050087Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nechutný závěr druhého finále mezi Pardubicemi a Třincem má dohru",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-nechutny-zaver-druheho-finale-mezi-pardubicemi-a-trincem-ma-dohru-5440961",
+      "dt": "2026-04-21T08:08:08Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dohru",
+        "druhého",
+        "finále",
+        "nechutný",
+        "pardubicemi",
+        "třincem",
+        "závěr"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,33 +788,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Problém pro reprezentaci před MS. Velmi nejistý je start Chlapíka, mimo také další sparťan",
-      "url": "https://www.sport.cz/clanek/hokej-reprezentace-problem-pro-reprezentaci-pred-ms-velmi-nejisty-je-start-zraneneho-chlapika-mimo-je-take-krejcik-5440908",
-      "dt": "2026-04-20T15:55:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "chlapíka",
-        "další",
-        "mimo",
-        "nejistý",
-        "problém",
-        "reprezentaci",
-        "sparťan",
-        "start",
-        "také",
-        "velmi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41646,
+      "bytes": 42010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T07:52:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T08:08:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nechutný závěr druhého finále mezi Pardubicemi a Třincem má dohru",
+            "publishedAt": "2026-04-21T08:08:08Z"
+          },
           {
             "title": "Spadla klec. Balíčků luxusního eskortu měli využívat i fotbalisté ze Serie A",
             "publishedAt": "2026-04-21T07:52:06Z"
@@ -880,10 +881,6 @@
           {
             "title": "Jela na doraz a neznala stop. Dlouhý popsal, proč musel Strýcovou brzdit",
             "publishedAt": "2026-04-21T04:51:25Z"
-          },
-          {
-            "title": "Procházka přiznal jednu z největších chyb. Chce znovu bojovat o titul",
-            "publishedAt": "2026-04-21T04:33:59Z"
           }
         ]
       }

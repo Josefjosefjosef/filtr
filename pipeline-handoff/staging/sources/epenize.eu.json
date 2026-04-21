@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-21T08:00:02.573733Z",
+  "ingestedAt": "2026-04-21T08:20:16.050087Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Němcová na síti: Babiš nastoluje zrůdné bolševické manýry",
+      "url": "https://www.epenize.eu/nemcova-na-siti-babis-nastoluje-zrudne-bolsevicke-manyry/",
+      "dt": "2026-04-21T07:16:52Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "babiš",
+        "bolševické",
+        "manýry",
+        "nastoluje",
+        "němcová",
+        "síti",
+        "zrůdné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -475,31 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Trump napadl papeže a pak se na sítích vyobrazil jako Ježíš",
-      "url": "https://www.epenize.eu/trump-napadl-papeze-a-pak-se-na-sitich-vyobrazil-jako-jezis/",
-      "dt": "2026-04-13T23:00:40Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "jako",
-        "ježíš",
-        "napadl",
-        "pak",
-        "papeže",
-        "sítích",
-        "trump",
-        "vyobrazil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 108192,
+      "bytes": 108922,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,12 +546,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T23:00:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:16:52Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 15,
+          "finance": 16,
           "zdravi": 1,
-          "zpravy": 3,
+          "zpravy": 2,
           "sport": 1
         },
         "drop_counts": {
@@ -565,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Němcová na síti: Babiš nastoluje zrůdné bolševické manýry",
+            "publishedAt": "2026-04-21T07:16:52Z"
+          },
           {
             "title": "Trumpův energetický náčelník je prý „úplně mimo“ a benzín za stovku je prý jen demokratický hoax",
             "publishedAt": "2026-04-20T23:00:35Z"
@@ -592,10 +595,6 @@
           {
             "title": "Stanjura nevrátil mobily ani tablet. Asi ví proč",
             "publishedAt": "2026-04-18T07:44:53Z"
-          },
-          {
-            "title": "Umění miliardového obchodu: Trumpova cesta k míru s Íránem",
-            "publishedAt": "2026-04-17T23:00:45Z"
           }
         ]
       }

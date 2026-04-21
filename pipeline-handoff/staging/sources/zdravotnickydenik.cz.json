@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T08:00:02.573733Z",
+  "ingestedAt": "2026-04-21T08:20:16.050087Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Trumpova léková politika ohrožuje Evropu: Česko se připravuje na „sanitární akci“ k ochraně cen",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/trump-lekova-politika-evropa-cesko-sanitarni-akce-ochrana-cen/",
+      "dt": "2026-04-21T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "akci",
+        "cen",
+        "evropu",
+        "léková",
+        "ochraně",
+        "ohrožuje",
+        "politika",
+        "připravuje",
+        "sanitární",
+        "trumpova",
+        "česko"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rovnítko mezi ordinací a monitorem: Vojtěch i šéf MEDDI Hubu chtějí jasná pravidla pro telemedicínu",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vojtech-sef-meddi-hub-jasna-pravidla-pro-telemedicinu/",
-      "dt": "2026-04-20T08:05:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chtějí",
-        "hubu",
-        "jasná",
-        "meddi",
-        "monitorem",
-        "ordinací",
-        "pravidla",
-        "rovnítko",
-        "telemedicínu",
-        "vojtěch",
-        "šéf"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96225,
+      "bytes": 97299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trumpova léková politika ohrožuje Evropu: Česko se připravuje na „sanitární akci“ k ochraně cen",
+            "publishedAt": "2026-04-21T08:00:00Z"
+          },
           {
             "title": "Proč lidé volají záchranku častěji než dříve? Data ukazují překvapivý trend",
             "publishedAt": "2026-04-21T07:00:00Z"
@@ -362,10 +366,6 @@
           {
             "title": "Fiasko Bruselu: Aplikaci na ochranu dětí prolomili hackeři za dvě minuty. Stála 100 milionů",
             "publishedAt": "2026-04-20T12:56:30Z"
-          },
-          {
-            "title": "Podezření v karlovarské nemocnici: Operovali srdeční implantáty neatestovaní lékaři?",
-            "publishedAt": "2026-04-20T12:03:48Z"
           }
         ]
       }
