@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T11:20:54.416785Z",
+  "ingestedAt": "2026-04-21T11:40:54.119527Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
+      "url": "https://www.penize.cz/nakupy/488624-zlato-ktere-zdrazuje-rychleji-nez-byty-do-prahy-miri-aukce-s-mincemi-za-miliony",
+      "dt": "2026-04-21T13:23:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "aukce",
+        "byty",
+        "miliony",
+        "mincemi",
+        "míří",
+        "než",
+        "prahy",
+        "rychleji",
+        "zdražuje",
+        "zlato"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,31 +511,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Termínované vklady mají novou jedničku. Zvedá úrok až ke čtyřce",
-      "url": "https://www.penize.cz/terminovane-vklady/488411-terminovane-vklady-maji-novou-jednicku-zveda-urok-az-ke-ctyrce",
-      "dt": "2026-04-16T15:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "jedničku",
-        "mají",
-        "novou",
-        "termínované",
-        "vklady",
-        "zvedá",
-        "úrok",
-        "čtyřce"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18085,
+      "bytes": 18165,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T12:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T13:23:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -572,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
+            "publishedAt": "2026-04-21T13:23:00Z"
+          },
           {
             "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
             "publishedAt": "2026-04-21T12:35:00Z"
@@ -598,10 +604,6 @@
           },
           {
             "title": "Blízký východ hoří. Proč evropské komerční nemovitosti zůstávají v klidu",
-            "publishedAt": "2026-04-20T13:00:00Z"
-          },
-          {
-            "title": "Novou daňovou úlevu využije skoro čtvrt milionu Čechů. Pomůže s penězi na stáří",
             "publishedAt": "2026-04-20T13:00:00Z"
           }
         ]

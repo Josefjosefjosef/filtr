@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T11:20:54.416785Z",
+  "ingestedAt": "2026-04-21T11:40:54.119527Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sabalenková měla husí kůži. Spolu s Alcarazem získali sportovní Oscary",
+      "url": "https://www.sport.cz/clanek/tenis-sabalenkova-mela-husi-kuzi-spolu-s-alcarazem-ziskali-sportovni-oscary-5440972",
+      "dt": "2026-04-21T11:30:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "alcarazem",
+        "husí",
+        "kůži",
+        "měla",
+        "oscary",
+        "sabalenková",
+        "spolu",
+        "sportovní",
+        "získali"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,31 +787,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vedení formule 1 odsouhlasilo změny pravidel od Velké ceny Miami",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-vedeni-formule-1-odsouhlasilo-zmeny-pravidel-od-velke-ceny-miami-5440928",
-      "dt": "2026-04-20T19:04:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ceny",
-        "formule",
-        "miami",
-        "odsouhlasilo",
-        "pravidel",
-        "vedení",
-        "velké",
-        "změny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41798,
+      "bytes": 42177,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T11:04:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T11:30:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sabalenková měla husí kůži. Spolu s Alcarazem získali sportovní Oscary",
+            "publishedAt": "2026-04-21T11:30:56Z"
+          },
           {
             "title": "Samson postoupila v Madridu do 2. kola, porazila o dvacet let starší Němku",
             "publishedAt": "2026-04-21T10:51:52Z"
@@ -875,10 +880,6 @@
           {
             "title": "Nechutný závěr druhého finále mezi Pardubicemi a Třincem má dohru",
             "publishedAt": "2026-04-21T08:08:08Z"
-          },
-          {
-            "title": "Alcaraz kvůli zranění zápěstí neví, zda bude obhajovat titul na Roland Garros",
-            "publishedAt": "2026-04-21T09:40:10Z"
           }
         ]
       }

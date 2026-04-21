@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T11:20:54.416785Z",
+  "ingestedAt": "2026-04-21T11:40:54.119527Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Samson postoupila v Madridu do 2. kola, porazila o dvacet let starší soupeřku",
+      "url": "https://www.idnes.cz/sport/tenis/madrid-samson.A260421_125429_tenis_kazdt",
+      "dt": "2026-04-21T11:08:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dvacet",
+        "kola",
+        "let",
+        "madridu",
+        "porazila",
+        "postoupila",
+        "samson",
+        "soupeřku",
+        "starší"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zůstane Krejčí navzdory sestupu v Premier League? Zájem prý mají Leeds a Brighton",
+      "url": "https://www.idnes.cz/fotbal/zahranici/wolves-ladislav-krejci-sestup-odchod-prestup-spekulace.A260421_105403_fot_zahranici_tals",
+      "dt": "2026-04-21T11:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brighton",
+        "krejčí",
+        "league",
+        "leeds",
+        "mají",
+        "navzdory",
+        "premier",
+        "prý",
+        "sestupu",
+        "zájem",
+        "zůstane"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -730,58 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Legendu střídá legenda. K rumunské reprezentaci se po čtvrtstoletí vrací Hagi",
-      "url": "https://www.idnes.cz/fotbal/reprezentace/legendu-strida-legenda-k-rumunske-reprezentaci-se-po-ctvrtstoleti-vraci-hagi.A260420_171659_fot_reprez_tit",
-      "dt": "2026-04-20T15:32:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hagi",
-        "legenda",
-        "legendu",
-        "reprezentaci",
-        "rumunské",
-        "střídá",
-        "vrací",
-        "čtvrtstoletí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sorry, holky, není to můj den, hlásila. Pak si Španělka dojela pro historický triumf",
-      "url": "https://www.idnes.cz/sport/cyklistika/amstel-gold-race-zeny-vysledek-paula-blasiova-pribeh.A260420_104855_cyklistika_ipet",
-      "dt": "2026-04-20T15:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "den",
-        "dojela",
-        "historický",
-        "hlásila",
-        "holky",
-        "můj",
-        "pak",
-        "sorry",
-        "triumf",
-        "španělka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47083,
+      "bytes": 47101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:41:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T11:08:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +846,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Samson postoupila v Madridu do 2. kola, porazila o dvacet let starší soupeřku",
+            "publishedAt": "2026-04-21T11:08:00Z"
+          },
+          {
+            "title": "Zůstane Krejčí navzdory sestupu v Premier League? Zájem prý mají Leeds a Brighton",
+            "publishedAt": "2026-04-21T11:01:00Z"
+          },
           {
             "title": "Pardubicím hrozí uzavření sektorů, Žabka musí za hozenou lahev platit pokutu",
             "publishedAt": "2026-04-21T10:41:35Z"
@@ -867,14 +877,6 @@
           {
             "title": "Hrozí, že Alcaraz nenastoupí na Roland Garros. Další test je klíčový, říká obhájce",
             "publishedAt": "2026-04-21T09:26:00Z"
-          },
-          {
-            "title": "Nový sportovní pár? Český olympionik Tuž tráví dovolenou s německou lyžařkou",
-            "publishedAt": "2026-04-21T08:59:00Z"
-          },
-          {
-            "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-            "publishedAt": "2026-04-21T08:29:00Z"
           }
         ]
       }

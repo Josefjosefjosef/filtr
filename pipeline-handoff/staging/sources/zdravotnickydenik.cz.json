@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T11:20:54.416785Z",
+  "ingestedAt": "2026-04-21T11:40:54.119527Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Historický průlom: V Česku se nově sleduje šíření nemocí v reálném čase. Data uvidíte i vy",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/infekcni-nemoci-sireni-v-realnem-case/",
+      "dt": "2026-04-21T11:31:20Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "data",
+        "historický",
+        "nemocí",
+        "nově",
+        "průlom",
+        "reálném",
+        "sleduje",
+        "uvidíte",
+        "čase",
+        "česku",
+        "šíření"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,35 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/mrna-vakcina-nadeje-pro-lecbu-rakoviny-slinivky/",
-      "dt": "2026-04-20T13:42:54Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "delší",
-        "dává",
-        "léčbě",
-        "mrna",
-        "naději",
-        "nemocným",
-        "průlom",
-        "rakoviny",
-        "slinivky",
-        "vakcína",
-        "výrazně",
-        "život"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92502,
+      "bytes": 88859,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:58:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T11:31:20Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Historický průlom: V Česku se nově sleduje šíření nemocí v reálném čase. Data uvidíte i vy",
+            "publishedAt": "2026-04-21T11:31:20Z"
+          },
           {
             "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
             "publishedAt": "2026-04-21T10:58:49Z"
@@ -361,10 +364,6 @@
           {
             "title": "Když se dva perou, Čína se směje. Léky na hubnutí dramaticky zlevní, už se ví kdy",
             "publishedAt": "2026-04-21T05:00:00Z"
-          },
-          {
-            "title": "Šok po tragickém požáru ve švýcarských Alpách: Zraněným dorazily statisícové faktury za léčbu",
-            "publishedAt": "2026-04-20T16:32:47Z"
           }
         ]
       }
