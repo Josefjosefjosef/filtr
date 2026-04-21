@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T05:06:39.472477Z",
+  "ingestedAt": "2026-04-21T05:25:27.443544Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Změna po 15 letech. Cook opustí post generálního ředitele společnosti Apple",
+      "url": "https://www.idnes.cz/ekonomika/podniky/tim-cook-po-15-letech-opusti-post-generalniho-reditele-spolecnosti-apple.A260421_070856_ekoakcie_iluj",
+      "dt": "2026-04-21T05:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "apple",
+        "cook",
+        "generálního",
+        "letech",
+        "opustí",
+        "post",
+        "společnosti",
+        "změna",
+        "ředitele"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Otrávených balení s dětskou výživou od HiPP může být až 12, píší rakouská média",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/otravenych-baleni-s-detskou-vyzivou-od-firmy-hipp-by-mohlo-byt-podle-medii-az-12.A260421_070244_eko-zahranicni_iluj",
+      "dt": "2026-04-21T05:04:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "balení",
+        "být",
+        "dětskou",
+        "hipp",
+        "média",
+        "otrávených",
+        "píší",
+        "rakouská",
+        "výživou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -731,60 +783,6 @@
         "přišla",
         "vyděračská",
         "výživy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čápi vzali na milost sloup, když jim Madonu zakryli. Broumov pro ně hledá jména",
-      "url": "https://www.idnes.cz/hradec-kralove/zpravy/capi-mariansky-sloup-pamatka-broumov-namesti-hnizdo-chko.A260420_142204_hradec-zpravy_tuu",
-      "dt": "2026-04-20T16:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "broumov",
-        "hledá",
-        "jim",
-        "jména",
-        "když",
-        "madonu",
-        "milost",
-        "sloup",
-        "vzali",
-        "zakryli",
-        "čápi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brit oživuje v Rusku tradici výroby luxusních hodinek. Nosí je i Putin",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/brit-ozivuje-v-rusku-tradici-vyroby-luxusnich-hodinek-nosi-je-i-putin.A260420_145757_eko-zahranicni_ven",
-      "dt": "2026-04-20T16:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "brit",
-        "hodinek",
-        "luxusních",
-        "nosí",
-        "oživuje",
-        "putin",
-        "rusku",
-        "tradici",
-        "výroby"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48893,
+      "bytes": 48628,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,11 +1625,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 4
+          "finance": 5,
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1643,6 +1641,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Změna po 15 letech. Cook opustí post generálního ředitele společnosti Apple",
+            "publishedAt": "2026-04-21T05:13:00Z"
+          },
+          {
+            "title": "Otrávených balení s dětskou výživou od HiPP může být až 12, píší rakouská média",
+            "publishedAt": "2026-04-21T05:04:00Z"
+          },
           {
             "title": "Srbsko může přijít o miliardu a půl eur kvůli úpadku demokracie, varuje EU",
             "publishedAt": "2026-04-21T04:53:00Z"
@@ -1666,14 +1672,6 @@
           {
             "title": "Zdlouhavé, složité a bez podpory. Jednotné měsíční hlášení bolí účetní, chtějí odklad",
             "publishedAt": "2026-04-21T04:00:00Z"
-          },
-          {
-            "title": "Utajovaný seznam nových velvyslanců: Kmoníček k OSN, Beran do Švýcarska",
-            "publishedAt": "2026-04-21T04:00:00Z"
-          },
-          {
-            "title": "Změna trestního zákoníku by mohla opět přitvrdit za neplacení výživného",
-            "publishedAt": "2026-04-21T03:38:00Z"
           }
         ]
       }

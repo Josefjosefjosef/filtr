@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T05:06:39.472477Z",
+  "ingestedAt": "2026-04-21T05:25:27.443544Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jaro odělo Blanensko do záplavy barev. Pilot zachytil Hitlerovu dálnici i Lysice",
+      "url": "https://www.denik.cz/regiony/letecke-snimky-blanensko-pilot-hitlerova-dalnici-rozkvetle-lysice.html",
+      "dt": "2026-04-21T05:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "barev",
+        "blanensko",
+        "dálnici",
+        "hitlerovu",
+        "jaro",
+        "lysice",
+        "odělo",
+        "pilot",
+        "zachytil",
+        "záplavy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Michal Pavlíček je Na obzoru a říká: Přál bych si, abych byl co nejdéle fresh",
-      "url": "https://www.denik.cz/hudba/michal-pavlicek-je-na-obzoru-a-rika-prat-bych-si-abych-byl-co-nejdele-fresh-2028.html",
-      "dt": "2026-04-20T12:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "abych",
-        "bych",
-        "fresh",
-        "michal",
-        "nejdéle",
-        "obzoru",
-        "pavlíček",
-        "přál",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29976,
+      "bytes": 29816,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -708,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaro odělo Blanensko do záplavy barev. Pilot zachytil Hitlerovu dálnici i Lysice",
+            "publishedAt": "2026-04-21T05:12:00Z"
+          },
           {
             "title": "Tornádo na Jičínsku lámalo stromy a zničilo posed. Obydlím se však vyhnulo",
             "publishedAt": "2026-04-21T04:32:00Z"
@@ -735,10 +740,6 @@
           {
             "title": "Střelba u pyramid: V mexické archeologické oblasti Teotihuacán zemřela žena",
             "publishedAt": "2026-04-20T20:10:00Z"
-          },
-          {
-            "title": "Rostoucí ceny ropy zdraží i oblíbené sportovní oblečení Čechů",
-            "publishedAt": "2026-04-20T18:00:00Z"
           }
         ]
       }
