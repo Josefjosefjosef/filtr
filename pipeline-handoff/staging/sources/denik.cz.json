@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T09:39:24.882922Z",
+  "ingestedAt": "2026-04-21T10:00:08.486945Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Pečovatel pořádal sexuální orgie s dětmi. Budu se léčit, slíbil u soudu",
+      "url": "https://www.denik.cz/krimi/plzen-soud-fotograf-sexualni-zlocin-chlapci-orgie.html",
+      "dt": "2026-04-21T09:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "budu",
+        "dětmi",
+        "léčit",
+        "orgie",
+        "pečovatel",
+        "pořádal",
+        "sexuální",
+        "slíbil",
+        "soudu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zrušení linky 14 či vysoká cena stavby. Dvorecký most v Praze čelí vlně kritiky",
+      "title": "Dvorecký most v Praze čelí vlně kritiky: Zrušení linky 14 či vysoká cena stavby",
       "url": "https://www.denik.cz/regiony/praha-dvorecky-most-kritika-mhd-zruseni-linky-14-draha-stavba.html",
       "dt": "2026-04-21T09:00:00Z",
       "media_raw": "Deník",
@@ -626,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Těžaři v létě otevřou stezku bývalým lomem ČSA. Bude pro pěší i cyklisty",
-      "url": "https://www.denik.cz/regiony/lom-csa-stezka-pesi-cyklista-rypadlo-rk-5000-uhli-tezba-priroda-20260419.html",
-      "dt": "2026-04-20T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bývalým",
-        "cyklisty",
-        "lomem",
-        "létě",
-        "otevřou",
-        "pěší",
-        "stezku",
-        "těžaři",
-        "čsa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28801,
+      "bytes": 28809,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,7 +716,11 @@
         },
         "sample_titles": [
           {
-            "title": "Zrušení linky 14 či vysoká cena stavby. Dvorecký most v Praze čelí vlně kritiky",
+            "title": "Pečovatel pořádal sexuální orgie s dětmi. Budu se léčit, slíbil u soudu",
+            "publishedAt": "2026-04-21T09:30:00Z"
+          },
+          {
+            "title": "Dvorecký most v Praze čelí vlně kritiky: Zrušení linky 14 či vysoká cena stavby",
             "publishedAt": "2026-04-21T09:00:00Z"
           },
           {
@@ -742,10 +746,6 @@
           {
             "title": "Apple mění šéfa. Na postu generálního ředitele končí Cook, střídá ho Ternus",
             "publishedAt": "2026-04-21T06:32:00Z"
-          },
-          {
-            "title": "Zabil ho lék, který nebyl tím, za co se vydával. Před 10 lety zemřel Prince",
-            "publishedAt": "2026-04-21T06:00:00Z"
           }
         ]
       }

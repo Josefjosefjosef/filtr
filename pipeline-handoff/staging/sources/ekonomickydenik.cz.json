@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-21T09:39:24.882922Z",
+  "ingestedAt": "2026-04-21T10:00:08.486945Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Bezpečnost zaměstnanců je naší prioritou.“ Komise podpořila mluvčí proti ruským hrozbám",
+      "url": "https://ekonomickydenik.cz/komise-podporila-mluvci-proti-ruskym-hrozbam/",
+      "dt": "2026-04-21T09:41:22Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bezpečnost",
+        "hrozbám",
+        "komise",
+        "mluvčí",
+        "naší",
+        "podpořila",
+        "prioritou",
+        "proti",
+        "ruským",
+        "zaměstnanců"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,33 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Víc funkcí, méně peněz. Vláda chystá vlastní návrh krácení odměn zastupitelům",
-      "url": "https://ekonomickydenik.cz/vic-funkci-mene-penez-vlada-chysta-vlastni-navrh-kraceni-odmen-zastupitelum/",
-      "dt": "2026-04-18T12:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chystá",
-        "funkcí",
-        "krácení",
-        "návrh",
-        "odměn",
-        "peněz",
-        "vlastní",
-        "vláda",
-        "víc",
-        "zastupitelům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70939,
+      "bytes": 70929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:19:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:41:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -850,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Bezpečnost zaměstnanců je naší prioritou.“ Komise podpořila mluvčí proti ruským hrozbám",
+            "publishedAt": "2026-04-21T09:41:22Z"
+          },
           {
             "title": "Macinka se má omluvit za teroristy. Vyzývá ho Hnutí Duha",
             "publishedAt": "2026-04-21T09:19:57Z"
@@ -877,10 +881,6 @@
           {
             "title": "Letecký kolaps nehrozí. Přesto se Evropa připravuje na nejhorší scénář",
             "publishedAt": "2026-04-20T16:34:49Z"
-          },
-          {
-            "title": "Stát ukázal, kam povede vysokorychlostní železnice. Které tratě mají smůlu?",
-            "publishedAt": "2026-04-20T15:25:25Z"
           }
         ]
       }

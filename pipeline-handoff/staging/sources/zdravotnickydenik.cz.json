@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T09:39:24.882922Z",
+  "ingestedAt": "2026-04-21T10:00:08.486945Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/deti-vr-bryle-kolaps-novy-projekt-skoly/",
+      "dt": "2026-04-21T09:40:45Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brýle",
+        "děti",
+        "kolapsu",
+        "míří",
+        "nasadí",
+        "nový",
+        "ocitnou",
+        "projekt",
+        "člověka",
+        "škol"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,31 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Podezření v karlovarské nemocnici: Operovali srdeční implantáty neatestovaní lékaři?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/karlovarska-nemocnice-srdecni-implantaty-neatestovani-lekari/",
-      "dt": "2026-04-20T12:03:48Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "implantáty",
-        "karlovarské",
-        "lékaři",
-        "neatestovaní",
-        "nemocnici",
-        "operovali",
-        "podezření",
-        "srdeční"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96092,
+      "bytes": 95444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:15:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:40:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
+            "publishedAt": "2026-04-21T09:40:45Z"
+          },
           {
             "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
             "publishedAt": "2026-04-21T09:15:51Z"
@@ -362,10 +368,6 @@
           {
             "title": "Ve společném podniku Olomouckého kraje a Agelu bude další nemocnice. Jediná v horském okrese",
             "publishedAt": "2026-04-20T14:19:24Z"
-          },
-          {
-            "title": "Průlom v léčbě rakoviny slinivky? mRNA vakcína dává nemocným naději na výrazně delší život",
-            "publishedAt": "2026-04-20T13:42:54Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T09:39:24.882922Z",
+  "ingestedAt": "2026-04-21T10:00:08.486945Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hrozí, že Alcaraz nenastoupí na Roland Garros. Další test je klíčový, říká obhájce",
+      "url": "https://www.idnes.cz/sport/tenis/carlos-alcaraz-zraneni-roland-garros.A260421_111931_tenis_kazdt",
+      "dt": "2026-04-21T09:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "alcaraz",
+        "další",
+        "garros",
+        "hrozí",
+        "klíčový",
+        "nenastoupí",
+        "obhájce",
+        "roland",
+        "test",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,31 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zemřel hokejista Příplata. Mladému obránci Karlových Varů bylo 19 let",
-      "url": "https://www.idnes.cz/hokej/extraliga/ondrej-priplata-karlovy-vary-smrt.A260420_142734_hokej_hrj",
-      "dt": "2026-04-20T12:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hokejista",
-        "karlových",
-        "let",
-        "mladému",
-        "obránci",
-        "příplata",
-        "varů",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46472,
+      "bytes": 46578,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T08:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrozí, že Alcaraz nenastoupí na Roland Garros. Další test je klíčový, říká obhájce",
+            "publishedAt": "2026-04-21T09:26:00Z"
+          },
           {
             "title": "Nový sportovní pár? Český olympionik Tuž tráví dovolenou s německou lyžařkou",
             "publishedAt": "2026-04-21T08:59:00Z"
@@ -873,10 +879,6 @@
           {
             "title": "Knicks i Denver promarnili náskok, série se srovnaly. Cleveland si další bod pohlídal",
             "publishedAt": "2026-04-21T07:02:00Z"
-          },
-          {
-            "title": "Experti nejen o baráži: Hráči simulují, hokej není fotbal! Rozhodčí na to nestačí",
-            "publishedAt": "2026-04-21T06:47:00Z"
           }
         ]
       }
