@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T16:19:36.757083Z",
+  "ingestedAt": "2026-04-21T16:40:00.690033Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události úterý 21. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-utery-21-dubna-372636",
+      "dt": "2026-04-21T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "souhrn",
+        "události",
+        "zásadní",
+        "úterý"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Většina firem chce koordinaci energetické politiky v EU, uvádí česko-německá komora",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/vetsina-firem-chce-koordinaci-energeticke-politiky-v-eu-uvadi-cesko-nemecka-komora-372627",
+      "dt": "2026-04-21T16:22:18Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chce",
+        "energetické",
+        "firem",
+        "komora",
+        "koordinaci",
+        "německá",
+        "politiky",
+        "uvádí",
+        "většina",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -699,53 +748,6 @@
         "východě",
         "základní",
         "zásoby"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Profesionální hasiči ze Sušice se po třiceti letech dočkali vlastní stanice",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/plzensky-kraj/profesionalni-hasici-ze-susice-se-po-triceti-letech-dockali-vlastni-stanice-372594",
-      "dt": "2026-04-21T04:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dočkali",
-        "hasiči",
-        "letech",
-        "profesionální",
-        "stanice",
-        "sušice",
-        "třiceti",
-        "vlastní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Haiťany terorizují drony. Cílí i na děti",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/haitany-terorizuji-drony-cili-i-na-deti-372577",
-      "dt": "2026-04-21T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cílí",
-        "drony",
-        "děti",
-        "haiťany",
-        "terorizují"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1526,7 +1528,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44169,
+      "bytes": 43852,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1586,12 +1588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:20:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
-          "other": 8,
-          "finance": 2
+          "zpravy": 19,
+          "finance": 3,
+          "other": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1603,6 +1605,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události úterý 21. dubna",
+            "publishedAt": "2026-04-21T16:29:00Z"
+          },
+          {
+            "title": "Většina firem chce koordinaci energetické politiky v EU, uvádí česko-německá komora",
+            "publishedAt": "2026-04-21T16:22:18Z"
+          },
           {
             "title": "Havlíček slíbil věcnou a odbornou debatu k zákonu o ČRo a ČT, prohlásil Zavoral",
             "publishedAt": "2026-04-21T15:20:09Z"
@@ -1626,14 +1636,6 @@
           {
             "title": "Šéf Senátu Vystrčil: Odmítnutí vládního letounu pro misi na Tchaj-wan je podraz",
             "publishedAt": "2026-04-21T14:33:17Z"
-          },
-          {
-            "title": "Dyk, Jandová či Štěpánek. StarDance představila kompletní páry",
-            "publishedAt": "2026-04-21T14:03:56Z"
-          },
-          {
-            "title": "Magyar podmiňuje politická jednání se Slovenskem „vyřešením“ Benešových dekretů",
-            "publishedAt": "2026-04-21T13:21:40Z"
           }
         ]
       }
@@ -1739,7 +1741,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77363,
+      "bytes": 77345,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
