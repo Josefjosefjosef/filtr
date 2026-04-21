@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-21T19:19:35.336787Z",
+  "ingestedAt": "2026-04-21T19:39:55.893090Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Jeden zraněný při protidrogové realizaci v Šestajovicích",
+      "url": "https://tydenikpolicie.cz/jeden-zraneny-pri-protidrogove-realizaci-v-sestajovicich/",
+      "dt": "2026-04-21T19:20:34Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jeden",
+        "protidrogové",
+        "při",
+        "realizaci",
+        "zraněný",
+        "šestajovicích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,35 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pražští kriminalisté dopadli v Unhošti mladíka z Ukrajiny, který měl být součástí organizované skupiny převaděčů",
-      "url": "https://tydenikpolicie.cz/prazsti-kriminaliste-dopadli-v-unhosti-mladika-z-ukrajiny-ktery-mel-byt-soucasti-organizovane-skupiny-prevadecu/",
-      "dt": "2026-04-21T13:12:10Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "být",
-        "dopadli",
-        "kriminalisté",
-        "mladíka",
-        "měl",
-        "organizované",
-        "pražští",
-        "převaděčů",
-        "skupiny",
-        "součástí",
-        "ukrajiny",
-        "unhošti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15856,
+      "bytes": 15833,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:02:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T19:20:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jeden zraněný při protidrogové realizaci v Šestajovicích",
+            "publishedAt": "2026-04-21T19:20:34Z"
+          },
           {
             "title": "Policisté hledají svědky srážky dvou škodovek v Přerově",
             "publishedAt": "2026-04-21T18:02:28Z"
@@ -352,10 +350,6 @@
           {
             "title": "Největší sbírkový podvod v České republice má smutné pokračování. Poškozených je takřka 50 tisíc lidí",
             "publishedAt": "2026-04-21T13:59:06Z"
-          },
-          {
-            "title": "Opilý řidič kamionu zablokoval při otáčení na Karlovarsku silnici",
-            "publishedAt": "2026-04-21T13:45:35Z"
           }
         ]
       }
