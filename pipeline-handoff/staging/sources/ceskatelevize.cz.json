@@ -1,22 +1,27 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T21:19:56.824278Z",
+  "ingestedAt": "2026-04-21T21:40:33.610388Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Prodloužím příměří s Íránem, řekl Trump",
+      "title": "Trump prodlužuje příměří s Íránem do doby, než Teherán předloží mírový návrh",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/prodlouzim-primeri-s-iranem-rekl-trump-372647",
       "dt": "2026-04-21T20:33:08Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "prodloužím",
+        "doby",
+        "mírový",
+        "než",
+        "návrh",
+        "prodlužuje",
+        "předloží",
         "příměří",
+        "teherán",
         "trump",
-        "íránem",
-        "řekl"
+        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -753,6 +758,30 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chelsea se dál zmítá v krizi, z Brightonu si veze třígólovou porážku",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-se-dal-zmita-v-krizi-z-brightonu-si-veze-trigolovou-porazku-156397",
+      "dt": "2026-04-21T21:32:31Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "brightonu",
+        "chelsea",
+        "krizi",
+        "porážku",
+        "třígólovou",
+        "veze",
+        "zmítá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1501,29 +1530,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bayern otočil zápas se Stuttgartem a už si zajistil titul",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/heidenheim-prohral-ve-freiburgu-a-je-krok-od-sestupu-156365",
-      "dt": "2026-04-19T15:48:27Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bayern",
-        "otočil",
-        "stuttgartem",
-        "titul",
-        "zajistil",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1534,7 +1540,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44664,
+      "bytes": 44903,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,7 +1618,7 @@
         },
         "sample_titles": [
           {
-            "title": "Prodloužím příměří s Íránem, řekl Trump",
+            "title": "Trump prodlužuje příměří s Íránem do doby, než Teherán předloží mírový návrh",
             "publishedAt": "2026-04-21T20:33:08Z"
           },
           {
@@ -1653,7 +1659,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39583,
+      "bytes": 39167,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1690,7 +1696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T19:37:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T21:32:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1705,6 +1711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chelsea se dál zmítá v krizi, z Brightonu si veze třígólovou porážku",
+            "publishedAt": "2026-04-21T21:32:31Z"
+          },
           {
             "title": "Litvínov v Jihlavě dominoval a nad Duklou vyhrál i potřetí, zářil Ondřej Kaše",
             "publishedAt": "2026-04-21T19:37:08Z"
@@ -1732,10 +1742,6 @@
           {
             "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
             "publishedAt": "2026-04-21T05:30:00Z"
-          },
-          {
-            "title": "Vladař pomohl 27 zákroky nulou Philadelphii ke druhé výhře, Dostál neodvrátil porážku",
-            "publishedAt": "2026-04-21T05:13:39Z"
           }
         ]
       }
@@ -1747,7 +1753,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77275,
+      "bytes": 77265,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
