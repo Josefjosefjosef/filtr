@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T11:01:39.795790Z",
+  "ingestedAt": "2026-04-21T11:20:54.416785Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
+      "url": "https://www.penize.cz/burza-cennych-papiru-praha/488621-dividenda-moneta-bank-2026-vyse-rozhodny-den-vyplata",
+      "dt": "2026-04-21T12:35:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dividendu",
+        "hromada",
+        "kolik",
+        "monety",
+        "schválila",
+        "valná",
+        "vyplatí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -485,30 +509,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Air Bank vylepšila aplikaci. Ukáže Chytrý zůstatek",
-      "url": "https://www.penize.cz/osobni-ucty/488438-air-bank-vylepsila-aplikaci-ukaze-lidem-chytry-zustatek",
-      "dt": "2026-04-16T14:45:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "air",
-        "aplikaci",
-        "bank",
-        "chytrý",
-        "ukáže",
-        "vylepšila",
-        "zůstatek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18039,
+      "bytes": 18085,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,7 +556,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T12:35:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -572,6 +572,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
+            "publishedAt": "2026-04-21T12:35:00Z"
+          },
           {
             "title": "Vláda změní penzijko. Jak by pomohlo snížení poplatků",
             "publishedAt": "2026-04-21T06:12:00Z"
@@ -599,10 +603,6 @@
           {
             "title": "Novou daňovou úlevu využije skoro čtvrt milionu Čechů. Pomůže s penězi na stáří",
             "publishedAt": "2026-04-20T13:00:00Z"
-          },
-          {
-            "title": "ČNB vydala desatero pro půjčky. Varuje i před úvěry na IČO",
-            "publishedAt": "2026-04-20T12:51:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T11:01:39.795790Z",
+  "ingestedAt": "2026-04-21T11:20:54.416785Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-prachatice-detske-oddeleni/",
+      "dt": "2026-04-21T10:58:49Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chybějí",
+        "dětské",
+        "jasný",
+        "končí",
+        "lékaři",
+        "oddělení",
+        "porodnici",
+        "prachaticích",
+        "termín"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,35 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Fiasko Bruselu: Aplikaci na ochranu dětí prolomili hackeři za dvě minuty. Stála 100 milionů",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/aplikaci-na-ochranu-deti-prolomili-hackeri-za-dve-minuty-stala-100-milionu/",
-      "dt": "2026-04-20T12:56:30Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "100",
-        "aplikaci",
-        "bruselu",
-        "dvě",
-        "dětí",
-        "fiasko",
-        "hackeři",
-        "milionů",
-        "minuty",
-        "ochranu",
-        "prolomili",
-        "stála"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95444,
+      "bytes": 92502,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:40:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:58:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
+            "publishedAt": "2026-04-21T10:58:49Z"
+          },
           {
             "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
             "publishedAt": "2026-04-21T09:40:45Z"
@@ -364,10 +365,6 @@
           {
             "title": "Šok po tragickém požáru ve švýcarských Alpách: Zraněným dorazily statisícové faktury za léčbu",
             "publishedAt": "2026-04-20T16:32:47Z"
-          },
-          {
-            "title": "Ve společném podniku Olomouckého kraje a Agelu bude další nemocnice. Jediná v horském okrese",
-            "publishedAt": "2026-04-20T14:19:24Z"
           }
         ]
       }
