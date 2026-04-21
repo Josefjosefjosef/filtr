@@ -173,6 +173,7 @@
   --iuRailGlow: rgba(27,36,48,.18);
   --iuContainerMax: 1200px;
   --iuContainerPad: 20px;
+  --iu-hub-top-extra: 0px;
   --iuLeftRailW: 136px;
   --iu-bank-accent: #3db3ff;
   --iu-gold: #d4af37;
@@ -313,6 +314,7 @@ body{
 
 /* P0 desktop ≥1025px: jeden vertikální scrollport na <body> — <html> overflow-y:hidden zabraňuje transient dvojité liště (html+body oba auto). Gutter jen na body (stable). */
 @media (min-width: 1025px){
+  :root{--iu-hub-top-extra:20px}
   html{
     width: 100%;
     max-width: 100%;
@@ -330,6 +332,7 @@ body{
     scrollbar-gutter: stable;
     scroll-padding-top: var(--topbarStackH);
   }
+  .mainCol #iuSilverTopCardsStack{margin-top:20px}
 }
 
 #page{
@@ -12541,7 +12544,7 @@ header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner{
   
   .layout:has(#leftStickyHeader) > aside.accordionCol{
     padding-top: 0 !important;
-    margin-top: var(--iuTopbarHeight) !important;
+    margin-top: calc(var(--iuTopbarHeight) + var(--iu-hub-top-extra)) !important;
     box-sizing: border-box;
   }
 
