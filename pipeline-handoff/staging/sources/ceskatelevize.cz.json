@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T21:40:33.610388Z",
+  "ingestedAt": "2026-04-21T22:00:32.219976Z",
   "items": [
     {
       "section": "aktualne",
@@ -765,6 +765,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Real porazil doma Alaves, na Barcelonu ztrácí šest bodů",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/real-porazil-doma-alaves-na-barcelonu-ztraci-sest-bodu-156398",
+      "dt": "2026-04-21T21:54:53Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "alaves",
+        "barcelonu",
+        "bodů",
+        "doma",
+        "porazil",
+        "real",
+        "ztrácí",
+        "šest"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Chelsea se dál zmítá v krizi, z Brightonu si veze třígólovou porážku",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-se-dal-zmita-v-krizi-z-brightonu-si-veze-trigolovou-porazku-156397",
       "dt": "2026-04-21T21:32:31Z",
@@ -1506,30 +1531,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Evenepoel se dočkal, premiérově vyhrál Amstel Gold Race",
-      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/evenepoel-se-dockal-premierove-vyhral-amstel-gold-race-156366",
-      "dt": "2026-04-19T15:55:11Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "amstel",
-        "dočkal",
-        "evenepoel",
-        "gold",
-        "premiérově",
-        "race",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1659,7 +1660,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39167,
+      "bytes": 39209,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1696,7 +1697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T21:32:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T21:54:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1711,6 +1712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Real porazil doma Alaves, na Barcelonu ztrácí šest bodů",
+            "publishedAt": "2026-04-21T21:54:53Z"
+          },
           {
             "title": "Chelsea se dál zmítá v krizi, z Brightonu si veze třígólovou porážku",
             "publishedAt": "2026-04-21T21:32:31Z"
@@ -1738,10 +1743,6 @@
           {
             "title": "Basketbalisté Denveru a New Yorku ztratili v prvním kole play-off vedení",
             "publishedAt": "2026-04-21T07:33:15Z"
-          },
-          {
-            "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
-            "publishedAt": "2026-04-21T05:30:00Z"
           }
         ]
       }
@@ -1753,7 +1754,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77265,
+      "bytes": 77269,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
