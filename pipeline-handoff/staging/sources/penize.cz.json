@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T13:59:34.178091Z",
+  "ingestedAt": "2026-04-21T15:02:52.655581Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Penzijní společnost dostala pokutu. Nepřipsala klientům výnos z úroků",
+      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488602-penzijni-spolecnost-dostala-pokutu-nepripsala-klientum-vynos-z-uroku",
+      "dt": "2026-04-21T16:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dostala",
+        "klientům",
+        "nepřipsala",
+        "penzijní",
+        "pokutu",
+        "společnost",
+        "výnos",
+        "úroků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -490,33 +515,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vinted jako nejlevnější kurýr? Evropou koluje trik, který platforma vidí nerada",
-      "url": "https://www.penize.cz/nakupy/488381-vinted-jako-nejlevnejsi-kuryr-evropou-koluje-trik-ktery-platforma-vidi-nerada",
-      "dt": "2026-04-17T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "evropou",
-        "jako",
-        "koluje",
-        "kurýr",
-        "nejlevnější",
-        "nerada",
-        "platforma",
-        "trik",
-        "vidí",
-        "vinted"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -527,7 +525,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18579,
+      "bytes": 18454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -564,11 +562,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 16
+          "finance": 16,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -580,6 +578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Penzijní společnost dostala pokutu. Nepřipsala klientům výnos z úroků",
+            "publishedAt": "2026-04-21T16:00:00Z"
+          },
           {
             "title": "Jako na houpačce. Maximální ceny benzinu a nafty na středu 22. dubna",
             "publishedAt": "2026-04-21T13:59:00Z"
@@ -607,10 +609,6 @@
           {
             "title": "Limit pro pojištění právní ochrany výrazně roste. Pomohly dvě novinky",
             "publishedAt": "2026-04-20T17:30:00Z"
-          },
-          {
-            "title": "Nový týden, nový strop. Maximální ceny benzinu a nafty na úterý 21. dubna",
-            "publishedAt": "2026-04-20T14:02:00Z"
           }
         ]
       }
