@@ -10294,7 +10294,8 @@ function buildVideoAsArticleCard(it) {
     function positionShell(shell, host){
       if (!shell || !host) return;
       try{
-        const r = host.getBoundingClientRect();
+        const tile = host.querySelector ? host.querySelector(".iu-mmTopTool") : null;
+        const r = (tile && tile.getBoundingClientRect ? tile : host).getBoundingClientRect();
         const vw = window.innerWidth || 0;
         const pad = 10;
         const maxW = Math.min(380, Math.max(240, vw - 2 * pad));
@@ -10355,6 +10356,7 @@ function buildVideoAsArticleCard(it) {
 
     function wireHover(host, shell, bridge){
       if (!host || !shell) return;
+      const tile = host.querySelector ? host.querySelector(".iu-mmTopTool") : null;
       let showTimer = null;
       let hideTimer = null;
       let open = false;
@@ -10376,7 +10378,7 @@ function buildVideoAsArticleCard(it) {
         clearShow();
         clearHide();
         open = false;
-        try{ host.classList.remove("iu-has-hover-summary"); }catch{}
+        try{ if (tile) tile.classList.remove("iu-has-hover-summary"); }catch{}
         try{ shell.classList.add("iu-mmHoverSummaryPanelShell--closed"); shell.setAttribute("aria-hidden", "true"); }catch{}
         if (bridge){
           try{ bridge.setAttribute("hidden", ""); bridge.setAttribute("aria-hidden", "true"); }catch{}
@@ -10398,7 +10400,7 @@ function buildVideoAsArticleCard(it) {
           if (host === hostTasks && hostCal && typeof hostCal.__iuForceHide === "function") hostCal.__iuForceHide();
         }catch{}
         open = true;
-        try{ host.classList.add("iu-has-hover-summary"); }catch{}
+        try{ if (tile) tile.classList.add("iu-has-hover-summary"); }catch{}
         if (bridge){
           try{ bridge.removeAttribute("hidden"); bridge.setAttribute("aria-hidden", "false"); }catch{}
         }
@@ -30549,16 +30551,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   "use strict";
   var ID = "iu-mm-hover-summary-desktop";
   var CSS =
-    ".accordionCol .mindMenu .iu-mmTopToolHoverHost.iu-hover-summary-host{min-width:0;display:flex;flex-direction:column;align-items:stretch}" +
+    ".accordionCol .mindMenu .iu-mmTopToolHoverHost.iu-hover-summary-host{position:relative;min-width:0;display:flex;flex-direction:column;align-items:stretch}" +
     ".accordionCol .mindMenu .iu-mmTopToolHoverHost.iu-hover-summary-host>.iu-mmTopTool{flex:1 1 auto;min-height:0;width:100%;align-self:stretch}" +
-    ".iu-mmHoverSummaryBridge{flex:0 0 auto;width:100%;height:0;margin:0;padding:0;border:0;pointer-events:none}" +
+    ".iu-mmHoverSummaryBridge{position:absolute;left:0;right:0;top:100%;width:100%;height:0;margin:0;padding:0;border:0;pointer-events:none;box-sizing:border-box;z-index:3}" +
     "@media(min-width:1025px){" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools{transform:none!important}" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost{transform:none!important}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryBridge:not([hidden]){height:10px;pointer-events:auto}" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:hover{transform:translateY(-1px)}" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:active{transform:translateY(0.5px)}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell.iu-mmHoverSummaryPanelShell--closed{position:fixed!important;left:-12000px!important;top:0!important;width:min(380px,calc(100vw - 20px))!important;max-height:min(72vh,560px)!important;opacity:0!important;pointer-events:none!important;z-index:-1!important;overflow:hidden!important}" +
     "#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorTasks{display:none!important}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
     ".dark body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){background:rgba(15,23,42,.96);border-color:rgba(148,163,184,.28);color:rgba(241,245,249,.95)}" +
-    "body.iu-desktop-hover-summary-enabled .iu-mmTopToolHoverHost.iu-has-hover-summary{position:relative;z-index:10058}" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost>.iu-mmTopTool.iu-has-hover-summary{position:relative;z-index:10058}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-card{border-radius:10px}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-text{white-space:normal;overflow:visible;text-overflow:clip}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-line2main{white-space:normal}" +
