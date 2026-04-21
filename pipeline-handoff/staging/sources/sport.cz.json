@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T15:40:15.062922Z",
+  "ingestedAt": "2026-04-21T15:59:59.796311Z",
   "items": [
     {
       "section": "sport",
@@ -22,6 +22,31 @@
         "svou",
         "vede",
         "využil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trenér Donovan po šesti sezonách NBA skončil u basketbalistů Chicaga",
+      "url": "https://www.sport.cz/clanek/basketbal-trener-donovan-po-sesti-sezonach-nba-skoncil-u-basketbalistu-chicaga-5441068",
+      "dt": "2026-04-21T15:50:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalistů",
+        "chicaga",
+        "donovan",
+        "nba",
+        "sezonách",
+        "skončil",
+        "trenér",
+        "šesti"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -753,34 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Famózní Strýcová zazářila v Bostonu. Slovenské legendě nadělila přes pět minut, nadchla i experta",
-      "url": "https://www.sport.cz/clanek/atletika-paradni-predstaveni-strycove-tenisova-legenda-zazarila-pri-bostonskem-maratonu-5440945",
-      "dt": "2026-04-21T06:16:28Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bostonu",
-        "experta",
-        "famózní",
-        "legendě",
-        "minut",
-        "nadchla",
-        "nadělila",
-        "pět",
-        "slovenské",
-        "strýcová",
-        "zazářila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44682,
+      "bytes": 44404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:12:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:50:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +843,10 @@
           {
             "title": "FOTBAL ONLINE: Jablonec využil svou převahu a v semifinále poháru vede nad Boleslaví",
             "publishedAt": "2026-04-21T07:41:26Z"
+          },
+          {
+            "title": "Trenér Donovan po šesti sezonách NBA skončil u basketbalistů Chicaga",
+            "publishedAt": "2026-04-21T15:50:12Z"
           },
           {
             "title": "Hokejisty Mladé Boleslavi posílí lotyšský reprezentační útočník Gavars",
@@ -870,10 +871,6 @@
           {
             "title": "V Edenu bude bezpečněji. Přibude vychytávka, která může zachránit život",
             "publishedAt": "2026-04-21T14:30:47Z"
-          },
-          {
-            "title": "Calzona skončil, píší Italové. Vedení slovenské reprezentace tvrdí, že o ničem neví",
-            "publishedAt": "2026-04-21T13:39:34Z"
           }
         ]
       }

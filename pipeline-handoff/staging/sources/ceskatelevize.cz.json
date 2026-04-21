@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T15:40:15.062922Z",
+  "ingestedAt": "2026-04-21T15:59:59.796311Z",
   "items": [
     {
       "section": "aktualne",
@@ -757,6 +757,25 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Los MS basketbalistek",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/los-ms-basketbalistek-156393",
+      "dt": "2026-04-21T15:55:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "basketbalistek",
+        "los"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Ukončí Mikula dlouhé čekání? Motokrosař cílí na pódiová umístění",
       "url": "https://sport.ceskatelevize.cz/clanek/motorsport/ukonci-mikula-dlouhe-cekani-motokrosar-cili-na-podiova-umisteni-156391",
       "dt": "2026-04-21T12:41:14Z",
@@ -1497,31 +1516,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muchová titul ve Stuttgartu nezískala, Malečková a Škoch v Rouenu slavily",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/muchova-nestacila-na-rybakinovou-a-titul-ve-stuttgartu-neziskala-156361",
-      "dt": "2026-04-19T12:41:35Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "malečková",
-        "muchová",
-        "nezískala",
-        "rouenu",
-        "slavily",
-        "stuttgartu",
-        "titul",
-        "škoch"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1532,7 +1526,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44170,
+      "bytes": 44169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1651,7 +1645,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40473,
+      "bytes": 40205,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1688,7 +1682,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T12:41:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1703,6 +1697,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Los MS basketbalistek",
+            "publishedAt": "2026-04-21T15:55:00Z"
+          },
           {
             "title": "Ukončí Mikula dlouhé čekání? Motokrosař cílí na pódiová umístění",
             "publishedAt": "2026-04-21T12:41:14Z"
@@ -1730,10 +1728,6 @@
           {
             "title": "Basketbalistky USK deklasovaly Žabiny a vykročily za 16. titulem v řadě",
             "publishedAt": "2026-04-20T18:35:53Z"
-          },
-          {
-            "title": "Hanika řádil v Le Mans, ve vytrvalostním závodě vyhrál podruhé za sebou",
-            "publishedAt": "2026-04-20T18:19:13Z"
           }
         ]
       }
@@ -1745,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77244,
+      "bytes": 77270,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T15:40:15.062922Z",
+  "ingestedAt": "2026-04-21T15:59:59.796311Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,31 @@
         "omezení",
         "ruší",
         "windows"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "AI slop ve hrách? Jak funguje kontroverzní vylepšení grafiky Nvidia DLSS 5",
+      "url": "https://www.zive.cz/clanky/ai-slop-ve-hrach-jak-funguje-kontroverzni-vylepseni-grafiky-nvidia-dlss-5/sc-3-a-240684/default.aspx",
+      "dt": "2026-04-21T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "dlss",
+        "funguje",
+        "grafiky",
+        "hrách",
+        "kontroverzní",
+        "nvidia",
+        "slop",
+        "vylepšení"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -939,34 +964,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Týden Živě: Microsoft řeší hříchy Windows 11, ale Francie radši přechází na Linux",
-      "url": "https://www.zive.cz/clanky/tyden-zive-microsoft-resi-hrichy-windows-11-ale-francie-radsi-prechazi-na-linux/sc-3-a-240767/default.aspx",
-      "dt": "2026-04-18T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ale",
-        "francie",
-        "hříchy",
-        "linux",
-        "microsoft",
-        "přechází",
-        "radši",
-        "týden",
-        "windows",
-        "řeší",
-        "živě"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22770,
+      "bytes": 22731,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1029,10 @@
           {
             "title": "Windows 11 ruší omezení formátování oddílu na FAT32. Místo 32 GB může mít až 2 TB",
             "publishedAt": "2026-04-21T12:45:00Z"
+          },
+          {
+            "title": "AI slop ve hrách? Jak funguje kontroverzní vylepšení grafiky Nvidia DLSS 5",
+            "publishedAt": "2026-04-21T15:45:00Z"
           },
           {
             "title": "Apple po 15 letech vymění šéfa. Otěže po Timu Cookovi převezme hardwarový guru John Ternus",
@@ -1056,10 +1057,6 @@
           {
             "title": "Oneplay a 30 nejoblíbenějších filmů a seriálů v dubnu 2026. Tohle Češi na bývalém Voyo nejvíc sledují",
             "publishedAt": "2026-04-21T11:45:00Z"
-          },
-          {
-            "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
-            "publishedAt": "2026-04-20T10:45:00Z"
           }
         ]
       }
