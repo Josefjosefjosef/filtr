@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-21T07:00:53.280352Z",
+  "ingestedAt": "2026-04-21T07:22:49.408062Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nafta v Česku zlevnila i pod 40 korun za litr",
+      "url": "https://profitonline.cz/nafta-v-cesku-zlevnila-i-pod-40-korun-za-litr/",
+      "dt": "2026-04-21T07:00:50Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "korun",
+        "litr",
+        "nafta",
+        "zlevnila",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -275,30 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbal a dovolená. Češi horečně nakupují letenky do Ameriky",
-      "url": "https://profitonline.cz/fotbal-a-dovolena-cesi-horecne-nakupuji-letenky-do-ameriky/",
-      "dt": "2026-04-18T10:00:10Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ameriky",
-        "dovolená",
-        "fotbal",
-        "horečně",
-        "letenky",
-        "nakupují",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19447,
+      "bytes": 19405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,11 +344,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:00:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:00:50Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "sport": 2,
-          "finance": 9,
+          "finance": 10,
+          "sport": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -363,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nafta v Česku zlevnila i pod 40 korun za litr",
+            "publishedAt": "2026-04-21T07:00:50Z"
+          },
           {
             "title": "Uvidíme místo StarDance či hokeje pouze černou obrazovku?",
             "publishedAt": "2026-04-21T04:00:33Z"
@@ -390,10 +392,6 @@
           {
             "title": "Češi budou tankovat levněji",
             "publishedAt": "2026-04-19T13:00:16Z"
-          },
-          {
-            "title": "Novinky v osobních financích: QR kód šetří čas i peníze. Proč ho Češi ignorují?",
-            "publishedAt": "2026-04-19T10:00:50Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-21T07:00:53.280352Z",
+  "ingestedAt": "2026-04-21T07:22:49.408062Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ženy v EU mají o čtvrtinu nižší důchod než muži. V Česku je rozdíl menší",
+      "url": "https://www.zdravezpravy.cz/2026/04/21/zeny-v-eu-maji-o-ctvrtinu-nizsi-duchod-nez-muzi-v-cesku-je-rozdil-mensi/",
+      "dt": "2026-04-21T06:40:34Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "důchod",
+        "mají",
+        "menší",
+        "muži",
+        "než",
+        "nižší",
+        "rozdíl",
+        "česku",
+        "čtvrtinu",
+        "ženy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,30 +498,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Richtrová z FN Brno získala cenu za obturátor pro děti s rozštěpem",
-      "url": "https://www.zdravezpravy.cz/2026/04/11/richtrova-z-fn-brno-ziskala-cenu-za-obturator-pro-deti-s-rozstepem/",
-      "dt": "2026-04-11T06:00:53Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "brno",
-        "cenu",
-        "děti",
-        "obturátor",
-        "richtrová",
-        "rozštěpem",
-        "získala"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 223126,
+      "bytes": 223308,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T15:59:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:40:34Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ženy v EU mají o čtvrtinu nižší důchod než muži. V Česku je rozdíl menší",
+            "publishedAt": "2026-04-21T06:40:34Z"
+          },
           {
             "title": "Doktor Google končí. Nemoci lidé řeší hlavně s chytrými chatboty",
             "publishedAt": "2026-04-20T15:59:51Z"
@@ -584,10 +591,6 @@
           {
             "title": "Pracující důchodci loni vyšetřili díky nižšímu odvodu 4 mld. Kč",
             "publishedAt": "2026-04-16T14:00:04Z"
-          },
-          {
-            "title": "Nemoci srdce a cév řeší premiér Babiš investicemi. Ale je to dost?",
-            "publishedAt": "2026-04-16T10:44:41Z"
           }
         ]
       }

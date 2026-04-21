@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T07:00:53.280352Z",
+  "ingestedAt": "2026-04-21T07:22:49.408062Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Otevírací doba obchodů o svátcích 1. a 8. května. Kdy bude zavřeno?",
+      "url": "https://www.idnes.cz/wiki/ekonomika/oteviraci-doba-v-obchodech-v-dobe-svatku.K456717",
+      "dt": "2026-04-21T07:03:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "doba",
+        "května",
+        "obchodů",
+        "otevírací",
+        "svátcích",
+        "zavřeno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "KOMENTÁŘ: Chcípni! Ale kdo to Issové a Langmajerovi „statečně“ poví z očí do očí?",
+      "url": "https://www.idnes.cz/kultura/film-televize/komentar-hejt-neni-nazor-issova-langmajer.A260420_094341_filmvideo_spm",
+      "dt": "2026-04-21T07:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "chcípni",
+        "issové",
+        "komentář",
+        "langmajerovi",
+        "očí",
+        "poví",
+        "statečně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -740,58 +788,6 @@
         "trumpův",
         "turecko",
         "šance"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hodně pije a má nevysvětlitelné absence. Rozlícený šéf FBI žaluje list pro pomluvu",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/fbi-kash-patel-zaloba-casopis-the-atlantic-pomluva.A260420_212837_zahranicni_tmps",
-      "dt": "2026-04-20T19:41:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "absence",
-        "fbi",
-        "hodně",
-        "list",
-        "nevysvětlitelné",
-        "pije",
-        "pomluvu",
-        "rozlícený",
-        "šéf",
-        "žaluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čeká nás spolupráce na jaderném odstrašování, oznámil Macron v Polsku",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/ceka-nas-spoluprace-na-jadernem-odstrasovani-oznamil-macron-v-polsku.A260420_192822_zahranicni_meli",
-      "dt": "2026-04-20T19:29:15Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jaderném",
-        "macron",
-        "nás",
-        "odstrašování",
-        "oznámil",
-        "polsku",
-        "spolupráce",
-        "čeká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1597,7 +1593,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49962,
+      "bytes": 49057,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1634,12 +1630,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:03:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 2,
-          "finance": 3
+          "finance": 4,
+          "other": 3,
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1651,6 +1647,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otevírací doba obchodů o svátcích 1. a 8. května. Kdy bude zavřeno?",
+            "publishedAt": "2026-04-21T07:03:00Z"
+          },
+          {
+            "title": "KOMENTÁŘ: Chcípni! Ale kdo to Issové a Langmajerovi „statečně“ poví z očí do očí?",
+            "publishedAt": "2026-04-21T07:00:00Z"
+          },
           {
             "title": "Zlom v poválečné politice, Japonci usnadní vývoz zbraní. Porušení ústavy, míní kritici",
             "publishedAt": "2026-04-21T06:52:00Z"
@@ -1674,14 +1678,6 @@
           {
             "title": "Z mexické pyramidy střílel muž. Zabil turistku a pak sebe, další lidi zranil",
             "publishedAt": "2026-04-21T05:31:00Z"
-          },
-          {
-            "title": "Změna po 15 letech. Cook opustí post generálního ředitele společnosti Apple",
-            "publishedAt": "2026-04-21T05:13:00Z"
-          },
-          {
-            "title": "Otrávených balení s dětskou výživou od HiPP může být až 12, píší rakouská média",
-            "publishedAt": "2026-04-21T05:04:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T07:00:53.280352Z",
+  "ingestedAt": "2026-04-21T07:22:49.408062Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hnutí Duha považuje Macinkův výrok o terorismu za nepřijatelný, žádá omluvu",
+      "url": "https://zpravy.aktualne.cz/domaci/hnuti-duha-povazuje-macinkuv-vyrok-o-terorismu-za-neprijatelny-zadaji-omluvu/r~aaa297cdf613021667ca25028e312430/",
+      "dt": "2026-04-21T07:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "duha",
+        "hnutí",
+        "macinkův",
+        "nepřijatelný",
+        "omluvu",
+        "považuje",
+        "terorismu",
+        "výrok",
+        "žádá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -492,32 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Problém pro Evropu? Volby v Bulharsku drtivě vyhrál muž, který se neštítí Putina",
-      "url": "https://zpravy.aktualne.cz/zahranici/rusko-ma-v-evrope-noveho-spojence-bulharske-volby-vyhral-maly-orban/r~aaa29e38bb568c9d05d3f0941f424424/",
-      "dt": "2026-04-20T18:40:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bulharsku",
-        "drtivě",
-        "evropu",
-        "muž",
-        "neštítí",
-        "problém",
-        "putina",
-        "volby",
-        "vyhrál"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22026,
+      "bytes": 22016,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,7 +565,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 15,
@@ -583,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hnutí Duha považuje Macinkův výrok o terorismu za nepřijatelný, žádá omluvu",
+            "publishedAt": "2026-04-21T07:03:00Z"
+          },
           {
             "title": "Svět je na prahu nebezpečného zlomu, varuje Amnesty International",
             "publishedAt": "2026-04-21T06:30:00Z"
@@ -610,10 +614,6 @@
           {
             "title": "„Operace Půlnoční kladivo byla kompletní,“ tvrdí Trump. Ale vykopání uranu bude těžké",
             "publishedAt": "2026-04-21T05:04:00Z"
-          },
-          {
-            "title": "Horší než za Berbra. Proč bezbolestné vrtačky řádí v českém fotbale dál",
-            "publishedAt": "2026-04-21T04:25:00Z"
           }
         ]
       }

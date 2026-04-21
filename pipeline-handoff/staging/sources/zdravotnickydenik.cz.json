@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T07:00:53.280352Z",
+  "ingestedAt": "2026-04-21T07:22:49.408062Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Proč lidé volají záchranku častěji než dříve? Data ukazují překvapivý trend",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/kdo-dnes-vola-zachranku-data-zmena/",
+      "dt": "2026-04-21T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "data",
+        "dříve",
+        "lidé",
+        "než",
+        "proč",
+        "překvapivý",
+        "trend",
+        "ukazují",
+        "volají",
+        "záchranku",
+        "častěji"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nejhorší místo pro stáří je nemocniční lůžko. Křehký pacient v centru pozornosti Prague IHS",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/stari-nemocnicni-luzko-krehky-pacient-prague-ihs/",
-      "dt": "2026-04-20T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "centru",
-        "ihs",
-        "křehký",
-        "lůžko",
-        "místo",
-        "nejhorší",
-        "nemocniční",
-        "pacient",
-        "pozornosti",
-        "prague",
-        "stáří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 115494,
+      "bytes": 96363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč lidé volají záchranku častěji než dříve? Data ukazují překvapivý trend",
+            "publishedAt": "2026-04-21T07:00:00Z"
+          },
           {
             "title": "Stopka pro nevyužité rezonance. Jak bude fungovat přístrojová komise dle nových pravidel?",
             "publishedAt": "2026-04-21T06:00:00Z"
@@ -362,10 +366,6 @@
           {
             "title": "Podezření v karlovarské nemocnici: Operovali srdeční implantáty neatestovaní lékaři?",
             "publishedAt": "2026-04-20T12:03:48Z"
-          },
-          {
-            "title": "Přísnější tresty za útoky na zdravotníky? Advokátka má k návrhu ČLK zásadní výhrady",
-            "publishedAt": "2026-04-20T09:32:05Z"
           }
         ]
       }
