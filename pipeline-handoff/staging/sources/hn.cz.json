@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T07:22:49.408062Z",
+  "ingestedAt": "2026-04-21T07:39:50.622169Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nenaplněné vize o autech bez řidiče. Tesla dobyla Nizozemsko, k autonomním autům pro běžný provoz je ale stále daleko",
+      "url": "https://byznys.hn.cz/c1-67869020-nenaplnene-vize-o-autech-bez-ridice-tesla-dobyla-holandsko-k-autonomnim-autum-pro-bezny-provoz-je-ale-stale-daleko",
+      "dt": "2026-04-21T07:35:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "autech",
+        "autonomním",
+        "autům",
+        "běžný",
+        "daleko",
+        "dobyla",
+        "nenaplněné",
+        "nizozemsko",
+        "provoz",
+        "stále",
+        "tesla",
+        "vize",
+        "řidiče"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1153,26 +1184,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Finanční trhy (20. 4. 2026)",
-      "url": "https://archiv.hn.cz/c1-67868070-financni-trhy-20-4-2026",
-      "dt": "2026-04-19T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "finanční",
-        "trhy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1183,7 +1194,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180713,
+      "bytes": 180692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1220,11 +1231,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 33,
+          "zdravi": 2,
           "zpravy": 3,
           "sport": 2
         },
@@ -1238,6 +1249,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nenaplněné vize o autech bez řidiče. Tesla dobyla Nizozemsko, k autonomním autům pro běžný provoz je ale stále daleko",
+            "publishedAt": "2026-04-21T07:35:00Z"
+          },
           {
             "title": "Hodně prachů, hodně holek,  ale... Jak těžké je být &bdquo;povoláním&ldquo; syn slavného otce, vysvětluje hudebník Mat213",
             "publishedAt": "2026-04-21T06:55:00Z"
@@ -1265,10 +1280,6 @@
           {
             "title": "Budeme s Polskem spolupracovat na jaderném odstrašování, řekl Macron v Gdaňsku. Vyzval i k deeskalaci v Hormuzském průlivu",
             "publishedAt": "2026-04-20T17:08:00Z"
-          },
-          {
-            "title": "V Českém rozhlase vzniká kvůli rušení poplatků stávkový výbor. Chápu naštvání, vládní návrh je paskvil, říká Zavoral",
-            "publishedAt": "2026-04-20T16:54:00Z"
           }
         ]
       }

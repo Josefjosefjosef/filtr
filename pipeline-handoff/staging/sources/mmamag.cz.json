@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-21T07:22:49.408062Z",
+  "ingestedAt": "2026-04-21T07:39:50.622169Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Karlos Benda přitvrdil. O Mikuláškovi prý ví věci, za které by šel sedět",
+      "url": "https://www.mmamag.cz/benda-mikulasek-clash/",
+      "dt": "2026-04-21T07:21:09Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "benda",
+        "karlos",
+        "mikuláškovi",
+        "prý",
+        "přitvrdil",
+        "sedět",
+        "věci",
+        "šel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1072,32 +1097,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "White Procházku nechápal. Podle šéfa UFC měl Ulberga dorazit",
-      "url": "https://www.mmamag.cz/white-prochazka-kritika-ufc-327/",
-      "dt": "2026-04-13T10:04:45Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "dorazit",
-        "měl",
-        "nechápal",
-        "podle",
-        "procházku",
-        "ufc",
-        "ulberga",
-        "white",
-        "šéfa"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1107,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77673,
+      "bytes": 77586,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1145,7 +1144,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T08:29:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:21:09Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1160,6 +1159,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karlos Benda přitvrdil. O Mikuláškovi prý ví věci, za které by šel sedět",
+            "publishedAt": "2026-04-21T07:21:09Z"
+          },
           {
             "title": "Hvězda Oktagonu bojovala ve vězení o holý život. Patrika Kincla napadl spoluvězeň nožem",
             "publishedAt": "2026-04-20T08:29:28Z"
@@ -1187,10 +1190,6 @@
           {
             "title": "Novotný otevřel nepříjemné téma. Po Procházkově KO řeší jeho bradu",
             "publishedAt": "2026-04-19T11:32:17Z"
-          },
-          {
-            "title": "Leo Beránek čelí obvinění. Hvězdě Clashe hrozí dlouhý pobyt ve vězení",
-            "publishedAt": "2026-04-19T09:01:07Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T07:22:49.408062Z",
+  "ingestedAt": "2026-04-21T07:39:50.622169Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Knicks i Denver promarnili náskok, série se srovnaly. Cleveland si další bod pohlídal",
+      "url": "https://www.idnes.cz/sport/basket/nba-vysledky-play-off.A260421_085209_sport-basket_kazdt",
+      "dt": "2026-04-21T07:02:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bod",
+        "cleveland",
+        "další",
+        "denver",
+        "knicks",
+        "náskok",
+        "pohlídal",
+        "promarnili",
+        "srovnaly",
+        "série"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -757,32 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stojí ty peníze za to? Bývalá tenistka se pustila do kolegyně kvůli propagaci vodky",
-      "url": "https://www.idnes.cz/sport/trendy/stoji-ty-penize-za-to-byvala-tenistka-se-pustila-do-kolegyne-kvuli-propagaci-vodky.A260420_103836_trendy_blah",
-      "dt": "2026-04-20T11:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bývalá",
-        "kolegyně",
-        "kvůli",
-        "peníze",
-        "propagaci",
-        "pustila",
-        "stojí",
-        "tenistka",
-        "vodky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46778,
+      "bytes": 46809,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Knicks i Denver promarnili náskok, série se srovnaly. Cleveland si další bod pohlídal",
+            "publishedAt": "2026-04-21T07:02:00Z"
+          },
           {
             "title": "Experti nejen o baráži: Hráči simulují, hokej není fotbal! Rozhodčí na to nestačí",
             "publishedAt": "2026-04-21T06:47:00Z"
@@ -872,10 +877,6 @@
           {
             "title": "Nejdřív titul, pak WNBA, plánuje Čechová. Myšlenky už mi utíkají, přiznává",
             "publishedAt": "2026-04-20T20:56:00Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
-            "publishedAt": "2026-04-20T20:46:00Z"
           }
         ]
       }

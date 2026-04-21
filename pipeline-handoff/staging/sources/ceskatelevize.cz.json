@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T07:22:49.408062Z",
+  "ingestedAt": "2026-04-21T07:39:50.622169Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hasiči druhým dnem zasahují ve skladu plastů v Brně, objevila se nová ohniska",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihomoravsky-kraj/hasici-druhym-dnem-zasahuji-ve-skladu-plastu-v-brne-objevila-se-nova-ohniska-372611",
+      "dt": "2026-04-21T07:29:21Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brně",
+        "dnem",
+        "druhým",
+        "hasiči",
+        "nová",
+        "objevila",
+        "ohniska",
+        "plastů",
+        "skladu",
+        "zasahují"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -32,21 +59,21 @@
     {
       "section": "kultura",
       "contentType": "article",
-      "title": "Cenu Arnošta Lustiga za rok 2025 získá herec Ondřej Vetchý",
+      "title": "„Jeho činy by vydaly za tři laureáty.“ Lustigovu cenu získá Vetchý",
       "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cenu-arnosta-lustiga-za-rok-2025-ziska-herec-ondrej-vetchy-372607",
       "dt": "2026-04-21T06:40:00Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "2025",
-        "arnošta",
         "cenu",
-        "herec",
-        "lustiga",
-        "ondřej",
-        "rok",
+        "jeho",
+        "laureáty",
+        "lustigovu",
+        "tři",
         "vetchý",
-        "získá"
+        "vydaly",
+        "získá",
+        "činy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -733,23 +760,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Vědci rozplétají komplikovaný kočičí apetit",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-rozpletaji-komplikovany-kocici-apetit-372578",
-      "dt": "2026-04-20T11:15:22Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Basketbalisté Denveru a New Yorku ztratili v prvním kole play-off vedení",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbaliste-denveru-a-new-yorku-ztratili-v-prvnim-kole-play-off-vedeni-156389",
+      "dt": "2026-04-21T07:33:15Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "apetit",
-        "komplikovaný",
-        "kočičí",
-        "rozplétají",
-        "vědci"
+        "basketbalisté",
+        "denveru",
+        "kole",
+        "new",
+        "off",
+        "play",
+        "prvním",
+        "vedení",
+        "yorku",
+        "ztratili"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1493,31 +1525,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Doma urveme oba zápasy, věří jihlavský gólman Beran",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/doma-urveme-oba-zapasy-veri-jihlavsky-golman-beran-156359",
-      "dt": "2026-04-19T09:23:22Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "beran",
-        "doma",
-        "gólman",
-        "jihlavský",
-        "oba",
-        "urveme",
-        "věří",
-        "zápasy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1528,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43265,
+      "bytes": 43456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,11 +1595,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T07:03:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:29:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 6,
+          "zpravy": 24,
+          "other": 5,
           "finance": 1
         },
         "drop_counts": {
@@ -1606,11 +1613,15 @@
         },
         "sample_titles": [
           {
+            "title": "Hasiči druhým dnem zasahují ve skladu plastů v Brně, objevila se nová ohniska",
+            "publishedAt": "2026-04-21T07:29:21Z"
+          },
+          {
             "title": "Fremr v kauze Dozimetr obviněn není. Jeho roli v případu zkoumali Reportéři ČT",
             "publishedAt": "2026-04-21T07:03:41Z"
           },
           {
-            "title": "Cenu Arnošta Lustiga za rok 2025 získá herec Ondřej Vetchý",
+            "title": "„Jeho činy by vydaly za tři laureáty.“ Lustigovu cenu získá Vetchý",
             "publishedAt": "2026-04-21T06:40:00Z"
           },
           {
@@ -1632,10 +1643,6 @@
           {
             "title": "Profesionální hasiči ze Sušice se po třiceti letech dočkali vlastní stanice",
             "publishedAt": "2026-04-21T04:30:00Z"
-          },
-          {
-            "title": "Haiťany terorizují drony. Cílí i na děti",
-            "publishedAt": "2026-04-21T04:00:00Z"
           }
         ]
       }
@@ -1647,7 +1654,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40180,
+      "bytes": 40233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1684,7 +1691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T07:33:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1699,6 +1706,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Basketbalisté Denveru a New Yorku ztratili v prvním kole play-off vedení",
+            "publishedAt": "2026-04-21T07:33:15Z"
+          },
           {
             "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
             "publishedAt": "2026-04-21T05:30:00Z"
@@ -1726,10 +1737,6 @@
           {
             "title": "Korir zaběhl rekord Bostonského maratonu, triumf zopakovala i Lokediová",
             "publishedAt": "2026-04-20T17:50:43Z"
-          },
-          {
-            "title": "Zbrojovka je po třech letech prvoligová. Artis se rozešel s Táborskem smírně",
-            "publishedAt": "2026-04-20T16:59:15Z"
           }
         ]
       }
