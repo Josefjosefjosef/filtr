@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T15:20:05.235029Z",
+  "ingestedAt": "2026-04-21T15:40:15.062922Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Jablonec - Ml. Boleslav 0:0, boj o finále poháru, nebezpečně pálí Nebyla",
+      "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, boj o finále poháru, skóre otevírá Jawo po rohu",
       "url": "https://www.idnes.cz/fotbal/domaci-souteze/mol-cup-semifinale-jablonec-mlada-boleslav-online-vysledek.A260421_121423_fot_dsouteze_tals",
-      "dt": "2026-04-21T15:14:34Z",
+      "dt": "2026-04-21T15:34:28Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -16,10 +16,35 @@
         "boleslav",
         "finále",
         "jablonec",
-        "nebezpečně",
-        "nebyla",
+        "jawo",
+        "otevírá",
         "poháru",
-        "pálí"
+        "rohu",
+        "skóre"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Yamal, Sabalenková i česká hvězda. Kdo zazářil na sportovních Oscarech?",
+      "url": "https://www.idnes.cz/sport/trendy/cesky-para-plavec-na-cervenem-koberci-kdo-dalsi-zazaril-na-sportovnich-oscarech.A260421_132441_trendy_subt/foto",
+      "dt": "2026-04-21T15:31:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hvězda",
+        "oscarech",
+        "sabalenková",
+        "sportovních",
+        "yamal",
+        "zazářil",
+        "česká"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -764,34 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bořilův úlet zastínil i první porážku. Jaký trest mu hrozí? Ve hře i drastická varianta",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/boriluv-ulet-zastinil-i-prvni-porazku-jaky-trest-mu-hrozi-ve-hre-i-drasticka-varianta.A260420_205132_fotbal_tit",
-      "dt": "2026-04-21T05:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bořilův",
-        "drastická",
-        "hrozí",
-        "hře",
-        "jaký",
-        "porážku",
-        "první",
-        "trest",
-        "varianta",
-        "zastínil",
-        "úlet"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46868,
+      "bytes": 47162,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:14:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:34:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,8 +852,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Jablonec - Ml. Boleslav 0:0, boj o finále poháru, nebezpečně pálí Nebyla",
-            "publishedAt": "2026-04-21T15:14:34Z"
+            "title": "ONLINE: Jablonec - Ml. Boleslav 1:0, boj o finále poháru, skóre otevírá Jawo po rohu",
+            "publishedAt": "2026-04-21T15:34:28Z"
+          },
+          {
+            "title": "Yamal, Sabalenková i česká hvězda. Kdo zazářil na sportovních Oscarech?",
+            "publishedAt": "2026-04-21T15:31:00Z"
           },
           {
             "title": "Budou mít Slovinci posilu díky Dončičovi? Američan se pochlubil: Pas už jsem dostal",
@@ -881,10 +882,6 @@
           {
             "title": "V taxíku s Beckerem a šaty na poslední chvíli. Kratochvíl zažil sportovní Oscary",
             "publishedAt": "2026-04-21T13:41:00Z"
-          },
-          {
-            "title": "Obrovský trapas maratonce. Začal slavit předčasně, v cíli ho předběhl soupeř",
-            "publishedAt": "2026-04-21T13:28:00Z"
           }
         ]
       }

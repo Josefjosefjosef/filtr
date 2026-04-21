@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T15:20:05.235029Z",
+  "ingestedAt": "2026-04-21T15:40:15.062922Z",
   "items": [
     {
       "section": "finance",
@@ -76,6 +76,37 @@
         "zavedení",
         "zevnitř",
         "zlata"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tim Cook předá vedení Applu specialistovi na hardware. Sílí i pozice autora silikonových srdcí iPhonů a Maců",
+      "url": "https://archiv.hn.cz/c1-67869600-tim-cook-preda-vedeni-applu-specialistovi-na-hardware-sili-i-pozice-autora-silikonovych-srdci-iphonu-a-macu",
+      "dt": "2026-04-21T14:38:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "applu",
+        "autora",
+        "cook",
+        "hardware",
+        "iphonů",
+        "maců",
+        "pozice",
+        "předá",
+        "silikonových",
+        "specialistovi",
+        "srdcí",
+        "sílí",
+        "tim",
+        "vedení"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1142,31 +1173,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V bulharských volbách zvítězil exprezident Radev, získal 44,6 procenta hlasů",
-      "url": "https://archiv.hn.cz/c1-67868890-bulharske-volby-ovladl-exprezident-radev-protiukrajinsky-euroskeptik-ziskal-pres-40-procent-hlasu-a-chce-ukoncit-nestabilitu-v-zemi",
-      "dt": "2026-04-20T11:25:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bulharských",
-        "exprezident",
-        "hlasů",
-        "procenta",
-        "radev",
-        "volbách",
-        "zvítězil",
-        "získal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1183,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 180979,
+      "bytes": 180912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1245,6 +1251,10 @@
             "publishedAt": "2026-04-21T14:43:00Z"
           },
           {
+            "title": "Tim Cook předá vedení Applu specialistovi na hardware. Sílí i pozice autora silikonových srdcí iPhonů a Maců",
+            "publishedAt": "2026-04-21T14:38:00Z"
+          },
+          {
             "title": "J&T startuje svůj největší současný rezidenční projekt v Česku. V Brně postaví 1700 bytů",
             "publishedAt": "2026-04-21T14:20:00Z"
           },
@@ -1259,10 +1269,6 @@
           {
             "title": "Český fastfood rozstřelili noví hráči. Kde je nejvýdělečnější &bdquo;mekáč&ldquo; u nás, co drtí KFC a kde se objeví další Five Guys?",
             "publishedAt": "2026-04-21T13:05:00Z"
-          },
-          {
-            "title": "Moneta vyplatí na dividendách 90 procent loňského zisku, ten stoupl na 6,5 miliardy korun",
-            "publishedAt": "2026-04-21T10:32:00Z"
           }
         ]
       }

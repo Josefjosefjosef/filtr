@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T15:20:05.235029Z",
+  "ingestedAt": "2026-04-21T15:40:15.062922Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kdo vidí vaše zdravotní údaje? 5 mýtů, které se stále šíří",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-udaje-5-mytu/",
+      "dt": "2026-04-21T15:19:33Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "mýtů",
+        "stále",
+        "vaše",
+        "vidí",
+        "zdravotní",
+        "údaje",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Stopka pro nevyužité rezonance. Jak bude fungovat přístrojová komise dle nových pravidel?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pristrojova-komise-nove-fungovani-vymazal/",
-      "dt": "2026-04-21T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dle",
-        "fungovat",
-        "komise",
-        "nevyužité",
-        "nových",
-        "pravidel",
-        "přístrojová",
-        "rezonance",
-        "stopka"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91489,
+      "bytes": 85557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T14:12:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:19:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo vidí vaše zdravotní údaje? 5 mýtů, které se stále šíří",
+            "publishedAt": "2026-04-21T15:19:33Z"
+          },
           {
             "title": "Babiš slíbil nejmodernější celotělový PET/CT pro Česko. Nová technologie tu zatím chybí",
             "publishedAt": "2026-04-21T14:12:32Z"
@@ -361,10 +363,6 @@
           {
             "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
             "publishedAt": "2026-04-21T09:15:51Z"
-          },
-          {
-            "title": "Trumpova léková politika ohrožuje Evropu: Česko se připravuje na „sanitární akci“ k ochraně cen",
-            "publishedAt": "2026-04-21T08:00:00Z"
           }
         ]
       }

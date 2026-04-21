@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T15:20:05.235029Z",
+  "ingestedAt": "2026-04-21T15:40:15.062922Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Než s Rusy, to raději vůbec. Norsko zaujalo striktní postoj",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/nez-s-rusy-to-radeji-vubec-norsko-zaujalo-striktni-postoj/r~aaa29336e4c340b983390314d8bebb1b/",
+      "dt": "2026-04-21T15:16:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "než",
+        "norsko",
+        "postoj",
+        "raději",
+        "rusy",
+        "striktní",
+        "vůbec",
+        "zaujalo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -221,21 +246,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Další oběť války s Íránem. Tentokrát ovlivní váš sexuální život",
+      "title": "Válka má nečekaný důsledek. Dotkne se i sexuálního života Čechů",
       "url": "https://zpravy.aktualne.cz/zahranici/dalsi-obet-valky-s-iranem-tentokrat-ovlivni-vas-sexualni-zivot/r~aaa29bf5cf671cfb9eba99e8c76f80e5/",
       "dt": "2026-04-21T13:35:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "další",
-        "oběť",
-        "ovlivní",
-        "sexuální",
-        "tentokrát",
-        "války",
-        "váš",
-        "íránem",
-        "život"
+        "dotkne",
+        "důsledek",
+        "nečekaný",
+        "sexuálního",
+        "válka",
+        "čechů",
+        "života"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -509,33 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Cenu prezidenta MFF Karlovy Vary letos převezme herečka Magda Vášáryová",
-      "url": "https://magazin.aktualne.cz/kultura/film/cenu-prezidenta-mff-karlovy-vary-letos-prevezme-herecka-magda-vasaryova/r~aaa29da62b52a4d84689887dc9bce798/",
-      "dt": "2026-04-21T10:44:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cenu",
-        "herečka",
-        "karlovy",
-        "letos",
-        "magda",
-        "mff",
-        "prezidenta",
-        "převezme",
-        "vary",
-        "vášáryová"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22873,
+      "bytes": 22765,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,13 +579,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T15:16:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 2,
           "zpravy": 14,
-          "other": 3,
-          "finance": 2,
-          "sport": 1
+          "other": 2,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -601,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Než s Rusy, to raději vůbec. Norsko zaujalo striktní postoj",
+            "publishedAt": "2026-04-21T15:16:00Z"
+          },
           {
             "title": "Další rána pro Starmera. Úředník popsal tlak při jmenování amerického velvyslance",
             "publishedAt": "2026-04-21T15:01:00Z"
@@ -628,10 +628,6 @@
           {
             "title": "Orbánův zákon proti LGBT+ narazil. Evropský soudní dvůr ho označil za diskriminační",
             "publishedAt": "2026-04-21T13:56:00Z"
-          },
-          {
-            "title": "Otrávenou kojeneckou výživu stahují z regálů. Online prodej ji ale drží dál",
-            "publishedAt": "2026-04-21T13:35:00Z"
           }
         ]
       }
