@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T18:20:38.320989Z",
+  "ingestedAt": "2026-04-21T18:39:52.791109Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Jihlava - Litvínov 1:2, vyrovnaný stav vydržel jen minutu. Hosté opět vedou",
-      "url": "https://www.idnes.cz/hokej/extraliga/baraz-3-zapas-jihlava-litvinov-online-zpravodajstvi.A260421_115441_hokej_drev",
-      "dt": "2026-04-21T18:10:08Z",
+      "title": "Bronzový obrat. KP Brno si pro další medaili došlo díky famóznímu finiši",
+      "url": "https://www.idnes.cz/sport/basket/basketbalistky-kp-brno-po-obratu-porazily-ostravu-a-maji-treti-bronz-za-sebou.A260421_202354_sport-basket_ten",
+      "dt": "2026-04-21T18:28:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
+        "brno",
+        "bronzový",
+        "další",
+        "došlo",
+        "díky",
+        "famóznímu",
+        "finiši",
+        "medaili",
+        "obrat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Jihlava - Litvínov 1:3, hosté vedou už o dva góly. Jsou blízko mečbolu v baráži",
+      "url": "https://www.idnes.cz/hokej/extraliga/baraz-3-zapas-jihlava-litvinov-online-zpravodajstvi.A260421_115441_hokej_drev",
+      "dt": "2026-04-21T18:27:22Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráži",
+        "blízko",
+        "dva",
+        "góly",
         "hosté",
-        "jen",
         "jihlava",
         "litvínov",
-        "minutu",
-        "opět",
-        "stav",
-        "vedou",
-        "vydržel",
-        "vyrovnaný"
+        "mečbolu",
+        "vedou"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -761,33 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hrozí, že Alcaraz nenastoupí na Roland Garros. Další test je klíčový, říká obhájce",
-      "url": "https://www.idnes.cz/sport/tenis/carlos-alcaraz-zraneni-roland-garros.A260421_111931_tenis_kazdt",
-      "dt": "2026-04-21T09:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alcaraz",
-        "další",
-        "garros",
-        "hrozí",
-        "klíčový",
-        "nenastoupí",
-        "obhájce",
-        "roland",
-        "test",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47042,
+      "bytes": 47485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:10:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,8 +849,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Jihlava - Litvínov 1:2, vyrovnaný stav vydržel jen minutu. Hosté opět vedou",
-            "publishedAt": "2026-04-21T18:10:08Z"
+            "title": "Bronzový obrat. KP Brno si pro další medaili došlo díky famóznímu finiši",
+            "publishedAt": "2026-04-21T18:28:00Z"
+          },
+          {
+            "title": "ONLINE: Jihlava - Litvínov 1:3, hosté vedou už o dva góly. Jsou blízko mečbolu v baráži",
+            "publishedAt": "2026-04-21T18:27:22Z"
           },
           {
             "title": "ONLINE: Karviná - Baník 0:0, derby v semifinále poháru. Kdo postoupí dál?",
@@ -877,10 +879,6 @@
           {
             "title": "Jablonec - Ml. Boleslav 1:0, domácí jsou prvním finalistou MOL Cupu. Rozhodl Jawo",
             "publishedAt": "2026-04-21T17:15:43Z"
-          },
-          {
-            "title": "Do extraligy míří lotyšský reprezentant. Boleslav podepsala útočníka Gavarse",
-            "publishedAt": "2026-04-21T16:54:00Z"
           }
         ]
       }

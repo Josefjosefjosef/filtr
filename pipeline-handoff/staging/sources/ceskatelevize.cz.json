@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T18:20:38.320989Z",
+  "ingestedAt": "2026-04-21T18:39:52.791109Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podvodná charita vylákala z lidí několik desítek milionů korun",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/podvodna-charita-vylakala-z-lidi-nekolik-desitek-milionu-korun-372644",
+      "dt": "2026-04-21T18:20:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "charita",
+        "desítek",
+        "korun",
+        "lidí",
+        "milionů",
+        "několik",
+        "podvodná",
+        "vylákala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,24 +762,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Leteckého paliva je dost do podzimu, prohlásil Havlíček",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/leteckeho-paliva-je-dost-do-podzimu-prohlasil-havlicek-372603",
-      "dt": "2026-04-21T06:37:14Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Královo Pole porazilo i napodruhé Ostravu a získalo ligový bronz",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/kralovo-pole-porazilo-i-npodruhe-ostravu-a-ziskalo-ligovy-bronz-156395",
+      "dt": "2026-04-21T18:30:09Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dost",
-        "havlíček",
-        "leteckého",
-        "paliva",
-        "podzimu",
-        "prohlásil"
+        "bronz",
+        "královo",
+        "ligový",
+        "napodruhé",
+        "ostravu",
+        "pole",
+        "porazilo",
+        "získalo"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1500,31 +1527,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "AC Milán vyhrál ve Veroně a už je druhý, Juventus se blíží Lize mistrů",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ac-milan-vyhral-ve-verone-a-uz-je-druhy-156364",
-      "dt": "2026-04-19T15:24:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "blíží",
-        "druhý",
-        "juventus",
-        "lize",
-        "milán",
-        "mistrů",
-        "veroně",
-        "vyhrál"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1535,7 +1537,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44731,
+      "bytes": 44969,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1595,7 +1597,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:40:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:20:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1612,6 +1614,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podvodná charita vylákala z lidí několik desítek milionů korun",
+            "publishedAt": "2026-04-21T18:20:22Z"
+          },
           {
             "title": "Britská královská rodina si připomíná sto let od narození Alžběty II.",
             "publishedAt": "2026-04-21T17:40:49Z"
@@ -1639,10 +1645,6 @@
           {
             "title": "Čína dotáhla USA ve vývoji AI, hlásí Stanfordova univerzita",
             "publishedAt": "2026-04-21T15:17:02Z"
-          },
-          {
-            "title": "Ukrajina dokončila opravu ropovodu Družba, řekl Zelenskyj",
-            "publishedAt": "2026-04-21T14:53:42Z"
           }
         ]
       }
@@ -1654,7 +1656,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39960,
+      "bytes": 39698,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1691,7 +1693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:12:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:30:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1706,6 +1708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Královo Pole porazilo i napodruhé Ostravu a získalo ligový bronz",
+            "publishedAt": "2026-04-21T18:30:09Z"
+          },
           {
             "title": "Jablonec si po osmi letech zahraje o domácí pohárovou trofej",
             "publishedAt": "2026-04-21T17:12:53Z"
@@ -1733,10 +1739,6 @@
           {
             "title": "Finská liga je skvělá, říká Bednář. Je vděčný za šanci v Ässätu i reprezentaci",
             "publishedAt": "2026-04-21T04:00:00Z"
-          },
-          {
-            "title": "Wolves sestupují z Premier League. Osud Krejčího týmu zpečetila remíza v londýnském derby",
-            "publishedAt": "2026-04-20T21:08:49Z"
           }
         ]
       }
