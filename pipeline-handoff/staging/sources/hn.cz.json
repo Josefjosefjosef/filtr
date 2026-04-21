@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T15:02:52.655581Z",
+  "ingestedAt": "2026-04-21T15:20:05.235029Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na dálnicích zlevněno. Jak ale zlevnit jejich výstavbu?",
+      "url": "https://archiv.hn.cz/c1-67869420-na-dalnicich-zlevneno-jak-ale-zlevnit-jejich-vystavbu",
+      "dt": "2026-04-21T14:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "dálnicích",
+        "jejich",
+        "výstavbu",
+        "zlevnit",
+        "zlevněno"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1144,36 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nemohu akcionářům vysvětlit investice v prostředí, které mě brzdí. Siemens hrozí, že kvůli unijní regulaci bude do AI investovat jinde",
-      "url": "https://byznys.hn.cz/c1-67868860-nemohu-akcionarum-vysvetlit-investice-v-prostredi-ktere-me-brzdi-siemens-hrozi-ze-kvuli-unijni-regulaci-bude-do-ai-investovat-jinde",
-      "dt": "2026-04-20T10:50:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "akcionářům",
-        "brzdí",
-        "hrozí",
-        "investice",
-        "investovat",
-        "jinde",
-        "kvůli",
-        "nemohu",
-        "prostředí",
-        "regulaci",
-        "siemens",
-        "unijní",
-        "vysvětlit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1184,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181202,
+      "bytes": 180979,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1221,7 +1214,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T14:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T14:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 36,
@@ -1239,6 +1232,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na dálnicích zlevněno. Jak ale zlevnit jejich výstavbu?",
+            "publishedAt": "2026-04-21T14:57:00Z"
+          },
           {
             "title": "Výrazný přesun v tuzemském zemědělství. Miliardový podnik na Kutnohorsku kupuje bývalý ministr",
             "publishedAt": "2026-04-21T14:46:00Z"
@@ -1266,10 +1263,6 @@
           {
             "title": "Moneta vyplatí na dividendách 90 procent loňského zisku, ten stoupl na 6,5 miliardy korun",
             "publishedAt": "2026-04-21T10:32:00Z"
-          },
-          {
-            "title": "Práci vám nevezme umělá inteligence, ale kolega, který se ji naučí lépe využívat, říká makroekonom Aleš Maršál",
-            "publishedAt": "2026-04-21T10:03:00Z"
           }
         ]
       }
