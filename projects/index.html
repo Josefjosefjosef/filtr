@@ -325,10 +325,58 @@ style-src 'self' 'unsafe-inline' https:;
                   </header>
                 </div>
                 <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" aria-label="Silver horní boxy">
-                  <section id="silver-slot" class="silver-slot" aria-label="Silver" data-iu-silver-welcome-variant="evening">
+                  <section id="silver-slot" class="silver-slot" aria-label="Silver">
+                    <script>
+                    (function(){
+                      function greetingKeyFromHour(h){
+                        if (h >= 5 && h < 9) return "morning";
+                        if (h >= 9 && h < 12) return "lateMorning";
+                        if (h >= 12 && h < 18) return "afternoon";
+                        return "evening";
+                      }
+                      var k = greetingKeyFromHour(new Date().getHours());
+                      try { window.__IU_SILVER_WELCOME_PAINT_K__ = k; } catch (e0) {}
+                      try { document.documentElement.setAttribute("data-iu-silver-welcome-paint", k); } catch (e1) {}
+                      var slot = document.getElementById("silver-slot");
+                      if (slot) slot.setAttribute("data-iu-silver-welcome-variant", k);
+                      var hostTop = document.getElementById("iuTopbarSilverComposerHost");
+                      if (hostTop) hostTop.setAttribute("data-iu-silver-welcome-variant", k);
+                    })();
+                    </script>
                     <div class="iuSilverWelcomeSticky" id="iuSilverWelcomeSticky">
-                      <div class="silver-welcome-stack silver-welcome-stack--evening" id="iuSilverWelcomeStack" data-iu-silver-welcome-stack data-iu-silver-welcome-variant="evening">
-                        <div class="iuWelcomeBox iuWelcomeBox--LOCKED iuSilverWelcomeCard silver-welcome-card" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="evening">
+                      <div class="silver-welcome-stack" id="iuSilverWelcomeStack" data-iu-silver-welcome-stack data-iu-silver-welcome-variant="">
+                    <script>
+                    (function(){
+                      function greetingKeyFromHour(h){
+                        if (h >= 5 && h < 9) return "morning";
+                        if (h >= 9 && h < 12) return "lateMorning";
+                        if (h >= 12 && h < 18) return "afternoon";
+                        return "evening";
+                      }
+                      var k = typeof window.__IU_SILVER_WELCOME_PAINT_K__ === "string" && window.__IU_SILVER_WELCOME_PAINT_K__
+                        ? window.__IU_SILVER_WELCOME_PAINT_K__
+                        : greetingKeyFromHour(new Date().getHours());
+                      var stack = document.currentScript && document.currentScript.parentNode;
+                      if (!stack || !stack.classList) return;
+                      var prefix = "silver-welcome-stack--";
+                      var variants = ["morning", "lateMorning", "afternoon", "evening"];
+                      for (var i = 0; i < variants.length; i++) {
+                        stack.classList.remove(prefix + variants[i]);
+                      }
+                      stack.classList.add(prefix + k);
+                      stack.setAttribute("data-iu-silver-welcome-variant", k);
+                    })();
+                    </script>
+                        <div class="iuWelcomeBox iuWelcomeBox--LOCKED iuSilverWelcomeCard silver-welcome-card" id="iuSilverWelcomeCard" data-iu-silver-welcome-card data-iu-silver-welcome-variant="">
+                    <script>
+                    (function(){
+                      var k = typeof window.__IU_SILVER_WELCOME_PAINT_K__ === "string" && window.__IU_SILVER_WELCOME_PAINT_K__
+                        ? window.__IU_SILVER_WELCOME_PAINT_K__
+                        : "evening";
+                      var card = document.currentScript && document.currentScript.parentNode;
+                      if (card && card.setAttribute) card.setAttribute("data-iu-silver-welcome-variant", k);
+                    })();
+                    </script>
                           <button type="button" id="iuSilverWelcomeInfoBtn" class="iuTopbarInfoBtn iuSilverWelcomeInfoBtn" aria-label="Informace o webu" aria-haspopup="dialog" aria-controls="iuTopbarInfoOverlay" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" aria-hidden="true" width="44" height="44" focusable="false">
                               <circle cx="23" cy="23" r="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>

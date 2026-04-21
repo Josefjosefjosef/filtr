@@ -6399,6 +6399,7 @@ function buildVideoAsArticleCard(it) {
       const candidate = iuParseNamedayTailFromRaw(raw);
       return candidate ? "svátek má " + candidate : "svátek má —";
     }
+    /** Must match synchronous Silver welcome bootstrap in projects/index.html (first paint). */
     function greetingKeyFromHour(h){
       if (h >= 5 && h < 9) return "morning";
       if (h >= 9 && h < 12) return "lateMorning";
@@ -6460,13 +6461,15 @@ function buildVideoAsArticleCard(it) {
         const want = prefix + k;
         try{
           const slotEl0 = document.getElementById("silver-slot");
+          const hostTop0 = document.getElementById("iuTopbarSilverComposerHost");
           if (
             stackEl &&
             stackEl.classList.contains(want) &&
             stackEl.getAttribute("data-iu-silver-welcome-variant") === k &&
             slotEl0 &&
             slotEl0.getAttribute("data-iu-silver-welcome-variant") === k &&
-            cardEl.getAttribute("data-iu-silver-welcome-variant") === k
+            cardEl.getAttribute("data-iu-silver-welcome-variant") === k &&
+            (!hostTop0 || hostTop0.getAttribute("data-iu-silver-welcome-variant") === k)
           ){
             return;
           }
