@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T06:20:39.437287Z",
+  "ingestedAt": "2026-04-21T06:40:54.923697Z",
   "items": [
     {
       "section": "aktualne",
@@ -157,6 +157,34 @@
         "projelo",
         "protisměru",
         "zákaz"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sochař Olbram Zoubek by oslavil stovku. Jeho poslední dílo čeká výstavní premiéra",
+      "url": "https://www.idnes.cz/kultura/vytvarne-umeni/sochar-olbram-zoubek-alberto-giacometti.A260420_094016_vytvarne-umeni_nh",
+      "dt": "2026-04-21T04:55:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dílo",
+        "jeho",
+        "olbram",
+        "oslavil",
+        "poslední",
+        "premiéra",
+        "sochař",
+        "stovku",
+        "výstavní",
+        "zoubek",
+        "čeká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -761,32 +789,6 @@
         "velvyslance",
         "česko",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Japonsko po silném zemětřesení zasáhla tsunami. Hrozí další, obří otřesy",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/japonsko-zemetreseni-pobrezi-varovani-tsunami.A260420_101659_zahranicni_kha",
-      "dt": "2026-04-20T18:40:53Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "další",
-        "hrozí",
-        "japonsko",
-        "obří",
-        "otřesy",
-        "silném",
-        "tsunami",
-        "zasáhla",
-        "zemětřesení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1594,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49942,
+      "bytes": 49954,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,8 +1634,8 @@
         "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 1,
+          "zpravy": 25,
+          "other": 2,
           "finance": 3
         },
         "drop_counts": {
@@ -1671,12 +1673,12 @@
             "publishedAt": "2026-04-21T05:00:00Z"
           },
           {
-            "title": "Moc se houpala. Žďárskou lávku mají zkrotit speciální tlumiče, testují ji běžci",
+            "title": "Sochař Olbram Zoubek by oslavil stovku. Jeho poslední dílo čeká výstavní premiéra",
             "publishedAt": "2026-04-21T04:55:00Z"
           },
           {
-            "title": "Srbsko může přijít o miliardu a půl eur kvůli úpadku demokracie, varuje EU",
-            "publishedAt": "2026-04-21T04:53:00Z"
+            "title": "Moc se houpala. Žďárskou lávku mají zkrotit speciální tlumiče, testují ji běžci",
+            "publishedAt": "2026-04-21T04:55:00Z"
           }
         ]
       }

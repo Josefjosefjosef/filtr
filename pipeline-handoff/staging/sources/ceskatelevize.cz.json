@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T06:20:39.437287Z",
+  "ingestedAt": "2026-04-21T06:40:54.923697Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ceny ropy klesají v reakci na možná mírová jednání USA s Íránem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-ropy-klesaji-v-reakci-na-mozna-mirova-jednani-usa-s-iranem-372606",
+      "dt": "2026-04-21T06:15:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ceny",
+        "jednání",
+        "klesají",
+        "možná",
+        "mírová",
+        "reakci",
+        "ropy",
+        "usa",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -719,32 +745,6 @@
         "slovensku",
         "výbuchu",
         "začal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajina zasáhla ruskou rafinerii v Tuapse a dvě výsadkové lodě na Krymu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajinska-vojenska-rozvedka-tvrdi-ze-zasahla-dve-velke-ruske-vysadkove-lode-372574",
-      "dt": "2026-04-20T10:14:34Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dvě",
-        "krymu",
-        "lodě",
-        "rafinerii",
-        "ruskou",
-        "tuapse",
-        "ukrajina",
-        "výsadkové",
-        "zasáhla"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42742,
+      "bytes": 42370,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,11 +1587,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:15:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "other": 6,
-          "zpravy": 24
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1603,6 +1604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ceny ropy klesají v reakci na možná mírová jednání USA s Íránem",
+            "publishedAt": "2026-04-21T06:15:53Z"
+          },
           {
             "title": "Operní Psohlavci přivedli Kozinu opět do Plzně",
             "publishedAt": "2026-04-21T06:00:00Z"
@@ -1630,10 +1635,6 @@
           {
             "title": "Americká ministryně práce opouští Trumpovu vládu. Pojily se s ní skandály",
             "publishedAt": "2026-04-20T22:38:29Z"
-          },
-          {
-            "title": "Tim Cook opustí post generálního ředitele společnosti Apple",
-            "publishedAt": "2026-04-20T22:02:53Z"
           }
         ]
       }
@@ -1739,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77380,
+      "bytes": 77376,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
