@@ -4762,14 +4762,10 @@ try {
   function iuBuildFeedSectionHeaderElement() {
     const file = iuFeedSectionHeaderResolveAssetFile();
     if (!file) return null;
-    const wrap = document.createElement("div");
-    wrap.className = "iuFeedSectionHeader";
-    wrap.setAttribute("role", "presentation");
-    wrap.setAttribute("aria-hidden", "true");
-    const inner = document.createElement("div");
-    inner.className = "iuFeedSectionHeader__inner";
     const img = document.createElement("img");
-    img.className = "iuFeedSectionHeader__img";
+    img.className = "iu-feed-section-header-img";
+    img.setAttribute("role", "presentation");
+    img.setAttribute("aria-hidden", "true");
     img.decoding = "async";
     img.loading = "eager";
     img.alt = "";
@@ -4778,14 +4774,12 @@ try {
       "error",
       function () {
         try {
-          wrap.remove();
+          img.remove();
         } catch (_) {}
       },
       { once: true }
     );
-    inner.appendChild(img);
-    wrap.appendChild(inner);
-    return wrap;
+    return img;
   }
 
   function iuFeedSectionHeaderEnsureAppended(safeTargetEl, headerEl) {
