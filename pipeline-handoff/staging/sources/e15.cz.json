@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-21T05:45:22.476949Z",
+  "ingestedAt": "2026-04-21T06:05:11.574174Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Pracujete v důchodu? Z výplaty vám může zbýt víc peněz, slevu si ale musíte u šéfa ohlídat",
+      "url": "https://www.e15.cz/finexpert/duchody/pracujete-v-duchodu-z-vyplaty-vam-muze-zbyt-vic-penez-slevu-si-ale-musite-u-sefa-ohlidat-1431892",
+      "dt": "2026-04-21T05:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ale",
+        "důchodu",
+        "musíte",
+        "ohlídat",
+        "peněz",
+        "pracujete",
+        "slevu",
+        "vám",
+        "víc",
+        "výplaty",
+        "zbýt",
+        "šéfa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1071,32 +1100,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Šéfové letišť vyhlížejí skvělý rok. Podmínkou ale je, že bude benzín do letadel",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/sefove-letist-vyhlizeji-skvely-rok-podminkou-ale-je-ze-bude-benzin-do-letadel-1432205",
-      "dt": "2026-04-19T03:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "ale",
-        "benzín",
-        "letadel",
-        "letišť",
-        "podmínkou",
-        "rok",
-        "skvělý",
-        "vyhlížejí",
-        "šéfové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1107,7 +1110,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56847,
+      "bytes": 56945,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1144,12 +1147,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zdravi": 2,
-          "zpravy": 1
+          "finance": 38,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1161,6 +1163,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pracujete v důchodu? Z výplaty vám může zbýt víc peněz, slevu si ale musíte u šéfa ohlídat",
+            "publishedAt": "2026-04-21T05:30:00Z"
+          },
           {
             "title": "Vyhodit miliardy a ovládnout už ovládané je zbytečné, říká k zestátnění ČEZ šéf burzy Koblic",
             "publishedAt": "2026-04-21T03:30:00Z"
@@ -1188,10 +1194,6 @@
           {
             "title": "Lovecký zámek Dřevíč po Schwarzenbergovi změnil majitele. Nemovitost získala rodina spolumajitele Tipsportu",
             "publishedAt": "2026-04-20T16:20:00Z"
-          },
-          {
-            "title": "Elektrotraktor bez řidiče zkrachoval. Na dotovaném stroji manažerů Boeingu i Tesly farmáři jen štípou dříví",
-            "publishedAt": "2026-04-20T16:00:00Z"
           }
         ]
       }

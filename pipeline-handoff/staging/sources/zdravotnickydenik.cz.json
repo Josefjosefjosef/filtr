@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-21T05:45:22.476949Z",
+  "ingestedAt": "2026-04-21T06:05:11.574174Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Stopka pro nevyužité rezonance. Jak bude fungovat přístrojová komise dle nových pravidel?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pristrojova-komise-nove-fungovani-vymazal/",
+      "dt": "2026-04-21T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dle",
+        "fungovat",
+        "komise",
+        "nevyužité",
+        "nových",
+        "pravidel",
+        "přístrojová",
+        "rezonance",
+        "stopka"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,31 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Opakovaná vyšetření stojí miliardy. Systém je zatím nedokáže zastavit",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pojistovny-tezko-odhaluji-duplicitni-vykony/",
-      "dt": "2026-04-20T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "miliardy",
-        "nedokáže",
-        "opakovaná",
-        "stojí",
-        "systém",
-        "vyšetření",
-        "zastavit",
-        "zatím"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 113069,
+      "bytes": 115494,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stopka pro nevyužité rezonance. Jak bude fungovat přístrojová komise dle nových pravidel?",
+            "publishedAt": "2026-04-21T06:00:00Z"
+          },
           {
             "title": "Když se dva perou, Čína se směje. Léky na hubnutí dramaticky zlevní, už se ví kdy",
             "publishedAt": "2026-04-21T05:00:00Z"
@@ -361,10 +366,6 @@
           {
             "title": "Přísnější tresty za útoky na zdravotníky? Advokátka má k návrhu ČLK zásadní výhrady",
             "publishedAt": "2026-04-20T09:32:05Z"
-          },
-          {
-            "title": "Rovnítko mezi ordinací a monitorem: Vojtěch i šéf MEDDI Hubu chtějí jasná pravidla pro telemedicínu",
-            "publishedAt": "2026-04-20T08:05:02Z"
           }
         ]
       }
