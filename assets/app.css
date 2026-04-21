@@ -9521,9 +9521,10 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileMainBackBar[hidden]{
     display: none !important;
   }
-  /* P0 WebNav: detail z „Navigace po webu“ — fixed k viewportu (JS přesune uzel na body kvůli overflow:hidden na #leftContent / Edge+WebKit).
+  /* P0 Mobile/tablet: hlavní „Zpět“ — fixed k viewportu při iu-mainSectionBackBarDocked (JS přesune uzel na body).
+     Stejný layout pro vstup z HOME karet i z „Navigace po webu“; iu-webnavDetailFromGate zůstává jen pro návratovou větev Zpět.
      --iuWebNavDetailMainBackTop: buď spodní hrana #topbarWrap (když je viditelný), nebo safe-area (≤1024px je topbar často display:none). */
-  body.iu-mobileMainVisible.iu-webnavDetailFromGate #iuMobileMainBackBar:not([hidden]){
+  body.iu-mobileMainVisible.iu-mainSectionBackBarDocked #iuMobileMainBackBar:not([hidden]){
     position: fixed !important;
     inset-inline: 0 !important;
     left: 0 !important;
@@ -9554,7 +9555,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     -webkit-user-select: none !important;
     user-select: none !important;
   }
-  body.iu-mobileMainVisible.iu-webnavDetailFromGate #leftContent{
+  body.iu-mobileMainVisible.iu-mainSectionBackBarDocked #leftContent{
     padding-top: var(--iuWebNavDetailMainBackH, 52px) !important;
     box-sizing: border-box !important;
   }

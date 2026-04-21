@@ -10932,7 +10932,7 @@ function buildVideoAsArticleCard(it) {
   }
 
   /**
-   * P0 WebNav detail back bar — měřený top offset (reálná zařízení + Playwright):
+   * P0 Mobile/tablet hlavní „Zpět“ (#iuMobileMainBackBar) — měřený top offset (reálná zařízení + Playwright):
    * - Na ≤1024px je #topbarWrap často display:none (Silver shell, viz app.css) → getBoundingClientRect().bottom === 0.
    *   Dřív JS padal na fallback --iuMobileBtnH (52px) → lišta vizuálně „níž“, ačkoliv horní lišta webu není zobrazená.
    * - Je-li topbar viditelný: top = spodní hrana #topbarWrap.
@@ -10948,8 +10948,12 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
         return;
       }
+      var mqDock = false;
+      try {
+        mqDock = window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+      } catch (_) {}
       var active =
-        document.body.classList.contains("iu-webnavDetailFromGate") &&
+        mqDock &&
         document.body.classList.contains("iu-mobileMainVisible");
       if (!active) {
         try {
@@ -10991,17 +10995,21 @@ function buildVideoAsArticleCard(it) {
   }
 
   /**
-   * P0 WebNav detail back bar: drž tlačítko #iuMobileMainBackBar na document.body, když je aktivní detail z „Navigace po webu“.
-   * Důvod: #leftContent má na tabletu portrait overflow:hidden — fixed potomci bývají ořezaní/posunutí (Edge) nebo špatný hit-target (Safari).
-   * Mimo tento stav vrať prvek zpět jako první dítě #leftContent (desktop / ne-webnav flow).
+   * P0 Mobile/tablet (≤900px): při viditelné hlavní liště „Zpět“ drž #iuMobileMainBackBar na document.body (stejný model jako dříve jen u web-nav).
+   * Důvod: #leftContent má na tabletu portrait overflow:hidden — fixed potomci uvnitř bývají ořezaní/posunutí (Edge) nebo špatný hit-target (Safari).
+   * Nad 900px nebo skrytá lišta: uzel zpět jako první dítě #leftContent. body.iu-mainSectionBackBarDocked řídí shodný padding #leftContent (app.css).
    */
   function iuWebNavDetailBackBarHostSync() {
     try {
       var bar = document.getElementById("iuMobileMainBackBar");
       var lc = document.getElementById("leftContent");
       if (!bar || !lc) return;
+      var mqDock = false;
+      try {
+        mqDock = window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+      } catch (_) {}
       var active =
-        document.body.classList.contains("iu-webnavDetailFromGate") &&
+        mqDock &&
         document.body.classList.contains("iu-mobileMainVisible") &&
         !bar.hidden;
       if (active) {
@@ -11011,12 +11019,18 @@ function buildVideoAsArticleCard(it) {
         try {
           iuWebNavDetailBackBarTopSync();
         } catch (_) {}
+        try {
+          document.body.classList.add("iu-mainSectionBackBarDocked");
+        } catch (_) {}
       } else {
         if (bar.parentElement === document.body) {
           lc.insertBefore(bar, lc.firstChild);
         }
         try {
           document.documentElement.style.removeProperty("--iuWebNavDetailMainBackTop");
+        } catch (_) {}
+        try {
+          document.body.classList.remove("iu-mainSectionBackBarDocked");
         } catch (_) {}
       }
     } catch (_) {}
@@ -25932,6 +25946,25 @@ function buildVideoAsArticleCard(it) {
           try {
             if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
               document.body.classList.remove("iu-webnavDetailFromGate");
+            }
+          } catch (_) {}
+          /* P0 mobile/tablet cold URL / reload: ?section=feed&topic=zpravy (konkrétní vertikála) — stejný chrome
+             jako po tapu na HOME/Silver preview (iu-mobileMainVisible + #iuMobileMainBackBar + host sync). */
+          try {
+            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
+              /* stejné jako non–hub větev: při hard-lock overlaye nesahat na main chrome */
+            } else {
+              const topicCold = String(nav.topic || "").trim().toLowerCase();
+              if (topicCold && topicCold !== "all") {
+                try {
+                  if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+                } catch (_) {}
+                try {
+                  document.body.classList.add("iu-mobileMainVisible");
+                } catch (_) {}
+                var mbFeedTopicCold = document.getElementById("iuMobileMainBackBar");
+                if (mbFeedTopicCold) mbFeedTopicCold.hidden = false;
+              }
             }
           } catch (_) {}
           try {
