@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T06:40:54.923697Z",
+  "ingestedAt": "2026-04-21T07:00:53.280352Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,35 @@
         "router",
         "skvělou",
         "výbavu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Apple po 15 letech vymění šéfa. Otěže po Timu Cookovi převezme hardwarový guru John Ternus",
+      "url": "https://www.zive.cz/clanky/apple-po-15-letech-vymeni-sefa-oteze-po-timu-cookovi-prevezme-hardwarovy-guru-john-ternus/sc-3-a-240795/default.aspx",
+      "dt": "2026-04-21T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "apple",
+        "cookovi",
+        "guru",
+        "hardwarový",
+        "john",
+        "letech",
+        "otěže",
+        "převezme",
+        "ternus",
+        "timu",
+        "vymění",
+        "šéfa"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -938,33 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Nejlepší doplněk pro turisty. MapyClimbs doplní na Mapy.com přehlednější grafy stoupání",
-      "url": "https://www.zive.cz/clanky/nejlepsi-doplnek-pro-turisty-mapyclimbs-doplni-na-mapycom-prehlednejsi-grafy-stoupani/sc-3-a-240732/default.aspx",
-      "dt": "2026-04-17T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "com",
-        "doplní",
-        "doplněk",
-        "grafy",
-        "mapy",
-        "mapyclimbs",
-        "nejlepší",
-        "přehlednější",
-        "stoupání",
-        "turisty"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -975,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22490,
+      "bytes": 22486,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1012,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-20T19:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1030,6 +1032,10 @@
           {
             "title": "Legendární MikroTik má první router s Wi-Fi 7. Láká na skvělou výbavu a není ani přehnaně drahý",
             "publishedAt": "2026-04-20T10:45:00Z"
+          },
+          {
+            "title": "Apple po 15 letech vymění šéfa. Otěže po Timu Cookovi převezme hardwarový guru John Ternus",
+            "publishedAt": "2026-04-21T06:45:00Z"
           },
           {
             "title": "ChatGPT ani Codex nefungují, problém není jen u vás",
@@ -1054,10 +1060,6 @@
           {
             "title": "Tohle se fakt stalo. Nejlepší filmy podle skutečných událostí, kterým prostě neuvěříte",
             "publishedAt": "2026-04-19T15:45:00Z"
-          },
-          {
-            "title": "Supervyhledávač Raycast pro Windows nabírá funkce. Ukáže náhled souboru a připne okno tam, kde ho potřebujete",
-            "publishedAt": "2026-04-20T12:45:00Z"
           }
         ]
       }

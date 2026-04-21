@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-21T06:40:54.923697Z",
+  "ingestedAt": "2026-04-21T07:00:53.280352Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Sony bude vyžadovat ověření věku pro určité funkce PlayStationu - INDIAN",
+      "url": "https://indian-tv.cz/clanek/sony-bude-vyzadovat-overeni-veku-na-playstationu-2bccdw",
+      "dt": "2026-04-21T06:44:17Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "funkce",
+        "indian",
+        "ověření",
+        "playstationu",
+        "sony",
+        "určité",
+        "vyžadovat",
+        "věku"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1053,33 +1078,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Červen bude patřit herním oznámením v čele se Summer Game Festem a Xboxem - INDIAN",
-      "url": "https://indian-tv.cz/clanek/cerven-bude-patrit-hernim-oznamenim-4qbx8n",
-      "dt": "2026-04-16T09:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "festem",
-        "game",
-        "herním",
-        "indian",
-        "oznámením",
-        "patřit",
-        "summer",
-        "xboxem",
-        "čele",
-        "červen"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 190825,
+      "bytes": 190743,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,7 +1125,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:09:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:44:17Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1142,6 +1140,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sony bude vyžadovat ověření věku pro určité funkce PlayStationu - INDIAN",
+            "publishedAt": "2026-04-21T06:44:17Z"
+          },
           {
             "title": "Tohle je Tropico 7. El Presidente se hlásí o slovo - INDIAN",
             "publishedAt": "2026-04-21T06:09:40Z"
@@ -1169,10 +1171,6 @@
           {
             "title": "Akční RPG Beast of Reincarnation od studia Game Freak spouští předobjednávky a odhaluje datum vydání - INDIAN",
             "publishedAt": "2026-04-20T13:00:00Z"
-          },
-          {
-            "title": "Sci-fi akce Pragmata má za sebou velmi úspěšný start - INDIAN",
-            "publishedAt": "2026-04-20T12:00:59Z"
           }
         ]
       }

@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T06:40:54.923697Z",
+  "ingestedAt": "2026-04-21T07:00:53.280352Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Cenu Arnošta Lustiga za rok 2025 získá herec Ondřej Vetchý",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cenu-arnosta-lustiga-za-rok-2025-ziska-herec-ondrej-vetchy-372607",
+      "dt": "2026-04-21T06:40:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "2025",
+        "arnošta",
+        "cenu",
+        "herec",
+        "lustiga",
+        "ondřej",
+        "rok",
+        "vetchý",
+        "získá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Leteckého paliva je dost do podzimu, prohlásil Havlíček",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/leteckeho-paliva-je-dost-do-podzimu-prohlasil-havlicek-372603",
+      "dt": "2026-04-21T06:37:14Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dost",
+        "havlíček",
+        "leteckého",
+        "paliva",
+        "podzimu",
+        "prohlásil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -696,55 +745,6 @@
         "vládní",
         "zasahuje",
         "čro"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Už si nemyslím, že svět je peklo, říká Fiala z Mňágy a Žďorp",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/uz-si-nemyslim-ze-svet-je-peklo-rika-fiala-z-mnagy-a-zdorp-372575",
-      "dt": "2026-04-20T10:43:31Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "fiala",
-        "mňágy",
-        "nemyslím",
-        "peklo",
-        "svět",
-        "říká",
-        "žďorp"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Slovensku začal proces v případu výbuchu plynu z roku 2019",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/na-slovensku-zacal-proces-v-pripadu-vybuchu-plynu-z-roku-2019-372576",
-      "dt": "2026-04-20T10:32:27Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "2019",
-        "plynu",
-        "proces",
-        "případu",
-        "roku",
-        "slovensku",
-        "výbuchu",
-        "začal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42370,
+      "bytes": 42829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,12 +1587,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:15:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "other": 6,
-          "zpravy": 23
+          "zpravy": 23,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1604,6 +1604,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenu Arnošta Lustiga za rok 2025 získá herec Ondřej Vetchý",
+            "publishedAt": "2026-04-21T06:40:00Z"
+          },
+          {
+            "title": "Leteckého paliva je dost do podzimu, prohlásil Havlíček",
+            "publishedAt": "2026-04-21T06:37:14Z"
+          },
           {
             "title": "Ceny ropy klesají v reakci na možná mírová jednání USA s Íránem",
             "publishedAt": "2026-04-21T06:15:53Z"
@@ -1627,14 +1635,6 @@
           {
             "title": "Japonsko usnadní vývoz zbraní, média hovoří o zásadní změně poválečné politiky",
             "publishedAt": "2026-04-21T03:21:07Z"
-          },
-          {
-            "title": "Otrávených balení s dětskou výživou by mohlo být podle médií až dvanáct",
-            "publishedAt": "2026-04-21T00:32:16Z"
-          },
-          {
-            "title": "Americká ministryně práce opouští Trumpovu vládu. Pojily se s ní skandály",
-            "publishedAt": "2026-04-20T22:38:29Z"
           }
         ]
       }
@@ -1740,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77376,
+      "bytes": 77407,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

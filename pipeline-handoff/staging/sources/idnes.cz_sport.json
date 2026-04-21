@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T06:40:54.923697Z",
+  "ingestedAt": "2026-04-21T07:00:53.280352Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Experti nejen o baráži: Hráči simulují, hokej není fotbal! Rozhodčí na to nestačí",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-litvinov-jihlava-baraz-experti-ruzicka-kyhos.A260420_155253_hokej_pbi",
+      "dt": "2026-04-21T06:47:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baráži",
+        "experti",
+        "fotbal",
+        "hokej",
+        "hráči",
+        "nejen",
+        "nestačí",
+        "rozhodčí",
+        "simulují"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -757,33 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Tragédie při rallye v Argentině. Rotující auto smetlo i diváky, jeden zemřel",
-      "url": "https://www.idnes.cz/sport/motorsport/rallye-argentina-smrt-divaka.A260420_123148_motorsport_kazdt",
-      "dt": "2026-04-20T10:53:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "argentině",
-        "auto",
-        "diváky",
-        "jeden",
-        "při",
-        "rallye",
-        "rotující",
-        "smetlo",
-        "tragédie",
-        "zemřel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46158,
+      "bytes": 46778,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:25:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:47:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Experti nejen o baráži: Hráči simulují, hokej není fotbal! Rozhodčí na to nestačí",
+            "publishedAt": "2026-04-21T06:47:00Z"
+          },
           {
             "title": "Bezchybný Vladař vychytal Pittsburgh, Dostál v play off čelil McDavidovi",
             "publishedAt": "2026-04-21T06:25:01Z"
@@ -873,10 +876,6 @@
           {
             "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
             "publishedAt": "2026-04-20T20:46:00Z"
-          },
-          {
-            "title": "Kratochvílovi cena Laureus unikla. Hlavní kategorie ovládli Alcaraz a Sabalenková",
-            "publishedAt": "2026-04-20T20:03:00Z"
           }
         ]
       }
