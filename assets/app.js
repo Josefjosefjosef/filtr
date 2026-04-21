@@ -11878,6 +11878,12 @@ function buildVideoAsArticleCard(it) {
     return best;
   }
 
+  function iuMaxPublishedMsFromItems(items) {
+    void items;
+    return null;
+  }
+  function iuUpdateSectionDataUpdatedAtEl() {}
+
   const IU_FEED_PREV_PUBLISHED_KEY = "iu_feed_prev_pub_v1";
 
   function iuPublicationReadPrevSet() {

@@ -1,7 +1,7 @@
 /**
  * infoUzel — 1 téma = 1 článek (cluster + pick best).
  * String + rough + sémantika (klíčová slova + entity + ENTITY_MAP), bez API.
- * Jen uvnitř stejného topic/section.
+ * Sekce: jen uvnitř stejného topic/section.
  * Čas: max rozpětí publikace v clusteru ±6 h vůči prvnímu článku.
  * Max velikost clusteru: 10.
  */
