@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T16:59:30.652571Z",
+  "ingestedAt": "2026-04-21T17:19:51.601623Z",
   "items": [
     {
       "section": "aktualne",
@@ -761,6 +761,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Jablonec si po osmi letech zahraje o domácí pohárovou trofej",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/jablonec-si-po-osmi-letech-zahraje-o-domaci-poharovou-trofej-156394",
+      "dt": "2026-04-21T17:12:53Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "domácí",
+        "jablonec",
+        "letech",
+        "osmi",
+        "pohárovou",
+        "trofej",
+        "zahraje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/los-ms-basketbalistek-156393",
       "dt": "2026-04-21T15:55:00Z",
@@ -1500,31 +1524,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavia přišla v Hradci o neporazitelnost, Plzeň selhala doma s Pardubicemi",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sigma-v-premiere-pod-hapalem-po-obratu-udolala-slovacko-hoste-dohravali-v-deviti-156362",
-      "dt": "2026-04-19T13:59:10Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "doma",
-        "hradci",
-        "neporazitelnost",
-        "pardubicemi",
-        "plzeň",
-        "přišla",
-        "selhala",
-        "slavia"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1535,7 +1534,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43407,
+      "bytes": 43412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1654,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40299,
+      "bytes": 39960,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1691,7 +1690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:12:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1706,6 +1705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jablonec si po osmi letech zahraje o domácí pohárovou trofej",
+            "publishedAt": "2026-04-21T17:12:53Z"
+          },
           {
             "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
             "publishedAt": "2026-04-21T15:55:00Z"
@@ -1733,10 +1736,6 @@
           {
             "title": "Wolves sestupují z Premier League. Osud Krejčího týmu zpečetila remíza v londýnském derby",
             "publishedAt": "2026-04-20T21:08:49Z"
-          },
-          {
-            "title": "Basketbalistky USK deklasovaly Žabiny a vykročily za 16. titulem v řadě",
-            "publishedAt": "2026-04-20T18:35:53Z"
           }
         ]
       }
@@ -1748,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77351,
+      "bytes": 77329,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
