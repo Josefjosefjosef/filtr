@@ -25948,6 +25948,25 @@ function buildVideoAsArticleCard(it) {
               document.body.classList.remove("iu-webnavDetailFromGate");
             }
           } catch (_) {}
+          /* P0 mobile/tablet cold URL / reload: ?section=feed&topic=zpravy (konkrétní vertikála) — stejný chrome
+             jako po tapu na HOME/Silver preview (iu-mobileMainVisible + #iuMobileMainBackBar + host sync). */
+          try {
+            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
+              /* stejné jako non–hub větev: při hard-lock overlaye nesahat na main chrome */
+            } else {
+              const topicCold = String(nav.topic || "").trim().toLowerCase();
+              if (topicCold && topicCold !== "all") {
+                try {
+                  if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+                } catch (_) {}
+                try {
+                  document.body.classList.add("iu-mobileMainVisible");
+                } catch (_) {}
+                var mbFeedTopicCold = document.getElementById("iuMobileMainBackBar");
+                if (mbFeedTopicCold) mbFeedTopicCold.hidden = false;
+              }
+            }
+          } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
           } catch (_) {}
