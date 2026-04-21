@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-21T04:45:35.544177Z",
+  "ingestedAt": "2026-04-21T05:06:39.472477Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař vynuloval v play off Pittsburgh a Flyers uspěli i podruhé. Vyhrála i Carolina",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474622/vladar-vynuloval-v-play-off-pittsburgh-a-flyers-uspeli-i-podruhe-vyhrala-i-carolina.html",
+      "dt": "2026-04-21T04:30:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "carolina",
+        "flyers",
+        "off",
+        "pittsburgh",
+        "play",
+        "podruhé",
+        "uspěli",
+        "vladař",
+        "vyhrála",
+        "vynuloval"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -126,33 +153,6 @@
         "nejlepší",
         "trpišovský",
         "vízka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL ONLINE: Dostál otevírá sérii s Oilers, Faksa opět proti Minnesotě",
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474622/nhl-online-dostal-otevira-serii-s-oilers-faksa-opet-proti-minnesote.html",
-      "dt": "2026-04-20T21:20:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "dostál",
-        "faksa",
-        "minnesotě",
-        "nhl",
-        "oilers",
-        "online",
-        "opět",
-        "otevírá",
-        "proti",
-        "sérii"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1084,7 +1084,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 58515,
+      "bytes": 58471,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,7 +1121,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1136,6 +1136,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař vynuloval v play off Pittsburgh a Flyers uspěli i podruhé. Vyhrála i Carolina",
+            "publishedAt": "2026-04-21T04:30:00Z"
+          },
           {
             "title": "ONLINE: Jihlava - Litvínov. Zdramatizují domácí ještě vývoj baráže na domácím ledě?",
             "publishedAt": "2026-04-21T04:00:00Z"
@@ -1155,10 +1159,6 @@
           {
             "title": "Nejlepší hráči ligy: jak hlasovali Trpišovský či Hyský. Jedničkou pro Vízka je...",
             "publishedAt": "2026-04-21T03:00:00Z"
-          },
-          {
-            "title": "NHL ONLINE: Dostál otevírá sérii s Oilers, Faksa opět proti Minnesotě",
-            "publishedAt": "2026-04-20T21:20:00Z"
           },
           {
             "title": "Wolverhampton sestupuje z Premier League. Souček u remízy West Hamu, Tottenham v problémech",

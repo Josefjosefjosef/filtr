@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T04:45:35.544177Z",
+  "ingestedAt": "2026-04-21T05:06:39.472477Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vance se chystá do Pákistánu, bude vyjednávat o konci války",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chystá",
+        "konci",
+        "pákistánu",
+        "vance",
+        "vyjednávat",
+        "války"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -272,32 +295,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Nedojde-li k dohodě s Íránem, je prodloužení příměří velmi nepravděpodobné, řekl Trump",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dohodě",
-        "nedojde",
-        "nepravděpodobné",
-        "prodloužení",
-        "příměří",
-        "trump",
-        "velmi",
-        "íránem",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Rvačka mezi mladými lidmi v Severní Karolíně vyústila v hromadnou střelbu",
       "url": "https://zpravy.aktualne.cz/zahranici/rvacka-mezi-mladymi-lidmi-v-severni-karoline-vyustila-v-hromadnou-strelbu/r~aaa29fe556b7b7e0523b506d8ad128ee/",
       "dt": "2026-04-20T16:50:00Z",
@@ -541,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21804,
+      "bytes": 21701,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,9 +578,9 @@
         "raw_feed_latest_publishedAt": "2026-04-21T04:25:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 13,
           "sport": 4,
           "other": 1,
-          "zpravy": 13,
           "finance": 2
         },
         "drop_counts": {
@@ -596,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vance se chystá do Pákistánu, bude vyjednávat o konci války",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
           {
             "title": "Horší než za Berbra. Proč bezbolestné vrtačky řádí v českém fotbale dál",
             "publishedAt": "2026-04-21T04:25:00Z"
@@ -622,10 +623,6 @@
           },
           {
             "title": "Tohle Rusy bolelo. Ukrajinci trefili klíčové místo hluboko uvnitř Putinovy země",
-            "publishedAt": "2026-04-21T03:30:00Z"
-          },
-          {
-            "title": "Pravidelně se budíte ve tři ráno? Nejste sami. Věda vysvětluje, proč to není náhoda",
             "publishedAt": "2026-04-21T03:30:00Z"
           }
         ]

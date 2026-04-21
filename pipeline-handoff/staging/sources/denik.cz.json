@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T04:45:35.544177Z",
+  "ingestedAt": "2026-04-21T05:06:39.472477Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tornádo na Jičínsku lámalo stromy a zničilo posed. Obydlím se však vyhnulo",
+      "url": "https://www.denik.cz/regiony/tornado-vichr-skody-stromy-nymbursko-jicinsko-boure-lovci.html",
+      "dt": "2026-04-21T04:32:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jičínsku",
+        "lámalo",
+        "obydlím",
+        "posed",
+        "stromy",
+        "tornádo",
+        "vyhnulo",
+        "však",
+        "zničilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,31 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "ČT a ČRo kritizují vládní návrh: Zasahuje do svobody veřejnoprávních médií",
-      "url": "https://www.denik.cz/z_domova/ceska-televize-cesky-rozhlas-vladni-navrh-financovani-reakce.html",
-      "dt": "2026-04-20T11:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kritizují",
-        "médií",
-        "návrh",
-        "svobody",
-        "veřejnoprávních",
-        "vládní",
-        "zasahuje",
-        "čro"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30235,
+      "bytes": 29976,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:32:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -707,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tornádo na Jičínsku lámalo stromy a zničilo posed. Obydlím se však vyhnulo",
+            "publishedAt": "2026-04-21T04:32:00Z"
+          },
           {
             "title": "Zajímavosti o Alžbětě II.: Vystřelila si z turistů USA, v šesti dostala svůj dům",
             "publishedAt": "2026-04-21T04:05:00Z"
@@ -734,10 +739,6 @@
           {
             "title": "Rostoucí ceny ropy zdraží i oblíbené sportovní oblečení Čechů",
             "publishedAt": "2026-04-20T18:00:00Z"
-          },
-          {
-            "title": "Drama v Severní Karolíně: Rvačka mezi mladými vyústila v hromadnou střelbu",
-            "publishedAt": "2026-04-20T17:44:00Z"
           }
         ]
       }
