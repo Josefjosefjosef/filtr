@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T20:00:15.566728Z",
+  "ingestedAt": "2026-04-21T20:21:28.998062Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Litvínov sviští za záchranou. V jihlavské aréně nastřílel pět gólů",
+      "url": "https://sport.aktualne.cz/hokej/litvinov-svisti-za-zachranou-v-jihlavske-arene-nastrilel-pet-golu/r~aaa2904962a1a46c7515e54eed5e41bd/",
+      "dt": "2026-04-21T20:07:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aréně",
+        "gólů",
+        "jihlavské",
+        "litvínov",
+        "nastřílel",
+        "pět",
+        "sviští",
+        "záchranou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Milion chvilek zveřejnil podpisovou výzvu na podporu ČT a ČRo, chystá pochod",
+      "url": "https://zpravy.aktualne.cz/domaci/milion-chvilek-zverejnil-podpisovou-vyzvu-na-podporu-ct-a-cro-chysta-pochod/r~aaa294b0b871395adf7f9fdad9903815/",
+      "dt": "2026-04-21T20:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chvilek",
+        "chystá",
+        "milion",
+        "pochod",
+        "podpisovou",
+        "podporu",
+        "výzvu",
+        "zveřejnil",
+        "čro"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -476,55 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Američtí veteráni vytáhli proti Trumpově válce. Pustila se do nich policie",
-      "url": "https://zpravy.aktualne.cz/zahranici/stejne-sliby-jako-v-iraku-veterani-vytahli-proti-valce-policie-se-do-nich-pustila/r~aaa291719f9017478db09ecd21812259/",
-      "dt": "2026-04-21T14:41:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "američtí",
-        "nich",
-        "policie",
-        "proti",
-        "pustila",
-        "trumpově",
-        "veteráni",
-        "vytáhli",
-        "válce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otrávenou kojeneckou výživu prodejny stahují z regálů",
-      "url": "https://zpravy.aktualne.cz/ekonomika/otravenou-kojeneckou-vyzivu-stahuji-z-regalu-online-prodej-ji-ale-drzi-dal/r~aaa296b2887193bd517eaf12aac1df59/",
-      "dt": "2026-04-21T13:35:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kojeneckou",
-        "otrávenou",
-        "prodejny",
-        "regálů",
-        "stahují",
-        "výživu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22111,
+      "bytes": 22041,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,12 +574,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:37:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T20:07:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 6,
           "zpravy": 12,
-          "sport": 5,
-          "finance": 2,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -590,6 +592,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Litvínov sviští za záchranou. V jihlavské aréně nastřílel pět gólů",
+            "publishedAt": "2026-04-21T20:07:00Z"
+          },
+          {
+            "title": "Milion chvilek zveřejnil podpisovou výzvu na podporu ČT a ČRo, chystá pochod",
+            "publishedAt": "2026-04-21T20:04:00Z"
+          },
           {
             "title": "Írán nemá na výběr. Buď dohoda, nebo nové bombardování, řekl Trump",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -613,14 +623,6 @@
           {
             "title": "„Duchové“ udeřili na ruskou flotilu. Moskvu to může stát miliardy",
             "publishedAt": "2026-04-21T17:45:00Z"
-          },
-          {
-            "title": "EU se přela o Izrael. Česko odmítá zmrazení asociační dohody, shoda je v nedohlednu",
-            "publishedAt": "2026-04-21T17:32:00Z"
-          },
-          {
-            "title": "Prvním finalistou poháru je Jablonec, na Mladou Boleslav stačila jediná branka",
-            "publishedAt": "2026-04-21T17:15:00Z"
           }
         ]
       }
