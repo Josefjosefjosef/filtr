@@ -30227,6 +30227,39 @@ try { document.documentElement.classList.remove("iu" + "RailHidden"); } catch (e
 try { localStorage.removeItem("iuRailHidden"); } catch (e) {}
 try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
+// P0 desktop ≥901px MindMenu fullscreen: injected here so assets/app.css stays under css_debt_guard byte budget (same rules as former app.css block).
+(function iuToolsOverlayFsDesktopInject(){
+  "use strict";
+  var ID = "iu-tools-overlay-fs-desktop";
+  var CSS =
+    "@media(min-width:901px){" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop:not([hidden])," +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop.iuNotesRoot:not([hidden])," +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop:not([hidden]){align-items:stretch!important;justify-content:stretch!important;overflow:hidden!important;z-index:12000!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__backdrop," +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__backdrop," +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__backdrop{position:fixed!important;inset:0!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__dialog," +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__dialog{width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;min-height:100vh!important;min-height:100dvh!important;max-height:none!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-rows:auto 1fr!important;overflow:hidden!important;box-sizing:border-box!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body{display:grid!important;grid-template-columns:minmax(0,1fr) 340px!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__main," +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__side," +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__listScroll," +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__detailScroll{min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
+    "#iuCalendarOverlay.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__viewRoot{min-height:320px!important;height:calc(100% - 42px)!important;overflow:auto!important}" +
+    "#iuNotesOverlay.iu-tools-overlay-fullscreen-desktop .iu-notesOverlay__body{display:grid!important;grid-template-columns:300px minmax(0,1fr)!important;min-height:0!important;height:100%!important;overflow:hidden!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__dialog{width:100%!important;max-width:none!important;min-height:100vh!important;min-height:100dvh!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important}" +
+    "#iuTasksOverlay.iu-tools-overlay-fullscreen-desktop .iu-tasksOverlay__scroll{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}" +
+    "}";
+  try{
+    if (document.getElementById(ID)) return;
+    var st = document.createElement("style");
+    st.id = ID;
+    st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+  }catch(e){}
+})();
+
 // === Calendar overlay module (isolated, local-first, Silver API) ===
 (function(){
   "use strict";
