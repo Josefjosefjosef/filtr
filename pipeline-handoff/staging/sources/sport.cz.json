@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T18:02:45.476692Z",
+  "ingestedAt": "2026-04-21T18:20:38.320989Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Litvínov v oslabení neproměnil tutovku",
+      "title": "HOKEJ ONLINE: Videomomenty. Litvínov se bleskově vrací do vedení",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-baraz-se-stehuje-na-vysocinu-litvinov-utoci-na-mecbol-5440966",
       "dt": "2026-04-21T13:57:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "bleskově",
         "hokej",
         "litvínov",
-        "neproměnil",
         "online",
-        "oslabení",
-        "tutovku",
-        "videomomenty"
+        "vedení",
+        "videomomenty",
+        "vrací"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -30,22 +30,45 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: O druhém finalistovi se rozhoduje ve Slezsku. Baník zachraňuje sezonu, Karviná útočí na historický úspěch",
+      "title": "Basketbalistky KP Brno získaly potřetí za sebou ligový bronz",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbalistky-kp-brno-ziskaly-potreti-za-sebou-ligovy-bronz-5441214",
+      "dt": "2026-04-21T18:11:55Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "basketbalistky",
+        "brno",
+        "bronz",
+        "ligový",
+        "potřetí",
+        "sebou",
+        "získaly"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Druhý boj o finále! Baník zachraňuje sezonu, Karviná útočí na historický úspěch",
       "url": "https://www.sport.cz/clanek/fotbal-pohar-o-druhem-finalistovi-poharu-se-rozhodne-ve-slezsku-banik-zachranuje-sezonu-karvina-utoci-na-historicky-uspech-5440968",
       "dt": "2026-04-21T09:28:45Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "baník",
-        "druhém",
-        "finalistovi",
+        "boj",
+        "druhý",
+        "finále",
         "fotbal",
         "historický",
         "karviná",
         "online",
-        "rozhoduje",
         "sezonu",
-        "slezsku",
         "zachraňuje",
         "úspěch",
         "útočí"
@@ -753,32 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sabalenková měla husí kůži, Alcaraz pyšně vykročil ve stopách gigantů",
-      "url": "https://www.sport.cz/clanek/tenis-sabalenkova-mela-husi-kuzi-spolu-s-alcarazem-ziskali-sportovni-oscary-5440972",
-      "dt": "2026-04-21T11:30:56Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "alcaraz",
-        "gigantů",
-        "husí",
-        "kůži",
-        "měla",
-        "pyšně",
-        "sabalenková",
-        "stopách",
-        "vykročil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42696,
+      "bytes": 41988,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +823,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:39:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:11:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,11 +839,15 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Litvínov v oslabení neproměnil tutovku",
+            "title": "HOKEJ ONLINE: Videomomenty. Litvínov se bleskově vrací do vedení",
             "publishedAt": "2026-04-21T13:57:00Z"
           },
           {
-            "title": "FOTBAL ONLINE: O druhém finalistovi se rozhoduje ve Slezsku. Baník zachraňuje sezonu, Karviná útočí na historický úspěch",
+            "title": "Basketbalistky KP Brno získaly potřetí za sebou ligový bronz",
+            "publishedAt": "2026-04-21T18:11:55Z"
+          },
+          {
+            "title": "FOTBAL ONLINE: Druhý boj o finále! Baník zachraňuje sezonu, Karviná útočí na historický úspěch",
             "publishedAt": "2026-04-21T09:28:45Z"
           },
           {
@@ -868,10 +869,6 @@
           {
             "title": "Jablonec slaví, finále domácího poháru vystřelil Jawo",
             "publishedAt": "2026-04-21T07:41:26Z"
-          },
-          {
-            "title": "Bouřlivák z Oktagonu narazil. V UFC dostal rychlého padáka",
-            "publishedAt": "2026-04-21T16:51:16Z"
           }
         ]
       }

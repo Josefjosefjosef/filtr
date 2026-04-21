@@ -1,35 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T18:02:45.476692Z",
+  "ingestedAt": "2026-04-21T18:20:38.320989Z",
   "items": [
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán nemá na výběr. Buď dohoda, nebo nové bombardování, řekl Trump",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bombardování",
-        "buď",
-        "dohoda",
-        "nebo",
-        "nemá",
-        "nové",
-        "trump",
-        "výběr",
-        "írán",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -50,6 +23,59 @@
         "ruská",
         "slovensko",
         "uvedl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„To bude zlé. Udělala tu největší chybu.“ Osobnosti českého tenisu se diví Vondroušové",
+      "url": "https://sport.aktualne.cz/tenis/to-bude-zle-udelala-tu-nejvetsi-chybu-osobnosti-ceskeho-tenisu-se-divi-vondrousove/r~aaa298a8a32c37799a23321ec570ceeb/",
+      "dt": "2026-04-21T17:51:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "chybu",
+        "diví",
+        "největší",
+        "osobnosti",
+        "tenisu",
+        "udělala",
+        "vondroušové",
+        "zlé",
+        "českého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán nemá na výběr. Buď dohoda, nebo nové bombardování, řekl Trump",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bombardování",
+        "buď",
+        "dohoda",
+        "nebo",
+        "nemá",
+        "nové",
+        "trump",
+        "výběr",
+        "írán",
+        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -495,31 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Brankář budoucnosti? ptají se v NHL. Český úkaz zastiňuje supertalenty",
-      "url": "https://sport.aktualne.cz/hokej/brankar-budoucnosti-ptaji-se-v-nhl-cesky-ukaz-zastinuje-supertalenty/r~aaa29021f7932521b4d7b5a3486f53f6/",
-      "dt": "2026-04-21T13:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brankář",
-        "budoucnosti",
-        "nhl",
-        "ptají",
-        "supertalenty",
-        "zastiňuje",
-        "úkaz",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22003,
+      "bytes": 22098,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,7 +568,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:51:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 12,
@@ -586,12 +587,16 @@
         },
         "sample_titles": [
           {
-            "title": "Írán nemá na výběr. Buď dohoda, nebo nové bombardování, řekl Trump",
-            "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
             "title": "Maďarsko a Slovensko podpoří půjčku pro Kyjev, pokud poteče ruská ropa, uvedl Macinka",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "„To bude zlé. Udělala tu největší chybu.“ Osobnosti českého tenisu se diví Vondroušové",
+            "publishedAt": "2026-04-21T17:51:00Z"
+          },
+          {
+            "title": "Írán nemá na výběr. Buď dohoda, nebo nové bombardování, řekl Trump",
+            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "„Duchové“ udeřili na ruskou flotilu. Moskvu to může stát miliardy",
@@ -612,10 +617,6 @@
           {
             "title": "Obří skandál v Itálii. 70 fotbalistů z první ligy je zapleteno do aféry s prostitucí",
             "publishedAt": "2026-04-21T16:33:00Z"
-          },
-          {
-            "title": "4/20: Jak se z obyčejných čísel stal kód pro „čas jít hulit“",
-            "publishedAt": "2026-04-21T16:29:00Z"
           }
         ]
       }

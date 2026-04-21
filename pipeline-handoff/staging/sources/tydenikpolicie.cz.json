@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-21T18:02:45.476692Z",
+  "ingestedAt": "2026-04-21T18:20:38.320989Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté hledají svědky srážky dvou škodovek v Přerově",
+      "url": "https://tydenikpolicie.cz/policiste-hledaji-svedky-srazky-dvou-skodovek-v-prerove/",
+      "dt": "2026-04-21T18:02:28Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dvou",
+        "hledají",
+        "policisté",
+        "přerově",
+        "srážky",
+        "svědky",
+        "škodovek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,29 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policistům na Královéhradecku ujížděl opilý řidič mercedesu",
-      "url": "https://tydenikpolicie.cz/policistum-na-kralovehradecku-ujizdel-opily-ridic/",
-      "dt": "2026-04-21T13:07:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "královéhradecku",
-        "mercedesu",
-        "opilý",
-        "policistům",
-        "ujížděl",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15973,
+      "bytes": 15856,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T14:50:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:02:28Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté hledají svědky srážky dvou škodovek v Přerově",
+            "publishedAt": "2026-04-21T18:02:28Z"
+          },
           {
             "title": "Za volant usedla bez řidičáku, za jízdy začala partnerovi vyčítat nevěru. Hádkou a konfliktem na sebe dvojice sama upozornila",
             "publishedAt": "2026-04-21T14:50:31Z"
@@ -351,10 +356,6 @@
           {
             "title": "Opilý řidič kamionu zablokoval při otáčení na Karlovarsku silnici",
             "publishedAt": "2026-04-21T13:45:35Z"
-          },
-          {
-            "title": "Krátce po propuštění z vězení se vloupal do provozovny, kde se najedl, oblékl a následně usnul",
-            "publishedAt": "2026-04-21T13:18:23Z"
           }
         ]
       }
