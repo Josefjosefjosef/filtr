@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-21T17:42:44.681600Z",
+  "ingestedAt": "2026-04-21T18:02:45.476692Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Pomalé zbrojení Evropy může lákat Putina. Komisař zase hrozil útokem Ruska",
+      "url": "https://ekonomickydenik.cz/pomale-zbrojeni-evropy-muze-lakat-putina/",
+      "dt": "2026-04-21T17:49:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evropy",
+        "hrozil",
+        "komisař",
+        "lákat",
+        "pomalé",
+        "putina",
+        "ruska",
+        "zase",
+        "zbrojení",
+        "útokem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Digitální ostuda Komise. Aplikace za 100 milionů korun padla po dvou minutách",
-      "url": "https://ekonomickydenik.cz/digitalni-ostuda-komise-aplikace-za-100-milionu-korun/",
-      "dt": "2026-04-20T10:46:16Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "100",
-        "aplikace",
-        "digitální",
-        "dvou",
-        "komise",
-        "korun",
-        "milionů",
-        "minutách",
-        "ostuda",
-        "padla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72033,
+      "bytes": 72631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,12 +829,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:50:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zdravi": 2,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 26,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pomalé zbrojení Evropy může lákat Putina. Komisař zase hrozil útokem Ruska",
+            "publishedAt": "2026-04-21T17:49:00Z"
+          },
           {
             "title": "Výměna za miliardy: Družba je opravena, míč je teď na straně Orbána",
             "publishedAt": "2026-04-21T16:50:33Z"
@@ -873,10 +877,6 @@
           {
             "title": "Největší světový výrobce kondomů zvedá ceny. Důvodem je válka i nedostatek",
             "publishedAt": "2026-04-21T12:34:06Z"
-          },
-          {
-            "title": "Fico oznámil, že chce Magyar řešit Benešovy dekrety. Extrémně citlivé téma i pro Čechy",
-            "publishedAt": "2026-04-21T12:09:11Z"
           }
         ]
       }

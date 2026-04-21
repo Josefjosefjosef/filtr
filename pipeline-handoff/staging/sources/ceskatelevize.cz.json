@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T17:42:44.681600Z",
+  "ingestedAt": "2026-04-21T18:02:45.476692Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Britská královská rodina si připomíná sto let od narození Alžběty II.",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/britska-kralovska-rodina-si-pripomina-sto-let-od-narozeni-alzbety-ii-372643",
+      "dt": "2026-04-21T17:40:49Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "alžběty",
+        "britská",
+        "královská",
+        "let",
+        "narození",
+        "připomíná",
+        "rodina",
+        "sto"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,32 +751,6 @@
         "paliva",
         "podzimu",
         "prohlásil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny ropy klesají v reakci na možná mírová jednání USA s Íránem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-ropy-klesaji-v-reakci-na-mozna-mirova-jednani-usa-s-iranem-372606",
-      "dt": "2026-04-21T06:15:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ceny",
-        "jednání",
-        "klesají",
-        "možná",
-        "mírová",
-        "reakci",
-        "ropy",
-        "usa",
-        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1536,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43906,
+      "bytes": 44731,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1596,11 +1595,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:33:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:40:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
-          "finance": 3,
+          "zpravy": 21,
+          "finance": 2,
           "other": 7
         },
         "drop_counts": {
@@ -1613,6 +1612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Britská královská rodina si připomíná sto let od narození Alžběty II.",
+            "publishedAt": "2026-04-21T17:40:49Z"
+          },
           {
             "title": "Pozastavení asociační dohody s Izraelem je nyní neprosaditelné, řekl Macinka",
             "publishedAt": "2026-04-21T17:33:34Z"
@@ -1640,10 +1643,6 @@
           {
             "title": "Ukrajina dokončila opravu ropovodu Družba, řekl Zelenskyj",
             "publishedAt": "2026-04-21T14:53:42Z"
-          },
-          {
-            "title": "Česko má poprvé data o očkování v reálném čase. Ukazují, komu se vyplatí nejvíc",
-            "publishedAt": "2026-04-21T14:50:33Z"
           }
         ]
       }
@@ -1749,7 +1748,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77335,
+      "bytes": 77281,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

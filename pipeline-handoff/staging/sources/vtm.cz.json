@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T17:42:44.681600Z",
+  "ingestedAt": "2026-04-21T18:02:45.476692Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,35 @@
         "tisíc",
         "vejdou",
         "základní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Tohle není reklama, ale mohla by být. Astronaut natočil dechberoucí video „západu Země“ na svůj iPhone",
+      "url": "https://mobilmania.zive.cz/clanky/tohle-neni-reklama-ale-mohla-by-byt-astronaut-natocil-dechberouci-video-zapadu-zeme-na-svuj-iphone/sc-3-a-1364600/default.aspx",
+      "dt": "2026-04-21T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "astronaut",
+        "být",
+        "dechberoucí",
+        "iphone",
+        "natočil",
+        "reklama",
+        "svůj",
+        "tohle",
+        "video",
+        "země",
+        "západu"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -935,35 +964,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hackeři, kteří vykradli Spotify, u soudu prohráli bez boje. Musí zaplatit 322 milionů dolarů",
-      "url": "https://www.zive.cz/clanky/hackeri-stahli-ze-spotify-vsechny-pisnicky-a-metadata-archiv-o-velikosti-300-tb-miri-na-internet/sc-3-a-238817/default.aspx",
-      "dt": "2026-04-17T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "322",
-        "boje",
-        "dolarů",
-        "hackeři",
-        "kteří",
-        "milionů",
-        "musí",
-        "prohráli",
-        "soudu",
-        "spotify",
-        "vykradli",
-        "zaplatit"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22731,
+      "bytes": 22573,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1029,10 @@
           {
             "title": "Nejlepší notebooky do 25 tisíc. Základní pro hry, spolehlivé na práci a vejdou se i MacBooky",
             "publishedAt": "2026-04-21T16:45:00Z"
+          },
+          {
+            "title": "Tohle není reklama, ale mohla by být. Astronaut natočil dechberoucí video „západu Země“ na svůj iPhone",
+            "publishedAt": "2026-04-21T17:45:00Z"
           },
           {
             "title": "Nebezpečný malware umí překrýt displej Androidu. V Česku zneužívá i přihlašování Komerční banky",
@@ -1053,10 +1057,6 @@
           {
             "title": "Windows 11 ruší omezení formátování oddílu na FAT32. Místo 32 GB může mít až 2 TB",
             "publishedAt": "2026-04-21T12:45:00Z"
-          },
-          {
-            "title": "Výkonný aku šroubovák je za 620 Kč. Mova se nabíjí pomocí USB-C a v krabičce má 24 bitů",
-            "publishedAt": "2026-04-21T10:45:00Z"
           }
         ]
       }
