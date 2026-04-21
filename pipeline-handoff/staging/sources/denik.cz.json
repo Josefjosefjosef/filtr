@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T03:45:43.744554Z",
+  "ingestedAt": "2026-04-21T04:05:40.556286Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nejsme v zimním spánku, pan poslanec Koten bude překvapen, říká Koudelka z BIS",
+      "url": "https://www.denik.cz/z_domova/michal-koudelka-bis-radek-koten-spd.html",
+      "dt": "2026-04-21T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bis",
+        "koten",
+        "koudelka",
+        "nejsme",
+        "pan",
+        "poslanec",
+        "překvapen",
+        "spánku",
+        "zimním",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,32 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Líbí se vám? Čeští vojáci budou mít nové stejnokroje, z unikátního materiálu",
-      "url": "https://www.denik.cz/z_domova/vojaci-budou-mit-nove-stejnokroje-v-khaki-barve-a-z-odlehceneho-materialu-202704.html",
-      "dt": "2026-04-20T11:01:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "líbí",
-        "materiálu",
-        "mít",
-        "nové",
-        "stejnokroje",
-        "unikátního",
-        "vojáci",
-        "vám",
-        "čeští"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30579,
+      "bytes": 30276,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -707,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejsme v zimním spánku, pan poslanec Koten bude překvapen, říká Koudelka z BIS",
+            "publishedAt": "2026-04-21T03:30:00Z"
+          },
           {
             "title": "Masakr v Nantes: Francouzskou rodinu vyhladila metodická poprava, otec zmizel",
             "publishedAt": "2026-04-21T03:00:00Z"
@@ -734,10 +739,6 @@
           {
             "title": "Školáka v Melbourne táhl autobus stovky metrů. Řidič přišel o práci",
             "publishedAt": "2026-04-20T17:14:00Z"
-          },
-          {
-            "title": "Péče o Toničku po transplantaci je náročná. Rodina z Merboltic hledá podporu",
-            "publishedAt": "2026-04-20T16:24:00Z"
           }
         ]
       }

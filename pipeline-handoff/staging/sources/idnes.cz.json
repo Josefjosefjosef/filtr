@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T03:45:43.744554Z",
+  "ingestedAt": "2026-04-21T04:05:40.556286Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Změna trestního zákoníku by mohla opět přitvrdit za neplacení výživného",
+      "url": "https://www.idnes.cz/zpravy/domaci/zmena-trestniho-zakoniku-by-mohla-opet-pritvrdit-za-neplaceni-vyzivneho.A260421_052156_domaci_kop",
+      "dt": "2026-04-21T03:38:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "neplacení",
+        "opět",
+        "přitvrdit",
+        "trestního",
+        "výživného",
+        "změna",
+        "zákoníku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,33 +776,6 @@
         "rozhodnou",
         "slováci",
         "volbách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Satelity odhalily Kimův jaderný sprint. Únik informací rozhádal Soul a Washington",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/kldr-uran-jaderne-zbrane-kim-jizni-korea-usa.A260420_133433_zahranicni_rtn",
-      "dt": "2026-04-20T14:14:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "informací",
-        "jaderný",
-        "kimův",
-        "odhalily",
-        "rozhádal",
-        "satelity",
-        "soul",
-        "sprint",
-        "washington",
-        "únik"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48200,
+      "bytes": 47861,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T03:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1636,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Změna trestního zákoníku by mohla opět přitvrdit za neplacení výživného",
+            "publishedAt": "2026-04-21T03:38:00Z"
+          },
           {
             "title": "Taková návštěva v Ulici dlouho nebyla. Vrací se postava, kterou nikdo nečekal",
             "publishedAt": "2026-04-21T03:00:00Z"
@@ -1663,10 +1664,6 @@
           {
             "title": "Čeká nás spolupráce na jaderném odstrašování, oznámil Macron v Polsku",
             "publishedAt": "2026-04-20T19:29:15Z"
-          },
-          {
-            "title": "„Lepší než Obamova a Bidenova.“ Trump slibuje jadernou dohodu s Íránem",
-            "publishedAt": "2026-04-20T19:28:00Z"
           }
         ]
       }
