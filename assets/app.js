@@ -4716,6 +4716,86 @@ try {
     return items.length + 1;
   }
 
+  /** Feed-only: sekční obrázek nad prvním článkem (mapování podle URL / mediaTopicKey / hash sekcí — ne podle titulku). */
+  const IU_FEED_SECTION_HEADER_ASSETS = Object.freeze({
+    hub: "section-prehled-dne.jpg",
+    zpravy: "section-zpravy.jpg",
+    sport: "section-sport.jpg",
+    finance: "section-finance.jpg",
+    zdravi: "section-zdravi.jpg",
+    cestovani: "section-cestovani.jpg",
+    hry: "section-hry.jpg",
+    kultura: "section-kultura-akce.jpg",
+    veda: "section-veda-historie.jpg",
+    vzdelavani: "section-vzdelavani.jpg",
+  });
+
+  function iuFeedSectionHeaderResolveVisualKey() {
+    const mtkRaw = state && state.mediaTopicKey;
+    const mtk =
+      mtkRaw && String(mtkRaw).trim() && String(mtkRaw).trim().toLowerCase() !== "all"
+        ? String(mtkRaw).trim().toLowerCase()
+        : "";
+    if (mtk) {
+      if (IU_DISABLED_MEDIA_TOPIC_KEYS.has(mtk)) return "";
+      if (!Object.prototype.hasOwnProperty.call(IU_FEED_SECTION_HEADER_ASSETS, mtk)) return "";
+      return mtk;
+    }
+    const secs = Array.isArray(activeSections) && activeSections.length ? activeSections : ["vse"];
+    const narrowed = secs.filter(function (k) {
+      return k && String(k).toLowerCase() !== "vse";
+    });
+    if (narrowed.length === 1) {
+      const one = String(narrowed[0]).trim().toLowerCase();
+      if (Object.prototype.hasOwnProperty.call(IU_FEED_SECTION_HEADER_ASSETS, one)) return one;
+      return "";
+    }
+    return "hub";
+  }
+
+  function iuFeedSectionHeaderResolveAssetFile() {
+    const key = iuFeedSectionHeaderResolveVisualKey();
+    if (!key) return "";
+    return IU_FEED_SECTION_HEADER_ASSETS[key] || "";
+  }
+
+  function iuBuildFeedSectionHeaderElement() {
+    const file = iuFeedSectionHeaderResolveAssetFile();
+    if (!file) return null;
+    const wrap = document.createElement("div");
+    wrap.className = "iuFeedSectionHeader";
+    wrap.setAttribute("role", "presentation");
+    wrap.setAttribute("aria-hidden", "true");
+    const inner = document.createElement("div");
+    inner.className = "iuFeedSectionHeader__inner";
+    const img = document.createElement("img");
+    img.className = "iuFeedSectionHeader__img";
+    img.decoding = "async";
+    img.loading = "eager";
+    img.alt = "";
+    img.setAttribute("src", "/assets/images/" + file);
+    img.addEventListener(
+      "error",
+      function () {
+        try {
+          wrap.remove();
+        } catch (_) {}
+      },
+      { once: true }
+    );
+    inner.appendChild(img);
+    wrap.appendChild(inner);
+    return wrap;
+  }
+
+  function iuFeedSectionHeaderEnsureAppended(safeTargetEl, headerEl) {
+    if (!headerEl || !safeTargetEl) return;
+    try {
+      if (headerEl.parentNode === safeTargetEl) return;
+      safeTargetEl.appendChild(headerEl);
+    } catch (_) {}
+  }
+
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -4944,6 +5024,7 @@ try {
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
+    const feedSectionHeaderEl = iuBuildFeedSectionHeaderElement();
     while (pos < visibleItems.length) {
       const batchMax = firstDomBatch
         ? reloadDomTight
@@ -5007,6 +5088,7 @@ try {
           } else {
             safeTarget.replaceChildren();
           }
+          iuFeedSectionHeaderEnsureAppended(safeTarget, feedSectionHeaderEl);
           domPatchStarted = true;
           if (hasDemoPending) {
             safeTarget.appendChild(demoFrag);
@@ -5058,6 +5140,7 @@ try {
       } else {
         safeTarget.replaceChildren();
       }
+      iuFeedSectionHeaderEnsureAppended(safeTarget, feedSectionHeaderEl);
       domPatchStarted = true;
       if (iuAlertDemo && demoFrag.childNodes.length > 0) {
         safeTarget.appendChild(demoFrag);
