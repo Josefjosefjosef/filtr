@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-21T02:05:30.281628Z",
+  "ingestedAt": "2026-04-21T02:25:34.078503Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konec éry: Tim Cook odstupuje z pozice výkonného ředitele Applu, nahradí ho hardwarový inženýr John Ternus",
+      "url": "https://tech.hn.cz/c1-67869160-konec-ery-tim-cook-odstupuje-z-pozice-vykonneho-reditele-applu-nahradi-ho-hardwarovy-inzenyr-john-ternus",
+      "dt": "2026-04-21T01:47:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "applu",
+        "cook",
+        "hardwarový",
+        "inženýr",
+        "john",
+        "konec",
+        "nahradí",
+        "odstupuje",
+        "pozice",
+        "ternus",
+        "tim",
+        "výkonného",
+        "éry",
+        "ředitele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1145,37 +1176,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Děláme pragmatickou zahraniční politiku, hodnotová nic nepřinesla, říká Babiš. Připojí se k Macronově iniciativě jaderného odstrašení",
-      "url": "https://archiv.hn.cz/c1-67868550-babis-delame-pragmatickou-zahranicni-politiku-hodnotova-vicemene-nic-neprinesla",
-      "dt": "2026-04-19T08:56:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiš",
-        "děláme",
-        "hodnotová",
-        "iniciativě",
-        "jaderného",
-        "macronově",
-        "nepřinesla",
-        "nic",
-        "odstrašení",
-        "politiku",
-        "pragmatickou",
-        "připojí",
-        "zahraniční",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1223,12 +1223,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T01:47:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "zpravy": 3,
+          "finance": 34,
           "sport": 2,
-          "zpravy": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1241,6 +1241,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec éry: Tim Cook odstupuje z pozice výkonného ředitele Applu, nahradí ho hardwarový inženýr John Ternus",
+            "publishedAt": "2026-04-21T01:47:00Z"
+          },
           {
             "title": "Finanční trhy (21. 4. 2026)",
             "publishedAt": "2026-04-20T22:00:00Z"
@@ -1268,10 +1272,6 @@
           {
             "title": "Kdo nabízí nejlepší dluhopisy? Unikátní model srovnává, kde dostane investor dobře zaplaceno",
             "publishedAt": "2026-04-20T15:49:00Z"
-          },
-          {
-            "title": "Plyn zlevnil, vyčerpané zásobníky se plní. Rezerva na příští zimu však stále roste příliš pomalu",
-            "publishedAt": "2026-04-20T15:37:00Z"
           }
         ]
       }
