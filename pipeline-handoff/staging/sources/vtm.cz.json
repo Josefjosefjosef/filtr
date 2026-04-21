@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-21T18:39:52.791109Z",
+  "ingestedAt": "2026-04-21T18:59:34.667761Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,33 @@
         "tisíc",
         "vejdou",
         "základní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Přehled telefonů, které dostanou Android 16. Aktualizace už vydala většina velkých i menších značek",
+      "url": "https://mobilmania.zive.cz/clanky/android-16-prehled-zarizeni-202604/sc-3-a-1364594/default.aspx",
+      "dt": "2026-04-21T18:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aktualizace",
+        "android",
+        "dostanou",
+        "menších",
+        "přehled",
+        "telefonů",
+        "velkých",
+        "vydala",
+        "většina",
+        "značek"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -935,35 +962,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Android se chystá zatočit se šmejdy a podvodníky. Nová ochrana odhalí zfalšovaná čísla bank a úřadů",
-      "url": "https://mobilmania.zive.cz/clanky/android-se-chysta-zatocit-se-smejdy-a-podvodniky-nova-ochrana-odhali-zfalsovana-cisla-bank-a-uradu/sc-3-a-1364566/default.aspx",
-      "dt": "2026-04-19T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "android",
-        "bank",
-        "chystá",
-        "nová",
-        "ochrana",
-        "odhalí",
-        "podvodníky",
-        "zatočit",
-        "zfalšovaná",
-        "úřadů",
-        "čísla",
-        "šmejdy"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +972,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22573,
+      "bytes": 22487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1009,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1027,10 @@
           {
             "title": "Nejlepší notebooky do 25 tisíc. Základní pro hry, spolehlivé na práci a vejdou se i MacBooky",
             "publishedAt": "2026-04-21T16:45:00Z"
+          },
+          {
+            "title": "Přehled telefonů, které dostanou Android 16. Aktualizace už vydala většina velkých i menších značek",
+            "publishedAt": "2026-04-21T18:15:00Z"
           },
           {
             "title": "Tohle není reklama, ale mohla by být. Astronaut natočil dechberoucí video „západu Země“ na svůj iPhone",
@@ -1053,10 +1055,6 @@
           {
             "title": "Nejkrásnější fotky z obletu Měsíce. Stáhněte si snímky z mise Artemis II jako tapety",
             "publishedAt": "2026-04-21T14:45:00Z"
-          },
-          {
-            "title": "Windows 11 ruší omezení formátování oddílu na FAT32. Místo 32 GB může mít až 2 TB",
-            "publishedAt": "2026-04-21T12:45:00Z"
           }
         ]
       }

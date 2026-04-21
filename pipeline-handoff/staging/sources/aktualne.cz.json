@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T18:39:52.791109Z",
+  "ingestedAt": "2026-04-21T18:59:34.667761Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán vkládá nečekané naděje ve Vance. Ten hraje i o své budoucí prezidentské křeslo",
+      "url": "https://zpravy.aktualne.cz/zahranici/iran-vklada-necekane-nadeje-ve-vance-ten-hraje-i-o-sve-budouci-prezidentske-kreslo/r~aaa292c38f751c114444cebff54f5933/",
+      "dt": "2026-04-21T18:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "budoucí",
+        "hraje",
+        "křeslo",
+        "naděje",
+        "nečekané",
+        "prezidentské",
+        "své",
+        "ten",
+        "vance",
+        "vkládá",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -497,30 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Válka má nečekaný důsledek. Dotkne se i sexuálního života Čechů",
-      "url": "https://zpravy.aktualne.cz/zahranici/dalsi-obet-valky-s-iranem-tentokrat-ovlivni-vas-sexualni-zivot/r~aaa29bf5cf671cfb9eba99e8c76f80e5/",
-      "dt": "2026-04-21T13:35:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dotkne",
-        "důsledek",
-        "nečekaný",
-        "sexuálního",
-        "válka",
-        "čechů",
-        "života"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22015,
+      "bytes": 22111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,7 +572,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:37:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 12,
@@ -586,6 +590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán vkládá nečekané naděje ve Vance. Ten hraje i o své budoucí prezidentské křeslo",
+            "publishedAt": "2026-04-21T18:37:00Z"
+          },
           {
             "title": "Jak získat náhradu škody. Advokáti radí pumpařům v boji proti cenovým stropům",
             "publishedAt": "2026-04-21T18:25:00Z"
@@ -613,10 +621,6 @@
           {
             "title": "Prvním finalistou poháru je Jablonec, na Mladou Boleslav stačila jediná branka",
             "publishedAt": "2026-04-21T17:15:00Z"
-          },
-          {
-            "title": "Orbánův zákon proti LGBT+ narazil. Evropský soudní dvůr ho označil za diskriminační",
-            "publishedAt": "2026-04-21T13:56:00Z"
           }
         ]
       }

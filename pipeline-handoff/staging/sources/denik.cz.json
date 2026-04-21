@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T18:39:52.791109Z",
+  "ingestedAt": "2026-04-21T18:59:34.667761Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
+      "url": "https://prazsky.denik.cz/zpravy_region/letisti-vaclava-havla-special-letectva-usa.html",
+      "dt": "2026-04-21T18:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvakrát",
+        "letectva",
+        "neděle",
+        "nekomentují",
+        "praze",
+        "speciál",
+        "usa",
+        "úřady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -635,33 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zůna odmítl znovuzavedení povinné vojny. Chce posílit zálohy a mobilizační síly",
-      "url": "https://www.denik.cz/z_domova/povinna-vojna-ministr-obrany-jaromir-zuna.html",
-      "dt": "2026-04-21T08:59:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chce",
-        "mobilizační",
-        "odmítl",
-        "posílit",
-        "povinné",
-        "síly",
-        "vojny",
-        "znovuzavedení",
-        "zálohy",
-        "zůna"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -672,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29570,
+      "bytes": 29763,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -709,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T18:18:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -724,6 +722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
+            "publishedAt": "2026-04-21T18:18:00Z"
+          },
           {
             "title": "YouTube má pro rodiče vypínač. Návyková krátká videa omezí dětem i na nulu",
             "publishedAt": "2026-04-21T18:00:00Z"
@@ -751,10 +753,6 @@
           {
             "title": "Timmy opět bojuje o život. Podle expertů už záchranáři mají velrybu nechat být",
             "publishedAt": "2026-04-21T14:22:00Z"
-          },
-          {
-            "title": "Všech deset párů pro StarDance 2026 odhaleno: Tančit bude Dyk, Jandová či Polák",
-            "publishedAt": "2026-04-21T13:59:00Z"
           }
         ]
       }
