@@ -114,22 +114,28 @@ def check_fetch_paths(app_js: Path):
 
 
 def check_section_feed_header(app_js: Path, index_html: Path):
-    """Regresní guard: feed #dataUpdatedAt nesmí používat globální dataset generatedAt ani starý text."""
+    """Regresní guard: odstraněné sekční chrome (#sectionLabel / #dataUpdatedAt) a legacy dataset řádek."""
     issues = []
     if app_js.exists():
         t = app_js.read_text(encoding="utf-8")
         if "Poslední aktualizace dat" in t:
             issues.append(
-                "assets/app.js must not contain legacy label 'Poslední aktualizace dat' (use section-derived header)"
+                "assets/app.js must not contain legacy label 'Poslední aktualizace dat'"
             )
-        if "iuMaxPublishedMsFromItems" not in t or "iuUpdateSectionDataUpdatedAtEl" not in t:
+        if "Poslední aktualizace sekce" in t:
             issues.append(
-                "assets/app.js must define iuMaxPublishedMsFromItems + iuUpdateSectionDataUpdatedAtEl for feed header"
+                "assets/app.js must not contain removed UI copy 'Poslední aktualizace sekce'"
             )
+        if "getElementById(\"sectionLabel\")" in t or "getElementById('sectionLabel')" in t:
+            issues.append("assets/app.js must not reference removed #sectionLabel")
+        if "getElementById(\"dataUpdatedAt\")" in t or "getElementById('dataUpdatedAt')" in t:
+            issues.append("assets/app.js must not reference removed #dataUpdatedAt")
     if index_html.exists():
         ix = index_html.read_text(encoding="utf-8")
-        if 'id="dataUpdatedAt"' in ix and "Poslední aktualizace sekce" not in ix:
-            issues.append("projects/index.html #dataUpdatedAt must use section-level placeholder (Poslední aktualizace sekce)")
+        if 'id="sectionLabel"' in ix:
+            issues.append("projects/index.html must not contain removed #sectionLabel")
+        if 'id="dataUpdatedAt"' in ix:
+            issues.append("projects/index.html must not contain removed #dataUpdatedAt")
     return issues
 
 

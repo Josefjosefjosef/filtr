@@ -414,7 +414,7 @@
       }
 
       // ✅ FIX: Odstraněny mrtvé querySelectory (#lastUpdate, #emptyState neexistují v HTML)
-      // app.js používá #dataUpdatedAt a #emptyBox místo toho
+      // app.js používá #emptyBox pro prázdný feed stav
 
       const breakMode2 = new URLSearchParams(location.search).get("break");
       if (breakMode2 === "domNull") {
