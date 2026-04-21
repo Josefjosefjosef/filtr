@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T10:19:27.650707Z",
+  "ingestedAt": "2026-04-21T10:41:17.667501Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Cenu prezidenta MFF Karlovy Vary letos převezme herečka Magda Vášáryová",
+      "url": "https://www.denik.cz/film-a-televize/cena-prezidenta-mff-karlovy-vary-magda-vasaryova.html",
+      "dt": "2026-04-21T10:07:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cenu",
+        "herečka",
+        "karlovy",
+        "letos",
+        "magda",
+        "mff",
+        "prezidenta",
+        "převezme",
+        "vary",
+        "vášáryová"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dcera Karla Gotta Charlotte si změnila jméno. U lidí to vyvolalo pozdvižení",
-      "url": "https://www.denik.cz/hudba/charlotte-gott-zmena-jmena-karel-gott.html",
-      "dt": "2026-04-20T15:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "charlotte",
-        "dcera",
-        "gotta",
-        "jméno",
-        "karla",
-        "lidí",
-        "pozdvižení",
-        "vyvolalo",
-        "změnila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28931,
+      "bytes": 29233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T09:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:07:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -714,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cenu prezidenta MFF Karlovy Vary letos převezme herečka Magda Vášáryová",
+            "publishedAt": "2026-04-21T10:07:00Z"
+          },
           {
             "title": "Karlovarský festival uvede digitálně restaurovaný film Kopytem sem kopytem tam",
             "publishedAt": "2026-04-21T09:59:00Z"
@@ -741,10 +746,6 @@
           {
             "title": "Tankovací stojany zmizely. Brněnská benzinka zavřela, již brzy ji čeká demolice",
             "publishedAt": "2026-04-21T07:00:00Z"
-          },
-          {
-            "title": "Hnutí Duha žádá po Macinkovi veřejnou omluvu za výrok o terorismu",
-            "publishedAt": "2026-04-21T06:43:00Z"
           }
         ]
       }

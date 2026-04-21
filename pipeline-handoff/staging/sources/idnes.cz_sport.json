@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-21T10:19:27.650707Z",
+  "ingestedAt": "2026-04-21T10:41:17.667501Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Myslel jsem si, že tě zatkli. Trenér si dobíral fotbalistku Lehmannovou",
+      "url": "https://www.idnes.cz/sport/trendy/myslel-jsem-si-ze-te-zatkli-trener-si-dobiral-fotbalistku-lehmannovou.A260421_103608_trendy_blah",
+      "dt": "2026-04-21T10:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dobíral",
+        "fotbalistku",
+        "jsem",
+        "lehmannovou",
+        "myslel",
+        "trenér",
+        "zatkli"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Končí Ďaloga, Holland, Krošelj i další. Hokejová Kometa hlásí sedm odchodů",
-      "url": "https://www.idnes.cz/hokej/extraliga/s-kometou-se-louci-sedm-hokejistu-vcetne-bartejse-dalogy-hollanda-a-stranskeho.A260420_154456_hokej_tit",
-      "dt": "2026-04-20T13:49:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "hlásí",
-        "hokejová",
-        "holland",
-        "kometa",
-        "končí",
-        "krošelj",
-        "odchodů",
-        "sedm",
-        "ďaloga"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46619,
+      "bytes": 46734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T10:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Myslel jsem si, že tě zatkli. Trenér si dobíral fotbalistku Lehmannovou",
+            "publishedAt": "2026-04-21T10:14:00Z"
+          },
           {
             "title": "Horváthovi: Tati, Spartu i Slavii bys mohl trénovat! Showbyznys mi cestu zavřel",
             "publishedAt": "2026-04-21T10:00:00Z"
@@ -874,10 +875,6 @@
           {
             "title": "Wembanyama dostal trofej, o které nikdo nepochyboval. Je nejlepším obráncem NBA",
             "publishedAt": "2026-04-21T07:48:00Z"
-          },
-          {
-            "title": "Kempný se po roce vrací do extraligy. Hokejově mi Švédsko pomohlo, říká",
-            "publishedAt": "2026-04-21T07:41:00Z"
           }
         ]
       }

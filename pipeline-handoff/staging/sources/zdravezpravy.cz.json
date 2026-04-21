@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-21T10:19:27.650707Z",
+  "ingestedAt": "2026-04-21T10:41:17.667501Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotní pojišťovny se do JMHZ nezahrnuly, přehledy mají zvlášť",
+      "url": "https://www.zdravezpravy.cz/2026/04/21/zdravotni-pojistovny-se-do-jmhz-nezahrnuly-prehledy-maji-zvlast/",
+      "dt": "2026-04-21T09:21:39Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "jmhz",
+        "mají",
+        "nezahrnuly",
+        "pojišťovny",
+        "přehledy",
+        "zdravotní",
+        "zvlášť"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,31 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Interrupcí v ČR rok od roku ubývá. To díky osvětě i moderní antikoncepci",
-      "url": "https://www.zdravezpravy.cz/2026/04/13/interrupci-v-cesku-rok-od-roku-ubyva-to-diky-osvete-i-moderni-antikoncepci/",
-      "dt": "2026-04-13T07:18:41Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "antikoncepci",
-        "díky",
-        "interrupcí",
-        "moderní",
-        "osvětě",
-        "rok",
-        "roku",
-        "ubývá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 223294,
+      "bytes": 223300,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T06:40:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T09:21:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -560,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotní pojišťovny se do JMHZ nezahrnuly, přehledy mají zvlášť",
+            "publishedAt": "2026-04-21T09:21:39Z"
+          },
           {
             "title": "Ženy v EU mají o čtvrtinu nižší důchod než muži. V Česku je rozdíl menší",
             "publishedAt": "2026-04-21T06:40:34Z"
@@ -587,10 +590,6 @@
           {
             "title": "Benda: Vládní koalice je zdivočelá. ODS mění kandidáta do rady VZP",
             "publishedAt": "2026-04-17T07:09:49Z"
-          },
-          {
-            "title": "Pracující důchodci loni vyšetřili díky nižšímu odvodu 4 mld. Kč",
-            "publishedAt": "2026-04-16T14:00:04Z"
           }
         ]
       }
