@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T04:25:38.448829Z",
+  "ingestedAt": "2026-04-21T04:45:35.544177Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Profesionální hasiči ze Sušice se po třiceti letech dočkali vlastní stanice",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/plzensky-kraj/profesionalni-hasici-ze-susice-se-po-triceti-letech-dockali-vlastni-stanice-372594",
+      "dt": "2026-04-21T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dočkali",
+        "hasiči",
+        "letech",
+        "profesionální",
+        "stanice",
+        "sušice",
+        "třiceti",
+        "vlastní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -719,28 +744,6 @@
         "skladu",
         "úterý",
         "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Satelity ukázaly památky UNESCO z vesmíru",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/satelity-ukazaly-pamatky-unesco-z-vesmiru-372570",
-      "dt": "2026-04-20T08:57:50Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "památky",
-        "satelity",
-        "ukázaly",
-        "unesco",
-        "vesmíru"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1525,7 +1528,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42431,
+      "bytes": 42633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1585,11 +1588,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 7
+          "zpravy": 24,
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1601,6 +1604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Profesionální hasiči ze Sušice se po třiceti letech dočkali vlastní stanice",
+            "publishedAt": "2026-04-21T04:30:00Z"
+          },
           {
             "title": "Haiťany terorizují drony. Cílí i na děti",
             "publishedAt": "2026-04-21T04:00:00Z"
@@ -1628,10 +1635,6 @@
           {
             "title": "Případ otrávené dětské výživy řeší kriminalisté ze tří zemí",
             "publishedAt": "2026-04-20T19:00:00Z"
-          },
-          {
-            "title": "Za zpoplatnění dálniční známky pro elektroauta Česku mohou hrozit sankce",
-            "publishedAt": "2026-04-20T18:26:06Z"
           }
         ]
       }
@@ -1737,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77375,
+      "bytes": 77371,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
