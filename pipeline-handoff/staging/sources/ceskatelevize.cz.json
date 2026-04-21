@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-21T06:05:11.574174Z",
+  "ingestedAt": "2026-04-21T06:20:39.437287Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Operní Psohlavci přivedli Kozinu opět do Plzně",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/operni-psohlavci-privedli-kozinu-opet-do-plzne-372588",
+      "dt": "2026-04-21T06:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kozinu",
+        "operní",
+        "opět",
+        "plzně",
+        "psohlavci",
+        "přivedli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -722,30 +745,6 @@
         "ukrajina",
         "výsadkové",
         "zasáhla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Manželé vyléčili vrozenou slepotu. Dostali za to „vědeckého Oscara“",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/manzele-vylecili-vrozenou-slepotu-dostali-za-to-vedeckeho-oscara-372571",
-      "dt": "2026-04-20T09:31:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dostali",
-        "manželé",
-        "oscara",
-        "slepotu",
-        "vrozenou",
-        "vyléčili",
-        "vědeckého"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1528,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43094,
+      "bytes": 42742,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,11 +1587,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "other": 6
+          "other": 6,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1604,6 +1603,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Operní Psohlavci přivedli Kozinu opět do Plzně",
+            "publishedAt": "2026-04-21T06:00:00Z"
+          },
           {
             "title": "Americkým lodím na Blízkém východě docházejí základní zásoby. Doručení trvá i přes měsíc",
             "publishedAt": "2026-04-21T05:10:00Z"
@@ -1631,10 +1634,6 @@
           {
             "title": "Tim Cook opustí post generálního ředitele společnosti Apple",
             "publishedAt": "2026-04-20T22:02:53Z"
-          },
-          {
-            "title": "Konec bojů, nebo jen pauza? Libanonci se vracejí domů s obavami z další eskalace",
-            "publishedAt": "2026-04-20T20:46:04Z"
           }
         ]
       }
@@ -1740,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77374,
+      "bytes": 77380,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T06:05:11.574174Z",
+  "ingestedAt": "2026-04-21T06:20:39.437287Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud řeší pobodání raperů v centru Prahy, podle svědků měl útočník kopí",
+      "url": "https://www.idnes.cz/zpravy/domaci/soud-praha-7-raperi-pobodani-kopi-money-slim-churaq-clique.A260420_145335_domaci_svm",
+      "dt": "2026-04-21T06:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "centru",
+        "kopí",
+        "měl",
+        "pobodání",
+        "podle",
+        "prahy",
+        "raperů",
+        "soud",
+        "svědků",
+        "útočník",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kostka, Kaiser a Syslová bez dozoru. Svěrákův film Pět švestek láká ukázkou",
+      "url": "https://www.idnes.cz/kultura/film-televize/jan-sverak-pet-svestek-oldrich-kaiser-lenka-termerova-trailer.A260420_173659_filmvideo_jgo",
+      "dt": "2026-04-21T06:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dozoru",
+        "film",
+        "kaiser",
+        "kostka",
+        "láká",
+        "pět",
+        "svěrákův",
+        "syslová",
+        "ukázkou",
+        "švestek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,57 +787,6 @@
         "tsunami",
         "zasáhla",
         "zemětřesení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Od aut až po plechovky. Jak válka s Íránem ovlivňuje světové dodávky hliníku",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/hlinik-valka-iran-persky-zaliv.A260420_093723_eko-zahranicni_ven",
-      "dt": "2026-04-20T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aut",
-        "dodávky",
-        "hliníku",
-        "ovlivňuje",
-        "plechovky",
-        "světové",
-        "válka",
-        "íránem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Výrazný znak: potetovaná pravá paže. Policie pátrá po uprchlém vězni",
-      "url": "https://www.idnes.cz/praha/zpravy/policie-patrani-uprchly-vezen-ktery-uprchl-volne-pracoviste-jirny-zdenek-balada.A260420_182819_praha-zpravy_lysa",
-      "dt": "2026-04-20T17:10:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "paže",
-        "policie",
-        "potetovaná",
-        "pravá",
-        "pátrá",
-        "uprchlém",
-        "výrazný",
-        "vězni",
-        "znak"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49503,
+      "bytes": 49942,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,11 +1629,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
-          "finance": 4
+          "other": 1,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1641,6 +1646,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud řeší pobodání raperů v centru Prahy, podle svědků měl útočník kopí",
+            "publishedAt": "2026-04-21T06:00:00Z"
+          },
+          {
+            "title": "Kostka, Kaiser a Syslová bez dozoru. Svěrákův film Pět švestek láká ukázkou",
+            "publishedAt": "2026-04-21T06:00:00Z"
+          },
           {
             "title": "Z mexické pyramidy střílel muž. Zabil turistku a pak sebe, další lidi zranil",
             "publishedAt": "2026-04-21T05:31:00Z"
@@ -1664,14 +1677,6 @@
           {
             "title": "Srbsko může přijít o miliardu a půl eur kvůli úpadku demokracie, varuje EU",
             "publishedAt": "2026-04-21T04:53:00Z"
-          },
-          {
-            "title": "Už vloni jsme naprosto zničili íránské areály s jaderným prachem, řekl Trump",
-            "publishedAt": "2026-04-21T04:49:00Z"
-          },
-          {
-            "title": "Viceprezident USA Vance odletí do Pákistánu na další kolo jednání s Íránci",
-            "publishedAt": "2026-04-21T04:37:00Z"
           }
         ]
       }

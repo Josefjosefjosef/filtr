@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-21T06:05:11.574174Z",
+  "ingestedAt": "2026-04-21T06:20:39.437287Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič volkswagenu ujel v Jičíně od nehody. Když ho vypátrali policisté, byl pod vlivem alkoholu",
+      "url": "https://tydenikpolicie.cz/ridic-volkswagenu-ujel-v-jicine-od-nehody-kdyz-ho-vypatrali-policiste-byl-pod-vlivem-alkoholu/",
+      "dt": "2026-04-21T06:02:40Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "alkoholu",
+        "jičíně",
+        "když",
+        "nehody",
+        "policisté",
+        "ujel",
+        "vlivem",
+        "volkswagenu",
+        "vypátrali",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,31 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policistům na Kroměřížsku ujížděl řidič škodovky. Naboural do zaparkovaného auta",
-      "url": "https://tydenikpolicie.cz/policistum-na-zlinsku-ujizdel-ridic-skodovky-naboural-do-zaparkovaneho-auta/",
-      "dt": "2026-04-20T14:45:52Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "auta",
-        "kroměřížsku",
-        "naboural",
-        "policistům",
-        "ujížděl",
-        "zaparkovaného",
-        "řidič",
-        "škodovky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16267,
+      "bytes": 16253,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T04:02:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:02:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič volkswagenu ujel v Jičíně od nehody. Když ho vypátrali policisté, byl pod vlivem alkoholu",
+            "publishedAt": "2026-04-21T06:02:40Z"
+          },
           {
             "title": "Mladíka z Ústí nad Labem obvinili kriminalisté z loupeže i z distribuce drog nezletilému",
             "publishedAt": "2026-04-21T04:02:58Z"
@@ -347,10 +353,6 @@
           {
             "title": "Opilý muž vyhrožoval v Dubí policistovi s tím, že ho svlíkne z uniformy, počká si na něj a zbije ho jako psa",
             "publishedAt": "2026-04-20T15:22:53Z"
-          },
-          {
-            "title": "Opilý muž se chtěl vyhnout hněvu přítelkyně, přespal proto ve sklepě",
-            "publishedAt": "2026-04-20T14:52:03Z"
           }
         ]
       }
