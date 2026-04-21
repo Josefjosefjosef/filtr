@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-21T03:05:26.672071Z",
+  "ingestedAt": "2026-04-21T03:25:14.925022Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Taková návštěva v Ulici dlouho nebyla. Vrací se postava, kterou nikdo nečekal",
+      "url": "https://www.idnes.cz/magaziny/koktejl/takova-navsteva-v-ulici-dlouho-nebyla-vraci-se-postava-kterou-nikdo-necekal.A260417_140706_koktejl_brna",
+      "dt": "2026-04-21T03:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dlouho",
+        "nebyla",
+        "nečekal",
+        "nikdo",
+        "návštěva",
+        "postava",
+        "taková",
+        "ulici",
+        "vrací"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -753,31 +779,6 @@
         "sprint",
         "washington",
         "únik"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Absťák dohnal opilce ke krádeži v obchodě. Nakonec ho museli křísit",
-      "url": "https://www.idnes.cz/plzen/zpravy/plzen-obchod-ukradl-lahev-alkohol-zkolaboval-abstak-zachranari-straznik.A260420_153231_plzen-zpravy_vb",
-      "dt": "2026-04-20T14:14:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "absťák",
-        "dohnal",
-        "krádeži",
-        "křísit",
-        "museli",
-        "nakonec",
-        "obchodě",
-        "opilce"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1582,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48339,
+      "bytes": 48200,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T03:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1635,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Taková návštěva v Ulici dlouho nebyla. Vrací se postava, kterou nikdo nečekal",
+            "publishedAt": "2026-04-21T03:00:00Z"
+          },
           {
             "title": "Finanční stopka. Bez peněz EU se Česko do výstavby rychlotratí nepustí",
             "publishedAt": "2026-04-20T22:00:00Z"
@@ -1662,10 +1667,6 @@
           {
             "title": "„Lepší než Obamova a Bidenova.“ Trump slibuje jadernou dohodu s Íránem",
             "publishedAt": "2026-04-20T19:28:00Z"
-          },
-          {
-            "title": "Stanice metra Rajská zahrada a Černý Most jsou uzavřeny kvůli požáru střelnice",
-            "publishedAt": "2026-04-20T19:15:52Z"
           }
         ]
       }

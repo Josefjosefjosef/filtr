@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T03:05:26.672071Z",
+  "ingestedAt": "2026-04-21T03:25:14.925022Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dřevěný supermarket. Billa brzy otevře nový typ prodejny, takhle vypadá",
+      "url": "https://www.penize.cz/nakupy/488521-dreveny-supermarket-billa-otevre-novy-typ-prodejny-takhle-vypada",
+      "dt": "2026-04-21T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "billa",
+        "brzy",
+        "dřevěný",
+        "nový",
+        "otevře",
+        "prodejny",
+        "supermarket",
+        "takhle",
+        "typ",
+        "vypadá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -484,30 +511,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jaká je nejlepší bankovka na světě? Tady jsou favoriti soutěže",
-      "url": "https://www.penize.cz/nakupy/488376-jaka-je-nejlepsi-bankovka-sveta-tady-jsou-favoriti",
-      "dt": "2026-04-16T05:10:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bankovka",
-        "favoriti",
-        "jaká",
-        "nejlepší",
-        "soutěže",
-        "světě",
-        "tady"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18023,
+      "bytes": 18044,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +558,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-20T17:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T05:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 16,
@@ -571,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dřevěný supermarket. Billa brzy otevře nový typ prodejny, takhle vypadá",
+            "publishedAt": "2026-04-21T05:00:00Z"
+          },
           {
             "title": "Limit pro pojištění právní ochrany výrazně roste. Pomohly dvě novinky",
             "publishedAt": "2026-04-20T17:30:00Z"
@@ -598,10 +605,6 @@
           {
             "title": "Kolik si můžete vybrat z bankomatu a jaké hodnoty? Přehled podle bank",
             "publishedAt": "2026-04-20T05:05:00Z"
-          },
-          {
-            "title": "Brigádníci v zemědělství můžou letos vydělat víc díky nové slevě",
-            "publishedAt": "2026-04-20T05:00:00Z"
           }
         ]
       }

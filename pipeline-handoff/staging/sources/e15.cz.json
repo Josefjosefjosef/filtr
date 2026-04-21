@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-21T03:05:26.672071Z",
+  "ingestedAt": "2026-04-21T03:25:14.925022Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nadhodnocené akcie ČEZ? Růst podobných firem obrušuje nálepku drahého zboží",
+      "url": "https://www.e15.cz/byznys/burzy-a-trhy/nadhodnocene-akcie-cez-rust-podobnych-firem-obrusuje-nalepku-draheho-zbozi-1432272",
+      "dt": "2026-04-21T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "akcie",
+        "drahého",
+        "firem",
+        "nadhodnocené",
+        "nálepku",
+        "obrušuje",
+        "podobných",
+        "růst",
+        "zboží",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1069,33 +1096,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nová vlna zdražování potravin je šancí pro lokální farmáře, říká manažer Rohlíku",
-      "url": "https://www.e15.cz/byznys/potraviny/nova-vlna-zdrazovani-potravin-je-sanci-pro-lokalni-farmare-rika-manazer-rohliku-1432197",
-      "dt": "2026-04-18T08:28:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "farmáře",
-        "lokální",
-        "manažer",
-        "nová",
-        "potravin",
-        "rohlíku",
-        "vlna",
-        "zdražování",
-        "říká",
-        "šancí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1106,7 +1106,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 58008,
+      "bytes": 57976,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1143,7 +1143,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-20T21:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1160,6 +1160,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nadhodnocené akcie ČEZ? Růst podobných firem obrušuje nálepku drahého zboží",
+            "publishedAt": "2026-04-21T03:00:00Z"
+          },
           {
             "title": "Konec éry Tima Cooka. Apple od září povede John Ternus s vizí zaměřenou na hardware",
             "publishedAt": "2026-04-20T21:02:00Z"
@@ -1187,10 +1191,6 @@
           {
             "title": "Experti odhadli dopady AI. V Česku v příštích 25 letech vyhodí čtvrt milionu lidí z práce",
             "publishedAt": "2026-04-20T14:00:00Z"
-          },
-          {
-            "title": "Vydavatel Desmond prohrál spor o britskou Národní loterii. Soud dal za pravdu Komárkovu Allwynu",
-            "publishedAt": "2026-04-20T13:45:00Z"
           }
         ]
       }
