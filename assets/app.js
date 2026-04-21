@@ -528,7 +528,6 @@ try {
   const elNewsList = document.getElementById("newsList");
   const elFeed = document.getElementById("feed");
   const emptyBox = document.getElementById("emptyBox");
-  const sectionLabel = document.getElementById("sectionLabel");
   const sectionsBar = document.getElementById("sectionsBar");
   // hotfix topbar search toggle: canonical search form/input binding (no feed pipeline change)
   const searchFormEl =
@@ -3965,19 +3964,6 @@ try {
     return "";
   }
 
-  function getSectionLabelText(keys) {
-    const names = keys
-      .map((key) => SECTION_LABELS[key] || key)
-      .filter(Boolean);
-    return names.length ? names.join(", ") : SECTION_LABELS.vse;
-  }
-
-  function updateSectionLabel() {
-    if (!sectionLabel) return;
-    const labelText = getSectionLabelText(activeSections);
-    sectionLabel.textContent = `Sekce: ${labelText}`;
-  }
-
   function renderSectionsBar() {
     if (!sectionsBar) return;
     sectionsBar.innerHTML = "";
@@ -4042,7 +4028,6 @@ try {
       state.sections = new Set(["aktualne"]);
       activeSections = ["aktualne"];
     }
-    updateSectionLabel();
     updateSectionButtons();
   }
 
@@ -11893,17 +11878,11 @@ function buildVideoAsArticleCard(it) {
     return best;
   }
 
-  /** Latest content time among visible feed items (section-derived; not dataset generatedAt). */
   function iuMaxPublishedMsFromItems(items) {
-    if (!Array.isArray(items) || items.length === 0) return null;
-    let max = null;
-    for (let ii = 0; ii < items.length; ii++) {
-      const t = iuItemBestPublishedMs(items[ii]);
-      if (t === null || t === undefined) continue;
-      if (max === null || t > max) max = t;
-    }
-    return max;
+    void items;
+    return null;
   }
+  function iuUpdateSectionDataUpdatedAtEl() {}
 
   const IU_FEED_PREV_PUBLISHED_KEY = "iu_feed_prev_pub_v1";
 
@@ -12082,43 +12061,6 @@ function buildVideoAsArticleCard(it) {
     return out;
   }
 
-  /** Local time, no seconds, no raw ISO in UI. Shorter label when the newest item is from today. */
-  function iuFormatSectionLastUpdateLine(ms) {
-    if (ms === null || ms === undefined || !Number.isFinite(ms)) return null;
-    const d = new Date(ms);
-    if (Number.isNaN(d.getTime())) return null;
-    const now = new Date();
-    const sameDay =
-      d.getFullYear() === now.getFullYear() &&
-      d.getMonth() === now.getMonth() &&
-      d.getDate() === now.getDate();
-    const hm =
-      String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-    if (sameDay) {
-      return "Poslední aktualizace sekce: " + hm;
-    }
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return "Poslední aktualizace sekce: " + day + ". " + month + ". " + year + " " + hm;
-  }
-
-  /** Feed header: odvozeno z položek aktuálně zobrazené sekce / filtru (state.filteredItems). */
-  function iuUpdateSectionDataUpdatedAtEl() {
-    const elUpdated = document.getElementById("dataUpdatedAt");
-    if (!elUpdated) return;
-    const items = Array.isArray(state.filteredItems) ? state.filteredItems : [];
-    const maxMs = iuMaxPublishedMsFromItems(items);
-    const line = iuFormatSectionLastUpdateLine(maxMs);
-    if (line) {
-      elUpdated.textContent = line;
-      elUpdated.classList.remove("iu-date-pending");
-    } else {
-      elUpdated.textContent = "Poslední aktualizace sekce: —";
-      elUpdated.classList.add("iu-date-pending");
-    }
-  }
-
   // === LOCKED PIPELINE ===
   // Jakákoli změna této funkce MUSÍ respektovat invarianty feedu.
   // Druhá render cesta je zakázaná.
@@ -12230,7 +12172,6 @@ function buildVideoAsArticleCard(it) {
           auditRun.phases.renderItemsMs =
             (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tRi0;
         }
-        iuUpdateSectionDataUpdatedAtEl();
         if (usePubClusterCap && !state.__iuHomeFullPubClusterIdleScheduled) {
           state.__iuHomeFullPubClusterIdleScheduled = true;
           iuScheduleHomeFullPublicationCluster();
@@ -12326,7 +12267,6 @@ function buildVideoAsArticleCard(it) {
           filtered: 0,
         });
       }
-      iuUpdateSectionDataUpdatedAtEl();
       return;
     }
     if (!Array.isArray(state.filteredItems)) {
@@ -12355,7 +12295,6 @@ function buildVideoAsArticleCard(it) {
         filtered: filtered.length,
       });
     }
-    iuUpdateSectionDataUpdatedAtEl();
     } finally {
       try {
         state.__iuApplyFilterBusy = false;
@@ -13895,7 +13834,6 @@ function buildVideoAsArticleCard(it) {
         }
         setStatus(statusParts.join(" • "));
       }
-      // Sekční řádek „Poslední aktualizace sekce“: výhradně z iuUpdateSectionDataUpdatedAtEl() po applyFilter().
       updateLastArticlesInfo(sanitizedArticles.length, data?.updatedAt ?? data?.updated_at ?? null);
 
       iuHomeLoadAuditNotify("loadData:complete");
@@ -25957,38 +25895,6 @@ function buildVideoAsArticleCard(it) {
       } else {
         if (barFeed) barFeed.hidden = true;
         if (barInView) barInView.hidden = true;
-      }
-    } catch (_) {}
-
-    try {
-      const sl = document.getElementById("sectionLabel");
-      if (sl) {
-        const labels = {
-          all: "Vše",
-          zpravy: "Zprávy",
-          sport: "Sport",
-          finance: "Finance",
-          zdravi: "Zdraví",
-          hry: "Hry",
-          kultura: "Kultura / Akce",
-          veda: "Věda & Historie",
-          vzdelavani: "Vzdělávání",
-        };
-        let txt = "";
-        if (section === "travel") {
-          txt = nav.mode === "media" ? "Cestování média" : "Cestování poradna";
-        } else if (iuArticleHubSectionP(section)) {
-          if (!nav.topic || nav.topic === "all") txt = labels.all;
-          else txt = labels[nav.topic] || labels.zpravy;
-        } else if (labels[section]) {
-          txt = labels[section];
-        }
-        if (txt) {
-          sl.textContent = "Sekce: " + txt;
-          sl.style.display = "";
-        } else {
-          sl.style.display = "none";
-        }
       }
     } catch (_) {}
 

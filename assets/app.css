@@ -2480,6 +2480,15 @@ a.brand,
   visibility: hidden;
 }
 
+/* P0 guard: odstraněné sekční řádky — nesmí se znovu propsat do layoutu */
+#sectionLabel,
+#dataUpdatedAt,
+.iu-section-header,
+.iu-section-name,
+.iu-section-updated{
+  display: none !important;
+}
+
 @media (max-width: 520px){
   .feedTopRow{
     flex-direction: column;
