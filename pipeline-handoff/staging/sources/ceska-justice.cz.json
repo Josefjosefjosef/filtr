@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "EU přiznává chyby v energetice. Teď chce zlevnit elektřinu, říká Stehlík z White & Case",
+      "url": "https://www.ceska-justice.cz/2026/04/stehlik-misto-ideologie-reseni-skutecnych-problemu/",
+      "dt": "2026-04-21T04:15:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "case",
+        "chce",
+        "chyby",
+        "elektřinu",
+        "energetice",
+        "přiznává",
+        "stehlík",
+        "white",
+        "zlevnit",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,32 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soudila dopravní nehody, sama havarovala opilá. Může ji to stát nejen talár",
-      "url": "https://www.ceska-justice.cz/2026/04/soudila-dopravni-nehody-sama-havarovala-soudkyne-opila/",
-      "dt": "2026-04-18T09:00:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "dopravní",
-        "havarovala",
-        "nehody",
-        "nejen",
-        "opilá",
-        "sama",
-        "soudila",
-        "stát",
-        "talár"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 101614,
+      "bytes": 111838,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-20T13:24:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EU přiznává chyby v energetice. Teď chce zlevnit elektřinu, říká Stehlík z White & Case",
+            "publishedAt": "2026-04-21T04:15:00Z"
+          },
           {
             "title": "Ministr je politickou loutkou, vzkazuje Decroix. Tejce vyzvala ke zveřejnění dokumentů o bitcoinech",
             "publishedAt": "2026-04-20T13:24:23Z"
@@ -353,10 +358,6 @@
           {
             "title": "Policie advokátní komoru kvůli zpronevěře úschov stíhat nebude",
             "publishedAt": "2026-04-18T13:45:00Z"
-          },
-          {
-            "title": "Přihlášek patentů přibývá, ve srovnání s Evropou inovátoři paběrkují",
-            "publishedAt": "2026-04-18T11:40:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pije whisky a ženám nedá spát. Český noir Říkají mi Lars Hofmannovo charisma neutáhne",
+      "url": "https://magazin.aktualne.cz/kultura/film/pije-whisky-a-zenam-neda-spat-cesky-noir-rikaji-mi-lars-charisma-hofmanna-neutahne/r~aaa29c8c2c72d44afa777e5f48003330/",
+      "dt": "2026-04-21T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "charisma",
+        "hofmannovo",
+        "lars",
+        "nedá",
+        "neutáhne",
+        "noir",
+        "pije",
+        "spát",
+        "whisky",
+        "český",
+        "říkají",
+        "ženám"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,32 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Studenti podpoří protestem ČT a ČRo, vládu vyzvali ke stažení návrhu zákona",
-      "url": "https://zpravy.aktualne.cz/domaci/studenti-podpori-protestem-ct-a-cro-vladu-vyzvali-ke-stazeni-navrhu-zakona/r~aaa2997be0cd0c964487c5cce03cc4e3/",
-      "dt": "2026-04-20T13:49:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "návrhu",
-        "podpoří",
-        "protestem",
-        "stažení",
-        "studenti",
-        "vládu",
-        "vyzvali",
-        "zákona",
-        "čro"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21975,
+      "bytes": 21893,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,10 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T03:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
+          "other": 1,
+          "zpravy": 14,
           "finance": 2,
           "sport": 3
         },
@@ -593,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pije whisky a ženám nedá spát. Český noir Říkají mi Lars Hofmannovo charisma neutáhne",
+            "publishedAt": "2026-04-21T04:00:00Z"
+          },
           {
             "title": "V hlavní roli výhled na Vltavu. Z problémového sloupu vzniklo srdce moderního interiéru",
             "publishedAt": "2026-04-21T03:59:00Z"
@@ -620,10 +628,6 @@
           {
             "title": "Souček s West Hamem zpečetil sestup Krejčího Wolverhamptonu",
             "publishedAt": "2026-04-20T21:45:00Z"
-          },
-          {
-            "title": "Po ukrajinském útoku na ruský terminál se v Černém moři objevila ropná skvrna",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

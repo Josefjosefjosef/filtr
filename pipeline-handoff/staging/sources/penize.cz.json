@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Proč v penzijním spoření nenaspoříte? Poplatky sežerou i půl výnosu",
+      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488597-proc-v-penzijnim-sporeni-nenasporite-poplatky-sezerou-i-pul-vynosu",
+      "dt": "2026-04-21T06:12:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "nenaspoříte",
+        "penzijním",
+        "poplatky",
+        "proč",
+        "půl",
+        "sežerou",
+        "spoření",
+        "výnosu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -486,31 +511,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "A zase dolů. Maximální ceny benzinu a nafty na pátek 17. dubna",
-      "url": "https://www.penize.cz/doprava/488429-a-zase-dolu-maximalni-ceny-benzinu-a-nafty-na-patek-17-dubna",
-      "dt": "2026-04-16T13:57:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "dolů",
-        "dubna",
-        "maximální",
-        "nafty",
-        "pátek",
-        "zase"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18044,
+      "bytes": 18069,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,11 +558,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T06:12:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
-          "zpravy": 4
+          "finance": 17,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -574,6 +574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč v penzijním spoření nenaspoříte? Poplatky sežerou i půl výnosu",
+            "publishedAt": "2026-04-21T06:12:00Z"
+          },
           {
             "title": "Dřevěný supermarket. Billa brzy otevře nový typ prodejny, takhle vypadá",
             "publishedAt": "2026-04-21T05:00:00Z"
@@ -601,10 +605,6 @@
           {
             "title": "ČNB vydala desatero pro půjčky. Varuje i před úvěry na IČO",
             "publishedAt": "2026-04-20T12:51:00Z"
-          },
-          {
-            "title": "Kolik si můžete vybrat z bankomatu a jaké hodnoty? Přehled podle bank",
-            "publishedAt": "2026-04-20T05:05:00Z"
           }
         ]
       }

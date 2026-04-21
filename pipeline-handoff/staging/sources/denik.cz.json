@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zajímavosti o Alžbětě II.: Vystřelila si z turistů USA, v šesti dostala svůj dům",
+      "url": "https://www.denik.cz/staty-mimo-eu/kralovna-alzbeta-ii-sto-let-od-narozeni-malo-zname-zajimavosti-arsenal-corgi.html",
+      "dt": "2026-04-21T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alžbětě",
+        "dostala",
+        "dům",
+        "svůj",
+        "turistů",
+        "usa",
+        "vystřelila",
+        "zajímavosti",
+        "šesti"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -618,33 +644,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řecko zavádí pro turisty přísné zákazy: Týkají se žen i kuřáků. Hrozí pokuty",
-      "url": "https://www.denik.cz/staty-eu/recko-ateny-dovolena-pravidla-zakazy-zeny-podpadky-koureni-alkohol-pokuty.html",
-      "dt": "2026-04-20T11:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hrozí",
-        "kuřáků",
-        "pokuty",
-        "přísné",
-        "turisty",
-        "týkají",
-        "zavádí",
-        "zákazy",
-        "řecko",
-        "žen"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +654,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30276,
+      "bytes": 30235,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -708,6 +707,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zajímavosti o Alžbětě II.: Vystřelila si z turistů USA, v šesti dostala svůj dům",
+            "publishedAt": "2026-04-21T04:05:00Z"
+          },
           {
             "title": "Nejsme v zimním spánku, pan poslanec Koten bude překvapen, říká Koudelka z BIS",
             "publishedAt": "2026-04-21T03:30:00Z"
@@ -735,10 +738,6 @@
           {
             "title": "Drama v Severní Karolíně: Rvačka mezi mladými vyústila v hromadnou střelbu",
             "publishedAt": "2026-04-20T17:44:00Z"
-          },
-          {
-            "title": "Školáka v Melbourne táhl autobus stovky metrů. Řidič přišel o práci",
-            "publishedAt": "2026-04-20T17:14:00Z"
           }
         ]
       }

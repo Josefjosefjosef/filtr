@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fantastický Vladař vynuloval Crosbyho a Flyers mají další výhru",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-fantasticky-vladar-vynuloval-crosbyho-a-flyers-maji-dalsi-vyhru-5440941",
+      "dt": "2026-04-21T04:00:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "crosbyho",
+        "další",
+        "fantastický",
+        "flyers",
+        "mají",
+        "vladař",
+        "vynuloval",
+        "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,33 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kometa zahájila rekonstrukci, končí sedm hráčů včetně dlouholetých beků i brankáře",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-kometa-zahajila-rekonstrukci-konci-sedm-hracu-vcetne-dlouholetych-beku-i-brankare-5440886",
-      "dt": "2026-04-20T13:25:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "beků",
-        "brankáře",
-        "dlouholetých",
-        "hráčů",
-        "kometa",
-        "končí",
-        "rekonstrukci",
-        "sedm",
-        "včetně",
-        "zahájila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43112,
+      "bytes": 42381,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T20:55:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:00:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fantastický Vladař vynuloval Crosbyho a Flyers mají další výhru",
+            "publishedAt": "2026-04-21T04:00:34Z"
+          },
           {
             "title": "Hotovo. Wolves s Krejčím sestupují, rozhodla o tom remíza Součkova West Hamu",
             "publishedAt": "2026-04-20T20:55:12Z"
@@ -881,10 +883,6 @@
           {
             "title": "Dominance. Basketbalistky USK Praha deklasovaly v prvním finále Žabiny",
             "publishedAt": "2026-04-20T17:52:56Z"
-          },
-          {
-            "title": "Vedení formule 1 odsouhlasilo změny pravidel od Velké ceny Miami",
-            "publishedAt": "2026-04-20T19:04:22Z"
           }
         ]
       }

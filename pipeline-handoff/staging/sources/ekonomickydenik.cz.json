@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-21T04:05:40.556286Z",
+  "ingestedAt": "2026-04-21T04:25:38.448829Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stehlík: Evropa dohání chyby v energetice. Klíčem jsou nové investice",
+      "url": "https://ekonomickydenik.cz/stehlik-evropska-komise-ideologie/",
+      "dt": "2026-04-21T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chyby",
+        "dohání",
+        "energetice",
+        "evropa",
+        "investice",
+        "klíčem",
+        "nové",
+        "stehlík"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,34 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Ruské energie přinášejí korupci a válku.“ Nová maďarská vláda nechce nic slibovat",
-      "url": "https://ekonomickydenik.cz/ruske-energie-prinaseji-valku-madarska-vlada/",
-      "dt": "2026-04-17T15:50:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "energie",
-        "korupci",
-        "maďarská",
-        "nechce",
-        "nic",
-        "nová",
-        "přinášejí",
-        "ruské",
-        "slibovat",
-        "vláda",
-        "válku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69549,
+      "bytes": 69469,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-20T16:34:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-21T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -852,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stehlík: Evropa dohání chyby v energetice. Klíčem jsou nové investice",
+            "publishedAt": "2026-04-21T04:05:00Z"
+          },
           {
             "title": "Letecký kolaps nehrozí. Přesto se Evropa připravuje na nejhorší scénář",
             "publishedAt": "2026-04-20T16:34:49Z"
@@ -879,10 +880,6 @@
           {
             "title": "Končí ruské symboly. Nová uniforma vrací vojákům noblesu i lva",
             "publishedAt": "2026-04-20T12:59:50Z"
-          },
-          {
-            "title": "Reaktory Rolls-Royce vyrostou i v Česku. V pátek to stvrdíme podpisem, řekl Havlíček",
-            "publishedAt": "2026-04-20T12:35:32Z"
           }
         ]
       }
