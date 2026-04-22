@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Liga zná termín derby. Sparta se znovu vydá na Slavii",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-liga-zna-termin-derby-sparta-se-znovu-vyda-na-slavii-5440974",
+      "dt": "2026-04-22T06:50:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "derby",
+        "liga",
+        "slavii",
+        "sparta",
+        "termín",
+        "vydá",
+        "znovu",
+        "zná"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,33 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rezervní jezdec McLarenu odsoudil současnou F1. Je to umělá show a vůbec mě neláká, tvrdí",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-rezervni-jezdec-mclarenu-odsoudil-soucasnou-f1-je-to-umela-show-a-vubec-me-nelaka-tvrdi-5440985",
-      "dt": "2026-04-21T14:47:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "jezdec",
-        "mclarenu",
-        "neláká",
-        "odsoudil",
-        "rezervní",
-        "show",
-        "současnou",
-        "tvrdí",
-        "umělá",
-        "vůbec"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42633,
+      "bytes": 42520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:17:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:50:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Liga zná termín derby. Sparta se znovu vydá na Slavii",
+            "publishedAt": "2026-04-22T06:50:25Z"
+          },
           {
             "title": "Portland otočil zápas se San Antoniem a srovnal sérii play off",
             "publishedAt": "2026-04-22T06:17:48Z"
@@ -868,10 +870,6 @@
           {
             "title": "Diváci v Jihlavě nadávali na baráž a křičeli: APK mafia. Mají pravdu, řekl útočník Dukly",
             "publishedAt": "2026-04-22T04:24:01Z"
-          },
-          {
-            "title": "Real Madrid po dvou kolech bodoval naplno",
-            "publishedAt": "2026-04-21T19:20:40Z"
           }
         ]
       }

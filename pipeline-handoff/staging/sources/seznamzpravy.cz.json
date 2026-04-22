@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
     {
       "section": "aktualne",
@@ -73,6 +73,31 @@
         "straší",
         "změnit",
         "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podvodníci přitvrdili. Z účtů mizí víc peněz než kdy dřív",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-podvodnici-pritvrdili-z-uctu-mizi-vic-penez-nez-kdy-driv-304524",
+      "dt": "2026-04-22T06:35:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy / Domácí",
+      "tokens": [
+        "dřív",
+        "mizí",
+        "než",
+        "peněz",
+        "podvodníci",
+        "přitvrdili",
+        "víc",
+        "účtů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -735,33 +760,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš se stal obětí online podvodníků, ochranu proti nim Česko nepřijalo",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-byznys-trendy-analyzy-babis-se-stal-obeti-online-podvodu-ochranu-proti-nim-cesko-neprijalo-304194",
-      "dt": "2026-04-21T05:00:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy / Domácí",
-      "tokens": [
-        "babiš",
-        "nepřijalo",
-        "nim",
-        "obětí",
-        "ochranu",
-        "online",
-        "podvodníků",
-        "proti",
-        "stal",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Každá sní, že si ji odveze běloch. Jak mladé Kubánky hledají v Havaně štěstí",
@@ -831,6 +829,31 @@
         "straší",
         "změnit",
         "česko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_sz_byznys",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podvodníci přitvrdili. Z účtů mizí víc peněz než kdy dřív",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-podvodnici-pritvrdili-z-uctu-mizi-vic-penez-nez-kdy-driv-304524",
+      "dt": "2026-04-22T06:35:00Z",
+      "media_raw": "Seznam Zprávy / Byznys",
+      "media_norm": "Seznam Zprávy / Byznys",
+      "tokens": [
+        "dřív",
+        "mizí",
+        "než",
+        "peněz",
+        "podvodníci",
+        "přitvrdili",
+        "víc",
+        "účtů"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -1484,33 +1507,6 @@
         "tchaj",
         "tím",
         "wan"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_sz_byznys",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš se stal obětí online podvodníků, ochranu proti nim Česko nepřijalo",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-byznys-trendy-analyzy-babis-se-stal-obeti-online-podvodu-ochranu-proti-nim-cesko-neprijalo-304194",
-      "dt": "2026-04-21T05:00:00Z",
-      "media_raw": "Seznam Zprávy / Byznys",
-      "media_norm": "Seznam Zprávy / Byznys",
-      "tokens": [
-        "babiš",
-        "nepřijalo",
-        "nim",
-        "obětí",
-        "ochranu",
-        "online",
-        "podvodníků",
-        "proti",
-        "stal",
-        "česko"
       ],
       "feedCategory": "finance",
       "feedType": "rubric",
@@ -2284,7 +2280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 35747,
+      "bytes": 35636,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2321,7 +2317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -2351,6 +2347,10 @@
             "publishedAt": "2026-04-22T06:00:00Z"
           },
           {
+            "title": "Podvodníci přitvrdili. Z účtů mizí víc peněz než kdy dřív",
+            "publishedAt": "2026-04-22T06:35:00Z"
+          },
+          {
             "title": "Politici ať nechají univerzity na pokoji. Macinka také",
             "publishedAt": "2026-04-22T06:20:00Z"
           },
@@ -2365,10 +2365,6 @@
           {
             "title": "Ještě jeden pokus. Sedlák vzpomíná, jak nevzdal boj o NHL",
             "publishedAt": "2026-04-22T05:40:00Z"
-          },
-          {
-            "title": "Studenti napříč republikou se zapojí do protestní akce na podporu ČT a ČRo",
-            "publishedAt": "2026-04-22T05:23:00Z"
           }
         ]
       }
@@ -2380,7 +2376,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/byznys",
-      "bytes": 35747,
+      "bytes": 35636,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2417,7 +2413,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 18,
@@ -2448,6 +2444,10 @@
             "publishedAt": "2026-04-22T06:00:00Z"
           },
           {
+            "title": "Podvodníci přitvrdili. Z účtů mizí víc peněz než kdy dřív",
+            "publishedAt": "2026-04-22T06:35:00Z"
+          },
+          {
             "title": "Politici ať nechají univerzity na pokoji. Macinka také",
             "publishedAt": "2026-04-22T06:20:00Z"
           },
@@ -2462,10 +2462,6 @@
           {
             "title": "Ještě jeden pokus. Sedlák vzpomíná, jak nevzdal boj o NHL",
             "publishedAt": "2026-04-22T05:40:00Z"
-          },
-          {
-            "title": "Studenti napříč republikou se zapojí do protestní akce na podporu ČT a ČRo",
-            "publishedAt": "2026-04-22T05:23:00Z"
           }
         ]
       }

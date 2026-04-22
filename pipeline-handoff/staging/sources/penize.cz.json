@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nový král spořicích účtů? Další banka odmění za investování",
+      "url": "https://www.penize.cz/sporici-ucty/479023-novy-kral-sporicich-uctu-dalsi-banka-odmeni-za-investovani",
+      "dt": "2026-04-22T08:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "banka",
+        "další",
+        "investování",
+        "král",
+        "nový",
+        "odmění",
+        "spořicích",
+        "účtů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -489,31 +514,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Než nechat bitcoiny kvantovým zlodějům, to je radši navždy zmrazte",
-      "url": "https://www.penize.cz/kryptomeny/488513-nez-nechat-bitcoiny-kvantovym-zlodejum-to-je-radsi-navzdy-zmrazte",
-      "dt": "2026-04-18T07:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bitcoiny",
-        "kvantovým",
-        "navždy",
-        "nechat",
-        "než",
-        "radši",
-        "zlodějům",
-        "zmrazte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18406,
+      "bytes": 18248,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,7 +561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -577,6 +577,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový král spořicích účtů? Další banka odmění za investování",
+            "publishedAt": "2026-04-22T08:30:00Z"
+          },
           {
             "title": "Už zaplacený zájezd může zdražit. Nejde to ale jen tak",
             "publishedAt": "2026-04-22T07:00:00Z"
@@ -604,10 +608,6 @@
           {
             "title": "Vláda změní penzijko. Jak by pomohlo snížení poplatků",
             "publishedAt": "2026-04-21T06:12:00Z"
-          },
-          {
-            "title": "Dřevěný supermarket. Billa brzy otevře nový typ prodejny, takhle vypadá",
-            "publishedAt": "2026-04-21T05:00:00Z"
           }
         ]
       }

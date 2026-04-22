@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "105 spících miliard na účtech. Mají peníze připadnout státu nebo bance?",
+      "url": "https://ekonomickydenik.cz/105-spicich-miliard-na-uctech/",
+      "dt": "2026-04-22T06:52:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "105",
+        "bance",
+        "mají",
+        "miliard",
+        "nebo",
+        "peníze",
+        "připadnout",
+        "spících",
+        "státu",
+        "účtech"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -754,31 +781,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Levná auta pro Evropany. Můžou „emisní odpustky“ nakopnout trh?",
-      "url": "https://ekonomickydenik.cz/levna-auta-elektromobily-skoda/",
-      "dt": "2026-04-20T11:38:40Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "auta",
-        "emisní",
-        "evropany",
-        "levná",
-        "můžou",
-        "nakopnout",
-        "odpustky",
-        "trh"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73667,
+      "bytes": 73611,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,12 +828,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:52:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 25,
           "zdravi": 3,
-          "zpravy": 2,
-          "finance": 25
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "105 spících miliard na účtech. Mají peníze připadnout státu nebo bance?",
+            "publishedAt": "2026-04-22T06:52:56Z"
+          },
           {
             "title": "Nemocnice má problém s rekonstrukcí vyhořelého pavilonu. Co brzdí dostavbu ÚVN?",
             "publishedAt": "2026-04-22T04:30:00Z"
@@ -870,10 +876,6 @@
           {
             "title": "Letadla mají létat na vodík a elektřinu. Nebudeme rukojmími „darebáckých států“",
             "publishedAt": "2026-04-21T13:08:11Z"
-          },
-          {
-            "title": "Do zbraně i sedmdesátníci? Radikální náhrada mladých odpíračů rezonuje Německem",
-            "publishedAt": "2026-04-21T12:36:55Z"
           }
         ]
       }

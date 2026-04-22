@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ankalaev má jasno. Cesta k titulu vede přes Procházku",
+      "url": "https://www.mmamag.cz/ankalaev-ufc-prochazka-costa/",
+      "dt": "2026-04-22T06:38:43Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "ankalaev",
+        "cesta",
+        "jasno",
+        "procházku",
+        "titulu",
+        "vede"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1095,34 +1118,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Největší legenda UFC vyměnila slávu za ostudu. Jon Jones pochlebuje Kadyrovovi a Rusku",
-      "url": "https://www.mmamag.cz/legenda-ufc-spoluprace-rusko/",
-      "dt": "2026-04-15T07:39:04Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "jon",
-        "jones",
-        "kadyrovovi",
-        "legenda",
-        "největší",
-        "ostudu",
-        "pochlebuje",
-        "rusku",
-        "slávu",
-        "ufc",
-        "vyměnila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1133,7 +1128,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78018,
+      "bytes": 77930,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1170,7 +1165,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:22:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:38:43Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1185,6 +1180,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ankalaev má jasno. Cesta k titulu vede přes Procházku",
+            "publishedAt": "2026-04-22T06:38:43Z"
+          },
           {
             "title": "Nenáviděný Shem Rock v UFC pohořel. Po dvou porážkách dostal padáka",
             "publishedAt": "2026-04-22T06:22:04Z"
@@ -1212,10 +1211,6 @@
           {
             "title": "Za každou hvězdou MMA a boxu je příběh, který se do záběrů nevejde. Kdo ho zná, sleduje sport jinak než ostatní fanoušci",
             "publishedAt": "2026-04-21T08:54:58Z"
-          },
-          {
-            "title": "Jiří Procházka se s odstupem vyjádřil k porážce s Carlosem Ulbergem a uvedl věci na pravou míru",
-            "publishedAt": "2026-04-21T08:15:23Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
     {
       "section": "aktualne",
@@ -765,6 +765,32 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Portland otočil zápas se San Antoniem, Spurs přišli o zraněného Wembanyamu",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/portland-otocil-zapas-se-san-antoniem-spurs-prisli-o-zraneneho-wembanyamu-156400",
+      "dt": "2026-04-22T06:49:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "antoniem",
+        "otočil",
+        "portland",
+        "přišli",
+        "san",
+        "spurs",
+        "wembanyamu",
+        "zraněného",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Boston vyrovnal sérii s Buffalem, Pastrňák vládne produktivitě play-off",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/boston-vyrovnal-serii-s-buffalem-pastrnak-vladne-produktivite-play-off-156399",
       "dt": "2026-04-22T06:23:06Z",
@@ -1510,32 +1536,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mrzí to. Věděli jsme, že to bude náročná série, říká Daňo po dvou prohrách",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/mrzi-to-vedeli-jsme-ze-to-bude-narocna-serie-rika-dano-po-dvou-prohrach-156371",
-      "dt": "2026-04-20T04:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "daňo",
-        "dvou",
-        "jsme",
-        "mrzí",
-        "náročná",
-        "prohrách",
-        "série",
-        "věděli",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1665,7 +1665,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38826,
+      "bytes": 38952,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1702,7 +1702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:23:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:49:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1717,6 +1717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Portland otočil zápas se San Antoniem, Spurs přišli o zraněného Wembanyamu",
+            "publishedAt": "2026-04-22T06:49:45Z"
+          },
           {
             "title": "Boston vyrovnal sérii s Buffalem, Pastrňák vládne produktivitě play-off",
             "publishedAt": "2026-04-22T06:23:06Z"
@@ -1744,10 +1748,6 @@
           {
             "title": "Královo Pole porazilo i napodruhé Ostravu a získalo ligový bronz",
             "publishedAt": "2026-04-21T18:30:09Z"
-          },
-          {
-            "title": "Jablonec si po osmi letech zahraje o pohár, ve finále ho čeká Karviná",
-            "publishedAt": "2026-04-21T17:12:53Z"
           }
         ]
       }
@@ -1759,7 +1759,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77388,
+      "bytes": 77398,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,26 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T06:38:49.480539Z",
+  "ingestedAt": "2026-04-22T07:00:07.594687Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Možná jste ji viděli. Policisté po této podvodnici z Třebíčska pátrají už 27 let",
+      "title": "Jak pašovat fentanyl? Ve střevech. Euforie je zpět, v tuctovější podobě",
+      "url": "https://www.denik.cz/film-a-televize/euforie-3-serial-hbo-max-recenze-zendaya.html",
+      "dt": "2026-04-22T06:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "euforie",
+        "fentanyl",
+        "pašovat",
+        "podobě",
+        "střevech",
+        "tuctovější",
+        "zpět"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Neviděli jste ji? Policie po podvodnici z Třebíčska neúspěšně pátrá již 27 let",
       "url": "https://www.denik.cz/regiony/patrani-podvodnice-trebic-nejdele-hledana-27-let-20260421.html",
       "dt": "2026-04-22T06:15:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "již",
         "jste",
         "let",
-        "možná",
+        "neviděli",
+        "neúspěšně",
         "podvodnici",
-        "policisté",
-        "pátrají",
-        "této",
-        "třebíčska",
-        "viděli"
+        "policie",
+        "pátrá",
+        "třebíčska"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -626,32 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kopání do hlav či vlečení za traktorem. Spolek zveřejnil další záběry z kravínů",
-      "url": "https://www.denik.cz/regiony/biti-krav-na-vysocine-spolek-ukazal-na-6-mist-brodska-20260421.html",
-      "dt": "2026-04-21T12:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "další",
-        "hlav",
-        "kopání",
-        "kravínů",
-        "spolek",
-        "traktorem",
-        "vlečení",
-        "zveřejnil",
-        "záběry"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29922,
+      "bytes": 29684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,7 +713,11 @@
         },
         "sample_titles": [
           {
-            "title": "Možná jste ji viděli. Policisté po této podvodnici z Třebíčska pátrají už 27 let",
+            "title": "Jak pašovat fentanyl? Ve střevech. Euforie je zpět, v tuctovější podobě",
+            "publishedAt": "2026-04-22T06:30:00Z"
+          },
+          {
+            "title": "Neviděli jste ji? Policie po podvodnici z Třebíčska neúspěšně pátrá již 27 let",
             "publishedAt": "2026-04-22T06:15:00Z"
           },
           {
@@ -741,10 +743,6 @@
           {
             "title": "Schwarzenbergův zámek se prodal. Koupila ho rodina spolumajitele Tipsportu",
             "publishedAt": "2026-04-22T04:20:00Z"
-          },
-          {
-            "title": "El Niño sílí, hrozí rekordy. Češi by ale měli spíš sledovat síly ze Středozemí",
-            "publishedAt": "2026-04-22T03:30:00Z"
           }
         ]
       }
