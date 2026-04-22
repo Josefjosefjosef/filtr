@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-22T02:00:24.966952Z",
+  "ingestedAt": "2026-04-22T02:20:20.501775Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté na Blatensku objasnili sérii vloupání. Podezřelého se podařilo zadržet v Plzeňském kraji",
+      "url": "https://tydenikpolicie.cz/policiste-na-blatensku-objasnili-serii-vloupani-podezreleho-se-podarilo-zadrzet-v-plzenskem-kraji/",
+      "dt": "2026-04-22T02:02:40Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "blatensku",
+        "kraji",
+        "objasnili",
+        "plzeňském",
+        "podařilo",
+        "podezřelého",
+        "policisté",
+        "sérii",
+        "vloupání",
+        "zadržet"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,31 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ženě se nechce do vězení. Policisté po ní pátrají již osm let",
-      "url": "https://tydenikpolicie.cz/zene-se-nechce-do-vezeni-policiste-po-ni-patraji-jiz-osm-let/",
-      "dt": "2026-04-21T14:16:32Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "již",
-        "let",
-        "nechce",
-        "osm",
-        "policisté",
-        "pátrají",
-        "vězení",
-        "ženě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15785,
+      "bytes": 15936,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T22:02:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T02:02:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté na Blatensku objasnili sérii vloupání. Podezřelého se podařilo zadržet v Plzeňském kraji",
+            "publishedAt": "2026-04-22T02:02:40Z"
+          },
           {
             "title": "Měl si vydělat peníze sledováním videí, místo toho přišel o 100 tisíc korun",
             "publishedAt": "2026-04-21T22:02:46Z"
@@ -350,10 +356,6 @@
           {
             "title": "Za volant usedla bez řidičáku, za jízdy začala partnerovi vyčítat nevěru. Hádkou a konfliktem na sebe dvojice sama upozornila",
             "publishedAt": "2026-04-21T14:50:31Z"
-          },
-          {
-            "title": "Na pražském letišti proběhla kontrolní akce DAMOCLES",
-            "publishedAt": "2026-04-21T14:37:19Z"
           }
         ]
       }
