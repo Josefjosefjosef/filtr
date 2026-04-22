@@ -1,32 +1,27 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-22T06:16:17.435761Z",
-  "run_time_utc": "2026-04-22T06:16:17.435761Z",
+  "generatedAt": "2026-04-22T06:40:22.029177Z",
+  "run_time_utc": "2026-04-22T06:40:22.029177Z",
   "summary": {
     "schemaVersion": 2,
-    "generatedAt": "2026-04-22T06:16:17.435761Z",
-    "run_time_utc": "2026-04-22T06:16:17.435761Z",
+    "generatedAt": "2026-04-22T06:40:22.029177Z",
+    "run_time_utc": "2026-04-22T06:40:22.029177Z",
     "sources_checked": 60,
-    "sources_with_new_items": 49,
-    "total_raw_items": 1589,
-    "total_parsed_items": 1218,
-    "total_normalized_items": 1218,
-    "total_after_dedupe_items": 1218,
-    "total_written_articles_feed_attributed": 5414,
+    "sources_with_new_items": 47,
+    "total_raw_items": 1494,
+    "total_parsed_items": 1138,
+    "total_normalized_items": 1138,
+    "total_after_dedupe_items": 1138,
+    "total_written_articles_feed_attributed": 5425,
     "written_by_section": {
-      "zpravy": 2429,
-      "sport": 1689,
+      "zpravy": 2434,
+      "sport": 1695,
       "finance": 1010,
       "zdravi": 303,
       "cestovani": 28
     },
     "newest_written_publishedAt": "2026-04-22T07:00:00Z",
     "top_sources_by_new_items": [
-      {
-        "source_id": "fin_e15",
-        "feed_url": "https://www.e15.cz/rss",
-        "raw_feed_new_item_count": 40
-      },
       {
         "source_id": "fin_hn",
         "feed_url": "https://hn.cz/?m=rss",
@@ -48,11 +43,6 @@
         "raw_feed_new_item_count": 40
       },
       {
-        "source_id": "spt_isport",
-        "feed_url": "https://isport.blesk.cz/rss",
-        "raw_feed_new_item_count": 40
-      },
-      {
         "source_id": "spt_mmamag",
         "feed_url": "https://www.mmamag.cz/feed/",
         "raw_feed_new_item_count": 40
@@ -71,13 +61,28 @@
         "source_id": "fin_ekonomickydenik",
         "feed_url": "https://www.ekonomickydenik.cz/feed/",
         "raw_feed_new_item_count": 30
+      },
+      {
+        "source_id": "fin_idnes_ekonomika",
+        "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
+        "raw_feed_new_item_count": 30
+      },
+      {
+        "source_id": "fin_novinky_ekonomika",
+        "feed_url": "https://www.novinky.cz/rss/ekonomika",
+        "raw_feed_new_item_count": 30
       }
     ],
     "top_sources_by_written_items": [
       {
         "source_id": "zpr_idnes_zpravy",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-        "written_to_articles_json_count": 527
+        "written_to_articles_json_count": 528
+      },
+      {
+        "source_id": "spt_sportcz",
+        "feed_url": "https://www.sport.cz/rss",
+        "written_to_articles_json_count": 474
       },
       {
         "source_id": "zpr_aktualne",
@@ -85,14 +90,9 @@
         "written_to_articles_json_count": 473
       },
       {
-        "source_id": "spt_sportcz",
-        "feed_url": "https://www.sport.cz/rss",
-        "written_to_articles_json_count": 472
-      },
-      {
         "source_id": "zpr_denik",
         "feed_url": "https://www.denik.cz/rss/zpravy.html",
-        "written_to_articles_json_count": 417
+        "written_to_articles_json_count": 419
       },
       {
         "source_id": "spt_isport",
@@ -102,12 +102,12 @@
       {
         "source_id": "spt_idnes",
         "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
-        "written_to_articles_json_count": 373
+        "written_to_articles_json_count": 374
       },
       {
         "source_id": "zpr_ct24_domaci",
         "feed_url": "https://www.ceskatelevize.cz/ct24/rss",
-        "written_to_articles_json_count": 341
+        "written_to_articles_json_count": 342
       },
       {
         "source_id": "fin_e15",
@@ -122,7 +122,7 @@
       {
         "source_id": "spt_ctsport",
         "feed_url": "https://sport.ceskatelevize.cz/rss",
-        "written_to_articles_json_count": 225
+        "written_to_articles_json_count": 227
       }
     ],
     "top_drop_sources": [
@@ -134,7 +134,7 @@
       {
         "source_id": "spt_mmamag",
         "feed_url": "https://www.mmamag.cz/feed/",
-        "raw_minus_written": 40
+        "raw_minus_written": 39
       },
       {
         "source_id": "kul_vlasta",
@@ -186,8 +186,8 @@
       "feed_url": "https://www.cestujlevne.com/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-21T17:57:02Z",
@@ -257,21 +257,21 @@
       "feed_url": "https://www.novinky.cz/rss/cestovani",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:29:52Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 3,
+        "zpravy": 4,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
-        "cestovani": 27,
+        "cestovani": 26,
         "other": 0
       },
       "release_eligible_count": 2,
@@ -287,6 +287,18 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
         {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
@@ -306,18 +318,6 @@
         {
           "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
           "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -328,8 +328,8 @@
       "feed_url": "https://www.pelipecky.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-21T18:22:37Z",
@@ -399,8 +399,8 @@
       "feed_url": "https://www.svetcestovatele.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-22T04:00:01Z",
@@ -470,8 +470,8 @@
       "feed_url": "https://travelbible.cz/feed/",
       "topic": "cestovani",
       "section_primary": "cestovani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-21T07:25:00Z",
@@ -541,19 +541,19 @@
       "feed_url": "https://www.e15.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
-      "raw_feed_item_count": 48,
-      "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
-      "ingested_item_count": 40,
-      "parsed_item_count": 40,
-      "normalized_item_count": 40,
-      "valid_publishedAt_count": 40,
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
+      "raw_feed_item_count": 0,
+      "raw_feed_new_item_count": 0,
+      "raw_feed_latest_publishedAt": "",
+      "ingested_item_count": 0,
+      "parsed_item_count": 0,
+      "normalized_item_count": 0,
+      "valid_publishedAt_count": 0,
       "mapped_to_section_count": {
-        "zpravy": 1,
+        "zpravy": 0,
         "sport": 0,
-        "finance": 39,
+        "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
         "other": 0
@@ -570,40 +570,7 @@
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": [
-        {
-          "title": "Téměř polovina obchodů ČEB míří do obrany. Banka roste napříč obory",
-          "publishedAt": "2026-04-22T06:00:00Z"
-        },
-        {
-          "title": "Trump prodloužil příměří s Íránem, podle Teheránu budou útoky pokračovat",
-          "publishedAt": "2026-04-22T05:30:00Z"
-        },
-        {
-          "title": "Írán krátkodobě pomáhá plnit ruskou kasu. Putinovi ale přibývají problémy doma i na frontě",
-          "publishedAt": "2026-04-22T04:30:00Z"
-        },
-        {
-          "title": "Nejzadluženější země světa pro rok 2026: Řecko není v Evropě nejhorší",
-          "publishedAt": "2026-04-22T04:00:00Z"
-        },
-        {
-          "title": "České banky větří nový zdroj příjmu. Budou prodávat bitcoin i přes dřívější averzi",
-          "publishedAt": "2026-04-22T03:30:00Z"
-        },
-        {
-          "title": "Šokové zdražování se Česku může vyhnout. Finanční trhy věří, že Írán bude jen hořkou epizodou",
-          "publishedAt": "2026-04-22T03:00:00Z"
-        },
-        {
-          "title": "Další krach ve skupině Twist. Zmrzlinová firma je v úpadku kvůli rozteklým nanukům",
-          "publishedAt": "2026-04-21T17:00:00Z"
-        },
-        {
-          "title": "Větrná energetika v pasti byrokracie. Česko platí za chyby úředníků miliardy navíc",
-          "publishedAt": "2026-04-21T16:20:00Z"
-        }
-      ]
+      "sample_titles": []
     },
     {
       "source_id": "fin_ekonom",
@@ -612,8 +579,8 @@
       "feed_url": "https://ekonom.cz/?p=400000_rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 26,
       "raw_feed_new_item_count": 26,
       "raw_feed_latest_publishedAt": "2026-04-21T03:00:00Z",
@@ -683,8 +650,8 @@
       "feed_url": "https://www.ekonomickydenik.cz/feed/",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-22T04:30:00Z",
@@ -754,8 +721,8 @@
       "feed_url": "https://www.epenize.eu/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-21T23:00:04Z",
@@ -825,8 +792,8 @@
       "feed_url": "https://www.faei.cz/feed/",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 12,
       "raw_feed_new_item_count": 12,
       "raw_feed_latest_publishedAt": "2026-04-22T06:00:26Z",
@@ -896,8 +863,8 @@
       "feed_url": "https://hn.cz/?m=rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 150,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-22T05:11:00Z",
@@ -967,8 +934,8 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-21T22:00:00Z",
@@ -1038,19 +1005,19 @@
       "feed_url": "https://www.novinky.cz/rss/ekonomika",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:29:52Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 9,
+        "zpravy": 10,
         "sport": 0,
-        "finance": 19,
+        "finance": 18,
         "zdravi": 1,
         "cestovani": 1,
         "other": 0
@@ -1068,6 +1035,18 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
         {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
@@ -1087,18 +1066,6 @@
         {
           "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
           "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -1109,8 +1076,8 @@
       "feed_url": "https://www.penize.cz/rss",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-22T07:00:00Z",
@@ -1180,11 +1147,11 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/byznys",
       "topic": "finance",
       "section_primary": "finance",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:20:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -1192,8 +1159,8 @@
       "mapped_to_section_count": {
         "zpravy": 18,
         "sport": 1,
-        "finance": 9,
-        "zdravi": 2,
+        "finance": 10,
+        "zdravi": 1,
         "cestovani": 0,
         "other": 0
       },
@@ -1223,24 +1190,24 @@
           "publishedAt": "2026-04-22T06:00:00Z"
         },
         {
+          "title": "Politici ať nechají univerzity na pokoji. Macinka také",
+          "publishedAt": "2026-04-22T06:20:00Z"
+        },
+        {
+          "title": "Meta bude sledovat práci svých zaměstnanců, data použije k trénování AI",
+          "publishedAt": "2026-04-22T06:19:00Z"
+        },
+        {
+          "title": "Írán zaútočil na obchodní loď u ománských břehů, hlásí britské námořnictvo",
+          "publishedAt": "2026-04-22T06:15:04Z"
+        },
+        {
           "title": "Ještě jeden pokus. Sedlák vzpomíná, jak nevzdal boj o NHL",
           "publishedAt": "2026-04-22T05:40:00Z"
         },
         {
           "title": "Studenti napříč republikou se zapojí do protestní akce na podporu ČT a ČRo",
           "publishedAt": "2026-04-22T05:23:00Z"
-        },
-        {
-          "title": "Jen pracovat už dnes nestačí, na vlastní bydlení je potřeba víc",
-          "publishedAt": "2026-04-22T05:00:00Z"
-        },
-        {
-          "title": "Muskova SpaceX si zajistila opci na odkup startupu Cursor za 60 miliard dolarů",
-          "publishedAt": "2026-04-22T04:17:44Z"
-        },
-        {
-          "title": "Trump prodloužil příměří s Íránem. Pákistán to vítá, podle Íránu přijde útok",
-          "publishedAt": "2026-04-21T20:29:22Z"
         }
       ]
     },
@@ -1251,11 +1218,11 @@
       "feed_url": "https://indian-tv.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 56,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-21T18:58:44Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:25:35Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -1281,6 +1248,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Splatoon Raiders se zaměří na jednoho hráče - INDIAN",
+          "publishedAt": "2026-04-22T06:25:35Z"
+        },
         {
           "title": "TOP 7 herních mechanik, které nám lezou na nervy - INDIAN",
           "publishedAt": "2026-04-21T18:58:44Z"
@@ -1308,10 +1279,6 @@
         {
           "title": "Assassin’s Creed: Black Flag Resynced uniká. Internetem kolují první záběry - INDIAN",
           "publishedAt": "2026-04-21T07:41:12Z"
-        },
-        {
-          "title": "Xbox láká na stylové příslušenství k Forza Horizon 6 - INDIAN",
-          "publishedAt": "2026-04-21T07:08:46Z"
         }
       ]
     },
@@ -1322,8 +1289,8 @@
       "feed_url": "https://www.nedd.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1360,11 +1327,11 @@
       "feed_url": "https://www.novinky.cz/rss/hry",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:29:52Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -1391,6 +1358,18 @@
       },
       "sample_titles": [
         {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
+        {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
         },
@@ -1409,18 +1388,6 @@
         {
           "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
           "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -1431,8 +1398,8 @@
       "feed_url": "https://sector.sk/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1469,8 +1436,8 @@
       "feed_url": "https://www.vortex.cz/feed/",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2025-08-31T18:05:31Z",
@@ -1540,8 +1507,8 @@
       "feed_url": "https://zing.cz/rss/all",
       "topic": "hry",
       "section_primary": "hry",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 200,
       "raw_feed_new_item_count": 40,
       "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
@@ -1611,8 +1578,8 @@
       "feed_url": "https://www.ceskatelevize.cz/art/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1649,8 +1616,8 @@
       "feed_url": "https://www.kinobox.cz/api/rss",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
@@ -1720,8 +1687,8 @@
       "feed_url": "https://www.vipzivot.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-22T06:04:00Z",
@@ -1791,11 +1758,11 @@
       "feed_url": "https://www.vlasta.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 50,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:02:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:32:00Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -1821,6 +1788,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Jak se zbavit mechu v trávníku bez drahých přípravků. Tento zahrádkářský trik většina lidí nezná",
+          "publishedAt": "2026-04-22T06:32:00Z"
+        },
         {
           "title": "Karel Kryl do konce života litoval, že zpíval s Karlem Gottem. „Malicherné a smutné,“ reagoval tehdy Gott",
           "publishedAt": "2026-04-22T06:02:00Z"
@@ -1848,10 +1819,6 @@
         {
           "title": "Dnes v Ulici: Ufňukaná Daniela se pořád cítí jako páté kolo u vozu. A Marek si dělá ze školy holubník",
           "publishedAt": "2026-04-21T07:35:09Z"
-        },
-        {
-          "title": "Výdrž jako banda chlapů. Stella Zázvorková přepila Menšíka i Sováka. Alkoholička ale nebyla",
-          "publishedAt": "2026-04-21T07:03:00Z"
         }
       ]
     },
@@ -1862,8 +1829,8 @@
       "feed_url": "https://www.vtelce.cz/feed/",
       "topic": "kultura",
       "section_primary": "kultura",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-21T17:28:19Z",
@@ -1933,8 +1900,8 @@
       "feed_url": "https://www.crzpravy.cz/rss/sport/",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -1971,11 +1938,11 @@
       "feed_url": "https://sport.ceskatelevize.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T04:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:23:06Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -1988,9 +1955,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 225,
-      "written_to_articles_json_count": 225,
-      "newest_written_publishedAt": "2026-04-22T04:00:00Z",
+      "release_eligible_count": 227,
+      "written_to_articles_json_count": 227,
+      "newest_written_publishedAt": "2026-04-22T06:23:06Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -2001,6 +1968,14 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Boston vyrovnal sérii s Buffalem, Pastrňák vládne produktivitě play-off",
+          "publishedAt": "2026-04-22T06:23:06Z"
+        },
+        {
+          "title": "Táborsko pokukuje po první lize. Cíl je baráž, jdeme krůček po krůčku, popisuje ředitel klubu",
+          "publishedAt": "2026-04-22T06:11:48Z"
+        },
         {
           "title": "Vrátí se česká osmnáctka do bojů o medaile? Na Slovensku startuje MS, zápasy nabídne ČT",
           "publishedAt": "2026-04-22T04:00:00Z"
@@ -2024,14 +1999,6 @@
         {
           "title": "Jablonec si po osmi letech zahraje o pohár, ve finále ho čeká Karviná",
           "publishedAt": "2026-04-21T17:12:53Z"
-        },
-        {
-          "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
-          "publishedAt": "2026-04-21T15:55:00Z"
-        },
-        {
-          "title": "Ukončí Mikula dlouhé čekání? Motokrosař cílí na pódiová umístění",
-          "publishedAt": "2026-04-21T12:41:14Z"
         }
       ]
     },
@@ -2042,11 +2009,11 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=sport",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:08:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:24:13Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2059,8 +2026,8 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 373,
-      "written_to_articles_json_count": 373,
+      "release_eligible_count": 374,
+      "written_to_articles_json_count": 374,
       "newest_written_publishedAt": "2026-04-22T06:08:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
@@ -2073,15 +2040,15 @@
       },
       "sample_titles": [
         {
+          "title": "Boston i díky produktivitě Pastrňáka se Zachou srovnal sérii s Buffalem",
+          "publishedAt": "2026-04-22T06:24:13Z"
+        },
+        {
           "title": "Kolos Wembanyama se zřítil na bradu a ztratil vědomí. Krejčího Portland srovnal",
           "publishedAt": "2026-04-22T06:08:00Z"
         },
         {
-          "title": "Boston i díky produktivitě Pastrňáka se Zachou srovnal sérii s Buffalem",
-          "publishedAt": "2026-04-22T06:05:17Z"
-        },
-        {
-          "title": "Už ať je to za námi... Hráči Litvínova zaplatili fandům výjezd a útočí na záchranu",
+          "title": "Už ať je to za námi... Hráči Litvínova zaplatili fandům výjezd, útočí na záchranu",
           "publishedAt": "2026-04-22T05:57:00Z"
         },
         {
@@ -2113,18 +2080,18 @@
       "feed_url": "https://isport.blesk.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
-      "raw_feed_item_count": 47,
-      "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
-      "ingested_item_count": 40,
-      "parsed_item_count": 40,
-      "normalized_item_count": 40,
-      "valid_publishedAt_count": 40,
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
+      "raw_feed_item_count": 0,
+      "raw_feed_new_item_count": 0,
+      "raw_feed_latest_publishedAt": "",
+      "ingested_item_count": 0,
+      "parsed_item_count": 0,
+      "normalized_item_count": 0,
+      "valid_publishedAt_count": 0,
       "mapped_to_section_count": {
         "zpravy": 0,
-        "sport": 40,
+        "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
@@ -2142,40 +2109,7 @@
         "dedupe": 0,
         "other": 0
       },
-      "sample_titles": [
-        {
-          "title": "ONLINE: Česko - USA. Osmnáctky startují mistrovství světa na Slovensku, jak si povedou?",
-          "publishedAt": "2026-04-22T06:00:00Z"
-        },
-        {
-          "title": "ONLINE: Jihlava - Litvínov. Verva má rychlý mečbol, udrží si extraligovou příslušnost?",
-          "publishedAt": "2026-04-22T06:00:00Z"
-        },
-        {
-          "title": "ONLINE: Třinec - Pardubice. Finále se stěhuje na led Ocelářů, sníží domácí stav série?",
-          "publishedAt": "2026-04-22T06:00:00Z"
-        },
-        {
-          "title": "Colorado se trápilo s LA, Nečas má asistenci. Pastrňák bodoval a Boston srovnal sérii",
-          "publishedAt": "2026-04-22T05:55:00Z"
-        },
-        {
-          "title": "Berbr znovu u soudu. Začíná kauza Dezinfekce, která může z podmínky udělat trest natvrdo",
-          "publishedAt": "2026-04-22T03:30:00Z"
-        },
-        {
-          "title": "Pět proher v řadě, Smetanova pozice je v ohrožení. Kteří trenéři by mohli převzít Baník?",
-          "publishedAt": "2026-04-22T03:00:00Z"
-        },
-        {
-          "title": "Sexy kočky kluků z nároďáku dovádějí za velkou louží: Průzkumnice v Americe",
-          "publishedAt": "2026-04-22T03:00:00Z"
-        },
-        {
-          "title": "Schumacherův blízký přítel Todt: Promluvil o Michaelových podvodech!",
-          "publishedAt": "2026-04-22T03:00:00Z"
-        }
-      ]
+      "sample_titles": []
     },
     {
       "source_id": "spt_mmamag",
@@ -2184,11 +2118,11 @@
       "feed_url": "https://www.mmamag.cz/feed/",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 100,
       "raw_feed_new_item_count": 40,
-      "raw_feed_latest_publishedAt": "2026-04-22T03:53:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:22:04Z",
       "ingested_item_count": 40,
       "parsed_item_count": 40,
       "normalized_item_count": 40,
@@ -2201,9 +2135,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 60,
-      "written_to_articles_json_count": 60,
-      "newest_written_publishedAt": "2026-04-22T03:53:00Z",
+      "release_eligible_count": 61,
+      "written_to_articles_json_count": 61,
+      "newest_written_publishedAt": "2026-04-22T06:22:04Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -2214,6 +2148,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Nenáviděný Shem Rock v UFC pohořel. Po dvou porážkách dostal padáka",
+          "publishedAt": "2026-04-22T06:22:04Z"
+        },
         {
           "title": "Outsider umlčel halu a nikdo nevěřil vlastním očím. Momenty z MMA a boxu, které odhalí, jestli jste skutečný znalec, nebo jen divák",
           "publishedAt": "2026-04-22T03:53:00Z"
@@ -2241,10 +2179,6 @@
         {
           "title": "Jiří Procházka se s odstupem vyjádřil k porážce s Carlosem Ulbergem a uvedl věci na pravou míru",
           "publishedAt": "2026-04-21T08:15:23Z"
-        },
-        {
-          "title": "Karlos Vémola skončil opět v nemocnici. Fanouškům ale poslal dobrou zprávu",
-          "publishedAt": "2026-04-21T07:56:01Z"
         }
       ]
     },
@@ -2255,11 +2189,11 @@
       "feed_url": "https://www.sport.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T05:11:05Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:17:48Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2272,9 +2206,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 472,
-      "written_to_articles_json_count": 472,
-      "newest_written_publishedAt": "2026-04-22T05:11:05Z",
+      "release_eligible_count": 474,
+      "written_to_articles_json_count": 474,
+      "newest_written_publishedAt": "2026-04-22T06:17:48Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -2285,6 +2219,14 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Portland otočil zápas se San Antoniem a srovnal sérii play off",
+          "publishedAt": "2026-04-22T06:17:48Z"
+        },
+        {
+          "title": "Čeští mladíci na úvod šampionátu vyzvou velkého favorita",
+          "publishedAt": "2026-04-22T06:12:01Z"
+        },
         {
           "title": "Pastrňák znovu řádil! Trefil se i Zacha a Boston srovnal. Nečas nastartoval obrat",
           "publishedAt": "2026-04-22T03:52:52Z"
@@ -2308,14 +2250,6 @@
         {
           "title": "Real Madrid po dvou kolech bodoval naplno",
           "publishedAt": "2026-04-21T19:20:40Z"
-        },
-        {
-          "title": "Drsný sešup. Leicester deset let po senzaci spadl do třetí ligy",
-          "publishedAt": "2026-04-21T21:36:24Z"
-        },
-        {
-          "title": "Inter po obratu porazil Como a je ve finále poháru",
-          "publishedAt": "2026-04-21T21:24:39Z"
         }
       ]
     },
@@ -2326,8 +2260,8 @@
       "feed_url": "https://www.tenisportal.cz/rss",
       "topic": "sport",
       "section_primary": "sport",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2364,8 +2298,8 @@
       "feed_url": "https://www.ceskatelevize.cz/rss/veda/",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2402,11 +2336,11 @@
       "feed_url": "https://www.novinky.cz/rss/veda",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:36:13Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -2433,6 +2367,22 @@
       },
       "sample_titles": [
         {
+          "title": "Opilý řidič ujížděl Hradcem Králové, policie střílela a použila PIT manévr",
+          "publishedAt": "2026-04-22T06:36:13Z"
+        },
+        {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
+        {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
         },
@@ -2447,22 +2397,6 @@
         {
           "title": "Supermarkety postupně vracejí výživy HiPP do prodeje",
           "publishedAt": "2026-04-22T05:38:48Z"
-        },
-        {
-          "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
-          "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -2473,8 +2407,8 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=technet",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-22T02:00:00Z",
@@ -2544,8 +2478,8 @@
       "feed_url": "https://vtm.zive.cz/rss",
       "topic": "veda",
       "section_primary": "veda",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 35,
       "raw_feed_new_item_count": 35,
       "raw_feed_latest_publishedAt": "2026-04-21T19:15:00Z",
@@ -2615,8 +2549,8 @@
       "feed_url": "https://www.nespechej.cz/feed/",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2653,22 +2587,22 @@
       "feed_url": "https://www.novinky.cz/rss/skola",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:36:13Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 9,
+        "zpravy": 6,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 21
+        "other": 24
       },
       "release_eligible_count": 21,
       "written_to_articles_json_count": 21,
@@ -2684,6 +2618,22 @@
       },
       "sample_titles": [
         {
+          "title": "Opilý řidič ujížděl Hradcem Králové, policie střílela a použila PIT manévr",
+          "publishedAt": "2026-04-22T06:36:13Z"
+        },
+        {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
+        {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
         },
@@ -2698,22 +2648,6 @@
         {
           "title": "Supermarkety postupně vracejí výživy HiPP do prodeje",
           "publishedAt": "2026-04-22T05:38:48Z"
-        },
-        {
-          "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
-          "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -2724,22 +2658,22 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/vzdelavani",
       "topic": "vzdelavani",
       "section_primary": "vzdelavani",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:35:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 6,
+        "zpravy": 7,
         "sport": 0,
         "finance": 0,
         "zdravi": 0,
         "cestovani": 0,
-        "other": 24
+        "other": 23
       },
       "release_eligible_count": 28,
       "written_to_articles_json_count": 28,
@@ -2767,24 +2701,24 @@
           "publishedAt": "2026-04-22T06:00:00Z"
         },
         {
+          "title": "Podvodníci přitvrdili. Z účtů mizí víc peněz než kdy dřív",
+          "publishedAt": "2026-04-22T06:35:00Z"
+        },
+        {
+          "title": "Politici ať nechají univerzity na pokoji. Macinka také",
+          "publishedAt": "2026-04-22T06:20:00Z"
+        },
+        {
+          "title": "Meta bude sledovat práci svých zaměstnanců, data použije k trénování AI",
+          "publishedAt": "2026-04-22T06:19:00Z"
+        },
+        {
+          "title": "Írán zaútočil na obchodní loď u ománských břehů, hlásí britské námořnictvo",
+          "publishedAt": "2026-04-22T06:15:04Z"
+        },
+        {
           "title": "Ještě jeden pokus. Sedlák vzpomíná, jak nevzdal boj o NHL",
           "publishedAt": "2026-04-22T05:40:00Z"
-        },
-        {
-          "title": "Studenti napříč republikou se zapojí do protestní akce na podporu ČT a ČRo",
-          "publishedAt": "2026-04-22T05:23:00Z"
-        },
-        {
-          "title": "Jen pracovat už dnes nestačí, na vlastní bydlení je potřeba víc",
-          "publishedAt": "2026-04-22T05:00:00Z"
-        },
-        {
-          "title": "Muskova SpaceX si zajistila opci na odkup startupu Cursor za 60 miliard dolarů",
-          "publishedAt": "2026-04-22T04:17:44Z"
-        },
-        {
-          "title": "Trump prodloužil příměří s Íránem. Pákistán to vítá, podle Íránu přijde útok",
-          "publishedAt": "2026-04-21T20:29:22Z"
         }
       ]
     },
@@ -2795,8 +2729,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeMmUMUg37zgbo9CTmtqzAGQ",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2833,8 +2767,8 @@
       "feed_url": "https://www.youtube.com/feeds/videos.xml?playlist_id=PLmjovsp6pTeOaU28zlFr4pS7dR0PbXeiw",
       "topic": "aktualne",
       "section_primary": "aktualne",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -2871,8 +2805,8 @@
       "feed_url": "https://www.betterlife.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-21T15:44:48Z",
@@ -2942,8 +2876,8 @@
       "feed_url": "https://www.plnezdravi.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-21T07:40:25Z",
@@ -3013,8 +2947,8 @@
       "feed_url": "https://www.prozeny.cz/rss/zdravi",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
       "raw_feed_latest_publishedAt": "2026-04-22T03:01:00Z",
@@ -3084,8 +3018,8 @@
       "feed_url": "https://www.zdrave.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -3122,8 +3056,8 @@
       "feed_url": "https://www.zdravezpravy.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-21T17:13:24Z",
@@ -3193,8 +3127,8 @@
       "feed_url": "https://www.zdravotnickydenik.cz/feed/",
       "topic": "zdravi",
       "section_primary": "zdravi",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
@@ -3264,8 +3198,8 @@
       "feed_url": "https://www.aktualne.cz/rss/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 20,
       "raw_feed_new_item_count": 20,
       "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
@@ -3335,8 +3269,8 @@
       "feed_url": "https://www.ceska-justice.cz/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-22T04:30:00Z",
@@ -3406,11 +3340,11 @@
       "feed_url": "https://www.ceskatelevize.cz/ct24/rss",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T05:35:21Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:22:47Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3423,9 +3357,9 @@
         "cestovani": 0,
         "other": 4
       },
-      "release_eligible_count": 341,
-      "written_to_articles_json_count": 341,
-      "newest_written_publishedAt": "2026-04-22T05:35:21Z",
+      "release_eligible_count": 342,
+      "written_to_articles_json_count": 342,
+      "newest_written_publishedAt": "2026-04-22T06:22:47Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3437,7 +3371,11 @@
       },
       "sample_titles": [
         {
-          "title": "Voliči ve Virginii podpořili překreslení obvodů. Favorizují demokraty",
+          "title": "Urbanová zdůrazňuje tchajwanské investice. Rituálních tanečků netřeba, namítá Zahradil",
+          "publishedAt": "2026-04-22T06:22:47Z"
+        },
+        {
+          "title": "Voliči ve Virginii podpořili překreslení obvodů ve prospěch demokratů",
           "publishedAt": "2026-04-22T05:35:21Z"
         },
         {
@@ -3463,10 +3401,6 @@
         {
           "title": "V Peru kvůli problémům při volbách rezignoval šéf volební komise",
           "publishedAt": "2026-04-21T23:47:17Z"
-        },
-        {
-          "title": "Trump prodlužuje příměří s Íránem, Pákistán to vítá, Teherán čeká útok",
-          "publishedAt": "2026-04-21T20:33:08Z"
         }
       ]
     },
@@ -3477,8 +3411,8 @@
       "feed_url": "https://www.ceskenoviny.cz/rss/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 0,
       "raw_feed_new_item_count": 0,
       "raw_feed_latest_publishedAt": "",
@@ -3515,11 +3449,11 @@
       "feed_url": "https://www.denik.cz/rss/zpravy.html",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 25,
       "raw_feed_new_item_count": 25,
-      "raw_feed_latest_publishedAt": "2026-04-22T05:40:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:15:00Z",
       "ingested_item_count": 25,
       "parsed_item_count": 25,
       "normalized_item_count": 25,
@@ -3532,9 +3466,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 417,
-      "written_to_articles_json_count": 417,
-      "newest_written_publishedAt": "2026-04-22T05:40:00Z",
+      "release_eligible_count": 419,
+      "written_to_articles_json_count": 419,
+      "newest_written_publishedAt": "2026-04-22T06:15:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3545,6 +3479,14 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Možná jste ji viděli. Policisté po této podvodnici z Třebíčska pátrají už 27 let",
+          "publishedAt": "2026-04-22T06:15:00Z"
+        },
+        {
+          "title": "Extrémní proměny: Marek má protézu a skoro 160 kilo. Bez pochutin nedá ani ránu",
+          "publishedAt": "2026-04-22T06:00:00Z"
+        },
         {
           "title": "Velké loučení. Liberec ukončí chov slonů, Bala v září zamíří do Velké Británie",
           "publishedAt": "2026-04-22T05:40:00Z"
@@ -3568,14 +3510,6 @@
         {
           "title": "El Niño sílí, hrozí rekordy. Češi by ale měli spíš sledovat síly ze Středozemí",
           "publishedAt": "2026-04-22T03:30:00Z"
-        },
-        {
-          "title": "Velikonoční masakr v Jizerských horách: V roce 1946 děti vraždily děti",
-          "publishedAt": "2026-04-22T03:00:00Z"
-        },
-        {
-          "title": "Bude Česko zbrojařem Evropy? Premiér Andrej Babiš odpoví dnes na Deník.cz",
-          "publishedAt": "2026-04-22T02:30:00Z"
         }
       ]
     },
@@ -3586,8 +3520,8 @@
       "feed_url": "https://hlidacipes.org/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-22T04:30:12Z",
@@ -3657,11 +3591,11 @@
       "feed_url": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:13:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3674,9 +3608,9 @@
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 527,
-      "written_to_articles_json_count": 527,
-      "newest_written_publishedAt": "2026-04-22T06:00:00Z",
+      "release_eligible_count": 528,
+      "written_to_articles_json_count": 528,
+      "newest_written_publishedAt": "2026-04-22T06:13:00Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3687,6 +3621,10 @@
         "other": 0
       },
       "sample_titles": [
+        {
+          "title": "Mráz sevřel část Česka. Mapa meteorologů ukazuje, kde bylo až -10 stupňů",
+          "publishedAt": "2026-04-22T06:13:00Z"
+        },
         {
           "title": "Média nedáme! Studenti pořádají protesty na podporu České televize a rozhlasu",
           "publishedAt": "2026-04-22T06:00:00Z"
@@ -3714,10 +3652,6 @@
         {
           "title": "Miliardový projekt strategické trati čeká přísnější posouzení. Kvůli vzácnému dravci",
           "publishedAt": "2026-04-22T04:17:00Z"
-        },
-        {
-          "title": "Poslanci projednají návrh, který má bránit poskytování nepřiměřeně drahých úvěrů",
-          "publishedAt": "2026-04-22T04:12:00Z"
         }
       ]
     },
@@ -3728,8 +3662,8 @@
       "feed_url": "https://www.kverulant.org/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-20T22:07:00Z",
@@ -3799,11 +3733,11 @@
       "feed_url": "https://www.novinky.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:29:52Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3830,6 +3764,18 @@
       },
       "sample_titles": [
         {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
+        {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
         },
@@ -3848,18 +3794,6 @@
         {
           "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
           "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -3870,11 +3804,11 @@
       "feed_url": "https://www.novinky.cz/rss/zahranicni",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:05:52Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:29:52Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
@@ -3901,6 +3835,18 @@
       },
       "sample_titles": [
         {
+          "title": "Česko zažilo mrazivé ráno. Na Šumavě naměřili -10 °C",
+          "publishedAt": "2026-04-22T06:29:52Z"
+        },
+        {
+          "title": "„Blbá náhoda.“ Podle střelnice požár u metra způsobil projektil",
+          "publishedAt": "2026-04-22T06:26:23Z"
+        },
+        {
+          "title": "Zemřel Alan Osmond z kapely The Osmonds",
+          "publishedAt": "2026-04-22T06:16:10Z"
+        },
+        {
           "title": "Autonomní Tesly už křižují Amsterdam. Zvládnou hodně, nepozornost neodpouští",
           "publishedAt": "2026-04-22T06:05:52Z"
         },
@@ -3919,18 +3865,6 @@
         {
           "title": "Ani mimořádné zisky z prodeje ropy ruskou ekonomiku neoživily, tvrdí šéf švédské rozvědky",
           "publishedAt": "2026-04-22T05:26:32Z"
-        },
-        {
-          "title": "Shoď ji na pás do hnoje, jsi nesvéprávný, nabádal manžel mladíka. Vraždu ženy provedl nájemník",
-          "publishedAt": "2026-04-22T05:16:52Z"
-        },
-        {
-          "title": "Dům pro Báseň pravého úhlu je jedním z nejpoetičtějších projektů letošního držitele Pritzkerovy ceny",
-          "publishedAt": "2026-04-22T05:02:00Z"
-        },
-        {
-          "title": "Evropu zasáhne další vlna chladu",
-          "publishedAt": "2026-04-22T05:01:20Z"
         }
       ]
     },
@@ -3941,26 +3875,26 @@
       "feed_url": "https://www.seznamzpravy.cz/rss/domaci",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 30,
       "raw_feed_new_item_count": 30,
-      "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+      "raw_feed_latest_publishedAt": "2026-04-22T06:20:00Z",
       "ingested_item_count": 30,
       "parsed_item_count": 30,
       "normalized_item_count": 30,
       "valid_publishedAt_count": 30,
       "mapped_to_section_count": {
-        "zpravy": 21,
+        "zpravy": 20,
         "sport": 1,
-        "finance": 8,
+        "finance": 9,
         "zdravi": 0,
         "cestovani": 0,
         "other": 0
       },
-      "release_eligible_count": 197,
-      "written_to_articles_json_count": 197,
-      "newest_written_publishedAt": "2026-04-22T04:40:00Z",
+      "release_eligible_count": 198,
+      "written_to_articles_json_count": 198,
+      "newest_written_publishedAt": "2026-04-22T06:15:04Z",
       "drop_counts": {
         "missing_publishedAt": 0,
         "invalid_publishedAt": 0,
@@ -3984,24 +3918,24 @@
           "publishedAt": "2026-04-22T06:00:00Z"
         },
         {
+          "title": "Politici ať nechají univerzity na pokoji. Macinka také",
+          "publishedAt": "2026-04-22T06:20:00Z"
+        },
+        {
+          "title": "Meta bude sledovat práci svých zaměstnanců, data použije k trénování AI",
+          "publishedAt": "2026-04-22T06:19:00Z"
+        },
+        {
+          "title": "Írán zaútočil na obchodní loď u ománských břehů, hlásí britské námořnictvo",
+          "publishedAt": "2026-04-22T06:15:04Z"
+        },
+        {
           "title": "Ještě jeden pokus. Sedlák vzpomíná, jak nevzdal boj o NHL",
           "publishedAt": "2026-04-22T05:40:00Z"
         },
         {
           "title": "Studenti napříč republikou se zapojí do protestní akce na podporu ČT a ČRo",
           "publishedAt": "2026-04-22T05:23:00Z"
-        },
-        {
-          "title": "Jen pracovat už dnes nestačí, na vlastní bydlení je potřeba víc",
-          "publishedAt": "2026-04-22T05:00:00Z"
-        },
-        {
-          "title": "Muskova SpaceX si zajistila opci na odkup startupu Cursor za 60 miliard dolarů",
-          "publishedAt": "2026-04-22T04:17:44Z"
-        },
-        {
-          "title": "Trump prodloužil příměří s Íránem. Pákistán to vítá, podle Íránu přijde útok",
-          "publishedAt": "2026-04-21T20:29:22Z"
         }
       ]
     },
@@ -4012,8 +3946,8 @@
       "feed_url": "https://www.tydenikpolicie.cz/feed/",
       "topic": "aktualne",
       "section_primary": "zpravy",
-      "generatedAt": "2026-04-22T06:16:17.435761Z",
-      "run_time_utc": "2026-04-22T06:16:17.435761Z",
+      "generatedAt": "2026-04-22T06:40:22.029177Z",
+      "run_time_utc": "2026-04-22T06:40:22.029177Z",
       "raw_feed_item_count": 10,
       "raw_feed_new_item_count": 10,
       "raw_feed_latest_publishedAt": "2026-04-22T04:02:54Z",
