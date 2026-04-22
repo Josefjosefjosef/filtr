@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T22:09:28.783414Z",
+  "ingestedAt": "2026-04-22T23:14:58.153674Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "POHLED: Potkají se Pasta a Lord Stanley? Střelci Bruins se tenčí šance na vítězství",
+      "url": "https://www.idnes.cz/hokej/nhl/david-pastrnak-tricetilety-boston-otazka-vyhra-stanley-cup.A260422_201244_nhl_ten",
+      "dt": "2026-04-22T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bruins",
+        "lord",
+        "pasta",
+        "pohled",
+        "potkají",
+        "stanley",
+        "střelci",
+        "tenčí",
+        "vítězství",
+        "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,33 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češi vykoupili sektor na zápas s Mexikem, na další klání reprezentace místa zbyla",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/ms-ve-fotbale-vstupenky-cesko-fanousci.A260422_142912_ms-fotbal_kazdt",
-      "dt": "2026-04-22T12:40:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "další",
-        "klání",
-        "mexikem",
-        "místa",
-        "reprezentace",
-        "sektor",
-        "vykoupili",
-        "zbyla",
-        "zápas",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46338,
+      "bytes": 46600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T21:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POHLED: Potkají se Pasta a Lord Stanley? Střelci Bruins se tenčí šance na vítězství",
+            "publishedAt": "2026-04-22T22:00:00Z"
+          },
           {
             "title": "Schick byl u konce Leverkusenu v poháru, v semifinále nestačil na Bayern",
             "publishedAt": "2026-04-22T21:42:00Z"
@@ -875,10 +879,6 @@
           },
           {
             "title": "Áčko Dynama nemá v květnu kde trénovat. Přímý útok, reaguje klub. Šije do hejtmana",
-            "publishedAt": "2026-04-22T19:52:00Z"
-          },
-          {
-            "title": "Play off hokejové extraligy 2026: program, systém, finálová dvojice, kde sledovat",
             "publishedAt": "2026-04-22T19:52:00Z"
           }
         ]
