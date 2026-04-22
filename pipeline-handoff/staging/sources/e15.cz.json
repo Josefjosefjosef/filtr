@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-22T05:15:42.925460Z",
+  "ingestedAt": "2026-04-22T06:15:02.352729Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Téměř polovina obchodů ČEB míří do obrany. Banka roste napříč obory",
+      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/temer-polovina-obchodu-ceb-miri-do-obrany-banka-roste-napric-obory-1432018",
+      "dt": "2026-04-22T06:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "banka",
+        "míří",
+        "napříč",
+        "obchodů",
+        "obory",
+        "obrany",
+        "polovina",
+        "roste",
+        "téměř",
+        "čeb"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Trump prodloužil příměří s Íránem, podle Teheránu budou útoky pokračovat",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/trump-prodlouzil-primeri-s-iranem-podle-teheranu-budou-utoky-pokracovat-1432302",
+      "dt": "2026-04-22T05:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "podle",
+        "pokračovat",
+        "prodloužil",
+        "příměří",
+        "teheránu",
+        "trump",
+        "íránem",
+        "útoky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1032,57 +1084,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dukovany ožívají v plánech. KHNP odevzdala první dokumentaci",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/dukovany-ozivaji-v-planech-khnp-odevzdala-prvni-dokumentaci-1432252",
-      "dt": "2026-04-20T10:27:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dokumentaci",
-        "dukovany",
-        "khnp",
-        "odevzdala",
-        "ožívají",
-        "plánech",
-        "první"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Křetínského reforma se rozjíždí. Royal Mail končí se sobotním doručováním obyčejných dopisů",
-      "url": "https://www.e15.cz/byznys/kretinskeho-reforma-se-rozjizdi-royal-mail-konci-se-sobotnim-dorucovanim-obycejnych-dopisu-1432247",
-      "dt": "2026-04-20T10:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dopisů",
-        "doručováním",
-        "končí",
-        "křetínského",
-        "mail",
-        "obyčejných",
-        "reforma",
-        "royal",
-        "rozjíždí",
-        "sobotním"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1093,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54785,
+      "bytes": 54795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1130,10 +1131,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 40
+          "finance": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1145,6 +1147,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Téměř polovina obchodů ČEB míří do obrany. Banka roste napříč obory",
+            "publishedAt": "2026-04-22T06:00:00Z"
+          },
+          {
+            "title": "Trump prodloužil příměří s Íránem, podle Teheránu budou útoky pokračovat",
+            "publishedAt": "2026-04-22T05:30:00Z"
+          },
           {
             "title": "Írán krátkodobě pomáhá plnit ruskou kasu. Putinovi ale přibývají problémy doma i na frontě",
             "publishedAt": "2026-04-22T04:30:00Z"
@@ -1168,14 +1178,6 @@
           {
             "title": "Větrná energetika v pasti byrokracie. Česko platí za chyby úředníků miliardy navíc",
             "publishedAt": "2026-04-21T16:20:00Z"
-          },
-          {
-            "title": "Německé dotace na elektromobily mají prvního poraženého: německé výrobce",
-            "publishedAt": "2026-04-21T15:30:00Z"
-          },
-          {
-            "title": "Trump věří ve skvělou dohodu s Íránem, odmítá prodloužení příměří",
-            "publishedAt": "2026-04-21T13:40:00Z"
           }
         ]
       }

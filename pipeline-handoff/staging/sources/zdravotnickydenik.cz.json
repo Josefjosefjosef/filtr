@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T05:15:42.925460Z",
+  "ingestedAt": "2026-04-22T06:15:02.352729Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Třesk v operacích nádorů: Tady mají skončit s hazardními zákroky na játrech či na slinivce",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-operace-nadoru-jatra-slinivka-jicen/",
+      "dt": "2026-04-22T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hazardními",
+        "játrech",
+        "mají",
+        "nádorů",
+        "operacích",
+        "skončit",
+        "slinivce",
+        "tady",
+        "třesk",
+        "zákroky"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,34 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Trumpova léková politika ohrožuje Evropu: Česko se připravuje na „sanitární akci“ k ochraně cen",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/trump-lekova-politika-evropa-cesko-sanitarni-akce-ochrana-cen/",
-      "dt": "2026-04-21T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "akci",
-        "cen",
-        "evropu",
-        "léková",
-        "ochraně",
-        "ohrožuje",
-        "politika",
-        "připravuje",
-        "sanitární",
-        "trumpova",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88570,
+      "bytes": 95829,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třesk v operacích nádorů: Tady mají skončit s hazardními zákroky na játrech či na slinivce",
+            "publishedAt": "2026-04-22T06:00:00Z"
+          },
           {
             "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
             "publishedAt": "2026-04-22T05:00:00Z"
@@ -358,10 +361,6 @@
           {
             "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
             "publishedAt": "2026-04-21T10:58:49Z"
-          },
-          {
-            "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
-            "publishedAt": "2026-04-21T09:40:45Z"
           }
         ]
       }

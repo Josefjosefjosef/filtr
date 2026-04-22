@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-22T05:15:42.925460Z",
+  "ingestedAt": "2026-04-22T06:15:02.352729Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hana Libecajtová předsedkyní správní rady Nadace KB",
+      "url": "https://profitonline.cz/hana-libecajtova-predsedkyni-spravni-rady-nadace-kb/",
+      "dt": "2026-04-22T06:00:26Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "hana",
+        "libecajtová",
+        "nadace",
+        "předsedkyní",
+        "rady",
+        "správní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -279,30 +302,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Kilogramy vyhozených léků ohrožují děti. Pokládají je za bonbony",
-      "url": "https://profitonline.cz/kilogramy-vyhozenych-leku-ohrozuji-deti-pokladaji-je-za-bonbony/",
-      "dt": "2026-04-20T04:00:15Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bonbony",
-        "děti",
-        "kilogramy",
-        "léků",
-        "ohrožují",
-        "pokládají",
-        "vyhozených"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -313,7 +312,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19978,
+      "bytes": 19864,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -350,12 +349,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-22T04:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:00:26Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "sport": 1,
-          "zdravi": 1
+          "finance": 11,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -367,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hana Libecajtová předsedkyní správní rady Nadace KB",
+            "publishedAt": "2026-04-22T06:00:26Z"
+          },
           {
             "title": "Diváci Dámu na kolejích znají, a právě proto na ni půjdou, říká Pečenka k titulu, který ožívá na Fidlovačce",
             "publishedAt": "2026-04-22T04:00:22Z"
@@ -394,10 +396,6 @@
           {
             "title": "Uvidíme místo StarDance či hokeje pouze černou obrazovku?",
             "publishedAt": "2026-04-21T04:00:33Z"
-          },
-          {
-            "title": "Blíží se největší IPO v historii: SpaceX vstupuje na burzu",
-            "publishedAt": "2026-04-20T13:00:47Z"
           }
         ]
       }
