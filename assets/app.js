@@ -21550,6 +21550,89 @@ function buildVideoAsArticleCard(it) {
     updateShareConvertButton();
   }
 
+  /** Stejný html2pdf stack jako Word → PDF (po převodu na HTML) — pro fakturační modul bez otevírání quick feedu. */
+  function iuPdfExportHtmlStringToBlobForInvoice(htmlString, fileName, done) {
+    var vendorBase = "/assets/vendor";
+    function loadScript(src, cb) {
+      var s = document.createElement("script");
+      s.src = (/^\//.test(src) ? "" : "/") + src;
+      s.onload = function () {
+        if (typeof cb === "function") cb();
+      };
+      s.onerror = function () {
+        if (typeof cb === "function") cb(new Error("load failed"));
+      };
+      document.head.appendChild(s);
+    }
+    function loadHtml2Pdf(cb) {
+      if (typeof window.html2pdf !== "undefined") {
+        cb();
+        return;
+      }
+      loadScript(vendorBase + "/html2pdf.bundle.min.js", function () {
+        if (typeof window.html2pdf === "undefined") {
+          if (typeof cb === "function") cb(new Error("html2pdf"));
+        } else if (typeof cb === "function") cb();
+      });
+    }
+    var html = String(htmlString || "");
+    if (!html.trim()) {
+      if (typeof done === "function") done(new Error("empty html"));
+      return;
+    }
+    loadHtml2Pdf(function (e0) {
+      if (e0 || typeof window.html2pdf === "undefined") {
+        if (typeof done === "function") done(e0 || new Error("html2pdf"));
+        return;
+      }
+      var exportRoot = document.createElement("div");
+      exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
+      exportRoot.style.cssText =
+        "position:fixed;left:-10000px;top:0;width:794px;height:auto;overflow:visible;background:#fff;color:#000;z-index:-1;pointer-events:none;box-sizing:border-box;padding:12px;font-family:system-ui,-apple-system,sans-serif;";
+      exportRoot.innerHTML = html;
+      document.body.appendChild(exportRoot);
+      var opts = {
+        image: { type: "png", quality: 1.0 },
+        html2canvas: {
+          scale: 2,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: exportRoot.scrollWidth,
+          windowHeight: exportRoot.scrollHeight,
+          useCORS: false,
+          backgroundColor: "#ffffff",
+        },
+        jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"] },
+      };
+      window
+        .html2pdf()
+        .set(opts)
+        .from(exportRoot)
+        .toPdf()
+        .outputPdf("blob")
+        .then(function (blob) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (!blob || blob.size < 200) {
+            if (typeof done === "function") done(new Error("small pdf"));
+            return;
+          }
+          try {
+            window._iuPdfLastEngine = "invoice-html2pdf";
+            window._iuPdfLastSource = "invoice-html";
+          } catch (_) {}
+          if (typeof done === "function") done(null, { blob: blob, fileName: fileName || "faktura.pdf" });
+        })
+        .catch(function (e) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(e);
+        });
+    });
+  }
+  try {
+    window.iuPdfExportHtmlStringToBlobForInvoice = iuPdfExportHtmlStringToBlobForInvoice;
+  } catch (_) {}
+
   function iuApplyMobileQuickFeedLayout(quick) {
     try {
       if (!quick) return;
