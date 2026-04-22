@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-22T19:24:30.288285Z",
+  "ingestedAt": "2026-04-22T19:47:32.843964Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Návrh na letní zákaz vjezdu aut do centra pobouřil radní sedmi pražských částí",
+      "url": "https://www.idnes.cz/praha/zpravy/zakaz-vjezdu-do-centra-praha-nesouhlas-beranek-hrib.A260422_203216_praha-zpravy_votr",
+      "dt": "2026-04-22T19:27:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "aut",
+        "centra",
+        "letní",
+        "návrh",
+        "pobouřil",
+        "pražských",
+        "radní",
+        "sedmi",
+        "vjezdu",
+        "zákaz",
+        "částí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,34 +790,6 @@
         "studentů",
         "ven",
         "úřadu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Věž kostela v Anglii se naklání víc než ta v Pise. Farnost shání peníze na opravu",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/vez-kostela-v-anglii-se-naklani-vic-nez-ta-v-pise-farnost-shani-penize-na-opravu.A260421_134813_eko-zahranicni_wall",
-      "dt": "2026-04-22T13:59:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "anglii",
-        "farnost",
-        "kostela",
-        "naklání",
-        "než",
-        "opravu",
-        "peníze",
-        "pise",
-        "shání",
-        "víc",
-        "věž"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51499,
+      "bytes": 51338,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,11 +1620,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T18:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T19:27:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 2,
+          "zpravy": 28,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -1637,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrh na letní zákaz vjezdu aut do centra pobouřil radní sedmi pražských částí",
+            "publishedAt": "2026-04-22T19:27:00Z"
+          },
           {
             "title": "Trump chce do Konga přesunout Afghánce, kteří pomáhali USA proti Tálibánu",
             "publishedAt": "2026-04-22T18:52:00Z"
@@ -1664,10 +1668,6 @@
           {
             "title": "Nový šéf armády? Pavel čeká na návrhy ministra Zůny a chce jednat otevřeně",
             "publishedAt": "2026-04-22T17:21:00Z"
-          },
-          {
-            "title": "Odpustím hřích a uzdravím jejich zem. Trump v čtecím maratonu citoval z Bible",
-            "publishedAt": "2026-04-22T17:18:00Z"
           }
         ]
       }

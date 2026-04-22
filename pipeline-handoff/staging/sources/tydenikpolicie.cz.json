@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-22T19:24:30.288285Z",
+  "ingestedAt": "2026-04-22T19:47:32.843964Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Měl pozitivní test na drogy, sotva opustil policejní služebnu, usedl znovu za volant",
+      "url": "https://tydenikpolicie.cz/mel-pozitivni-test-na-drogy-sotva-opustil-policejni-sluzebnu-usedl-znovu-za-volant/",
+      "dt": "2026-04-22T19:27:19Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "drogy",
+        "měl",
+        "opustil",
+        "policejní",
+        "pozitivní",
+        "služebnu",
+        "sotva",
+        "test",
+        "usedl",
+        "volant",
+        "znovu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,32 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cyklista po pádu z elektrokola nadýchal policistům na jižní Moravě 5,15 promile alkoholu",
-      "url": "https://tydenikpolicie.cz/cyklista-po-padu-z-elektrokola-nadychal-policistum-na-jizni-morave-515-promile-alkoholu/",
-      "dt": "2026-04-22T14:19:31Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "alkoholu",
-        "cyklista",
-        "elektrokola",
-        "jižní",
-        "moravě",
-        "nadýchal",
-        "policistům",
-        "promile",
-        "pádu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16386,
+      "bytes": 16175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T18:56:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T19:27:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Měl pozitivní test na drogy, sotva opustil policejní služebnu, usedl znovu za volant",
+            "publishedAt": "2026-04-22T19:27:19Z"
+          },
           {
             "title": "Celníci odhalili během jednoho dne dva cizince, kteří se zdržovali neoprávněně na území České republiky",
             "publishedAt": "2026-04-22T18:56:52Z"
@@ -352,10 +358,6 @@
           {
             "title": "Pachatel si měl při vloupání na Rychnovsku uvařit jahodové knedlíky",
             "publishedAt": "2026-04-22T14:29:13Z"
-          },
-          {
-            "title": "Žena v Brně zaparkovala BMW na chodníku. Lustrací pak strážníci zjistili, že má platný zákaz řízení",
-            "publishedAt": "2026-04-22T14:27:50Z"
           }
         ]
       }
