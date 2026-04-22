@@ -1,22 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T16:34:47.584031Z",
+  "ingestedAt": "2026-04-22T16:59:33.057626Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Třinec - Pardubice 1:1. Po Kondelíkově trefě srovnává Nestrašil",
-      "url": "https://www.idnes.cz/hokej/extraliga/3-zapas-finale-online-zpravodajstvi-souhrny-trinec-pardubice.A260422_105705_hokej_huda",
-      "dt": "2026-04-22T16:23:13Z",
+      "title": "Kopřiva na antuce v Madridu jasně přehrál Číňana, čeká ho bývalý vítěz",
+      "url": "https://www.idnes.cz/sport/tenis/kopriva-zacal-na-antuce-v-madridu-suverenni-vyhrou-nad-cang-c-cenem.A260422_122954_tenis_kazdt",
+      "dt": "2026-04-22T16:53:16Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "kondelíkově",
-        "nestrašil",
+        "antuce",
+        "bývalý",
+        "jasně",
+        "kopřiva",
+        "madridu",
+        "přehrál",
+        "vítěz",
+        "čeká",
+        "číňana"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Třinec - Pardubice 1:2. Sedlákovu střelu si Kacetl smolně posouvá do brány",
+      "url": "https://www.idnes.cz/hokej/extraliga/3-zapas-finale-online-zpravodajstvi-souhrny-trinec-pardubice.A260422_105705_hokej_huda",
+      "dt": "2026-04-22T16:36:54Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brány",
+        "kacetl",
         "pardubice",
-        "srovnává",
-        "trefě",
+        "posouvá",
+        "sedlákovu",
+        "smolně",
+        "střelu",
         "třinec"
       ],
       "feedCategory": "sport",
@@ -583,32 +611,6 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Kopřiva na antuce v Madridu jasně přehrál Číňana, čeká ho bývalý vítěz",
-      "url": "https://www.idnes.cz/sport/tenis/kopriva-zacal-na-antuce-v-madridu-suverenni-vyhrou-nad-cang-c-cenem.A260422_122954_tenis_kazdt",
-      "dt": "2026-04-22T10:36:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "antuce",
-        "bývalý",
-        "jasně",
-        "kopřiva",
-        "madridu",
-        "přehrál",
-        "vítěz",
-        "čeká",
-        "číňana"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
       "title": "Nepřijatelný výkon, zuřil kouč Chelsea. Fanouškům vzkázal: Chápu vaši frustraci",
       "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-chelsea-liam-rosenior-trener-krize-vysledky.A260422_102423_fot_zahranici_tals",
       "dt": "2026-04-22T10:31:00Z",
@@ -800,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47520,
+      "bytes": 47477,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T16:23:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T16:53:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,8 +855,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Třinec - Pardubice 1:1. Po Kondelíkově trefě srovnává Nestrašil",
-            "publishedAt": "2026-04-22T16:23:13Z"
+            "title": "Kopřiva na antuce v Madridu jasně přehrál Číňana, čeká ho bývalý vítěz",
+            "publishedAt": "2026-04-22T16:53:16Z"
+          },
+          {
+            "title": "ONLINE: Třinec - Pardubice 1:2. Sedlákovu střelu si Kacetl smolně posouvá do brány",
+            "publishedAt": "2026-04-22T16:36:54Z"
           },
           {
             "title": "ONLINE: Jihlava - Litvínov 2:0. Domácí jistí vedení a živí naději na prodloužení série",
@@ -879,10 +885,6 @@
           {
             "title": "Kuriózní gól. Brankář Buffala si nadával, inkasoval po obloučku z poloviny hřiště",
             "publishedAt": "2026-04-22T14:27:00Z"
-          },
-          {
-            "title": "Hadamczik vyzývá extraligu ke změnám, ta tvrdí: Jednání vyhrocuje, my jsme otevření",
-            "publishedAt": "2026-04-22T14:02:00Z"
           }
         ]
       }
