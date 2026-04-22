@@ -10254,6 +10254,9 @@ function buildVideoAsArticleCard(it) {
     }
 
     function relocateSummaries(toDesktop){
+      if (!toDesktop){
+        try{ iuMmHoverSummaryCloseAll(); }catch{}
+      }
       if (toDesktop){
         try{ shellCal.appendChild(calCard); }catch{}
         try{ shellTasks.appendChild(tasksCard); }catch{}
@@ -10280,22 +10283,6 @@ function buildVideoAsArticleCard(it) {
       else if (mqDesk && mqDesk.addListener) mqDesk.addListener(applyMqRelocate);
     }catch{}
     let resizeT = null;
-    try{
-      window.addEventListener(
-        "resize",
-        function (){
-          try{
-            if (resizeT) clearTimeout(resizeT);
-          }catch{}
-          resizeT = setTimeout(function (){
-            resizeT = null;
-            applyMqRelocate();
-            try{ iuMmHoverSummaryCloseAll(); }catch{}
-          }, 160);
-        },
-        { passive: true }
-      );
-    }catch{}
 
     applyMqRelocate();
     try{
@@ -10327,8 +10314,10 @@ function buildVideoAsArticleCard(it) {
         if (ovl < minOv){
           left = Math.min(vw - pad - maxW, Math.max(pad, r.right - maxW));
         }
+        const maxLeft = Math.max(pad, Math.floor(vw - pad - maxW));
+        left = Math.max(pad, Math.min(Math.round(left), maxLeft));
         const topPx = Math.round(r.bottom + 6);
-        const leftPx = Math.round(left);
+        const leftPx = left;
         shell.style.setProperty("box-sizing", "border-box", "important");
         shell.style.setProperty("width", maxW + "px", "important");
         shell.style.setProperty("max-width", maxW + "px", "important");
@@ -10336,7 +10325,7 @@ function buildVideoAsArticleCard(it) {
         shell.style.setProperty("right", "auto", "important");
         shell.style.setProperty("top", topPx + "px", "important");
         shell.style.setProperty("left", leftPx + "px", "important");
-        shell.style.setProperty("z-index", "10060", "important");
+        shell.style.setProperty("z-index", "10150", "important");
       }catch{}
     }
 
@@ -10365,6 +10354,22 @@ function buildVideoAsArticleCard(it) {
       hoverState.openHosts.length = 0;
     }
 
+    /** True if pointer is still over Kalendář/Úkoly hover UI (host, dlaždice, bridge nebo panel) — scroll/resize nesmí panel hned zavřít. */
+    function iuMmHoverSummaryHoverActive(){
+      try{
+        function nh(el){
+          return !!(el && el.matches && el.matches(":hover"));
+        }
+        if (nh(hostCal) || nh(hostTasks)) return true;
+        if (nh(shellCal) || nh(shellTasks)) return true;
+        if (nh(bridgeCal) || nh(bridgeTasks)) return true;
+        const tCal = hostCal && hostCal.querySelector ? hostCal.querySelector(".iu-mmTopTool") : null;
+        const tTasks = hostTasks && hostTasks.querySelector ? hostTasks.querySelector(".iu-mmTopTool") : null;
+        if (nh(tCal) || nh(tTasks)) return true;
+      }catch{}
+      return false;
+    }
+
     try{
       window.addEventListener(
         "scroll",
@@ -10378,15 +10383,44 @@ function buildVideoAsArticleCard(it) {
           hoverSummaryScrollCloseT = setTimeout(function (){
             hoverSummaryScrollCloseT = null;
             try{
-              const overHost =
-                (hostCal && typeof hostCal.matches === "function" && hostCal.matches(":hover")) ||
-                (hostTasks && typeof hostTasks.matches === "function" && hostTasks.matches(":hover"));
-              if (overHost) return;
+              if (iuMmHoverSummaryHoverActive()) return;
             }catch{}
             try{ iuMmHoverSummaryCloseAll(); }catch{}
           }, 120);
         },
         { passive: true, capture: true }
+      );
+    }catch{}
+
+    try{
+      window.addEventListener(
+        "resize",
+        function (){
+          try{
+            if (resizeT) clearTimeout(resizeT);
+          }catch{}
+          resizeT = setTimeout(function (){
+            resizeT = null;
+            applyMqRelocate();
+            try{
+              if (!mqDesktopMatches()){
+                iuMmHoverSummaryCloseAll();
+                return;
+              }
+              if (iuMmHoverSummaryHoverActive()){
+                try{
+                  if (shellCal && !shellCal.classList.contains("iu-mmHoverSummaryPanelShell--closed")) positionShell(shellCal, hostCal);
+                  if (shellTasks && !shellTasks.classList.contains("iu-mmHoverSummaryPanelShell--closed")) positionShell(shellTasks, hostTasks);
+                }catch{}
+                return;
+              }
+              iuMmHoverSummaryCloseAll();
+            }catch{
+              try{ iuMmHoverSummaryCloseAll(); }catch{}
+            }
+          }, 160);
+        },
+        { passive: true }
       );
     }catch{}
 
@@ -10422,6 +10456,13 @@ function buildVideoAsArticleCard(it) {
         if (bridge){
           try{ bridge.setAttribute("hidden", ""); bridge.setAttribute("aria-hidden", "true"); }catch{}
         }
+        try{
+          if (host.__iuMmHoverShellPortaled && shell && shell.parentNode === document.body){
+            if (bridge && bridge.parentNode === host) host.insertBefore(shell, bridge.nextSibling);
+            else host.appendChild(shell);
+          }
+          host.__iuMmHoverShellPortaled = 0;
+        }catch{}
         clearShellInline(shell);
         try{
           const ix = hoverState.openHosts.indexOf(host);
@@ -10433,7 +10474,8 @@ function buildVideoAsArticleCard(it) {
       function showNow(){
         clearHide();
         if (!mqDesktopMatches()) return;
-        if (!host.contains(shell)) return;
+        if (!shell) return;
+        if (!host.contains(shell) && shell.parentNode !== document.body) return;
         try{
           if (host === hostCal && hostTasks && typeof hostTasks.__iuForceHide === "function") hostTasks.__iuForceHide();
           if (host === hostTasks && hostCal && typeof hostCal.__iuForceHide === "function") hostCal.__iuForceHide();
@@ -10444,6 +10486,12 @@ function buildVideoAsArticleCard(it) {
           try{ bridge.removeAttribute("hidden"); bridge.setAttribute("aria-hidden", "false"); }catch{}
         }
         try{
+          if (mqDesktopMatches() && shell.parentNode === host){
+            document.body.appendChild(shell);
+            host.__iuMmHoverShellPortaled = 1;
+          }
+        }catch{}
+        try{
           positionShell(shell, host);
           shell.classList.remove("iu-mmHoverSummaryPanelShell--closed");
           shell.setAttribute("aria-hidden", "false");
@@ -10452,21 +10500,40 @@ function buildVideoAsArticleCard(it) {
           if (hoverState.openHosts.indexOf(host) < 0) hoverState.openHosts.push(host);
         }catch{}
         try{
-          requestAnimationFrame(function (){
+          function iuMmHoverSummaryClampShellInViewport(){
             try{
               positionShell(shell, host);
-              const br = shell.getBoundingClientRect();
               const vh = window.innerHeight || 0;
               const pad = 8;
-              if (br.bottom > vh - pad){
-                const over = br.bottom - (vh - pad);
+              for (let iter = 0; iter < 6; iter++){
+                const br = shell.getBoundingClientRect();
                 const curRaw = String(shell.style.getPropertyValue("top") || "").trim();
-                const curTop = parseFloat(curRaw.replace(/px$/i, "")) || 0;
-                const nextTop = Math.max(pad, Math.round(curTop - over));
-                shell.style.setProperty("top", nextTop + "px", "important");
+                let curTop = parseFloat(curRaw.replace(/px$/i, "")) || 0;
+                let changed = false;
+                if (br.bottom > vh - pad){
+                  const over = br.bottom - (vh - pad);
+                  curTop = Math.max(pad, Math.round(curTop - over));
+                  shell.style.setProperty("top", curTop + "px", "important");
+                  changed = true;
+                } else if (br.top < pad){
+                  shell.style.setProperty("top", pad + "px", "important");
+                  changed = true;
+                } else if (br.top > vh - pad){
+                  const h = Math.max(br.height, 160);
+                  curTop = Math.max(pad, Math.round(vh - pad - h));
+                  shell.style.setProperty("top", curTop + "px", "important");
+                  changed = true;
+                }
+                if (!changed) break;
               }
             }catch{}
+          }
+          requestAnimationFrame(function (){
+            iuMmHoverSummaryClampShellInViewport();
           });
+          setTimeout(function (){
+            iuMmHoverSummaryClampShellInViewport();
+          }, 48);
         }catch{}
       }
 
@@ -10531,6 +10598,7 @@ function buildVideoAsArticleCard(it) {
             const rt = ev && ev.relatedTarget ? ev.relatedTarget : null;
             if (host === hostCal && hostTasks && relatedIn(hostTasks, rt)) return;
             if (host === hostTasks && hostCal && relatedIn(hostCal, rt)) return;
+            if (relatedIn(shell, rt) || relatedIn(bridge, rt)) return;
           }catch{}
           scheduleHide();
         });
@@ -30702,7 +30770,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:active{transform:translateY(0.5px)}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell.iu-mmHoverSummaryPanelShell--closed{position:fixed!important;left:-12000px!important;top:0!important;width:min(380px,calc(100vw - 20px))!important;max-height:min(72vh,560px)!important;opacity:0!important;pointer-events:none!important;z-index:-1!important;overflow:hidden!important}" +
     "#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorTasks{display:none!important}" +
-    "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){position:fixed!important;left:auto!important;top:auto!important;right:auto!important;z-index:10060!important;box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
+    "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){position:fixed!important;left:auto!important;top:auto!important;right:auto!important;z-index:10150!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
     ".dark body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){background:rgba(15,23,42,.96);border-color:rgba(148,163,184,.28);color:rgba(241,245,249,.95)}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost>.iu-mmTopTool.iu-has-hover-summary{position:relative;z-index:10058}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-card{border-radius:10px}" +
