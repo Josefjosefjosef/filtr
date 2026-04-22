@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T08:20:14.860038Z",
+  "ingestedAt": "2026-04-22T08:34:55.886892Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chlapce z Trutnovska čeká další operace. Aby zvládl léčbu, rodina potřebuje auto",
+      "url": "https://www.denik.cz/regiony/tobika-ceka-dalsi-operace-rodina-nutne-potrebuje-auto-aby-zvladla-lecbu-20260422.html",
+      "dt": "2026-04-22T08:08:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "auto",
+        "chlapce",
+        "další",
+        "léčbu",
+        "operace",
+        "potřebuje",
+        "rodina",
+        "trutnovska",
+        "zvládl",
+        "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -622,34 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Timmy opět bojuje o život. Podle expertů už záchranáři mají velrybu nechat být",
-      "url": "https://www.denik.cz/staty-eu/uvazly-keporkak-veltyba-timmy-nemecko-situace-zachrana.html",
-      "dt": "2026-04-21T14:22:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojuje",
-        "být",
-        "expertů",
-        "mají",
-        "nechat",
-        "opět",
-        "podle",
-        "timmy",
-        "velrybu",
-        "záchranáři",
-        "život"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29590,
+      "bytes": 29498,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:08:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -712,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chlapce z Trutnovska čeká další operace. Aby zvládl léčbu, rodina potřebuje auto",
+            "publishedAt": "2026-04-22T08:08:00Z"
+          },
           {
             "title": "Čechům se dovolená v Asii prodraží a zkomplikuje. Kvůli válce i leteckému palivu",
             "publishedAt": "2026-04-22T07:33:00Z"
@@ -739,10 +742,6 @@
           {
             "title": "Prezident Petr Pavel promluví v Litomyšli s občany. Sledujte debatu online",
             "publishedAt": "2026-04-22T05:30:00Z"
-          },
-          {
-            "title": "Benešovy dekrety jsou v roce 2026 vyhaslé, říká bývalý ministr Ivan Korčok",
-            "publishedAt": "2026-04-22T05:00:00Z"
           }
         ]
       }

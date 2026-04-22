@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-22T08:20:14.860038Z",
+  "ingestedAt": "2026-04-22T08:34:55.886892Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Živě &bdquo;Nelegální tabák: kde selhává systém?&ldquo;",
+      "url": "https://domaci.hn.cz/c1-67869560-zive-bdquo-nelegalni-tabak-kde-selhava-system-ldquo",
+      "dt": "2026-04-22T08:30:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "ldquo",
+        "nelegální",
+        "selhává",
+        "systém",
+        "tabák",
+        "živě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1079,39 +1103,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Obce nově platí kuchařky a školníky, zaskočilo je ale zvýšení platů i platby za plavání. Některé tratí miliony a tlačí na změnu",
-      "url": "https://archiv.hn.cz/c1-67869550-nejen-kucharky-a-skolnici-ale-i-plavani-obce-prebiraji-za-skoly-cim-dal-vic-vydaju-nektere-trati-miliony-a-tlaci-na-zmenu",
-      "dt": "2026-04-21T13:06:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "kuchařky",
-        "miliony",
-        "nově",
-        "některé",
-        "obce",
-        "platby",
-        "platí",
-        "platů",
-        "plavání",
-        "tlačí",
-        "tratí",
-        "zaskočilo",
-        "změnu",
-        "zvýšení",
-        "školníky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1122,7 +1113,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181603,
+      "bytes": 181524,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1159,7 +1150,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1177,6 +1168,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Živě &bdquo;Nelegální tabák: kde selhává systém?&ldquo;",
+            "publishedAt": "2026-04-22T08:30:00Z"
+          },
           {
             "title": "&bdquo;Zbývají poslední kusy!&ldquo; a další digitální pasti. Jak nás e-shopy manipulují a tlačí k nákupům",
             "publishedAt": "2026-04-22T08:00:00Z"
@@ -1204,10 +1199,6 @@
           {
             "title": "S nájemními byty prostě nemáte klid. Skutečný rentiér vysvětluje, jak si zařídit finanční svobodu",
             "publishedAt": "2026-04-22T05:11:00Z"
-          },
-          {
-            "title": "Zásadně omezit nebo rovnou zrušit emisní povolenky, jak chce česká vláda? Většina zemí EU si to nepřeje",
-            "publishedAt": "2026-04-22T04:51:00Z"
           }
         ]
       }
