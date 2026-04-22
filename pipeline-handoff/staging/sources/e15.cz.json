@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-22T09:19:26.647806Z",
+  "ingestedAt": "2026-04-22T09:39:24.418218Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Agrofert znovu dosáhne na dotace, fond zpětné vymáhání části podpor odmítl",
+      "url": "https://www.e15.cz/byznys/agrofert-znovu-dosahne-na-dotace-fond-zpetne-vymahani-casti-podpor-odmitl-1432305",
+      "dt": "2026-04-22T09:11:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "agrofert",
+        "dosáhne",
+        "dotace",
+        "fond",
+        "odmítl",
+        "podpor",
+        "vymáhání",
+        "znovu",
+        "zpětné",
+        "části"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1055,33 +1082,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ženy mají v EU o čtvrtinu nižší důchod než muži, v ČR patří rozdíl mezi nejmenší",
-      "url": "https://www.e15.cz/finexpert/duchody/zeny-maji-v-eu-o-ctvrtinu-nizsi-duchod-nez-muzi-v-cr-patri-rozdil-mezi-nejmensi-1432257",
-      "dt": "2026-04-20T11:10:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "důchod",
-        "mají",
-        "muži",
-        "nejmenší",
-        "než",
-        "nižší",
-        "patří",
-        "rozdíl",
-        "čtvrtinu",
-        "ženy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1092,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54443,
+      "bytes": 54578,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1129,7 +1129,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:11:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 39,
@@ -1145,6 +1145,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Agrofert znovu dosáhne na dotace, fond zpětné vymáhání části podpor odmítl",
+            "publishedAt": "2026-04-22T09:11:00Z"
+          },
           {
             "title": "Ceny nafty v Česku v březnu vzrostly o 27,6 procenta, nejvíce v EU",
             "publishedAt": "2026-04-22T07:58:00Z"
@@ -1172,10 +1176,6 @@
           {
             "title": "Nejzadluženější země světa pro rok 2026: Řecko není v Evropě nejhorší",
             "publishedAt": "2026-04-22T04:00:00Z"
-          },
-          {
-            "title": "České banky větří nový zdroj příjmu. Budou prodávat bitcoin i přes dřívější averzi",
-            "publishedAt": "2026-04-22T03:30:00Z"
           }
         ]
       }

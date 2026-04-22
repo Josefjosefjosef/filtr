@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-22T09:19:26.647806Z",
+  "ingestedAt": "2026-04-22T09:39:24.418218Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odbory Českého rozhlasu vyhlásily stávkovou pohotovost",
+      "url": "https://zpravy.aktualne.cz/domaci/odbory-ceskeho-rozhlasu-vyhlasily-stavkovou-pohotovost/r~aaa29877980bb496b0b73e87defd4ba6/",
+      "dt": "2026-04-22T09:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "odbory",
+        "pohotovost",
+        "rozhlasu",
+        "stávkovou",
+        "vyhlásily",
+        "českého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -30,7 +53,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "\"Ráno jsme si řekli, jak na to.\" Boston velebí českou souhru, která zařídila vítězný gól",
+      "title": "„Ráno jsme si řekli, jak na to.\" Boston velebí českou souhru, která zařídila vítězný gól",
       "url": "https://sport.aktualne.cz/hokej/boston-velebi-ceskou-souhru-zaridila-vitezny-gol-genialni-necas-zachranil-colorado/r~aaa293e33798fdcd14a2943e7b28b594/",
       "dt": "2026-04-22T07:43:00Z",
       "media_raw": "Aktuálně",
@@ -494,33 +517,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mostecká tvrďačka plus vyhlášená bojovnice. Na scénu se přihnal nový deblový úkaz",
-      "url": "https://sport.aktualne.cz/tenis/mostecka-tvrdacka-i-vyhlasena-bojovnice-na-scenu-se-prihnal-novy-deblovy-ukaz/r~aaa29ef0497d7da27f28d201aa2f705a/",
-      "dt": "2026-04-22T04:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bojovnice",
-        "deblový",
-        "mostecká",
-        "nový",
-        "plus",
-        "přihnal",
-        "scénu",
-        "tvrďačka",
-        "vyhlášená",
-        "úkaz"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +527,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22244,
+      "bytes": 22170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,11 +564,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T09:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "sport": 4,
+          "zpravy": 15,
+          "sport": 3,
           "finance": 1,
           "other": 1
         },
@@ -587,11 +583,15 @@
         },
         "sample_titles": [
           {
+            "title": "Odbory Českého rozhlasu vyhlásily stávkovou pohotovost",
+            "publishedAt": "2026-04-22T09:14:00Z"
+          },
+          {
             "title": "Kdo zapálil zastupiteli auto? Hluboká nad Vltavou vypsala odměnu",
             "publishedAt": "2026-04-22T09:07:00Z"
           },
           {
-            "title": "\"Ráno jsme si řekli, jak na to.\" Boston velebí českou souhru, která zařídila vítězný gól",
+            "title": "„Ráno jsme si řekli, jak na to.\" Boston velebí českou souhru, která zařídila vítězný gól",
             "publishedAt": "2026-04-22T07:43:00Z"
           },
           {
@@ -613,10 +613,6 @@
           {
             "title": "Nečekaná komplikace po návratu z vesmíru. Astronautka se po přistání učí znovu chodit",
             "publishedAt": "2026-04-22T08:13:00Z"
-          },
-          {
-            "title": "Senior podezřelý z vyhrožování výbušninou v budově vnitra skončil v cele",
-            "publishedAt": "2026-04-22T08:07:00Z"
           }
         ]
       }

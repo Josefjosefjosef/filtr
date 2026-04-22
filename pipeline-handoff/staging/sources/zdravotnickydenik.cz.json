@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T09:19:26.647806Z",
+  "ingestedAt": "2026-04-22T09:39:24.418218Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Praha 1 má audit Nemocnice na Františku. Ve hře je její převzetí magistrátem",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/praha-1-audit-nemocnice-na-frantisku-magistrat/",
+      "dt": "2026-04-22T09:21:58Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "audit",
+        "františku",
+        "hře",
+        "její",
+        "magistrátem",
+        "nemocnice",
+        "praha",
+        "převzetí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,34 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Historický průlom: V Česku se nově sleduje šíření nemocí v reálném čase. Data uvidíte i vy",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/infekcni-nemoci-sireni-v-realnem-case/",
-      "dt": "2026-04-21T11:31:20Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "data",
-        "historický",
-        "nemocí",
-        "nově",
-        "průlom",
-        "reálném",
-        "sleduje",
-        "uvidíte",
-        "čase",
-        "česku",
-        "šíření"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103653,
+      "bytes": 102842,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T08:13:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:21:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Praha 1 má audit Nemocnice na Františku. Ve hře je její převzetí magistrátem",
+            "publishedAt": "2026-04-22T09:21:58Z"
+          },
           {
             "title": "Nemocnice v Ústeckém kraji stoply růst mezd. Nechtějí ani zvyšovat počet zaměstnanců",
             "publishedAt": "2026-04-22T08:13:18Z"
@@ -360,10 +361,6 @@
           {
             "title": "Babiš slíbil nejmodernější celotělový PET/CT pro Česko. Nová technologie tu zatím chybí",
             "publishedAt": "2026-04-21T14:12:32Z"
-          },
-          {
-            "title": "Zalévat zdravotnictví penězi zvládne i cvičená opice, napsal Kalousek. Kritizoval Vojtěchův návrh",
-            "publishedAt": "2026-04-21T13:33:14Z"
           }
         ]
       }
