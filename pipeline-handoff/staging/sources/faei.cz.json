@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-22T09:59:32.001694Z",
+  "ingestedAt": "2026-04-22T10:19:14.421342Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
+      "url": "https://profitonline.cz/babis-se-uz-vidi-v-pekingu-proto-vystrcilovi-zatrhnul-letoun-na-tchaj-wan/",
+      "dt": "2026-04-22T10:00:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "babiš",
+        "letoun",
+        "pekingu",
+        "proto",
+        "tchaj",
+        "vidí",
+        "vystrčilovi",
+        "wan",
+        "zatrhnul"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,35 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hříšníci bez eura. Proč pětice zemí včetně Česka otálí s přijetím společné evropské měny?",
-      "url": "https://profitonline.cz/hrisnici-bez-eura-proc-petice-zemi-vcetne-ceska-otali-s-prijetim-spolecne-evropske-meny/",
-      "dt": "2026-04-20T08:00:18Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "eura",
-        "evropské",
-        "hříšníci",
-        "měny",
-        "otálí",
-        "proč",
-        "pětice",
-        "přijetím",
-        "společné",
-        "včetně",
-        "zemí",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19637,
+      "bytes": 19499,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-22T08:00:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T10:00:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -362,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
+            "publishedAt": "2026-04-22T10:00:00Z"
+          },
           {
             "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
             "publishedAt": "2026-04-22T08:00:38Z"
@@ -389,10 +390,6 @@
           {
             "title": "Dražší energie vyvíjejí tlak na ceny v českém průmyslu",
             "publishedAt": "2026-04-21T08:00:44Z"
-          },
-          {
-            "title": "Nafta v Česku zlevnila i pod 40 korun za litr",
-            "publishedAt": "2026-04-21T07:00:50Z"
           }
         ]
       }

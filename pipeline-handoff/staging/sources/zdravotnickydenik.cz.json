@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T09:59:32.001694Z",
+  "ingestedAt": "2026-04-22T10:19:14.421342Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/vzp-zmena-prihlaseni-do-aplikace/",
+      "dt": "2026-04-22T10:07:13Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "aplikace",
+        "dřív",
+        "jako",
+        "miliony",
+        "nebude",
+        "oblíbené",
+        "pojištěnců",
+        "přihlášení",
+        "vzp",
+        "změna",
+        "čeká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Očkování přímo v práci? Zaměstnavatelé chtějí větší vliv ve zdravotním systému",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/ockovani-v-praci-zamestnavatele-vliv/",
-      "dt": "2026-04-21T12:07:42Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chtějí",
-        "očkování",
-        "práci",
-        "přímo",
-        "systému",
-        "vliv",
-        "větší",
-        "zaměstnavatelé",
-        "zdravotním"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102842,
+      "bytes": 101529,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T09:21:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T10:07:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
+            "publishedAt": "2026-04-22T10:07:13Z"
+          },
           {
             "title": "Praha 1 má audit Nemocnice na Františku. Ve hře je její převzetí magistrátem",
             "publishedAt": "2026-04-22T09:21:58Z"
@@ -357,10 +363,6 @@
           {
             "title": "5 mýtů o vašich zdravotních údajích. Kdo všechno je může vidět a má nad nimi kontrolu?",
             "publishedAt": "2026-04-21T15:19:33Z"
-          },
-          {
-            "title": "Babiš slíbil nejmodernější celotělový PET/CT pro Česko. Nová technologie tu zatím chybí",
-            "publishedAt": "2026-04-21T14:12:32Z"
           }
         ]
       }

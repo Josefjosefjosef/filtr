@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-22T09:59:32.001694Z",
+  "ingestedAt": "2026-04-22T10:19:14.421342Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Odstartovaly kontroly příspěvků na bydlení. Kvůli chybám či podvodům hrozí vracení peněz a pokuty",
+      "url": "https://www.betterlife.cz/odstartovaly-kontroly-prispevku-na-bydleni-kvuli-chybam-ci-podvodum-hrozi-vraceni-penez-a-pokuty/",
+      "dt": "2026-04-22T10:11:56Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "bydlení",
+        "chybám",
+        "hrozí",
+        "kontroly",
+        "kvůli",
+        "odstartovaly",
+        "peněz",
+        "podvodům",
+        "pokuty",
+        "příspěvků",
+        "vracení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -262,28 +290,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ulice: Záchrana, simulace těhotenství a překvapení",
-      "url": "https://www.betterlife.cz/ulice-zachrana-simulace-tehotenstvi-a-prekvapeni/",
-      "dt": "2026-04-18T07:14:15Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "překvapení",
-        "simulace",
-        "těhotenství",
-        "ulice",
-        "záchrana"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +300,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 71407,
+      "bytes": 70706,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -354,10 +360,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T09:46:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T10:11:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
+          "zpravy": 1,
+          "zdravi": 8,
           "sport": 1
         },
         "drop_counts": {
@@ -370,6 +377,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odstartovaly kontroly příspěvků na bydlení. Kvůli chybám či podvodům hrozí vracení peněz a pokuty",
+            "publishedAt": "2026-04-22T10:11:56Z"
+          },
           {
             "title": "Z pohodlí domova: Nové metody analýzy DNA odhalují rodinnou historii, skryté dispozice i talenty",
             "publishedAt": "2026-04-22T09:46:50Z"
@@ -397,10 +408,6 @@
           {
             "title": "Příští týden v seriálu Ulice: Konec velkých iluzí, nečekané stěhování i politický kalkul",
             "publishedAt": "2026-04-19T15:57:55Z"
-          },
-          {
-            "title": "Sanitka: Prestižní adresa, skryté detaily, hudební přesah za hranicemi a jugoslávská vozidla v akci",
-            "publishedAt": "2026-04-19T14:14:06Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-22T09:59:32.001694Z",
+  "ingestedAt": "2026-04-22T10:19:14.421342Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
+      "url": "https://www.penize.cz/dan-z-nemovitosti/488672-dan-z-nemovitosti-se-opet-blizi-jeji-vysi-zjistite-uz-ted",
+      "dt": "2026-04-22T11:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "blíží",
+        "daně",
+        "její",
+        "nemovitosti",
+        "platba",
+        "výši",
+        "zjistíte"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -488,32 +512,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Cena za úzkost. Devět způsobů, jak strach z létání ždímá vaši peněženku",
-      "url": "https://www.penize.cz/doprava/488137-cena-za-uzkost-devet-zpusobu-jak-strach-z-letani-zdima-vasi-penezenku",
-      "dt": "2026-04-19T07:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "cena",
-        "devět",
-        "létání",
-        "peněženku",
-        "strach",
-        "vaši",
-        "způsobů",
-        "úzkost",
-        "ždímá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -524,7 +522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18248,
+      "bytes": 18170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -561,11 +559,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T11:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 3
+          "finance": 18,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -577,6 +575,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
+            "publishedAt": "2026-04-22T11:58:00Z"
+          },
           {
             "title": "Nový král spořicích účtů? Další banka odmění za investování",
             "publishedAt": "2026-04-22T08:30:00Z"
@@ -604,10 +606,6 @@
           {
             "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
             "publishedAt": "2026-04-21T12:35:00Z"
-          },
-          {
-            "title": "Vláda změní penzijko. Jak by pomohlo snížení poplatků",
-            "publishedAt": "2026-04-21T06:12:00Z"
           }
         ]
       }

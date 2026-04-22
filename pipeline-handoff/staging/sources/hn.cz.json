@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-22T09:59:32.001694Z",
+  "ingestedAt": "2026-04-22T10:19:14.421342Z",
   "items": [
     {
       "section": "finance",
@@ -107,6 +107,32 @@
         "shopy",
         "tlačí",
         "zbývají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Regulace cen energií je za rohem, náklady státu porostou o desítky miliard",
+      "url": "https://archiv.hn.cz/c1-67869770-regulace-cen-energii-je-za-rohem-naklady-statu-porostou-o-desitky-miliard",
+      "dt": "2026-04-22T07:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cen",
+        "desítky",
+        "energií",
+        "miliard",
+        "náklady",
+        "porostou",
+        "regulace",
+        "rohem",
+        "státu"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1066,38 +1092,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zmizí nejen hokej a pohádky. Vláda nás nutí zrušit přesně to, co chtějí její voliči, říká Českého rozhlasu",
-      "url": "https://archiv.hn.cz/c1-67869270-vladni-politici-o-nas-siri-lzi-a-manipulace-stavce-rozumim-ticho-v-eteru-ale-nebude-rika-sef-ceskeho-rozhlasu-zavoral",
-      "dt": "2026-04-21T13:57:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chtějí",
-        "hokej",
-        "její",
-        "nejen",
-        "nutí",
-        "nás",
-        "pohádky",
-        "přesně",
-        "rozhlasu",
-        "vláda",
-        "voliči",
-        "zmizí",
-        "zrušit",
-        "českého",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1102,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 182089,
+      "bytes": 182139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1148,9 +1142,9 @@
         "raw_feed_latest_publishedAt": "2026-04-22T09:16:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
+          "finance": 35,
           "zpravy": 3,
-          "sport": 2,
+          "sport": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1180,6 +1174,10 @@
             "publishedAt": "2026-04-22T08:00:00Z"
           },
           {
+            "title": "Regulace cen energií je za rohem, náklady státu porostou o desítky miliard",
+            "publishedAt": "2026-04-22T07:00:00Z"
+          },
+          {
             "title": "Pomáhá válka inovacím, nebo je ničí? Vědci přišli s překvapivou odpovědí",
             "publishedAt": "2026-04-22T06:59:00Z"
           },
@@ -1190,10 +1188,6 @@
           {
             "title": "Firmy nabírají nevhodné lidi a zbytečně kvůli tomu přicházejí o miliony korun. Jak se těmto ztrátám vyhnout?",
             "publishedAt": "2026-04-22T06:56:00Z"
-          },
-          {
-            "title": "Pokud firmy chtějí zaměstnance zpět v kancelářích, musí jim nabídnout mnohem víc než stůl a počítač, říká šéf Scott.Weber",
-            "publishedAt": "2026-04-22T06:53:00Z"
           }
         ]
       }
