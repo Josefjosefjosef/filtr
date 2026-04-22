@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-22T12:24:32.709936Z",
+  "ingestedAt": "2026-04-22T12:44:28.149155Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jak se dožít stovky? Jednoduché návyky, které prokazatelně prodlužují život",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-jak-se-dozit-stovky-zivotni-navyky-ktere-prokazatelne-prodluzuji-zivot-94570",
+      "dt": "2026-04-22T12:41:23Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "dožít",
+        "jednoduché",
+        "návyky",
+        "prodlužují",
+        "prokazatelně",
+        "stovky",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -808,33 +832,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Vyzkoušeno v redakci: Tónovací masky na vlasy dodají lesk a oddálí návštěvu kadeřníka",
-      "url": "https://www.prozeny.cz/clanek/krasa-a-moda-krasna-tvar-recenze-kosmetiky-vyzkouseno-v-redakci-tonovaci-masky-na-vlasy-dodaji-lesk-a-oddali-navstevu-kadernika-103086",
-      "dt": "2026-04-21T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "dodají",
-        "kadeřníka",
-        "lesk",
-        "masky",
-        "návštěvu",
-        "oddálí",
-        "redakci",
-        "tónovací",
-        "vlasy",
-        "vyzkoušeno"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -845,7 +842,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39309,
+      "bytes": 39324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -882,7 +879,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:11:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:41:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -898,6 +895,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak se dožít stovky? Jednoduché návyky, které prokazatelně prodlužují život",
+            "publishedAt": "2026-04-22T12:41:23Z"
+          },
           {
             "title": "StarDance se blíží! Dva slavní fešáci vyrazí na parket s novými vlasy. Přitom o to ani jeden nestál",
             "publishedAt": "2026-04-22T12:11:26Z"
@@ -924,10 +925,6 @@
           },
           {
             "title": "Mladí dnes přistupují k sexu a ochraně jinak. Není důvod bát se hormonální antikoncepce, říká lékař",
-            "publishedAt": "2026-04-22T03:00:00Z"
-          },
-          {
-            "title": "Šatník Lejly Abbasové: „Nikdy bych si nevzala mašle a volánky!“   Fotogalerie plná úžasných modelů",
             "publishedAt": "2026-04-22T03:00:00Z"
           }
         ]

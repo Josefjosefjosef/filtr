@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T12:24:32.709936Z",
+  "ingestedAt": "2026-04-22T12:44:28.149155Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kdy zaplatit daň z nemovitosti? Úřady rozesílají platební údaje a varují před podvody",
+      "url": "https://ekonomickydenik.cz/kdy-zaplatit-dan-z-nemovitosti/",
+      "dt": "2026-04-22T12:23:19Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "daň",
+        "nemovitosti",
+        "platební",
+        "podvody",
+        "rozesílají",
+        "varují",
+        "zaplatit",
+        "údaje",
+        "úřady"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -756,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odklad povolenek na vytápění? Jen plané sliby Nerudové, varuje svaz tepláren",
-      "url": "https://ekonomickydenik.cz/odklad-povolenek-vytapeni-sliby-nerudova-teplarny/",
-      "dt": "2026-04-20T14:20:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jen",
-        "nerudové",
-        "odklad",
-        "plané",
-        "povolenek",
-        "sliby",
-        "svaz",
-        "tepláren",
-        "varuje",
-        "vytápění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73578,
+      "bytes": 73402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:02:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:23:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 24,
+          "zpravy": 4,
+          "finance": 23,
           "zdravi": 3
         },
         "drop_counts": {
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdy zaplatit daň z nemovitosti? Úřady rozesílají platební údaje a varují před podvody",
+            "publishedAt": "2026-04-22T12:23:19Z"
+          },
           {
             "title": "Izrael rozdělil Evropu. Španělsko a Irsko chtějí tvrdý trest, Itálie a Německo říkají ne",
             "publishedAt": "2026-04-22T12:02:18Z"
@@ -874,10 +877,6 @@
           {
             "title": "105 spících miliard na účtech. Mají peníze připadnout státu nebo bance?",
             "publishedAt": "2026-04-22T06:52:56Z"
-          },
-          {
-            "title": "Nemocnice má problém s rekonstrukcí vyhořelého pavilonu. Co brzdí dostavbu ÚVN?",
-            "publishedAt": "2026-04-22T04:30:00Z"
           }
         ]
       }
