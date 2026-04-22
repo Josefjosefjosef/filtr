@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-22T06:15:02.352729Z",
+  "ingestedAt": "2026-04-22T06:38:49.480539Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mráz sevřel část Česka. Mapa meteorologů ukazuje, kde bylo až -10 stupňů",
+      "url": "https://www.idnes.cz/zpravy/domaci/mraz-sevrel-cast-ceska-mapa-meteorologu-ukazuje-kde-bylo-az-10-stupnu.A260422_074302_domaci_skr",
+      "dt": "2026-04-22T06:13:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "mapa",
+        "meteorologů",
+        "mráz",
+        "sevřel",
+        "stupňů",
+        "ukazuje",
+        "česka",
+        "část"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,32 +777,6 @@
         "správce",
         "žaluje",
         "žádá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kavárny v ulicích Teheránu jsou plné, hrozba nové války je však za dveřmi",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/kavarny-v-ulicich-teheranu-jsou-plne-hrozba-nove-valky-je-vsak-za-dvermi.A260421_190638_zahranicni_meli",
-      "dt": "2026-04-21T17:22:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dveřmi",
-        "hrozba",
-        "kavárny",
-        "nové",
-        "plné",
-        "teheránu",
-        "ulicích",
-        "války",
-        "však"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47356,
+      "bytes": 47087,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:13:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1629,6 +1628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mráz sevřel část Česka. Mapa meteorologů ukazuje, kde bylo až -10 stupňů",
+            "publishedAt": "2026-04-22T06:13:00Z"
+          },
           {
             "title": "Média nedáme! Studenti pořádají protesty na podporu České televize a rozhlasu",
             "publishedAt": "2026-04-22T06:00:00Z"
@@ -1656,10 +1659,6 @@
           {
             "title": "Miliardový projekt strategické trati čeká přísnější posouzení. Kvůli vzácnému dravci",
             "publishedAt": "2026-04-22T04:17:00Z"
-          },
-          {
-            "title": "Poslanci projednají návrh, který má bránit poskytování nepřiměřeně drahých úvěrů",
-            "publishedAt": "2026-04-22T04:12:00Z"
           }
         ]
       }
