@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-22T12:44:28.149155Z",
+  "ingestedAt": "2026-04-22T13:04:19.735070Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Ruce pryč!“ Studenti demonstrují za veřejnoprávní média, vyrážejí za Klempířem",
+      "url": "https://zpravy.aktualne.cz/domaci/studenti-demonstrovali-za-verejnopravni-media-ted-miri-za-klempirem/r~aaa2977f8db8b12005360de507a4813f/",
+      "dt": "2026-04-22T11:20:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "demonstrují",
+        "klempířem",
+        "média",
+        "pryč",
+        "ruce",
+        "studenti",
+        "veřejnoprávní",
+        "vyrážejí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Letošní festival Svět knihy navštíví nobelista Gurnah, historik Snyder i Sansal",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/letosni-festival-svet-knihy-navstivi-nobelista-gurnah-historik-snyder-i-sansal/r~aaa299eec4faaaf4ad9f15193a4dac63/",
+      "dt": "2026-04-22T12:43:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "festival",
+        "gurnah",
+        "historik",
+        "knihy",
+        "letošní",
+        "navštíví",
+        "nobelista",
+        "sansal",
+        "snyder",
+        "svět"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -75,31 +127,6 @@
         "pěstouny",
         "tříleté",
         "vraždy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Ruce pryč od…“ Studenti demonstrují za veřejnoprávní média, vyrážejí za Klempířem",
-      "url": "https://zpravy.aktualne.cz/domaci/studenti-demonstrovali-za-verejnopravni-media-ted-miri-za-klempirem/r~aaa2977f8db8b12005360de507a4813f/",
-      "dt": "2026-04-22T11:20:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "demonstrují",
-        "klempířem",
-        "média",
-        "pryč",
-        "ruce",
-        "studenti",
-        "veřejnoprávní",
-        "vyrážejí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -494,35 +521,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Buďte doma nebo si sundejte bundy a šetřete palivo. Jak svět bojuje s vysokými cenami benzinu",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/pro-ridice/budte-doma-nebo-si-sundejte-bundy-a-setrete-palivo-jak-svet-bojuje-s-vysokymi-cenami-benzinu/r~aaa29a5c475c88a7cd2ddd7f97ff46a6/",
-      "dt": "2026-04-22T09:42:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "benzinu",
-        "bojuje",
-        "bundy",
-        "buďte",
-        "cenami",
-        "doma",
-        "nebo",
-        "palivo",
-        "sundejte",
-        "svět",
-        "vysokými",
-        "šetřete"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +531,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21173,
+      "bytes": 20989,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,13 +568,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:43:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 16,
-          "sport": 2,
-          "other": 1,
-          "finance": 1
+          "other": 2,
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -588,6 +585,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Ruce pryč!“ Studenti demonstrují za veřejnoprávní média, vyrážejí za Klempířem",
+            "publishedAt": "2026-04-22T11:20:00Z"
+          },
+          {
+            "title": "Letošní festival Svět knihy navštíví nobelista Gurnah, historik Snyder i Sansal",
+            "publishedAt": "2026-04-22T12:43:00Z"
+          },
           {
             "title": "Trump prodloužil příměří, čeká, až Írán předloží mírový návrh. „Prohráváte,“ zní z Teheránu",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -601,10 +606,6 @@
             "publishedAt": "2026-04-22T12:27:00Z"
           },
           {
-            "title": "„Ruce pryč od…“ Studenti demonstrují za veřejnoprávní média, vyrážejí za Klempířem",
-            "publishedAt": "2026-04-22T11:20:00Z"
-          },
-          {
             "title": "Reálný rozhovor nebo AI? Babiš žádá objasnění třaskavé nahrávky kolem Rady ČT",
             "publishedAt": "2026-04-22T12:02:00Z"
           },
@@ -615,10 +616,6 @@
           {
             "title": "\"Malý zázrak, láska na celý život.\" Tuniská tenisová hvězda začala novou etapu života",
             "publishedAt": "2026-04-22T11:28:00Z"
-          },
-          {
-            "title": "Fico s Orbánem ustoupili, EU půjčí Ukrajině 90 miliard eur",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }
