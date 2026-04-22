@@ -21143,7 +21143,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot .iu-mobileSilverGateStack.iu-mobileSilverGateStack--floatingSilver{
     position:relative!important;isolation:isolate!important;overflow:visible!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;
-    --iu-mobile-cta-h:52px!important;--iu-mobile-silver-float-d:84px!important;--iu-mobile-silver-tab-inner-curve:42px!important;--iu-mobile-silver-tab-gap:3px!important;
+    --iu-mobile-cta-h:52px!important;--iu-mobile-silver-float-d:84px!important;--iu-mobile-silver-tab-inner-curve:calc(var(--iu-mobile-silver-float-d)*0.5)!important;--iu-mobile-silver-tab-gap:1px!important;
   }
   #silver-slot .iuSilverHomeInputWrap.iu-mobileSilverGateHost{overflow:visible!important}
   #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatMount{
@@ -21170,12 +21170,12 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     width:100%!important;max-width:100%!important;padding:8px 0 0!important;margin:0!important;box-sizing:border-box!important;background:transparent!important;
   }
   #silver-slot #iuMobileGateTabs.iu-mobileGateTabs--silverFloat .iu-mobileGateTab--pairLeft{
-    border-radius:10px 10px var(--iu-mobile-silver-tab-inner-curve,42px) 10px!important;
-    margin-inline-end:calc(var(--iu-mobile-silver-float-d)*0.5 - var(--iu-mobile-gate-half-gap) + var(--iu-mobile-silver-tab-gap,3px))!important;
+    border-radius:10px var(--iu-mobile-silver-tab-inner-curve,42px) 10px 10px!important;
+    margin-inline-end:calc(var(--iu-mobile-silver-float-d)*0.5 - var(--iu-mobile-gate-half-gap) + var(--iu-mobile-silver-tab-gap,1px))!important;
   }
   #silver-slot #iuMobileGateTabs.iu-mobileGateTabs--silverFloat .iu-mobileGateTab--pairRight{
-    border-radius:10px 10px 10px var(--iu-mobile-silver-tab-inner-curve,42px)!important;
-    margin-inline-start:calc(var(--iu-mobile-silver-float-d)*0.5 - var(--iu-mobile-gate-half-gap) + var(--iu-mobile-silver-tab-gap,3px))!important;
+    border-radius:var(--iu-mobile-silver-tab-inner-curve,42px) 10px 10px 10px!important;
+    margin-inline-start:calc(var(--iu-mobile-silver-float-d)*0.5 - var(--iu-mobile-gate-half-gap) + var(--iu-mobile-silver-tab-gap,1px))!important;
   }
   #silver-slot #iuMobileGateTabs .iu-mobileGateTab{
     min-width:0!important;height:var(--iu-mobile-cta-h,52px)!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
