@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T03:20:13.966425Z",
+  "ingestedAt": "2026-04-22T04:20:27.238211Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák znovu řádil! Trefil se i Zacha a Boston srovnal",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-znovu-radil-trefil-se-i-zacha-a-boston-srovnal-5441375",
+      "dt": "2026-04-22T03:52:52Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boston",
+        "pastrňák",
+        "srovnal",
+        "trefil",
+        "zacha",
+        "znovu",
+        "řádil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -738,31 +762,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dva stíhaní v kauze fotbalové korupce byli propuštěni z vazby",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-dva-stihani-v-kauze-fotbalove-korupce-byli-propusteni-z-vazby-5440995",
-      "dt": "2026-04-21T12:50:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "byli",
-        "dva",
-        "fotbalové",
-        "kauze",
-        "korupce",
-        "propuštěni",
-        "stíhaní",
-        "vazby"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41880,
+      "bytes": 41527,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T21:36:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T03:52:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -825,6 +824,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák znovu řádil! Trefil se i Zacha a Boston srovnal",
+            "publishedAt": "2026-04-22T03:52:52Z"
+          },
           {
             "title": "Real Madrid po dvou kolech bodoval naplno",
             "publishedAt": "2026-04-21T19:20:40Z"
@@ -852,10 +855,6 @@
           {
             "title": "Historický postup. Karviná je druhým finalistou MOL Cupu, v napínavém slezském derby udolala Baník",
             "publishedAt": "2026-04-21T09:28:45Z"
-          },
-          {
-            "title": "SESTŘIH: Litvínov v Jihlavě dominoval, od záchrany ho dělí jediná výhra",
-            "publishedAt": "2026-04-21T13:57:00Z"
           }
         ]
       }

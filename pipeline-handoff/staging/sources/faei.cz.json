@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-22T03:20:13.966425Z",
+  "ingestedAt": "2026-04-22T04:20:27.238211Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Diváci Dámu na kolejích znají, a právě proto na ni půjdou, říká Pečenka k titulu, který ožívá na Fidlovačce",
+      "url": "https://profitonline.cz/divaci-damu-na-kolejich-znaji-a-prave-proto-na-ni-pujdou-rika-pecenka-k-titulu-ktery-oziva-na-fidlovacce/",
+      "dt": "2026-04-22T04:00:22Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "diváci",
+        "dámu",
+        "fidlovačce",
+        "kolejích",
+        "ožívá",
+        "pečenka",
+        "proto",
+        "právě",
+        "půjdou",
+        "titulu",
+        "znají",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,26 +303,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi budou tankovat levněji",
-      "url": "https://profitonline.cz/cesi-budou-tankovat-levneji/",
-      "dt": "2026-04-19T13:00:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "levněji",
-        "tankovat",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +313,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19409,
+      "bytes": 19978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,7 +350,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-21T12:00:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T04:00:22Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -358,6 +367,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Diváci Dámu na kolejích znají, a právě proto na ni půjdou, říká Pečenka k titulu, který ožívá na Fidlovačce",
+            "publishedAt": "2026-04-22T04:00:22Z"
+          },
           {
             "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
             "publishedAt": "2026-04-21T12:00:49Z"
@@ -385,10 +398,6 @@
           {
             "title": "Blíží se největší IPO v historii: SpaceX vstupuje na burzu",
             "publishedAt": "2026-04-20T13:00:47Z"
-          },
-          {
-            "title": "The Economist: S jakým Íránem vlastně Amerika jedná a co může zmařit příměří",
-            "publishedAt": "2026-04-20T10:00:07Z"
           }
         ]
       }

@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T03:20:13.966425Z",
+  "ingestedAt": "2026-04-22T04:20:27.238211Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "El Niño sílí, hrozí rekordy. Češi by ale měli spíš sledovat síly ze Středozemí",
+      "url": "https://www.denik.cz/pocasi/klimaticky-jev-el-nino-co-muze-zpusobit-svet-evropa-cesko-teploty.html",
+      "dt": "2026-04-22T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "hrozí",
+        "měli",
+        "niño",
+        "rekordy",
+        "sledovat",
+        "spíš",
+        "středozemí",
+        "síly",
+        "sílí",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velikonoční masakr v Jizerských horách: V roce 1946 děti vraždily děti",
+      "url": "https://www.denik.cz/historie/velikonocni-masakr-jizerske-hory-1946-hrbitovni-cesta-lazne-libverda-hejnice.html",
+      "dt": "2026-04-22T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "1946",
+        "děti",
+        "horách",
+        "jizerských",
+        "masakr",
+        "roce",
+        "velikonoční",
+        "vraždily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -600,58 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie odkrývá hrůzné detaily střelby na pyramidě: Obří chaos, lidé padali dolů",
-      "url": "https://www.denik.cz/ze_sveta/strelba-pyramidy-mexiko-teotihuacan-svedectvi.html",
-      "dt": "2026-04-21T10:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chaos",
-        "detaily",
-        "dolů",
-        "hrůzné",
-        "lidé",
-        "obří",
-        "odkrývá",
-        "padali",
-        "policie",
-        "pyramidě",
-        "střelby"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Herec Dylan Sprouse zpacifikoval zloděje, který se mu vloupal do domu",
-      "url": "https://www.denik.cz/ze_sveta/herec-dylan-sprouse-premohl-zadrzel-zlodeje-los-angeles-usa.html",
-      "dt": "2026-04-21T10:43:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domu",
-        "dylan",
-        "herec",
-        "sprouse",
-        "vloupal",
-        "zloděje",
-        "zpacifikoval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29336,
+      "bytes": 29488,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -714,6 +715,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "El Niño sílí, hrozí rekordy. Češi by ale měli spíš sledovat síly ze Středozemí",
+            "publishedAt": "2026-04-22T03:30:00Z"
+          },
+          {
+            "title": "Velikonoční masakr v Jizerských horách: V roce 1946 děti vraždily děti",
+            "publishedAt": "2026-04-22T03:00:00Z"
+          },
           {
             "title": "Bude Česko zbrojařem Evropy? Premiér Andrej Babiš odpoví dnes na Deník.cz",
             "publishedAt": "2026-04-22T02:30:00Z"
@@ -737,14 +746,6 @@
           {
             "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
             "publishedAt": "2026-04-21T18:18:00Z"
-          },
-          {
-            "title": "YouTube má pro rodiče vypínač. Návyková krátká videa omezí dětem i na nulu",
-            "publishedAt": "2026-04-21T18:00:00Z"
-          },
-          {
-            "title": "Šéf Senátu Vystrčil poletí na Tchaj-wan komerční linkou. Podraz od vlády, řekl",
-            "publishedAt": "2026-04-21T16:14:00Z"
           }
         ]
       }

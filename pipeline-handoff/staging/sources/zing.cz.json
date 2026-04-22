@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-22T03:20:13.966425Z",
+  "ingestedAt": "2026-04-22T04:20:27.238211Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na Steamu odstartoval další tematický výprodej",
+      "url": "https://zing.cz/article/na-steamu-odstartoval-dalsi-tematicky-vyprodej-14",
+      "dt": "2026-04-22T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "další",
+        "odstartoval",
+        "steamu",
+        "tematický",
+        "výprodej"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -961,28 +983,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Průzkumné dobrodružství Outbound dorazí později",
-      "url": "https://zing.cz/article/pruzkumne-dobrodruzstvi-outbound-dorazi-pozdeji",
-      "dt": "2026-04-16T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dobrodružství",
-        "dorazí",
-        "outbound",
-        "později",
-        "průzkumné"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126412,
+      "bytes": 126340,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,7 +1030,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1046,6 +1046,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Steamu odstartoval další tematický výprodej",
+            "publishedAt": "2026-04-22T04:00:00Z"
+          },
           {
             "title": "Game Pass zlevňuje, Call of Duty se v předplatném objeví s ročním zpožděním",
             "publishedAt": "2026-04-21T18:00:00Z"
@@ -1073,10 +1077,6 @@
           {
             "title": "Game Pass již brzy přijde o několik známých her",
             "publishedAt": "2026-04-21T06:00:00Z"
-          },
-          {
-            "title": "Assassin's Creed Black Flag Resynced odhalil termín oficiálního představení",
-            "publishedAt": "2026-04-21T04:00:00Z"
           }
         ]
       }
