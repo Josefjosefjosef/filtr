@@ -10447,7 +10447,7 @@ function buildVideoAsArticleCard(it) {
         showTimer = setTimeout(function (){
           showTimer = null;
           showNow();
-        }, 70);
+        }, 0);
       }
 
       function scheduleHide(){
@@ -10456,7 +10456,16 @@ function buildVideoAsArticleCard(it) {
         hideTimer = setTimeout(function (){
           hideTimer = null;
           forceHide();
-        }, 240);
+        }, 280);
+      }
+
+      function relatedIn(el, rt){
+        try{
+          if (!el || !rt || typeof rt.closest !== "function") return false;
+          return el === rt || (typeof el.contains === "function" && el.contains(rt));
+        }catch{
+          return false;
+        }
       }
 
       try{
@@ -10466,7 +10475,12 @@ function buildVideoAsArticleCard(it) {
         });
       }catch{}
       try{
-        host.addEventListener("mouseleave", function (){
+        host.addEventListener("mouseleave", function (ev){
+          try{
+            const rt = ev && ev.relatedTarget ? ev.relatedTarget : null;
+            if (host === hostCal && hostTasks && relatedIn(hostTasks, rt)) return;
+            if (host === hostTasks && hostCal && relatedIn(hostCal, rt)) return;
+          }catch{}
           scheduleHide();
         });
       }catch{}
@@ -10476,7 +10490,11 @@ function buildVideoAsArticleCard(it) {
             if (!mqDesktopMatches()) return;
             clearHide();
           });
-          bridge.addEventListener("mouseleave", function (){
+          bridge.addEventListener("mouseleave", function (ev){
+            try{
+              const rt = ev && ev.relatedTarget ? ev.relatedTarget : null;
+              if (relatedIn(shell, rt) || relatedIn(tile, rt) || relatedIn(host, rt)) return;
+            }catch{}
             scheduleHide();
           });
         }
@@ -10486,7 +10504,11 @@ function buildVideoAsArticleCard(it) {
           if (!mqDesktopMatches()) return;
           clearHide();
         });
-        shell.addEventListener("mouseleave", function (){
+        shell.addEventListener("mouseleave", function (ev){
+          try{
+            const rt = ev && ev.relatedTarget ? ev.relatedTarget : null;
+            if (relatedIn(bridge, rt) || relatedIn(tile, rt) || relatedIn(host, rt)) return;
+          }catch{}
           scheduleHide();
         });
       }catch{}
@@ -30588,6 +30610,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".iu-mmHoverSummaryBridge{position:absolute;left:0;right:0;top:100%;width:100%;height:0;margin:0;padding:0;border:0;pointer-events:none;box-sizing:border-box;z-index:3}" +
     "@media(min-width:1025px){" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools{transform:none!important}" +
+    "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost~.iu-mmTopToolHoverHost{z-index:10070!important}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost{transform:none!important}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryBridge:not([hidden]){height:10px;pointer-events:auto}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:hover{transform:translateY(-1px)}" +
