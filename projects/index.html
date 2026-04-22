@@ -484,9 +484,14 @@ style-src 'self' 'unsafe-inline' https:;
                                 </button>
                               </div>
                               <!-- P0 Mobile/tablet: gate tabs live inside brown Silver frame (desktop hidden via CSS) -->
-                              <div id="iuMobileGateTabs" class="iu-mobileGateTabs" role="tablist" aria-label="Sekce mobilního rozcestníku">
-                                <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
-                                <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                              <div id="iuMobileGateTabs" class="iu-mobileGateTabs iu-mobileGateTabs--silverCenter" role="tablist" aria-label="Sekce mobilního rozcestníku">
+                                <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab iu-mobileGateTab--pairLeft" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
+                                <div class="iu-mobileGateSilverMid" role="presentation" aria-hidden="true">
+                                  <span class="iu-mobileGateSilverMidCircle">
+                                    <img class="iu-mobileGateSilverMidImg" src="/assets/images/iu-silver-button.png" alt="" width="52" height="52" decoding="async" />
+                                  </span>
+                                </div>
+                                <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab iu-mobileGateTab--pairRight" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
                               </div>
                             </div>
                           </div>
@@ -495,7 +500,7 @@ style-src 'self' 'unsafe-inline' https:;
                     </div>
                   </section>
                 </div>
-                <!-- P0 Mobile/tablet: topbar → Silver → 2-tab gate (Navigace | MindMenu); only one section open at a time -->
+                <!-- P0 Mobile/tablet: topbar → Silver → gate row (Navigace | Silver decor | MindMenu); only one section open at a time -->
                 <div id="iuMobileGateWrap" class="iu-mobileGateWrap" aria-hidden="true" data-iu-mobile-gate="">
                   <div id="iuMobileSilverSlot" class="iu-mobileSilverSlot" aria-label="Silver"></div>
                   <script>
