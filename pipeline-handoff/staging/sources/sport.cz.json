@@ -1,25 +1,27 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T21:29:55.008362Z",
+  "ingestedAt": "2026-04-22T21:49:28.564662Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Arsenal už nevede Premier League. Do čela se dostal Manchester City",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-arsenal-uz-nevede-premier-league-do-cela-se-dostal-manchester-city-5441863",
-      "dt": "2026-04-22T20:58:15Z",
+      "title": "Klobouk dolů před Třincem, nepodcenili jsme je, řekl Kondelík. Dynamo teď vzhlíží k lékařům",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-klobouk-dolu-pred-trincem-nepodcenili-jsme-je-rekl-kondelik-dynamo-ted-vzhlizi-k-lekarum-5441866",
+      "dt": "2026-04-22T21:42:23Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "arsenal",
-        "city",
-        "dostal",
-        "league",
-        "manchester",
-        "nevede",
-        "premier",
-        "čela"
+        "dolů",
+        "dynamo",
+        "jsme",
+        "klobouk",
+        "kondelík",
+        "lékařům",
+        "nepodcenili",
+        "třincem",
+        "vzhlíží",
+        "řekl"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -49,6 +51,31 @@
         "zákrok",
         "řekl",
         "šanci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Arsenal už nevede Premier League. Do čela se dostal Manchester City",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-arsenal-uz-nevede-premier-league-do-cela-se-dostal-manchester-city-5441863",
+      "dt": "2026-04-22T20:58:15Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "arsenal",
+        "city",
+        "dostal",
+        "league",
+        "manchester",
+        "nevede",
+        "premier",
+        "čela"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -730,30 +757,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Liberec oznámil odchody. Končí gólman i dvojice odchovanců",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-liberec-oznamil-odchody-konci-golman-i-dvojice-odchovancu-5441425",
-      "dt": "2026-04-22T13:27:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dvojice",
-        "gólman",
-        "končí",
-        "liberec",
-        "odchody",
-        "odchovanců",
-        "oznámil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -764,7 +767,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42926,
+      "bytes": 43028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -801,7 +804,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T21:13:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:42:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -818,12 +821,16 @@
         },
         "sample_titles": [
           {
-            "title": "Arsenal už nevede Premier League. Do čela se dostal Manchester City",
-            "publishedAt": "2026-04-22T20:58:15Z"
+            "title": "Klobouk dolů před Třincem, nepodcenili jsme je, řekl Kondelík. Dynamo teď vzhlíží k lékařům",
+            "publishedAt": "2026-04-22T21:42:23Z"
           },
           {
             "title": "Káca vytáhl skvělý zákrok a dal mi šanci se trefit, řekl autor vítězného gólu Třince",
             "publishedAt": "2026-04-22T21:13:32Z"
+          },
+          {
+            "title": "Arsenal už nevede Premier League. Do čela se dostal Manchester City",
+            "publishedAt": "2026-04-22T20:58:15Z"
           },
           {
             "title": "Leverkusen s Schickem do finále německého poháru nepostoupil",
@@ -844,10 +851,6 @@
           {
             "title": "SESTŘIH: Třinec zvládl prodloužení! Ve finálové sérii má první bod",
             "publishedAt": "2026-04-22T13:00:08Z"
-          },
-          {
-            "title": "Atlético Madrid počtvrté za sebou prohrálo",
-            "publishedAt": "2026-04-22T19:06:29Z"
           }
         ]
       }
