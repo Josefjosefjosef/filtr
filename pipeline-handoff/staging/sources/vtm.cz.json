@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-22T08:34:55.886892Z",
+  "ingestedAt": "2026-04-22T08:59:40.189906Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,36 @@
         "základnu",
         "česka",
         "část"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "ChatGPT má nejlepší generátor obrázků na světě. Ježíše ve Fabii zvládá jako král, nakreslí i český komiks",
+      "url": "https://www.zive.cz/clanky/chatgpt-ma-nejlepsi-generator-obrazku-na-svete-jezise-ve-fabii-zvlada-jako-kral-nakresli-i-cesky-komiks/sc-3-a-240816/default.aspx",
+      "dt": "2026-04-22T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chatgpt",
+        "fabii",
+        "generátor",
+        "jako",
+        "ježíše",
+        "komiks",
+        "král",
+        "nakreslí",
+        "nejlepší",
+        "obrázků",
+        "světě",
+        "zvládá",
+        "český"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -935,34 +965,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Kingdom Come: Deliverance II získalo prestižní cenu BAFTA. Silnou konkurenci poráží příběhem",
-      "url": "https://doupe.zive.cz/kingdom-come-deliverance-ii-ziskalo-prestizni-cenu-bafta-silnou-konkurenci-porazi-pribehem",
-      "dt": "2026-04-20T06:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "bafta",
-        "cenu",
-        "come",
-        "deliverance",
-        "kingdom",
-        "konkurenci",
-        "poráží",
-        "prestižní",
-        "příběhem",
-        "silnou",
-        "získalo"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -973,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22168,
+      "bytes": 22443,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1010,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1028,6 +1030,10 @@
           {
             "title": "Babiš neříká pravdu. Tchaj-wan si z Česka udělal technologickou základnu pro část světa",
             "publishedAt": "2026-04-22T06:45:00Z"
+          },
+          {
+            "title": "ChatGPT má nejlepší generátor obrázků na světě. Ježíše ve Fabii zvládá jako král, nakreslí i český komiks",
+            "publishedAt": "2026-04-22T08:45:00Z"
           },
           {
             "title": "Xbox Game Pass zlevnil nejdražší předplatná. Nové Call of Duty v něm při vydání už nenajdete",
@@ -1052,10 +1058,6 @@
           {
             "title": "AI slop ve hrách? Jak funguje kontroverzní vylepšení grafiky Nvidia DLSS 5",
             "publishedAt": "2026-04-21T15:45:00Z"
-          },
-          {
-            "title": "Nebezpečný malware umí překrýt displej Androidu. V Česku zneužívá i přihlašování Komerční banky",
-            "publishedAt": "2026-04-21T08:45:00Z"
           }
         ]
       }
