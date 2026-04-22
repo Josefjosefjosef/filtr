@@ -1,8 +1,64 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T14:50:05.994491Z",
+  "ingestedAt": "2026-04-22T15:09:33.242745Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "HOKEJ ONLINE: Těžká zkouška na úvod. Čeští mladíci statečně vzdorují favorizovaným USA",
+      "url": "https://www.sport.cz/clanek/hokej-ms-cesti-mladici-na-uvod-sampionatu-vyzvou-velkeho-favorita-5441373",
+      "dt": "2026-04-22T06:12:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "favorizovaným",
+        "hokej",
+        "mladíci",
+        "online",
+        "statečně",
+        "těžká",
+        "usa",
+        "vzdorují",
+        "zkouška",
+        "úvod",
+        "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Další odvážný slib snookerového matadora. Pokud vyhraje titul, poběží nahý po dálnici",
+      "url": "https://www.sport.cz/clanek/ostatni-dalsi-odvazny-slib-snookeroveho-matadora-pokud-vyhraje-titul-pobezi-nahy-po-dalnici-5441477",
+      "dt": "2026-04-22T14:58:53Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "dálnici",
+        "matadora",
+        "nahý",
+        "odvážný",
+        "poběží",
+        "pokud",
+        "slib",
+        "snookerového",
+        "titul",
+        "vyhraje"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -22,36 +78,6 @@
         "rozhovor",
         "světa",
         "zákaz"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "HOKEJ ONLINE: Těžká zkouška na úvod mistrovství světa. Čeští mladíci statečně vzdorují favorizovaným USA",
-      "url": "https://www.sport.cz/clanek/hokej-ms-cesti-mladici-na-uvod-sampionatu-vyzvou-velkeho-favorita-5441373",
-      "dt": "2026-04-22T06:12:01Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "favorizovaným",
-        "hokej",
-        "mistrovství",
-        "mladíci",
-        "online",
-        "statečně",
-        "světa",
-        "těžká",
-        "usa",
-        "vzdorují",
-        "zkouška",
-        "úvod",
-        "čeští"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -750,29 +776,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Komfort po dvou výhrách? To by byla sebevražda, tuší Sedlák",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-komfort-po-dvou-vyhrach-to-by-byla-sebevrazda-tusi-sedlak-5441000",
-      "dt": "2026-04-22T08:25:10Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dvou",
-        "komfort",
-        "sebevražda",
-        "sedlák",
-        "tuší",
-        "výhrách"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +786,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44164,
+      "bytes": 43686,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,10 +823,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T14:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T14:58:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
+          "sport": 28,
+          "zpravy": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -837,12 +841,16 @@
         },
         "sample_titles": [
           {
-            "title": "Podivný rozhovor s mistrem světa. Norris dostal zákaz odpovídat na ožehavé otázky",
-            "publishedAt": "2026-04-22T14:14:49Z"
+            "title": "HOKEJ ONLINE: Těžká zkouška na úvod. Čeští mladíci statečně vzdorují favorizovaným USA",
+            "publishedAt": "2026-04-22T06:12:01Z"
           },
           {
-            "title": "HOKEJ ONLINE: Těžká zkouška na úvod mistrovství světa. Čeští mladíci statečně vzdorují favorizovaným USA",
-            "publishedAt": "2026-04-22T06:12:01Z"
+            "title": "Další odvážný slib snookerového matadora. Pokud vyhraje titul, poběží nahý po dálnici",
+            "publishedAt": "2026-04-22T14:58:53Z"
+          },
+          {
+            "title": "Podivný rozhovor s mistrem světa. Norris dostal zákaz odpovídat na ožehavé otázky",
+            "publishedAt": "2026-04-22T14:14:49Z"
           },
           {
             "title": "RAJNOCHŮV GLOSÁŘ: Problémy v kabině Baníku? Smetanovo ego to naznačuje",
@@ -863,10 +871,6 @@
           {
             "title": "Videomomenty. Třinec nechce Dynamu povolit mečbol, doma potřebuje vyhrát",
             "publishedAt": "2026-04-22T13:00:08Z"
-          },
-          {
-            "title": "ČUS vyzývá vládu, aby zařadila sportoviště mezi priority dotované z fondů EU",
-            "publishedAt": "2026-04-22T12:59:51Z"
           }
         ]
       }
