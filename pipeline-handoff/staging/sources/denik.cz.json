@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T02:39:59.974197Z",
+  "ingestedAt": "2026-04-22T03:00:33.188808Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bude Česko zbrojařem Evropy? Premiér Andrej Babiš odpoví dnes na Deník.cz",
+      "url": "https://www.denik.cz/z_domova/premier-andrej-babis-debata-15-minut.html",
+      "dt": "2026-04-22T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "andrej",
+        "babiš",
+        "deník",
+        "evropy",
+        "odpoví",
+        "premiér",
+        "zbrojařem",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vlna hrozeb v Chorvatsku: Někdo ohlásil bomby ve školách od Záhřebu po Dubrovník",
-      "url": "https://www.denik.cz/staty-eu/chorvatsko-hrozba-bomba-zahreb-dubrovnik.html",
-      "dt": "2026-04-21T10:26:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bomby",
-        "chorvatsku",
-        "dubrovník",
-        "hrozeb",
-        "někdo",
-        "ohlásil",
-        "vlna",
-        "záhřebu",
-        "školách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29375,
+      "bytes": 29336,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bude Česko zbrojařem Evropy? Premiér Andrej Babiš odpoví dnes na Deník.cz",
+            "publishedAt": "2026-04-22T02:30:00Z"
+          },
           {
             "title": "Vliv konzervativních spolků na vládu sílí, varují lidskoprávní organizace",
             "publishedAt": "2026-04-22T02:00:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Šéf Senátu Vystrčil poletí na Tchaj-wan komerční linkou. Podraz od vlády, řekl",
             "publishedAt": "2026-04-21T16:14:00Z"
-          },
-          {
-            "title": "Neobvykle zbarvený sníh? Vědci v Krkonoších zkoumají sněžné květy",
-            "publishedAt": "2026-04-21T15:10:00Z"
           }
         ]
       }
