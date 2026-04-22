@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-22T16:59:33.057626Z",
+  "ingestedAt": "2026-04-22T17:19:29.369816Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Letoví dispečeři vydělali na aerolinkách půl miliardy, Babišově vládě navrhují tučnou dividendu",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/letovi-dispeceri-vydelali-na-aerolinkach-pul-miliardy-babisove-vlade-navrhuji-tucnou-dividendu-1432324",
+      "dt": "2026-04-22T16:50:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aerolinkách",
+        "babišově",
+        "dispečeři",
+        "dividendu",
+        "letoví",
+        "miliardy",
+        "navrhují",
+        "půl",
+        "tučnou",
+        "vládě",
+        "vydělali"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1060,34 +1088,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lovecký zámek Dřevíč po Schwarzenbergovi změnil majitele. Nemovitost získala rodina spolumajitele Tipsportu",
-      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/lovecky-zamek-drevic-po-schwarzenbergovi-zmenil-majitele-nemovitost-ziskala-rodina-spolumajitele-tipsportu-1432273",
-      "dt": "2026-04-20T16:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dřevíč",
-        "lovecký",
-        "majitele",
-        "nemovitost",
-        "rodina",
-        "schwarzenbergovi",
-        "spolumajitele",
-        "tipsportu",
-        "změnil",
-        "zámek",
-        "získala"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1098,7 +1098,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54720,
+      "bytes": 54554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1135,11 +1135,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T15:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T16:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 39,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 38
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1151,6 +1151,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letoví dispečeři vydělali na aerolinkách půl miliardy, Babišově vládě navrhují tučnou dividendu",
+            "publishedAt": "2026-04-22T16:50:00Z"
+          },
           {
             "title": "ČEZ navrhuje dividendu 42 korun. Do státní kasy a k akcionářům může zamířit 23 miliard",
             "publishedAt": "2026-04-22T15:06:00Z"
@@ -1178,10 +1182,6 @@
           {
             "title": "VZP mění zabezpečení aplikace. Nově se přihlásíte PINem nebo otiskem prstu",
             "publishedAt": "2026-04-22T10:31:00Z"
-          },
-          {
-            "title": "Agrofert znovu dosáhne na dotace, fond zpětné vymáhání části podpor odmítl",
-            "publishedAt": "2026-04-22T09:11:00Z"
           }
         ]
       }
