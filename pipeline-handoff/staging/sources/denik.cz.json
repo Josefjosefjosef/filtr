@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T17:19:29.369816Z",
+  "ingestedAt": "2026-04-22T18:19:06.709814Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Předního španělského matadora v Seville srazil a vážně zranil býk",
+      "url": "https://www.denik.cz/staty-eu/spanelsko-matador-sevilla-zraneni-byk-zapasy.html",
+      "dt": "2026-04-22T17:21:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "býk",
+        "matadora",
+        "předního",
+        "seville",
+        "srazil",
+        "vážně",
+        "zranil",
+        "španělského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -624,31 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záchranu Timmyho poznamenala tragédie, klíčová veterinářka leží v kómatu",
-      "url": "https://www.denik.cz/staty-eu/zachrana-timmy-velryby-keporkak-koma-klicove-zachranarky-veterinarky.html",
-      "dt": "2026-04-22T09:02:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "klíčová",
-        "kómatu",
-        "leží",
-        "poznamenala",
-        "timmyho",
-        "tragédie",
-        "veterinářka",
-        "záchranu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29399,
+      "bytes": 29287,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T16:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T17:21:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -711,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předního španělského matadora v Seville srazil a vážně zranil býk",
+            "publishedAt": "2026-04-22T17:21:00Z"
+          },
           {
             "title": "Z Prahy do Bratislavy za 2 hodiny. Ministři podepsali memorandum",
             "publishedAt": "2026-04-22T16:39:00Z"
@@ -738,10 +742,6 @@
           {
             "title": "Pěstouni v Polsku krutě zavraždili tříletou dívku, hrozí jim doživotí",
             "publishedAt": "2026-04-22T13:13:00Z"
-          },
-          {
-            "title": "Romantika na řece láká. Odemykání Dyje zahájilo vodáckou sezonu na Znojemsku",
-            "publishedAt": "2026-04-22T13:00:00Z"
           }
         ]
       }

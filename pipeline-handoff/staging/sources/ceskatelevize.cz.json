@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T17:19:29.369816Z",
+  "ingestedAt": "2026-04-22T18:19:06.709814Z",
   "items": [
     {
       "section": "aktualne",
@@ -754,7 +754,33 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Finále play-off extraligy Třinec – Pardubice 1:4",
+      "title": "Jihlava odmítla konec baráže a i přes závěrečné drama si vynutila pátý duel",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/jihlava-odmitla-konec-baraze-a-i-pres-zaverecne-drama-si-vynutila-paty-duel-156409",
+      "dt": "2026-04-22T18:00:19Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "baráže",
+        "drama",
+        "duel",
+        "jihlava",
+        "konec",
+        "odmítla",
+        "pátý",
+        "vynutila",
+        "závěrečné"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Finále play-off extraligy Třinec – Pardubice 2:4",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/finale-play-off-extraligy-trinec-pardubice-156406",
       "dt": "2026-04-22T15:58:00Z",
       "media_raw": "ČT sport",
@@ -1485,31 +1511,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mbodji byl proti Hradci vyloučen správně, uvedla komise rozhodčích",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/mbodji-byl-proti-hradci-vyloucen-spravne-uvedla-komise-rozhodcich-156377",
-      "dt": "2026-04-20T12:16:03Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hradci",
-        "komise",
-        "mbodji",
-        "proti",
-        "rozhodčích",
-        "správně",
-        "uvedla",
-        "vyloučen"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1520,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42426,
+      "bytes": 42427,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1639,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38407,
+      "bytes": 38245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1676,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T15:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T18:00:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1692,7 +1693,11 @@
         },
         "sample_titles": [
           {
-            "title": "Finále play-off extraligy Třinec – Pardubice 1:4",
+            "title": "Jihlava odmítla konec baráže a i přes závěrečné drama si vynutila pátý duel",
+            "publishedAt": "2026-04-22T18:00:19Z"
+          },
+          {
+            "title": "Finále play-off extraligy Třinec – Pardubice 2:4",
             "publishedAt": "2026-04-22T15:58:00Z"
           },
           {
@@ -1718,10 +1723,6 @@
           {
             "title": "Portland otočil zápas se San Antoniem, Spurs přišli o zraněného Wembanyamu",
             "publishedAt": "2026-04-22T06:49:45Z"
-          },
-          {
-            "title": "Boston vyrovnal sérii s Buffalem, Pastrňák vládne produktivitě play-off",
-            "publishedAt": "2026-04-22T06:23:06Z"
           }
         ]
       }
@@ -1733,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77779,
+      "bytes": 77817,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
