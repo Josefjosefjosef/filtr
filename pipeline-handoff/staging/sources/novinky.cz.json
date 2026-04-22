@@ -1,11 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "novinky.cz",
-  "ingestedAt": "2026-04-22T23:14:58.153674Z",
+  "ingestedAt": "2026-04-22T23:29:21.374874Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
+      "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+      "url": "https://www.novinky.cz/clanek/kultura-cesky-klavirista-schulmeister-ma-cenu-bbc-music-magazine-award-pro-nove-talenty-40574881",
+      "dt": "2026-04-22T23:11:02Z",
+      "media_raw": "Novinky / Domácí",
+      "media_norm": "Novinky / Domácí",
+      "tokens": [
+        "award",
+        "bbc",
+        "cenu",
+        "klavírista",
+        "magazine",
+        "music",
+        "nové",
+        "schulmeister",
+        "talenty",
+        "český"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_novinky_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "novinky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
       "title": "Plicní lékaři stárnou a je jich málo, péče kolabuje. Nadějí je umělá inteligence",
       "url": "https://www.novinky.cz/clanek/internet-a-pc-ai-plicni-lekari-starnou-a-je-jich-malo-pece-kolabuje-nadeji-je-umela-inteligence-40574687",
       "dt": "2026-04-22T22:51:00Z",
@@ -726,22 +753,26 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Trefa Milana Mikuleckého: Ideologická zaťatost Pirátů",
-      "url": "https://www.novinky.cz/clanek/komentare-trefa-milana-mikuleckeho-ideologicka-zatatost-piratu-40574764",
-      "dt": "2026-04-22T15:09:40Z",
-      "media_raw": "Novinky / Domácí",
-      "media_norm": "Novinky / Domácí",
+      "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+      "url": "https://www.novinky.cz/clanek/kultura-cesky-klavirista-schulmeister-ma-cenu-bbc-music-magazine-award-pro-nove-talenty-40574881",
+      "dt": "2026-04-22T23:11:02Z",
+      "media_raw": "Novinky / Zahraniční",
+      "media_norm": "Novinky / Zahraniční",
       "tokens": [
-        "ideologická",
-        "mikuleckého",
-        "milana",
-        "pirátů",
-        "trefa",
-        "zaťatost"
+        "award",
+        "bbc",
+        "cenu",
+        "klavírista",
+        "magazine",
+        "music",
+        "nové",
+        "schulmeister",
+        "talenty",
+        "český"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
-      "feedId": "zpr_novinky_domaci",
+      "feedId": "zpr_novinky_zahranicni",
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "novinky.cz",
       "_dt_serialized": true
@@ -1458,29 +1489,6 @@
         "zasloužíte",
         "žalobkyně",
         "žrát"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_novinky_zahranicni",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "novinky.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trefa Milana Mikuleckého: Ideologická zaťatost Pirátů",
-      "url": "https://www.novinky.cz/clanek/komentare-trefa-milana-mikuleckeho-ideologicka-zatatost-piratu-40574764",
-      "dt": "2026-04-22T15:09:40Z",
-      "media_raw": "Novinky / Zahraniční",
-      "media_norm": "Novinky / Zahraniční",
-      "tokens": [
-        "ideologická",
-        "mikuleckého",
-        "milana",
-        "pirátů",
-        "trefa",
-        "zaťatost"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -5233,7 +5241,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/domaci",
-      "bytes": 43689,
+      "bytes": 43199,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5270,7 +5278,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T22:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T23:11:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -5286,6 +5294,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+            "publishedAt": "2026-04-22T23:11:02Z"
+          },
           {
             "title": "Plicní lékaři stárnou a je jich málo, péče kolabuje. Nadějí je umělá inteligence",
             "publishedAt": "2026-04-22T22:51:00Z"
@@ -5313,10 +5325,6 @@
           {
             "title": "Před srážkou vlaků na východním Slovensku sledoval strojvedoucí videa",
             "publishedAt": "2026-04-22T18:41:05Z"
-          },
-          {
-            "title": "Orbánův Fidesz rychle ztrácí voliče",
-            "publishedAt": "2026-04-22T18:35:14Z"
           }
         ]
       }
@@ -5328,7 +5336,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.novinky.cz/rss/zahranicni",
-      "bytes": 43689,
+      "bytes": 43199,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -5365,7 +5373,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T22:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T23:11:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -5381,6 +5389,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+            "publishedAt": "2026-04-22T23:11:02Z"
+          },
           {
             "title": "Plicní lékaři stárnou a je jich málo, péče kolabuje. Nadějí je umělá inteligence",
             "publishedAt": "2026-04-22T22:51:00Z"
@@ -5408,10 +5420,6 @@
           {
             "title": "Před srážkou vlaků na východním Slovensku sledoval strojvedoucí videa",
             "publishedAt": "2026-04-22T18:41:05Z"
-          },
-          {
-            "title": "Orbánův Fidesz rychle ztrácí voliče",
-            "publishedAt": "2026-04-22T18:35:14Z"
           }
         ]
       }

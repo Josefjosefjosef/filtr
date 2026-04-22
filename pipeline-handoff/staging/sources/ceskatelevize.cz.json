@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T23:14:58.153674Z",
+  "ingestedAt": "2026-04-22T23:29:21.374874Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izraelské útoky zabily na jihu Libanonu místní novinářku, píše Reuters",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izraelske-utoky-zabily-na-jihu-libanonu-mistni-novinarku-pise-reuters-372688",
+      "dt": "2026-04-22T23:15:39Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "izraelské",
+        "jihu",
+        "libanonu",
+        "místní",
+        "novinářku",
+        "píše",
+        "reuters",
+        "zabily",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -716,30 +742,6 @@
         "soud",
         "stížnost",
         "ústavní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Senát odmítl vládní návrh na regulaci cen paliv",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senat-projedna-regulaci-cen-pohonnych-hmot-372653",
-      "dt": "2026-04-22T07:11:06Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cen",
-        "návrh",
-        "odmítl",
-        "paliv",
-        "regulaci",
-        "senát",
-        "vládní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1517,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42434,
+      "bytes": 42350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1577,11 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T21:51:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T23:15:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 7,
           "zpravy": 22,
+          "other": 7,
           "finance": 1
         },
         "drop_counts": {
@@ -1594,6 +1596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izraelské útoky zabily na jihu Libanonu místní novinářku, píše Reuters",
+            "publishedAt": "2026-04-22T23:15:39Z"
+          },
           {
             "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
             "publishedAt": "2026-04-22T21:51:08Z"
@@ -1621,10 +1627,6 @@
           {
             "title": "SOUHRN: Zásadní události středy 22. dubna",
             "publishedAt": "2026-04-22T16:30:00Z"
-          },
-          {
-            "title": "„Půjčování času.“ Rusko zkresluje svá ekonomická data, říká šéf švédské rozvědky",
-            "publishedAt": "2026-04-22T16:20:00Z"
           }
         ]
       }
@@ -1730,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 78095,
+      "bytes": 78087,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
