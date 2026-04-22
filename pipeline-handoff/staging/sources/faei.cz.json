@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-22T20:49:57.807329Z",
+  "ingestedAt": "2026-04-22T21:09:28.916006Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sentiment spotřebitelů v eurozóně se výrazně zhoršuje",
+      "url": "https://profitonline.cz/sentiment-spotrebitelu-v-eurozone-se-vyrazne-zhorsuje/",
+      "dt": "2026-04-22T21:05:43Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "eurozóně",
+        "sentiment",
+        "spotřebitelů",
+        "výrazně",
+        "zhoršuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,32 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "The Economist: S jakým Íránem vlastně Amerika jedná a co může zmařit příměří",
-      "url": "https://profitonline.cz/the-economist-s-jakym-iranem-vlastne-amerika-jedna-a-co-muze-zmarit-primeri/",
-      "dt": "2026-04-20T10:00:07Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "amerika",
-        "economist",
-        "jakým",
-        "jedná",
-        "příměří",
-        "the",
-        "vlastně",
-        "zmařit",
-        "íránem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,9 +300,9 @@
       "source": "FAEI",
       "topic": "finance",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19499,
+      "bytes": 19216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +339,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:05:43Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -359,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sentiment spotřebitelů v eurozóně se výrazně zhoršuje",
+            "publishedAt": "2026-04-22T21:05:43Z"
+          },
           {
             "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
             "publishedAt": "2026-04-22T10:00:00Z"
@@ -386,10 +386,6 @@
           {
             "title": "Blízkovýchodní šok zasahuje českou ekonomiku v příznivou chvíli",
             "publishedAt": "2026-04-21T09:00:34Z"
-          },
-          {
-            "title": "Dražší energie vyvíjejí tlak na ceny v českém průmyslu",
-            "publishedAt": "2026-04-21T08:00:44Z"
           }
         ]
       }
