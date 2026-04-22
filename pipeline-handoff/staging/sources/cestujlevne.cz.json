@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-22T12:04:07.720495Z",
+  "ingestedAt": "2026-04-22T12:24:32.709936Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Porto Santo z Prahy na týden se snídaní. Zájezd od 10 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/porto-santo-z-prahy-na-tyden-se-snidani",
+      "dt": "2026-04-22T12:22:07Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "porto",
+        "prahy",
+        "santo",
+        "snídaní",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -479,29 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Varšava z Bratislavy i na prodloužené víkendy. Letenky od 732 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/varsava-z-bratilavy-i-na-prodlouzene-vikendy",
-      "dt": "2026-04-16T14:21:51Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "732",
-        "bratislavy",
-        "letenky",
-        "prodloužené",
-        "varšava",
-        "víkendy"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 39665,
+      "bytes": 41457,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:32:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:22:07Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Porto Santo z Prahy na týden se snídaní. Zájezd od 10 990 Kč",
+            "publishedAt": "2026-04-22T12:22:07Z"
+          },
           {
             "title": "Chorvatsko z Vídně: Dubrovník, Pula i Zadar před letní sezónou. Letenky od 733 Kč",
             "publishedAt": "2026-04-22T10:32:35Z"
@@ -591,10 +596,6 @@
           {
             "title": "Turecko all-inclusive zájezdy se slevou 2 000 Kč. Zájezd od 7 390 Kč",
             "publishedAt": "2026-04-21T11:13:57Z"
-          },
-          {
-            "title": "Z Prahy do Sofie na jednu noc ze soboty na neděli. Letenky od 1 423 Kč",
-            "publishedAt": "2026-04-21T08:18:16Z"
           }
         ]
       }

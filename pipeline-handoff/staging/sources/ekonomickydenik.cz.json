@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T12:04:07.720495Z",
+  "ingestedAt": "2026-04-22T12:24:32.709936Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Izrael rozdělil Evropu. Španělsko a Irsko chtějí tvrdý trest, Itálie a Německo říkají ne",
+      "url": "https://ekonomickydenik.cz/izrael-rozdelil-evropu-spanelsko-a-irsko-chteji-tvrdy-trest/",
+      "dt": "2026-04-22T12:02:18Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chtějí",
+        "evropu",
+        "irsko",
+        "itálie",
+        "izrael",
+        "německo",
+        "rozdělil",
+        "trest",
+        "tvrdý",
+        "říkají",
+        "španělsko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,33 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš stopl miliardy pro kraje: O penězích se nejdříve musíte dohodnout mezi sebou, vzkázal",
-      "url": "https://ekonomickydenik.cz/babis-stopl-miliardy-pro-kraje/",
-      "dt": "2026-04-20T13:45:17Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "dohodnout",
-        "kraje",
-        "miliardy",
-        "musíte",
-        "nejdříve",
-        "penězích",
-        "sebou",
-        "stopl",
-        "vzkázal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73132,
+      "bytes": 73578,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,12 +830,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:50:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:02:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zdravi": 3,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 24,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izrael rozdělil Evropu. Španělsko a Irsko chtějí tvrdý trest, Itálie a Německo říkají ne",
+            "publishedAt": "2026-04-22T12:02:18Z"
+          },
           {
             "title": "Družba se opět plní, ropa na Slovensko dorazí ve čtvrtek. Fico mluví o narušení důvěry",
             "publishedAt": "2026-04-22T10:50:45Z"
@@ -873,10 +878,6 @@
           {
             "title": "Nemocnice má problém s rekonstrukcí vyhořelého pavilonu. Co brzdí dostavbu ÚVN?",
             "publishedAt": "2026-04-22T04:30:00Z"
-          },
-          {
-            "title": "Pomalé zbrojení Evropy může lákat Putina. Komisař zase hrozil útokem Ruska",
-            "publishedAt": "2026-04-21T17:49:00Z"
           }
         ]
       }
