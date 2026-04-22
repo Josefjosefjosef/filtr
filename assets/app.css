@@ -8927,6 +8927,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   #iuMobileGateTabs.iu-mobileGateTabs{
     display: none !important;
   }
+  .iu-mobileSilverFloatMount{
+    display: none !important;
+  }
 }
 
 @media (max-width: 900px){
@@ -9257,79 +9260,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     margin-right: 0 !important;
     box-sizing: border-box !important;
   }
-  
-  #iuMobileGateTabs.iu-mobileGateTabs{
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) var(--iu-mobile-silver-mid-w, 52px) minmax(0, 1fr) !important;
-    column-gap: 6px !important;
-    row-gap: 0 !important;
-    align-items: center !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 10px 0 0 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    --iu-mobile-cta-h: 52px !important;
-    --iu-mobile-silver-mid-w: 52px !important;
-  }
 
-  /* P0 guard: inner edge radius only for Navigace | MindMenu pair flanking the Silver decor (mobile/tablet ≤900px). */
-  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateTab--pairLeft{
-    border-radius: 10px 26px 26px 10px !important;
-  }
-  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateTab--pairRight{
-    border-radius: 26px 10px 10px 26px !important;
-  }
-  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMid{
-    width: var(--iu-mobile-silver-mid-w, 52px) !important;
-    height: var(--iu-mobile-silver-mid-w, 52px) !important;
-    min-width: var(--iu-mobile-silver-mid-w, 52px) !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-shrink: 0 !important;
-    pointer-events: none !important;
-  }
-  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMidCircle{
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 50% !important;
-    overflow: hidden !important;
-    display: block !important;
-    flex-shrink: 0 !important;
-  }
-  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMidImg{
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-  }
-  
-  #iuMobileGateTabs .iu-mobileGateTab{
-    min-width: 0 !important;
-    height: var(--iu-mobile-cta-h, 52px) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 12px !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(0,0,0,.12) !important;
-    background: #c9c9c9 !important;
-    color: #1b2a4a !important;
-    cursor: pointer !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    transition: background .15s ease, border-color .15s ease !important;
-  }
-  #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
-    background: #b0b0b0 !important;
-    border-color: #888 !important;
-    color: #0d1520 !important;
-  }
-  
   #iuMobileGateContent.iu-mobileGateContent{
     width: 100% !important;
     max-width: 100% !important;
@@ -21210,11 +21141,48 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
     box-shadow: none !important;
   }
+  #silver-slot .iu-mobileSilverGateStack.iu-mobileSilverGateStack--floatingSilver{
+    position:relative!important;isolation:isolate!important;overflow:visible!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+    --iu-mobile-cta-h:52px!important;--iu-mobile-silver-float-d:84px!important;--iu-mobile-silver-tab-inner-curve:40px!important;
+  }
+  #silver-slot .iuSilverHomeInputWrap.iu-mobileSilverGateHost{overflow:visible!important}
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatMount{
+    position:absolute!important;inset:0!important;pointer-events:none!important;z-index:3!important;
+  }
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatDecor{
+    position:absolute!important;left:50%!important;top:var(--iu-mobile-cta-h)!important;transform:translate(-50%,-50%)!important;
+    width:var(--iu-mobile-silver-float-d)!important;height:var(--iu-mobile-silver-float-d)!important;box-sizing:border-box!important;pointer-events:none!important;
+  }
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatDecorCircle{
+    width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important;display:block!important;box-sizing:border-box!important;
+  }
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatDecorImg{
+    display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;
+  }
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver .iuSilverHomeInputRow.iuSilverHomeComposerShell{
+    position:relative!important;z-index:2!important;overflow:visible!important;
+  }
+  #silver-slot .iu-mobileSilverGateStack--floatingSilver #iuMobileGateTabs.iu-mobileGateTabs{
+    position:relative!important;z-index:4!important;
+  }
   #silver-slot #iuMobileGateTabs.iu-mobileGateTabs{
-    padding: 8px 0 0 0 !important;
-    column-gap: 6px !important;
-    row-gap: 0 !important;
-    background: transparent !important;
+    display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:8px!important;row-gap:0!important;align-items:center!important;
+    width:100%!important;max-width:100%!important;padding:8px 0 0!important;margin:0!important;box-sizing:border-box!important;background:transparent!important;
+  }
+  #silver-slot #iuMobileGateTabs.iu-mobileGateTabs--silverFloat .iu-mobileGateTab--pairLeft{
+    border-radius:10px var(--iu-mobile-silver-tab-inner-curve,40px) 10px 10px!important;
+  }
+  #silver-slot #iuMobileGateTabs.iu-mobileGateTabs--silverFloat .iu-mobileGateTab--pairRight{
+    border-radius:var(--iu-mobile-silver-tab-inner-curve,40px) 10px 10px 10px!important;
+  }
+  #silver-slot #iuMobileGateTabs .iu-mobileGateTab{
+    min-width:0!important;height:var(--iu-mobile-cta-h,52px)!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+    padding:0 12px!important;font-size:13px!important;font-weight:600!important;border-radius:10px!important;border:1px solid rgba(0,0,0,.12)!important;
+    background:#c9c9c9!important;color:#1b2a4a!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;
+    transition:background .15s ease,border-color .15s ease!important;
+  }
+  #silver-slot #iuMobileGateTabs .iu-mobileGateTab[aria-selected="true"]{
+    background:#b0b0b0!important;border-color:#888!important;color:#0d1520!important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
     border-top: 1px solid rgba(255, 255, 255, 0.12) !important;

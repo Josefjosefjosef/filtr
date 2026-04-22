@@ -476,22 +476,26 @@ style-src 'self' 'unsafe-inline' https:;
                           <div class="silver-compose">
                             <div class="silver-output" aria-live="polite">
                             </div>
-                            <div class="silver-inputWrap iuSilverHomeInputWrap iuSilverStackChromaFrame">
-                              <div class="iuSilverHomeInputRow iuSilverHomeComposerShell">
-                                <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" maxlength="150" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
-                                <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
-                                  <svg class="iuSilverHomeSendIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 4 18 12h-4v8h-4v-8H6l6-8z"/></svg>
-                                </button>
-                              </div>
-                              <!-- P0 Mobile/tablet: gate tabs live inside brown Silver frame (desktop hidden via CSS) -->
-                              <div id="iuMobileGateTabs" class="iu-mobileGateTabs iu-mobileGateTabs--silverCenter" role="tablist" aria-label="Sekce mobilního rozcestníku">
-                                <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab iu-mobileGateTab--pairLeft" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
-                                <div class="iu-mobileGateSilverMid" role="presentation" aria-hidden="true">
-                                  <span class="iu-mobileGateSilverMidCircle">
-                                    <img class="iu-mobileGateSilverMidImg" src="/assets/images/iu-silver-button.png" alt="" width="52" height="52" decoding="async" />
-                                  </span>
+                            <div class="silver-inputWrap iuSilverHomeInputWrap iuSilverStackChromaFrame iu-mobileSilverGateHost">
+                              <div class="iu-mobileSilverGateStack iu-mobileSilverGateStack--floatingSilver">
+                                <div class="iuSilverHomeInputRow iuSilverHomeComposerShell">
+                                  <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" maxlength="150" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
+                                  <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
+                                    <svg class="iuSilverHomeSendIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 4 18 12h-4v8h-4v-8H6l6-8z"/></svg>
+                                  </button>
                                 </div>
-                                <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab iu-mobileGateTab--pairRight" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                                <div class="iu-mobileSilverFloatMount" aria-hidden="true">
+                                  <div class="iu-mobileSilverFloatDecor" role="presentation">
+                                    <span class="iu-mobileSilverFloatDecorCircle">
+                                      <img class="iu-mobileSilverFloatDecorImg" src="/assets/images/iu-silver-button.png" alt="" width="84" height="84" decoding="async" />
+                                    </span>
+                                  </div>
+                                </div>
+                                <!-- P0 Mobile/tablet: gate tabs + floating Silver decor (desktop hidden via CSS) -->
+                                <div id="iuMobileGateTabs" class="iu-mobileGateTabs iu-mobileGateTabs--silverFloat" role="tablist" aria-label="Sekce mobilního rozcestníku">
+                                  <button type="button" id="iuMobileGateTabNav" class="iu-mobileGateTab iu-mobileGateTab--pairLeft" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelNav" data-iu-gate-tab="nav">Navigace po webu</button>
+                                  <button type="button" id="iuMobileGateTabTools" class="iu-mobileGateTab iu-mobileGateTab--pairRight" role="tab" aria-selected="false" aria-controls="iuMobileGatePanelTools" data-iu-gate-tab="tools">MindMenu a nástroje</button>
+                                </div>
                               </div>
                             </div>
                           </div>
