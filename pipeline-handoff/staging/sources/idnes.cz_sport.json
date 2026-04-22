@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T07:00:07.594687Z",
+  "ingestedAt": "2026-04-22T07:20:22.325877Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Houška junior: Hrát s Ústím o zlato je sen. Bylo by to největší finále v Česku",
+      "url": "https://www.idnes.cz/sport/basket/houska-marek-basketbal-el-nordico-ctvrtfinale-play-off.A260421_233517_sport-basket_pbi",
+      "dt": "2026-04-22T06:52:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finále",
+        "houška",
+        "hrát",
+        "junior",
+        "největší",
+        "sen",
+        "zlato",
+        "ústím",
+        "česku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tohle je sen a doufám, že ho budu žít ještě dlouho. Kačor vyhlíží pohárové finále",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/pavel-kacor-mfk-karvina-mol-cupu-banik.A260421_233107_fot_dsouteze_jsl",
+      "dt": "2026-04-22T06:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "budu",
+        "dlouho",
+        "doufám",
+        "finále",
+        "ještě",
+        "kačor",
+        "pohárové",
+        "sen",
+        "tohle",
+        "vyhlíží",
+        "žít"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -729,60 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obrovský trapas maratonce. Začal slavit předčasně, v cíli ho předběhl soupeř",
-      "url": "https://www.idnes.cz/sport/trendy/obrovsky-trapas-maratonce-zacal-slavit-predcasne-v-cili-ho-predbehl-souper.A260421_123026_trendy_blah",
-      "dt": "2026-04-21T13:28:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cíli",
-        "maratonce",
-        "obrovský",
-        "předběhl",
-        "předčasně",
-        "slavit",
-        "soupeř",
-        "trapas",
-        "začal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dva stíhaní z fotbalové kauzy opustili vazbu. Maření vyšetřování nehrozí, rozhodl žalobce",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/korupce-ve-fotbale-dva-obvineni-propusteni.A260421_143601_fot_dsouteze_kazdt",
-      "dt": "2026-04-21T13:25:43Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dva",
-        "fotbalové",
-        "kauzy",
-        "maření",
-        "nehrozí",
-        "opustili",
-        "rozhodl",
-        "stíhaní",
-        "vazbu",
-        "vyšetřování",
-        "žalobce"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47217,
+      "bytes": 47506,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:24:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T06:52:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +845,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Houška junior: Hrát s Ústím o zlato je sen. Bylo by to největší finále v Česku",
+            "publishedAt": "2026-04-22T06:52:00Z"
+          },
+          {
+            "title": "Tohle je sen a doufám, že ho budu žít ještě dlouho. Kačor vyhlíží pohárové finále",
+            "publishedAt": "2026-04-22T06:27:00Z"
+          },
           {
             "title": "Boston i díky produktivitě Pastrňáka se Zachou srovnal sérii s Buffalem",
             "publishedAt": "2026-04-22T06:24:13Z"
@@ -868,14 +876,6 @@
           {
             "title": "Boltův čas za milion dolarů. Dopingové hry se blíží. Jde o pokrok, nebo čirý hazard?",
             "publishedAt": "2026-04-21T22:00:00Z"
-          },
-          {
-            "title": "Chelsea je ve stoleté krizi. Popáté v řadě padla bez gólu. Brighton jí nadělil trojku",
-            "publishedAt": "2026-04-21T21:27:29Z"
-          },
-          {
-            "title": "Barcelona zachránila sezonu v Evropě. Výrazně se podíleli Satoranský s Veselým",
-            "publishedAt": "2026-04-21T20:56:00Z"
           }
         ]
       }

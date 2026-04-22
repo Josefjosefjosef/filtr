@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T07:00:07.594687Z",
+  "ingestedAt": "2026-04-22T07:20:22.325877Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/chripkova-sezona-znepokojiva-data-ale-ockovani-stale-nizke/",
+      "dt": "2026-04-22T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chřipkové",
+        "data",
+        "dva",
+        "miliony",
+        "mrtvých",
+        "nemocných",
+        "nestoupá",
+        "očkování",
+        "sezóny",
+        "straší",
+        "tisíce",
+        "téměř"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/prezije-interna-ve-znojemske-nemocnici-novy-reditel-odhalil-sve-plany/",
-      "dt": "2026-04-21T09:15:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "interna",
-        "nemocnici",
-        "nový",
-        "odhalil",
-        "plány",
-        "přežije",
-        "své",
-        "znojemské",
-        "ředitel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95829,
+      "bytes": 101013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
+            "publishedAt": "2026-04-22T07:00:00Z"
+          },
           {
             "title": "Třesk v operacích nádorů: Tady mají skončit s hazardními zákroky na játrech či na slinivce",
             "publishedAt": "2026-04-22T06:00:00Z"
@@ -357,10 +364,6 @@
           {
             "title": "Historický průlom: V Česku se nově sleduje šíření nemocí v reálném čase. Data uvidíte i vy",
             "publishedAt": "2026-04-21T11:31:20Z"
-          },
-          {
-            "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
-            "publishedAt": "2026-04-21T10:58:49Z"
           }
         ]
       }

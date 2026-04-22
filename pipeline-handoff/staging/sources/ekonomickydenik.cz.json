@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T07:00:07.594687Z",
+  "ingestedAt": "2026-04-22T07:20:22.325877Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Z Brna letecky k moři do Chorvatska? O lince do Zadaru se už jedná",
+      "url": "https://ekonomickydenik.cz/brno-zadar-letecka-linka/",
+      "dt": "2026-04-22T07:01:27Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "brna",
+        "chorvatska",
+        "jedná",
+        "letecky",
+        "lince",
+        "moři",
+        "zadaru"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,32 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nobelista kritizuje Trumpa. Komunistický Peking je solidnější partner, tvrdí ekonom",
-      "url": "https://ekonomickydenik.cz/nobelista-kritizuje-trumpa-peking-partner/",
-      "dt": "2026-04-20T12:07:13Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ekonom",
-        "komunistický",
-        "kritizuje",
-        "nobelista",
-        "partner",
-        "peking",
-        "solidnější",
-        "trumpa",
-        "tvrdí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73611,
+      "bytes": 73267,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:52:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:01:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -845,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Brna letecky k moři do Chorvatska? O lince do Zadaru se už jedná",
+            "publishedAt": "2026-04-22T07:01:27Z"
+          },
           {
             "title": "105 spících miliard na účtech. Mají peníze připadnout státu nebo bance?",
             "publishedAt": "2026-04-22T06:52:56Z"
@@ -872,10 +874,6 @@
           {
             "title": "Spekulantům vstup zakázán. Jaké změny čekají katastr nemovitostí?",
             "publishedAt": "2026-04-21T13:33:13Z"
-          },
-          {
-            "title": "Letadla mají létat na vodík a elektřinu. Nebudeme rukojmími „darebáckých států“",
-            "publishedAt": "2026-04-21T13:08:11Z"
           }
         ]
       }
