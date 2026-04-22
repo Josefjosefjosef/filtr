@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-04-22T11:23:38.933469Z",
+  "ingestedAt": "2026-04-22T11:44:05.898290Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Thajsko od 10 990 Kč: Bangkok, Chiang Mai a Phuket včetně zavazadla",
+      "url": "https://pelipecky.cz/thajsko-akcni-letenky/",
+      "dt": "2026-04-22T11:41:49Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "990",
+        "bangkok",
+        "chiang",
+        "mai",
+        "phuket",
+        "thajsko",
+        "včetně",
+        "zavazadla"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -232,28 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Ráj v Indickém oceánu: Mauricius od 16 290 Kč",
-      "url": "https://pelipecky.cz/mauricius-letenky-z-prahy/",
-      "dt": "2026-04-13T09:05:00Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "290",
-        "indickém",
-        "mauricius",
-        "oceánu",
-        "ráj"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -264,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 147536,
+      "bytes": 147742,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -301,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:59:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T11:41:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -316,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Thajsko od 10 990 Kč: Bangkok, Chiang Mai a Phuket včetně zavazadla",
+            "publishedAt": "2026-04-22T11:41:49Z"
+          },
           {
             "title": "Letenky už levnější nebudou: rezervuj si TOP destinace od… od 690 Kč",
             "publishedAt": "2026-04-22T10:59:32Z"
@@ -343,10 +350,6 @@
           {
             "title": "Exotika od 7 990 Kč + 10 důvodů, proč si snadno oblíbíš aerolinky Saudia",
             "publishedAt": "2026-04-16T14:30:00Z"
-          },
-          {
-            "title": "Emirates z Vídně již dvakrát denně: lepší spojení na Maledivy, Seychely i Mauricius!",
-            "publishedAt": "2026-04-16T10:35:50Z"
           }
         ]
       }
