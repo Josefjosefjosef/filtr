@@ -10299,32 +10299,42 @@ function buildVideoAsArticleCard(it) {
         const vw = window.innerWidth || 0;
         const pad = 10;
         const maxW = Math.min(380, Math.max(240, vw - 2 * pad));
-        shell.style.boxSizing = "border-box";
-        shell.style.width = maxW + "px";
-        shell.style.maxWidth = maxW + "px";
         let left = r.left;
         if (left + maxW > vw - pad) left = Math.max(pad, vw - pad - maxW);
         if (left < pad) left = pad;
+        const minOv = Math.min(72, Math.max(28, r.width * 0.55));
+        function segOverlap(a0, a1, b0, b1){
+          return Math.min(a1, b1) - Math.max(a0, b0);
+        }
+        let ovl = segOverlap(left, left + maxW, r.left, r.right);
+        if (ovl < minOv){
+          left = Math.min(vw - pad - maxW, Math.max(pad, r.left));
+          ovl = segOverlap(left, left + maxW, r.left, r.right);
+        }
+        if (ovl < minOv){
+          left = Math.min(vw - pad - maxW, Math.max(pad, r.right - maxW));
+        }
         const topPx = Math.round(r.bottom + 6);
         const leftPx = Math.round(left);
-        shell.style.position = "fixed";
-        shell.style.top = topPx + "px";
-        shell.style.left = leftPx + "px";
-        shell.style.right = "auto";
-        shell.style.zIndex = "10060";
+        shell.style.setProperty("box-sizing", "border-box", "important");
+        shell.style.setProperty("width", maxW + "px", "important");
+        shell.style.setProperty("max-width", maxW + "px", "important");
+        shell.style.setProperty("position", "fixed", "important");
+        shell.style.setProperty("right", "auto", "important");
+        shell.style.setProperty("top", topPx + "px", "important");
+        shell.style.setProperty("left", leftPx + "px", "important");
+        shell.style.setProperty("z-index", "10060", "important");
       }catch{}
     }
 
     function clearShellInline(shell){
       if (!shell) return;
       try{
-        shell.style.position = "";
-        shell.style.top = "";
-        shell.style.left = "";
-        shell.style.right = "";
-        shell.style.width = "";
-        shell.style.maxWidth = "";
-        shell.style.zIndex = "";
+        ["box-sizing", "position", "top", "left", "right", "width", "max-width", "z-index"].forEach(function (p){
+          try{
+            shell.style.removeProperty(p);
+          }catch{}
+        });
       }catch{}
     }
 
@@ -10404,26 +10414,28 @@ function buildVideoAsArticleCard(it) {
         if (bridge){
           try{ bridge.removeAttribute("hidden"); bridge.setAttribute("aria-hidden", "false"); }catch{}
         }
-        try{ shell.classList.remove("iu-mmHoverSummaryPanelShell--closed"); shell.setAttribute("aria-hidden", "false"); }catch{}
+        try{
+          positionShell(shell, host);
+          shell.classList.remove("iu-mmHoverSummaryPanelShell--closed");
+          shell.setAttribute("aria-hidden", "false");
+        }catch{}
         try{
           if (hoverState.openHosts.indexOf(host) < 0) hoverState.openHosts.push(host);
         }catch{}
         try{
           requestAnimationFrame(function (){
-            try{ positionShell(shell, host); }catch{}
             try{
-              requestAnimationFrame(function (){
-                try{
-                  const br = shell.getBoundingClientRect();
-                  const vh = window.innerHeight || 0;
-                  const pad = 8;
-                  if (br.bottom > vh - pad){
-                    const over = br.bottom - (vh - pad);
-                    const curTop = parseFloat(shell.style.top) || 0;
-                    shell.style.top = Math.max(pad, Math.round(curTop - over)) + "px";
-                  }
-                }catch{}
-              });
+              positionShell(shell, host);
+              const br = shell.getBoundingClientRect();
+              const vh = window.innerHeight || 0;
+              const pad = 8;
+              if (br.bottom > vh - pad){
+                const over = br.bottom - (vh - pad);
+                const curRaw = String(shell.style.getPropertyValue("top") || "").trim();
+                const curTop = parseFloat(curRaw.replace(/px$/i, "")) || 0;
+                const nextTop = Math.max(pad, Math.round(curTop - over));
+                shell.style.setProperty("top", nextTop + "px", "important");
+              }
             }catch{}
           });
         }catch{}
@@ -10455,6 +10467,26 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       try{
         host.addEventListener("mouseleave", function (){
+          scheduleHide();
+        });
+      }catch{}
+      try{
+        if (bridge){
+          bridge.addEventListener("mouseenter", function (){
+            if (!mqDesktopMatches()) return;
+            clearHide();
+          });
+          bridge.addEventListener("mouseleave", function (){
+            scheduleHide();
+          });
+        }
+      }catch{}
+      try{
+        shell.addEventListener("mouseenter", function (){
+          if (!mqDesktopMatches()) return;
+          clearHide();
+        });
+        shell.addEventListener("mouseleave", function (){
           scheduleHide();
         });
       }catch{}
@@ -30562,7 +30594,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:active{transform:translateY(0.5px)}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell.iu-mmHoverSummaryPanelShell--closed{position:fixed!important;left:-12000px!important;top:0!important;width:min(380px,calc(100vw - 20px))!important;max-height:min(72vh,560px)!important;opacity:0!important;pointer-events:none!important;z-index:-1!important;overflow:hidden!important}" +
     "#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorTasks{display:none!important}" +
-    "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
+    "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){position:fixed!important;left:auto!important;top:auto!important;right:auto!important;z-index:10060!important;box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
     ".dark body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){background:rgba(15,23,42,.96);border-color:rgba(148,163,184,.28);color:rgba(241,245,249,.95)}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost>.iu-mmTopTool.iu-has-hover-summary{position:relative;z-index:10058}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell .silver-calendar-summary-card{border-radius:10px}" +
