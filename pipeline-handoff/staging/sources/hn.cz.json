@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-22T14:24:24.072552Z",
+  "ingestedAt": "2026-04-22T14:50:05.994491Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rusko ukončí dodávky kazachstánské ropy do Německa. Moskva chce surovinu přesměrovat na jiné trasy",
+      "url": "https://zahranicni.hn.cz/c1-67870020-rusko-ukonci-dodavky-kazachstanske-ropy-do-nemecka-moskva-chce-surovinu-presmerovat-na-jine-trasy",
+      "dt": "2026-04-22T14:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chce",
+        "dodávky",
+        "jiné",
+        "kazachstánské",
+        "moskva",
+        "německa",
+        "přesměrovat",
+        "ropy",
+        "rusko",
+        "surovinu",
+        "trasy",
+        "ukončí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1082,35 +1111,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V Praze dvakrát přistál speciál amerického letectva. Air Force Two letěl přes Česko do Pákistánu",
-      "url": "https://domaci.hn.cz/c1-67869620-v-praze-dvakrat-pristal-special-americkeho-letectva-air-force-two-letel-pres-cesko-do-pakistanu",
-      "dt": "2026-04-21T18:03:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "air",
-        "amerického",
-        "dvakrát",
-        "force",
-        "letectva",
-        "letěl",
-        "praze",
-        "pákistánu",
-        "přistál",
-        "speciál",
-        "two",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1121,7 +1121,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183526,
+      "bytes": 183729,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1158,7 +1158,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T13:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T14:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1176,6 +1176,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko ukončí dodávky kazachstánské ropy do Německa. Moskva chce surovinu přesměrovat na jiné trasy",
+            "publishedAt": "2026-04-22T14:01:00Z"
+          },
           {
             "title": "Wolt, Foodora, Uber a spol. zneužívají svou sílu, flexibilita je jen iluze. Nový zákon problémy neřeší, říká šéf &bdquo;kurýrské&ldquo; asociace",
             "publishedAt": "2026-04-22T13:52:00Z"
@@ -1203,10 +1207,6 @@
           {
             "title": "Odbory ČT a ČRo vyhlásily stávkovou pohotovost, kvůli vládnímu návrhu zákona o médiích veřejné služby a návrhu na omezení poplatků",
             "publishedAt": "2026-04-22T10:43:00Z"
-          },
-          {
-            "title": "Ceny pražských novostaveb prolomily hranici 180 tisíc korun za metr čtvereční. Co je hitem mezi investory?",
-            "publishedAt": "2026-04-22T09:16:00Z"
           }
         ]
       }

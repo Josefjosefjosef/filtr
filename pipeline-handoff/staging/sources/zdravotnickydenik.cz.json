@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T14:24:24.072552Z",
+  "ingestedAt": "2026-04-22T14:50:05.994491Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/cerny-trh-cigarety-cesko/",
+      "dt": "2026-04-22T14:29:29Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cigaretami",
+        "exploduje",
+        "kokain",
+        "než",
+        "pašeráky",
+        "tabák",
+        "trh",
+        "výnosnější",
+        "černý"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,31 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "5 mýtů o vašich zdravotních údajích. Kdo všechno je může vidět a má nad nimi kontrolu?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-udaje-5-mytu/",
-      "dt": "2026-04-21T15:19:33Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kontrolu",
-        "mýtů",
-        "nimi",
-        "vašich",
-        "vidět",
-        "všechno",
-        "zdravotních",
-        "údajích"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104924,
+      "bytes": 106427,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,10 +317,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T13:33:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T14:29:29Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -331,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
+            "publishedAt": "2026-04-22T14:29:29Z"
+          },
           {
             "title": "Po letech sporů přišel verdikt: Hygienici musí začít řešit hluk z dopravy",
             "publishedAt": "2026-04-22T13:33:09Z"
@@ -358,10 +364,6 @@
           {
             "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
             "publishedAt": "2026-04-22T07:00:00Z"
-          },
-          {
-            "title": "Třesk v operacích nádorů: Tady mají skončit s hazardními zákroky na játrech či na slinivce",
-            "publishedAt": "2026-04-22T06:00:00Z"
           }
         ]
       }
