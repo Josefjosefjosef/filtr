@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T13:04:19.735070Z",
+  "ingestedAt": "2026-04-22T14:04:45.132371Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Po letech sporů přišel verdikt: Hygienici musí začít řešit hluk z dopravy",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/spor-hygienici-hluk-z-dopravy/",
+      "dt": "2026-04-22T13:33:09Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dopravy",
+        "hluk",
+        "hygienici",
+        "letech",
+        "musí",
+        "přišel",
+        "sporů",
+        "verdikt",
+        "začít",
+        "řešit"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,33 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Babiš slíbil nejmodernější celotělový PET/CT pro Česko. Nová technologie tu zatím chybí",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/babis-celotelovy-pet-ct/",
-      "dt": "2026-04-21T14:12:32Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babiš",
-        "celotělový",
-        "chybí",
-        "nejmodernější",
-        "nová",
-        "pet",
-        "slíbil",
-        "technologie",
-        "zatím",
-        "česko"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103772,
+      "bytes": 104924,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:00:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T13:33:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -331,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po letech sporů přišel verdikt: Hygienici musí začít řešit hluk z dopravy",
+            "publishedAt": "2026-04-22T13:33:09Z"
+          },
           {
             "title": "Pavilon ÚVN je po požáru před 4 lety stále prázdný. Rekonstrukci brzdí ostré spory",
             "publishedAt": "2026-04-22T12:00:33Z"
@@ -358,10 +362,6 @@
           {
             "title": "Třesk v operacích nádorů: Tady mají skončit s hazardními zákroky na játrech či na slinivce",
             "publishedAt": "2026-04-22T06:00:00Z"
-          },
-          {
-            "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
-            "publishedAt": "2026-04-22T05:00:00Z"
           }
         ]
       }
