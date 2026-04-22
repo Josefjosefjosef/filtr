@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T07:20:22.325877Z",
+  "ingestedAt": "2026-04-22T07:40:16.420401Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prostějovskem otřásla smrt známého lékaře. Tragédií se zabývá i policie",
+      "url": "https://www.denik.cz/regiony/smrt-tragedie-doktor-prostejov-vicov-policie.html",
+      "dt": "2026-04-22T07:22:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "lékaře",
+        "otřásla",
+        "policie",
+        "prostějovskem",
+        "smrt",
+        "tragédií",
+        "zabývá",
+        "známého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -392,20 +417,21 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
-      "url": "https://prazsky.denik.cz/zpravy_region/letisti-vaclava-havla-special-letectva-usa.html",
+      "title": "Dvakrát za pár dní. Americký speciál odletěl z Ruzyně do Pákistánu, vrátil se",
+      "url": "https://www.denik.cz/regiony/letisti-vaclava-havla-special-letectva-usa.html",
       "dt": "2026-04-21T18:18:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "americký",
+        "dní",
         "dvakrát",
-        "letectva",
-        "neděle",
-        "nekomentují",
-        "praze",
+        "odletěl",
+        "pákistánu",
+        "pár",
+        "ruzyně",
         "speciál",
-        "usa",
-        "úřady"
+        "vrátil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -625,31 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Červená kráska. Hasiči v Černotíně se pochlubili novým zásahovým autem",
-      "url": "https://www.denik.cz/ctenar-reporter/hasici-v-cernotine-se-pochlubili-novym-zasahovym-autem-20260419.html",
-      "dt": "2026-04-21T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "autem",
-        "hasiči",
-        "kráska",
-        "novým",
-        "pochlubili",
-        "zásahovým",
-        "černotíně",
-        "červená"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29684,
+      "bytes": 29538,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:22:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -712,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prostějovskem otřásla smrt známého lékaře. Tragédií se zabývá i policie",
+            "publishedAt": "2026-04-22T07:22:00Z"
+          },
           {
             "title": "Jak pašovat fentanyl? Ve střevech. Euforie je zpět, v tuctovější podobě",
             "publishedAt": "2026-04-22T06:30:00Z"
@@ -739,10 +744,6 @@
           {
             "title": "New Aliquot slaví 10 let a otevírá novou kapitolu s Davidem Bendou",
             "publishedAt": "2026-04-22T04:30:00Z"
-          },
-          {
-            "title": "Schwarzenbergův zámek se prodal. Koupila ho rodina spolumajitele Tipsportu",
-            "publishedAt": "2026-04-22T04:20:00Z"
           }
         ]
       }

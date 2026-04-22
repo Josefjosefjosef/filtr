@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-22T07:20:22.325877Z",
+  "ingestedAt": "2026-04-22T07:40:16.420401Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zapálil sousedku, která ho přistihla při vloupání. Teď Američana popravili",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/florida-poprava-vrah-vloupani.A260422_084358_zahranicni_pari",
+      "dt": "2026-04-22T07:12:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "američana",
+        "popravili",
+        "při",
+        "přistihla",
+        "sousedku",
+        "vloupání",
+        "zapálil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -748,35 +772,6 @@
         "usa",
         "vlajku",
         "části"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když příměří, tak expanze. Izrael zabírá jih Libanonu, vznikla zóna volné střelby",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izrael-libanon-hranice-zluta-linie-gaza-primeri-hizballah.A260421_112036_zahranicni_rtn",
-      "dt": "2026-04-21T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "expanze",
-        "izrael",
-        "jih",
-        "když",
-        "libanonu",
-        "příměří",
-        "střelby",
-        "tak",
-        "volné",
-        "vznikla",
-        "zabírá",
-        "zóna"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1570,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48199,
+      "bytes": 47507,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,7 +1607,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1629,6 +1624,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zapálil sousedku, která ho přistihla při vloupání. Teď Američana popravili",
+            "publishedAt": "2026-04-22T07:12:00Z"
+          },
           {
             "title": "Volíme obdobný postup jako v roce 2022, hájí Schillerová regulaci cen",
             "publishedAt": "2026-04-22T07:05:00Z"
@@ -1656,10 +1655,6 @@
           {
             "title": "Milovaný, nenáviděný, ikonický. Podívejte se na nepřístupná místa Tančícího domu",
             "publishedAt": "2026-04-22T06:07:00Z"
-          },
-          {
-            "title": "Média nedáme! Studenti pořádají protesty na podporu České televize a rozhlasu",
-            "publishedAt": "2026-04-22T06:00:00Z"
           }
         ]
       }

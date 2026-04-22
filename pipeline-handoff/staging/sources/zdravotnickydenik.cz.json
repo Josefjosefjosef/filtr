@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T07:20:22.325877Z",
+  "ingestedAt": "2026-04-22T07:40:16.420401Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Exšéf Nemocnice Na Homolce narazil u Ústavního soudu. Trest pro Dbalého platí",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/exsef-nemocnice-na-homolce-narazil-u-ustavniho-soudu-trest-pro-dbaleho-plati/",
+      "dt": "2026-04-22T07:23:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dbalého",
+        "exšéf",
+        "homolce",
+        "narazil",
+        "nemocnice",
+        "platí",
+        "soudu",
+        "trest",
+        "ústavního"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/deti-vr-bryle-kolaps-novy-projekt-skoly/",
-      "dt": "2026-04-21T09:40:45Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "brýle",
-        "děti",
-        "kolapsu",
-        "míří",
-        "nasadí",
-        "nový",
-        "ocitnou",
-        "projekt",
-        "člověka",
-        "škol"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101013,
+      "bytes": 101850,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:23:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Exšéf Nemocnice Na Homolce narazil u Ústavního soudu. Trest pro Dbalého platí",
+            "publishedAt": "2026-04-22T07:23:51Z"
+          },
           {
             "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
             "publishedAt": "2026-04-22T07:00:00Z"
@@ -360,10 +363,6 @@
           {
             "title": "Očkování přímo v práci? Zaměstnavatelé chtějí větší vliv ve zdravotním systému",
             "publishedAt": "2026-04-21T12:07:42Z"
-          },
-          {
-            "title": "Historický průlom: V Česku se nově sleduje šíření nemocí v reálném čase. Data uvidíte i vy",
-            "publishedAt": "2026-04-21T11:31:20Z"
           }
         ]
       }
