@@ -127,6 +127,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/app.css?v=silver-address-slot-class-no-empty" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
+    <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
@@ -1862,7 +1863,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><button type="button" class="iuTileLink" data-iuq="fincalc" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><button type="button" class="iuTileLink" role="listitem" data-iuq="legaldocs" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="komunikace_vzdelavani" data-iu-ql="komunikace-vzdelavani"><span class="iuTileLink" role="listitem" data-ql="platformy" aria-label="Komunikace a vzdělávání"><span class="iuTileText">Komunikace a vzdělávání</span></span></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="katastr_nemovitosti" data-iu-ql="katastr-nemovitosti"><span class="iuTileLink" role="listitem" data-ql="katastr" aria-label="Katastr nemovitostí"><span class="iuTileText">Katastr nemovitostí</span></span></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="vytvorit_fakturu" data-iu-ql="vytvorit-fakturu"><button type="button" class="iuTileLink" data-iuq="faktura" aria-label="Vytvořit fakturu"><span class="iuTileText">Vytvořit fakturu</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="registr_smluv" data-iu-ql="registr-smluv"><a class="iuTileLink" role="listitem" data-iuq="seznam" data-ql="seznam" href="https://www.seznam.cz/" target="_blank" rel="noopener noreferrer" aria-label="Registr smluv"><span class="iuTileText">Registr smluv</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="obchodni_rejstrik" data-iu-ql="obchodni-rejstrik"><span class="iuTileLink" role="listitem" data-ql="rejstrik" aria-label="Obchodní rejstřík"><span class="iuTileText">Obchodní rejstřík</span></span></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="zivnostensky_rejstrik" data-iu-ql="zivnostensky-rejstrik"><span class="iuTileLink" role="listitem" data-ql="zivnost" aria-label="Živnostenský rejstřík"><span class="iuTileText">Živnostenský rejstřík</span></span></div>
@@ -1905,6 +1906,24 @@ style-src 'self' 'unsafe-inline' https:;
                           </header>
                           <div id="iuLegalDocsScrollHost" class="iu-legal-overlay-scrollHost">
                             <div id="iuLegalDocsViews"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="iuInvoiceBackdrop" class="iu-invoice-overlay iu-invoice-overlay-backdrop" hidden aria-hidden="true"></div>
+                    <div id="iuInvoicePanel" class="iu-invoice-overlay iu-invoice-overlay-panel" role="dialog" aria-modal="true" aria-labelledby="iuInvoiceTitle" hidden data-open="0" aria-hidden="true">
+                      <div class="iu-invoice-overlay-cardShell">
+                        <div class="iu-invoice-overlay-inner">
+                          <header class="iu-invoice-overlay-header">
+                            <div class="iu-invoice-overlay-heading">
+                              <h2 id="iuInvoiceTitle" class="iu-invoice-overlay-h2">Vytvořit fakturu</h2>
+                              <p class="iu-invoice-overlay-sub">Profesionální generátor faktury — údaje jen v tomto prohlížeči</p>
+                            </div>
+                            <button type="button" id="iuInvoiceClose" class="iu-overlayCloseBtn38 iu-close-btn-38" aria-label="Zavřít" data-iu-close>×</button>
+                          </header>
+                          <div id="iuInvoiceScrollHost" class="iu-invoice-overlay-scrollHost">
+                            <div id="iuInvoiceMount"></div>
                           </div>
                         </div>
                       </div>

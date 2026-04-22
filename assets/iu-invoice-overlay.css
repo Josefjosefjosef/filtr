@@ -1,0 +1,508 @@
+/* === Fakturační modul — overlay 1:1 pattern jako právní modul; bez :has() === */
+#iuInvoiceBackdrop.iu-invoice-overlay-backdrop[hidden],
+#iuInvoicePanel.iu-invoice-overlay-panel[hidden]{
+  display: none !important;
+}
+#iuInvoiceBackdrop.iu-invoice-overlay-backdrop{
+  position: fixed;
+  inset: 0;
+  z-index: 10033;
+  background: rgba(15, 23, 42, 0.48);
+  box-sizing: border-box;
+}
+@media (max-width: 1024px){
+  #iuInvoicePanel.iu-invoice-overlay-panel{
+    position: fixed;
+    inset: 0;
+    z-index: 10034;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  #iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-cardShell{
+    pointer-events: auto;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: #fafafa;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    border: 0;
+  }
+  #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
+    padding: 14px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (min-width: 1025px){
+  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]){
+    position: fixed;
+    inset: 0;
+    left: 0;
+    top: 0;
+    transform: none;
+    z-index: 10034;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    background: rgb(241, 245, 249);
+    pointer-events: none;
+  }
+  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-cardShell{
+    pointer-events: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
+    align-self: center;
+    height: auto;
+    max-height: none;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid rgba(136, 19, 55, 0.12);
+    background: #fafafa;
+  }
+  body.iu-invoice-overlay-open #iuInvoicePanel.iu-invoice-overlay-panel:not([hidden]) .iu-invoice-overlay-header{
+    flex: 0 0 auto;
+    padding: 14px 16px;
+  }
+  body.iu-invoice-overlay-open #iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    padding: 14px 16px 16px;
+  }
+}
+#iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-inner{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  max-height: inherit;
+  position: relative;
+}
+#iuInvoiceMount{
+  position: relative;
+  min-height: 0;
+}
+#iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-header{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px 12px 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  flex: 0 0 auto;
+  min-width: 0;
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+}
+#iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-heading{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-h2{
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 750;
+  line-height: 1.25;
+  color: #0f172a;
+}
+#iuInvoicePanel.iu-invoice-overlay-panel .iu-invoice-overlay-sub{
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.62);
+}
+#iuInvoiceScrollHost.iu-invoice-overlay-scrollHost{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+}
+
+/* --- Form --- */
+#iuInvoicePanel .iu-inv-root{
+  position: relative;
+  min-height: 120px;
+}
+#iuInvoicePanel .iu-inv-intro{
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15, 23, 42, 0.7);
+}
+#iuInvoicePanel .iu-inv-block{
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+#iuInvoicePanel .iu-inv-h{
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 750;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-seg{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+#iuInvoicePanel .iu-inv-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #0f172a;
+  cursor: pointer;
+}
+#iuInvoicePanel .iu-inv-fieldGrid{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (min-width: 700px){
+  #iuInvoicePanel .iu-inv-fieldGrid--2{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 14px;
+  }
+}
+#iuInvoicePanel .iu-inv-field{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.75);
+  min-width: 0;
+}
+#iuInvoicePanel .iu-inv-field--grow{
+  flex: 1 1 auto;
+}
+#iuInvoicePanel .iu-inv-field--check .iu-inv-inline{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+#iuInvoicePanel .iu-inv-field--compact{
+  max-width: 140px;
+}
+#iuInvoicePanel .iu-inv-label{
+  font-weight: 650;
+}
+#iuInvoicePanel .iu-inv-input,
+#iuInvoicePanel .iu-inv-select,
+#iuInvoicePanel .iu-inv-textarea{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  font-size: 16px;
+  line-height: 1.3;
+  font-family: inherit;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 10px;
+  background: #fff;
+  min-width: 0;
+}
+#iuInvoicePanel .iu-inv-textarea{
+  resize: vertical;
+  min-height: 72px;
+}
+#iuInvoicePanel .iu-inv-recipientRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+#iuInvoicePanel .iu-inv-lineCard{
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: rgba(248, 250, 252, 0.65);
+  box-sizing: border-box;
+}
+#iuInvoicePanel .iu-inv-lineCardTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+#iuInvoicePanel .iu-inv-lineTitle{
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-lineBtns{
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+#iuInvoicePanel .iu-inv-btn{
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  cursor: pointer;
+  background: #fff;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-btn--mini{
+  padding: 6px 10px;
+  font-size: 13px;
+}
+#iuInvoicePanel .iu-inv-btn--ghost{
+  background: #f8fafc;
+}
+#iuInvoicePanel .iu-inv-btn--primary{
+  background: #881337;
+  border-color: #881337;
+  color: #fff;
+  font-weight: 650;
+}
+#iuInvoicePanel .iu-inv-btn--primary:hover{
+  background: #9f1239;
+}
+#iuInvoicePanel .iu-inv-summary{
+  font-size: 15px;
+  line-height: 1.55;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-summaryDue{
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(136, 19, 55, 0.08);
+  border: 1px solid rgba(136, 19, 55, 0.2);
+  font-size: 17px;
+  font-weight: 800;
+  color: #881337;
+}
+#iuInvoicePanel .iu-inv-stickyBar{
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0 4px;
+  margin-top: 8px;
+  background: linear-gradient(180deg, rgba(250, 250, 250, 0) 0%, #fafafa 28%);
+}
+#iuInvoicePanel .iu-inv-status{
+  min-height: 1.25em;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #b45309;
+}
+
+/* explicit guard */
+#iuInvoicePanel .iu-inv-guard-hidden[hidden]{
+  display: none !important;
+}
+
+/* Preview layer */
+#iuInvoicePanel .iu-inv-previewLayer{
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+#iuInvoicePanel .iu-inv-previewToolbar{
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+}
+#iuInvoicePanel .iu-inv-previewScroll{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* HTML invoice preview */
+#iuInvoicePanel .iu-inv-pr{
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 18px 20px 22px;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-pr-head{
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(136, 19, 55, 0.06) 0%, #fff 40%);
+  margin-bottom: 16px;
+}
+#iuInvoicePanel .iu-inv-pr-brand{
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #881337;
+}
+#iuInvoicePanel .iu-inv-pr-title{
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+#iuInvoicePanel .iu-inv-pr-no{
+  font-size: 15px;
+  margin-top: 4px;
+  color: rgba(15, 23, 42, 0.65);
+}
+#iuInvoicePanel .iu-inv-pr-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+@media (min-width: 640px){
+  #iuInvoicePanel .iu-inv-pr-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+#iuInvoicePanel .iu-inv-pr-h{
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #881337;
+  margin-bottom: 6px;
+}
+#iuInvoicePanel .iu-inv-pr-pre{
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #0f172a;
+}
+#iuInvoicePanel .iu-inv-pr-meta{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+#iuInvoicePanel .iu-inv-pr-meta th,
+#iuInvoicePanel .iu-inv-pr-meta td{
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+#iuInvoicePanel .iu-inv-pr-meta th{
+  width: 22%;
+  background: rgba(15, 23, 42, 0.03);
+  font-weight: 650;
+}
+#iuInvoicePanel .iu-inv-pr-bank{
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.03);
+}
+#iuInvoicePanel .iu-inv-pr-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+#iuInvoicePanel .iu-inv-pr-table th,
+#iuInvoicePanel .iu-inv-pr-table td{
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 8px;
+  text-align: left;
+}
+#iuInvoicePanel .iu-inv-pr-table th{
+  background: rgba(136, 19, 55, 0.07);
+  font-weight: 700;
+}
+#iuInvoicePanel .iu-inv-pr-num{
+  text-align: right;
+}
+#iuInvoicePanel .iu-inv-pr-strong{
+  font-weight: 800;
+}
+#iuInvoicePanel .iu-inv-pr-desc{
+  font-size: 12px;
+  color: rgba(15, 23, 42, 0.62);
+  margin-top: 4px;
+}
+#iuInvoicePanel .iu-inv-pr-totals{
+  font-size: 14px;
+  text-align: right;
+  margin-top: 8px;
+}
+#iuInvoicePanel .iu-inv-pr-due{
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #881337;
+}
+#iuInvoicePanel .iu-inv-pr-foot{
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  font-size: 12px;
+  color: rgba(15, 23, 42, 0.5);
+  text-align: center;
+}
+
+#iuInvoicePanel .iu-invoice-overlay-cardShell{
+  position: relative;
+}

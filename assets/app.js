@@ -8,6 +8,7 @@ import {
 } from "./cluster_engine.js";
 import { initIuFinancialCalculatorsOverlay } from "./iu-financial-calculators-module.js";
 import { initIuLegalDocumentsOverlay } from "./iu-legal-documents-module.js";
+import { initIuInvoiceOverlay } from "./iu-invoice-module.js";
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -18143,7 +18144,7 @@ function buildVideoAsArticleCard(it) {
     { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
     { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
     { id: "komunikace_vzdelavani", label: "Komunikace a vzdělávání", accent: "#6a1b9a" },
-    { id: "katastr_nemovitosti", label: "Katastr nemovitostí", accent: "#5d4037" },
+    { id: "vytvorit_fakturu", label: "Vytvořit fakturu", accent: "#0f766e" },
     { id: "registr_smluv", label: "Registr smluv", accent: "#0066cc" },
     { id: "obchodni_rejstrik", label: "Obchodní rejstřík", accent: "#37474f" },
     { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
@@ -18182,10 +18183,13 @@ function buildVideoAsArticleCard(it) {
   function sanitizeQuickToolsConfig(stored) {
     const defaultCfg = getDefaultQuickToolsConfig();
     const knownIds = new Set(IU_QUICKTOOLS_REGISTRY.map(function(r){ return r.id; }));
-    let order = Array.isArray(stored.order) ? stored.order.filter(function(id){ return knownIds.has(id); }) : [];
+    function migrateQuickToolId(id) {
+      return id === "katastr_nemovitosti" ? "vytvorit_fakturu" : id;
+    }
+    let order = Array.isArray(stored.order) ? stored.order.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
     const missingOrder = defaultCfg.order.filter(function(id){ return order.indexOf(id) === -1; });
     order = order.concat(missingOrder);
-    let visible = Array.isArray(stored.visible) ? stored.visible.filter(function(id){ return knownIds.has(id); }) : [];
+    let visible = Array.isArray(stored.visible) ? stored.visible.map(migrateQuickToolId).filter(function(id){ return knownIds.has(id); }) : [];
     visible = order.filter(function(id){ return visible.indexOf(id) !== -1; });
     return { version: IU_QUICKTOOLS_CONFIG_VERSION, order: order, visible: visible };
   }
@@ -22616,7 +22620,7 @@ function buildVideoAsArticleCard(it) {
     }
     try {
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-invoice-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
@@ -22651,6 +22655,8 @@ function buildVideoAsArticleCard(it) {
       if (finPanel && vis(finPanel) && String(finPanel.dataset.open || "") === "1") ids.push("financial");
       const legPanel = document.getElementById("iuLegalDocsPanel");
       if (legPanel && vis(legPanel) && String(legPanel.dataset.open || "") === "1") ids.push("legal");
+      const invPanel = document.getElementById("iuInvoicePanel");
+      if (invPanel && vis(invPanel) && String(invPanel.dataset.open || "") === "1") ids.push("invoice");
     } catch (_) {}
     return ids;
   }
@@ -22770,6 +22776,22 @@ function buildVideoAsArticleCard(it) {
           document.body.classList.remove("iu-legal-docs-overlay-open");
         } catch (_) {}
       }
+      if (typeof window.iuInvoiceCloseSurface === "function") {
+        try { window.iuInvoiceCloseSurface(); } catch (_) {}
+      } else {
+        const invBd = document.getElementById("iuInvoiceBackdrop");
+        const invPn = document.getElementById("iuInvoicePanel");
+        if (typeof window.iuSetElOpenVisible === "function") {
+          try { window.iuSetElOpenVisible(invBd, false); window.iuSetElOpenVisible(invPn, false); } catch (_) {}
+        } else {
+          if (invBd) invBd.hidden = true;
+          if (invPn) invPn.hidden = true;
+        }
+        try {
+          if (invPn) invPn.dataset.open = "0";
+          document.body.classList.remove("iu-invoice-overlay-open");
+        } catch (_) {}
+      }
       var nak = document.getElementById("iuNakupModal");
       if (nak) {
         nak.hidden = true;
@@ -22782,7 +22804,7 @@ function buildVideoAsArticleCard(it) {
         try { el.classList.remove("is-open", "active"); } catch (_) {}
       });
       iuSetViewportLock(false);
-      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
+      document.body.classList.remove("iu-modal-open", "iu-quickFeedOpen", "iu-mobileGateToolsQuickOpen", "iu-quickFeedMojeFullscreen", "iu-nakup-online-overlay-open", "iu-grocery-desktop-overlay-open", "iu-ds-overlay-open", "iu-financial-overlay-open", "iu-financial-calculators-overlay-open", "iu-legal-docs-overlay-open", "iu-invoice-overlay-open", "iu-ai-narrow-fullscreen", "iu-banking-desktop-overlay-open", "iu-bakalari-desktop-overlay-open", "iu-pojistovna-desktop-overlay-open", "iu-wordpdf-desktop-overlay-open");
     } catch (_) {}
   }
 
@@ -22816,6 +22838,10 @@ function buildVideoAsArticleCard(it) {
       if (t === "legal") {
         if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
         if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+      }
+      if (t === "invoice") {
+        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
       }
     } finally {
       try {
@@ -22861,6 +22887,9 @@ function buildVideoAsArticleCard(it) {
       } else if (last === "legal") {
         if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
         if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+      } else if (last === "invoice") {
+        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
       }
     } catch (_) {}
   }
@@ -22883,6 +22912,7 @@ function buildVideoAsArticleCard(it) {
     if (key === "datovka") return { actionType: "overlay", overlayId: "datovka", key: "datovka" };
     if (key === "fincalc") return { actionType: "overlay", overlayId: "financial", key: "fincalc" };
     if (key === "legaldocs") return { actionType: "overlay", overlayId: "legal", key: "legaldocs" };
+    if (key === "faktura") return { actionType: "overlay", overlayId: "invoice", key: "faktura" };
     if (modal === "banka" || modal === "bakalari" || modal === "pojistovna") return { actionType: "overlay", overlayId: "quickfeed", key: modal };
     /* P0: AI asistenti — vždy stejný overlay (#iu-aiPanel); úzké viewporty řeší CSS (iu-ai-narrow-fullscreen), desktop = datovka-like shell v app.css. */
     if (key === "ai") {
@@ -22926,6 +22956,8 @@ function buildVideoAsArticleCard(it) {
         iuOpenOverlay("financial", null);
       } else if (resolved.overlayId === "legal") {
         iuOpenOverlay("legal", null);
+      } else if (resolved.overlayId === "invoice") {
+        iuOpenOverlay("invoice", null);
       } else if (resolved.overlayId === "ai") {
         iuOpenOverlay("ai");
       } else {
@@ -23112,7 +23144,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     // 2) Modal (#iu-aiPanel or .iuModal or #iu-mojeSluzbyPanel)
-    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iuFinancialCalcPanel') || closeEl.closest('#iuLegalDocsPanel'));
+    const modal = closeEl.closest && (closeEl.closest('.iuModal, [data-iu-modal]') || closeEl.closest('#iu-aiPanel') || closeEl.closest('#iuDsPanel') || closeEl.closest('#iu-mojeSluzbyPanel') || closeEl.closest('#iuFinancialCalcPanel') || closeEl.closest('#iuLegalDocsPanel') || closeEl.closest('#iuInvoicePanel'));
     if (modal) {
       if (modal.id === 'iu-aiPanel') {
         const ov = document.getElementById('iu-aiOverlay');
@@ -23132,11 +23164,13 @@ function buildVideoAsArticleCard(it) {
         window.iuFinancialCalcCloseSurface();
       } else if (modal.id === 'iuLegalDocsPanel' && typeof window.iuLegalDocsCloseSurface === 'function') {
         window.iuLegalDocsCloseSurface();
+      } else if (modal.id === 'iuInvoicePanel' && typeof window.iuInvoiceCloseSurface === 'function') {
+        window.iuInvoiceCloseSurface();
       } else {
         modal.setAttribute('hidden', '');
       }
       modal.classList.remove('is-open');
-      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open', 'iu-financial-calculators-overlay-open', 'iu-legal-docs-overlay-open');
+      document.body.classList.remove('iu-modal-open', 'iu-ds-overlay-open', 'iu-financial-overlay-open', 'iu-financial-calculators-overlay-open', 'iu-legal-docs-overlay-open', 'iu-invoice-overlay-open');
     }
   }, true);
 
@@ -26092,6 +26126,23 @@ function buildVideoAsArticleCard(it) {
     return true;
   }
   try { window.ensureLegalDocsModalInBody = ensureLegalDocsModalInBody; } catch (_) {}
+
+  function ensureInvoiceModalInBody() {
+    const backs = document.querySelectorAll("#iuInvoiceBackdrop");
+    const panels = document.querySelectorAll("#iuInvoicePanel");
+    const back = backs[0] || null;
+    const panel = panels[0] || null;
+    if (!back || !panel) return false;
+    for (let i = 1; i < backs.length; i++) backs[i].setAttribute("data-iu-dup", "1");
+    for (let i = 1; i < panels.length; i++) panels[i].setAttribute("data-iu-dup", "1");
+    if (back.parentElement === document.body && panel.parentElement === document.body) return true;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(back);
+    frag.appendChild(panel);
+    document.body.appendChild(frag);
+    return true;
+  }
+  try { window.ensureInvoiceModalInBody = ensureInvoiceModalInBody; } catch (_) {}
 
   function iuHideAllOverlaysNow(){
     try {
@@ -34050,6 +34101,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (e) {
       try {
         console.warn("[iu] legal documents overlay init failed", e);
+      } catch (_) {}
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+  else run();
+})();
+
+(function iuBootInvoiceOverlay() {
+  function run() {
+    try {
+      initIuInvoiceOverlay({});
+    } catch (e) {
+      try {
+        console.warn("[iu] invoice overlay init failed", e);
       } catch (_) {}
     }
   }
