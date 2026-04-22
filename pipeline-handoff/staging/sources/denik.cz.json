@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T04:20:27.238211Z",
+  "ingestedAt": "2026-04-22T04:45:36.969173Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Schwarzenbergův zámek se prodal. Koupila ho rodina spolumajitele Tipsportu",
+      "url": "https://www.denik.cz/regiony/zamek-drevic-na-rakovnicku-kde-zil-schwarzenberg-zmenil-vlastnika-20260421.html",
+      "dt": "2026-04-22T04:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "koupila",
+        "prodal",
+        "rodina",
+        "schwarzenbergův",
+        "spolumajitele",
+        "tipsportu",
+        "zámek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -627,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Falešný Babiš láká na výhodné investice. Policie varuje před novými podvody",
-      "url": "https://www.denik.cz/krimi/falesny-babis-laka-na-snadne-zisky-kladenska-policie-varuje-pred-podvody.html",
-      "dt": "2026-04-21T11:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "falešný",
-        "investice",
-        "láká",
-        "novými",
-        "podvody",
-        "policie",
-        "varuje",
-        "výhodné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29488,
+      "bytes": 29622,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T04:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schwarzenbergův zámek se prodal. Koupila ho rodina spolumajitele Tipsportu",
+            "publishedAt": "2026-04-22T04:20:00Z"
+          },
           {
             "title": "El Niño sílí, hrozí rekordy. Češi by ale měli spíš sledovat síly ze Středozemí",
             "publishedAt": "2026-04-22T03:30:00Z"
@@ -742,10 +744,6 @@
           {
             "title": "Policie zadržela muže, který vyhrožoval bombovým útokem na objekt ministerstva",
             "publishedAt": "2026-04-21T19:13:00Z"
-          },
-          {
-            "title": "Speciál letectva USA byl od neděle dvakrát v Praze, úřady to nekomentují",
-            "publishedAt": "2026-04-21T18:18:00Z"
           }
         ]
       }

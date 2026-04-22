@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T04:20:27.238211Z",
+  "ingestedAt": "2026-04-22T04:45:36.969173Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocnice má problém s rekonstrukcí vyhořelého pavilonu. Co brzdí dostavbu ÚVN?",
+      "url": "https://ekonomickydenik.cz/uvn-rekonstrukce-vyhorely-pavilon/",
+      "dt": "2026-04-22T04:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "brzdí",
+        "dostavbu",
+        "nemocnice",
+        "pavilonu",
+        "problém",
+        "rekonstrukcí",
+        "vyhořelého",
+        "úvn"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -754,34 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Výplatní páska už nebude tabu. Nová pravidla odhalí výplaty kolegů a usnadní žaloby",
-      "url": "https://ekonomickydenik.cz/nova-pravidla-odhali-vyplaty-kolegu-a-usnadni-zaloby/",
-      "dt": "2026-04-20T10:56:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "kolegů",
-        "nebude",
-        "nová",
-        "odhalí",
-        "pravidla",
-        "páska",
-        "tabu",
-        "usnadní",
-        "výplatní",
-        "výplaty",
-        "žaloby"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72631,
+      "bytes": 73667,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,12 +826,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 3,
           "zpravy": 2,
-          "finance": 26,
-          "zdravi": 2
+          "finance": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocnice má problém s rekonstrukcí vyhořelého pavilonu. Co brzdí dostavbu ÚVN?",
+            "publishedAt": "2026-04-22T04:30:00Z"
+          },
           {
             "title": "Pomalé zbrojení Evropy může lákat Putina. Komisař zase hrozil útokem Ruska",
             "publishedAt": "2026-04-21T17:49:00Z"
@@ -873,10 +874,6 @@
           {
             "title": "Do zbraně i sedmdesátníci? Radikální náhrada mladých odpíračů rezonuje Německem",
             "publishedAt": "2026-04-21T12:36:55Z"
-          },
-          {
-            "title": "Největší světový výrobce kondomů zvedá ceny. Důvodem je válka i nedostatek",
-            "publishedAt": "2026-04-21T12:34:06Z"
           }
         ]
       }
