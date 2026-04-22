@@ -1,25 +1,75 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T07:40:16.420401Z",
+  "ingestedAt": "2026-04-22T07:59:49.662093Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Šmicer vzkazuje slávistům: Titul nevyhrajete řvaním, ale fotbalem!",
+      "title": "Šmicer má pro slávisty rázný vzkaz!",
       "url": "https://www.sport.cz/clanek/podcasty-smica-z-voleje-smicer-vzkazuje-slavistum-titul-nevyhrajete-rvanim-ale-fotbalem-5441360",
       "dt": "2026-04-22T07:35:24Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "ale",
-        "fotbalem",
-        "nevyhrajete",
-        "slávistům",
-        "titul",
-        "vzkazuje",
-        "řvaním",
+        "rázný",
+        "slávisty",
+        "vzkaz",
         "šmicer"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hybš nechápal nedostatky v nasazení. Ale nebudu do nikoho střílet, řekl po vyřazení",
+      "url": "https://www.sport.cz/clanek/fotbal-pohar-hybs-nechapal-nedostatky-v-nasazeni-ale-nebudu-do-nikoho-strilet-rekl-po-vyrazeni-5441381",
+      "dt": "2026-04-22T07:45:31Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "hybš",
+        "nasazení",
+        "nebudu",
+        "nechápal",
+        "nedostatky",
+        "nikoho",
+        "střílet",
+        "vyřazení",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mladý sudí prožil otřesnou premiéru v mužském fotbale. Napadli ho, zápas se ani nedohrál",
+      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-mlady-sudi-prozil-otresnou-premieru-v-muzskem-fotbale-napadli-ho-zapas-se-ani-nedohral-5441219",
+      "dt": "2026-04-22T07:45:06Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbale",
+        "mladý",
+        "mužském",
+        "napadli",
+        "nedohrál",
+        "otřesnou",
+        "premiéru",
+        "prožil",
+        "sudí",
+        "zápas"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -728,56 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trenér Donovan po šesti sezonách NBA skončil u basketbalistů Chicaga",
-      "url": "https://www.sport.cz/clanek/basketbal-trener-donovan-po-sesti-sezonach-nba-skoncil-u-basketbalistu-chicaga-5441068",
-      "dt": "2026-04-21T15:50:12Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "basketbalistů",
-        "chicaga",
-        "donovan",
-        "nba",
-        "sezonách",
-        "skončil",
-        "trenér",
-        "šesti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokejisty Mladé Boleslavi posílí lotyšský reprezentační útočník Gavars",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-hokejisty-mlade-boleslavi-posili-lotyssky-reprezentacni-utocnik-gavars-5441029",
-      "dt": "2026-04-21T15:12:32Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boleslavi",
-        "gavars",
-        "hokejisty",
-        "lotyšský",
-        "mladé",
-        "posílí",
-        "reprezentační",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42717,
+      "bytes": 42919,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:35:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:45:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,8 +841,16 @@
         },
         "sample_titles": [
           {
-            "title": "Šmicer vzkazuje slávistům: Titul nevyhrajete řvaním, ale fotbalem!",
+            "title": "Šmicer má pro slávisty rázný vzkaz!",
             "publishedAt": "2026-04-22T07:35:24Z"
+          },
+          {
+            "title": "Hybš nechápal nedostatky v nasazení. Ale nebudu do nikoho střílet, řekl po vyřazení",
+            "publishedAt": "2026-04-22T07:45:31Z"
+          },
+          {
+            "title": "Mladý sudí prožil otřesnou premiéru v mužském fotbale. Napadli ho, zápas se ani nedohrál",
+            "publishedAt": "2026-04-22T07:45:06Z"
           },
           {
             "title": "Fotbal je k nám v posledních týdnech hodně krutý, štve trenéra Baníku po vyřazení",
@@ -863,14 +871,6 @@
           {
             "title": "Pastrňák znovu řádil! Trefil se i Zacha a Boston srovnal. Nečas nastartoval obrat",
             "publishedAt": "2026-04-22T03:52:52Z"
-          },
-          {
-            "title": "Kritický stav, stabilizace. Slovinský mistr světa se vážně zranil po pádu z kola, píše se o alkoholu",
-            "publishedAt": "2026-04-22T05:11:05Z"
-          },
-          {
-            "title": "Dva zásadní domácí úkoly pro Třinec. Pardubicím ukážeme, vzkazuje Dynamu Daňo",
-            "publishedAt": "2026-04-22T04:56:32Z"
           }
         ]
       }
