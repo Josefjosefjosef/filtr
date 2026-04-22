@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-22T15:09:33.242745Z",
+  "ingestedAt": "2026-04-22T15:30:00.710559Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Microsoft prý chystá masivní propouštění v herní divizi - INDIAN",
+      "url": "https://indian-tv.cz/clanek/microsoft-pry-chysta-masivni-propousteni-v-herni-divizi-1b6fnm",
+      "dt": "2026-04-22T15:17:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "chystá",
+        "divizi",
+        "herní",
+        "indian",
+        "masivní",
+        "microsoft",
+        "propouštění",
+        "prý"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1052,32 +1077,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Warhammer 40,000: Space Marine 2 nalákal velké množství hráčů - INDIAN",
-      "url": "https://indian-tv.cz/clanek/warhammer-40-000-space-marine-2-nalakal-velke-mnozstvi-hracu-1w8igt",
-      "dt": "2026-04-18T14:40:21Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "000",
-        "hráčů",
-        "indian",
-        "marine",
-        "množství",
-        "nalákal",
-        "space",
-        "velké",
-        "warhammer"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1088,7 +1087,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 194835,
+      "bytes": 195246,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1125,7 +1124,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T15:17:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1140,6 +1139,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Microsoft prý chystá masivní propouštění v herní divizi - INDIAN",
+            "publishedAt": "2026-04-22T15:17:00Z"
+          },
           {
             "title": "PlayStation Plus přijde o další hry. V květnu zmizí i Control - INDIAN",
             "publishedAt": "2026-04-22T14:45:00Z"
@@ -1167,10 +1170,6 @@
           {
             "title": "Cronos: The New Dawn láká na tajemné oznámení - INDIAN",
             "publishedAt": "2026-04-22T08:03:35Z"
-          },
-          {
-            "title": "Forza Horizon 6 ještě nevyšla, ale zájem v předobjednávkách na Steamu je obrovský - INDIAN",
-            "publishedAt": "2026-04-22T06:36:24Z"
           }
         ]
       }

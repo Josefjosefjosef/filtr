@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-22T15:09:33.242745Z",
+  "ingestedAt": "2026-04-22T15:30:00.710559Z",
   "items": [
     {
       "section": "aktualne",
@@ -23,6 +23,34 @@
         "zní",
         "írán",
         "čeká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Senzace na slavném Valonském šípu. Brutální kopec do cíle zvládl nejlépe francouzský mladík",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/senzace-na-slavnem-valonskem-sipu-brutalni-kopec-do-cile-zvladl-nejlepe-francouzsky-mladik/r~aaa29d1713d51da6a1904b5b80f895f6/",
+      "dt": "2026-04-22T15:08:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brutální",
+        "cíle",
+        "francouzský",
+        "kopec",
+        "mladík",
+        "nejlépe",
+        "senzace",
+        "slavném",
+        "valonském",
+        "zvládl",
+        "šípu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -495,31 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Rusko se připravuje na střet s NATO.“ Němci jsou ve střehu, naznačili, co chystají",
-      "url": "https://zpravy.aktualne.cz/zahranici/nemecky-ministr-obrany-varuje-rusko-se-pripravuje-na-stret-s-nato/r~aaa298fa9746f939a4c8077fd7dae2dc/",
-      "dt": "2026-04-22T10:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chystají",
-        "nato",
-        "naznačili",
-        "němci",
-        "připravuje",
-        "rusko",
-        "střehu",
-        "střet"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21388,
+      "bytes": 21351,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,11 +570,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T13:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T15:08:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
+          "zpravy": 14,
+          "sport": 5,
           "other": 1
         },
         "drop_counts": {
@@ -587,6 +590,10 @@
           {
             "title": "Trump prodloužil příměří, čeká, až Írán předloží mírový návrh. „Prohráváte,“ zní z Teheránu",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Senzace na slavném Valonském šípu. Brutální kopec do cíle zvládl nejlépe francouzský mladík",
+            "publishedAt": "2026-04-22T15:08:00Z"
           },
           {
             "title": "„Ruce pryč!“ Studenti demonstrovali za veřejnoprávní média, Klempíř za nimi nevyšel",
@@ -611,10 +618,6 @@
           {
             "title": "OBRAZEM: Studenti vyšli do ulic proti mediálnímu zákonu",
             "publishedAt": "2026-04-22T13:09:00Z"
-          },
-          {
-            "title": "Letošní festival Svět knihy navštíví nobelista Gurnah, historik Snyder i Sansal",
-            "publishedAt": "2026-04-22T12:43:00Z"
           }
         ]
       }
