@@ -10204,8 +10204,7 @@ function buildVideoAsArticleCard(it) {
    */
   function iuDesktopMindMenuSilverSummaryHoverInit(){
     try{
-      if (window.__iuDesktopMindMenuSilverSummaryHoverInit) return;
-      window.__iuDesktopMindMenuSilverSummaryHoverInit = 1;
+      if (window.__iuDesktopMindMenuSilverSummaryHoverInit === 1) return;
     }catch{}
 
     const mqDesk = window.matchMedia ? window.matchMedia("(min-width: 1025px)") : null;
@@ -10221,7 +10220,21 @@ function buildVideoAsArticleCard(it) {
     const shellTasks = document.getElementById("iuMmHoverSummaryPanelShellTasks");
     const bridgeCal = document.getElementById("iuMmHoverSummaryBridgeCalendar");
     const bridgeTasks = document.getElementById("iuMmHoverSummaryBridgeTasks");
-    if (!calCard || !tasksCard || !stack || !hostCal || !hostTasks || !shellCal || !shellTasks || !insertTasksBefore) return;
+    if (!calCard || !tasksCard || !stack || !hostCal || !hostTasks || !shellCal || !shellTasks || !insertTasksBefore){
+      try{
+        const n = Number(window.__iuMmHoverSummaryInitTry || 0);
+        if (n < 16){
+          window.__iuMmHoverSummaryInitTry = n + 1;
+          const delay = n < 4 ? 0 : n < 9 ? 40 : 140;
+          setTimeout(function (){
+            try{
+              iuDesktopMindMenuSilverSummaryHoverInit();
+            }catch{}
+          }, delay);
+        }
+      }catch{}
+      return;
+    }
 
     function mqDesktopMatches(){
       try{
@@ -10339,6 +10352,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     const hoverState = { openHosts: [] };
+    let hoverSummaryScrollCloseT = null;
 
     function iuMmHoverSummaryCloseAll(){
       try{
@@ -10358,7 +10372,19 @@ function buildVideoAsArticleCard(it) {
           try{
             if (!mqDesktopMatches()) return;
           }catch{}
-          try{ iuMmHoverSummaryCloseAll(); }catch{}
+          try{
+            if (hoverSummaryScrollCloseT) clearTimeout(hoverSummaryScrollCloseT);
+          }catch{}
+          hoverSummaryScrollCloseT = setTimeout(function (){
+            hoverSummaryScrollCloseT = null;
+            try{
+              const overHost =
+                (hostCal && typeof hostCal.matches === "function" && hostCal.matches(":hover")) ||
+                (hostTasks && typeof hostTasks.matches === "function" && hostTasks.matches(":hover"));
+              if (overHost) return;
+            }catch{}
+            try{ iuMmHoverSummaryCloseAll(); }catch{}
+          }, 120);
         },
         { passive: true, capture: true }
       );
@@ -10468,10 +10494,19 @@ function buildVideoAsArticleCard(it) {
         }
       }
 
+      function onHostHoverIntent(){
+        if (!mqDesktopMatches()) return;
+        scheduleShow();
+      }
       try{
-        host.addEventListener("mouseenter", function (){
-          if (!mqDesktopMatches()) return;
-          scheduleShow();
+        host.addEventListener("mouseenter", onHostHoverIntent);
+      }catch{}
+      try{
+        host.addEventListener("pointerenter", function (ev){
+          try{
+            if (ev && ev.pointerType === "touch") return;
+          }catch{}
+          onHostHoverIntent();
         });
       }catch{}
       try{
@@ -10516,6 +10551,12 @@ function buildVideoAsArticleCard(it) {
 
     wireHover(hostCal, shellCal, bridgeCal);
     wireHover(hostTasks, shellTasks, bridgeTasks);
+    try{
+      window.__iuMmHoverSummaryInitTry = 0;
+    }catch{}
+    try{
+      window.__iuDesktopMindMenuSilverSummaryHoverInit = 1;
+    }catch{}
   }
 
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
@@ -18468,6 +18509,20 @@ function buildVideoAsArticleCard(it) {
     try{ iuSilverCalendarSummaryInit(); }catch{}
     try{ iuSilverTasksSummaryInit(); }catch{}
     try{ iuDesktopMindMenuSilverSummaryHoverInit(); }catch{}
+    try{
+      requestAnimationFrame(function (){
+        try{
+          iuDesktopMindMenuSilverSummaryHoverInit();
+        }catch{}
+      });
+    }catch{}
+    try{
+      setTimeout(function (){
+        try{
+          iuDesktopMindMenuSilverSummaryHoverInit();
+        }catch{}
+      }, 320);
+    }catch{}
     try{ iuNamedayWishInit(); }catch{}
 
     if (btnToggleDebug) {
