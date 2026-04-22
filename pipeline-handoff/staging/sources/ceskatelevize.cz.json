@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T21:49:28.564662Z",
+  "ingestedAt": "2026-04-22T22:09:28.783414Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/cesky-klavirista-schulmeister-ma-cenu-bbc-music-magazine-award-pro-nove-talenty-372687",
+      "dt": "2026-04-22T21:51:08Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "award",
+        "bbc",
+        "cenu",
+        "klavírista",
+        "magazine",
+        "music",
+        "nové",
+        "schulmeister",
+        "talenty",
+        "český"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -713,32 +740,6 @@
         "regulaci",
         "senát",
         "vládní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sněmovna v úvodním kole podpořila koaliční návrh zrušit nominační zákon",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/snemovna-by-mohla-pokracovat-v-debate-o-zruseni-nominacniho-zakona-372652",
-      "dt": "2026-04-22T07:00:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "koaliční",
-        "kole",
-        "nominační",
-        "návrh",
-        "podpořila",
-        "sněmovna",
-        "zrušit",
-        "zákon",
-        "úvodním"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1516,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42661,
+      "bytes": 42434,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1576,11 +1577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T19:18:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:51:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 6,
+          "other": 7,
+          "zpravy": 22,
           "finance": 1
         },
         "drop_counts": {
@@ -1593,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český klavírista Schulmeister má cenu BBC Music Magazine Award pro nové talenty",
+            "publishedAt": "2026-04-22T21:51:08Z"
+          },
           {
             "title": "Izrael a Hizballáh se obviňují z porušování příměří",
             "publishedAt": "2026-04-22T19:18:08Z"
@@ -1620,10 +1625,6 @@
           {
             "title": "„Půjčování času.“ Rusko zkresluje svá ekonomická data, říká šéf švédské rozvědky",
             "publishedAt": "2026-04-22T16:20:00Z"
-          },
-          {
-            "title": "K údajně nebezpečně schopné AI Mythos získali přístup neznámí lidé, tvrdí Anthropic",
-            "publishedAt": "2026-04-22T16:08:24Z"
           }
         ]
       }
@@ -1729,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77785,
+      "bytes": 78017,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

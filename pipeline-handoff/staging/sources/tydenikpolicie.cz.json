@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-22T21:49:28.564662Z",
+  "ingestedAt": "2026-04-22T22:09:28.783414Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prostějovští policisté dopadli dva mladíky podezřelé z krádeže nafty",
+      "url": "https://tydenikpolicie.cz/prostejovsti-policiste-dopadli-dva-mladiky-podezrele-z-kradeze-nafty/",
+      "dt": "2026-04-22T22:02:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dopadli",
+        "dva",
+        "krádeže",
+        "mladíky",
+        "nafty",
+        "podezřelé",
+        "policisté",
+        "prostějovští"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,30 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Řidiči kamionů na Rychnovsku a na Lounsku v problémech. Zasahovali hasiči",
-      "url": "https://tydenikpolicie.cz/ridici-kamionu-na-rychnovsku-a-na-lounsku-v-problemech-zasahovali-hasici/",
-      "dt": "2026-04-22T14:25:27Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "hasiči",
-        "kamionů",
-        "lounsku",
-        "problémech",
-        "rychnovsku",
-        "zasahovali",
-        "řidiči"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16175,
+      "bytes": 16301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T19:27:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T22:02:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prostějovští policisté dopadli dva mladíky podezřelé z krádeže nafty",
+            "publishedAt": "2026-04-22T22:02:04Z"
+          },
           {
             "title": "Měl pozitivní test na drogy, sotva opustil policejní služebnu, usedl znovu za volant",
             "publishedAt": "2026-04-22T19:27:19Z"
@@ -354,10 +359,6 @@
           {
             "title": "Hodinu po přijetí oznámení o loupeži v Chomutově dopadli policisté dva podezřelé mladíky",
             "publishedAt": "2026-04-22T14:32:43Z"
-          },
-          {
-            "title": "Pachatel si měl při vloupání na Rychnovsku uvařit jahodové knedlíky",
-            "publishedAt": "2026-04-22T14:29:13Z"
           }
         ]
       }

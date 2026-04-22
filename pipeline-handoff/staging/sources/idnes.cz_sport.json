@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T21:49:28.564662Z",
+  "ingestedAt": "2026-04-22T22:09:28.783414Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Schick byl u konce Leverkusenu v poháru, v semifinále nestačil na Bayern",
+      "url": "https://www.idnes.cz/fotbal/zahranici/nemecky-pohar-semifinale-leverkusen-bayern-vysledky.A260422_233331_fot_zahranici_ipet",
+      "dt": "2026-04-22T21:42:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bayern",
+        "konce",
+        "leverkusenu",
+        "nestačil",
+        "poháru",
+        "schick",
+        "semifinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -762,33 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jaký dres povezou Vingegaard a Van Aert na Tour de France? Rozhodnou fanoušci",
-      "url": "https://www.idnes.cz/sport/trendy/jaky-dres-povezou-vingegaard-a-van-aert-na-tour-de-france-rozhodnou-fanousci.A260422_100511_trendy_subt",
-      "dt": "2026-04-22T12:07:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "aert",
-        "dres",
-        "fanoušci",
-        "france",
-        "jaký",
-        "povezou",
-        "rozhodnou",
-        "tour",
-        "van",
-        "vingegaard"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46603,
+      "bytes": 46338,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T21:20:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:42:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -852,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schick byl u konce Leverkusenu v poháru, v semifinále nestačil na Bayern",
+            "publishedAt": "2026-04-22T21:42:00Z"
+          },
           {
             "title": "City vládlo v Burnley a předstihlo Arsenal. Bournemouth uhrál s Leedsem remízu",
             "publishedAt": "2026-04-22T21:20:20Z"
@@ -879,10 +880,6 @@
           {
             "title": "Play off hokejové extraligy 2026: program, systém, finálová dvojice, kde sledovat",
             "publishedAt": "2026-04-22T19:52:00Z"
-          },
-          {
-            "title": "Zlín vyhrál první ligu, má právo vyzvat Hradec Králové v baráži o Maxa NBL",
-            "publishedAt": "2026-04-22T19:32:00Z"
           }
         ]
       }
