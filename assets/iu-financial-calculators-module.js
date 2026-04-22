@@ -1332,6 +1332,7 @@ export function initIuFinancialCalculatorsOverlay(deps) {
         b.classList.contains("iu-grocery-desktop-overlay-open") ||
         b.classList.contains("iu-ds-overlay-open") ||
         b.classList.contains("iu-legal-docs-overlay-open") ||
+        b.classList.contains("iu-invoice-overlay-open") ||
         b.classList.contains("iu-ai-narrow-fullscreen")
       );
     } catch (_) {
