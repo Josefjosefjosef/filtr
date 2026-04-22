@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T21:09:28.916006Z",
+  "ingestedAt": "2026-04-22T21:29:55.008362Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Úspěch českého klavíristy. Získal cenu BBC Music Magazine Award pro nové talenty",
+      "url": "https://www.denik.cz/hudba/cesky-klavirista-jan-schulmeister-cena-talent-bbc-music-magazine-award.html",
+      "dt": "2026-04-22T20:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "award",
+        "bbc",
+        "cenu",
+        "klavíristy",
+        "magazine",
+        "music",
+        "nové",
+        "talenty",
+        "získal",
+        "úspěch",
+        "českého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,33 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Senát odmítl vládní zákon o změně formy regulace cen pohonných hmot",
-      "url": "https://www.denik.cz/z_domova/senat-odmitl-vladni-zakon-zmena-formy-regulace-cen-pohonnych-hmot.html",
-      "dt": "2026-04-22T10:32:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cen",
-        "formy",
-        "hmot",
-        "odmítl",
-        "pohonných",
-        "regulace",
-        "senát",
-        "vládní",
-        "změně",
-        "zákon"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29616,
+      "bytes": 29705,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-22T19:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T20:50:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -718,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úspěch českého klavíristy. Získal cenu BBC Music Magazine Award pro nové talenty",
+            "publishedAt": "2026-04-22T20:50:00Z"
+          },
           {
             "title": "V Rusku kvůli špatnému stavu ekonomiky hrozí revoluce, varoval šéf komunistů",
             "publishedAt": "2026-04-22T19:17:00Z"
@@ -745,10 +750,6 @@
           {
             "title": "Do obsahu televize mluvit nechceme, řekl Babiš Deníku",
             "publishedAt": "2026-04-22T16:20:00Z"
-          },
-          {
-            "title": "Lufthansa zruší dvacet tisíc letů po Evropě. Spoje stoply i další aerolinky",
-            "publishedAt": "2026-04-22T16:00:00Z"
           }
         ]
       }

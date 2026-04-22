@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-22T21:09:28.916006Z",
+  "ingestedAt": "2026-04-22T21:29:55.008362Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zlomil jsem prokletí, věří hrdina Třince. Rozhodčí na něj vytáhli „UFC takedown\"",
+      "url": "https://sport.aktualne.cz/hokej/zlomil-jsem-prokleti-veri-hrdina-trince-rozhodci-na-nej-vytahli-ufc-takedown/r~aaa291f663d08d8116a79e8d12cb61f3/",
+      "dt": "2026-04-22T21:06:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hrdina",
+        "jsem",
+        "něj",
+        "prokletí",
+        "rozhodčí",
+        "takedown",
+        "třince",
+        "ufc",
+        "vytáhli",
+        "věří",
+        "zlomil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -267,7 +295,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Krůček ke hvězdám. Astronaut Svoboda dokončil drsný výcvik, geologie byla těžší než stíhačka",
+      "title": "Krůček ke hvězdám. Astronaut Svoboda dokončil drsný výcvik, řekl, co bylo nejtěžší",
       "url": "https://magazin.aktualne.cz/krucek-ke-hvezdam-astronaut-svoboda-dokoncil-drsny-vycvik-geologie-byla-tezsi-nez-stihacka/r~aaa29494decda1184d8e70ff035dde5e/",
       "dt": "2026-04-22T16:55:00Z",
       "media_raw": "Aktuálně",
@@ -276,14 +304,12 @@
         "astronaut",
         "dokončil",
         "drsný",
-        "geologie",
         "hvězdám",
         "krůček",
-        "než",
-        "stíhačka",
+        "nejtěžší",
         "svoboda",
-        "těžší",
-        "výcvik"
+        "výcvik",
+        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -498,31 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Od titulu k ostudě. Leicester ukazuje, jak rychle se dá spadnout z fotbalových výšin",
-      "url": "https://sport.aktualne.cz/fotbal/od-titulu-k-ostude-leicester-ukazuje-jak-rychle-se-da-spadnout-z-fotbalovych-vysin/r~aaa29b0e20ffbd2313ab250f2eaef60a/",
-      "dt": "2026-04-22T13:44:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "fotbalových",
-        "leicester",
-        "ostudě",
-        "rychle",
-        "spadnout",
-        "titulu",
-        "ukazuje",
-        "výšin"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21405,
+      "bytes": 21603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,7 +571,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T20:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 8,
@@ -587,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlomil jsem prokletí, věří hrdina Třince. Rozhodčí na něj vytáhli „UFC takedown\"",
+            "publishedAt": "2026-04-22T21:06:00Z"
+          },
           {
             "title": "Česká osmnáctka šokovala Američany. Na úvod MS je porazila v prodloužení",
             "publishedAt": "2026-04-22T16:56:00Z"
@@ -614,10 +619,6 @@
           {
             "title": "Členství v unii se blíží. Brusel chystá přístupovou smlouvu pro Černou Horu",
             "publishedAt": "2026-04-22T18:49:00Z"
-          },
-          {
-            "title": "Extraligové naděje Dukly žijí. Litvínov první první barážový mečbol nevyužil",
-            "publishedAt": "2026-04-22T18:09:00Z"
           }
         ]
       }

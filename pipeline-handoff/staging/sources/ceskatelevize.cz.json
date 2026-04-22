@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T21:09:28.916006Z",
+  "ingestedAt": "2026-04-22T21:29:55.008362Z",
   "items": [
     {
       "section": "aktualne",
@@ -750,6 +750,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Manchester City už je v čele anglické ligy. Vede o skóre před Arsenalem",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/manchester-city-uz-je-v-cele-anglicke-ligy-vede-o-skore-pred-arsenalem-156413",
+      "dt": "2026-04-22T21:15:54Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "anglické",
+        "arsenalem",
+        "city",
+        "ligy",
+        "manchester",
+        "skóre",
+        "vede",
+        "čele"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Valentová v Madridu rychle skončila, všichni ostatní Češi zůstávají",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/valentova-v-madridu-rychle-skoncila-kopriva-a-pliskova-zustavaji-156412",
       "dt": "2026-04-22T18:36:47Z",
@@ -1481,31 +1506,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zbrojovka je po třech letech prvoligová. Artis se rozešel s Táborskem smírně",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/zbrojovka-je-po-trech-letech-prvoligova-artis-se-rozesel-s-taborskem-smirne-156381",
-      "dt": "2026-04-20T16:59:15Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "artis",
-        "letech",
-        "prvoligová",
-        "rozešel",
-        "smírně",
-        "táborskem",
-        "třech",
-        "zbrojovka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1635,7 +1635,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37757,
+      "bytes": 37600,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1672,7 +1672,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T18:36:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:15:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1687,6 +1687,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Manchester City už je v čele anglické ligy. Vede o skóre před Arsenalem",
+            "publishedAt": "2026-04-22T21:15:54Z"
+          },
           {
             "title": "Valentová v Madridu rychle skončila, všichni ostatní Češi zůstávají",
             "publishedAt": "2026-04-22T18:36:47Z"
@@ -1714,10 +1718,6 @@
           {
             "title": "Česká osmnáctka vstoupila do MS výhrou nad USA, v prodloužení rozhodl Řípa",
             "publishedAt": "2026-04-22T13:57:00Z"
-          },
-          {
-            "title": "Kopřiva v Madridu dovolil čínskému soupeři jen dva gemy",
-            "publishedAt": "2026-04-22T10:50:19Z"
           }
         ]
       }
@@ -1729,7 +1729,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77783,
+      "bytes": 77777,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

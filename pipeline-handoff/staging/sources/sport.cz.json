@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T21:09:28.916006Z",
+  "ingestedAt": "2026-04-22T21:29:55.008362Z",
   "items": [
     {
       "section": "sport",
@@ -20,6 +20,35 @@
         "nevede",
         "premier",
         "čela"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Káca vytáhl skvělý zákrok a dal mi šanci se trefit, řekl autor vítězného gólu Třince",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-kaca-vytahl-skvely-zakrok-a-dal-mi-sanci-se-trefit-rekl-autor-vitezneho-golu-trince-5441864",
+      "dt": "2026-04-22T21:13:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "autor",
+        "dal",
+        "gólu",
+        "káca",
+        "skvělý",
+        "trefit",
+        "třince",
+        "vytáhl",
+        "vítězného",
+        "zákrok",
+        "řekl",
+        "šanci"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -725,33 +754,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Naprosté dno. Potupa kdysi elitní tenistky pokračuje. Sabalenková nabízí pomoc",
-      "url": "https://www.sport.cz/clanek/tenis-potupa-pro-grandslamovou-semifinalistku-sabalenkova-nabizi-pomocnou-ruku-5441383",
-      "dt": "2026-04-22T11:43:47Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dno",
-        "elitní",
-        "kdysi",
-        "nabízí",
-        "naprosté",
-        "pokračuje",
-        "pomoc",
-        "potupa",
-        "sabalenková",
-        "tenistky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -762,7 +764,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42158,
+      "bytes": 42926,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,7 +801,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T20:58:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T21:13:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -818,6 +820,10 @@
           {
             "title": "Arsenal už nevede Premier League. Do čela se dostal Manchester City",
             "publishedAt": "2026-04-22T20:58:15Z"
+          },
+          {
+            "title": "Káca vytáhl skvělý zákrok a dal mi šanci se trefit, řekl autor vítězného gólu Třince",
+            "publishedAt": "2026-04-22T21:13:32Z"
           },
           {
             "title": "Leverkusen s Schickem do finále německého poháru nepostoupil",
@@ -842,10 +848,6 @@
           {
             "title": "Atlético Madrid počtvrté za sebou prohrálo",
             "publishedAt": "2026-04-22T19:06:29Z"
-          },
-          {
-            "title": "Zlín ovládl basketbalovou první ligu a zahraje si baráž o NBL",
-            "publishedAt": "2026-04-22T20:00:38Z"
           }
         ]
       }
