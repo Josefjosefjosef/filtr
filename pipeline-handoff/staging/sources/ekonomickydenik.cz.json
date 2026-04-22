@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T09:39:24.418218Z",
+  "ingestedAt": "2026-04-22T09:59:32.001694Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Místo do Řecka na Mácháč? Letní plány ohrožuje nedostatek leteckého paliva",
+      "url": "https://ekonomickydenik.cz/letni-plany-muze-ohrozit-nedostatek-leteckeho-paliva/",
+      "dt": "2026-04-22T09:45:41Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "leteckého",
+        "letní",
+        "mácháč",
+        "místo",
+        "nedostatek",
+        "ohrožuje",
+        "paliva",
+        "plány",
+        "řecka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,32 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Končí ruské symboly. Nová uniforma vrací vojákům noblesu i lva",
-      "url": "https://ekonomickydenik.cz/konci-ruske-symboly-nova-uniforma/",
-      "dt": "2026-04-20T12:59:50Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "končí",
-        "lva",
-        "noblesu",
-        "nová",
-        "ruské",
-        "symboly",
-        "uniforma",
-        "vojákům",
-        "vrací"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73269,
+      "bytes": 73296,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T08:13:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:45:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -842,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo do Řecka na Mácháč? Letní plány ohrožuje nedostatek leteckého paliva",
+            "publishedAt": "2026-04-22T09:45:41Z"
+          },
           {
             "title": "Čeští byznysmeni rekordně investují ve světě. Zahraniční kapitál spíš odchází",
             "publishedAt": "2026-04-22T08:13:31Z"
@@ -869,10 +873,6 @@
           {
             "title": "Výměna za miliardy: Družba je opravena, míč je teď na straně Orbána",
             "publishedAt": "2026-04-21T16:50:33Z"
-          },
-          {
-            "title": "Zrada na Balkáně? Zdechovský se bojí vývoje v Bulharsku: Nebezpečný posun k Rusku",
-            "publishedAt": "2026-04-21T15:25:52Z"
           }
         ]
       }

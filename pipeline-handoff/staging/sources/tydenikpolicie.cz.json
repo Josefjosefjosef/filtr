@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-22T09:39:24.418218Z",
+  "ingestedAt": "2026-04-22T09:59:32.001694Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Strážníkům v Brně ujížděl na motocyklu patnáctiletý mladík bez řidičáku",
+      "url": "https://tydenikpolicie.cz/straznikum-v-brne-ujizdel-na-motocyklu-patnactilety-mladik-bez-ridicaku/",
+      "dt": "2026-04-22T09:43:13Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "brně",
+        "mladík",
+        "motocyklu",
+        "patnáctiletý",
+        "strážníkům",
+        "ujížděl",
+        "řidičáku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -246,29 +270,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jeden zraněný při protidrogové realizaci v Šestajovicích",
-      "url": "https://tydenikpolicie.cz/jeden-zraneny-pri-protidrogove-realizaci-v-sestajovicich/",
-      "dt": "2026-04-21T19:20:34Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jeden",
-        "protidrogové",
-        "při",
-        "realizaci",
-        "zraněný",
-        "šestajovicích"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16438,
+      "bytes": 16790,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T09:34:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:43:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strážníkům v Brně ujížděl na motocyklu patnáctiletý mladík bez řidičáku",
+            "publishedAt": "2026-04-22T09:43:13Z"
+          },
           {
             "title": "Dva zranění při nehodě škodovky s dodávkou u Dlouhé Třebové",
             "publishedAt": "2026-04-22T09:34:02Z"
@@ -358,10 +363,6 @@
           {
             "title": "Návštěva diskotéky v České Lípě skončila brutálním napadením",
             "publishedAt": "2026-04-21T19:56:04Z"
-          },
-          {
-            "title": "Muž se v České Lípě snažil před policisty splynout s keřem. Našli u něj dětské jízdní kolo",
-            "publishedAt": "2026-04-21T19:54:09Z"
           }
         ]
       }
