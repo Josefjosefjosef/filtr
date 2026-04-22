@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T15:30:00.710559Z",
+  "ingestedAt": "2026-04-22T16:34:47.584031Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocí z povolání prudce ubylo, covid dál vede. Na cestě je změna pravidel",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemoci-z-povolani-covid-zmena-pravidel/",
+      "dt": "2026-04-22T15:50:20Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cestě",
+        "covid",
+        "nemocí",
+        "povolání",
+        "pravidel",
+        "prudce",
+        "ubylo",
+        "vede",
+        "změna"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -244,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/rychlejsi-vstup-inovaci-foldyna-hellova/",
-      "dt": "2026-04-22T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "byrokratickém",
-        "inovacemi",
-        "ministerstvo",
-        "mrháme",
-        "očistci",
-        "roky",
-        "skončí",
-        "zaparkovanými",
-        "časem"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 106427,
+      "bytes": 101169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,11 +317,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T14:29:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T15:50:20Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -333,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocí z povolání prudce ubylo, covid dál vede. Na cestě je změna pravidel",
+            "publishedAt": "2026-04-22T15:50:20Z"
+          },
           {
             "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
             "publishedAt": "2026-04-22T14:29:29Z"
@@ -360,10 +364,6 @@
           {
             "title": "Exšéf Nemocnice Na Homolce narazil u Ústavního soudu. Trest pro Dbalého platí",
             "publishedAt": "2026-04-22T07:23:51Z"
-          },
-          {
-            "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
-            "publishedAt": "2026-04-22T07:00:00Z"
           }
         ]
       }

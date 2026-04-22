@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-22T15:30:00.710559Z",
+  "ingestedAt": "2026-04-22T16:34:47.584031Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Škrty už začaly. Lufthansa chystá omezení letů mezi Prahou a Mnichovem",
+      "url": "https://ekonomickydenik.cz/lufthansa-praha-mnichov-lety/",
+      "dt": "2026-04-22T15:33:09Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chystá",
+        "letů",
+        "lufthansa",
+        "mnichovem",
+        "omezení",
+        "prahou",
+        "začaly",
+        "škrty"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,31 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Letecký kolaps nehrozí. Přesto se Evropa připravuje na nejhorší scénář",
-      "url": "https://ekonomickydenik.cz/letecky-kolaps-nehrozi-pripravuje-nejhorsi-scenar/",
-      "dt": "2026-04-20T16:34:49Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropa",
-        "kolaps",
-        "letecký",
-        "nehrozí",
-        "nejhorší",
-        "přesto",
-        "připravuje",
-        "scénář"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72511,
+      "bytes": 72902,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T14:01:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T15:33:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Škrty už začaly. Lufthansa chystá omezení letů mezi Prahou a Mnichovem",
+            "publishedAt": "2026-04-22T15:33:09Z"
+          },
           {
             "title": "Velký bratr v boji proti zločinu. Evropa chystá policejní cloud a umělou inteligenci",
             "publishedAt": "2026-04-22T14:01:35Z"
@@ -876,10 +880,6 @@
           {
             "title": "Čeští byznysmeni rekordně investují ve světě. Zahraniční kapitál spíš odchází",
             "publishedAt": "2026-04-22T08:13:31Z"
-          },
-          {
-            "title": "Česko jako evropský rekordman: Nafta u nás zdražila nejvíc z celé EU",
-            "publishedAt": "2026-04-22T07:43:35Z"
           }
         ]
       }

@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-22T15:30:00.710559Z",
+  "ingestedAt": "2026-04-22T16:34:47.584031Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Aktivujte si zdarma na Steamu dvě hry",
+      "url": "https://zing.cz/article/aktivujte-si-zdarma-na-steamu-dve-hry-6",
+      "dt": "2026-04-22T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "aktivujte",
+        "dvě",
+        "hry",
+        "steamu",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -965,29 +987,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Filmový Street Fighter se připomíná akčním traileru",
-      "url": "https://zing.cz/article/filmovy-street-fighter-se-pripomina-akcnim-traileru",
-      "dt": "2026-04-16T15:30:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "akčním",
-        "fighter",
-        "filmový",
-        "připomíná",
-        "street",
-        "traileru"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -998,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126374,
+      "bytes": 126229,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1035,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1051,6 +1050,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aktivujte si zdarma na Steamu dvě hry",
+            "publishedAt": "2026-04-22T16:00:00Z"
+          },
           {
             "title": "Konec němé postavy. Hrdina Metra 2039 bude mít podle autora knih rozhodně co říct",
             "publishedAt": "2026-04-22T14:00:00Z"
@@ -1078,10 +1081,6 @@
           {
             "title": "Game Pass zlevňuje, Call of Duty se v předplatném objeví s ročním zpožděním",
             "publishedAt": "2026-04-21T18:00:00Z"
-          },
-          {
-            "title": "GOG nabízí po čase hru zdarma",
-            "publishedAt": "2026-04-21T16:00:00Z"
           }
         ]
       }

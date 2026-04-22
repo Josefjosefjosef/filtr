@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-22T15:30:00.710559Z",
+  "ingestedAt": "2026-04-22T16:34:47.584031Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocnice Krajské zdravotní vykázaly ztrátu. Platy neporostou",
+      "url": "https://www.zdravezpravy.cz/2026/04/22/nemocnice-krajske-zdravotni-vykazaly-ztratu-1427-mil-kc-mzdy-neporostou/",
+      "dt": "2026-04-22T14:48:39Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "krajské",
+        "nemocnice",
+        "neporostou",
+        "platy",
+        "vykázaly",
+        "zdravotní",
+        "ztrátu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,29 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Záludnosti zdravotních dotazníků pojišťoven řeší i onkopacienti",
-      "url": "https://www.zdravezpravy.cz/2026/04/14/zaludnosti-zdravotnich-dotazniku-pojistoven-resi-i-onkopacienti/",
-      "dt": "2026-04-14T10:00:46Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dotazníků",
-        "onkopacienti",
-        "pojišťoven",
-        "zdravotních",
-        "záludnosti",
-        "řeší"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 230948,
+      "bytes": 228035,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:48:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T14:48:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -558,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocnice Krajské zdravotní vykázaly ztrátu. Platy neporostou",
+            "publishedAt": "2026-04-22T14:48:39Z"
+          },
           {
             "title": "Soukromí poskytovatelé zdravotní péče znají klíč k zachování služeb",
             "publishedAt": "2026-04-22T12:48:07Z"
@@ -585,10 +590,6 @@
           {
             "title": "Ke křtům se přiklání stále více dospívajících i dospělých osob",
             "publishedAt": "2026-04-20T12:05:27Z"
-          },
-          {
-            "title": "Komentář: Majetkový test pro domácí pečující? Asi se zbláznili",
-            "publishedAt": "2026-04-20T10:00:51Z"
           }
         ]
       }
