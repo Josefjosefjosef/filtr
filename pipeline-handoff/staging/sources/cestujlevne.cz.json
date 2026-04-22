@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-22T10:19:14.421342Z",
+  "ingestedAt": "2026-04-22T11:23:38.933469Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Chorvatsko z Vídně: Dubrovník, Pula i Zadar před letní sezónou. Letenky od 733 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/chorvatsko-z-vidne-dubrovnik-pula-i-zadar-pred-sezonou",
+      "dt": "2026-04-22T10:32:35Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "733",
+        "chorvatsko",
+        "dubrovník",
+        "letenky",
+        "letní",
+        "pula",
+        "sezónou",
+        "vídně",
+        "zadar"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -476,32 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Tenerife – Puerto de la Cruz s all-inclusive z Prahy. Zájezd od 9 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-tenerife-puerto-de-la-cruz-s-all-inclusive-z-prahy",
-      "dt": "2026-04-16T11:37:44Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "cruz",
-        "inclusive",
-        "prahy",
-        "puerto",
-        "tenerife",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 40456,
+      "bytes": 39665,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T09:10:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T10:32:35Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorvatsko z Vídně: Dubrovník, Pula i Zadar před letní sezónou. Letenky od 733 Kč",
+            "publishedAt": "2026-04-22T10:32:35Z"
+          },
           {
             "title": "Kréta z Brna do 4* hotelu s all-inclusive na začátku května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-22T09:10:50Z"
@@ -591,10 +595,6 @@
           {
             "title": "Z Prahy do Sofie na jednu noc ze soboty na neděli. Letenky od 1 423 Kč",
             "publishedAt": "2026-04-21T08:18:16Z"
-          },
-          {
-            "title": "Severní Makedonie z Bratislavy v červnu. Letenky od 688 Kč",
-            "publishedAt": "2026-04-20T19:18:31Z"
           }
         ]
       }

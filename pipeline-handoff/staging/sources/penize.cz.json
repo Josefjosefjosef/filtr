@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-22T10:19:14.421342Z",
+  "ingestedAt": "2026-04-22T11:23:38.933469Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kyberpodvodníci jdou po vašich penězích. Proč jsou letos dvakrát silnější?",
+      "url": "https://www.penize.cz/bezne-ucty/488675-kyberpodvodnici-jdou-po-vasich-penezich-proc-jsou-letos-dvakrat-silnejsi",
+      "dt": "2026-04-22T12:15:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dvakrát",
+        "jdou",
+        "kyberpodvodníci",
+        "letos",
+        "penězích",
+        "proč",
+        "silnější",
+        "vašich"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -487,31 +512,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "HiPP stahuje dětské výživy. Ve sklenicích našli jed na krysy",
-      "url": "https://www.penize.cz/nakupy/488536-hipp-stahuje-detske-vyzivy-ve-sklenicich-nasli-jed-na-krysy",
-      "dt": "2026-04-19T12:54:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dětské",
-        "hipp",
-        "jed",
-        "krysy",
-        "našli",
-        "sklenicích",
-        "stahuje",
-        "výživy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -522,7 +522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18170,
+      "bytes": 18187,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -559,11 +559,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T11:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 17
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -575,6 +575,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kyberpodvodníci jdou po vašich penězích. Proč jsou letos dvakrát silnější?",
+            "publishedAt": "2026-04-22T12:15:00Z"
+          },
           {
             "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
             "publishedAt": "2026-04-22T11:58:00Z"
@@ -602,10 +606,6 @@
           {
             "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
             "publishedAt": "2026-04-21T13:23:00Z"
-          },
-          {
-            "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
-            "publishedAt": "2026-04-21T12:35:00Z"
           }
         ]
       }
