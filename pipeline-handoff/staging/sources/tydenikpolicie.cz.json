@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-22T08:59:40.189906Z",
+  "ingestedAt": "2026-04-22T09:19:26.647806Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zásahová jednotka postřelila v Šestajovicích podezřelého muže, který na ní při realizaci zaútočil se zbraní",
+      "url": "https://tydenikpolicie.cz/zasahova-jednotka-postrelila-v-sestajovicich-podezreleho-muze-ktery-na-ni-pri-realizaci-zautocil-se-zbrani/",
+      "dt": "2026-04-22T09:03:50Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jednotka",
+        "muže",
+        "podezřelého",
+        "postřelila",
+        "při",
+        "realizaci",
+        "zaútočil",
+        "zbraní",
+        "zásahová",
+        "šestajovicích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,29 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na pražském letišti proběhla kontrolní akce DAMOCLES",
-      "url": "https://tydenikpolicie.cz/na-prazskem-letisti-probehla-kontrolni-akce-damocles/",
-      "dt": "2026-04-21T14:37:19Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "akce",
-        "damocles",
-        "kontrolní",
-        "letišti",
-        "pražském",
-        "proběhla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16175,
+      "bytes": 16521,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T04:02:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T09:03:50Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zásahová jednotka postřelila v Šestajovicích podezřelého muže, který na ní při realizaci zaútočil se zbraní",
+            "publishedAt": "2026-04-22T09:03:50Z"
+          },
           {
             "title": "Opilý řidič ve Zlíně naboural při couvání a pak tvrdil, že neřídil. Nepřesvědčil ani strážníky, ani kameru",
             "publishedAt": "2026-04-22T04:02:54Z"
@@ -357,10 +365,6 @@
           {
             "title": "Jeden zraněný při protidrogové realizaci v Šestajovicích",
             "publishedAt": "2026-04-21T19:20:34Z"
-          },
-          {
-            "title": "Policisté hledají svědky srážky dvou škodovek v Přerově",
-            "publishedAt": "2026-04-21T18:02:28Z"
           }
         ]
       }

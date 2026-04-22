@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T08:59:40.189906Z",
+  "ingestedAt": "2026-04-22T09:19:26.647806Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fantastický počin, krásný příběh! Jarolím přiznal, že měl z trénování Karviné respekt",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/marek-jarolim-mfk-karvina.A260422_095640_fot_dsouteze_jsl",
+      "dt": "2026-04-22T08:54:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fantastický",
+        "jarolím",
+        "karviné",
+        "krásný",
+        "měl",
+        "počin",
+        "přiznal",
+        "příběh",
+        "respekt",
+        "trénování"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hradec má své jisté, o složení elitní šestky rozhodne i Slavia. Co potřebuje k titulu?",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/hradec-kralove-v-elitni-sestce-o-co-se-hraje-v-zaverecnem-kole-fotbalove-ligy.A260421_145145_fotbal_min",
-      "dt": "2026-04-21T14:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "elitní",
-        "hradec",
-        "jisté",
-        "potřebuje",
-        "rozhodne",
-        "slavia",
-        "složení",
-        "své",
-        "titulu",
-        "šestky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47767,
+      "bytes": 47701,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:54:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fantastický počin, krásný příběh! Jarolím přiznal, že měl z trénování Karviné respekt",
+            "publishedAt": "2026-04-22T08:54:00Z"
+          },
           {
             "title": "Talent k nepřehlédnutí. Pojede Tomek na MS v sedmnácti? Trumfnout může i Jágra",
             "publishedAt": "2026-04-22T07:55:00Z"
@@ -874,10 +878,6 @@
           {
             "title": "Kolos Wembanyama se zřítil na bradu a ztratil vědomí. Krejčího Portland srovnal",
             "publishedAt": "2026-04-22T06:08:00Z"
-          },
-          {
-            "title": "Už ať je to za námi... Hráči Litvínova zaplatili fandům výjezd, útočí na záchranu",
-            "publishedAt": "2026-04-22T05:57:00Z"
           }
         ]
       }
