@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-22T11:44:05.898290Z",
+  "ingestedAt": "2026-04-22T12:04:07.720495Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na čtvrtek 23. dubna",
+      "url": "https://www.penize.cz/doprava/488696-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-23-dubna",
+      "dt": "2026-04-22T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "maximální",
+        "nafty",
+        "čtvrtek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -486,32 +509,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brigádníci v zemědělství můžou letos vydělat víc díky nové slevě",
-      "url": "https://www.penize.cz/socialni-pojisteni/488538-brigadnici-v-zemedelstvi-muzou-letos-vydelat-vic-diky-nove-sleve",
-      "dt": "2026-04-20T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "brigádníci",
-        "díky",
-        "letos",
-        "můžou",
-        "nové",
-        "slevě",
-        "vydělat",
-        "víc",
-        "zemědělství"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -522,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18187,
+      "bytes": 18219,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -559,11 +556,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T12:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 17
+          "zpravy": 4,
+          "finance": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -575,6 +572,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na čtvrtek 23. dubna",
+            "publishedAt": "2026-04-22T13:58:00Z"
+          },
           {
             "title": "Kyberpodvodníci jdou po vašich penězích. Proč jsou letos dvakrát silnější?",
             "publishedAt": "2026-04-22T12:15:00Z"
@@ -602,10 +603,6 @@
           {
             "title": "Jako na houpačce. Maximální ceny benzinu a nafty na středu 22. dubna",
             "publishedAt": "2026-04-21T13:59:00Z"
-          },
-          {
-            "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
-            "publishedAt": "2026-04-21T13:23:00Z"
           }
         ]
       }

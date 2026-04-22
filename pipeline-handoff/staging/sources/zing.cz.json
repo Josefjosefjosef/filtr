@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-22T11:44:05.898290Z",
+  "ingestedAt": "2026-04-22T12:04:07.720495Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Pirátská hra Windrose se stala nejvýdělečnější hrou na Steamu za poslední týden",
+      "url": "https://zing.cz/article/piratska-hra-windrose-se-stala-nejvydelecnejsi-hrou-na-steamu-za-posledni-tyden",
+      "dt": "2026-04-22T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hra",
+        "hrou",
+        "nejvýdělečnější",
+        "pirátská",
+        "poslední",
+        "stala",
+        "steamu",
+        "týden",
+        "windrose"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,32 +984,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Windrose zažívá úspěšný start, za 48 hodin prodal půl milionu kopií",
-      "url": "https://zing.cz/article/windrose-zaziva-uspesny-start-za-48-hodin-prodala-pul-milionu-kopii",
-      "dt": "2026-04-16T13:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hodin",
-        "kopií",
-        "milionu",
-        "prodal",
-        "půl",
-        "start",
-        "windrose",
-        "zažívá",
-        "úspěšný"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -994,7 +994,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126386,
+      "bytes": 126379,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1031,7 +1031,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1047,6 +1047,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pirátská hra Windrose se stala nejvýdělečnější hrou na Steamu za poslední týden",
+            "publishedAt": "2026-04-22T12:00:00Z"
+          },
           {
             "title": "Oceňovaná hra This War of Mine se vrátí v nové podobě",
             "publishedAt": "2026-04-22T10:00:00Z"
@@ -1074,10 +1078,6 @@
           {
             "title": "Far Cry 7 mělo projít vývojovým peklem, k vydání dojde nejdříve v roce 2027",
             "publishedAt": "2026-04-21T14:00:00Z"
-          },
-          {
-            "title": "Assassin's Creed Black Flag Resynced na uniklých záběrech a obrázcích",
-            "publishedAt": "2026-04-21T12:00:00Z"
           }
         ]
       }

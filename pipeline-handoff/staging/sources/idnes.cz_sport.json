@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T11:44:05.898290Z",
+  "ingestedAt": "2026-04-22T12:04:07.720495Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šerm jako ze sci-fi filmu. Nová technologie ukazuje každý pohyb čepele",
+      "url": "https://www.idnes.cz/sport/trendy/serm-jako-ze-sci-fi-filmu-nova-technologie-ukazuje-kazdy-pohyb-cepele.A260422_103430_trendy_subt",
+      "dt": "2026-04-22T11:38:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "filmu",
+        "jako",
+        "každý",
+        "nová",
+        "pohyb",
+        "sci",
+        "technologie",
+        "ukazuje",
+        "čepele",
+        "šerm"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,31 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Za excesy prospěšné práce. Slavia údajně potrestala Chorého s Bořilem",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/tomas-chory-jan-boril-slavia-praha-excesy.A260421_212000_fotbal_hava",
-      "dt": "2026-04-21T19:26:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bořilem",
-        "chorého",
-        "excesy",
-        "potrestala",
-        "prospěšné",
-        "práce",
-        "slavia",
-        "údajně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47553,
+      "bytes": 47770,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T11:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šerm jako ze sci-fi filmu. Nová technologie ukazuje každý pohyb čepele",
+            "publishedAt": "2026-04-22T11:38:00Z"
+          },
           {
             "title": "Expertům jsme zavřeli hubu! Nahodilova žula v emocích povolila: Byl jsem dojatý",
             "publishedAt": "2026-04-22T11:30:00Z"
@@ -881,10 +887,6 @@
           {
             "title": "Hezké holky jsou hloupé. Boxer v televizi šokoval sexistickými a misogynními výroky",
             "publishedAt": "2026-04-22T10:21:00Z"
-          },
-          {
-            "title": "Vingegaard překvapil: Je čas na změnu. Radši bych letos vyhrál Giro než Tour",
-            "publishedAt": "2026-04-22T10:00:00Z"
           }
         ]
       }

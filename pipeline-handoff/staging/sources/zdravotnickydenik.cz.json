@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T11:44:05.898290Z",
+  "ingestedAt": "2026-04-22T12:04:07.720495Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pavilon ÚVN je po požáru před 4 lety stále prázdný. Rekonstrukci brzdí ostré spory",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pavilon-uvn-pozar-rekonstrukce-strecha/",
+      "dt": "2026-04-22T12:00:33Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brzdí",
+        "lety",
+        "ostré",
+        "pavilon",
+        "požáru",
+        "prázdný",
+        "rekonstrukci",
+        "spory",
+        "stále",
+        "úvn"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,34 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zalévat zdravotnictví penězi zvládne i cvičená opice, napsal Kalousek. Kritizoval Vojtěchův návrh",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnictvi-penize-cvicena-opice-napsal-kalousek/",
-      "dt": "2026-04-21T13:33:14Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cvičená",
-        "kalousek",
-        "kritizoval",
-        "napsal",
-        "návrh",
-        "opice",
-        "penězi",
-        "vojtěchův",
-        "zalévat",
-        "zdravotnictví",
-        "zvládne"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101529,
+      "bytes": 103772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:07:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T12:00:33Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pavilon ÚVN je po požáru před 4 lety stále prázdný. Rekonstrukci brzdí ostré spory",
+            "publishedAt": "2026-04-22T12:00:33Z"
+          },
           {
             "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
             "publishedAt": "2026-04-22T10:07:13Z"
@@ -359,10 +362,6 @@
           {
             "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
             "publishedAt": "2026-04-22T05:00:00Z"
-          },
-          {
-            "title": "5 mýtů o vašich zdravotních údajích. Kdo všechno je může vidět a má nad nimi kontrolu?",
-            "publishedAt": "2026-04-21T15:19:33Z"
           }
         ]
       }
