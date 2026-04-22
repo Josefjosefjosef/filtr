@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odbory Českého rozhlasu vyhlásily stávkovou pohotovost",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/brifink-odboru-ceskeho-rozhlasu-k-navrhovanym-zmenam-financovani-medii-verejne-sluzby-372657",
+      "dt": "2026-04-22T08:00:23Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "odbory",
+        "pohotovost",
+        "rozhlasu",
+        "stávkovou",
+        "vyhlásily",
+        "českého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -30,7 +53,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Senát projedná regulaci cen pohonných hmot",
+      "title": "Senát odmítl projednat regulaci cen pohonných hmot ve zkráceném jednání",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senat-projedna-regulaci-cen-pohonnych-hmot-372653",
       "dt": "2026-04-22T07:11:06Z",
       "media_raw": "ČT24 / Domácí",
@@ -38,10 +61,13 @@
       "tokens": [
         "cen",
         "hmot",
+        "jednání",
+        "odmítl",
         "pohonných",
-        "projedná",
+        "projednat",
         "regulaci",
-        "senát"
+        "senát",
+        "zkráceném"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -723,31 +749,6 @@
         "středu",
         "vláda",
         "zvýšila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Senátní výbory odmítly vládní regulaci cen pohonných hmot",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/senatni-hospodarsky-vybor-odmitl-vladni-regulaci-cen-pohonnych-hmot-372628",
-      "dt": "2026-04-21T12:51:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cen",
-        "hmot",
-        "odmítly",
-        "pohonných",
-        "regulaci",
-        "senátní",
-        "vládní",
-        "výbory"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1540,7 +1541,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45602,
+      "bytes": 45592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1600,7 +1601,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:23:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:00:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1618,11 +1619,15 @@
         },
         "sample_titles": [
           {
+            "title": "Odbory Českého rozhlasu vyhlásily stávkovou pohotovost",
+            "publishedAt": "2026-04-22T08:00:23Z"
+          },
+          {
             "title": "Ústavní soud odmítl stížnost exšéfa nemocnice Dbalého",
             "publishedAt": "2026-04-22T07:23:41Z"
           },
           {
-            "title": "Senát projedná regulaci cen pohonných hmot",
+            "title": "Senát odmítl projednat regulaci cen pohonných hmot ve zkráceném jednání",
             "publishedAt": "2026-04-22T07:11:06Z"
           },
           {
@@ -1644,10 +1649,6 @@
           {
             "title": "Hormuzský průliv lze obejít. Má to ale háčky",
             "publishedAt": "2026-04-22T05:00:00Z"
-          },
-          {
-            "title": "Hlavní polská opoziční strana ztrácí preference a řeší vnitřní spory",
-            "publishedAt": "2026-04-22T04:30:00Z"
           }
         ]
       }
@@ -1753,7 +1754,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77398,
+      "bytes": 77332,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

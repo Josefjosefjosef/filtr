@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "&bdquo;Zbývají poslední kusy!&ldquo; a další digitální pasti. Jak nás e-shopy manipulují a tlačí k nákupům",
+      "url": "https://vikend.hn.cz/c1-67868770-bdquo-zbyvaji-posledni-kusy-ldquo-a-dalsi-digitalni-pasti-jak-nas-e-shopy-manipuluji-a-tlaci-k-nakupum",
+      "dt": "2026-04-22T08:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "další",
+        "digitální",
+        "kusy",
+        "ldquo",
+        "manipulují",
+        "nákupům",
+        "nás",
+        "pasti",
+        "poslední",
+        "shopy",
+        "tlačí",
+        "zbývají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1082,39 +1112,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Český fastfood rozstřelili noví hráči. Kde je nejvýdělečnější &bdquo;mekáč&ldquo; u nás, co drtí KFC a kde se objeví další Five Guys?",
-      "url": "https://byznys.hn.cz/c1-67869480-cesky-fastfood-rozstrelili-novi-hraci-kde-je-nejvydelecnejsi-bdquo-mekac-ldquo-u-nas-co-drti-kfc-a-kde-se-objevi-dalsi-five-guys",
-      "dt": "2026-04-21T13:05:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "další",
-        "drtí",
-        "fastfood",
-        "five",
-        "guys",
-        "hráči",
-        "kfc",
-        "ldquo",
-        "mekáč",
-        "nejvýdělečnější",
-        "noví",
-        "nás",
-        "objeví",
-        "rozstřelili",
-        "český"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1125,7 +1122,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 181694,
+      "bytes": 181603,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1162,7 +1159,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1180,6 +1177,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "&bdquo;Zbývají poslední kusy!&ldquo; a další digitální pasti. Jak nás e-shopy manipulují a tlačí k nákupům",
+            "publishedAt": "2026-04-22T08:00:00Z"
+          },
           {
             "title": "Pomáhá válka inovacím, nebo je ničí? Vědci přišli s překvapivou odpovědí",
             "publishedAt": "2026-04-22T06:59:00Z"
@@ -1207,10 +1208,6 @@
           {
             "title": "Zásadně omezit nebo rovnou zrušit emisní povolenky, jak chce česká vláda? Většina zemí EU si to nepřeje",
             "publishedAt": "2026-04-22T04:51:00Z"
-          },
-          {
-            "title": "Nejlepší obrázky už nedělá Google. ChatGPT Images 2.0 kouzlí s typografií, má méně cenzury, novější informace a mozek",
-            "publishedAt": "2026-04-22T03:22:00Z"
           }
         ]
       }

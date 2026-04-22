@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Talent k nepřehlédnutí. Pojede Tomek na MS v sedmnácti? Trumfnout může i Jágra",
+      "url": "https://www.idnes.cz/hokej/ms-2026/petr-tomek-sedmnact-let-talent-nominace-acko.A260421_161552_ms-hokej-2026_ten",
+      "dt": "2026-04-22T07:55:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "jágra",
+        "nepřehlédnutí",
+        "pojede",
+        "sedmnácti",
+        "talent",
+        "tomek",
+        "trumfnout"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,29 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na stadionu Slavie budou nově veřejně dostupné defibrilátory",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/slavia-projekt-defibrilatory-stadion.A260420_115720_fotbal_malu",
-      "dt": "2026-04-21T14:02:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "defibrilátory",
-        "dostupné",
-        "nově",
-        "slavie",
-        "stadionu",
-        "veřejně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47370,
+      "bytes": 47767,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Talent k nepřehlédnutí. Pojede Tomek na MS v sedmnácti? Trumfnout může i Jágra",
+            "publishedAt": "2026-04-22T07:55:00Z"
+          },
           {
             "title": "Mistr světa v letech ošklivě sletěl z kola, u zkoušky měl Kranjec přes dvě promile",
             "publishedAt": "2026-04-22T07:25:00Z"
@@ -873,10 +878,6 @@
           {
             "title": "Už ať je to za námi... Hráči Litvínova zaplatili fandům výjezd, útočí na záchranu",
             "publishedAt": "2026-04-22T05:57:00Z"
-          },
-          {
-            "title": "30 tisíc fanoušků, chrám Dynama. Kluci z Děčína podávali míče ve 2. bundeslize",
-            "publishedAt": "2026-04-22T04:36:00Z"
           }
         ]
       }

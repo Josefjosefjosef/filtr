@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ne papírové obálky, ale telefonní hovory zvýší účast na prevenci",
+      "url": "https://www.zdravezpravy.cz/2026/04/22/zadne-papirove-obalky-ale-telefonni-hovor-zvysuje-ucast-na-prevenci/",
+      "dt": "2026-04-22T07:23:01Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ale",
+        "hovory",
+        "obálky",
+        "papírové",
+        "prevenci",
+        "telefonní",
+        "zvýší",
+        "účast"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -470,31 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Operace nádorů slinivky, jícnu a jater se soustředí do několika center",
-      "url": "https://www.zdravezpravy.cz/2026/04/13/operace-nadoru-slinivky-jicnu-a-jater-se-soustredi-do-nekolika-center/",
-      "dt": "2026-04-13T14:55:08Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "center",
-        "jater",
-        "jícnu",
-        "nádorů",
-        "několika",
-        "operace",
-        "slinivky",
-        "soustředí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 224310,
+      "bytes": 226315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-21T17:13:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:23:01Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ne papírové obálky, ale telefonní hovory zvýší účast na prevenci",
+            "publishedAt": "2026-04-22T07:23:01Z"
+          },
           {
             "title": "Respirační nemoci se nyní sledují téměř v reálném čase",
             "publishedAt": "2026-04-21T17:13:24Z"
@@ -584,10 +588,6 @@
           {
             "title": "Nová imunoterapie rakovinu zvládne, tvrdí vědci. Chce to jen čas",
             "publishedAt": "2026-04-18T06:30:20Z"
-          },
-          {
-            "title": "Hemofilici už žijí jako ostatní lidé. A to díky preventivní léčbě",
-            "publishedAt": "2026-04-17T15:42:13Z"
           }
         ]
       }

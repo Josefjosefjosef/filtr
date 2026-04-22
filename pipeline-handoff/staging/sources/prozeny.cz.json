@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vážná nemoc ji připravila o krásu! Kathleen Turner čelila pomluvám. Teď zhubla a zahodila chodítko",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-vazna-nemoc-ji-pripravila-o-krasu-kathleen-turner-celila-pomluvam-ted-zhubla-a-zahodila-choditko-103200",
+      "dt": "2026-04-22T07:58:31Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "chodítko",
+        "kathleen",
+        "krásu",
+        "nemoc",
+        "pomluvám",
+        "připravila",
+        "turner",
+        "vážná",
+        "zahodila",
+        "zhubla",
+        "čelila"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -805,34 +833,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Děti pryč z domova? Pavel Šporcl přiznal, co to udělalo s jeho manželstvím s Bárou Kodetovou",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-deti-pryc-z-domova-pavel-sporcl-priznal-co-to-udelalo-s-jeho-manzelstvim-s-barou-kodetovou-103151",
-      "dt": "2026-04-20T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "bárou",
-        "domova",
-        "děti",
-        "jeho",
-        "kodetovou",
-        "manželstvím",
-        "pavel",
-        "pryč",
-        "přiznal",
-        "udělalo",
-        "šporcl"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -843,7 +843,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39024,
+      "bytes": 39084,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -880,7 +880,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T07:58:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -896,6 +896,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vážná nemoc ji připravila o krásu! Kathleen Turner čelila pomluvám. Teď zhubla a zahodila chodítko",
+            "publishedAt": "2026-04-22T07:58:31Z"
+          },
           {
             "title": "Šest důvodů, proč byste neměli podceňovat pravidelný sex ve vztahu (ani po letech)",
             "publishedAt": "2026-04-22T07:00:45Z"
@@ -922,10 +926,6 @@
           },
           {
             "title": "I pejskové stárnou. Jak změnit péči, když je z vašeho parťáka senior?",
-            "publishedAt": "2026-04-22T03:00:00Z"
-          },
-          {
-            "title": "Láska na první pohled? Kdepak! Tyto slavné české páry se zprvu nemohly ani vystát",
             "publishedAt": "2026-04-22T03:00:00Z"
           }
         ]

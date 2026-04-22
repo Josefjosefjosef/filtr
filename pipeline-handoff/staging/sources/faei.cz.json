@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
+      "url": "https://profitonline.cz/je-tesla-jen-predrazenou-automobilkou-dnesek-ukaze/",
+      "dt": "2026-04-22T08:00:38Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "automobilkou",
+        "dnešek",
+        "jen",
+        "předraženou",
+        "tesla",
+        "ukáže"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -276,32 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hormuz je opět uzavřen, ale nafta zlevní o dvě koruny. Jak je to možné?",
-      "url": "https://profitonline.cz/hormuz-je-opet-uzavren-ale-nafta-zlevni-o-dve-koruny-jak-je-to-mozne/",
-      "dt": "2026-04-20T06:00:54Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "dvě",
-        "hormuz",
-        "koruny",
-        "možné",
-        "nafta",
-        "opět",
-        "uzavřen",
-        "zlevní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -312,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19864,
+      "bytes": 19637,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -349,7 +346,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-22T06:00:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:00:38Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -365,6 +362,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
+            "publishedAt": "2026-04-22T08:00:38Z"
+          },
           {
             "title": "Hana Libecajtová předsedkyní správní rady Nadace KB",
             "publishedAt": "2026-04-22T06:00:26Z"
@@ -392,10 +393,6 @@
           {
             "title": "Nafta v Česku zlevnila i pod 40 korun za litr",
             "publishedAt": "2026-04-21T07:00:50Z"
-          },
-          {
-            "title": "Uvidíme místo StarDance či hokeje pouze černou obrazovku?",
-            "publishedAt": "2026-04-21T04:00:33Z"
           }
         ]
       }

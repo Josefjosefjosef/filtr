@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Letenky do Bangkoku za 14 390 Kč",
+      "url": "https://pelipecky.cz/bangkok-aktivity/",
+      "dt": "2026-04-22T08:00:00Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "390",
+        "bangkoku",
+        "letenky"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -237,31 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Velmi dostupné letenky: Fantastická ASIE s Air China od 13 790 Kč",
-      "url": "https://pelipecky.cz/levne-letenky-na-palube-air-china/",
-      "dt": "2026-04-03T07:46:07Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "790",
-        "air",
-        "asie",
-        "china",
-        "dostupné",
-        "fantastická",
-        "letenky",
-        "velmi"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 130574,
+      "bytes": 144823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T18:22:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -324,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Letenky do Bangkoku za 14 390 Kč",
+            "publishedAt": "2026-04-22T08:00:00Z"
+          },
           {
             "title": "NABÍDKA DNE: Poznávací zájezd na Srí Lanku s programem, ubytováním i dopravou od 54 790 Kč",
             "publishedAt": "2026-04-21T18:22:37Z"
@@ -351,10 +350,6 @@
           {
             "title": "NABÍDKA DNE: 4* Tunisko s odletem z Prahy a All Inclusive službami za 6 990 Kč.",
             "publishedAt": "2026-04-15T15:25:03Z"
-          },
-          {
-            "title": "Ráj v Indickém oceánu: Mauricius od 16 290 Kč",
-            "publishedAt": "2026-04-13T09:05:00Z"
           }
         ]
       }

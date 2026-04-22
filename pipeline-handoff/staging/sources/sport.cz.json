@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vanišová se v PWHL podílela třemi body na vítězství hokejistek Vancouveru",
+      "url": "https://www.sport.cz/clanek/hokej-vanisova-se-v-pwhl-podilela-tremi-body-na-vitezstvi-hokejistek-vancouveru-5441388",
+      "dt": "2026-04-22T08:08:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "body",
+        "hokejistek",
+        "podílela",
+        "pwhl",
+        "třemi",
+        "vancouveru",
+        "vanišová",
+        "vítězství"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -81,7 +106,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Fotbal je k nám v posledních týdnech hodně krutý, štve trenéra Baníku po vyřazení",
+      "title": "Fotbal je k nám v posledních týdnech hodně krutý, štve trenéra Baníku",
       "url": "https://www.sport.cz/clanek/fotbal-pohar-fotbal-je-k-nam-v-poslednich-tydnech-hodne-kruty-stve-trenera-baniku-po-vyrazeni-5441380",
       "dt": "2026-04-22T07:17:58Z",
       "media_raw": "Sport.cz",
@@ -95,7 +120,6 @@
         "posledních",
         "trenéra",
         "týdnech",
-        "vyřazení",
         "štve"
       ],
       "feedCategory": "sport",
@@ -750,34 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šéf Mercedesu se obává dodatečného vývoje pohonných jednotek. Doufá, že nezmění pořadí na trati",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-sef-mercedesu-se-obava-dodatecneho-vyvoje-pohonnych-jednotek-doufa-ze-nezmeni-poradi-na-trati-5441006",
-      "dt": "2026-04-21T15:57:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dodatečného",
-        "doufá",
-        "jednotek",
-        "mercedesu",
-        "nezmění",
-        "obává",
-        "pohonných",
-        "pořadí",
-        "trati",
-        "vývoje",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42919,
+      "bytes": 42773,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:45:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:08:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +837,10 @@
         },
         "sample_titles": [
           {
+            "title": "Vanišová se v PWHL podílela třemi body na vítězství hokejistek Vancouveru",
+            "publishedAt": "2026-04-22T08:08:51Z"
+          },
+          {
             "title": "Šmicer má pro slávisty rázný vzkaz!",
             "publishedAt": "2026-04-22T07:35:24Z"
           },
@@ -853,7 +853,7 @@
             "publishedAt": "2026-04-22T07:45:06Z"
           },
           {
-            "title": "Fotbal je k nám v posledních týdnech hodně krutý, štve trenéra Baníku po vyřazení",
+            "title": "Fotbal je k nám v posledních týdnech hodně krutý, štve trenéra Baníku",
             "publishedAt": "2026-04-22T07:17:58Z"
           },
           {
@@ -867,10 +867,6 @@
           {
             "title": "Čeští mladíci na úvod šampionátu vyzvou velkého favorita",
             "publishedAt": "2026-04-22T06:12:01Z"
-          },
-          {
-            "title": "Pastrňák znovu řádil! Trefil se i Zacha a Boston srovnal. Nečas nastartoval obrat",
-            "publishedAt": "2026-04-22T03:52:52Z"
           }
         ]
       }

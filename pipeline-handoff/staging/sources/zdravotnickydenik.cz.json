@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T07:59:49.662093Z",
+  "ingestedAt": "2026-04-22T08:20:14.860038Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nemocnice v Ústeckém kraji stoply růst mezd. Nechtějí ani zvyšovat počet zaměstnanců",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-ustecky-kraj-mzdy-nabor/",
+      "dt": "2026-04-22T08:13:18Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "kraji",
+        "mezd",
+        "nechtějí",
+        "nemocnice",
+        "počet",
+        "růst",
+        "stoply",
+        "zaměstnanců",
+        "zvyšovat",
+        "ústeckém"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Po porodnici končí v Prachaticích i dětské oddělení. Termín už je jasný, chybějí lékaři",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-prachatice-detske-oddeleni/",
-      "dt": "2026-04-21T10:58:49Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chybějí",
-        "dětské",
-        "jasný",
-        "končí",
-        "lékaři",
-        "oddělení",
-        "porodnici",
-        "prachaticích",
-        "termín"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 101850,
+      "bytes": 103653,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T07:23:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T08:13:18Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocnice v Ústeckém kraji stoply růst mezd. Nechtějí ani zvyšovat počet zaměstnanců",
+            "publishedAt": "2026-04-22T08:13:18Z"
+          },
           {
             "title": "Exšéf Nemocnice Na Homolce narazil u Ústavního soudu. Trest pro Dbalého platí",
             "publishedAt": "2026-04-22T07:23:51Z"
@@ -359,10 +364,6 @@
           {
             "title": "Zalévat zdravotnictví penězi zvládne i cvičená opice, napsal Kalousek. Kritizoval Vojtěchův návrh",
             "publishedAt": "2026-04-21T13:33:14Z"
-          },
-          {
-            "title": "Očkování přímo v práci? Zaměstnavatelé chtějí větší vliv ve zdravotním systému",
-            "publishedAt": "2026-04-21T12:07:42Z"
           }
         ]
       }
