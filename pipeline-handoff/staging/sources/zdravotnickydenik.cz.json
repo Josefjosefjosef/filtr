@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-22T04:45:36.969173Z",
+  "ingestedAt": "2026-04-22T05:15:42.925460Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/rychlejsi-vstup-inovaci-foldyna-hellova/",
+      "dt": "2026-04-22T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "byrokratickém",
+        "inovacemi",
+        "ministerstvo",
+        "mrháme",
+        "očistci",
+        "roky",
+        "skončí",
+        "zaparkovanými",
+        "časem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,34 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Proč lidé volají záchranku častěji než dříve? Data ukazují překvapivý trend",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/kdo-dnes-vola-zachranku-data-zmena/",
-      "dt": "2026-04-21T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "data",
-        "dříve",
-        "lidé",
-        "než",
-        "proč",
-        "překvapivý",
-        "trend",
-        "ukazují",
-        "volají",
-        "záchranku",
-        "častěji"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85584,
+      "bytes": 88570,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T15:19:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mrháme časem. Ministerstvo skončí s inovacemi roky zaparkovanými v byrokratickém očistci",
+            "publishedAt": "2026-04-22T05:00:00Z"
+          },
           {
             "title": "5 mýtů o vašich zdravotních údajích. Kdo všechno je může vidět a má nad nimi kontrolu?",
             "publishedAt": "2026-04-21T15:19:33Z"
@@ -360,10 +362,6 @@
           {
             "title": "Děti si nasadí VR brýle a ocitnou se u kolapsu člověka. Nový projekt míří do škol",
             "publishedAt": "2026-04-21T09:40:45Z"
-          },
-          {
-            "title": "Přežije interna ve znojemské nemocnici? Nový ředitel odhalil své plány",
-            "publishedAt": "2026-04-21T09:15:51Z"
           }
         ]
       }
