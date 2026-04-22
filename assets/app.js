@@ -10392,6 +10392,9 @@ function buildVideoAsArticleCard(it) {
 
     function wireHover(host, shell, bridge){
       if (!host || !shell) return;
+      try{
+        if (host.__iuMmHoverSummaryWired) return;
+      }catch{}
       const tile = host.querySelector ? host.querySelector(".iu-mmTopTool") : null;
       let showTimer = null;
       let hideTimer = null;
@@ -10496,19 +10499,32 @@ function buildVideoAsArticleCard(it) {
 
       function onHostHoverIntent(){
         if (!mqDesktopMatches()) return;
+        try{
+          if (host === hostCal) window.__iuMmHoverSummaryEnterCalTs = Date.now();
+          if (host === hostTasks) window.__iuMmHoverSummaryEnterTasksTs = Date.now();
+        }catch{}
         scheduleShow();
+      }
+      function onTilePointerEnter(ev){
+        try{
+          if (ev && ev.pointerType === "touch") return;
+        }catch{}
+        onHostHoverIntent();
       }
       try{
         host.addEventListener("mouseenter", onHostHoverIntent);
       }catch{}
       try{
-        host.addEventListener("pointerenter", function (ev){
-          try{
-            if (ev && ev.pointerType === "touch") return;
-          }catch{}
-          onHostHoverIntent();
-        });
+        host.addEventListener("pointerenter", onTilePointerEnter);
       }catch{}
+      if (tile){
+        try{
+          tile.addEventListener("mouseenter", onHostHoverIntent);
+        }catch{}
+        try{
+          tile.addEventListener("pointerenter", onTilePointerEnter);
+        }catch{}
+      }
       try{
         host.addEventListener("mouseleave", function (ev){
           try{
@@ -10546,6 +10562,13 @@ function buildVideoAsArticleCard(it) {
           }catch{}
           scheduleHide();
         });
+      }catch{}
+      try{
+        host.__iuMmHoverSummaryWired = 1;
+      }catch{}
+      try{
+        if (host.id === "iuMmHoverSummaryHostCalendar") window.__iuMmHoverSummaryBoundCal = 1;
+        if (host.id === "iuMmHoverSummaryHostTasks") window.__iuMmHoverSummaryBoundTasks = 1;
       }catch{}
     }
 
@@ -18522,6 +18545,13 @@ function buildVideoAsArticleCard(it) {
           iuDesktopMindMenuSilverSummaryHoverInit();
         }catch{}
       }, 320);
+    }catch{}
+    try{
+      setTimeout(function (){
+        try{
+          iuDesktopMindMenuSilverSummaryHoverInit();
+        }catch{}
+      }, 900);
     }catch{}
     try{ iuNamedayWishInit(); }catch{}
 
