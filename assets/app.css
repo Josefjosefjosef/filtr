@@ -9260,14 +9260,50 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   
   #iuMobileGateTabs.iu-mobileGateTabs{
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
+    grid-template-columns: minmax(0, 1fr) var(--iu-mobile-silver-mid-w, 52px) minmax(0, 1fr) !important;
+    column-gap: 6px !important;
+    row-gap: 0 !important;
+    align-items: center !important;
     width: 100% !important;
     max-width: 100% !important;
     padding: 10px 0 0 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
     --iu-mobile-cta-h: 52px !important;
+    --iu-mobile-silver-mid-w: 52px !important;
+  }
+
+  /* P0 guard: inner edge radius only for Navigace | MindMenu pair flanking the Silver decor (mobile/tablet ≤900px). */
+  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateTab--pairLeft{
+    border-radius: 10px 26px 26px 10px !important;
+  }
+  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateTab--pairRight{
+    border-radius: 26px 10px 10px 26px !important;
+  }
+  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMid{
+    width: var(--iu-mobile-silver-mid-w, 52px) !important;
+    height: var(--iu-mobile-silver-mid-w, 52px) !important;
+    min-width: var(--iu-mobile-silver-mid-w, 52px) !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    pointer-events: none !important;
+  }
+  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMidCircle{
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+  }
+  #iuMobileGateTabs.iu-mobileGateTabs--silverCenter .iu-mobileGateSilverMidImg{
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
   
   #iuMobileGateTabs .iu-mobileGateTab{
@@ -21176,7 +21212,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuMobileGateTabs.iu-mobileGateTabs{
     padding: 8px 0 0 0 !important;
-    gap: 8px !important;
+    column-gap: 6px !important;
+    row-gap: 0 !important;
     background: transparent !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuMobileGateTabs.iu-mobileGateTabs{
