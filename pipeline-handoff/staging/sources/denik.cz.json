@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-22T02:20:20.501775Z",
+  "ingestedAt": "2026-04-22T02:39:59.974197Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vliv konzervativních spolků na vládu sílí, varují lidskoprávní organizace",
+      "url": "https://www.denik.cz/z_domova/vlada-posiluje-konzervativni-spolky-zaslapnou-zeny-gaye-a-nakonec-vsechny-202608.html",
+      "dt": "2026-04-22T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "konzervativních",
+        "lidskoprávní",
+        "organizace",
+        "spolků",
+        "sílí",
+        "varují",
+        "vliv",
+        "vládu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -628,33 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cenu prezidenta MFF Karlovy Vary letos převezme herečka Magda Vášáryová",
-      "url": "https://www.denik.cz/film-a-televize/cena-prezidenta-mff-karlovy-vary-magda-vasaryova.html",
-      "dt": "2026-04-21T10:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cenu",
-        "herečka",
-        "karlovy",
-        "letos",
-        "magda",
-        "mff",
-        "prezidenta",
-        "převezme",
-        "vary",
-        "vášáryová"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29372,
+      "bytes": 29375,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-21T20:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -717,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vliv konzervativních spolků na vládu sílí, varují lidskoprávní organizace",
+            "publishedAt": "2026-04-22T02:00:00Z"
+          },
           {
             "title": "V Šestajovicích u Prahy se večer střílelo. Policie zasahovala kvůli drogám",
             "publishedAt": "2026-04-21T20:45:00Z"
@@ -744,10 +746,6 @@
           {
             "title": "Neobvykle zbarvený sníh? Vědci v Krkonoších zkoumají sněžné květy",
             "publishedAt": "2026-04-21T15:10:00Z"
-          },
-          {
-            "title": "Ropovod Družba je opravený, může obnovit provoz, oznámil Zelenskyj",
-            "publishedAt": "2026-04-21T14:57:00Z"
           }
         ]
       }

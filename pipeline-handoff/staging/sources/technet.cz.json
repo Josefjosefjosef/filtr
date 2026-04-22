@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-22T02:20:20.501775Z",
+  "ingestedAt": "2026-04-22T02:39:59.974197Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Lyridy 2026: Kdy sledovat padající hvězdy a další nebeské úkazy roku 2026",
+      "url": "https://www.idnes.cz/technet/vesmir/lyridy-2026-meteoricky-roj-ukazy-kalendar.A260420_135117_tec_vesmir_vanky",
+      "dt": "2026-04-22T02:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "2026",
+        "další",
+        "hvězdy",
+        "lyridy",
+        "nebeské",
+        "padající",
+        "roku",
+        "sledovat",
+        "úkazy"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,32 +765,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bestie v uniformě vyvraždila před 100 lety samotu nedaleko Lázní Kynžvart",
-      "url": "https://www.idnes.cz/technet/pred-100-lety/masakr-samota-doyscherhof-franz-sandner-pred-100-lety.A260410_092400_pred-100-lety_vov",
-      "dt": "2026-04-10T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "100",
-        "bestie",
-        "kynžvart",
-        "lety",
-        "lázní",
-        "nedaleko",
-        "samotu",
-        "uniformě",
-        "vyvraždila"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 47034,
+      "bytes": 46740,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,11 +812,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-21T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-22T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 18,
-          "zpravy": 12
+          "other": 19,
+          "zpravy": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -828,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lyridy 2026: Kdy sledovat padající hvězdy a další nebeské úkazy roku 2026",
+            "publishedAt": "2026-04-22T02:00:00Z"
+          },
           {
             "title": "Před 100 lety se měnilo třetí nádvoří Hradu. Plečnik chystal šachovnici z kamene",
             "publishedAt": "2026-04-21T22:00:00Z"
@@ -855,10 +859,6 @@
           {
             "title": "V ČSSR se „díky“ RVHP vyráběly i zastaralé tramvaje T2D pro NDR",
             "publishedAt": "2026-04-20T22:00:00Z"
-          },
-          {
-            "title": "Zjistěte, co o vás Facebook prozrazuje ostatním",
-            "publishedAt": "2026-04-19T22:00:00Z"
           }
         ]
       }
