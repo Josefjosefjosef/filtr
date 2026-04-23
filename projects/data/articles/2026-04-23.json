@@ -1,6 +1,6 @@
 {
   "date": "2026-04-23",
-  "generatedAt": "2026-04-23T03:36:40.453271Z",
+  "generatedAt": "2026-04-23T05:04:11.020759Z",
   "items": [
     {
       "topic": "finance",
@@ -23,7 +23,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/spotrebitel/488223-kde-se-bere-sebevedomi-a-proc-rozhoduje-vic-nez-si-myslite",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.85,
+      "displayScore": 0.8392718979753488,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -54,13 +54,851 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/starobni-duchod/483186-zmena-pro-pracujici-duchodce-dostanou-dalsi-odmenu-chysta-juchelka",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.85,
+      "displayScore": 0.8279181643137892,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "zdravi",
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V Německu to vře: Miliony odborářů míří do ulic kvůli úsporám ve zdravotnictví",
+      "publishedAt": "2026-04-23T05:00:00Z",
+      "sources": [
+        {
+          "name": "Zdravotnický deník",
+          "url": "https://www.zdravotnickydenik.cz/2026/04/nemecko-odborari-uspory-ve-zdravotnictvi/"
+        }
+      ],
+      "primaryCategory": "zdravi",
+      "topicHash": "fc8cbbd9fa48d5ef",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "zdravi",
+      "sourceLabel": "Zdravotnický deník",
+      "feedId": "zdr_zdravotnickydenik",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecko-odborari-uspory-ve-zdravotnictvi/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0227224379932656,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zdravi",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "zdravi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Žabka podržel Kacetla a fantom se vykoupil. Střídání jsem v hlavě neměl, řekl trenér Třince",
+      "publishedAt": "2026-04-23T04:55:43Z",
+      "sources": [
+        {
+          "name": "Sport.cz",
+          "url": "https://www.sport.cz/clanek/hokej-extraliga-zabka-podrzel-kacetla-a-fantom-se-vykoupil-stridani-jsem-v-hlave-nemel-rekl-trener-trince-5441874"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "be301765f6385b12",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "sport",
+      "sourceLabel": "Sport.cz",
+      "feedId": "spt_sportcz",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-zabka-podrzel-kacetla-a-fantom-se-vykoupil-stridani-jsem-v-hlave-nemel-rekl-trener-trince-5441874",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.1072921103506062,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "krimi",
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Britská policie zatkla další dva lidi podezřelé z plánování žhářského útoku",
+      "publishedAt": "2026-04-23T04:55:06Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-britska-policie-zatkla-dalsi-dva-lidi-podezrele-z-planovani-zharskeho-utoku-304651"
+        }
+      ],
+      "primaryCategory": "finance",
+      "topicHash": "cfb7a3cd9cb2c1da",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "finance",
+      "sourceLabel": "Seznam Zprávy / Byznys",
+      "feedId": "fin_sz_byznys",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-britska-policie-zatkla-dalsi-dva-lidi-podezrele-z-planovani-zharskeho-utoku-304651",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.1054688072689736,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "krimi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "finance",
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hledáte nové auto a chcete ušetřit? Mezi nejlevnějšími jsou v Česku nečekaná jména",
+      "publishedAt": "2026-04-23T04:49:36Z",
+      "sources": [
+        {
+          "name": "Aktuálně",
+          "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/hledate-nove-auto-a-chcete-usetrit-mezi-nejlevnejsimi-jsou-v-cesku-necekana-jmena/r~aaa2989f539f9ed21b34e343fb7a6829/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "ffe5b15367138c67",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Aktuálně",
+      "feedId": "zpr_aktualne",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/hledate-nove-auto-a-chcete-usetrit-mezi-nejlevnejsimi-jsou-v-cesku-necekana-jmena/r~aaa2989f539f9ed21b34e343fb7a6829/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.8999958614006102,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "krimi",
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Izraelské útoky zabily na jihu Libanonu místní novinářku, píše Reuters",
+      "publishedAt": "2026-04-23T04:40:57Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-izraelske-utoky-zabily-na-jihu-libanonu-mistni-novinarku-pise-reuters-304650"
+        }
+      ],
+      "primaryCategory": "finance",
+      "topicHash": "5f8f18ad5d642305",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "finance",
+      "sourceLabel": "Seznam Zprávy / Byznys",
+      "feedId": "fin_sz_byznys",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-izraelske-utoky-zabily-na-jihu-libanonu-mistni-novinarku-pise-reuters-304650",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0652209919170537,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "krimi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "finance",
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nová vláda odvolala dalšího člena vedení ČEPS. Proč musel Lucký skončit",
+      "publishedAt": "2026-04-23T04:40:00Z",
+      "sources": [
+        {
+          "name": "Ekonomický deník",
+          "url": "https://ekonomickydenik.cz/vlada-odvolala-dalsiho-clena-vedeni-ceps-lucky/"
+        }
+      ],
+      "primaryCategory": "finance",
+      "topicHash": "5a49c71f84d30781",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.85,
+      "sectionPrimary": "finance",
+      "sourceLabel": "Ekonomický deník",
+      "feedId": "fin_ekonomickydenik",
+      "url": "https://ekonomickydenik.cz/vlada-odvolala-dalsiho-clena-vedeni-ceps-lucky/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.7854174215702899,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Odložili jsme pivo, říkal po výhře jihlavský bek. Doma to ukončíme, slibuje útočník Litvínova",
+      "publishedAt": "2026-04-23T04:39:37Z",
+      "sources": [
+        {
+          "name": "Sport.cz",
+          "url": "https://www.sport.cz/clanek/hokej-extraliga-odlozili-jsme-pivo-rikal-po-vyhre-jihlavsky-bek-doma-to-ukoncime-slibuje-utocnik-litvinova-5441872"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "43d65278c920aaa8",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "sport",
+      "sourceLabel": "Sport.cz",
+      "feedId": "spt_sportcz",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-odlozili-jsme-pivo-rikal-po-vyhre-jihlavsky-bek-doma-to-ukoncime-slibuje-utocnik-litvinova-5441872",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0615790712477662,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "MMA a box umí překvapit i ty nejzkušenější. Tyhle zápasy to dokázaly víc než cokoliv jiného. Víte, o kterých mluvíme",
+      "publishedAt": "2026-04-23T04:36:00Z",
+      "sources": [
+        {
+          "name": "MMAMAG",
+          "url": "https://www.mmamag.cz/mma-a-box-umi-prekvapit-i-ty-nejzkusenejsi-tyhle-zapasy-to-dokazaly-vic-nez-cokoliv-jineho-vite-o-kterych-mluvime/"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "8dcff8d134c5ba66",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.8,
+      "sectionPrimary": "sport",
+      "sourceLabel": "MMAMAG",
+      "feedId": "spt_mmamag",
+      "url": "https://www.mmamag.cz/mma-a-box-umi-prekvapit-i-ty-nejzkusenejsi-tyhle-zapasy-to-dokazaly-vic-nez-cokoliv-jineho-vite-o-kterych-mluvime/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.731704068215397,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čekání na změny v ČEZ. Dozorčí rada z doby Fialovy vlády skončí 1. června",
+      "publishedAt": "2026-04-23T04:30:02Z",
+      "sources": [
+        {
+          "name": "HlídacíPes",
+          "url": "https://hlidacipes.org/cekani-na-zmeny-v-cez-dozorci-rada-z-doby-fialovy-vlady-skonci-1-cervna/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "1639449000de7078",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.8,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "HlídacíPes",
+      "feedId": "zpr_hlidacipes",
+      "url": "https://hlidacipes.org/cekani-na-zmeny-v-cez-dozorci-rada-z-doby-fialovy-vlady-skonci-1-cervna/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.720777693092753,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Masér měl klientce dráždit klitoris. Nejvyšší soud zpochybnil znásilnění i důkazy",
+      "publishedAt": "2026-04-23T04:30:00Z",
+      "sources": [
+        {
+          "name": "Česká justice",
+          "url": "https://www.ceska-justice.cz/2026/04/maser-mel-zene-drazdit-klitoris-nejvyssi-soud/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "1312ebc14df1f915",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.75,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Česká justice",
+      "feedId": "zpr_ceskajustice",
+      "url": "https://www.ceska-justice.cz/2026/04/maser-mel-zene-drazdit-klitoris-nejvyssi-soud/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.6756727201711492,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Prostě nám umřeli před očima.“ Nabatíja je v troskách, zůstal jen zlomek rodin",
+      "publishedAt": "2026-04-23T04:30:00Z",
+      "sources": [
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/svet/proste-nam-umreli-pred-ocima-nabatija-je-v-troskach-zustal-jen-zlomek-rodin-372682"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "245cdd8c0d16e15b",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "ČT24 / Domácí",
+      "feedId": "zpr_ct24_domaci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/proste-nam-umreli-pred-ocima-nabatija-je-v-troskach-zustal-jen-zlomek-rodin-372682",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.081076352183659,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice měly Třinec u zdi, ale závěr nezvládly. Musíme to hodit za hlavu, říká Kondelík",
+      "publishedAt": "2026-04-23T04:30:00Z",
+      "sources": [
+        {
+          "name": "ČT sport",
+          "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubice-mely-trinec-u-zdi-ale-zaver-nezvladly-musime-to-hodit-za-hlavu-rika-kondelik-156414"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "cc731eca25a05add",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "sport",
+      "sourceLabel": "ČT sport",
+      "feedId": "spt_ctsport",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubice-mely-trinec-u-zdi-ale-zaver-nezvladly-musime-to-hodit-za-hlavu-rika-kondelik-156414",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0810763524091078,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šéf amerického námořnictva Phelan končí ve funkci, uvedl Pentagon",
+      "publishedAt": "2026-04-23T04:27:04Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Domácí",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-304649"
+        },
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-304649"
+        },
+        {
+          "name": "Seznam Zprávy / Vzdělávání",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-304649"
+        },
+        {
+          "name": "Novinky / Domácí",
+          "url": "https://www.novinky.cz/clanek/zahranicni-amerika-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-40574883"
+        },
+        {
+          "name": "Novinky / Zahraniční",
+          "url": "https://www.novinky.cz/clanek/zahranicni-amerika-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-40574883"
+        },
+        {
+          "name": "Novinky / Škola",
+          "url": "https://www.novinky.cz/clanek/zahranicni-amerika-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-40574883"
+        },
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/svet/sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-372690"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "92476e7345563f64",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Seznam Zprávy / Domácí",
+      "feedId": "zpr_seznam_domaci",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-304649",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.028481787546792,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ukrajinka, která píchá do vosího hnízda. Jde po Sabalenkové a tvrdí: Zastrašují mě",
+      "publishedAt": "2026-04-23T04:23:00Z",
+      "sources": [
+        {
+          "name": "Aktuálně",
+          "url": "https://sport.aktualne.cz/tenis/ukrajinka-ktera-picha-do-vosiho-hnizda-jde-po-sabalenkove-a-tvrdi-zastrasuji-me/r~aaa2991db834da199d1826c3b5014048/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "12439b0e77183d06",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Aktuálně",
+      "feedId": "zpr_aktualne",
+      "url": "https://sport.aktualne.cz/tenis/ukrajinka-ktera-picha-do-vosiho-hnizda-jde-po-sabalenkove-a-tvrdi-zastrasuji-me/r~aaa2991db834da199d1826c3b5014048/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.8411178791339253,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajina se snaží oživit jednání. Turecko požádala o summit mezi Zelenským a Putinem",
+      "publishedAt": "2026-04-23T04:22:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/zpravy/zahranicni/ukrajina-pozadala-turecko-aby-hostilo-summit-mezi-zelenskym-a-putinem.A260423_061735_zahranicni_iluj"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "6f9088c4508e962c",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/ukrajina-pozadala-turecko-aby-hostilo-summit-mezi-zelenskym-a-putinem.A260423_061735_zahranicni_iluj",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9715365594719041,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Léčba šokem: Asie se vrací k uhlí, ale zároveň od něj utíká",
+      "publishedAt": "2026-04-23T04:20:00Z",
+      "sources": [
+        {
+          "name": "Seznam Zprávy / Domácí",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-lecba-sokem-asie-se-vraci-k-uhli-ale-zaroven-od-nej-utika-304446"
+        },
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-lecba-sokem-asie-se-vraci-k-uhli-ale-zaroven-od-nej-utika-304446"
+        },
+        {
+          "name": "Seznam Zprávy / Vzdělávání",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-lecba-sokem-asie-se-vraci-k-uhli-ale-zaroven-od-nej-utika-304446"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "89b3049e00dd1992",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Seznam Zprávy / Domácí",
+      "feedId": "zpr_seznam_domaci",
+      "url": "https://www.seznamzpravy.cz/clanek/zahranicni-lecba-sokem-asie-se-vraci-k-uhli-ale-zaroven-od-nej-utika-304446",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0107378736858896,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "OBRAZEM: Macura končí s politikou. Podívejte, jak se z volebního vítěze stal vyvrhel",
+      "publishedAt": "2026-04-23T04:16:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/ostrava/zpravy/tomas-macura-politika-primator-ostrava-hnuti-ano.A260422_145547_ostrava-zpravy_jog"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "9a5911ec7f327d3a",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/ostrava/zpravy/tomas-macura-politika-primator-ostrava-hnuti-ano.A260422_145547_ostrava-zpravy_jog",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9574427614861999,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "finance",
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpovo rozhodování a výhrůžky ohledně Íránu nejsou chaos, mají skrytou logiku. Český expert vysvětluje překvapivé souvislosti",
+      "publishedAt": "2026-04-23T04:10:00Z",
+      "sources": [
+        {
+          "name": "HN / Ekonomika",
+          "url": "https://podcasty.hn.cz/c1-67869910-trumpovo-rozhodovani-a-vyhruzky-ohledne-iranu-nejsou-chaos-maji-skrytou-logiku-cesky-expert-vysvetluje-prekvapive-souvislosti"
+        }
+      ],
+      "primaryCategory": "finance",
+      "topicHash": "f1fa556170e4e4ea",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.0,
+      "sectionPrimary": "finance",
+      "sourceLabel": "HN / Ekonomika",
+      "feedId": "fin_hn",
+      "url": "https://podcasty.hn.cz/c1-67869910-trumpovo-rozhodovani-a-vyhruzky-ohledne-iranu-nejsou-chaos-maji-skrytou-logiku-cesky-expert-vysvetluje-prekvapive-souvislosti",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.8579563870842449,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
+      "publishedAt": "2026-04-23T04:05:00Z",
+      "sources": [
+        {
+          "name": "Deník",
+          "url": "https://www.denik.cz/z_domova/herec-jan-potmesil-lzi-o-jeho-zdravotnim-stavu-falesne-citaty-internet.html"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "4a2ff9524905e77c",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Deník",
+      "feedId": "zpr_denik",
+      "url": "https://www.denik.cz/z_domova/herec-jan-potmesil-lzi-o-jeho-zdravotnim-stavu-falesne-citaty-internet.html",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.8054606492357022,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladíci v Ústí nad Labem přepadli patnáctiletého chlapce",
+      "publishedAt": "2026-04-23T04:02:11Z",
+      "sources": [
+        {
+          "name": "Týdeník Policie",
+          "url": "https://tydenikpolicie.cz/mladici-v-usti-nad-labem-prepadli-patnactileteho-chlapce/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "a66316bcbd936adb",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.75,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Týdeník Policie",
+      "feedId": "zpr_tydenikpolicie",
+      "url": "https://tydenikpolicie.cz/mladici-v-usti-nad-labem-prepadli-patnactileteho-chlapce/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.6316995018125704,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "finance",
+      "section": "finance",
+      "contentType": "article",
+      "title": "Slovensko bojovalo proti SSSR, ale na kremelském seznamu není",
+      "publishedAt": "2026-04-23T04:00:18Z",
+      "sources": [
+        {
+          "name": "FAEI",
+          "url": "https://profitonline.cz/slovensko-bojovalo-proti-sssr-ale-na-kremelskem-seznamu-neni/"
+        }
+      ],
+      "primaryCategory": "finance",
+      "topicHash": "e7dbb2a37e92b0d9",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.8,
+      "sectionPrimary": "finance",
+      "sourceLabel": "FAEI",
+      "feedId": "fin_faei",
+      "url": "https://profitonline.cz/slovensko-bojovalo-proti-sssr-ale-na-kremelskem-seznamu-neni/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.6708568060283707,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "eDoklady mají téměř milion uživatelů. V budoucnu aplikaci nahradí digitální peněženka",
+      "publishedAt": "2026-04-23T04:00:00Z",
+      "sources": [
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/domaci/edoklady-maji-temer-milion-uzivatelu-v-budoucnu-aplikaci-nahradi-digitalni-penezenka-372630"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "847e346631e6a1cd",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "ČT24 / Domácí",
+      "feedId": "zpr_ct24_domaci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/edoklady-maji-temer-milion-uzivatelu-v-budoucnu-aplikaci-nahradi-digitalni-penezenka-372630",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0055824984561648,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Národní tým čeká v dalším programu přípravy před MS dvojzápas s Rakouskem",
+      "publishedAt": "2026-04-23T04:00:00Z",
+      "sources": [
+        {
+          "name": "ČT sport",
+          "url": "https://sport.ceskatelevize.cz/clanek/hokej/narodni-tym-ceka-v-dalsim-programu-pripravy-pred-ms-dvojzapas-s-rakouskem-156404"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "d6e459b1666eff38",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "sport",
+      "sourceLabel": "ČT sport",
+      "feedId": "spt_ctsport",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/narodni-tym-ceka-v-dalsim-programu-pripravy-pred-ms-dvojzapas-s-rakouskem-156404",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0055824986512258,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Amatérismus a chaos.“ Expert tepe vládu za třesk v ČT a rozhlase. Říká, co nastane",
+      "publishedAt": "2026-04-23T03:30:00Z",
+      "sources": [
+        {
+          "name": "Aktuálně",
+          "url": "https://video.aktualne.cz/spotlight-video/nejde-o-poplatky-jde-o-kontrolu-analytik-o-zasahu-do-verejnopravnich-medii/r~aaa29eb44a482280fdd556430950f7fd/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "8f60c14b2698cf9e",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Aktuálně",
+      "feedId": "zpr_aktualne",
+      "url": "https://video.aktualne.cz/spotlight-video/nejde-o-poplatky-jde-o-kontrolu-analytik-o-zasahu-do-verejnopravnich-medii/r~aaa29eb44a482280fdd556430950f7fd/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.7441224939236403,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "To by se Trumpovi asi líbilo. Ukrajinci vymysleli, že dobyté území pojmenují po něm",
+      "publishedAt": "2026-04-23T03:30:00Z",
+      "sources": [
+        {
+          "name": "Aktuálně",
+          "url": "https://zpravy.aktualne.cz/zahranici/to-by-se-trumpovi-asi-libilo-ukrajinci-vymysleli-ze-dobyte-uzemi-pojmenuji-po-nem/r~aaa29dd2b771c846960eac6fc7329007/"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "e4234686c6b18bf9",
+      "feedType": "rss",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Aktuálně",
+      "feedId": "zpr_aktualne",
+      "url": "https://zpravy.aktualne.cz/zahranici/to-by-se-trumpovi-asi-libilo-ukrajinci-vymysleli-ze-dobyte-uzemi-pojmenuji-po-nem/r~aaa29dd2b771c846960eac6fc7329007/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.7441224938426872,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
+      "publishedAt": "2026-04-23T03:30:00Z",
+      "sources": [
+        {
+          "name": "Deník",
+          "url": "https://www.denik.cz/z_domova/sef-bis-michal-koudelka-seznam-ruskych-agentu.html"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "10e64636daf488fb",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Deník",
+      "feedId": "zpr_denik",
+      "url": "https://www.denik.cz/z_domova/sef-bis-michal-koudelka-seznam-ruskych-agentu.html",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.7441224937077656,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -85,7 +923,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/videoporady/flow/temu-hraje-se-zakazniky-nechutnou-hru-na-podzim-prijde-inflacni-vlna-predikuje-sef-slevomatu-braverman-1432307",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.9676039212205351,
+      "displayScore": 0.7832868359363314,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -147,7 +985,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/domaci/politika/zuna-navrhuje-protivzdusnou-obranu-za-stamiliardy-penize-ale-nema-a-podrobnosti-taji-1432316",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8954042025378971,
+      "displayScore": 0.7352914899361415,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -178,7 +1016,7 @@
       "feedId": "spt_isport",
       "url": "https://isport.blesk.cz/clanek/blesk-sport/474723/malem-zboril-sudiho-a-dnes-boril-jde-pro-trest.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.9401744114566013,
+      "displayScore": 0.7720560635656503,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -209,7 +1047,7 @@
       "feedId": "spt_isport",
       "url": "https://isport.blesk.cz/clanek/blesk-sport/474718/od-pletek-s-policii-do-ringu-mlatic-bez-rukavic.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.9401744113786535,
+      "displayScore": 0.7720560634868049,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -240,7 +1078,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/podcasty-restart-40-pratele-na-cely-zivot-casto-to-nevyjde-a-pak-to-hodne-boli-kamaradstvi-se-s-vekem-meni-103203",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.626782941646615,
+      "displayScore": 0.5147040428676932,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -271,7 +1109,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/bydleni-luxusni-chalupa-uplne-na-samote-nadherna-stavba-pod-krusnymi-horami-se-ztraci-v-okolni-prirode-103194",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6267829415946498,
+      "displayScore": 0.5147040428326508,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "bydleni",
@@ -364,7 +1202,7 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/kriminaliste-na-liberecku-objasnili-serii-vloupani-do-37-vozidel/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.5869100861148574,
+      "displayScore": 0.493074059166361,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -426,7 +1264,7 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/recidivistu-se-sekerou-v-ruce-dopadli-policiste-na-litomericku-primo-pri-vloupani/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.46583604882209123,
+      "displayScore": 0.4047055258180122,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
