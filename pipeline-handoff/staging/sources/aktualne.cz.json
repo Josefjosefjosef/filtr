@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T12:04:34.562379Z",
+  "ingestedAt": "2026-04-23T12:25:14.866078Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "World Press Photo vyhrál snímek rodiny migrantů rozdělené americkým úřadem",
+      "url": "https://magazin.aktualne.cz/kultura/world-press-photo-vyhral-snimek-rodiny-migrantu-rozdelene-americkym-uradem/r~aaa29647b61140bf4e0bcfa3460594cb/",
+      "dt": "2026-04-23T11:57:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "americkým",
+        "migrantů",
+        "photo",
+        "press",
+        "rodiny",
+        "rozdělené",
+        "snímek",
+        "vyhrál",
+        "world",
+        "úřadem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -496,34 +523,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán zabavil v Hormuzském průlivu dvě nákladní lodě. Na třetí dokonce zahájil palbu",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dokonce",
-        "dvě",
-        "hormuzském",
-        "lodě",
-        "nákladní",
-        "palbu",
-        "průlivu",
-        "třetí",
-        "zabavil",
-        "zahájil",
-        "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +533,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22387,
+      "bytes": 22283,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,12 +570,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:57:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
+          "other": 5,
+          "zpravy": 10,
           "finance": 3,
-          "other": 4,
           "sport": 2
         },
         "drop_counts": {
@@ -589,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "World Press Photo vyhrál snímek rodiny migrantů rozdělené americkým úřadem",
+            "publishedAt": "2026-04-23T11:57:00Z"
+          },
           {
             "title": "Průzkum: Osm z deseti Čechů zažívá psychické potíže, pomoc vyhledá jen čtvrtina",
             "publishedAt": "2026-04-23T11:52:00Z"
@@ -615,10 +618,6 @@
           },
           {
             "title": "Kontroverzní rapper Ye vystoupí letos v létě na závodišti v pražské Chuchli",
-            "publishedAt": "2026-04-23T11:25:00Z"
-          },
-          {
-            "title": "Družba není nutná. Expert vysvětlil, proč Maďaři chtějí Putinovu ropu",
             "publishedAt": "2026-04-23T11:25:00Z"
           }
         ]

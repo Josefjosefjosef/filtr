@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T12:04:34.562379Z",
+  "ingestedAt": "2026-04-23T12:25:14.866078Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nebezpecny-toxin-obsahuje-44-kojeneckych-vyziv-podivejte-se-zda-nekterou-nemate-doma/",
+      "dt": "2026-04-23T12:03:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doma",
+        "kojeneckých",
+        "nemáte",
+        "obsahuje",
+        "orgánů",
+        "podívejte",
+        "selhání",
+        "toxin",
+        "vede",
+        "výživ",
+        "zda"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,32 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/cerny-trh-cigarety-cesko/",
-      "dt": "2026-04-22T14:29:29Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cigaretami",
-        "exploduje",
-        "kokain",
-        "než",
-        "pašeráky",
-        "tabák",
-        "trh",
-        "výnosnější",
-        "černý"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99742,
+      "bytes": 97987,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,11 +315,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:52:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:03:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -329,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
+            "publishedAt": "2026-04-23T12:03:02Z"
+          },
           {
             "title": "Záchranáři budou jezdit i přes hranice. Poslanci schválili přelomovou dohodu se Slovenskem",
             "publishedAt": "2026-04-23T11:52:15Z"
@@ -356,10 +361,6 @@
           {
             "title": "Umírání na přístrojích jako český standard? Čtvrtina pacientů na JIP tam vůbec nepatří",
             "publishedAt": "2026-04-23T06:00:00Z"
-          },
-          {
-            "title": "V Německu to vře: Miliony odborářů míří do ulic kvůli úsporám ve zdravotnictví",
-            "publishedAt": "2026-04-23T05:00:00Z"
           }
         ]
       }

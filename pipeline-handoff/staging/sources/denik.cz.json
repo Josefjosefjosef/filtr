@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T12:04:34.562379Z",
+  "ingestedAt": "2026-04-23T12:25:14.866078Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pat v zemi nikoho. Úplné otevření Hormuzu potrvá i půl roku, rizikem jsou miny",
+      "url": "https://www.denik.cz/ze_sveta/hormuzsky-pruliv-blokada-miny-otevreni.html",
+      "dt": "2026-04-23T12:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hormuzu",
+        "miny",
+        "nikoho",
+        "otevření",
+        "pat",
+        "potrvá",
+        "půl",
+        "rizikem",
+        "roku",
+        "zemi",
+        "úplné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,30 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Z Prahy do Bratislavy vlakem za 2 hodiny. Ministři podepsali memorandum",
-      "url": "https://www.denik.cz/doprava/doprava-praha-bratislava-memorandum-penize-z-eu-vrt.html",
-      "dt": "2026-04-22T16:39:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bratislavy",
-        "hodiny",
-        "memorandum",
-        "ministři",
-        "podepsali",
-        "prahy",
-        "vlakem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29841,
+      "bytes": 29737,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -719,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pat v zemi nikoho. Úplné otevření Hormuzu potrvá i půl roku, rizikem jsou miny",
+            "publishedAt": "2026-04-23T12:00:00Z"
+          },
           {
             "title": "Důkaz, že jsou zpět. Čáp si na Šumpersku pořídil stylové selfíčko z hnízda",
             "publishedAt": "2026-04-23T11:06:00Z"
@@ -746,10 +754,6 @@
           {
             "title": "Lidl na Slovensku stahuje sýrovou rolku. Bakterie v ní může ohrozit těhotné",
             "publishedAt": "2026-04-23T08:00:00Z"
-          },
-          {
-            "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
-            "publishedAt": "2026-04-23T07:36:00Z"
           }
         ]
       }
