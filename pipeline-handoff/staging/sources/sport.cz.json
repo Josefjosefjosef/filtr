@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T21:39:50.259144Z",
+  "ingestedAt": "2026-04-23T22:00:14.225751Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Stuttgart může stále snít o obhajobě, ve finále poháru potká Bayern",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-stuttgart-muze-stale-snit-o-obhajobe-ve-finale-poharu-potka-bayern-5442315",
+      "dt": "2026-04-23T21:46:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bayern",
+        "finále",
+        "obhajobě",
+        "poháru",
+        "potká",
+        "snít",
+        "stuttgart",
+        "stále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,29 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Před Podještědským derby to mezi oběma rivaly pořádně vře",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-valka-pred-podjestedskym-derby-o-fanousky-liberec-obvinuje-vedeni-jablonce-ze-strachu-a-lzi-5441890",
-      "dt": "2026-04-23T12:20:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "derby",
-        "oběma",
-        "podještědským",
-        "pořádně",
-        "rivaly",
-        "vře"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44704,
+      "bytes": 44580,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T21:14:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T21:46:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stuttgart může stále snít o obhajobě, ve finále poháru potká Bayern",
+            "publishedAt": "2026-04-23T21:46:09Z"
+          },
           {
             "title": "Plavec Foltýn vylepšil český rekord i na prsařské padesátce",
             "publishedAt": "2026-04-23T21:14:56Z"
@@ -871,10 +877,6 @@
           {
             "title": "Pozice Neymara je před MS vrtkavá. Měli se proti němu postavit i hvězdní spoluhráči",
             "publishedAt": "2026-04-23T20:14:22Z"
-          },
-          {
-            "title": "Sedlák schytal rány na hlavu, sudí se omlouvali za přehlédnutý faul. Dejte ho na tribunu, vtipkoval Žabka",
-            "publishedAt": "2026-04-23T19:19:57Z"
           }
         ]
       }
