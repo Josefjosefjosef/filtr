@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T18:24:31.012258Z",
+  "ingestedAt": "2026-04-23T18:47:58.908650Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "K jednotnému měsíčnímu hlášení se zatím přihlásila polovina zaměstnavatelů",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/k-jednotnemu-mesicnimu-hlaseni-se-zatim-prihlasila-polovina-zamestnavatelu-372725",
+      "dt": "2026-04-23T18:25:19Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hlášení",
+        "jednotnému",
+        "měsíčnímu",
+        "polovina",
+        "přihlásila",
+        "zaměstnavatelů",
+        "zatím"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -761,26 +785,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Archeologové objevili v Egyptě mumii. V břiše měla zašitou Iliadu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/archeologove-objevili-v-egypte-mumii-v-brise-mela-zasitou-iliadu-372696",
-      "dt": "2026-04-23T08:05:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Šelmy oddálily konec, Liberec porazily 3:0",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/selmy-oddalily-konec-liberec-porazily-30-156423",
+      "dt": "2026-04-23T18:24:44Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "archeologové",
-        "břiše",
-        "egyptě",
-        "iliadu",
-        "mumii",
-        "měla",
-        "objevili",
-        "zašitou"
+        "konec",
+        "liberec",
+        "oddálily",
+        "porazily",
+        "šelmy"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1518,31 +1539,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Královo Pole porazilo i napodruhé Ostravu a získalo ligový bronz",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/kralovo-pole-porazilo-i-npodruhe-ostravu-a-ziskalo-ligovy-bronz-156395",
-      "dt": "2026-04-21T18:30:09Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bronz",
-        "královo",
-        "ligový",
-        "napodruhé",
-        "ostravu",
-        "pole",
-        "porazilo",
-        "získalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1553,7 +1549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43781,
+      "bytes": 44233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,12 +1609,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:11:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:25:19Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 3,
           "zpravy": 20,
-          "other": 8,
-          "finance": 2
+          "other": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1630,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K jednotnému měsíčnímu hlášení se zatím přihlásila polovina zaměstnavatelů",
+            "publishedAt": "2026-04-23T18:25:19Z"
+          },
           {
             "title": "To opatření mělo přijít mnohem dřív, míní Šlachta o cenových stropech paliv",
             "publishedAt": "2026-04-23T18:11:47Z"
@@ -1657,10 +1657,6 @@
           {
             "title": "Akcionáři společnosti Warner Bros schválili převzetí firmy rivalem Paramount",
             "publishedAt": "2026-04-23T14:54:02Z"
-          },
-          {
-            "title": "Počet světových multimilionářů by mohl během pěti let vzrůst na skoro čtyři tisíce",
-            "publishedAt": "2026-04-23T14:34:52Z"
           }
         ]
       }
@@ -1672,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37852,
+      "bytes": 37997,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1709,7 +1705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T17:51:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:24:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1724,6 +1720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šelmy oddálily konec, Liberec porazily 3:0",
+            "publishedAt": "2026-04-23T18:24:44Z"
+          },
           {
             "title": "Třinec srovnal sérii s Pardubicemi, rozhodl obránce Musil",
             "publishedAt": "2026-04-23T17:51:30Z"
@@ -1751,10 +1751,6 @@
           {
             "title": "Klíč k triumfu v superfinále? Disciplína, nasazení a méně chyb, shodují se Sládek s Hanákem",
             "publishedAt": "2026-04-23T12:30:00Z"
-          },
-          {
-            "title": "Čeští brankáři slaví výhry v play-off NHL. Dostál zvládl přestřelku, Vladař je krok od postupu",
-            "publishedAt": "2026-04-23T05:48:56Z"
           }
         ]
       }
@@ -1766,7 +1762,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77037,
+      "bytes": 77041,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

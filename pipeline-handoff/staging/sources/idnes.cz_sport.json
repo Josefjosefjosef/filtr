@@ -1,23 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T18:24:31.012258Z",
+  "ingestedAt": "2026-04-23T18:47:58.908650Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Rakousko 3:1. O snížení soupeře se postaral Kolařík",
+      "title": "ONLINE: Česko - Rakousko 4:1. Národní tým vede v přípravě na MS. Prosadil se Král",
       "url": "https://www.idnes.cz/hokej/ms-2026/priprava-rakousko-cesko-online-zpravodajstvi.A260423_145305_ms-hokej-2026_drev",
-      "dt": "2026-04-23T18:11:08Z",
+      "dt": "2026-04-23T18:40:52Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "kolařík",
-        "postaral",
+        "král",
+        "národní",
+        "prosadil",
+        "přípravě",
         "rakousko",
-        "snížení",
-        "soupeře",
+        "tým",
+        "vede",
         "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šelmy v Brně pookřály a snížily ve finálové sérii, zápas sledoval rekordní počet diváků",
+      "url": "https://www.idnes.cz/sport/ostatni/liberec-selmy-brno-volejbal.A260423_201211_sporty_kazdt",
+      "dt": "2026-04-23T18:25:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brně",
+        "diváků",
+        "finálové",
+        "pookřály",
+        "počet",
+        "rekordní",
+        "sledoval",
+        "snížily",
+        "sérii",
+        "zápas",
+        "šelmy"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -750,34 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Oklahoma City zvýšilo vedení v sérii, Detroit po 18 letech vyhrál v play off doma",
-      "url": "https://www.idnes.cz/sport/basket/obhajce-titulu-v-nba-oklahoma-ma-druhou-vyhru-detroit-srovnal-proti-orlandu.A260423_093136_sport-basket_ivt",
-      "dt": "2026-04-23T07:46:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "city",
-        "detroit",
-        "doma",
-        "letech",
-        "off",
-        "oklahoma",
-        "play",
-        "sérii",
-        "vedení",
-        "vyhrál",
-        "zvýšilo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46386,
+      "bytes": 46242,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:11:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:40:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,8 +843,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Rakousko 3:1. O snížení soupeře se postaral Kolařík",
-            "publishedAt": "2026-04-23T18:11:08Z"
+            "title": "ONLINE: Česko - Rakousko 4:1. Národní tým vede v přípravě na MS. Prosadil se Král",
+            "publishedAt": "2026-04-23T18:40:52Z"
+          },
+          {
+            "title": "Šelmy v Brně pookřály a snížily ve finálové sérii, zápas sledoval rekordní počet diváků",
+            "publishedAt": "2026-04-23T18:25:00Z"
           },
           {
             "title": "Třinec - Pardubice 4:2, finále je srovnáno. Will po dvou gólech střídal ve třetí minutě",
@@ -867,10 +873,6 @@
           {
             "title": "Klinsmann si při ošklivé srážce poranil páteř, podstoupil náročnou operaci",
             "publishedAt": "2026-04-23T15:36:00Z"
-          },
-          {
-            "title": "Obrat a kanár. Samson si v Madridu vyšlápla na nasazenou, Bouzková končí",
-            "publishedAt": "2026-04-23T14:56:52Z"
           }
         ]
       }

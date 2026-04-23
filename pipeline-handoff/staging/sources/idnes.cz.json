@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T18:24:31.012258Z",
+  "ingestedAt": "2026-04-23T18:47:58.908650Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "V Teheránu se spustila protivzdušná obrana, podle médií kvůli dronům",
       "url": "https://www.idnes.cz/zpravy/zahranicni/v-teheranu-byla-aktivovana-protivzdusna-obrana-v-nekterych-castech-mesta-zasahuje.A260423_195339_zahranicni_remy",
-      "dt": "2026-04-23T18:06:34Z",
+      "dt": "2026-04-23T18:36:51Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -20,6 +20,32 @@
         "protivzdušná",
         "spustila",
         "teheránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci se ptali, co dělá Turek. Řešili i jeho výroky o deratizaci parazitů",
+      "url": "https://www.idnes.cz/zpravy/domaci/poslanci-se-ptali-co-konkretne-dela-vladni-zmocnenec-pro-green-deal-turek.A260423_185454_domaci_kop",
+      "dt": "2026-04-23T18:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "deratizaci",
+        "dělá",
+        "jeho",
+        "parazitů",
+        "poslanci",
+        "ptali",
+        "turek",
+        "výroky",
+        "řešili"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -756,32 +782,6 @@
         "zřejmě",
         "ředitel",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Ujasníme si to.“ Pavel a Babiš se sejdou 8. května kvůli účasti na summitu NATO",
-      "url": "https://www.idnes.cz/zpravy/domaci/prezident-pavel-babis-premier-schuzka.A260423_134232_domaci_aoc",
-      "dt": "2026-04-23T13:21:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "babiš",
-        "května",
-        "kvůli",
-        "nato",
-        "pavel",
-        "sejdou",
-        "summitu",
-        "ujasníme",
-        "účasti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49437,
+      "bytes": 49875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,7 +1614,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:06:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:36:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1633,7 +1633,11 @@
         "sample_titles": [
           {
             "title": "V Teheránu se spustila protivzdušná obrana, podle médií kvůli dronům",
-            "publishedAt": "2026-04-23T18:06:34Z"
+            "publishedAt": "2026-04-23T18:36:51Z"
+          },
+          {
+            "title": "Poslanci se ptali, co dělá Turek. Řešili i jeho výroky o deratizaci parazitů",
+            "publishedAt": "2026-04-23T18:23:00Z"
           },
           {
             "title": "Pražští radní schválili koupi Národního domu na Vinohradech a zámku Veleslavín",
@@ -1658,10 +1662,6 @@
           {
             "title": "Dramatická záchrana na Šumpersku: k dělníkovi se lékař musel slanit z vrtulníku",
             "publishedAt": "2026-04-23T16:59:00Z"
-          },
-          {
-            "title": "Chameneí čeká na protézu nohy a plastiku obličeje. Kvůli zranění má potíže mluvit",
-            "publishedAt": "2026-04-23T16:56:00Z"
           }
         ]
       }
