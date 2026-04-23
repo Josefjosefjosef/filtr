@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T08:59:10.407438Z",
+  "ingestedAt": "2026-04-23T09:20:03.907070Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ropě z Německa hrozí výpadky, Havlíček jedná o náhradě ze Slovenska",
+      "url": "https://zpravy.aktualne.cz/ekonomika/rope-z-nemecka-hrozi-vypadky-havlicek-jedna-o-nahrade-ze-slovenska/r~aaa29bd5a425a483afdd67149147d2c6/",
+      "dt": "2026-04-23T09:08:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "havlíček",
+        "hrozí",
+        "jedná",
+        "náhradě",
+        "německa",
+        "ropě",
+        "slovenska",
+        "výpadky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -508,32 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "To by se Trumpovi asi líbilo. Ukrajinci vymysleli, že dobyté území pojmenují po něm",
-      "url": "https://zpravy.aktualne.cz/zahranici/to-by-se-trumpovi-asi-libilo-ukrajinci-vymysleli-ze-dobyte-uzemi-pojmenuji-po-nem/r~aaa29dd2b771c846960eac6fc7329007/",
-      "dt": "2026-04-23T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "asi",
-        "dobyté",
-        "líbilo",
-        "něm",
-        "pojmenují",
-        "trumpovi",
-        "ukrajinci",
-        "vymysleli",
-        "území"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22483,
+      "bytes": 22373,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,13 +580,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T08:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T09:08:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "sport": 4,
-          "zpravy": 12,
-          "other": 3,
-          "finance": 1
+          "zpravy": 11,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -599,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ropě z Německa hrozí výpadky, Havlíček jedná o náhradě ze Slovenska",
+            "publishedAt": "2026-04-23T09:08:00Z"
+          },
           {
             "title": "Proč zakazujeme dětem závodit? hřímá Bauer. V synovi vidí většího blázna, než byl sám",
             "publishedAt": "2026-04-23T08:31:00Z"
@@ -626,10 +629,6 @@
           {
             "title": "Mysleli, že brát více vitaminů nevadí. Některé kombinace způsobí víc škody než užitku",
             "publishedAt": "2026-04-23T07:18:00Z"
-          },
-          {
-            "title": "„Proč by jezdil tankovat, počká si.“ Češi se rozhodují v jeden konkrétní čas",
-            "publishedAt": "2026-04-23T07:06:00Z"
           }
         ]
       }

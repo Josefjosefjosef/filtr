@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-23T08:59:10.407438Z",
+  "ingestedAt": "2026-04-23T09:20:03.907070Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kolik lidí podvedl soudce Kafka? Žalobci počítají škodu",
+      "url": "https://www.ceska-justice.cz/2026/04/podvedl-soudce-kafka-skoda/",
+      "dt": "2026-04-23T08:59:11Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "kafka",
+        "kolik",
+        "lidí",
+        "podvedl",
+        "počítají",
+        "soudce",
+        "škodu",
+        "žalobci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,34 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babišova vláda narazila: Senátoři varují, že regulace cen nafty omezí soudní kontrolu",
-      "url": "https://www.ceska-justice.cz/2026/04/babisova-vlada-narazila-senatori-nafta/",
-      "dt": "2026-04-21T16:14:03Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "babišova",
-        "cen",
-        "kontrolu",
-        "nafty",
-        "narazila",
-        "omezí",
-        "regulace",
-        "senátoři",
-        "soudní",
-        "varují",
-        "vláda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 100107,
+      "bytes": 98132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T06:27:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:59:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolik lidí podvedl soudce Kafka? Žalobci počítají škodu",
+            "publishedAt": "2026-04-23T08:59:11Z"
+          },
           {
             "title": "Biopaliva se přejmenují, plánuje ministerstvo. Mají tady špatný zvuk",
             "publishedAt": "2026-04-23T06:27:18Z"
@@ -353,10 +354,6 @@
           {
             "title": "Stačilo 40 minut. Policie odhalila seniora, který anonymně hrozil výbušninou na vnitru",
             "publishedAt": "2026-04-22T09:23:52Z"
-          },
-          {
-            "title": "Soudy si neujasnily, co řeší. Spor o 248 milionů pokračuje i po 10 letech",
-            "publishedAt": "2026-04-22T06:51:23Z"
           }
         ]
       }
