@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T15:34:52.244946Z",
+  "ingestedAt": "2026-04-23T15:54:42.830391Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Audioknihou roku jsou Hovory. Jde o mrazivé zpracování telefonátů Ukrajinců po invazi",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/audioknihou-roku-jsou-hovory-jde-o-mrazive-zpracovani-telefonatu-ukrajincu-po-invazi/r~aaa29a4ae30dcd58c2ae4af73e7f9ada/",
+      "dt": "2026-04-23T15:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "audioknihou",
+        "hovory",
+        "invazi",
+        "jde",
+        "mrazivé",
+        "roku",
+        "telefonátů",
+        "ukrajinců",
+        "zpracování"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -109,7 +135,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Třinec - Pardubice 2:1. Divoký úvod zápasu, hosté reagují na drtivý nástup domácích",
+      "title": "Třinec - Pardubice 2:2. Divoký úvod zápasu, hosté reagují na drtivý nástup domácích",
       "url": "https://sport.aktualne.cz/hokej/trinec-pardubice-ocelari-obrim-obratem-ozili-ve-ctvrtem-duelu-mohou-serii-srovnat/r~aaa29a74b6e64ffa6da17038fda0587e/",
       "dt": "2026-04-23T14:42:00Z",
       "media_raw": "Aktuálně",
@@ -496,31 +522,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Macron čelí kritice za dosazování spojenců do klíčových státních pozic",
-      "url": "https://zpravy.aktualne.cz/zahranici/macron-celi-kritice-za-dosazovani-spojencu-do-klicovych-statnich-pozic/r~aaa2961939a76c7352b373f0ba014112/",
-      "dt": "2026-04-23T12:34:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dosazování",
-        "klíčových",
-        "kritice",
-        "macron",
-        "pozic",
-        "spojenců",
-        "státních",
-        "čelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +532,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21202,
+      "bytes": 21188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,11 +569,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T15:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 1,
           "finance": 3,
-          "zpravy": 15,
+          "zpravy": 14,
           "sport": 2
         },
         "drop_counts": {
@@ -585,6 +587,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Audioknihou roku jsou Hovory. Jde o mrazivé zpracování telefonátů Ukrajinců po invazi",
+            "publishedAt": "2026-04-23T15:29:00Z"
+          },
           {
             "title": "Hollywoodská fúze za 2,3 bilionu: Paramount převezme svého rivala",
             "publishedAt": "2026-04-23T15:14:00Z"
@@ -602,7 +608,7 @@
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
-            "title": "Třinec - Pardubice 2:1. Divoký úvod zápasu, hosté reagují na drtivý nástup domácích",
+            "title": "Třinec - Pardubice 2:2. Divoký úvod zápasu, hosté reagují na drtivý nástup domácích",
             "publishedAt": "2026-04-23T14:42:00Z"
           },
           {
@@ -611,10 +617,6 @@
           },
           {
             "title": "Chaos kolem Timmyho: veterinářka utekla, influencer se natáčel a spisovatel mluvil s duší kytovce",
-            "publishedAt": "2026-04-23T14:30:00Z"
-          },
-          {
-            "title": "Vlak, který potřebuje trolej i naftu. Talgo vyjelo, propojí Prahu, Moravu a Slovensko",
             "publishedAt": "2026-04-23T14:30:00Z"
           }
         ]
