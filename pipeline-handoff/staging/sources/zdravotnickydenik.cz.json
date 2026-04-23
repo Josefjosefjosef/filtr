@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T05:47:46.865710Z",
+  "ingestedAt": "2026-04-23T06:09:21.921045Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Umírání na přístrojích jako český standard? Čtvrtina pacientů na JIP tam vůbec nepatří",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/reforma-intenzivni-pece/",
+      "dt": "2026-04-23T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "jako",
+        "jip",
+        "nepatří",
+        "pacientů",
+        "přístrojích",
+        "standard",
+        "tam",
+        "umírání",
+        "vůbec",
+        "český",
+        "čtvrtina"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,35 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Tisíce mrtvých a téměř dva miliony nemocných. Data chřipkové sezóny straší, očkování nestoupá",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/chripkova-sezona-znepokojiva-data-ale-ockovani-stale-nizke/",
-      "dt": "2026-04-22T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chřipkové",
-        "data",
-        "dva",
-        "miliony",
-        "mrtvých",
-        "nemocných",
-        "nestoupá",
-        "očkování",
-        "sezóny",
-        "straší",
-        "tisíce",
-        "téměř"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88513,
+      "bytes": 94079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -332,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umírání na přístrojích jako český standard? Čtvrtina pacientů na JIP tam vůbec nepatří",
+            "publishedAt": "2026-04-23T06:00:00Z"
+          },
           {
             "title": "V Německu to vře: Miliony odborářů míří do ulic kvůli úsporám ve zdravotnictví",
             "publishedAt": "2026-04-23T05:00:00Z"
@@ -359,10 +362,6 @@
           {
             "title": "Praha 1 má audit Nemocnice na Františku. Ve hře je její převzetí magistrátem",
             "publishedAt": "2026-04-22T09:21:58Z"
-          },
-          {
-            "title": "Nemocnice v Ústeckém kraji stoply růst mezd. Nechtějí ani zvyšovat počet zaměstnanců",
-            "publishedAt": "2026-04-22T08:13:18Z"
           }
         ]
       }
