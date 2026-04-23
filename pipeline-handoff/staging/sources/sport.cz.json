@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T09:39:29.999540Z",
+  "ingestedAt": "2026-04-23T10:00:11.807217Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zmiňuje se zájem Realu i Interu. Furt je to ale dvoumetrový chlapík s duší dítěte, říká objevitel českého zázraku",
+      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-zminuje-se-zajem-realu-i-interu-furt-je-to-ale-dvoumetrovy-chlapik-s-dusi-ditete-rika-objevitel-ceskeho-zazraku-5438914",
+      "dt": "2026-04-23T09:55:41Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "chlapík",
+        "duší",
+        "dvoumetrový",
+        "dítěte",
+        "furt",
+        "interu",
+        "objevitel",
+        "realu",
+        "zmiňuje",
+        "zájem",
+        "zázraku",
+        "českého",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,30 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Atlético Madrid počtvrté za sebou prohrálo. Barcelona vyhrála",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-atletico-madrid-poctvrte-za-sebou-nebodovalo-5441833",
-      "dt": "2026-04-22T19:06:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "atlético",
-        "barcelona",
-        "madrid",
-        "počtvrté",
-        "prohrálo",
-        "sebou",
-        "vyhrála"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45721,
+      "bytes": 45990,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:31:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T09:55:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -845,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zmiňuje se zájem Realu i Interu. Furt je to ale dvoumetrový chlapík s duší dítěte, říká objevitel českého zázraku",
+            "publishedAt": "2026-04-23T09:55:41Z"
+          },
           {
             "title": "První trenérka elitního týmu Etaová: Není rozdíl v práci s muži a ženami",
             "publishedAt": "2026-04-23T09:31:45Z"
@@ -872,10 +883,6 @@
           {
             "title": "Tejralová dala druhý gól v sezoně PWHL a pomohla Seattlu porazit Minnesotu",
             "publishedAt": "2026-04-23T09:02:01Z"
-          },
-          {
-            "title": "Ronaldo si touží zahrát se synem. Brzy by se slavnému Portugalci mohl sen splnit",
-            "publishedAt": "2026-04-23T09:00:43Z"
           }
         ]
       }

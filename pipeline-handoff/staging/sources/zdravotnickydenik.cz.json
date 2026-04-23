@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T09:39:29.999540Z",
+  "ingestedAt": "2026-04-23T10:00:11.807217Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nebezpecna-horecka-dovolene-evropa-lecba/",
+      "dt": "2026-04-23T09:41:13Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dovolených",
+        "evropou",
+        "horečka",
+        "léčba",
+        "masivně",
+        "nebezpečná",
+        "neexistuje",
+        "vozí",
+        "útočí",
+        "češi",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,34 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vzp-zmena-prihlaseni-do-aplikace/",
-      "dt": "2026-04-22T10:07:13Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "aplikace",
-        "dřív",
-        "jako",
-        "miliony",
-        "nebude",
-        "oblíbené",
-        "pojištěnců",
-        "přihlášení",
-        "vzp",
-        "změna",
-        "čeká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103648,
+      "bytes": 104244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:02:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T09:41:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
+            "publishedAt": "2026-04-23T09:41:13Z"
+          },
           {
             "title": "Absurdita u zaměstnaneckých benefitů: Více peněz má jít na zábavu než na prevenci rakoviny",
             "publishedAt": "2026-04-23T09:02:15Z"
@@ -360,10 +364,6 @@
           {
             "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
             "publishedAt": "2026-04-22T14:29:29Z"
-          },
-          {
-            "title": "Po letech sporů přišel verdikt: Hygienici musí začít řešit hluk z dopravy",
-            "publishedAt": "2026-04-22T13:33:09Z"
           }
         ]
       }
