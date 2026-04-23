@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T20:39:48.843613Z",
+  "ingestedAt": "2026-04-23T20:59:44.157441Z",
   "items": [
     {
       "section": "aktualne",
@@ -783,6 +783,33 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Prospali jsme začátek. Nemá cenu se v tom babrat, řekl o porážce Sedlák",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/prospali-jsme-zacatek-nema-cenu-se-v-tom-babrat-rekl-o-porazce-sedlak-156427",
+      "dt": "2026-04-23T20:51:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "babrat",
+        "cenu",
+        "jsme",
+        "nemá",
+        "porážce",
+        "prospali",
+        "sedlák",
+        "tom",
+        "začátek",
+        "řekl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/pisek-i-podruhe-vyzral-na-usk-a-zahraje-si-play-off-156424",
       "dt": "2026-04-23T18:55:41Z",
@@ -1512,30 +1539,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chelsea se dál zmítá v krizi, z Brightonu si veze třígólovou porážku",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-se-dal-zmita-v-krizi-z-brightonu-si-veze-trigolovou-porazku-156397",
-      "dt": "2026-04-21T21:32:31Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brightonu",
-        "chelsea",
-        "krizi",
-        "porážku",
-        "třígólovou",
-        "veze",
-        "zmítá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1665,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38096,
+      "bytes": 38151,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1702,7 +1705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:55:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T20:51:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1717,6 +1720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prospali jsme začátek. Nemá cenu se v tom babrat, řekl o porážce Sedlák",
+            "publishedAt": "2026-04-23T20:51:17Z"
+          },
           {
             "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
             "publishedAt": "2026-04-23T18:55:41Z"
@@ -1744,10 +1751,6 @@
           {
             "title": "Bořilovi skončila sezona. Dostal vysoký sedmizápasový trest",
             "publishedAt": "2026-04-23T13:35:48Z"
-          },
-          {
-            "title": "Samson je v Madridu poprvé ve třetím kole, Bouzková končí",
-            "publishedAt": "2026-04-23T13:09:33Z"
           }
         ]
       }
@@ -1759,7 +1762,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77037,
+      "bytes": 77043,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
