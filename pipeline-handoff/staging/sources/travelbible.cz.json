@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "travelbible.cz",
-  "ingestedAt": "2026-04-23T11:22:47.121067Z",
+  "ingestedAt": "2026-04-23T11:44:44.247664Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Průvodce San Gimignano 2026: co vidět, ubytování a praktické tipy",
+      "url": "https://travelbible.cz/san-gimignano-toskansko/",
+      "dt": "2026-04-23T11:31:00Z",
+      "media_raw": "TravelBible",
+      "media_norm": "TravelBible",
+      "tokens": [
+        "2026",
+        "gimignano",
+        "praktické",
+        "průvodce",
+        "san",
+        "tipy",
+        "ubytování",
+        "vidět"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_travelbible",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "travelbible.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -215,29 +240,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "travelbible.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Proč mít dva cestovní pasy a jak je zařídit?",
-      "url": "https://travelbible.cz/dva-cestovni-pasy/",
-      "dt": "2026-03-14T03:18:59Z",
-      "media_raw": "TravelBible",
-      "media_norm": "TravelBible",
-      "tokens": [
-        "cestovní",
-        "dva",
-        "mít",
-        "pasy",
-        "proč",
-        "zařídit"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_travelbible",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "travelbible.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -248,7 +250,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://travelbible.cz/feed/",
-      "bytes": 13383,
+      "bytes": 13403,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -285,11 +287,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-21T07:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:31:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 6,
-          "zpravy": 4
+          "cestovani": 7,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -301,6 +303,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průvodce San Gimignano 2026: co vidět, ubytování a praktické tipy",
+            "publishedAt": "2026-04-23T11:31:00Z"
+          },
           {
             "title": "Španělsko: podrobný praktický průvodce pro každou dovolenou",
             "publishedAt": "2026-04-21T07:25:00Z"
@@ -328,10 +334,6 @@
           {
             "title": "THAJSKO: podrobný praktický průvodce pro cestování na vlastní pěst",
             "publishedAt": "2026-03-22T07:31:00Z"
-          },
-          {
-            "title": "Průvodce Poznaň: 21 tipů, co dělat, vidět i ochutnat",
-            "publishedAt": "2026-03-15T04:30:03Z"
           }
         ]
       }

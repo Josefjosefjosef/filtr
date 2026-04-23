@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T11:22:47.121067Z",
+  "ingestedAt": "2026-04-23T11:44:44.247664Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Důkaz, že jsou zpět. Čáp si na Šumpersku pořídil stylové selfíčko z hnízda",
+      "url": "https://www.denik.cz/regiony/stare-mesto-supikovice-capi-prenos-hnizdo-20260423.html",
+      "dt": "2026-04-23T11:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "důkaz",
+        "hnízda",
+        "pořídil",
+        "selfíčko",
+        "stylové",
+        "zpět",
+        "čáp",
+        "šumpersku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,30 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Do obsahu televize mluvit nechceme, řekl Babiš Deníku",
-      "url": "https://www.denik.cz/z_domova/andrej-babis-debata-verejnopravni-media-rada-ct-summit-nato.html",
-      "dt": "2026-04-22T16:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "deníku",
-        "mluvit",
-        "nechceme",
-        "obsahu",
-        "televize",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29465,
+      "bytes": 29841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:06:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -718,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Důkaz, že jsou zpět. Čáp si na Šumpersku pořídil stylové selfíčko z hnízda",
+            "publishedAt": "2026-04-23T11:06:00Z"
+          },
           {
             "title": "Ceny pohonných hmot v Česku v mezitýdenním srovnání druhý týden v řadě klesly",
             "publishedAt": "2026-04-23T10:02:00Z"
@@ -745,10 +750,6 @@
           {
             "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
             "publishedAt": "2026-04-23T07:36:00Z"
-          },
-          {
-            "title": "VZP plánuje větší zabezpečení mobilní aplikace, kterou používá 2,9 mil. klientů",
-            "publishedAt": "2026-04-23T06:20:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T11:22:47.121067Z",
+  "ingestedAt": "2026-04-23T11:44:44.247664Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "PBS prohrála, za zmařený projekt elektrárny na biomasu má platit britskému partnerovi přes půl miliardy",
+      "url": "https://domaci.hn.cz/c1-67870350-pbs-prohrala-za-zmareny-projekt-elektrarny-na-biomasu-ma-platit-britskemu-partnerovi-pres-pul-miliardy",
+      "dt": "2026-04-23T11:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "biomasu",
+        "britskému",
+        "elektrárny",
+        "miliardy",
+        "partnerovi",
+        "pbs",
+        "platit",
+        "prohrála",
+        "projekt",
+        "půl",
+        "zmařený"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1142,37 +1170,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Odbory ČT a ČRo vyhlásily stávkovou pohotovost, kvůli vládnímu návrhu zákona o médiích veřejné služby a návrhu na omezení poplatků",
-      "url": "https://domaci.hn.cz/c1-67869920-odbory-ct-a-cro-vyhlasily-stavkovou-pohotovost-kvuli-vladnimu-navrhu-zakona-o-mediich-verejne-sluzby-a-navrhu-na-omezeni-poplatku",
-      "dt": "2026-04-22T10:43:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "kvůli",
-        "médiích",
-        "návrhu",
-        "odbory",
-        "omezení",
-        "pohotovost",
-        "poplatků",
-        "služby",
-        "stávkovou",
-        "veřejné",
-        "vládnímu",
-        "vyhlásily",
-        "zákona",
-        "čro"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1183,7 +1180,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185079,
+      "bytes": 185082,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1220,12 +1217,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:26:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 30,
+          "zdravi": 4,
+          "finance": 29,
           "zpravy": 6,
-          "zdravi": 3,
           "sport": 1
         },
         "drop_counts": {
@@ -1238,6 +1235,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "PBS prohrála, za zmařený projekt elektrárny na biomasu má platit britskému partnerovi přes půl miliardy",
+            "publishedAt": "2026-04-23T11:25:00Z"
+          },
           {
             "title": "Českem se šíří poplašné fake news o větrnících. Neexistují důkazy, že by jejich infrazvuk škodil, upozorňuje Státní zdravotní ústav",
             "publishedAt": "2026-04-23T10:26:00Z"
@@ -1265,10 +1266,6 @@
           {
             "title": "Evropská komise rozjíždí nový obranný ekosystém a otevírá Česku cestu k více než dvěma miliardám eur",
             "publishedAt": "2026-04-23T07:35:00Z"
-          },
-          {
-            "title": "Slovensko poprvé od ledna přijímá ruskou ropu ropovodem Družba. Podmínilo tím schválení půjčky Ukrajině",
-            "publishedAt": "2026-04-23T06:40:00Z"
           }
         ]
       }

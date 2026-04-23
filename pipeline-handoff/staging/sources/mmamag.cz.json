@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-23T11:22:47.121067Z",
+  "ingestedAt": "2026-04-23T11:44:44.247664Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šampion UFC převzal v Kremlu státní vyznamenání. Dekoroval ho sám Putin",
+      "url": "https://www.mmamag.cz/sampion-ufc-yan-vyznamenani-putin-rusko/",
+      "dt": "2026-04-23T11:30:24Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "dekoroval",
+        "kremlu",
+        "putin",
+        "převzal",
+        "státní",
+        "sám",
+        "ufc",
+        "vyznamenání",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1102,38 +1128,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V MMA a boxu se nepočítají jen rány. Kdo zná skutečné výdaje za cestou na vrchol, rozumí sportu jinak než ostatní",
-      "url": "https://www.mmamag.cz/v-mma-a-boxu-se-nepocitaji-jen-rany-kdo-zna-skutecne-vydaje-za-cestou-na-vrchol-rozumi-sportu-jinak-nez-ostatni/",
-      "dt": "2026-04-17T03:04:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "boxu",
-        "cestou",
-        "jen",
-        "jinak",
-        "mma",
-        "nepočítají",
-        "než",
-        "ostatní",
-        "rozumí",
-        "rány",
-        "skutečné",
-        "sportu",
-        "vrchol",
-        "výdaje",
-        "zná"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1144,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78199,
+      "bytes": 78132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1181,7 +1175,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:25:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:30:24Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1196,6 +1190,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šampion UFC převzal v Kremlu státní vyznamenání. Dekoroval ho sám Putin",
+            "publishedAt": "2026-04-23T11:30:24Z"
+          },
           {
             "title": "Ulberg už zase chodí. Šampion UFC je pár dnů po operaci kolene na nohou",
             "publishedAt": "2026-04-23T10:25:15Z"
@@ -1223,10 +1221,6 @@
           {
             "title": "MMA a box umí překvapit i ty nejzkušenější. Tyhle zápasy to dokázaly víc než cokoliv jiného. Víte, o kterých mluvíme?",
             "publishedAt": "2026-04-23T04:36:00Z"
-          },
-          {
-            "title": "Ankalaev má jasno. Cesta k titulu vede přes Procházku",
-            "publishedAt": "2026-04-22T06:38:43Z"
           }
         ]
       }
