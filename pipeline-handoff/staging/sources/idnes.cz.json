@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T05:02:47.537823Z",
+  "ingestedAt": "2026-04-23T05:25:08.900328Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Na dva dny se oteplí až k 20 °C. Pak nastane změna, místy může i sněžit",
+      "url": "https://www.idnes.cz/zpravy/domaci/pocasi-duben-teplo-jaro-srazky.A260423_061024_domaci_meli",
+      "dt": "2026-04-23T05:04:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dny",
+        "dva",
+        "místy",
+        "nastane",
+        "oteplí",
+        "pak",
+        "sněžit",
+        "změna"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Další pražské mosty přes Vltavu? Ve hře je Suchdol i tramvaje přes Císařský ostrov",
+      "url": "https://www.idnes.cz/praha/zpravy/dalsi-prazske-mosty-vltava-suchdol-plany.A260420_900188_praha-zpravy_bur",
+      "dt": "2026-04-23T05:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "císařský",
+        "další",
+        "hře",
+        "mosty",
+        "ostrov",
+        "pražské",
+        "suchdol",
+        "tramvaje",
+        "vltavu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -111,14 +162,14 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Poslanci schválí smlouvu se Slovenskem o spolupráci zdravotnických záchranářů",
+      "title": "Poslanci schvalují smlouvu se Slovenskem o spolupráci zdravotnických záchranářů",
       "url": "https://www.idnes.cz/zpravy/domaci/snemovna-smlouva-se-slovenskem-o-spolupraci-zdravotnickych-zachranaru.A260423_053300_domaci_kop",
       "dt": "2026-04-23T04:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
         "poslanci",
-        "schválí",
+        "schvalují",
         "slovenskem",
         "smlouvu",
         "spolupráci",
@@ -734,60 +785,6 @@
         "vznik",
         "řekl",
         "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nová skupina islamistů napadá Židy po Evropě. V době, kdy se Írán chce mstít",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/evropa-utoky-zidovske-objekty-islamiste-skupina-hayi.A260422_131508_zahranicni_kha",
-      "dt": "2026-04-22T16:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chce",
-        "době",
-        "evropě",
-        "islamistů",
-        "mstít",
-        "napadá",
-        "nová",
-        "skupina",
-        "írán",
-        "židy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slavného toreadora nabodl býk v sevillské aréně. Těžce ho zranil na citlivém místě",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/spanelsko-byk-matador-seville-zraneni-arena.A260422_172501_zahranicni_votr",
-      "dt": "2026-04-22T15:57:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aréně",
-        "býk",
-        "citlivém",
-        "místě",
-        "nabodl",
-        "sevillské",
-        "slavného",
-        "toreadora",
-        "těžce",
-        "zranil"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49295,
+      "bytes": 48790,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,11 +1618,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T05:04:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 1,
           "zpravy": 27,
+          "other": 1,
           "finance": 2
         },
         "drop_counts": {
@@ -1638,6 +1635,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na dva dny se oteplí až k 20 °C. Pak nastane změna, místy může i sněžit",
+            "publishedAt": "2026-04-23T05:04:00Z"
+          },
+          {
+            "title": "Další pražské mosty přes Vltavu? Ve hře je Suchdol i tramvaje přes Císařský ostrov",
+            "publishedAt": "2026-04-23T05:00:00Z"
+          },
           {
             "title": "Český klavírista Schulmeister získal cenu BBC Music Magazine Award pro nové talenty",
             "publishedAt": "2026-04-23T04:31:00Z"
@@ -1655,19 +1660,11 @@
             "publishedAt": "2026-04-23T04:00:00Z"
           },
           {
-            "title": "Poslanci schválí smlouvu se Slovenskem o spolupráci zdravotnických záchranářů",
+            "title": "Poslanci schvalují smlouvu se Slovenskem o spolupráci zdravotnických záchranářů",
             "publishedAt": "2026-04-23T04:00:00Z"
           },
           {
             "title": "Konec slev pro kamiony za ujeté kilometry. Stát ušetří stovky milionů",
-            "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Rekordní deficit, pokles HDP, bez výplat. Máme potíže, přiznává Moskva otevřeně",
-            "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Půl roku po fúzi možnost jejího zrušení. Antimonopolní úřad chce víc pravomocí",
             "publishedAt": "2026-04-22T22:00:00Z"
           }
         ]

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T05:02:47.537823Z",
+  "ingestedAt": "2026-04-23T05:25:08.900328Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Investigace CNN rozkryla sexuální útoky na omámené oběti",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/investigace-cnn-rozkryla-sexualni-utoky-na-omamene-obeti-372684",
+      "dt": "2026-04-23T05:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "cnn",
+        "investigace",
+        "oběti",
+        "omámené",
+        "rozkryla",
+        "sexuální",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,25 +756,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Agrofert může opět čerpat dotace, rozhodl zemědělský fond",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/agrofert-muze-opet-cerpat-dotace-rozhodl-zemedelsky-fond-372660",
-      "dt": "2026-04-22T08:25:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Chceme se udržet a už nikdy nespadnout, zní ze Zbrojovky. Klíč k postupu? Svědík",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chceme-se-udrzet-a-uz-nikdy-nespadnout-zni-ze-zbrojovky-klic-k-postupu-svedik-156408",
+      "dt": "2026-04-23T05:18:44Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "agrofert",
-        "dotace",
-        "fond",
-        "opět",
-        "rozhodl",
-        "zemědělský",
-        "čerpat"
+        "chceme",
+        "klíč",
+        "nespadnout",
+        "nikdy",
+        "postupu",
+        "svědík",
+        "udržet",
+        "zbrojovky",
+        "zní"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1494,30 +1520,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Basketbalistky USK deklasovaly Žabiny a vykročily za 16. titulem v řadě",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbalistky-usk-deklasovaly-zabiny-a-vykrocily-za-16-titulem-v-rade-156384",
-      "dt": "2026-04-20T18:35:53Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "basketbalistky",
-        "deklasovaly",
-        "titulem",
-        "usk",
-        "vykročily",
-        "řadě",
-        "žabiny"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1528,7 +1530,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42211,
+      "bytes": 41962,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,7 +1590,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T05:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1604,6 +1606,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Investigace CNN rozkryla sexuální útoky na omámené oběti",
+            "publishedAt": "2026-04-23T05:01:00Z"
+          },
           {
             "title": "„Prostě nám umřeli před očima.“ Nabatíja je v troskách, zůstal jen zlomek rodin",
             "publishedAt": "2026-04-23T04:30:00Z"
@@ -1631,10 +1637,6 @@
           {
             "title": "Ukrajina má na bojišti nejsilnější pozici za poslední rok, tvrdí Sybiha",
             "publishedAt": "2026-04-22T19:02:35Z"
-          },
-          {
-            "title": "Roste počet kybernetických podvodů, jejich úspěšnost i způsobené škody",
-            "publishedAt": "2026-04-22T18:41:03Z"
           }
         ]
       }
@@ -1646,7 +1648,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37660,
+      "bytes": 37747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1683,7 +1685,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T05:18:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1698,6 +1700,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chceme se udržet a už nikdy nespadnout, zní ze Zbrojovky. Klíč k postupu? Svědík",
+            "publishedAt": "2026-04-23T05:18:44Z"
+          },
           {
             "title": "Pardubice měly Třinec u zdi, ale závěr nezvládly. Musíme to hodit za hlavu, říká Kondelík",
             "publishedAt": "2026-04-23T04:30:00Z"
@@ -1725,10 +1731,6 @@
           {
             "title": "Jihlava odmítla konec baráže a i přes závěrečné drama si vynutila pátý duel",
             "publishedAt": "2026-04-22T18:00:19Z"
-          },
-          {
-            "title": "Třinec ve finále žije, nevídaný obrat dovršil v prodloužení Daňo",
-            "publishedAt": "2026-04-22T15:58:00Z"
           }
         ]
       }
