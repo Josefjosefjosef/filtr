@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T14:05:21.889391Z",
+  "ingestedAt": "2026-04-23T14:25:14.961656Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Postižený papoušek se stal vládcem. Vymyslel totiž neporazitelný styl boje",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/postizeny-papousek-se-stal-vladcem-vymyslel-totiz-neporazitelny-styl-boje-372713",
+      "dt": "2026-04-23T14:13:40Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "boje",
+        "neporazitelný",
+        "papoušek",
+        "postižený",
+        "stal",
+        "styl",
+        "totiž",
+        "vládcem",
+        "vymyslel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -746,31 +772,6 @@
         "peněženka",
         "téměř",
         "uživatelů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šéf amerického námořnictva Phelan končí ve funkci, uvedl Pentagon",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/sef-americkeho-namornictva-phelan-konci-ve-funkci-uvedl-pentagon-372690",
-      "dt": "2026-04-23T03:52:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "amerického",
-        "funkci",
-        "končí",
-        "námořnictva",
-        "pentagon",
-        "phelan",
-        "uvedl",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1547,7 +1548,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44879,
+      "bytes": 44788,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1607,12 +1608,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:28:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:13:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1,
-          "other": 5
+          "other": 6,
+          "zpravy": 23,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1624,6 +1625,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Postižený papoušek se stal vládcem. Vymyslel totiž neporazitelný styl boje",
+            "publishedAt": "2026-04-23T14:13:40Z"
+          },
           {
             "title": "Kauza znečištění řeky Odry končí. Ministerstvo potvrdilo firmě pokutu sto tisíc",
             "publishedAt": "2026-04-23T13:28:22Z"
@@ -1651,10 +1656,6 @@
           {
             "title": "Státy EU finálně schválily půjčku pro Ukrajinu i dvacátý balík sankcí proti Rusku",
             "publishedAt": "2026-04-23T11:58:55Z"
-          },
-          {
-            "title": "Babiš a Pavel se sejdou ohledně účasti na summitu NATO 8. května, řekl premiér",
-            "publishedAt": "2026-04-23T11:41:52Z"
           }
         ]
       }
@@ -1760,7 +1761,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77258,
+      "bytes": 77417,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-23T14:05:21.889391Z",
+  "ingestedAt": "2026-04-23T14:25:14.961656Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komerční banka vyplatí rekordní dividendu, schválila valná hromada",
+      "url": "https://www.penize.cz/burza-cennych-papiru-praha/469401-komercni-banka-vyplati-rekordni-dividendu-schvalila-valna-hromada",
+      "dt": "2026-04-23T16:15:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "banka",
+        "dividendu",
+        "hromada",
+        "komerční",
+        "rekordní",
+        "schválila",
+        "valná",
+        "vyplatí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -483,32 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Limit pro pojištění právní ochrany výrazně roste. Pomohly dvě novinky",
-      "url": "https://www.penize.cz/pojisteni-pravni-ochrany/488571-limit-pro-pojisteni-pravni-ochrany-vyrazne-roste-pomohly-dve-novinky",
-      "dt": "2026-04-20T17:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dvě",
-        "limit",
-        "novinky",
-        "ochrany",
-        "pojištění",
-        "pomohly",
-        "právní",
-        "roste",
-        "výrazně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -519,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18221,
+      "bytes": 18285,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -556,11 +555,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "finance": 17
+          "finance": 17,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -572,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komerční banka vyplatí rekordní dividendu, schválila valná hromada",
+            "publishedAt": "2026-04-23T16:15:00Z"
+          },
           {
             "title": "Nafta skoro korunu nahoru. Maximální ceny benzinu a nafty na pátek 24. dubna",
             "publishedAt": "2026-04-23T13:59:00Z"
@@ -599,10 +602,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na čtvrtek 23. dubna",
             "publishedAt": "2026-04-22T13:58:00Z"
-          },
-          {
-            "title": "Kyberšmejdi už letos zkusili vylákat čtyři miliardy. Jde jim to líp než dřív",
-            "publishedAt": "2026-04-22T12:15:00Z"
           }
         ]
       }

@@ -1,25 +1,23 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T14:05:21.889391Z",
+  "ingestedAt": "2026-04-23T14:25:14.961656Z",
   "items": [
     {
-      "section": "krimi",
+      "section": "sport",
       "contentType": "article",
-      "title": "Skandální odhalení. Státem řízený doping má spojitost s pokusy o vraždu",
-      "url": "https://www.sport.cz/clanek/ostatni-skandalni-odhaleni-rusky-doping-ridili-stejni-lide-kteri-se-snazili-zavrazdit-odpurce-putina-5441903",
-      "dt": "2026-04-23T13:01:45Z",
+      "title": "Naděje pro Itálii. Šance zahrát si na MS stále žije",
+      "url": "https://www.sport.cz/clanek/fotbal-ms-nova-sance-pro-italii-zmenu-tlaci-blizky-pritel-trumpa-iran-je-vsak-na-ms-pripraven-5441889",
+      "dt": "2026-04-23T14:03:17Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "doping",
-        "odhalení",
-        "pokusy",
-        "skandální",
-        "spojitost",
-        "státem",
-        "vraždu",
-        "řízený"
+        "itálii",
+        "naděje",
+        "stále",
+        "zahrát",
+        "šance",
+        "žije"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -31,23 +29,51 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Češi chtějí navázat na cennou výhru proti dalšímu silnému soupeři",
+      "title": "HOKEJ ONLINE: Čeští mladíci po výhře nad USA čelí dalšímu silnému soupeři",
       "url": "https://www.sport.cz/clanek/hokej-ms-2026-u18-cesko-svedsko-online-5441868",
       "dt": "2026-04-23T06:45:23Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "cennou",
-        "chtějí",
         "dalšímu",
         "hokej",
-        "navázat",
+        "mladíci",
         "online",
-        "proti",
         "silnému",
         "soupeři",
-        "výhru",
-        "češi"
+        "usa",
+        "výhře",
+        "čelí",
+        "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skandální odhalení. Ruský doping řídili stejní lidé, kteří se snažili zabít odpůrce Putina",
+      "url": "https://www.sport.cz/clanek/ostatni-skandalni-odhaleni-rusky-doping-ridili-stejni-lide-kteri-se-snazili-zavrazdit-odpurce-putina-5441903",
+      "dt": "2026-04-23T13:01:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "doping",
+        "kteří",
+        "lidé",
+        "odhalení",
+        "odpůrce",
+        "putina",
+        "ruský",
+        "skandální",
+        "snažili",
+        "stejní",
+        "zabít",
+        "řídili"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -755,31 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šokující scéna. Kolo olympijské vítězky trefilo rozhodčí do hlavy",
-      "url": "https://www.sport.cz/clanek/cyklistika-po-hororu-konec-nadeji-kolo-drsne-sestrelilo-rozhodci-5441789",
-      "dt": "2026-04-23T07:25:20Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hlavy",
-        "kolo",
-        "olympijské",
-        "rozhodčí",
-        "scéna",
-        "trefilo",
-        "vítězky",
-        "šokující"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43735,
+      "bytes": 43850,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,11 +828,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:01:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:03:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "sport": 29
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -844,12 +844,16 @@
         },
         "sample_titles": [
           {
-            "title": "Skandální odhalení. Státem řízený doping má spojitost s pokusy o vraždu",
-            "publishedAt": "2026-04-23T13:01:45Z"
+            "title": "Naděje pro Itálii. Šance zahrát si na MS stále žije",
+            "publishedAt": "2026-04-23T14:03:17Z"
           },
           {
-            "title": "HOKEJ ONLINE: Češi chtějí navázat na cennou výhru proti dalšímu silnému soupeři",
+            "title": "HOKEJ ONLINE: Čeští mladíci po výhře nad USA čelí dalšímu silnému soupeři",
             "publishedAt": "2026-04-23T06:45:23Z"
+          },
+          {
+            "title": "Skandální odhalení. Ruský doping řídili stejní lidé, kteří se snažili zabít odpůrce Putina",
+            "publishedAt": "2026-04-23T13:01:45Z"
           },
           {
             "title": "Pořádný flastr pro Bořila! Do konce sezony už si nezahraje",
@@ -870,10 +874,6 @@
           {
             "title": "Obránce Kubíček se vrací k Bruslařům nastálo, podepsal dvouletou smlouvu",
             "publishedAt": "2026-04-23T12:45:02Z"
-          },
-          {
-            "title": "Crosby dostal nálepku simulanta. Dannyho parťáci zatočili s Pittsburghem i potřetí",
-            "publishedAt": "2026-04-23T07:35:23Z"
           }
         ]
       }
