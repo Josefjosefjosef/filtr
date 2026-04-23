@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T06:29:40.735581Z",
+  "ingestedAt": "2026-04-23T06:50:38.508738Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Slovensko poprvé od ledna přijímá ruskou ropu ropovodem Družba. Podmínilo tím schválení půjčky Ukrajině",
+      "url": "https://zahranicni.hn.cz/c1-67870250-slovensko-poprve-od-ledna-prijima-ruskou-ropu-ropovodem-druzba-podminilo-tim-schvaleni-pujcky-ukrajine",
+      "dt": "2026-04-23T06:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "družba",
+        "ledna",
+        "podmínilo",
+        "poprvé",
+        "přijímá",
+        "půjčky",
+        "ropovodem",
+        "ropu",
+        "ruskou",
+        "schválení",
+        "slovensko",
+        "tím",
+        "ukrajině"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1142,32 +1172,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Pomáhá válka inovacím, nebo je ničí? Vědci přišli s překvapivou odpovědí",
-      "url": "https://byznys.hn.cz/c1-67862440-pomaha-valka-inovacim-nebo-je-nici-vedci-prisli-s-prekvapivou-odpovedi",
-      "dt": "2026-04-22T06:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "inovacím",
-        "nebo",
-        "ničí",
-        "odpovědí",
-        "pomáhá",
-        "překvapivou",
-        "přišli",
-        "válka",
-        "vědci"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1178,7 +1182,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184997,
+      "bytes": 184935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1215,11 +1219,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T06:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 29,
+          "zpravy": 6,
           "zdravi": 4,
           "sport": 1
         },
@@ -1233,6 +1237,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovensko poprvé od ledna přijímá ruskou ropu ropovodem Družba. Podmínilo tím schválení půjčky Ukrajině",
+            "publishedAt": "2026-04-23T06:40:00Z"
+          },
           {
             "title": "Vitaminový manuál: K2 jako navigátor, D3 jako klíč k celkovému zdraví a D2 jako ta horší volba",
             "publishedAt": "2026-04-23T05:00:00Z"
@@ -1259,10 +1267,6 @@
           },
           {
             "title": "Deset minut operace, čtyři gigabajty dat. Oční klinika FN Ostrava ukazuje, jak vypadá nemocnice budoucnosti",
-            "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Lidé nechtějí být anonymní součástí zdravotnického systému, říká vedoucí lékařka Polikliniky Florenc",
             "publishedAt": "2026-04-22T22:00:00Z"
           }
         ]

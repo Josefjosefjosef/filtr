@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-23T06:29:40.735581Z",
+  "ingestedAt": "2026-04-23T06:50:38.508738Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Biopaliva se přejmenují, plánuje ministerstvo. Mají tady špatný zvuk",
+      "url": "https://www.ceska-justice.cz/2026/04/biopaliva-prejmenuji-planuje-ministerstvo/",
+      "dt": "2026-04-23T06:27:18Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "biopaliva",
+        "mají",
+        "ministerstvo",
+        "plánuje",
+        "přejmenují",
+        "tady",
+        "zvuk",
+        "špatný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,30 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dluží mu vysvětlení. Drogový delikvent uspěl u Ústavního soudu",
-      "url": "https://www.ceska-justice.cz/2026/04/dluzi-mu-vysvetleni-drogovy-delikvent-uspel-u-soudu/",
-      "dt": "2026-04-21T15:01:03Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "delikvent",
-        "dluží",
-        "drogový",
-        "soudu",
-        "uspěl",
-        "vysvětlení",
-        "ústavního"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94021,
+      "bytes": 100104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T06:27:18Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Biopaliva se přejmenují, plánuje ministerstvo. Mají tady špatný zvuk",
+            "publishedAt": "2026-04-23T06:27:18Z"
+          },
           {
             "title": "Masér měl klientce dráždit klitoris. Nejvyšší soud zpochybnil znásilnění i důkazy",
             "publishedAt": "2026-04-23T04:30:00Z"
@@ -352,10 +357,6 @@
           {
             "title": "Soudy si neujasnily, co řeší. Spor o 248 milionů pokračuje i po 10 letech",
             "publishedAt": "2026-04-22T06:51:23Z"
-          },
-          {
-            "title": "Soudce se k ženám choval nevhodně, potvrdil ombudsman. Postih ale nepřijde",
-            "publishedAt": "2026-04-22T04:30:00Z"
           }
         ]
       }
