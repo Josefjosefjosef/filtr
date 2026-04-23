@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T18:47:58.908650Z",
+  "ingestedAt": "2026-04-23T19:10:12.465009Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/na-kypru-zacal-neformalni-summit-eu-na-miste-je-i-zelenskyj-372733",
+      "dt": "2026-04-23T19:01:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "kypru",
+        "místě",
+        "neformální",
+        "summit",
+        "začal",
+        "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,27 +782,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Srážka vlaků nedaleko Kodaně si vyžádala 18 raněných, stav pěti je kritický",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/srazka-vlaku-u-kodane-si-vyzadala-sedmnact-ranenych-stav-ctyr-je-kriticky-372698",
-      "dt": "2026-04-23T08:14:56Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/pisek-i-podruhe-vyzral-na-usk-a-zahraje-si-play-off-156424",
+      "dt": "2026-04-23T18:55:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "kodaně",
-        "kritický",
-        "nedaleko",
-        "pěti",
-        "raněných",
-        "srážka",
-        "stav",
-        "vlaků",
-        "vyžádala"
+        "off",
+        "play",
+        "podruhé",
+        "písek",
+        "usk",
+        "vyzrál",
+        "zahraje"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1513,32 +1534,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Litvínov v Jihlavě dominoval a nad Duklou vyhrál i potřetí, zářil Ondřej Kaše",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/litvinov-v-jihlave-dominoval-a-duklu-porazil-i-potreti-zaril-ondrej-kase-156396",
-      "dt": "2026-04-21T19:37:08Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dominoval",
-        "duklou",
-        "jihlavě",
-        "kaše",
-        "litvínov",
-        "ondřej",
-        "potřetí",
-        "vyhrál",
-        "zářil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1549,7 +1544,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44233,
+      "bytes": 44127,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,11 +1604,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:25:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:01:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 20,
+          "finance": 3,
           "other": 7
         },
         "drop_counts": {
@@ -1626,6 +1621,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
+            "publishedAt": "2026-04-23T19:01:59Z"
+          },
           {
             "title": "K jednotnému měsíčnímu hlášení se zatím přihlásila polovina zaměstnavatelů",
             "publishedAt": "2026-04-23T18:25:19Z"
@@ -1653,10 +1652,6 @@
           {
             "title": "V Ústí přibývá opuštěných psů, někteří majitelé obcházejí poplatek za útulek",
             "publishedAt": "2026-04-23T15:11:02Z"
-          },
-          {
-            "title": "Akcionáři společnosti Warner Bros schválili převzetí firmy rivalem Paramount",
-            "publishedAt": "2026-04-23T14:54:02Z"
           }
         ]
       }
@@ -1668,7 +1663,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37997,
+      "bytes": 38023,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1705,7 +1700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:24:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:55:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1720,6 +1715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
+            "publishedAt": "2026-04-23T18:55:41Z"
+          },
           {
             "title": "Šelmy oddálily konec, Liberec porazily 3:0",
             "publishedAt": "2026-04-23T18:24:44Z"
@@ -1747,10 +1746,6 @@
           {
             "title": "Samson je v Madridu poprvé ve třetím kole, Bouzková končí",
             "publishedAt": "2026-04-23T13:09:33Z"
-          },
-          {
-            "title": "Klíč k triumfu v superfinále? Disciplína, nasazení a méně chyb, shodují se Sládek s Hanákem",
-            "publishedAt": "2026-04-23T12:30:00Z"
           }
         ]
       }
@@ -1762,7 +1757,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77041,
+      "bytes": 77003,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

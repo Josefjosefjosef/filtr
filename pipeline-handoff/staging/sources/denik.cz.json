@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T18:47:58.908650Z",
+  "ingestedAt": "2026-04-23T19:10:12.465009Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tragédie v Itálii: Žena vyskočila z balkonu i se svými třemi dětmi v náruči",
+      "url": "https://www.denik.cz/staty-eu/tragedie-italie-balkon-deti-zachranka-smrt-skok-sebevrazda.html",
+      "dt": "2026-04-23T18:50:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "balkonu",
+        "dětmi",
+        "itálii",
+        "náruči",
+        "svými",
+        "tragédie",
+        "třemi",
+        "vyskočila",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -634,31 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šéf amerického námořnictva Phelan končí ve funkci, uvedl Pentagon",
-      "url": "https://www.denik.cz/ze_sveta/sef-americkeho-namornictva-phelan-konci-pentagon.html",
-      "dt": "2026-04-23T05:46:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "amerického",
-        "funkci",
-        "končí",
-        "námořnictva",
-        "pentagon",
-        "phelan",
-        "uvedl",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29396,
+      "bytes": 29466,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:50:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -722,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tragédie v Itálii: Žena vyskočila z balkonu i se svými třemi dětmi v náruči",
+            "publishedAt": "2026-04-23T18:50:00Z"
+          },
           {
             "title": "Nový byt, anebo zámek? Kupující se vrací k českým památkám, Dubaj ztrácí lesk",
             "publishedAt": "2026-04-23T18:10:00Z"
@@ -749,10 +754,6 @@
           {
             "title": "Ryanair začne zavírat odbavování zavazadel dříve. Komu to pomůže, zlobí se lidé",
             "publishedAt": "2026-04-23T13:30:00Z"
-          },
-          {
-            "title": "Pohádková krása. Fantastické dorty obsadili Křemílek, víla Amálka i Maxipes Fík",
-            "publishedAt": "2026-04-23T13:01:00Z"
           }
         ]
       }
