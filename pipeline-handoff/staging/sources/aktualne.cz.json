@@ -1,27 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T17:24:42.238393Z",
+  "ingestedAt": "2026-04-23T17:44:38.147721Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Překročil jste rychlost, zaplaťte pokutu online.“ Policie varuje před dalším podvodem",
+      "title": "„Překročil jste rychlost, zaplaťte pokutu.“ Policie radí, jak odhalit případný podvod",
       "url": "https://zpravy.aktualne.cz/domaci/prekrocil-jste-rychlost-zaplatte-pokutu-online-policie-varuje-pred-dalsim-podvodem/r~aaa29a537b5f1dc26183d1a56ef93336/",
       "dt": "2026-04-23T15:49:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "dalším",
         "jste",
-        "online",
-        "podvodem",
+        "odhalit",
+        "podvod",
         "pokutu",
         "policie",
         "překročil",
+        "případný",
+        "radí",
         "rychlost",
-        "varuje",
         "zaplaťte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Letošní dovolená za rozumnou cenu? Ekonom má tip na ideální destinaci",
+      "url": "https://zpravy.aktualne.cz/domaci/letosni-dovolena-za-rozumnou-cenu-ekonom-ma-tip-na-idealni-destinaci/r~aaa295bbe462698334bded2d153c7024/",
+      "dt": "2026-04-23T17:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cenu",
+        "destinaci",
+        "dovolená",
+        "ekonom",
+        "ideální",
+        "letošní",
+        "rozumnou",
+        "tip"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -505,31 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Experti vyzvali vládu k zavedení plošné regulace mobilů ve školách",
-      "url": "https://zpravy.aktualne.cz/domaci/experti-vyzvali-vladu-k-zavedeni-plosne-regulace-mobilu-ve-skolach/r~aaa29af1591e7c19b3f4038982aefbbf/",
-      "dt": "2026-04-23T14:01:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "experti",
-        "mobilů",
-        "plošné",
-        "regulace",
-        "vládu",
-        "vyzvali",
-        "zavedení",
-        "školách"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21705,
+      "bytes": 21846,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,7 +577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T16:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 12,
@@ -596,8 +596,12 @@
         },
         "sample_titles": [
           {
-            "title": "„Překročil jste rychlost, zaplaťte pokutu online.“ Policie varuje před dalším podvodem",
+            "title": "„Překročil jste rychlost, zaplaťte pokutu.“ Policie radí, jak odhalit případný podvod",
             "publishedAt": "2026-04-23T15:49:00Z"
+          },
+          {
+            "title": "Letošní dovolená za rozumnou cenu? Ekonom má tip na ideální destinaci",
+            "publishedAt": "2026-04-23T17:28:00Z"
           },
           {
             "title": "Trump nařídil námořnictvu střílet na lodě, jež rozmisťují miny v Hormuzu",
@@ -622,10 +626,6 @@
           {
             "title": "Maskované komando přepadává lodě v Hormuzu. Íránci ukázali video, zajali i Evropany",
             "publishedAt": "2026-04-23T16:28:00Z"
-          },
-          {
-            "title": "Zemřel americký dirigent Michael Tilson Thomas. Bernstein ho měl za génia",
-            "publishedAt": "2026-04-23T16:14:00Z"
           }
         ]
       }

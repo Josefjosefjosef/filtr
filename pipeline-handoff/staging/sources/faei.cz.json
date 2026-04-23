@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T17:24:42.238393Z",
+  "ingestedAt": "2026-04-23T17:44:38.147721Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropské indexy zamířily strmě dolů",
+      "url": "https://profitonline.cz/evropske-indexy-zamirily-strme-dolu/",
+      "dt": "2026-04-23T17:40:00Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dolů",
+        "evropské",
+        "indexy",
+        "strmě",
+        "zamířily"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,31 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
-      "url": "https://profitonline.cz/levna-koupe-draha-chyba-cesko-se-stava-vrakovistem-evropy/",
-      "dt": "2026-04-21T12:00:49Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chyba",
-        "drahá",
-        "evropy",
-        "koupě",
-        "levná",
-        "stává",
-        "vrakovištěm",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,9 +301,9 @@
       "source": "FAEI",
       "topic": "finance",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19090,
+      "bytes": 18881,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T17:20:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:40:00Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -359,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropské indexy zamířily strmě dolů",
+            "publishedAt": "2026-04-23T17:40:00Z"
+          },
           {
             "title": "Vedení Applu přebírá John Ternus",
             "publishedAt": "2026-04-23T17:20:52Z"
@@ -386,10 +387,6 @@
           {
             "title": "Sentiment spotřebitelů v eurozóně se výrazně zhoršuje",
             "publishedAt": "2026-04-22T21:05:43Z"
-          },
-          {
-            "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
-            "publishedAt": "2026-04-22T10:00:00Z"
           }
         ]
       }

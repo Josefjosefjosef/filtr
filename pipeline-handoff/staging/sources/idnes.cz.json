@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T17:24:42.238393Z",
+  "ingestedAt": "2026-04-23T17:44:38.147721Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "V Etiopii staví mega letiště. Má být největší v Africe s kapacitou až 110 milionů lidí",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/letiste-nove-velke-etiopie-afrika-nejvetsi-addis-abeba.A260423_175318_eko-zahranicni_mikp",
+      "dt": "2026-04-23T17:37:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "110",
+        "africe",
+        "být",
+        "etiopii",
+        "kapacitou",
+        "letiště",
+        "lidí",
+        "mega",
+        "milionů",
+        "největší",
+        "staví"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -757,32 +785,6 @@
         "ukázal",
         "večeřet",
         "většina"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Po srážce vlaků v Dánsku je pět lidí v kritickém stavu, příčina se vyšetřuje",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/dansko-kodan-nehoda-srazka-vlaky-zraneni.A260423_092349_zahranicni_meli",
-      "dt": "2026-04-23T12:59:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dánsku",
-        "kritickém",
-        "lidí",
-        "pět",
-        "příčina",
-        "srážce",
-        "stavu",
-        "vlaků",
-        "vyšetřuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1578,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49031,
+      "bytes": 49025,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,12 +1617,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T17:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "other": 2,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 26,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1632,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Etiopii staví mega letiště. Má být největší v Africe s kapacitou až 110 milionů lidí",
+            "publishedAt": "2026-04-23T17:37:00Z"
+          },
           {
             "title": "S Českem zdvojnásobíme obchod, tvrdí Saúdové. Macinka v Rijádu nabízí radary",
             "publishedAt": "2026-04-23T17:17:00Z"
@@ -1659,10 +1665,6 @@
           {
             "title": "Opozice jednala s šéfy ČT a ČRo, Klempíř chyběl. Srabáctví, vzkázal mu Rakušan",
             "publishedAt": "2026-04-23T15:01:00Z"
-          },
-          {
-            "title": "Zemědělský fond ukázal analýzy k dotacím Agrofertu, chce předejít spekulacím",
-            "publishedAt": "2026-04-23T15:00:00Z"
           }
         ]
       }
