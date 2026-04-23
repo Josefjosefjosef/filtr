@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T09:20:03.907070Z",
+  "ingestedAt": "2026-04-23T09:39:29.999540Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "„Příliš mnoho rozkoše a neplodnost.“ Vyšla kniha o tom, jak bicykl osvobozoval ženy",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/prilis-mnoho-rozkose-a-neplodnost-vysla-kniha-o-tom-jak-bicykl-osvobozoval-zeny/r~aaa29a8f9f79fc9692895ac3eaac86f6/",
+      "dt": "2026-04-23T09:13:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bicykl",
+        "kniha",
+        "mnoho",
+        "neplodnost",
+        "osvobozoval",
+        "příliš",
+        "rozkoše",
+        "tom",
+        "vyšla",
+        "ženy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -31,24 +58,24 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Proč zakazujeme dětem závodit? hřímá Bauer. V synovi vidí většího blázna, než byl sám",
+      "title": "Lepší zázemí mají v každé norské vesnici, čertí se Bauer. Vidí ale i medailový příslib",
       "url": "https://sport.aktualne.cz/ostatni-sporty/proc-zakazujeme-detem-zavodit-hrima-bauer-v-synovi-vidi-vetsiho-blazna-nez-byl-sam/r~aaa29de174e1d4bc9441afd203a14ed5/",
       "dt": "2026-04-23T08:31:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
+        "ale",
         "bauer",
-        "blázna",
-        "dětem",
-        "hřímá",
-        "než",
-        "proč",
-        "synovi",
-        "sám",
+        "každé",
+        "lepší",
+        "mají",
+        "medailový",
+        "norské",
+        "příslib",
+        "vesnici",
         "vidí",
-        "většího",
-        "zakazujeme",
-        "závodit"
+        "zázemí",
+        "čertí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -507,32 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Amatérismus a chaos.“ Expert tepe vládu za třesk v ČT a rozhlase. Říká, co nastane",
-      "url": "https://video.aktualne.cz/spotlight-video/nejde-o-poplatky-jde-o-kontrolu-analytik-o-zasahu-do-verejnopravnich-medii/r~aaa29eb44a482280fdd556430950f7fd/",
-      "dt": "2026-04-23T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "amatérismus",
-        "chaos",
-        "expert",
-        "nastane",
-        "rozhlase",
-        "tepe",
-        "třesk",
-        "vládu",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22373,
+      "bytes": 22366,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,13 +581,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T09:13:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 4,
           "finance": 2,
           "sport": 4,
-          "zpravy": 11,
-          "other": 3
+          "zpravy": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -599,11 +600,15 @@
         },
         "sample_titles": [
           {
+            "title": "„Příliš mnoho rozkoše a neplodnost.“ Vyšla kniha o tom, jak bicykl osvobozoval ženy",
+            "publishedAt": "2026-04-23T09:13:00Z"
+          },
+          {
             "title": "Ropě z Německa hrozí výpadky, Havlíček jedná o náhradě ze Slovenska",
             "publishedAt": "2026-04-23T09:08:00Z"
           },
           {
-            "title": "Proč zakazujeme dětem závodit? hřímá Bauer. V synovi vidí většího blázna, než byl sám",
+            "title": "Lepší zázemí mají v každé norské vesnici, čertí se Bauer. Vidí ale i medailový příslib",
             "publishedAt": "2026-04-23T08:31:00Z"
           },
           {
@@ -625,10 +630,6 @@
           {
             "title": "Cenu Hanzelky a Zikmunda za cestopis získala kniha Kubánské tango v rytmu blues",
             "publishedAt": "2026-04-23T07:36:00Z"
-          },
-          {
-            "title": "Mysleli, že brát více vitaminů nevadí. Některé kombinace způsobí víc škody než užitku",
-            "publishedAt": "2026-04-23T07:18:00Z"
           }
         ]
       }

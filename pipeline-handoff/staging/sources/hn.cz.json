@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T09:20:03.907070Z",
+  "ingestedAt": "2026-04-23T09:39:29.999540Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ruským miliardářům válka ani sankce vadit nemusí. Bohatnou i tak",
+      "url": "https://zahranicni.hn.cz/c1-67870310-ruskym-miliardarum-valka-ani-sankce-vadit-nemusi-bohatnou-i-tak",
+      "dt": "2026-04-23T09:23:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bohatnou",
+        "miliardářům",
+        "nemusí",
+        "ruským",
+        "sankce",
+        "tak",
+        "vadit",
+        "válka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1149,35 +1174,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny pražských novostaveb prolomily hranici 180 tisíc korun za metr čtvereční. Co je hitem mezi investory?",
-      "url": "https://archiv.hn.cz/c1-67869840-ceny-prazskych-novostaveb-pokorily-hranici-180-tisic-korun-za-metr-ctverecni-co-je-hitem-mezi-investory",
-      "dt": "2026-04-22T09:16:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "180",
-        "ceny",
-        "hitem",
-        "hranici",
-        "investory",
-        "korun",
-        "metr",
-        "novostaveb",
-        "pražských",
-        "prolomily",
-        "tisíc",
-        "čtvereční"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1188,7 +1184,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185124,
+      "bytes": 185062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1225,7 +1221,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T08:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T09:23:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 30,
@@ -1243,6 +1239,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ruským miliardářům válka ani sankce vadit nemusí. Bohatnou i tak",
+            "publishedAt": "2026-04-23T09:23:00Z"
+          },
           {
             "title": "Tesla znovu jede. Zisk překonává očekávání, rychle rostou i prodeje v Evropě a Musk chystá masivní investice",
             "publishedAt": "2026-04-23T08:02:00Z"
@@ -1270,10 +1270,6 @@
           {
             "title": "Vitaminový manuál: K2 jako navigátor, D3 jako klíč k celkovému zdraví a D2 jako ta horší volba",
             "publishedAt": "2026-04-23T05:00:00Z"
-          },
-          {
-            "title": "Trumpovo rozhodování a výhrůžky ohledně Íránu nejsou chaos, mají skrytou logiku. Český expert vysvětluje překvapivé souvislosti",
-            "publishedAt": "2026-04-23T04:10:00Z"
           }
         ]
       }
