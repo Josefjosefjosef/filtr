@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-23T14:25:14.961656Z",
+  "ingestedAt": "2026-04-23T14:49:57.800080Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komerční banka vyplatí celý loňský zisk, akcionáři dostanou téměř sto korun na akcii",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-banka-vyplati-cely-lonsky-zisk-akcionari-dostanou-temer-sto-korun-na-akcii-1432352",
+      "dt": "2026-04-23T14:17:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "akcii",
+        "akcionáři",
+        "banka",
+        "celý",
+        "dostanou",
+        "komerční",
+        "korun",
+        "loňský",
+        "sto",
+        "téměř",
+        "vyplatí",
+        "zisk"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1043,33 +1072,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Téměř polovina obchodů ČEB míří do obrany. Banka roste napříč obory",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/temer-polovina-obchodu-ceb-miri-do-obrany-banka-roste-napric-obory-1432018",
-      "dt": "2026-04-22T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "banka",
-        "míří",
-        "napříč",
-        "obchodů",
-        "obory",
-        "obrany",
-        "polovina",
-        "roste",
-        "téměř",
-        "čeb"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1080,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56017,
+      "bytes": 56123,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1117,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:17:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1134,6 +1136,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komerční banka vyplatí celý loňský zisk, akcionáři dostanou téměř sto korun na akcii",
+            "publishedAt": "2026-04-23T14:17:00Z"
+          },
           {
             "title": "Výstavba za Prahou pojme jednou tolik obyvatel. Centrem obce se nově stane škola",
             "publishedAt": "2026-04-23T13:30:00Z"
@@ -1161,10 +1167,6 @@
           {
             "title": "Státní svátky v Německu 2026: Přehled, otevírací doba obchodů",
             "publishedAt": "2026-04-23T11:20:00Z"
-          },
-          {
-            "title": "Penta Hospitals otevírá na Florenci novou polikliniku s komplexní péčí",
-            "publishedAt": "2026-04-23T10:58:00Z"
           }
         ]
       }

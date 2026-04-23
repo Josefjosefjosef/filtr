@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T14:25:14.961656Z",
+  "ingestedAt": "2026-04-23T14:49:57.800080Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sportovní aplikace Strava si chce na burzu doběhnout pro další kapitál, aby mohla financovat nové akvizice. Vyjde jí to?",
+      "url": "https://archiv.hn.cz/c1-67870400-sportovni-aplikace-strava-si-chce-na-burzu-dobehnout-pro-dalsi-kapital-aby-mohla-financovat-nove-akvizice-vyjde-ji-to",
+      "dt": "2026-04-23T14:42:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "akvizice",
+        "aplikace",
+        "burzu",
+        "chce",
+        "další",
+        "doběhnout",
+        "financovat",
+        "kapitál",
+        "nové",
+        "sportovní",
+        "strava",
+        "vyjde"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1121,38 +1150,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ministr Červený zrušil výběr ředitele České inspekce životního prostředí. Motoristé přitom měli ve finále svého muže",
-      "url": "https://domaci.hn.cz/c1-67870140-ministr-cerveny-zrusil-vyber-reditele-ceske-inspekce-zivotniho-prostredi-motoriste-pritom-meli-ve-finale-sveho-muze",
-      "dt": "2026-04-22T14:59:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "finále",
-        "inspekce",
-        "ministr",
-        "motoristé",
-        "muže",
-        "měli",
-        "prostředí",
-        "přitom",
-        "svého",
-        "výběr",
-        "zrušil",
-        "červený",
-        "české",
-        "ředitele",
-        "životního"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1163,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184572,
+      "bytes": 185148,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1200,7 +1197,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 29,
@@ -1218,6 +1215,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sportovní aplikace Strava si chce na burzu doběhnout pro další kapitál, aby mohla financovat nové akvizice. Vyjde jí to?",
+            "publishedAt": "2026-04-23T14:42:00Z"
+          },
           {
             "title": "Jak investovat v dobách neustálých šoků. Sedm grafů ukazuje, jak portfolio složit",
             "publishedAt": "2026-04-23T13:55:00Z"
@@ -1245,10 +1246,6 @@
           {
             "title": "První krok na cestě k zestátnění. ČEZ chystá novou dceru, do které chce převést prodej energií a obchod",
             "publishedAt": "2026-04-23T11:57:00Z"
-          },
-          {
-            "title": "Skupina Twist se rychle zmenšuje. Přišla o desítky poboček, propouští a chystá reorganizaci se zkušeným spojencem",
-            "publishedAt": "2026-04-23T11:54:00Z"
           }
         ]
       }

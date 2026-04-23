@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-23T14:25:14.961656Z",
+  "ingestedAt": "2026-04-23T14:49:57.800080Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Červnový týden na řeckém Samosu v hotelu přímo u pláže s polopenzí. Zájezd od 11 990 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/cervnovy-tyden-na-reckem-samosu-v-hotelu-primo-u-plaze-s-polopenzi",
+      "dt": "2026-04-23T14:38:15Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "990",
+        "hotelu",
+        "pláže",
+        "polopenzí",
+        "přímo",
+        "samosu",
+        "týden",
+        "zájezd",
+        "červnový",
+        "řeckém"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,33 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Týden na Mallorce s all-inclusive z Prahy na přelomu dubna a května. Zájezd od 9 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/tyden-na-mallorce-s-all-inclusive-z-prahy-na-prelomu-dubna-a-kvetna",
-      "dt": "2026-04-17T18:24:48Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "dubna",
-        "inclusive",
-        "května",
-        "mallorce",
-        "prahy",
-        "přelomu",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 45584,
+      "bytes": 45568,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:18:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:38:15Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Červnový týden na řeckém Samosu v hotelu přímo u pláže s polopenzí. Zájezd od 11 990 Kč",
+            "publishedAt": "2026-04-23T14:38:15Z"
+          },
           {
             "title": "Kréta z Prahy na týden s polopenzí. Zájezd od 7 990 Kč",
             "publishedAt": "2026-04-23T11:18:38Z"
@@ -594,10 +598,6 @@
           {
             "title": "Kréta z Brna do 4* hotelu s all-inclusive na začátku května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-22T09:10:50Z"
-          },
-          {
-            "title": "Kapverdy z Prahy: týden ve 4* hotelu s all-inclusive na ostrově Sal. Zájezd od 19 690 Kč",
-            "publishedAt": "2026-04-22T07:58:43Z"
           }
         ]
       }

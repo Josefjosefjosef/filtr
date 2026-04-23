@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T14:25:14.961656Z",
+  "ingestedAt": "2026-04-23T14:49:57.800080Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rakovinu může odhalit dříve, než přijdou příznaky. Nový krevní test přijde na pár stovek",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/jeden-krevni-test-odhali-mnoho-druhu-rakoviny-prozkoumava-dna/",
+      "dt": "2026-04-23T14:39:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dříve",
+        "krevní",
+        "než",
+        "nový",
+        "odhalit",
+        "pár",
+        "přijde",
+        "přijdou",
+        "příznaky",
+        "rakovinu",
+        "stovek",
+        "test"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V Německu to vře: Miliony odborářů míří do ulic kvůli úsporám ve zdravotnictví",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecko-odborari-uspory-ve-zdravotnictvi/",
-      "dt": "2026-04-23T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kvůli",
-        "miliony",
-        "míří",
-        "německu",
-        "odborářů",
-        "ulic",
-        "vře",
-        "zdravotnictví",
-        "úsporám"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104654,
+      "bytes": 104214,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:39:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakovinu může odhalit dříve, než přijdou příznaky. Nový krevní test přijde na pár stovek",
+            "publishedAt": "2026-04-23T14:39:00Z"
+          },
           {
             "title": "Komentář: Slova o „tlustém parchantovi“ jako motivace? Tudy cesta z dětské obezity nevede",
             "publishedAt": "2026-04-23T13:15:00Z"
@@ -359,10 +366,6 @@
           {
             "title": "Bez cigaret na celý život? Ministr Šťastný komentuje britský plán pro mladé",
             "publishedAt": "2026-04-23T08:00:00Z"
-          },
-          {
-            "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
-            "publishedAt": "2026-04-23T07:00:00Z"
           }
         ]
       }
