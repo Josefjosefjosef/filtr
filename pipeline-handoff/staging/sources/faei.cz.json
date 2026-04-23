@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T06:50:38.508738Z",
+  "ingestedAt": "2026-04-23T07:09:02.781627Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
+      "url": "https://profitonline.cz/jeden-trh-pro-kapital-odvazny-evropsky-plan-s-hrozbou-fiaska/",
+      "dt": "2026-04-23T07:00:32Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "evropský",
+        "fiaska",
+        "hrozbou",
+        "jeden",
+        "kapitál",
+        "odvážný",
+        "plán",
+        "trh"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -268,30 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Uvidíme místo StarDance či hokeje pouze černou obrazovku?",
-      "url": "https://profitonline.cz/uvidime-misto-stardance-ci-hokeje-pouze-cernou-obrazovku/",
-      "dt": "2026-04-21T04:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hokeje",
-        "místo",
-        "obrazovku",
-        "pouze",
-        "stardance",
-        "uvidíme",
-        "černou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19030,
+      "bytes": 19010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,11 +340,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:00:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:00:32Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "sport": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -355,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
+            "publishedAt": "2026-04-23T07:00:32Z"
+          },
           {
             "title": "Slovensko bojovalo proti SSSR, ale na kremelském seznamu není",
             "publishedAt": "2026-04-23T04:00:18Z"
@@ -382,10 +386,6 @@
           {
             "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
             "publishedAt": "2026-04-21T12:00:49Z"
-          },
-          {
-            "title": "Gruzínská vláda se mstí studentům, omezuje veřejné univerzity",
-            "publishedAt": "2026-04-21T10:00:29Z"
           }
         ]
       }

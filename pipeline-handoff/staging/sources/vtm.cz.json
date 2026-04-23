@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-23T06:50:38.508738Z",
+  "ingestedAt": "2026-04-23T07:09:02.781627Z",
   "items": [
     {
       "section": "veda",
@@ -25,6 +25,37 @@
         "světě",
         "zvládá",
         "český"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vibe coding za 60 miliard dolarů. Musk chce Cursor, SpaceX díky němu smaže dluh v robotickém programování",
+      "url": "https://www.zive.cz/clanky/vibe-coding-za-60-miliard-dolaru-musk-chce-cursor-spacex-diky-nemu-smaze-dluh-v-robotickem-programovani/sc-3-a-240829/default.aspx",
+      "dt": "2026-04-23T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chce",
+        "coding",
+        "cursor",
+        "dluh",
+        "dolarů",
+        "díky",
+        "miliard",
+        "musk",
+        "němu",
+        "programování",
+        "robotickém",
+        "smaže",
+        "spacex",
+        "vibe"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -937,32 +968,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Apple a Google neuhlídaly aplikace, které pomocí AI svlékají lidi. Doporučovaly je i nezletilým",
-      "url": "https://mobilmania.zive.cz/clanky/apple-a-google-neuhlidaly-aplikace-ktere-pomoci-ai-svlekaji-lidi-doporucovaly-je-i-nezletilym/sc-3-a-1364581/default.aspx",
-      "dt": "2026-04-20T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "aplikace",
-        "apple",
-        "doporučovaly",
-        "google",
-        "lidi",
-        "neuhlídaly",
-        "nezletilým",
-        "pomocí",
-        "svlékají"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -973,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22452,
+      "bytes": 22456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1010,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-22T19:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1028,6 +1033,10 @@
           {
             "title": "ChatGPT má nejlepší generátor obrázků na světě. Ježíše ve Fabii zvládá jako král, nakreslí i český komiks",
             "publishedAt": "2026-04-22T08:45:00Z"
+          },
+          {
+            "title": "Vibe coding za 60 miliard dolarů. Musk chce Cursor, SpaceX díky němu smaže dluh v robotickém programování",
+            "publishedAt": "2026-04-23T06:45:00Z"
           },
           {
             "title": "Framework je modulární a snadno opravitelný notebook pro geeky. Nová varianta Laptop Pro přidává prémiové tělo i unikátní výbavu",
@@ -1052,10 +1061,6 @@
           {
             "title": "Ukládejte záznam z kamer na NAS. Návod od výběru hardwaru přes nastavení až po vzdálené sledování v mobilu",
             "publishedAt": "2026-04-22T10:45:00Z"
-          },
-          {
-            "title": "Smartphonů se poprvé po dvou letech prodalo méně. Netrápí to pouze Samsung a Apple",
-            "publishedAt": "2026-04-22T16:45:00Z"
           }
         ]
       }

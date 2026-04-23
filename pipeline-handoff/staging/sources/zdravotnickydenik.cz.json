@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T06:50:38.508738Z",
+  "ingestedAt": "2026-04-23T07:09:02.781627Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/bez-uhrad-telemedicina-nefunguje-vachta/",
+      "dt": "2026-04-23T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "dálku",
+        "lze",
+        "nefunguje",
+        "péče",
+        "telemedicína",
+        "třetinu",
+        "vachta",
+        "úhrad",
+        "řešit",
+        "říká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Exšéf Nemocnice Na Homolce narazil u Ústavního soudu. Trest pro Dbalého platí",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/exsef-nemocnice-na-homolce-narazil-u-ustavniho-soudu-trest-pro-dbaleho-plati/",
-      "dt": "2026-04-22T07:23:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dbalého",
-        "exšéf",
-        "homolce",
-        "narazil",
-        "nemocnice",
-        "platí",
-        "soudu",
-        "trest",
-        "ústavního"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94079,
+      "bytes": 102655,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -331,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
+            "publishedAt": "2026-04-23T07:00:00Z"
+          },
           {
             "title": "Umírání na přístrojích jako český standard? Čtvrtina pacientů na JIP tam vůbec nepatří",
             "publishedAt": "2026-04-23T06:00:00Z"
@@ -358,10 +364,6 @@
           {
             "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
             "publishedAt": "2026-04-22T10:07:13Z"
-          },
-          {
-            "title": "Praha 1 má audit Nemocnice na Františku. Ve hře je její převzetí magistrátem",
-            "publishedAt": "2026-04-22T09:21:58Z"
           }
         ]
       }
