@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T03:54:45.970607Z",
+  "ingestedAt": "2026-04-23T05:02:47.537823Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
+      "url": "https://www.denik.cz/z_domova/herec-jan-potmesil-lzi-o-jeho-zdravotnim-stavu-falesne-citaty-internet.html",
+      "dt": "2026-04-23T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "janu",
+        "jeho",
+        "jež",
+        "kolují",
+        "lži",
+        "neřekl",
+        "potměšilovi",
+        "slov",
+        "stavu",
+        "týkají",
+        "zesnulém"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "StarDance je skvělé, na ČT zůstane, slíbil Babiš. Zachovat chce i další pořady",
-      "url": "https://www.denik.cz/z_domova/stardance-zustane-na-ct-rekl-andrej-babis-navrh-oto-klempire-necetl.html",
-      "dt": "2026-04-22T11:34:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "chce",
-        "další",
-        "pořady",
-        "skvělé",
-        "slíbil",
-        "stardance",
-        "zachovat",
-        "zůstane"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29533,
+      "bytes": 29625,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -717,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
+            "publishedAt": "2026-04-23T04:05:00Z"
+          },
           {
             "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
             "publishedAt": "2026-04-23T03:30:00Z"
@@ -744,10 +750,6 @@
           {
             "title": "Vznik Spojených států evropských je jediné řešení pro Evropu, říká Petr Pavel",
             "publishedAt": "2026-04-22T18:57:00Z"
-          },
-          {
-            "title": "Když ho vláda nepustí na summit NATO, Petr Pavel vyrazí na koncert ZZ Top",
-            "publishedAt": "2026-04-22T18:35:00Z"
           }
         ]
       }

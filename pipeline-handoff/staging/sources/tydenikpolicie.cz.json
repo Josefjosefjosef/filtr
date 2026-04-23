@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-23T03:54:45.970607Z",
+  "ingestedAt": "2026-04-23T05:02:47.537823Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladíci v Ústí nad Labem přepadli patnáctiletého chlapce",
+      "url": "https://tydenikpolicie.cz/mladici-v-usti-nad-labem-prepadli-patnactileteho-chlapce/",
+      "dt": "2026-04-23T04:02:11Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chlapce",
+        "labem",
+        "mladíci",
+        "patnáctiletého",
+        "přepadli",
+        "ústí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -234,33 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hodinu po přijetí oznámení o loupeži v Chomutově dopadli policisté dva podezřelé mladíky",
-      "url": "https://tydenikpolicie.cz/hodinu-po-prijeti-oznameni-o-loupezi-v-chomutove-dopadli-policiste-dva-podezrele-mladiky/",
-      "dt": "2026-04-22T14:32:43Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chomutově",
-        "dopadli",
-        "dva",
-        "hodinu",
-        "loupeži",
-        "mladíky",
-        "oznámení",
-        "podezřelé",
-        "policisté",
-        "přijetí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16221,
+      "bytes": 16218,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T02:02:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T04:02:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladíci v Ústí nad Labem přepadli patnáctiletého chlapce",
+            "publishedAt": "2026-04-23T04:02:11Z"
+          },
           {
             "title": "Kriminalisté na Liberecku objasnili sérii vloupání do 37 vozidel",
             "publishedAt": "2026-04-23T02:02:01Z"
@@ -350,10 +350,6 @@
           {
             "title": "Ford projel při nehodě na pražské Palmovce výlohou kadeřnictví",
             "publishedAt": "2026-04-22T18:27:11Z"
-          },
-          {
-            "title": "Kvůli požáru na střeše kancelářské budovy v pražském Karlíně bylo evakuováno 500 lidí",
-            "publishedAt": "2026-04-22T18:00:26Z"
           }
         ]
       }

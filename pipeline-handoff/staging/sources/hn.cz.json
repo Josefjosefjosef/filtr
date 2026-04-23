@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T03:54:45.970607Z",
+  "ingestedAt": "2026-04-23T05:02:47.537823Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpovo rozhodování a výhrůžky ohledně Íránu nejsou chaos, mají skrytou logiku. Český expert vysvětluje překvapivé souvislosti",
+      "url": "https://podcasty.hn.cz/c1-67869910-trumpovo-rozhodovani-a-vyhruzky-ohledne-iranu-nejsou-chaos-maji-skrytou-logiku-cesky-expert-vysvetluje-prekvapive-souvislosti",
+      "dt": "2026-04-23T04:10:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chaos",
+        "expert",
+        "logiku",
+        "mají",
+        "nejsou",
+        "ohledně",
+        "překvapivé",
+        "rozhodování",
+        "skrytou",
+        "souvislosti",
+        "trumpovo",
+        "vysvětluje",
+        "výhrůžky",
+        "íránu",
+        "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1151,36 +1183,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Firmy nabírají nevhodné lidi a zbytečně kvůli tomu přicházejí o miliony korun. Jak se těmto ztrátám vyhnout?",
-      "url": "https://byznys.hn.cz/c1-67866110-firmy-nabiraji-nevhodne-lidi-a-zbytecne-kvuli-tomu-prichazeji-o-miliony-korun-jak-se-temto-ztratam-vyhnout",
-      "dt": "2026-04-22T06:56:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "firmy",
-        "korun",
-        "kvůli",
-        "lidi",
-        "miliony",
-        "nabírají",
-        "nevhodné",
-        "přicházejí",
-        "tomu",
-        "těmto",
-        "vyhnout",
-        "zbytečně",
-        "ztrátám"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1191,7 +1193,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185108,
+      "bytes": 185078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1228,12 +1230,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-22T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T04:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 30,
           "zdravi": 4,
           "zpravy": 5,
-          "finance": 30,
           "sport": 1
         },
         "drop_counts": {
@@ -1246,6 +1248,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trumpovo rozhodování a výhrůžky ohledně Íránu nejsou chaos, mají skrytou logiku. Český expert vysvětluje překvapivé souvislosti",
+            "publishedAt": "2026-04-23T04:10:00Z"
+          },
           {
             "title": "Doktoři upozorní na dědičný problém a operaci provede robot. Srdce kardiologie bije s trendy",
             "publishedAt": "2026-04-22T22:00:00Z"
@@ -1272,10 +1278,6 @@
           },
           {
             "title": "Investiční hit zlevňuje a zrychluje výstavbu. Montované garáže zhodnocují úspory a slovenský Gardeon s nimi dobývá Česko",
-            "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (23. 4. 2026)",
             "publishedAt": "2026-04-22T22:00:00Z"
           }
         ]
