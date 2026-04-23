@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T19:10:12.465009Z",
+  "ingestedAt": "2026-04-23T19:29:56.277104Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sedláka rozčilují ataky, sudí přehlédli faul. Dejte ho na tribunu, radí trenér Třince",
+      "url": "https://sport.aktualne.cz/hokej/sedlaka-rozciluji-ataky-sudi-prehledli-faul-dejte-ho-na-tribunu-radi-trener-trince/r~aaa29dffc072740470a826bd3a5a8734/",
+      "dt": "2026-04-23T19:17:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ataky",
+        "dejte",
+        "faul",
+        "přehlédli",
+        "radí",
+        "rozčilují",
+        "sedláka",
+        "sudí",
+        "trenér",
+        "tribunu",
+        "třince"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Teheránu byla aktivována protivzdušná obrana. Mohly za to drony",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aktivována",
+        "drony",
+        "mohly",
+        "obrana",
+        "protivzdušná",
+        "teheránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -71,29 +122,6 @@
         "summit",
         "začal",
         "zelenskyj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Teheránu byla aktivována protivzdušná obrana. Kdo vlastně útočí?",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aktivována",
-        "obrana",
-        "protivzdušná",
-        "teheránu",
-        "vlastně",
-        "útočí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -492,32 +520,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zemědělský fond zveřejnil analýzy k dotacím Agrofertu, chce předejít spekulacím",
-      "url": "https://zpravy.aktualne.cz/ekonomika/zemedelsky-fond-zverejnil-analyzy-k-dotacim-agrofertu-chce-predejit-spekulacim/r~aaa294ef79d20287d6ff85f871d484fe/",
-      "dt": "2026-04-23T14:31:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "agrofertu",
-        "analýzy",
-        "chce",
-        "dotacím",
-        "fond",
-        "předejít",
-        "spekulacím",
-        "zemědělský",
-        "zveřejnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21556,
+      "bytes": 21605,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,12 +567,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:17:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
           "zpravy": 11,
-          "sport": 4,
-          "finance": 3,
+          "finance": 2,
           "other": 2
         },
         "drop_counts": {
@@ -584,6 +586,14 @@
         },
         "sample_titles": [
           {
+            "title": "Sedláka rozčilují ataky, sudí přehlédli faul. Dejte ho na tribunu, radí trenér Třince",
+            "publishedAt": "2026-04-23T19:17:00Z"
+          },
+          {
+            "title": "V Teheránu byla aktivována protivzdušná obrana. Mohly za to drony",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila kdy pošle první peníze",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
@@ -596,10 +606,6 @@
             "publishedAt": "2026-04-23T18:37:00Z"
           },
           {
-            "title": "V Teheránu byla aktivována protivzdušná obrana. Kdo vlastně útočí?",
-            "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
             "title": "Pahlaví Evropu vyzval, aby přestala s politikou ustupování vůči Íránu",
             "publishedAt": "2026-04-23T17:53:00Z"
           },
@@ -610,10 +616,6 @@
           {
             "title": "„Překročil jste rychlost, zaplaťte pokutu.“ Policie radí, jak odhalit případný podvod",
             "publishedAt": "2026-04-23T15:49:00Z"
-          },
-          {
-            "title": "Letošní dovolená za rozumnou cenu? Ekonom má tip na ideální destinaci",
-            "publishedAt": "2026-04-23T17:28:00Z"
           }
         ]
       }

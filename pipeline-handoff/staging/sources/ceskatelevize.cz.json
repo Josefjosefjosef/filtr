@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T19:10:12.465009Z",
+  "ingestedAt": "2026-04-23T19:29:56.277104Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Samozřejmě že je tu nenecháme.“ Lidé se z Kramatorsku evakuují i s mazlíčky",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/samozrejme-ze-je-tu-nenechame-lide-se-z-kramatorsku-evakuuji-i-s-mazlicky-372722",
+      "dt": "2026-04-23T19:08:53Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evakuují",
+        "kramatorsku",
+        "lidé",
+        "mazlíčky",
+        "nenecháme",
+        "samozřejmě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,33 +778,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bývalý soudce Kafka dle policie podvedl desítky lidí o více než 23 milionů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/byvaly-soudce-kafka-dle-policie-podvedl-desitky-lidi-o-vice-nez-23-milionu-372699",
-      "dt": "2026-04-23T08:21:08Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bývalý",
-        "desítky",
-        "dle",
-        "kafka",
-        "lidí",
-        "milionů",
-        "než",
-        "podvedl",
-        "policie",
-        "soudce"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
@@ -854,14 +850,17 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Rakousko – Česko",
+      "title": "Reprezentace v přípravném utkání smetla Rakušany",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/rakousko-cesko-156421",
       "dt": "2026-04-23T16:40:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "rakousko",
-        "česko"
+        "přípravném",
+        "rakušany",
+        "reprezentace",
+        "smetla",
+        "utkání"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1544,7 +1543,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44127,
+      "bytes": 43791,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1604,7 +1603,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T19:01:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:08:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -1621,6 +1620,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Samozřejmě že je tu nenecháme.“ Lidé se z Kramatorsku evakuují i s mazlíčky",
+            "publishedAt": "2026-04-23T19:08:53Z"
+          },
           {
             "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
             "publishedAt": "2026-04-23T19:01:59Z"
@@ -1648,10 +1651,6 @@
           {
             "title": "V Číně odhalili naleziště nepopsatelných tvorů z hlubin času",
             "publishedAt": "2026-04-23T15:18:59Z"
-          },
-          {
-            "title": "V Ústí přibývá opuštěných psů, někteří majitelé obcházejí poplatek za útulek",
-            "publishedAt": "2026-04-23T15:11:02Z"
           }
         ]
       }
@@ -1663,7 +1662,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38023,
+      "bytes": 38096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1728,7 +1727,7 @@
             "publishedAt": "2026-04-23T17:51:30Z"
           },
           {
-            "title": "Rakousko – Česko",
+            "title": "Reprezentace v přípravném utkání smetla Rakušany",
             "publishedAt": "2026-04-23T16:40:00Z"
           },
           {
@@ -1757,7 +1756,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77003,
+      "bytes": 77005,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

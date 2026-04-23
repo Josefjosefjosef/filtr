@@ -1,25 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T19:10:12.465009Z",
+  "ingestedAt": "2026-04-23T19:29:56.277104Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Rakousko 5:1. Národní tým vede v přípravě na MS. Skóroval Měchura",
+      "title": "Česko - Rakousko 5:1, národní tým vyhrál v přípravě na MS. Kanadský bod má i gólman",
       "url": "https://www.idnes.cz/hokej/ms-2026/priprava-rakousko-cesko-online-zpravodajstvi.A260423_145305_ms-hokej-2026_drev",
-      "dt": "2026-04-23T18:40:52Z",
+      "dt": "2026-04-23T19:26:12Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "měchura",
+        "bod",
+        "gólman",
+        "kanadský",
         "národní",
         "přípravě",
         "rakousko",
-        "skóroval",
         "tým",
-        "vede",
+        "vyhrál",
         "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Písek vyhrál i v Praze, v play off vyzve Pardubice. USK nastřílel 100 bodů",
+      "url": "https://www.idnes.cz/sport/basket/usk-pisek-predkolo-play-off.A260423_205536_sport-basket_kazdt",
+      "dt": "2026-04-23T19:07:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "100",
+        "bodů",
+        "nastřílel",
+        "off",
+        "pardubice",
+        "play",
+        "praze",
+        "písek",
+        "usk",
+        "vyhrál",
+        "vyzve"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -754,32 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trumpův zmocněnec lobbuje u FIFA: Írán nahraďte na mistrovství světa Itálií",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/fifa-iran-italie-donald-trump-gianni-infantino.A260423_091202_ms-fotbal_ivt",
-      "dt": "2026-04-23T08:17:40Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fifa",
-        "itálií",
-        "lobbuje",
-        "mistrovství",
-        "nahraďte",
-        "světa",
-        "trumpův",
-        "zmocněnec",
-        "írán"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46243,
+      "bytes": 45893,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:40:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:26:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,8 +846,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Rakousko 5:1. Národní tým vede v přípravě na MS. Skóroval Měchura",
-            "publishedAt": "2026-04-23T18:40:52Z"
+            "title": "Česko - Rakousko 5:1, národní tým vyhrál v přípravě na MS. Kanadský bod má i gólman",
+            "publishedAt": "2026-04-23T19:26:12Z"
+          },
+          {
+            "title": "Písek vyhrál i v Praze, v play off vyzve Pardubice. USK nastřílel 100 bodů",
+            "publishedAt": "2026-04-23T19:07:00Z"
           },
           {
             "title": "Šelmy v Brně pookřály a snížily ve finálové sérii, zápas sledoval rekordní počet diváků",
@@ -869,10 +876,6 @@
           {
             "title": "Stěhování Dynama do Chomutova? U nás máte zavřeno, vzkazuje Zaťko majitelce",
             "publishedAt": "2026-04-23T16:28:45Z"
-          },
-          {
-            "title": "Klinsmann si při ošklivé srážce poranil páteř, podstoupil náročnou operaci",
-            "publishedAt": "2026-04-23T15:36:00Z"
           }
         ]
       }
