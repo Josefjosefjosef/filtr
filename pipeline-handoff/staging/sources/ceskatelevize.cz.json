@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T13:04:53.017257Z",
+  "ingestedAt": "2026-04-23T13:25:04.919788Z",
   "items": [
     {
       "section": "finance",
@@ -780,6 +780,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Samson je v Madridu poprvé ve třetím kole",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/samson-je-v-madridu-poprve-ve-tretim-kole-156417",
+      "dt": "2026-04-23T13:09:33Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "kole",
+        "madridu",
+        "poprvé",
+        "samson",
+        "třetím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Klíč k triumfu v superfinále? Disciplína, nasazení a méně chyb, shodují se Sládek s Hanákem",
       "url": "https://sport.ceskatelevize.cz/clanek/florbal/klic-k-triumfu-v-superfinale-disciplina-nasazeni-a-mene-chyb-shoduji-se-sladek-s-hanakem-156416",
       "dt": "2026-04-23T12:30:00Z",
@@ -1517,33 +1539,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař pomohl 27 zákroky nulou Philadelphii ke druhé výhře, Dostál neodvrátil porážku",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-27-zakroky-vychytal-pittsburgh-a-nulou-pomohl-philadelphii-ke-druhe-vyhre-156388",
-      "dt": "2026-04-21T05:13:39Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dostál",
-        "druhé",
-        "neodvrátil",
-        "nulou",
-        "philadelphii",
-        "pomohl",
-        "porážku",
-        "vladař",
-        "výhře",
-        "zákroky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1673,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37798,
+      "bytes": 37639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1710,7 +1705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:09:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1725,6 +1720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Samson je v Madridu poprvé ve třetím kole",
+            "publishedAt": "2026-04-23T13:09:33Z"
+          },
           {
             "title": "Klíč k triumfu v superfinále? Disciplína, nasazení a méně chyb, shodují se Sládek s Hanákem",
             "publishedAt": "2026-04-23T12:30:00Z"
@@ -1752,10 +1751,6 @@
           {
             "title": "Valentová v Madridu rychle skončila, všichni ostatní Češi zůstávají",
             "publishedAt": "2026-04-22T18:36:47Z"
-          },
-          {
-            "title": "USK je po další výhře poslední krok od dvacátého titulu",
-            "publishedAt": "2026-04-22T18:28:15Z"
           }
         ]
       }
@@ -1767,7 +1762,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77372,
+      "bytes": 77041,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T13:04:53.017257Z",
+  "ingestedAt": "2026-04-23T13:25:04.919788Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Evropa tlačí zelenou agendu opět do popředí. Slunce a vítr mají porazit Putina a další diktátory",
+      "url": "https://ekonomickydenik.cz/evropa-zelena-agenda-slunce-vitr-putin-diktatori/",
+      "dt": "2026-04-23T13:19:52Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "agendu",
+        "další",
+        "diktátory",
+        "evropa",
+        "mají",
+        "opět",
+        "popředí",
+        "porazit",
+        "putina",
+        "slunce",
+        "tlačí",
+        "vítr",
+        "zelenou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -765,32 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Letadla mají létat na vodík a elektřinu. Nebudeme rukojmími „darebáckých států“",
-      "url": "https://ekonomickydenik.cz/letadla-vodik-elektrina-nebudeme-rukojmimi/",
-      "dt": "2026-04-21T13:08:11Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "darebáckých",
-        "elektřinu",
-        "letadla",
-        "létat",
-        "mají",
-        "nebudeme",
-        "rukojmími",
-        "států",
-        "vodík"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72727,
+      "bytes": 73178,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,13 +842,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:23:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:19:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 4,
           "finance": 24,
           "sport": 1,
-          "zpravy": 3,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -856,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa tlačí zelenou agendu opět do popředí. Slunce a vítr mají porazit Putina a další diktátory",
+            "publishedAt": "2026-04-23T13:19:52Z"
+          },
           {
             "title": "Turecko zakazuje sociální sítě dětem do 15 let. Podobný krok zvažuje Babiš i Pavel",
             "publishedAt": "2026-04-23T12:23:48Z"
@@ -883,10 +891,6 @@
           {
             "title": "Miliardy v dělostřeleckých granátech: Strnadova CSG ulovila další obří zakázku",
             "publishedAt": "2026-04-23T07:29:24Z"
-          },
-          {
-            "title": "Slovensko zas přijímá ropu z Ruska. Fico mění postoj k sankcím",
-            "publishedAt": "2026-04-23T07:08:15Z"
           }
         ]
       }

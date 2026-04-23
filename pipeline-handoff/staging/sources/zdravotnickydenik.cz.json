@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T13:04:53.017257Z",
+  "ingestedAt": "2026-04-23T13:25:04.919788Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Komentář: Slova o „tlustém parchantovi“ jako motivace? Tudy cesta z dětské obezity nevede",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/komentar-tlusty-parchant-jako-motivace-detska-obezita/",
+      "dt": "2026-04-23T13:15:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cesta",
+        "dětské",
+        "jako",
+        "komentář",
+        "motivace",
+        "nevede",
+        "obezity",
+        "parchantovi",
+        "slova",
+        "tlustém",
+        "tudy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nemocí z povolání prudce ubylo, covid dál vede. Na cestě je změna pravidel",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemoci-z-povolani-covid-zmena-pravidel/",
-      "dt": "2026-04-22T15:50:20Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cestě",
-        "covid",
-        "nemocí",
-        "povolání",
-        "pravidel",
-        "prudce",
-        "ubylo",
-        "vede",
-        "změna"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98958,
+      "bytes": 104654,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:03:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:15:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komentář: Slova o „tlustém parchantovi“ jako motivace? Tudy cesta z dětské obezity nevede",
+            "publishedAt": "2026-04-23T13:15:00Z"
+          },
           {
             "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
             "publishedAt": "2026-04-23T12:03:02Z"
@@ -357,10 +363,6 @@
           {
             "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
             "publishedAt": "2026-04-23T07:00:00Z"
-          },
-          {
-            "title": "Umírání na přístrojích jako český standard? Čtvrtina pacientů na JIP tam vůbec nepatří",
-            "publishedAt": "2026-04-23T06:00:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-23T13:04:53.017257Z",
+  "ingestedAt": "2026-04-23T13:25:04.919788Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinovýhled: Zazpívá nám Michael Jackson. Podvratnou zábavu nabídne oceňovaná černá komedie",
+      "url": "https://www.kinobox.cz/clanky/filmy/52934-kinovyhled-v-kinech-bude-zpivat-michael-jackson-podvratnou-zabavu-nabizi-cerna-komedie-od-mary-bronstein",
+      "dt": "2026-04-23T13:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "jackson",
+        "kinovýhled",
+        "komedie",
+        "michael",
+        "nabídne",
+        "nám",
+        "oceňovaná",
+        "podvratnou",
+        "zazpívá",
+        "zábavu",
+        "černá"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -517,32 +545,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Klasické velkofilmy i aktuální oscarovky. Festival KRRR! má za sebou vyprodaný ročník",
-      "url": "https://www.kinobox.cz/clanky/festivaly/52868-klasicke-velkofilmy-i-aktualni-oscarovky-festival-krrr-ma-za-sebou-vyprodany-rocnik",
-      "dt": "2026-04-21T08:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "aktuální",
-        "festival",
-        "klasické",
-        "krrr",
-        "oscarovky",
-        "ročník",
-        "sebou",
-        "velkofilmy",
-        "vyprodaný"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +555,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28335,
+      "bytes": 28473,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,7 +592,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -605,6 +607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinovýhled: Zazpívá nám Michael Jackson. Podvratnou zábavu nabídne oceňovaná černá komedie",
+            "publishedAt": "2026-04-23T13:00:00Z"
+          },
           {
             "title": "Lesní duch se nikdy takhle nečinil. Smrtelné zlo se v nelítostném traileru chvěje v plamenech",
             "publishedAt": "2026-04-23T12:00:00Z"
@@ -632,10 +638,6 @@
           {
             "title": "Amber Heard je slavná z nešťastných důvodů. Deppově sokyni a hvězdě Aquamana je 40",
             "publishedAt": "2026-04-22T15:00:00Z"
-          },
-          {
-            "title": "K novému Rambovi se připojila známá tvář. Postavu z původní série ztvární hvězda Stranger Things",
-            "publishedAt": "2026-04-22T14:00:00Z"
           }
         ]
       }

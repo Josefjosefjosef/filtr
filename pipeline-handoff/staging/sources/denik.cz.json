@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T13:04:53.017257Z",
+  "ingestedAt": "2026-04-23T13:25:04.919788Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velrybu Timmyho má do moře dostat nákladní loď. Nechte ho už umřít, míní experti",
+      "url": "https://www.denik.cz/staty-eu/velryba-keporkak-timmy-nemecko-zachrana-experti.html",
+      "dt": "2026-04-23T12:55:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dostat",
+        "experti",
+        "loď",
+        "moře",
+        "míní",
+        "nechte",
+        "nákladní",
+        "timmyho",
+        "umřít",
+        "velrybu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -20,6 +47,31 @@
         "praktici",
         "péčí",
         "specialisté"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "EU schválila balík sankcí proti Rusku a finálně schválila půjčku Ukrajině",
+      "url": "https://www.denik.cz/staty-eu/eu-balik-sankci-rusko-pujcka-ukrajina.html",
+      "dt": "2026-04-23T12:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "balík",
+        "finálně",
+        "proti",
+        "půjčku",
+        "rusku",
+        "sankcí",
+        "schválila",
+        "ukrajině"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -605,60 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vznik Spojených států evropských je jediné řešení pro Evropu, říká Petr Pavel",
-      "url": "https://www.denik.cz/z_domova/prezident-petr-pavel-vznik-spojene-stary-evropske-francouzsky-jaderny-destnik.html",
-      "dt": "2026-04-22T18:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "evropských",
-        "evropu",
-        "jediné",
-        "pavel",
-        "petr",
-        "spojených",
-        "států",
-        "vznik",
-        "řešení",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když ho vláda nepustí na summit NATO, Petr Pavel vyrazí na koncert ZZ Top",
-      "url": "https://www.denik.cz/z_domova/kdyz-ho-vlada-nepusti-na-summit-nato-petr-pavel-vyrazi-na-koncert-zz-top.html",
-      "dt": "2026-04-22T18:35:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "když",
-        "koncert",
-        "nato",
-        "nepustí",
-        "pavel",
-        "petr",
-        "summit",
-        "top",
-        "vláda",
-        "vyrazí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29747,
+      "bytes": 29396,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,11 +704,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:55:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -723,8 +721,16 @@
         },
         "sample_titles": [
           {
+            "title": "Velrybu Timmyho má do moře dostat nákladní loď. Nechte ho už umřít, míní experti",
+            "publishedAt": "2026-04-23T12:55:00Z"
+          },
+          {
             "title": "Praktici i specialisté. V centru Prahy otevřeli polikliniku s komplexní péčí",
             "publishedAt": "2026-04-23T12:20:00Z"
+          },
+          {
+            "title": "EU schválila balík sankcí proti Rusku a finálně schválila půjčku Ukrajině",
+            "publishedAt": "2026-04-23T12:18:00Z"
           },
           {
             "title": "Z pultů zmizí čtyřicet nebezpečných kojeneckých výživ. Obsahují toxin cereulid",
@@ -745,14 +751,6 @@
           {
             "title": "Letecké záchranáře v Liberci ohrozil dron nad heliportem. Bezohlednost, zlobí se",
             "publishedAt": "2026-04-23T09:50:00Z"
-          },
-          {
-            "title": "Svět vás vidí a respektuje. Princ Harry přijel do Kyjeva, chce upozornit na boje",
-            "publishedAt": "2026-04-23T09:40:00Z"
-          },
-          {
-            "title": "Případ Bugár nebyl výjimkou. Vraždy vojáků se opakovaly každý rok, říká historik",
-            "publishedAt": "2026-04-23T09:00:00Z"
           }
         ]
       }
