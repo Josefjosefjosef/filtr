@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T10:39:40.829915Z",
+  "ingestedAt": "2026-04-23T11:00:26.663130Z",
   "items": [
     {
       "section": "sport",
@@ -205,6 +205,32 @@
         "odchody",
         "oznámilo",
         "stálice"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Olomoucký volejbal možná skončí, připustil předseda. Leda by se našel sponzor",
+      "url": "https://www.idnes.cz/olomouc/sport/zemanek-vk-olomouc-up-santovka-volejbal-konec.A260423_093426_olomouc-zpravy_hava",
+      "dt": "2026-04-23T08:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "leda",
+        "možná",
+        "našel",
+        "olomoucký",
+        "předseda",
+        "připustil",
+        "skončí",
+        "sponzor",
+        "volejbal"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -767,31 +793,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-      "url": "https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-do-18-let-2026-na-slovensku.A260420_225719_reprezentace_ald",
-      "dt": "2026-04-22T19:02:23Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokeji",
-        "hrají",
-        "kým",
-        "let",
-        "program",
-        "skupiny",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48310,
+      "bytes": 48466,
       "reason": "",
       "bozo": false,
       "bozoException": "",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-23T10:39:40.829915Z",
+  "ingestedAt": "2026-04-23T11:00:26.663130Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "těchto",
         "zkreslují",
         "šest"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Chytrá stolní lampa Xiaomi zlevnila pod 800 Kč. Hezky svítí a dá se ovládat i mobilem",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-chytra-lampa-xiaomi-mi-led-desk-lamp-1s/sc-3-a-240831/default.aspx",
+      "dt": "2026-04-23T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "800",
+        "chytrá",
+        "hezky",
+        "lampa",
+        "mobilem",
+        "ovládat",
+        "stolní",
+        "svítí",
+        "xiaomi",
+        "zlevnila"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -940,34 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vypadá jako iPhone a vůbec se za to nestydí. Řada telefonů Honor 600 míří do Česka",
-      "url": "https://mobilmania.zive.cz/clanky/vypada-jako-iphone-a-vubec-se-za-to-nestydi-rada-telefonu-honor-600-miri-do-ceska/sc-3-a-1364595/default.aspx",
-      "dt": "2026-04-21T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "600",
-        "honor",
-        "iphone",
-        "jako",
-        "míří",
-        "nestydí",
-        "telefonů",
-        "vypadá",
-        "vůbec",
-        "česka",
-        "řada"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -978,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22749,
+      "bytes": 22904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1015,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-23T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1033,6 +1032,10 @@
           {
             "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
             "publishedAt": "2026-04-23T08:45:00Z"
+          },
+          {
+            "title": "Chytrá stolní lampa Xiaomi zlevnila pod 800 Kč. Hezky svítí a dá se ovládat i mobilem",
+            "publishedAt": "2026-04-23T10:45:00Z"
           },
           {
             "title": "ChatGPT má nejlepší generátor obrázků na světě. Ježíše ve Fabii zvládá jako král, nakreslí i český komiks",
@@ -1057,10 +1060,6 @@
           {
             "title": "WhatsApp opravdu bude mít předplatné. Za 60 Kč měsíčně získáte jiný než zelený vzhled a několik bonusů",
             "publishedAt": "2026-04-22T14:45:00Z"
-          },
-          {
-            "title": "Vyzkoušeli jsme nové úpravy ve Fotkách Google. Zvýrazní obličej a poradí si s kruhy pod očima",
-            "publishedAt": "2026-04-22T18:45:00Z"
           }
         ]
       }
