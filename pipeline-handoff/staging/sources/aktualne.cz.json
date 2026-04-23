@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T05:25:08.900328Z",
+  "ingestedAt": "2026-04-23T05:47:46.865710Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zlato, orli a lvi: zelená pro „Arch de Trump“ pobuřuje odborníky i veřejnost",
+      "url": "https://zpravy.aktualne.cz/zahranici/zlato-orli-a-lvi-zelena-pro-arch-de-trump-poburuje-odborniky-i-verejnost/r~aaa29558abae043a8a87192d2dc2e518/",
+      "dt": "2026-04-23T05:18:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "arch",
+        "lvi",
+        "odborníky",
+        "orli",
+        "pobuřuje",
+        "trump",
+        "veřejnost",
+        "zelená",
+        "zlato"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -502,33 +528,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Opravdu nedokonalý.“ Kvůli mediálnímu zákonu vznikne pracovní skupina, oznámil šéf ČT",
-      "url": "https://zpravy.aktualne.cz/domaci/opravdu-nedokonaly-kvuli-medialnimu-zakonu-vznikne-pracovni-skupina-oznamil-sef-ct/r~aaa294b9fe840f9f4ca2042f8e83844e/",
-      "dt": "2026-04-22T16:05:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kvůli",
-        "mediálnímu",
-        "nedokonalý",
-        "opravdu",
-        "oznámil",
-        "pracovní",
-        "skupina",
-        "vznikne",
-        "zákonu",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +538,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22236,
+      "bytes": 22207,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,13 +575,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:49:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T05:18:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 11,
           "finance": 1,
           "sport": 7,
-          "other": 1,
-          "zpravy": 11
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -594,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlato, orli a lvi: zelená pro „Arch de Trump“ pobuřuje odborníky i veřejnost",
+            "publishedAt": "2026-04-23T05:18:00Z"
+          },
           {
             "title": "Hledáte nové auto a chcete ušetřit? Mezi nejlevnějšími jsou v Česku nečekaná jména",
             "publishedAt": "2026-04-23T04:49:36Z"
@@ -621,10 +624,6 @@
           {
             "title": "„Osobní vazby nezohledňujeme.“ Zůnův známý se bez prověrky dostal až do vedení obrany",
             "publishedAt": "2026-04-23T03:30:00Z"
-          },
-          {
-            "title": "Tam, kde se z chlívku stala vinárna. Chalupa v Krkonoších navazuje na minulost, ale srší novotou",
-            "publishedAt": "2026-04-23T03:25:00Z"
           }
         ]
       }

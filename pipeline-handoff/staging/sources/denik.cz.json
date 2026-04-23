@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T05:25:08.900328Z",
+  "ingestedAt": "2026-04-23T05:47:46.865710Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Útok v Louisianě: Matka zabitých dětí je zraněná. Nepamatuje si, že jsou mrtvé",
+      "url": "https://www.denik.cz/ze_sveta/strelba-v-louisiane-otec-zabil-osm-deti.html",
+      "dt": "2026-04-23T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětí",
+        "louisianě",
+        "matka",
+        "mrtvé",
+        "nepamatuje",
+        "zabitých",
+        "zraněná",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,33 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Noví radní ČT se volit nebudou, řekl Babiš. Počká na vyřešení korupční kauzy",
-      "url": "https://www.denik.cz/z_domova/novi-radni-ct-se-volit-nebudou-andrej-babis-pocka-na-vyreseni-korupcni-kauzy.html",
-      "dt": "2026-04-22T11:52:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "kauzy",
-        "korupční",
-        "nebudou",
-        "noví",
-        "počká",
-        "radní",
-        "volit",
-        "vyřešení",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29625,
+      "bytes": 29528,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -719,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útok v Louisianě: Matka zabitých dětí je zraněná. Nepamatuje si, že jsou mrtvé",
+            "publishedAt": "2026-04-23T05:00:00Z"
+          },
           {
             "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
             "publishedAt": "2026-04-23T04:05:00Z"
@@ -746,10 +748,6 @@
           {
             "title": "V Rusku kvůli špatnému stavu ekonomiky hrozí revoluce, varoval šéf komunistů",
             "publishedAt": "2026-04-22T19:17:00Z"
-          },
-          {
-            "title": "Vznik Spojených států evropských je jediné řešení pro Evropu, říká Petr Pavel",
-            "publishedAt": "2026-04-22T18:57:00Z"
           }
         ]
       }
