@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T02:54:42.849851Z",
+  "ingestedAt": "2026-04-23T03:15:44.406077Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Extrémní proměny: Marek dokázal, že hendikep nemusí být překážka. Zhubl 72 kg",
+      "url": "https://www.denik.cz/film-a-televize/marek-vala-dokazal-ze-hendikep-nemusi-byt-prekazka-ze-158-zhubl-na-86-kilo-20280.html",
+      "dt": "2026-04-23T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "být",
+        "dokázal",
+        "extrémní",
+        "hendikep",
+        "marek",
+        "nemusí",
+        "proměny",
+        "překážka",
+        "zhubl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,32 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zástupci států EU podpořili protiruské sankce. Maďaři a Slováci odvolali blokaci",
-      "url": "https://www.denik.cz/staty-eu/zastupci-statu-eu-podporili-protiruske-sankce.html",
-      "dt": "2026-04-22T11:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "blokaci",
-        "maďaři",
-        "odvolali",
-        "podpořili",
-        "protiruské",
-        "sankce",
-        "slováci",
-        "států",
-        "zástupci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29926,
+      "bytes": 29828,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T02:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -716,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Extrémní proměny: Marek dokázal, že hendikep nemusí být překážka. Zhubl 72 kg",
+            "publishedAt": "2026-04-23T02:30:00Z"
+          },
           {
             "title": "Radůza obstarala hluboký zážitek v Humpolci: Pohlazení, které rozechvělo pivovar",
             "publishedAt": "2026-04-23T02:20:00Z"
@@ -743,10 +747,6 @@
           {
             "title": "Petr Pavel: Do StarDance bych nešel, ale v České televizi by pořad měl zůstat",
             "publishedAt": "2026-04-22T18:03:00Z"
-          },
-          {
-            "title": "Předního španělského matadora v Seville srazil a vážně zranil býk",
-            "publishedAt": "2026-04-22T17:21:00Z"
           }
         ]
       }
