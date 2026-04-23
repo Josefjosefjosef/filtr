@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T16:30:46.328308Z",
+  "ingestedAt": "2026-04-23T16:44:40.309878Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události čtvrtka 23. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-ctvrtka-23-dubna-372723",
+      "dt": "2026-04-23T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "souhrn",
+        "události",
+        "zásadní",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -759,27 +781,20 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Ticho, pak lži. Československá média předstírala, že se v Černobylu nic nestalo",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/ticho-pak-lzi-ceskoslovenska-media-predstirala-ze-se-v-cernobylu-nic-nestalo-372670",
-      "dt": "2026-04-23T06:41:56Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Rakousko – Česko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/rakousko-cesko-156421",
+      "dt": "2026-04-23T16:40:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "lži",
-        "média",
-        "nestalo",
-        "nic",
-        "pak",
-        "předstírala",
-        "ticho",
-        "černobylu",
-        "československá"
+        "rakousko",
+        "česko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -787,16 +802,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS hokejistů do 18 let: Švédsko – Česko 1:2",
+      "title": "Česká osmnáctka přehrála po Američanech i Švédy. Rozhodla trefa v čase 59:39",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-hokejistu-do-18-let-svedsko-cesko-156420",
       "dt": "2026-04-23T13:58:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "hokejistů",
-        "let",
-        "česko",
-        "švédsko"
+        "američanech",
+        "osmnáctka",
+        "přehrála",
+        "rozhodla",
+        "trefa",
+        "čase",
+        "česká",
+        "švédy"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1520,30 +1539,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češky narazí na MS na obhájkyně titulu z USA, Itálii a Čínu",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/los-ms-basketbalistek-156393",
-      "dt": "2026-04-21T15:55:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "itálii",
-        "narazí",
-        "obhájkyně",
-        "titulu",
-        "usa",
-        "češky",
-        "čínu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1554,7 +1549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43930,
+      "bytes": 43871,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,11 +1609,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:28:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 19,
-          "other": 9,
+          "zpravy": 20,
+          "other": 8,
           "finance": 2
         },
         "drop_counts": {
@@ -1631,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události čtvrtka 23. dubna",
+            "publishedAt": "2026-04-23T16:29:00Z"
+          },
           {
             "title": "Podle Vystrčila Rutteho potěšila Babišova slova, že Česko splní závazky vůči NATO",
             "publishedAt": "2026-04-23T15:28:13Z"
@@ -1658,10 +1657,6 @@
           {
             "title": "Postižený papoušek se stal vládcem. Vymyslel totiž neporazitelný styl boje",
             "publishedAt": "2026-04-23T14:13:40Z"
-          },
-          {
-            "title": "Kauza znečištění řeky Odry končí. Ministerstvo potvrdilo firmě pokutu sto tisíc",
-            "publishedAt": "2026-04-23T13:28:22Z"
           }
         ]
       }
@@ -1673,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37953,
+      "bytes": 37790,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1710,7 +1705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1726,7 +1721,11 @@
         },
         "sample_titles": [
           {
-            "title": "MS hokejistů do 18 let: Švédsko – Česko 1:2",
+            "title": "Rakousko – Česko",
+            "publishedAt": "2026-04-23T16:40:00Z"
+          },
+          {
+            "title": "Česká osmnáctka přehrála po Američanech i Švédy. Rozhodla trefa v čase 59:39",
             "publishedAt": "2026-04-23T13:58:00Z"
           },
           {
@@ -1752,10 +1751,6 @@
           {
             "title": "Chceme se udržet a už nikdy nespadnout, zní ze Zbrojovky. Klíč k postupu? Svědík",
             "publishedAt": "2026-04-23T05:18:44Z"
-          },
-          {
-            "title": "Pardubice měly Třinec u zdi, ale závěr nezvládly. Musíme to hodit za hlavu, říká Kondelík",
-            "publishedAt": "2026-04-23T04:30:00Z"
           }
         ]
       }

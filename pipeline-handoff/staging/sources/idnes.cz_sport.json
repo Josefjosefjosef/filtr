@@ -1,26 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T16:30:46.328308Z",
+  "ingestedAt": "2026-04-23T16:44:40.309878Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Třinec - Pardubice 2:2, po pauze je hra klidnější. Od třetí minuty chytá Subban",
+      "title": "ONLINE: Třinec - Pardubice 3:2, přestřelka pokračuje. Vedení Ocelářům vrátil Musil",
       "url": "https://www.idnes.cz/hokej/extraliga/4-finale-trinec-pardubice-online-zpravodajstvi.A260423_142342_hokej_drev",
-      "dt": "2026-04-23T16:22:17Z",
+      "dt": "2026-04-23T16:40:01Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "chytá",
-        "hra",
-        "klidnější",
-        "minuty",
+        "musil",
+        "ocelářům",
         "pardubice",
-        "pauze",
-        "subban",
-        "třetí",
-        "třinec"
+        "pokračuje",
+        "přestřelka",
+        "třinec",
+        "vedení",
+        "vrátil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Stěhování Dynama do Chomutova? U nás máte zavřeno, vzkazuje Zaťko majitelce",
+      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-vypoved-treninky-stehovani-chomutov.A260423_125928_budejovice-zpravy_pkr",
+      "dt": "2026-04-23T16:28:45Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chomutova",
+        "dynama",
+        "majitelce",
+        "máte",
+        "nás",
+        "stěhování",
+        "vzkazuje",
+        "zavřeno",
+        "zaťko"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -279,33 +304,6 @@
         "posunul",
         "sportovní",
         "triatlonista"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zvěstem o stěhování Dynama se v Chomutově diví. Nikdo nás neoslovil, říká majitel",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-vypoved-treninky-stehovani-chomutov.A260423_125928_budejovice-zpravy_pkr",
-      "dt": "2026-04-23T11:59:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chomutově",
-        "diví",
-        "dynama",
-        "majitel",
-        "neoslovil",
-        "nikdo",
-        "nás",
-        "stěhování",
-        "zvěstem",
-        "říká"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -795,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46881,
+      "bytes": 46869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T16:22:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:40:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,8 +846,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Třinec - Pardubice 2:2, po pauze je hra klidnější. Od třetí minuty chytá Subban",
-            "publishedAt": "2026-04-23T16:22:17Z"
+            "title": "ONLINE: Třinec - Pardubice 3:2, přestřelka pokračuje. Vedení Ocelářům vrátil Musil",
+            "publishedAt": "2026-04-23T16:40:01Z"
+          },
+          {
+            "title": "Stěhování Dynama do Chomutova? U nás máte zavřeno, vzkazuje Zaťko majitelce",
+            "publishedAt": "2026-04-23T16:28:45Z"
           },
           {
             "title": "Klinsmann si při ošklivé srážce poranil páteř, podstoupil náročnou operaci",
@@ -874,10 +876,6 @@
           {
             "title": "Sedmizápasový distanc pro Bořila. Za Slavii už si v této sezoně nezahraje",
             "publishedAt": "2026-04-23T13:38:39Z"
-          },
-          {
-            "title": "Letenka zamluvena! Vonnová se těší na dovolenou. Pak ji ale čeká další operace",
-            "publishedAt": "2026-04-23T13:23:00Z"
           }
         ]
       }

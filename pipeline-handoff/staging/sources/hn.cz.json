@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T16:30:46.328308Z",
+  "ingestedAt": "2026-04-23T16:44:40.309878Z",
   "items": [
     {
       "section": "finance",
@@ -272,25 +272,21 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Co se stalo na schůzce Babiše se šéfem ČT? Ve hře jsou dvě varianty financování veřejnoprávních médií, jednu je premiér ochotný zavrhnout",
+      "title": "Co se stalo na schůzce Babiše se šéfem ČT? Premiér netrvá na odpuštění televizních poplatků důchodcům",
       "url": "https://domaci.hn.cz/c1-67870590-co-se-stalo-na-schuzce-babise-se-sefem-ct-ve-hre-jsou-dve-varianty-financovani-verejnopravnich-medii-jednu-je-premier-ochotny-zavrhnout",
       "dt": "2026-04-23T13:56:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
         "babiše",
-        "dvě",
-        "financování",
-        "hře",
-        "jednu",
-        "médií",
-        "ochotný",
+        "důchodcům",
+        "netrvá",
+        "odpuštění",
+        "poplatků",
         "premiér",
         "schůzce",
         "stalo",
-        "varianty",
-        "veřejnoprávních",
-        "zavrhnout",
+        "televizních",
         "šéfem"
       ],
       "feedCategory": "finance",
@@ -626,6 +622,35 @@
         "projekt",
         "půl",
         "zmařený"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko závisí na naftě z Německa, z dodávek se stal národní zájem. Podle Havlíčka jsou navíc v ohrožení",
+      "url": "https://byznys.hn.cz/c1-67870360-cesko-zavisi-na-nafte-z-nemecka-z-dodavek-se-stal-narodni-zajem-podle-havlicka-jsou-navic-dodavky-z-nemecka-v-ohrozeni",
+      "dt": "2026-04-23T10:37:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dodávek",
+        "havlíčka",
+        "naftě",
+        "navíc",
+        "národní",
+        "německa",
+        "ohrožení",
+        "podle",
+        "stal",
+        "zájem",
+        "závisí",
+        "česko"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1138,35 +1163,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Lidé nechtějí být anonymní součástí zdravotnického systému, říká vedoucí lékařka Polikliniky Florenc",
-      "url": "https://archiv.hn.cz/c1-67870060-lide-nechteji-byt-anonymni-soucasti-zdravotnickeho-systemu-rika-vedouci-lekarka-polikliniky-florenc",
-      "dt": "2026-04-22T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "anonymní",
-        "být",
-        "florenc",
-        "lidé",
-        "lékařka",
-        "nechtějí",
-        "polikliniky",
-        "součástí",
-        "systému",
-        "vedoucí",
-        "zdravotnického",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1173,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185158,
+      "bytes": 185334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1217,9 +1213,9 @@
         "raw_feed_latest_publishedAt": "2026-04-23T16:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 29,
+          "finance": 30,
           "zpravy": 5,
-          "zdravi": 6
+          "zdravi": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
