@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-23T12:45:55.479809Z",
+  "ingestedAt": "2026-04-23T13:04:53.017257Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "těchto",
         "zkreslují",
         "šest"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Polovina internetu už používá IPv6, říká Google. Česko je podprůměrné, Slovensko ostuda",
+      "url": "https://www.zive.cz/clanky/polovina-internetu-uz-pouziva-ipv6-rika-google-cesko-je-podprumerne-slovensko-ostuda/sc-3-a-240832/default.aspx",
+      "dt": "2026-04-23T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "google",
+        "internetu",
+        "ipv6",
+        "ostuda",
+        "podprůměrné",
+        "polovina",
+        "používá",
+        "slovensko",
+        "česko",
+        "říká"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -940,32 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "11 věcí, které nás štvou na Windows 11 a bohužel asi jen tak nepřestanou",
-      "url": "https://www.zive.cz/clanky/windows-11-veci-ktere-nas-stvou-202604/sc-3-a-240692/default.aspx",
-      "dt": "2026-04-20T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "asi",
-        "bohužel",
-        "jen",
-        "nepřestanou",
-        "nás",
-        "tak",
-        "věcí",
-        "windows",
-        "štvou"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -976,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22727,
+      "bytes": 22785,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1013,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1031,6 +1032,10 @@
           {
             "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
             "publishedAt": "2026-04-23T08:45:00Z"
+          },
+          {
+            "title": "Polovina internetu už používá IPv6, říká Google. Česko je podprůměrné, Slovensko ostuda",
+            "publishedAt": "2026-04-23T12:45:00Z"
           },
           {
             "title": "E-mailová aplikace od Seznamu přidává chytrý přehled objednávek. Rozpozná až 1800 e-shopů",
@@ -1055,10 +1060,6 @@
           {
             "title": "Framework je modulární a snadno opravitelný notebook pro geeky. Nová varianta Laptop Pro přidává prémiové tělo i unikátní výbavu",
             "publishedAt": "2026-04-22T17:45:00Z"
-          },
-          {
-            "title": "Jak Tim Cook za 15 let proměnil Apple. Česko vzal do první ligy a Prahu do mnoha reklam",
-            "publishedAt": "2026-04-22T19:15:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T12:45:55.479809Z",
+  "ingestedAt": "2026-04-23T13:04:53.017257Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Schváleno. Ukrajina dostane půjčku 90 miliard od EU, zemi má zachránit před bankrotem",
+      "url": "https://zahranicni.hn.cz/c1-67870460-schvaleno-ukrajina-dostane-pujcku-90-miliard-od-eu-zemi-ma-zachranit-pred-bankrotem",
+      "dt": "2026-04-23T12:16:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bankrotem",
+        "dostane",
+        "miliard",
+        "půjčku",
+        "schváleno",
+        "ukrajina",
+        "zachránit",
+        "zemi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -325,7 +350,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Slovensko poprvé od ledna přijímá ruskou ropu ropovodem Družba. Podmínilo tím schválení půjčky Ukrajině",
+      "title": "Slovensko i Maďarsko poprvé od ledna přijímají ruskou ropu ropovodem Družba. Podmínily tím schválení půjčky Ukrajině",
       "url": "https://zahranicni.hn.cz/c1-67870250-slovensko-poprve-od-ledna-prijima-ruskou-ropu-ropovodem-druzba-podminilo-tim-schvaleni-pujcky-ukrajine",
       "dt": "2026-04-23T06:40:00Z",
       "media_raw": "HN / Ekonomika",
@@ -333,9 +358,10 @@
       "tokens": [
         "družba",
         "ledna",
-        "podmínilo",
+        "maďarsko",
+        "podmínily",
         "poprvé",
-        "přijímá",
+        "přijímají",
         "půjčky",
         "ropovodem",
         "ropu",
@@ -1138,38 +1164,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Extra kila tuku kolem pasu? Před selháním srdce varují spolehlivěji než populární BMI, pomoci může jednoduchá změna",
-      "url": "https://vikend.hn.cz/c1-67862810-extra-kila-tuku-kolem-pasu-pred-selhanim-srdce-varuji-spolehliveji-nez-popularni-bmi-pomoci-muze-jednoducha-zmena",
-      "dt": "2026-04-22T13:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bmi",
-        "extra",
-        "jednoduchá",
-        "kila",
-        "kolem",
-        "než",
-        "pasu",
-        "pomoci",
-        "populární",
-        "selháním",
-        "spolehlivěji",
-        "srdce",
-        "tuku",
-        "varují",
-        "změna"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1180,7 +1174,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184972,
+      "bytes": 184930,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1217,7 +1211,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:16:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 30,
@@ -1235,6 +1229,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Schváleno. Ukrajina dostane půjčku 90 miliard od EU, zemi má zachránit před bankrotem",
+            "publishedAt": "2026-04-23T12:16:00Z"
+          },
           {
             "title": "První krok na cestě k zestátnění. ČEZ chystá novou dceru, do které chce převést prodej energií a obchod",
             "publishedAt": "2026-04-23T11:57:00Z"
@@ -1262,10 +1260,6 @@
           {
             "title": "Tesla znovu jede. Zisk překonává očekávání, rychle rostou i prodeje v Evropě a Musk chystá masivní investice",
             "publishedAt": "2026-04-23T08:02:00Z"
-          },
-          {
-            "title": "Průvodce koupí bytu v paneláku. Jak předejít tomu, aby se investice stala černou dírou na peníze",
-            "publishedAt": "2026-04-23T07:50:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-23T12:45:55.479809Z",
+  "ingestedAt": "2026-04-23T13:04:53.017257Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Test z prvouky: Ukažte, zda si ještě pamatujete učivo z 1. stupně základní školy",
+      "url": "https://www.prozeny.cz/clanek/test-z-prvouky-ukazte-zda-si-jeste-pamatujete-ucivo-zakladni-skoly-78065",
+      "dt": "2026-04-23T12:59:02Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "ještě",
+        "pamatujete",
+        "prvouky",
+        "stupně",
+        "test",
+        "ukažte",
+        "učivo",
+        "zda",
+        "základní",
+        "školy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -35,23 +62,24 @@
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Princ Louis slaví 8. narozeniny – z roztomilého rošťáka roste krásný kluk. Nová fotka je tu!",
+      "title": "Princ Louis slaví 8. narozeniny – z roztomilého rošťáka roste krásný kluk, jak ukazuje rodinné video",
       "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-kralovska-rodina-princ-louis-slavi-8-narozeniny-z-roztomileho-rostaka-roste-krasny-kluk-nova-fotka-je-tu-103221",
       "dt": "2026-04-23T09:14:19Z",
       "media_raw": "ProŽeny / Zdraví",
       "media_norm": "ProŽeny / Zdraví",
       "tokens": [
-        "fotka",
         "kluk",
         "krásný",
         "louis",
         "narozeniny",
-        "nová",
         "princ",
+        "rodinné",
         "roste",
         "roztomilého",
         "rošťáka",
-        "slaví"
+        "slaví",
+        "ukazuje",
+        "video"
       ],
       "feedCategory": "zdravi",
       "feedType": "rubric",
@@ -807,36 +835,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Aviváž a vonné perličky jsou jen reklamní tah: 5 mýtů o praní, které vás stojí víc než peníze",
-      "url": "https://www.prozeny.cz/clanek/bydleni-avivaz-a-vonne-perlicky-jsou-jen-reklamni-tah-5-mytu-o-prani-ktere-vas-stoji-vic-nez-penize-103061",
-      "dt": "2026-04-22T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "aviváž",
-        "jen",
-        "mýtů",
-        "než",
-        "peníze",
-        "perličky",
-        "praní",
-        "reklamní",
-        "stojí",
-        "tah",
-        "vonné",
-        "vás",
-        "víc"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -847,7 +845,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39668,
+      "bytes": 39596,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -884,7 +882,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:34:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:59:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -901,11 +899,15 @@
         },
         "sample_titles": [
           {
+            "title": "Test z prvouky: Ukažte, zda si ještě pamatujete učivo z 1. stupně základní školy",
+            "publishedAt": "2026-04-23T12:59:02Z"
+          },
+          {
             "title": "Dáma v červené: Jitka Boho na lovu? Tahle barva funguje a muže přitahuje jako magnet",
             "publishedAt": "2026-04-23T11:34:06Z"
           },
           {
-            "title": "Princ Louis slaví 8. narozeniny – z roztomilého rošťáka roste krásný kluk. Nová fotka je tu!",
+            "title": "Princ Louis slaví 8. narozeniny – z roztomilého rošťáka roste krásný kluk, jak ukazuje rodinné video",
             "publishedAt": "2026-04-23T09:14:19Z"
           },
           {
@@ -926,10 +928,6 @@
           },
           {
             "title": "Jak se obléct na křtiny jako maminka či kmotra? Této barvě se za každou cenu vyhněte",
-            "publishedAt": "2026-04-23T03:00:00Z"
-          },
-          {
-            "title": "Znáte ohnivý kotlík? Celý svět miluje pokrm čínských císařů i rolníků. A důvody jsou jasné!",
             "publishedAt": "2026-04-23T03:00:00Z"
           }
         ]
