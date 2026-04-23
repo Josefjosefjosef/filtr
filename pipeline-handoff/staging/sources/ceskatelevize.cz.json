@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kauza znečištění řeky Odry končí. Ministerstvo potvrdilo firmě pokutu sto tisíc",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/moravskoslezsky-kraj/kauza-znecisteni-reky-odry-konci-ministerstvo-potvrdilo-firme-pokutu-sto-tisic-372718",
+      "dt": "2026-04-23T13:28:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "firmě",
+        "kauza",
+        "končí",
+        "ministerstvo",
+        "odry",
+        "pokutu",
+        "potvrdilo",
+        "sto",
+        "tisíc",
+        "znečištění",
+        "řeky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -452,7 +480,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Srážka vlaků u Kodaně si vyžádala sedmnáct raněných, stav čtyř je kritický",
+      "title": "Srážka vlaků nedaleko Kodaně si vyžádala 18 raněných, stav pěti je kritický",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/srazka-vlaku-u-kodane-si-vyzadala-sedmnact-ranenych-stav-ctyr-je-kriticky-372698",
       "dt": "2026-04-23T08:14:56Z",
       "media_raw": "ČT24 / Domácí",
@@ -460,13 +488,13 @@
       "tokens": [
         "kodaně",
         "kritický",
+        "nedaleko",
+        "pěti",
         "raněných",
-        "sedmnáct",
         "srážka",
         "stav",
         "vlaků",
-        "vyžádala",
-        "čtyř"
+        "vyžádala"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -752,27 +780,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Izraelské útoky zabily na jihu Libanonu místní novinářku, píše Reuters",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/izraelske-utoky-zabily-na-jihu-libanonu-mistni-novinarku-pise-reuters-372688",
-      "dt": "2026-04-22T23:15:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Bořilovi skončila sezona. Dostal vysoký sedmizápasový trest",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/borilovi-skoncila-sezona-dostal-vysoky-sedmizapasovy-trest-156418",
+      "dt": "2026-04-23T13:35:48Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "izraelské",
-        "jihu",
-        "libanonu",
-        "místní",
-        "novinářku",
-        "píše",
-        "reuters",
-        "zabily",
-        "útoky"
+        "bořilovi",
+        "dostal",
+        "sedmizápasový",
+        "sezona",
+        "skončila",
+        "trest",
+        "vysoký"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1515,30 +1541,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hokej bez červené: Jak může fungovat spojení Motáka a Grosse u reprezentace?",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/hokej-bez-cervene-jak-muze-fungovat-spojeni-motaka-a-grosse-u-reprezentace-156387",
-      "dt": "2026-04-21T05:30:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "fungovat",
-        "grosse",
-        "hokej",
-        "motáka",
-        "reprezentace",
-        "spojení",
-        "červené"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1549,7 +1551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44230,
+      "bytes": 44879,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,11 +1611,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:10:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:28:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 24,
+          "finance": 1,
           "other": 5
         },
         "drop_counts": {
@@ -1626,6 +1628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kauza znečištění řeky Odry končí. Ministerstvo potvrdilo firmě pokutu sto tisíc",
+            "publishedAt": "2026-04-23T13:28:22Z"
+          },
           {
             "title": "Úvodem k zestátnění ČEZu má být nová dceřiná firma",
             "publishedAt": "2026-04-23T12:10:13Z"
@@ -1653,10 +1659,6 @@
           {
             "title": "Babiš a Pavel se sejdou ohledně účasti na summitu NATO 8. května, řekl premiér",
             "publishedAt": "2026-04-23T11:41:52Z"
-          },
-          {
-            "title": "Nezávislost veřejnoprávních médií nikdo neohrožuje, říká Nacher. Chcete z nich vládní tlampač, míní Hřib",
-            "publishedAt": "2026-04-23T11:09:12Z"
           }
         ]
       }
@@ -1668,7 +1670,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37639,
+      "bytes": 37690,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1705,7 +1707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:09:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:35:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1720,6 +1722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bořilovi skončila sezona. Dostal vysoký sedmizápasový trest",
+            "publishedAt": "2026-04-23T13:35:48Z"
+          },
           {
             "title": "Samson je v Madridu poprvé ve třetím kole",
             "publishedAt": "2026-04-23T13:09:33Z"
@@ -1747,10 +1753,6 @@
           {
             "title": "Manchester City už je v čele anglické ligy. Vede o skóre před Arsenalem",
             "publishedAt": "2026-04-22T21:15:54Z"
-          },
-          {
-            "title": "Valentová v Madridu rychle skončila, všichni ostatní Češi zůstávají",
-            "publishedAt": "2026-04-22T18:36:47Z"
           }
         ]
       }
@@ -1762,7 +1764,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77041,
+      "bytes": 77093,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

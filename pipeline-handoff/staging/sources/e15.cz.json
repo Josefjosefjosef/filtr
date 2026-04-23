@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Výstavba za Prahou pojme jednou tolik obyvatel. Centrem obce se nově stane škola",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/vystavba-za-prahou-pojme-jednou-tolik-obyvatel-centrem-obce-se-nove-stane-skola-1432345",
+      "dt": "2026-04-23T13:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "centrem",
+        "jednou",
+        "nově",
+        "obce",
+        "obyvatel",
+        "pojme",
+        "prahou",
+        "stane",
+        "tolik",
+        "výstavba",
+        "škola"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1042,31 +1070,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Trump prodloužil příměří s Íránem, podle Teheránu budou útoky pokračovat",
-      "url": "https://www.e15.cz/zahranicni/geopolitika/trump-prodlouzil-primeri-s-iranem-podle-teheranu-budou-utoky-pokracovat-1432302",
-      "dt": "2026-04-22T05:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "podle",
-        "pokračovat",
-        "prodloužil",
-        "příměří",
-        "teheránu",
-        "trump",
-        "íránem",
-        "útoky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1077,7 +1080,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56036,
+      "bytes": 56013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1114,11 +1117,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 5,
+          "finance": 35,
+          "zpravy": 4,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1131,6 +1134,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výstavba za Prahou pojme jednou tolik obyvatel. Centrem obce se nově stane škola",
+            "publishedAt": "2026-04-23T13:30:00Z"
+          },
           {
             "title": "Maďarský MOL po téměř třech měsících znovu dostává ropu ropovodem Družba",
             "publishedAt": "2026-04-23T12:58:00Z"
@@ -1158,10 +1165,6 @@
           {
             "title": "Penta Hospitals otevírá na Florenci novou polikliniku s komplexní péčí",
             "publishedAt": "2026-04-23T10:58:00Z"
-          },
-          {
-            "title": "Klinika Canadian Medical vstupuje do světa karlovarského festivalu",
-            "publishedAt": "2026-04-23T10:46:00Z"
           }
         ]
       }

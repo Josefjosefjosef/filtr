@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na hrůzy války se zapomenout nesmí. Ve Volenicích uctili oběti transportu smrti",
+      "url": "https://www.denik.cz/ctenar-reporter/transport-smrti-volenice-pietni-akcz-pamatka-2026.html",
+      "dt": "2026-04-23T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hrůzy",
+        "nesmí",
+        "oběti",
+        "smrti",
+        "transportu",
+        "uctili",
+        "volenicích",
+        "války",
+        "zapomenout"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -321,7 +347,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
+      "title": "Srážka vlaků u Kodaně: Zranilo se 18 lidí, pět je v kritickém stavu",
       "url": "https://www.denik.cz/staty-eu/dansko-kodan-srazka-vlaku-20260423.html",
       "dt": "2026-04-23T07:36:00Z",
       "media_raw": "Deník",
@@ -330,11 +356,11 @@
         "kodaně",
         "kritickém",
         "lidí",
+        "pět",
         "srážka",
         "stavu",
         "vlaků",
-        "zranilo",
-        "čtyři"
+        "zranilo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -630,33 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Rusku kvůli špatnému stavu ekonomiky hrozí revoluce, varoval šéf komunistů",
-      "url": "https://www.denik.cz/ze_sveta/rusko-spatna-ekonomika-hrozi-revoluce-gennadij-zjuganov.html",
-      "dt": "2026-04-22T19:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ekonomiky",
-        "hrozí",
-        "komunistů",
-        "kvůli",
-        "revoluce",
-        "rusku",
-        "stavu",
-        "varoval",
-        "špatnému",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29396,
+      "bytes": 29792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -720,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na hrůzy války se zapomenout nesmí. Ve Volenicích uctili oběti transportu smrti",
+            "publishedAt": "2026-04-23T13:00:00Z"
+          },
           {
             "title": "Velrybu Timmyho má do moře dostat nákladní loď. Nechte ho už umřít, míní experti",
             "publishedAt": "2026-04-23T12:55:00Z"
@@ -747,10 +750,6 @@
           {
             "title": "Ceny pohonných hmot v Česku v mezitýdenním srovnání druhý týden v řadě klesly",
             "publishedAt": "2026-04-23T10:02:00Z"
-          },
-          {
-            "title": "Letecké záchranáře v Liberci ohrozil dron nad heliportem. Bezohlednost, zlobí se",
-            "publishedAt": "2026-04-23T09:50:00Z"
           }
         ]
       }

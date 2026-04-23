@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Místo slevy zadarmo. Do pasti akcí se po Reeboku chytil Myprotein",
+      "url": "https://ekonomickydenik.cz/misto-slevy-zadarmo-past-akci-myprotein/",
+      "dt": "2026-04-23T13:32:53Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "akcí",
+        "chytil",
+        "myprotein",
+        "místo",
+        "pasti",
+        "reeboku",
+        "slevy",
+        "zadarmo"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -770,31 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Spekulantům vstup zakázán. Jaké změny čekají katastr nemovitostí?",
-      "url": "https://ekonomickydenik.cz/katastr-nemovitosti-zmeny-novely/",
-      "dt": "2026-04-21T13:33:13Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jaké",
-        "katastr",
-        "nemovitostí",
-        "spekulantům",
-        "vstup",
-        "zakázán",
-        "změny",
-        "čekají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73178,
+      "bytes": 72772,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,11 +842,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:19:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:32:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 24,
+          "zpravy": 4,
           "sport": 1,
           "zdravi": 1
         },
@@ -860,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místo slevy zadarmo. Do pasti akcí se po Reeboku chytil Myprotein",
+            "publishedAt": "2026-04-23T13:32:53Z"
+          },
           {
             "title": "Evropa tlačí zelenou agendu opět do popředí. Slunce a vítr mají porazit Putina a další diktátory",
             "publishedAt": "2026-04-23T13:19:52Z"
@@ -887,10 +891,6 @@
           {
             "title": "Netflix zdražil, už podruhé za dva roky. Nejlevnější tarif přesáhl 250 korun",
             "publishedAt": "2026-04-23T07:58:28Z"
-          },
-          {
-            "title": "Miliardy v dělostřeleckých granátech: Strnadova CSG ulovila další obří zakázku",
-            "publishedAt": "2026-04-23T07:29:24Z"
           }
         ]
       }

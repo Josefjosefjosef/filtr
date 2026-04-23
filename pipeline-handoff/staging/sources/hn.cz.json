@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Personální zemětřesení v BBC. Generálním ředitelem bude bývalý top manažer Googlu. Jeho úkolem je posílit veřejnoprávní vysílání",
+      "url": "https://zahranicni.hn.cz/c1-67865990-personalni-zemetreseni-v-bbc-generalnim-reditelem-bude-byvaly-top-manazer-googlu-jeho-ukolem-je-posilit-verejnopravni-vysilani",
+      "dt": "2026-04-23T13:25:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bbc",
+        "bývalý",
+        "generálním",
+        "googlu",
+        "jeho",
+        "manažer",
+        "personální",
+        "posílit",
+        "top",
+        "veřejnoprávní",
+        "vysílání",
+        "zemětřesení",
+        "úkolem",
+        "ředitelem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1136,34 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Německá ekonomika má letos růst méně, než se čekalo. Vládní prognózu zhoršila válka v Íránu",
-      "url": "https://byznys.hn.cz/c1-67870010-nemecka-ekonomika-ma-letos-rust-mene-nez-se-cekalo-vladni-prognozu-zhorsila-valka-v-iranu",
-      "dt": "2026-04-22T13:35:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ekonomika",
-        "letos",
-        "než",
-        "německá",
-        "prognózu",
-        "růst",
-        "vládní",
-        "válka",
-        "zhoršila",
-        "íránu",
-        "čekalo"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1174,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184821,
+      "bytes": 184871,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1211,7 +1214,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:25:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 30,
@@ -1229,6 +1232,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Personální zemětřesení v BBC. Generálním ředitelem bude bývalý top manažer Googlu. Jeho úkolem je posílit veřejnoprávní vysílání",
+            "publishedAt": "2026-04-23T13:25:00Z"
+          },
           {
             "title": "Schváleno. Ukrajina dostane půjčku 90 miliard od EU, zemi má zachránit před bankrotem",
             "publishedAt": "2026-04-23T12:16:00Z"
@@ -1256,10 +1263,6 @@
           {
             "title": "Ruským miliardářům válka ani sankce vadit nemusí. Bohatnou i tak",
             "publishedAt": "2026-04-23T09:23:00Z"
-          },
-          {
-            "title": "Tesla znovu jede. Zisk překonává očekávání, rychle rostou i prodeje v Evropě a Musk chystá masivní investice",
-            "publishedAt": "2026-04-23T08:02:00Z"
           }
         ]
       }

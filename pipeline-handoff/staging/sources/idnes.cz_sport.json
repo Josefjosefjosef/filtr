@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T13:25:04.919788Z",
+  "ingestedAt": "2026-04-23T13:44:48.549129Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sedmizápasový distanc pro Bořila. Za Slavii už si v této sezoně nezahraje",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/disciplinarni-komise-boril-trest.A260423_101621_fotbal_duff",
+      "dt": "2026-04-23T13:38:39Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bořila",
+        "distanc",
+        "nezahraje",
+        "sedmizápasový",
+        "sezoně",
+        "slavii",
+        "této"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Letenka zamluvena! Vonnová se těší na dovolenou. Pak ji ale čeká další operace",
+      "url": "https://www.idnes.cz/sport/trendy/lindsey-vonn-dovolena-operace-plany.A260423_100358_trendy_blah",
+      "dt": "2026-04-23T13:23:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "další",
+        "dovolenou",
+        "letenka",
+        "operace",
+        "pak",
+        "těší",
+        "vonnová",
+        "zamluvena",
+        "čeká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -47,31 +98,6 @@
         "vyšlápla",
         "závěr",
         "číňanku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jaký trest hrozí Bořilovi? Přitížit mu mohou slova, která k rozhodčímu použil",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/disciplinarni-komise-boril-trest.A260423_101621_fotbal_duff",
-      "dt": "2026-04-23T12:39:34Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bořilovi",
-        "hrozí",
-        "jaký",
-        "použil",
-        "přitížit",
-        "rozhodčímu",
-        "slova",
-        "trest"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -759,32 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "City vládlo v Burnley a předstihlo Arsenal. Bournemouth uhrál s Leedsem remízu",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-34-kolo-zpravodajstvi-online-vysledky.A260422_194630_fot_zahranici_duff",
-      "dt": "2026-04-22T21:20:20Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "arsenal",
-        "bournemouth",
-        "burnley",
-        "city",
-        "leedsem",
-        "předstihlo",
-        "remízu",
-        "uhrál",
-        "vládlo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47751,
+      "bytes": 47910,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:38:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,16 +848,20 @@
         },
         "sample_titles": [
           {
+            "title": "Sedmizápasový distanc pro Bořila. Za Slavii už si v této sezoně nezahraje",
+            "publishedAt": "2026-04-23T13:38:39Z"
+          },
+          {
+            "title": "Letenka zamluvena! Vonnová se těší na dovolenou. Pak ji ale čeká další operace",
+            "publishedAt": "2026-04-23T13:23:00Z"
+          },
+          {
             "title": "Bez bodu, s chybami i šrámy. McDavid se v play off trápí: Potřebujeme se rychle rozjet",
             "publishedAt": "2026-04-23T12:56:00Z"
           },
           {
             "title": "Obrat a na závěr kanár. Samson si v Madridu vyšlápla na nasazenou Číňanku",
             "publishedAt": "2026-04-23T12:53:00Z"
-          },
-          {
-            "title": "Jaký trest hrozí Bořilovi? Přitížit mu mohou slova, která k rozhodčímu použil",
-            "publishedAt": "2026-04-23T12:39:34Z"
           },
           {
             "title": "Yamal se zranil při penaltě. Barceloně do konce sezony nepomůže, MS prý stihne",
@@ -874,10 +878,6 @@
           {
             "title": "Real hledá trenéra. Ve Španělsku zmiňují Mourinha, mezi favority je i Klopp",
             "publishedAt": "2026-04-23T11:35:00Z"
-          },
-          {
-            "title": "Nové angažmá pro reprezentanta Kárníka. Po exotické štaci ho zlákalo Španělsko",
-            "publishedAt": "2026-04-23T11:24:00Z"
           }
         ]
       }
