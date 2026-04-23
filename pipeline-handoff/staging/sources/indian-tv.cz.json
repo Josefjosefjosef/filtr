@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-23T14:49:57.800080Z",
+  "ingestedAt": "2026-04-23T15:11:10.211761Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Forza Horizon 5 slaví velký úspěch na konzolích PlayStation 5 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/forza-horizon-5-slavi-velky-uspech-na-konzolich-playstation-uxlzd5",
+      "dt": "2026-04-23T15:06:59Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "forza",
+        "horizon",
+        "indian",
+        "konzolích",
+        "playstation",
+        "slaví",
+        "velký",
+        "úspěch"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1060,31 +1085,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "THQ Nordic má sedm neoznámených titulů pro Nintendo Switch 2 - INDIAN",
-      "url": "https://indian-tv.cz/clanek/thq-nordic-ma-sedm-neoznamenych-titulu-pro-switch-2",
-      "dt": "2026-04-20T10:37:31Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "indian",
-        "neoznámených",
-        "nintendo",
-        "nordic",
-        "sedm",
-        "switch",
-        "thq",
-        "titulů"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1095,11 +1095,11 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 198841,
+      "bytes": 202186,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 57,
+      "itemsParsed": 58,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1132,7 +1132,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T15:06:59Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1147,6 +1147,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Forza Horizon 5 slaví velký úspěch na konzolích PlayStation 5 - INDIAN",
+            "publishedAt": "2026-04-23T15:06:59Z"
+          },
           {
             "title": "Kodžima navštívil Xbox. Tajemná krabička rozjela spekulace - INDIAN",
             "publishedAt": "2026-04-23T13:00:00Z"
@@ -1174,10 +1178,6 @@
           {
             "title": "Gran Turismo 7 v dubnové aktualizaci přiváží Porsche 911 Turbo S i nové závody - INDIAN",
             "publishedAt": "2026-04-23T07:42:20Z"
-          },
-          {
-            "title": "Xbox chystá ve spolupráci s Discordem výhody pro členy Game Passu - INDIAN",
-            "publishedAt": "2026-04-23T07:35:18Z"
           }
         ]
       }

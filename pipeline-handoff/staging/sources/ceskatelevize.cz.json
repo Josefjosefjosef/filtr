@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T14:49:57.800080Z",
+  "ingestedAt": "2026-04-23T15:11:10.211761Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Akcionáři společnosti Warner Bros schválili převzetí firmy rivalem Paramount",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/akcionari-spolecnosti-warner-bros-schvalili-prevzeti-firmy-rivalem-paramount-372728",
+      "dt": "2026-04-23T14:54:02Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "akcionáři",
+        "bros",
+        "firmy",
+        "paramount",
+        "převzetí",
+        "rivalem",
+        "schválili",
+        "společnosti",
+        "warner"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -754,33 +780,9 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Investigace CNN rozkryla sexuální útoky na omámené oběti",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/investigace-cnn-rozkryla-sexualni-utoky-na-omamene-obeti-372684",
-      "dt": "2026-04-23T05:01:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "cnn",
-        "investigace",
-        "oběti",
-        "omámené",
-        "rozkryla",
-        "sexuální",
-        "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "MS hokejistů do 18 let: Švédsko – Česko",
+      "title": "MS hokejistů do 18 let: Švédsko – Česko 0:1",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-hokejistu-do-18-let-svedsko-cesko-156420",
       "dt": "2026-04-23T13:58:00Z",
       "media_raw": "ČT sport",
@@ -1547,7 +1549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44442,
+      "bytes": 44466,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1607,12 +1609,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T14:34:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:54:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 8,
           "finance": 2,
-          "other": 7,
-          "zpravy": 21
+          "zpravy": 20
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1624,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Akcionáři společnosti Warner Bros schválili převzetí firmy rivalem Paramount",
+            "publishedAt": "2026-04-23T14:54:02Z"
+          },
           {
             "title": "Počet světových multimilionářů by mohl během pěti let vzrůst na skoro čtyři tisíce",
             "publishedAt": "2026-04-23T14:34:52Z"
@@ -1651,10 +1657,6 @@
           {
             "title": "Veterináři zakazují v Česku prodej 44 kojeneckých výživ kvůli toxinu",
             "publishedAt": "2026-04-23T12:05:15Z"
-          },
-          {
-            "title": "Vědci sledovali Hadí jeskyni v Ugandě. Epicentrum viru marburg navštěvují lidé",
-            "publishedAt": "2026-04-23T12:04:47Z"
           }
         ]
       }
@@ -1666,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37728,
+      "bytes": 37848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1719,7 +1721,7 @@
         },
         "sample_titles": [
           {
-            "title": "MS hokejistů do 18 let: Švédsko – Česko",
+            "title": "MS hokejistů do 18 let: Švédsko – Česko 0:1",
             "publishedAt": "2026-04-23T13:58:00Z"
           },
           {
@@ -1760,7 +1762,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77346,
+      "bytes": 77158,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
