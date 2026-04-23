@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T10:00:11.807217Z",
+  "ingestedAt": "2026-04-23T10:19:30.043763Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
+      "url": "https://profitonline.cz/pribyva-plicnich-nemoci-ale-pacienty-uz-skoro-nema-kdo-lecit/",
+      "dt": "2026-04-23T10:00:03Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "ale",
+        "léčit",
+        "nemocí",
+        "nemá",
+        "pacienty",
+        "plicních",
+        "přibývá",
+        "skoro"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,30 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Blízkovýchodní šok zasahuje českou ekonomiku v příznivou chvíli",
-      "url": "https://profitonline.cz/blizkovychodni-sok-zasahuje-ceskou-ekonomiku-v-priznivou-chvili/",
-      "dt": "2026-04-21T09:00:34Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "blízkovýchodní",
-        "chvíli",
-        "ekonomiku",
-        "příznivou",
-        "zasahuje",
-        "českou",
-        "šok"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19245,
+      "bytes": 19266,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,10 +345,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:00:03Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zdravi": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -359,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
+            "publishedAt": "2026-04-23T10:00:03Z"
+          },
           {
             "title": "Přijít o tisíce kvůli chybě v daňovém přiznání je snazší, než se zdá",
             "publishedAt": "2026-04-23T09:00:46Z"
@@ -386,10 +392,6 @@
           {
             "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
             "publishedAt": "2026-04-22T08:00:38Z"
-          },
-          {
-            "title": "Hana Libecajtová předsedkyní správní rady Nadace KB",
-            "publishedAt": "2026-04-22T06:00:26Z"
           }
         ]
       }

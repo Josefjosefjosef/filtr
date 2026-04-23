@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T10:00:11.807217Z",
+  "ingestedAt": "2026-04-23T10:19:30.043763Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Poslanci podpořili návrh, který zpřísní podmínky pro spotřebitelské úvěry",
+      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-novela-o-spotrebitelskem-uveru-smlouva-se-slovenskem-zdravotnicti-zachranar.A260423_053300_domaci_kop",
+      "dt": "2026-04-23T10:14:06Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "návrh",
+        "podmínky",
+        "podpořili",
+        "poslanci",
+        "spotřebitelské",
+        "zpřísní",
+        "úvěry"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Slovensko hlásí obnovení dodávek ropy Družbou. Přerušily se koncem ledna",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/slovensko-ropa-ropovod-druzba.A260423_105239_eko-zahranicni_rie",
+      "dt": "2026-04-23T09:58:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dodávek",
+        "družbou",
+        "hlásí",
+        "koncem",
+        "ledna",
+        "obnovení",
+        "přerušily",
+        "ropy",
+        "slovensko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -21,30 +71,6 @@
         "stáhněte",
         "ten",
         "vyzývá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poslanci jednají o poskytování nepřiměřeně drahých spotřebitelských úvěrů",
-      "url": "https://www.idnes.cz/zpravy/domaci/snemovna-novela-o-spotrebitelskem-uveru-smlouva-se-slovenskem-zdravotnicti-zachranar.A260423_053300_domaci_kop",
-      "dt": "2026-04-23T09:30:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "drahých",
-        "jednají",
-        "nepřiměřeně",
-        "poskytování",
-        "poslanci",
-        "spotřebitelských",
-        "úvěrů"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -748,30 +774,6 @@
         "ukrajině",
         "videoher",
         "válka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Šéf amerického námořnictva končí ve funkci. Nepohodl se s Hegsethem",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/sef-americkeho-namornictva-john-phelan-propusteni-pentagon-usa.A260423_064046_zahranicni_meli",
-      "dt": "2026-04-23T05:38:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "amerického",
-        "funkci",
-        "hegsethem",
-        "končí",
-        "nepohodl",
-        "námořnictva",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1569,7 +1571,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46578,
+      "bytes": 46480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,12 +1608,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:14:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 21,
+          "finance": 4,
           "other": 3,
-          "finance": 3,
           "sport": 2
         },
         "drop_counts": {
@@ -1625,12 +1627,16 @@
         },
         "sample_titles": [
           {
-            "title": "Odvolejte Klempíře a stáhněte ten paskvil, vyzývá Babiše expremiér Fiala",
-            "publishedAt": "2026-04-23T09:35:00Z"
+            "title": "Poslanci podpořili návrh, který zpřísní podmínky pro spotřebitelské úvěry",
+            "publishedAt": "2026-04-23T10:14:06Z"
           },
           {
-            "title": "Poslanci jednají o poskytování nepřiměřeně drahých spotřebitelských úvěrů",
-            "publishedAt": "2026-04-23T09:30:00Z"
+            "title": "Slovensko hlásí obnovení dodávek ropy Družbou. Přerušily se koncem ledna",
+            "publishedAt": "2026-04-23T09:58:00Z"
+          },
+          {
+            "title": "Odvolejte Klempíře a stáhněte ten paskvil, vyzývá Babiše expremiér Fiala",
+            "publishedAt": "2026-04-23T09:35:00Z"
           },
           {
             "title": "Útočník dostal 12 let za napadení v Libni. Že spolupachatel začne střílet, prý netušil",
@@ -1651,10 +1657,6 @@
           {
             "title": "Běh a procházka pro miminka do dlaně. Lidé podpoří předčasně narozené děti",
             "publishedAt": "2026-04-23T08:57:00Z"
-          },
-          {
-            "title": "Nález odloženého zavazadla uzavřel Florenc. Obě linky metra stanicí projížděly",
-            "publishedAt": "2026-04-23T08:51:31Z"
           }
         ]
       }
