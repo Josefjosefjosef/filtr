@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-23T22:00:14.225751Z",
+  "ingestedAt": "2026-04-23T22:20:04.349679Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Do Česka vstupuje nový fotomobil. Sází na 200Mpx teleobjektiv a 4K video",
+      "url": "https://www.e15.cz/radce/do-ceska-vstupuje-novy-fotomobil-sazi-na-200mpx-teleobjektiv-a-4k-video-1431978",
+      "dt": "2026-04-23T22:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "200mpx",
+        "fotomobil",
+        "nový",
+        "sází",
+        "teleobjektiv",
+        "video",
+        "vstupuje",
+        "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1050,35 +1075,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hospodářský motor Evropy zadrhává. Německo letos poroste jen o půl procenta, varuje Berlín",
-      "url": "https://www.e15.cz/ekonomika/hospodarsky-motor-evropy-zadrhava-nemecko-letos-poroste-jen-o-pul-procenta-varuje-berlin-1432317",
-      "dt": "2026-04-22T13:13:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "berlín",
-        "evropy",
-        "hospodářský",
-        "jen",
-        "letos",
-        "motor",
-        "německo",
-        "poroste",
-        "procenta",
-        "půl",
-        "varuje",
-        "zadrhává"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1085,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56252,
+      "bytes": 56096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,11 +1122,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T22:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 33,
+          "zpravy": 6,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1143,6 +1139,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do Česka vstupuje nový fotomobil. Sází na 200Mpx teleobjektiv a 4K video",
+            "publishedAt": "2026-04-23T22:00:00Z"
+          },
           {
             "title": "Křehký klid zbraní v ohrožení. Nad íránskou metropolí zasahovala obrana proti neznámým cílům",
             "publishedAt": "2026-04-23T18:33:00Z"
@@ -1170,10 +1170,6 @@
           {
             "title": "Komerční banka vyplatí celý loňský zisk, akcionáři dostanou téměř sto korun na akcii",
             "publishedAt": "2026-04-23T14:17:00Z"
-          },
-          {
-            "title": "Výstavba za Prahou pojme jednou tolik obyvatel. Centrem obce se nově stane škola",
-            "publishedAt": "2026-04-23T13:30:00Z"
           }
         ]
       }
