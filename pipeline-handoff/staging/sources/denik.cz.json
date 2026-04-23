@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T10:19:30.043763Z",
+  "ingestedAt": "2026-04-23T10:39:40.829915Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ceny pohonných hmot v Česku v mezitýdenním srovnání druhý týden v řadě klesly",
+      "url": "https://www.denik.cz/z_domova/ceny-pohonnych-hmot-klesaji-cesko-mezitydenni-srovnani.html",
+      "dt": "2026-04-23T10:02:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ceny",
+        "druhý",
+        "hmot",
+        "klesly",
+        "mezitýdenním",
+        "pohonných",
+        "srovnání",
+        "týden",
+        "česku",
+        "řadě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,33 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lufthansa zruší dvacet tisíc letů po Evropě. Spoje stoply i další aerolinky",
-      "url": "https://www.denik.cz/staty-eu/lufthansa-ruseni-spoju-v-evrope-kratke-lety-valka-letecke-palivo-blizky-vychod.html",
-      "dt": "2026-04-22T16:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "aerolinky",
-        "další",
-        "dvacet",
-        "evropě",
-        "letů",
-        "lufthansa",
-        "spoje",
-        "stoply",
-        "tisíc",
-        "zruší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29234,
+      "bytes": 29465,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:02:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -718,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ceny pohonných hmot v Česku v mezitýdenním srovnání druhý týden v řadě klesly",
+            "publishedAt": "2026-04-23T10:02:00Z"
+          },
           {
             "title": "Letecké záchranáře v Liberci ohrozil dron nad heliportem. Bezohlednost, zlobí se",
             "publishedAt": "2026-04-23T09:50:00Z"
@@ -745,10 +749,6 @@
           {
             "title": "VZP plánuje větší zabezpečení mobilní aplikace, kterou používá 2,9 mil. klientů",
             "publishedAt": "2026-04-23T06:20:00Z"
-          },
-          {
-            "title": "Pedofilie musela z plátna pryč. Film Michael o zpěváku Jacksonovi se rodil těžce",
-            "publishedAt": "2026-04-23T06:00:00Z"
           }
         ]
       }

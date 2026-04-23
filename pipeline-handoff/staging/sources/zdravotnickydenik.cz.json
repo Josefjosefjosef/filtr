@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T10:19:30.043763Z",
+  "ingestedAt": "2026-04-23T10:39:40.829915Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hazard nad nemocnicí: Neznámý dron ohrozil vrtulník libereckých záchranářů",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/dron-vrtulnik-libereckych-zachranaru/",
+      "dt": "2026-04-23T10:25:14Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dron",
+        "hazard",
+        "libereckých",
+        "nemocnicí",
+        "neznámý",
+        "ohrozil",
+        "vrtulník",
+        "záchranářů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pavilon ÚVN je po požáru před 4 lety stále prázdný. Rekonstrukci brzdí ostré spory",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pavilon-uvn-pozar-rekonstrukce-strecha/",
-      "dt": "2026-04-22T12:00:33Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "brzdí",
-        "lety",
-        "ostré",
-        "pavilon",
-        "požáru",
-        "prázdný",
-        "rekonstrukci",
-        "spory",
-        "stále",
-        "úvn"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 104244,
+      "bytes": 101223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T09:41:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:25:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hazard nad nemocnicí: Neznámý dron ohrozil vrtulník libereckých záchranářů",
+            "publishedAt": "2026-04-23T10:25:14Z"
+          },
           {
             "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
             "publishedAt": "2026-04-23T09:41:13Z"
@@ -360,10 +362,6 @@
           {
             "title": "Nemocí z povolání prudce ubylo, covid dál vede. Na cestě je změna pravidel",
             "publishedAt": "2026-04-22T15:50:20Z"
-          },
-          {
-            "title": "Černý trh s cigaretami exploduje: Tabák je pro pašeráky výnosnější než kokain",
-            "publishedAt": "2026-04-22T14:29:29Z"
           }
         ]
       }

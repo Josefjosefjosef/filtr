@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-23T10:19:30.043763Z",
+  "ingestedAt": "2026-04-23T10:39:40.829915Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hlavně rychle a pohodlně. Takhle přicházíte o peníze v e-shopu, varuje banka",
+      "url": "https://www.penize.cz/nakupy/488725-hlavne-rychle-a-pohodlne-takhle-prichazite-o-penize-v-e-shopu-varuje-banka",
+      "dt": "2026-04-23T12:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "banka",
+        "hlavně",
+        "peníze",
+        "pohodlně",
+        "přicházíte",
+        "rychle",
+        "shopu",
+        "takhle",
+        "varuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,32 +508,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kotva odhalila první značky. Obchodní dům vsadil na italský luxus",
-      "url": "https://www.penize.cz/nakupy/488565-kotva-vsadila-na-italsky-luxus-obchodni-dum-odhalil-prvni-znacky",
-      "dt": "2026-04-20T13:42:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dům",
-        "italský",
-        "kotva",
-        "luxus",
-        "obchodní",
-        "odhalila",
-        "první",
-        "vsadil",
-        "značky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18182,
+      "bytes": 18130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +555,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -571,6 +571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hlavně rychle a pohodlně. Takhle přicházíte o peníze v e-shopu, varuje banka",
+            "publishedAt": "2026-04-23T12:00:00Z"
+          },
           {
             "title": "Kde se bere sebevědomí. A proč rozhoduje víc, než si myslíte",
             "publishedAt": "2026-04-23T05:05:00Z"
@@ -598,10 +602,6 @@
           {
             "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
             "publishedAt": "2026-04-22T11:58:00Z"
-          },
-          {
-            "title": "Nový král spořicích účtů? Další banka odmění za investování",
-            "publishedAt": "2026-04-22T08:30:00Z"
           }
         ]
       }
