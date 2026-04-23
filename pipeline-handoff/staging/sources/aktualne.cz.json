@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T08:34:48.384709Z",
+  "ingestedAt": "2026-04-23T08:59:10.407438Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Proč zakazujeme dětem závodit? hřímá Bauer. V synovi vidí většího blázna, než byl sám",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/proc-zakazujeme-detem-zavodit-hrima-bauer-v-synovi-vidi-vetsiho-blazna-nez-byl-sam/r~aaa29de174e1d4bc9441afd203a14ed5/",
+      "dt": "2026-04-23T08:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bauer",
+        "blázna",
+        "dětem",
+        "hřímá",
+        "než",
+        "proč",
+        "synovi",
+        "sám",
+        "vidí",
+        "většího",
+        "zakazujeme",
+        "závodit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -505,32 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministr za SPD si prosadil na top pozici starého známého. I bez důležité prověrky",
-      "url": "https://zpravy.aktualne.cz/domaci/osobni-vazby-nezohlednujeme-zunuv-znamy-se-bez-proverky-dostal-az-do-vedeni-obrany/r~aaa2931f60f38ac55b94483beae59819/",
-      "dt": "2026-04-23T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "důležité",
-        "ministr",
-        "pozici",
-        "prosadil",
-        "prověrky",
-        "spd",
-        "starého",
-        "top",
-        "známého"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22364,
+      "bytes": 22483,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,12 +581,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "sport": 4,
+          "zpravy": 12,
           "other": 3,
-          "sport": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -596,6 +599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč zakazujeme dětem závodit? hřímá Bauer. V synovi vidí většího blázna, než byl sám",
+            "publishedAt": "2026-04-23T08:31:00Z"
+          },
           {
             "title": "Ropovod Družba je v provozu, na Slovensko opět dodává ropu",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -623,10 +630,6 @@
           {
             "title": "„Proč by jezdil tankovat, počká si.“ Češi se rozhodují v jeden konkrétní čas",
             "publishedAt": "2026-04-23T07:06:00Z"
-          },
-          {
-            "title": "Bývalý soudce Kafka podle policie podvedl přes 60 lidí, získal více než 23 milionů korun",
-            "publishedAt": "2026-04-23T06:59:00Z"
           }
         ]
       }
