@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T15:54:42.830391Z",
+  "ingestedAt": "2026-04-23T16:11:20.804938Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "\"Překročil jste rychlost, zaplaťte pokutu online\". Policie varuje před dalším podvodem",
+      "url": "https://zpravy.aktualne.cz/domaci/prekrocil-jste-rychlost-zaplatte-pokutu-online-policie-varuje-pred-dalsim-podvodem/r~aaa29a537b5f1dc26183d1a56ef93336/",
+      "dt": "2026-04-23T15:49:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dalším",
+        "jste",
+        "online",
+        "podvodem",
+        "pokutu",
+        "policie",
+        "překročil",
+        "rychlost",
+        "varuje",
+        "zaplaťte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -110,20 +137,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zelenskyj ocenil půjčku od EU, první miliardy by chtěl v květnu či červnu",
+      "title": "Zelenskyj poděkoval za půjčku od EU. Von der Leyenová prozradila kdy se pošle",
       "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
       "dt": "2026-01-21T06:45:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "chtěl",
-        "květnu",
-        "miliardy",
-        "ocenil",
-        "první",
+        "der",
+        "leyenová",
+        "poděkoval",
+        "pošle",
+        "prozradila",
         "půjčku",
-        "zelenskyj",
-        "červnu"
+        "von",
+        "zelenskyj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -499,29 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Putin je připraven se setkat se Zelenským. Má to ale háček",
-      "url": "https://zpravy.aktualne.cz/zahranici/putin-je-pripraven-se-setkat-se-zelenskym-ma-to-ale-hacek/r~aaa29aab6a3b56fb98d59f3019edd2c9/",
-      "dt": "2026-04-23T12:55:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "háček",
-        "putin",
-        "připraven",
-        "setkat",
-        "zelenským"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21188,
+      "bytes": 21223,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -569,12 +573,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T15:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 14,
           "other": 1,
           "finance": 3,
-          "zpravy": 14,
           "sport": 2
         },
         "drop_counts": {
@@ -587,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "\"Překročil jste rychlost, zaplaťte pokutu online\". Policie varuje před dalším podvodem",
+            "publishedAt": "2026-04-23T15:49:00Z"
+          },
           {
             "title": "Audioknihou roku jsou Hovory. Jde o mrazivé zpracování telefonátů Ukrajinců po invazi",
             "publishedAt": "2026-04-23T15:29:00Z"
@@ -604,7 +612,7 @@
             "publishedAt": "2026-04-23T14:51:00Z"
           },
           {
-            "title": "Zelenskyj ocenil půjčku od EU, první miliardy by chtěl v květnu či červnu",
+            "title": "Zelenskyj poděkoval za půjčku od EU. Von der Leyenová prozradila kdy se pošle",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
@@ -614,10 +622,6 @@
           {
             "title": "Zemědělský fond zveřejnil analýzy k dotacím Agrofertu, chce předejít spekulacím",
             "publishedAt": "2026-04-23T14:31:00Z"
-          },
-          {
-            "title": "Chaos kolem Timmyho: veterinářka utekla, influencer se natáčel a spisovatel mluvil s duší kytovce",
-            "publishedAt": "2026-04-23T14:30:00Z"
           }
         ]
       }

@@ -1,22 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T15:54:42.830391Z",
+  "ingestedAt": "2026-04-23T16:11:20.804938Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Třinec - Pardubice 2:2, tristní úvod hostů pak skvělá reakce. Srovnal Červenka",
+      "title": "Klinsmann si při ošklivé srážce poranil páteř, podstoupil náročnou operaci",
+      "url": "https://www.idnes.cz/sport/trendy/jonathan-klinsmann-zraneni.A260423_112359_trendy_blah",
+      "dt": "2026-04-23T15:36:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "klinsmann",
+        "náročnou",
+        "operaci",
+        "ošklivé",
+        "podstoupil",
+        "poranil",
+        "páteř",
+        "při",
+        "srážce"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Třinec - Pardubice 2:2, tristní úvod hostů, pak dobrá reakce. Srovnal Červenka",
       "url": "https://www.idnes.cz/hokej/extraliga/4-finale-trinec-pardubice-online-zpravodajstvi.A260423_142342_hokej_drev",
       "dt": "2026-04-23T15:26:41Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
+        "dobrá",
         "hostů",
         "pak",
         "pardubice",
         "reakce",
-        "skvělá",
         "srovnal",
         "tristní",
         "třinec",
@@ -760,31 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař s Philadelphií míří za postupem, Dostál se radoval na ledě Edmontonu",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dostal.A260423_071225_nhl_mkr",
-      "dt": "2026-04-23T06:37:11Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dostál",
-        "edmontonu",
-        "ledě",
-        "míří",
-        "philadelphií",
-        "postupem",
-        "radoval",
-        "vladař"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47345,
+      "bytes": 46878,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:26:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T15:36:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,7 +849,11 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Třinec - Pardubice 2:2, tristní úvod hostů pak skvělá reakce. Srovnal Červenka",
+            "title": "Klinsmann si při ošklivé srážce poranil páteř, podstoupil náročnou operaci",
+            "publishedAt": "2026-04-23T15:36:00Z"
+          },
+          {
+            "title": "ONLINE: Třinec - Pardubice 2:2, tristní úvod hostů, pak dobrá reakce. Srovnal Červenka",
             "publishedAt": "2026-04-23T15:26:41Z"
           },
           {
@@ -874,10 +879,6 @@
           {
             "title": "Letenka zamluvena! Vonnová se těší na dovolenou. Pak ji ale čeká další operace",
             "publishedAt": "2026-04-23T13:23:00Z"
-          },
-          {
-            "title": "Bez bodu, s chybami i šrámy. McDavid se v play off trápí: Potřebujeme se rychle rozjet",
-            "publishedAt": "2026-04-23T12:56:00Z"
           }
         ]
       }

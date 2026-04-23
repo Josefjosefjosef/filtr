@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T15:54:42.830391Z",
+  "ingestedAt": "2026-04-23T16:11:20.804938Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Říšští Němci neměli k sudetským důvěru, Heydrich je prověřoval, říká spisovatel",
+      "url": "https://www.idnes.cz/zpravy/domaci/rissti-nemci-nemeli-k-sudetskym-duveru-heydrich-je-proveroval-rika-spisovatel.A260422_182826_domaci_tvrk",
+      "dt": "2026-04-23T16:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "důvěru",
+        "heydrich",
+        "neměli",
+        "němci",
+        "prověřoval",
+        "spisovatel",
+        "sudetským",
+        "říká",
+        "říšští"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -756,31 +782,6 @@
         "ztracené",
         "čtyři",
         "ženě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Veterináři varují před nebezpečnými výživami, zákaz rozšířili o další výrobky",
-      "url": "https://www.idnes.cz/ekonomika/domaci/kojenecka-vyziva-zakaz-prodeje-statni-veterinarni-sprava.A260423_140258_ekonomika_rie",
-      "dt": "2026-04-23T12:29:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "další",
-        "nebezpečnými",
-        "rozšířili",
-        "varují",
-        "veterináři",
-        "výrobky",
-        "výživami",
-        "zákaz"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48718,
+      "bytes": 48904,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,12 +1614,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "other": 2,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1630,6 +1631,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Říšští Němci neměli k sudetským důvěru, Heydrich je prověřoval, říká spisovatel",
+            "publishedAt": "2026-04-23T16:00:00Z"
+          },
           {
             "title": "Kafkovský způsob vinění? Mezi Blažkem a Decroix to vře kvůli bitcoinové aféře",
             "publishedAt": "2026-04-23T15:22:00Z"
@@ -1657,10 +1662,6 @@
           {
             "title": "Její jediný syn se udusil rajčetem. Trápící se žena kvůli tomu podstoupí eutanazii",
             "publishedAt": "2026-04-23T14:53:00Z"
-          },
-          {
-            "title": "Dvě pětiny pečujících jsou na vše samy, starají se hlavně ženy, zjistil průzkum",
-            "publishedAt": "2026-04-23T14:33:00Z"
           }
         ]
       }

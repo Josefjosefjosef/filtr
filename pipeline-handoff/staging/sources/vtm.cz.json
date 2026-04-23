@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-23T15:54:42.830391Z",
+  "ingestedAt": "2026-04-23T16:11:20.804938Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,30 @@
         "směrů",
         "vývoj",
         "čipů"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "15 let kapesní konzole Nintendo 3DS a 15 her, které ji proslavily",
+      "url": "https://doupe.zive.cz/nintendo-3ds-nejlepsi-hry-vyroci-15-let",
+      "dt": "2026-04-23T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "3ds",
+        "her",
+        "kapesní",
+        "konzole",
+        "let",
+        "nintendo",
+        "proslavily"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -936,35 +960,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "T-Mobile škrtí předplacenky. Při dobití pod 500 Kč má kredit platnost nově už jen půl roku",
-      "url": "https://mobilmania.zive.cz/clanky/t-mobile-skrti-predplacenky-pri-dobiti-pod-500kc-ma-kredit-platnost-nove-uz-jen-pul-roku/sc-3-a-1364592/default.aspx",
-      "dt": "2026-04-20T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "500",
-        "dobití",
-        "jen",
-        "kredit",
-        "mobile",
-        "nově",
-        "platnost",
-        "předplacenky",
-        "při",
-        "půl",
-        "roku",
-        "škrtí"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -975,7 +970,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22832,
+      "bytes": 22926,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1012,7 +1007,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-23T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1030,6 +1025,10 @@
           {
             "title": "Google se obejde bez Nvidie. Má už osmou generaci AI čipů a vývoj rozštěpil do dvou směrů",
             "publishedAt": "2026-04-23T14:45:00Z"
+          },
+          {
+            "title": "15 let kapesní konzole Nintendo 3DS a 15 her, které ji proslavily",
+            "publishedAt": "2026-04-23T15:45:00Z"
           },
           {
             "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
@@ -1054,10 +1053,6 @@
           {
             "title": "Vibe coding za 60 miliard dolarů. Musk chce Cursor, SpaceX díky němu smaže dluh v robotickém programování",
             "publishedAt": "2026-04-23T06:45:00Z"
-          },
-          {
-            "title": "Baudiš s Kučerou prodali další firmu. Američané získali technologický klenot z Brna",
-            "publishedAt": "2026-04-23T07:45:00Z"
           }
         ]
       }
