@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T18:04:47.586832Z",
+  "ingestedAt": "2026-04-23T18:24:31.012258Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Teheránu byla aktivována protivzdušná obrana. Zasahuje proti nepřátelským cílům",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aktivována",
+        "cílům",
+        "nepřátelským",
+        "obrana",
+        "proti",
+        "protivzdušná",
+        "teheránu",
+        "zasahuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,7 +56,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Drtivý úvod Pardubice nezlomil, přesto Třinec slaví druhý triumf. Rozhodl žolík Musil",
+      "title": "Drtivý úvod Pardubice nezlomil, přesto Třinec slaví druhý triumf. Rozhodl Musil",
       "url": "https://sport.aktualne.cz/drtivy-uvod-pardubice-nezlomil-presto-trinec-slavi-druhy-triumf-rozhodl-zolik-musil/r~aaa293c9e99ff04fb22debcc1e1c3779/",
       "dt": "2026-04-23T17:44:00Z",
       "media_raw": "Aktuálně",
@@ -47,8 +72,7 @@
         "slaví",
         "triumf",
         "třinec",
-        "úvod",
-        "žolík"
+        "úvod"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -101,32 +125,6 @@
         "letošní",
         "rozumnou",
         "tip"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump nařídil námořnictvu střílet na lodě, jež rozmisťují miny v Hormuzu",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hormuzu",
-        "jež",
-        "lodě",
-        "miny",
-        "nařídil",
-        "námořnictvu",
-        "rozmisťují",
-        "střílet",
-        "trump"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -538,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21853,
+      "bytes": 21855,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,11 +592,15 @@
         },
         "sample_titles": [
           {
+            "title": "V Teheránu byla aktivována protivzdušná obrana. Zasahuje proti nepřátelským cílům",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Pahlaví Evropu vyzval, aby přestala s politikou ustupování vůči Íránu",
             "publishedAt": "2026-04-23T17:53:00Z"
           },
           {
-            "title": "Drtivý úvod Pardubice nezlomil, přesto Třinec slaví druhý triumf. Rozhodl žolík Musil",
+            "title": "Drtivý úvod Pardubice nezlomil, přesto Třinec slaví druhý triumf. Rozhodl Musil",
             "publishedAt": "2026-04-23T17:44:00Z"
           },
           {
@@ -608,10 +610,6 @@
           {
             "title": "Letošní dovolená za rozumnou cenu? Ekonom má tip na ideální destinaci",
             "publishedAt": "2026-04-23T17:28:00Z"
-          },
-          {
-            "title": "Trump nařídil námořnictvu střílet na lodě, jež rozmisťují miny v Hormuzu",
-            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila kdy pošle první peníze",

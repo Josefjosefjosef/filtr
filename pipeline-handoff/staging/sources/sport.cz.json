@@ -1,26 +1,24 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T18:04:47.586832Z",
+  "ingestedAt": "2026-04-23T18:24:31.012258Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Češi drží ve Vídni pohodlné vedení, přečkali i druhé oslabení",
+      "title": "HOKEJ ONLINE: Češi mají ve Vídni převahu a směřují k výhře",
       "url": "https://www.sport.cz/clanek/hokej-ms-priprava-viden-cesko-rakousko-online-5441507",
       "dt": "2026-04-23T06:50:09Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "druhé",
-        "drží",
         "hokej",
+        "mají",
         "online",
-        "oslabení",
-        "pohodlné",
-        "přečkali",
-        "vedení",
+        "převahu",
+        "směřují",
         "vídni",
+        "výhře",
         "češi"
       ],
       "feedCategory": "sport",
@@ -33,7 +31,36 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Videomomenty. Třinec vydřel druhou výhru a srovnal stav finálové série",
+      "title": "GLOSA: Šílenost a obří flastr. Nedůstojné a lidsky smutné, pokud tím Bořil skončí kariéru",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-glosa-silenost-a-obri-flastr-nedustojne-a-lidsky-smutne-pokud-tim-boril-skonci-karieru-5442108",
+      "dt": "2026-04-23T18:17:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bořil",
+        "flastr",
+        "glosa",
+        "kariéru",
+        "lidsky",
+        "nedůstojné",
+        "obří",
+        "pokud",
+        "skončí",
+        "smutné",
+        "tím",
+        "šílenost"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "SESTŘIH: Třinec vydřel druhou výhru a srovnal stav finálové série",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-trinec-se-pokusi-srovnat-stav-finalove-serie-5441888",
       "dt": "2026-04-23T12:02:25Z",
       "media_raw": "Sport.cz",
@@ -41,11 +68,11 @@
       "tokens": [
         "druhou",
         "finálové",
+        "sestřih",
         "srovnal",
         "stav",
         "série",
         "třinec",
-        "videomomenty",
         "vydřel",
         "výhru"
       ],
@@ -758,33 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obhájce titulu v NBA Oklahoma má druhou výhru, Detroit srovnal proti Orlandu",
-      "url": "https://www.sport.cz/clanek/basketbal-obhajce-titulu-v-nba-oklahoma-ma-druhou-vyhru-detroit-srovnal-proti-orlandu-5441893",
-      "dt": "2026-04-23T09:07:24Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "detroit",
-        "druhou",
-        "nba",
-        "obhájce",
-        "oklahoma",
-        "orlandu",
-        "proti",
-        "srovnal",
-        "titulu",
-        "výhru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42145,
+      "bytes": 42110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T17:21:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:17:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,11 +848,15 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Češi drží ve Vídni pohodlné vedení, přečkali i druhé oslabení",
+            "title": "HOKEJ ONLINE: Češi mají ve Vídni převahu a směřují k výhře",
             "publishedAt": "2026-04-23T06:50:09Z"
           },
           {
-            "title": "Videomomenty. Třinec vydřel druhou výhru a srovnal stav finálové série",
+            "title": "GLOSA: Šílenost a obří flastr. Nedůstojné a lidsky smutné, pokud tím Bořil skončí kariéru",
+            "publishedAt": "2026-04-23T18:17:17Z"
+          },
+          {
+            "title": "SESTŘIH: Třinec vydřel druhou výhru a srovnal stav finálové série",
             "publishedAt": "2026-04-23T12:02:25Z"
           },
           {
@@ -874,10 +878,6 @@
           {
             "title": "SESTŘIH: Paráda! Češi rozhodli proti Švédsku v poslední minutě a vykročili za vítězstvím ve skupině",
             "publishedAt": "2026-04-23T06:45:23Z"
-          },
-          {
-            "title": "Itálie nechce na MS ve fotbale místo Íránu. Ostudný návrh! zní z Apeninského poloostrova",
-            "publishedAt": "2026-04-23T14:03:17Z"
           }
         ]
       }
