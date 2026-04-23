@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "seznamzpravy.cz",
-  "ingestedAt": "2026-04-23T03:35:23.435386Z",
+  "ingestedAt": "2026-04-23T03:54:45.970607Z",
   "items": [
     {
       "section": "aktualne",
@@ -23,6 +23,32 @@
         "realitní",
         "šéf",
         "železnic"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_seznam_domaci",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "seznamzpravy.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Firma roste, akcie klesají. CSG má za sebou tři měsíce na burze",
+      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-finance-akcie-fondy-firma-roste-akcie-klesaji-csg-ma-za-sebou-tri-mesice-na-burze-304597",
+      "dt": "2026-04-23T03:30:00Z",
+      "media_raw": "Seznam Zprávy / Domácí",
+      "media_norm": "Seznam Zprávy / Domácí",
+      "tokens": [
+        "akcie",
+        "burze",
+        "csg",
+        "firma",
+        "klesají",
+        "měsíce",
+        "roste",
+        "sebou",
+        "tři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -725,32 +751,6 @@
         "zkušený",
         "íránci",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_seznam_domaci",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "seznamzpravy.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jedna rána za druhou. Šéf Brana popisuje trápení evropských automobilek",
-      "url": "https://www.seznamzpravy.cz/clanek/ekonomika-byznys-rozhovory-jedna-rana-za-druhou-sef-brana-popisuje-trapeni-evropskych-automobilek-304490",
-      "dt": "2026-04-22T12:20:00Z",
-      "media_raw": "Seznam Zprávy / Domácí",
-      "media_norm": "Seznam Zprávy / Domácí",
-      "tokens": [
-        "automobilek",
-        "brana",
-        "druhou",
-        "evropských",
-        "jedna",
-        "popisuje",
-        "rána",
-        "trápení",
-        "šéf"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -2280,7 +2280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.seznamzpravy.cz/rss/domaci",
-      "bytes": 35688,
+      "bytes": 35104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -2317,12 +2317,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T03:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 19,
-          "sport": 1,
-          "finance": 10
+          "finance": 10,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -2337,6 +2337,10 @@
           {
             "title": "Šéf železnic jako realitní mág. Koupil další byt a prodávající opět prodělal",
             "publishedAt": "2026-04-23T03:00:00Z"
+          },
+          {
+            "title": "Firma roste, akcie klesají. CSG má za sebou tři měsíce na burze",
+            "publishedAt": "2026-04-23T03:30:00Z"
           },
           {
             "title": "Velký úspěch českého umělce. Dvacetiletý klavírista získal cenu BBC",
@@ -2361,10 +2365,6 @@
           {
             "title": "„Oto, pojď ven,“ žádali studenti Klempíře. Za média jich protestovaly tisíce",
             "publishedAt": "2026-04-22T18:28:51Z"
-          },
-          {
-            "title": "Poprvé po desetiletích. Američané vystřelili proti lodi z palubního děla",
-            "publishedAt": "2026-04-22T17:00:00Z"
           }
         ]
       }

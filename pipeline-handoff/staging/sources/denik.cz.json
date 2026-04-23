@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T03:35:23.435386Z",
+  "ingestedAt": "2026-04-23T03:54:45.970607Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
+      "url": "https://www.denik.cz/z_domova/sef-bis-michal-koudelka-seznam-ruskych-agentu.html",
+      "dt": "2026-04-23T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "absurdní",
+        "agentů",
+        "bis",
+        "koudelka",
+        "požadavek",
+        "ruských",
+        "seznam",
+        "česku",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,32 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Média nedáme! Studenti protestovali za Českou televizi, zaplnili náměstí v Praze",
-      "url": "https://www.denik.cz/regiony/studenti-obsadili-namesti-a-haji-media-stary-televizor-leti-z-okna-v-olomouci-20.html",
-      "dt": "2026-04-22T11:27:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "média",
-        "nedáme",
-        "náměstí",
-        "praze",
-        "protestovali",
-        "studenti",
-        "televizi",
-        "zaplnili",
-        "českou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29828,
+      "bytes": 29533,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -716,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
+            "publishedAt": "2026-04-23T03:30:00Z"
+          },
           {
             "title": "Extrémní proměny: Marek dokázal, že hendikep nemusí být překážka. Zhubl 72 kg",
             "publishedAt": "2026-04-23T02:30:00Z"
@@ -743,10 +748,6 @@
           {
             "title": "Když ho vláda nepustí na summit NATO, Petr Pavel vyrazí na koncert ZZ Top",
             "publishedAt": "2026-04-22T18:35:00Z"
-          },
-          {
-            "title": "Petr Pavel: Do StarDance bych nešel, ale v České televizi by pořad měl zůstat",
-            "publishedAt": "2026-04-22T18:03:00Z"
           }
         ]
       }
