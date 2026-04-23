@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T16:44:40.309878Z",
+  "ingestedAt": "2026-04-23T17:05:11.186871Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Problém pro německé tanky a stíhačky? Berlín přijde o ropu z Kazachstánu",
+      "url": "https://ekonomickydenik.cz/problem-pro-nemecke-tanky-a-stihacky-berlin-prijde-o-ropu/",
+      "dt": "2026-04-23T16:44:14Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "berlín",
+        "kazachstánu",
+        "německé",
+        "problém",
+        "přijde",
+        "ropu",
+        "stíhačky",
+        "tanky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,30 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Výměna za miliardy: Družba je opravena, míč je teď na straně Orbána",
-      "url": "https://ekonomickydenik.cz/druzba-je-opravena-mic-je-ted-na-strane-orbana/",
-      "dt": "2026-04-21T16:50:33Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "družba",
-        "miliardy",
-        "míč",
-        "opravena",
-        "orbána",
-        "straně",
-        "výměna"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72558,
+      "bytes": 72640,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:12:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:44:14Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Problém pro německé tanky a stíhačky? Berlín přijde o ropu z Kazachstánu",
+            "publishedAt": "2026-04-23T16:44:14Z"
+          },
           {
             "title": "Trest pro energetické firmy za „nemravné zisky“? Daně z neočekávaných příjmů jsou zpět",
             "publishedAt": "2026-04-23T15:12:54Z"
@@ -883,10 +888,6 @@
           {
             "title": "Konec „Putinových očí“ nad Evropou? Francouzi mají systém, před kterým se žádný dron neschová",
             "publishedAt": "2026-04-23T11:18:50Z"
-          },
-          {
-            "title": "Havlíček: Hrozí omezení dodávek z Německa. Paliva ze Slovnaftu potřebujeme",
-            "publishedAt": "2026-04-23T11:08:51Z"
           }
         ]
       }

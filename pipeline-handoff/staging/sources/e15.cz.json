@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-23T16:44:40.309878Z",
+  "ingestedAt": "2026-04-23T17:05:11.186871Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První pokles od pandemie. Růst cen nemovitostí v Dubaji utnul konflikt USA s Íránem",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/prvni-pokles-od-pandemie-rust-cen-nemovitosti-v-dubaji-utnul-konflikt-usa-s-iranem-1432331",
+      "dt": "2026-04-23T16:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cen",
+        "dubaji",
+        "konflikt",
+        "nemovitostí",
+        "pandemie",
+        "pokles",
+        "první",
+        "růst",
+        "usa",
+        "utnul",
+        "íránem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1044,36 +1072,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Většinu her si kvůli špatné reklamě nikdo nestáhne. Slovenský startup staví řešení na její automatizaci",
-      "url": "https://www.e15.cz/byznys/startupy/vetsinu-her-si-kvuli-spatne-reklame-nikdo-nestahne-slovensky-startup-stavi-reseni-na-jeji-automatizaci-1432275",
-      "dt": "2026-04-22T07:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "automatizaci",
-        "her",
-        "její",
-        "kvůli",
-        "nestáhne",
-        "nikdo",
-        "reklamě",
-        "slovenský",
-        "startup",
-        "staví",
-        "většinu",
-        "řešení",
-        "špatné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56019,
+      "bytes": 56057,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1138,6 +1136,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První pokles od pandemie. Růst cen nemovitostí v Dubaji utnul konflikt USA s Íránem",
+            "publishedAt": "2026-04-23T16:30:00Z"
+          },
           {
             "title": "Akcionáři schválili obří fúzi. Paramount Skydance kupuje Warner Bros. Discovery",
             "publishedAt": "2026-04-23T15:23:00Z"
@@ -1165,10 +1167,6 @@
           {
             "title": "mBank: Zkušenost s podvodným e-shopem má každý čtvrtý nakupující",
             "publishedAt": "2026-04-23T11:51:00Z"
-          },
-          {
-            "title": "ČEZ nabídne část majetku novým investorům, stát chce firmu plně ovládnout do roku 2029",
-            "publishedAt": "2026-04-23T11:45:00Z"
           }
         ]
       }

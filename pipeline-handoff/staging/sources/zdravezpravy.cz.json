@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-23T16:44:40.309878Z",
+  "ingestedAt": "2026-04-23T17:05:11.186871Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "SVS: V několika skleničkách výživy pro kojence byl jed na krysy",
+      "url": "https://www.zdravezpravy.cz/2026/04/23/svs-zasahuje-v-nekolika-sklenickach-vyzivy-pro-kojence-byl-jed-na-krysy/",
+      "dt": "2026-04-23T16:20:41Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "jed",
+        "kojence",
+        "krysy",
+        "několika",
+        "skleničkách",
+        "svs",
+        "výživy"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,32 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Divizi zdravotní péče Penta Hospitals CZ nově vede Martin Křížek",
-      "url": "https://www.zdravezpravy.cz/2026/04/15/divizi-zdravotni-pece-penta-hospitals-nove-vede-martin-krizek/",
-      "dt": "2026-04-15T07:50:31Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "divizi",
-        "hospitals",
-        "křížek",
-        "martin",
-        "nově",
-        "penta",
-        "péče",
-        "vede",
-        "zdravotní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -507,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 213815,
+      "bytes": 213462,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -544,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:30:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:20:41Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -559,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SVS: V několika skleničkách výživy pro kojence byl jed na krysy",
+            "publishedAt": "2026-04-23T16:20:41Z"
+          },
           {
             "title": "Na Florenci je nová poliklinika. Jsou v ní praktici, zubaři i další ambulance",
             "publishedAt": "2026-04-23T12:30:46Z"
@@ -586,10 +588,6 @@
           {
             "title": "Zdravotní pojišťovny se do JMHZ nezahrnuly, přehledy mají zvlášť",
             "publishedAt": "2026-04-21T09:21:39Z"
-          },
-          {
-            "title": "Ženy v EU mají o čtvrtinu nižší důchod než muži. V Česku je rozdíl menší",
-            "publishedAt": "2026-04-21T06:40:34Z"
           }
         ]
       }

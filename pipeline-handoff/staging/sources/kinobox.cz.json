@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-23T16:44:40.309878Z",
+  "ingestedAt": "2026-04-23T17:05:11.186871Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Nová česká komedie dorazila na Oneplay. Šviháci navazují na české rodinné klasiky",
+      "url": "https://www.kinobox.cz/clanky/vod/52935-nova-ceska-komedie-dorazila-na-oneplay-svihaci-navazuji-na-ceske-rodinne-klasiky",
+      "dt": "2026-04-23T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dorazila",
+        "klasiky",
+        "komedie",
+        "navazují",
+        "nová",
+        "oneplay",
+        "rodinné",
+        "česká",
+        "české",
+        "šviháci"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -519,35 +546,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Tom Cruise znovu usedne do stíhačky. Chystá se Top Gun 3 a také nová Světová válka Z",
-      "url": "https://www.kinobox.cz/clanky/filmy/52861-tom-cruise-znovu-usedne-do-stihacky-paramount-chysta-top-gun-3-a-take-novou-svetovou-valku-z",
-      "dt": "2026-04-21T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "chystá",
-        "cruise",
-        "gun",
-        "nová",
-        "stíhačky",
-        "světová",
-        "také",
-        "tom",
-        "top",
-        "usedne",
-        "válka",
-        "znovu"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -558,7 +556,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28630,
+      "bytes": 28404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -595,7 +593,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -610,6 +608,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová česká komedie dorazila na Oneplay. Šviháci navazují na české rodinné klasiky",
+            "publishedAt": "2026-04-23T17:00:00Z"
+          },
           {
             "title": "„Kdybych měla nohy, tak ti nakopu,“ sténá hrdinka úzkostného dramatu. Film je mateřskou noční můrou",
             "publishedAt": "2026-04-23T15:00:00Z"
@@ -637,10 +639,6 @@
           {
             "title": "Pět švestek Jana Svěráka slibuje existenciální komedii. Humor ale budí rozpaky",
             "publishedAt": "2026-04-23T09:00:00Z"
-          },
-          {
-            "title": "Nicole Kidman a Sandra Bullock opět čarují. Magická posedlost 2 má kouzelný trailer",
-            "publishedAt": "2026-04-23T07:00:00Z"
           }
         ]
       }
