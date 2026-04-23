@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T07:30:17.740639Z",
+  "ingestedAt": "2026-04-23T07:52:22.523015Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Miliardy v dělostřeleckých granátech: Strnadova CSG ulovila další obří zakázku",
+      "url": "https://ekonomickydenik.cz/csg-obri-zakazka-delostrelecke-granaty/",
+      "dt": "2026-04-23T07:29:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "csg",
+        "další",
+        "dělostřeleckých",
+        "granátech",
+        "miliardy",
+        "obří",
+        "strnadova",
+        "ulovila",
+        "zakázku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,29 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Macinka se má omluvit za teroristy. Vyzývá ho Hnutí Duha",
-      "url": "https://ekonomickydenik.cz/macinka-omluvit-teroristy-hnuti-duha/",
-      "dt": "2026-04-21T09:19:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "duha",
-        "hnutí",
-        "macinka",
-        "omluvit",
-        "teroristy",
-        "vyzývá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73190,
+      "bytes": 73008,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,10 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:08:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:29:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 24,
+          "sport": 1,
+          "finance": 23,
           "zpravy": 3,
           "zdravi": 3
         },
@@ -849,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miliardy v dělostřeleckých granátech: Strnadova CSG ulovila další obří zakázku",
+            "publishedAt": "2026-04-23T07:29:24Z"
+          },
           {
             "title": "Slovensko zas přijímá ropu z Ruska. Fico mění postoj k sankcím",
             "publishedAt": "2026-04-23T07:08:15Z"
@@ -876,10 +884,6 @@
           {
             "title": "Velký bratr v boji proti zločinu. Evropa chystá policejní cloud a umělou inteligenci",
             "publishedAt": "2026-04-22T14:01:35Z"
-          },
-          {
-            "title": "Konec cigaret pro ročníky po roce 2008. Inspirace pro Česko? Šťastný nesouhlasí",
-            "publishedAt": "2026-04-22T13:53:33Z"
           }
         ]
       }
