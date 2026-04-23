@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-23T23:22:23.851977Z",
+  "updatedAt": "2026-04-23T23:41:37.435527Z",
   "feeds": {
     "https://www.aktualne.cz/rss/": {
       "topic": "aktualne",
@@ -187,7 +187,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56100,
+      "bytes": 56096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -235,7 +235,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 114102,
+      "bytes": 113748,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,15 +836,15 @@
     "https://www.vtelce.cz/feed/": {
       "topic": "kultura",
       "source": "vTelce",
-      "accepted": 0,
-      "status": "BOZO",
-      "itemsParsed": 0,
-      "itemsKept": 0,
-      "httpStatus": 0,
-      "contentType": "",
+      "accepted": 10,
+      "status": "OK",
+      "itemsParsed": 10,
+      "itemsKept": 10,
+      "httpStatus": 200,
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 0,
-      "reason": "fetch_failed",
+      "bytes": 96299,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
