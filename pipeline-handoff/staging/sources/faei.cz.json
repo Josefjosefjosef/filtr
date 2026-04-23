@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T17:05:11.186871Z",
+  "ingestedAt": "2026-04-23T17:24:42.238393Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vedení Applu přebírá John Ternus",
+      "url": "https://profitonline.cz/vedeni-applu-prebira-john-ternus/",
+      "dt": "2026-04-23T17:20:52Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "applu",
+        "john",
+        "přebírá",
+        "ternus",
+        "vedení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -274,30 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Gruzínská vláda se mstí studentům, omezuje veřejné univerzity",
-      "url": "https://profitonline.cz/gruzinska-vlada-se-msti-studentum-omezuje-verejne-univerzity/",
-      "dt": "2026-04-21T10:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "gruzínská",
-        "mstí",
-        "omezuje",
-        "studentům",
-        "univerzity",
-        "veřejné",
-        "vláda"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19266,
+      "bytes": 19090,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,11 +343,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:00:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:20:52Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "finance": 11
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -361,6 +359,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vedení Applu přebírá John Ternus",
+            "publishedAt": "2026-04-23T17:20:52Z"
+          },
           {
             "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
             "publishedAt": "2026-04-23T10:00:03Z"
@@ -388,10 +390,6 @@
           {
             "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
             "publishedAt": "2026-04-22T10:00:00Z"
-          },
-          {
-            "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
-            "publishedAt": "2026-04-22T08:00:38Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-23T17:05:11.186871Z",
+  "ingestedAt": "2026-04-23T17:24:42.238393Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Sonda Voyager 1 se pomalu blíží svému konci. NASA vypnula další instrument",
+      "url": "https://www.idnes.cz/technet/vesmir/vesmir-sonda-vzdalena-voyager-setreni-energii-vypnuti.A260423_105546_tec_vesmir_vse",
+      "dt": "2026-04-23T16:55:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "blíží",
+        "další",
+        "instrument",
+        "konci",
+        "nasa",
+        "pomalu",
+        "sonda",
+        "svému",
+        "voyager",
+        "vypnula"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -736,32 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Úkoly a letadla podniku ČSA Agrolet. Nejen u Galanty to bylo jako na frontě",
-      "url": "https://www.idnes.cz/technet/technika/letecke-praskovani-odstepny-zavod-csa-agrolet.A231226_001133_tec_technika_erp",
-      "dt": "2026-04-12T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "agrolet",
-        "frontě",
-        "galanty",
-        "jako",
-        "letadla",
-        "nejen",
-        "podniku",
-        "úkoly",
-        "čsa"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45002,
+      "bytes": 44610,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-22T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 19,
-          "zpravy": 11
+          "other": 20,
+          "zpravy": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -825,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sonda Voyager 1 se pomalu blíží svému konci. NASA vypnula další instrument",
+            "publishedAt": "2026-04-23T16:55:00Z"
+          },
           {
             "title": "Možná vás překvapí, na co se soustředí přicházející Wi-Fi 8",
             "publishedAt": "2026-04-22T22:00:00Z"
@@ -851,10 +856,6 @@
           },
           {
             "title": "Před 100 lety se měnilo třetí nádvoří Hradu. Plečnik chystal šachovnici z kamene",
-            "publishedAt": "2026-04-21T22:00:00Z"
-          },
-          {
-            "title": "Trump plánuje utratit za zbrojení 1,5 bilionu dolarů. Víme, co chce koupit",
             "publishedAt": "2026-04-21T22:00:00Z"
           }
         ]

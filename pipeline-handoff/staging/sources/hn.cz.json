@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-23T17:05:11.186871Z",
+  "ingestedAt": "2026-04-23T17:24:42.238393Z",
   "items": [
     {
       "section": "finance",
@@ -79,6 +79,36 @@
         "přijde",
         "stalo",
         "znamená"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Skupinu Warner Bros může převzít její rival Paramount. Fúze vyvolala obavy herců i majitelů kin",
+      "url": "https://byznys.hn.cz/c1-67870630-skupinu-warner-bros-muze-prevzit-jeji-rival-paramount-fuze-vyvolala-obavy-hercu-i-majitelu-kin",
+      "dt": "2026-04-23T15:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bros",
+        "fúze",
+        "herců",
+        "její",
+        "kin",
+        "majitelů",
+        "obavy",
+        "paramount",
+        "převzít",
+        "rival",
+        "skupinu",
+        "vyvolala",
+        "warner"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1138,36 +1168,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Deset minut operace, čtyři gigabajty dat. Oční klinika FN Ostrava ukazuje, jak vypadá nemocnice budoucnosti",
-      "url": "https://archiv.hn.cz/c1-67870080-deset-minut-operace-ctyri-gigabajty-dat-ocni-klinika-fn-ostrava-ukazuje-jak-vypada-nemocnice-budoucnosti",
-      "dt": "2026-04-22T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "budoucnosti",
-        "dat",
-        "deset",
-        "gigabajty",
-        "klinika",
-        "minut",
-        "nemocnice",
-        "operace",
-        "ostrava",
-        "oční",
-        "ukazuje",
-        "vypadá",
-        "čtyři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1178,7 +1178,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 185379,
+      "bytes": 185411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1218,9 +1218,9 @@
         "raw_feed_latest_publishedAt": "2026-04-23T16:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 30,
+          "finance": 31,
           "zpravy": 5,
-          "zdravi": 5
+          "zdravi": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1245,6 +1245,10 @@
             "publishedAt": "2026-04-23T15:53:00Z"
           },
           {
+            "title": "Skupinu Warner Bros může převzít její rival Paramount. Fúze vyvolala obavy herců i majitelů kin",
+            "publishedAt": "2026-04-23T15:43:00Z"
+          },
+          {
             "title": "Změny mají 200 stran, to je jako román přečtený za víkend, odmítá Mrázová kritiku rozsáhlých úprav stavebního zákona",
             "publishedAt": "2026-04-23T15:30:00Z"
           },
@@ -1259,10 +1263,6 @@
           {
             "title": "Sportovní aplikace Strava si chce na burzu doběhnout pro další kapitál, aby mohla financovat nové akvizice. Vyjde jí to?",
             "publishedAt": "2026-04-23T14:42:00Z"
-          },
-          {
-            "title": "Český národ ztratil duchovní hybnost a žádá si probuzení. Jak se pokát za neodpustitelný hřích?",
-            "publishedAt": "2026-04-23T14:30:00Z"
           }
         ]
       }
