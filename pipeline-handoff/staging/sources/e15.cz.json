@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-23T07:09:02.781627Z",
+  "ingestedAt": "2026-04-23T07:30:17.740639Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Strnadova CSG získala další kontrakt na dělostřeleckou munici za stovky milionů eur",
+      "url": "https://www.e15.cz/byznys/strnadova-csg-ziskala-dalsi-kontrakt-na-delostreleckou-munici-za-stovky-milionu-eur-1432327",
+      "dt": "2026-04-23T07:04:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "csg",
+        "další",
+        "dělostřeleckou",
+        "eur",
+        "kontrakt",
+        "milionů",
+        "munici",
+        "stovky",
+        "strnadova",
+        "získala"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1045,34 +1072,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš neříká pravdu. Tchaj-wan si z Česka udělal technologickou základnu pro část světa",
-      "url": "https://www.e15.cz/nazory-a-analyzy/babis-nerika-pravdu-tchaj-wan-si-z-ceska-udelal-technologickou-zakladnu-pro-cast-sveta-1432246",
-      "dt": "2026-04-21T06:54:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "babiš",
-        "neříká",
-        "pravdu",
-        "světa",
-        "tchaj",
-        "technologickou",
-        "udělal",
-        "wan",
-        "základnu",
-        "česka",
-        "část"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1083,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54505,
+      "bytes": 54503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1120,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:04:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1136,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strnadova CSG získala další kontrakt na dělostřeleckou munici za stovky milionů eur",
+            "publishedAt": "2026-04-23T07:04:00Z"
+          },
           {
             "title": "Svátky 1. a 8. května 2026: Otevírací doba obchodů a co vlastně slavíme?",
             "publishedAt": "2026-04-23T06:45:00Z"
@@ -1163,10 +1166,6 @@
           {
             "title": "Letoví dispečeři vydělali na aerolinkách půl miliardy, Babišově vládě navrhují tučnou dividendu",
             "publishedAt": "2026-04-22T16:50:00Z"
-          },
-          {
-            "title": "ČEZ navrhuje dividendu 42 korun. Do státní kasy a k akcionářům může zamířit 23 miliard",
-            "publishedAt": "2026-04-22T15:06:00Z"
           }
         ]
       }

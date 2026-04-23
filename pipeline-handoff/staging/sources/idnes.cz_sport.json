@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-23T07:09:02.781627Z",
+  "ingestedAt": "2026-04-23T07:30:17.740639Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na pohlaví mě testovali, říká Fibingerová. Promluvila o genderu i dopingu",
+      "url": "https://www.idnes.cz/sport/atletika/fibingerova-atletika-gender-pohlavi-rozstrel-doping-bugar.A260422_141113_atletika_vov",
+      "dt": "2026-04-23T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dopingu",
+        "fibingerová",
+        "genderu",
+        "pohlaví",
+        "promluvila",
+        "testovali",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,35 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obr si způsobil otřes mozku, mrňous řádil. Play off vrací slavnou rivalitu z draftu",
-      "url": "https://www.idnes.cz/sport/basket/obr-victor-wembanyama-scoot-henderson-otres-mozku-play-off-nba-draft-rivalita.A260422_135837_sport-basket_mrg",
-      "dt": "2026-04-22T13:31:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "draftu",
-        "mozku",
-        "mrňous",
-        "obr",
-        "off",
-        "otřes",
-        "play",
-        "rivalitu",
-        "slavnou",
-        "vrací",
-        "způsobil",
-        "řádil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47044,
+      "bytes": 46888,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T06:37:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -847,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na pohlaví mě testovali, říká Fibingerová. Promluvila o genderu i dopingu",
+            "publishedAt": "2026-04-23T07:00:00Z"
+          },
           {
             "title": "Vladař s Philadelphií míří za postupem, Dostál se radoval na ledě Edmontonu",
             "publishedAt": "2026-04-23T06:37:11Z"
@@ -874,10 +873,6 @@
           {
             "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
             "publishedAt": "2026-04-22T20:30:00Z"
-          },
-          {
-            "title": "Třinec snížil z ofsajdu, proč si Pešán nevzal výzvu? Nechtěl jsem riskovat, říkal",
-            "publishedAt": "2026-04-22T20:19:00Z"
           }
         ]
       }

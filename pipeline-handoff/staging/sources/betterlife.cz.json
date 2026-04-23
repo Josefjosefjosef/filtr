@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-23T07:09:02.781627Z",
+  "ingestedAt": "2026-04-23T07:30:17.740639Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V Česku startuje potravinová sbírka. Tisíce dobrovolníků obsadí obchody",
+      "url": "https://www.betterlife.cz/v-cesku-startuje-potravinova-sbirka-tisice-dobrovolniku-obsadi-obchody/",
+      "dt": "2026-04-23T07:23:07Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "dobrovolníků",
+        "obchody",
+        "obsadí",
+        "potravinová",
+        "sbírka",
+        "startuje",
+        "tisíce",
+        "česku"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -261,35 +286,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Aktivita klíšťat stoupá na maximum. Ochránit zdraví pomáhá hladké světlé oblečení i správný repelent",
-      "url": "https://www.betterlife.cz/aktivita-klistat-stoupa-na-maximum-ochranit-zdravi-pomaha-hladke-svetle-obleceni-i-spravny-repelent/",
-      "dt": "2026-04-18T08:28:42Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "aktivita",
-        "hladké",
-        "klíšťat",
-        "maximum",
-        "oblečení",
-        "ochránit",
-        "pomáhá",
-        "repelent",
-        "správný",
-        "stoupá",
-        "světlé",
-        "zdraví"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -300,7 +296,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 70706,
+      "bytes": 68638,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -360,11 +356,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-22T10:11:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:23:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
           "zdravi": 8,
+          "zpravy": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -377,6 +373,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Česku startuje potravinová sbírka. Tisíce dobrovolníků obsadí obchody",
+            "publishedAt": "2026-04-23T07:23:07Z"
+          },
           {
             "title": "Odstartovaly kontroly příspěvků na bydlení. Kvůli chybám či podvodům hrozí vracení peněz a pokuty",
             "publishedAt": "2026-04-22T10:11:56Z"
@@ -404,10 +404,6 @@
           {
             "title": "Alchymie zvaná kvásek: Zkuste kouzlo domácího pečení, stačí vám jen mouka a voda",
             "publishedAt": "2026-04-20T09:23:35Z"
-          },
-          {
-            "title": "Příští týden v seriálu Ulice: Konec velkých iluzí, nečekané stěhování i politický kalkul",
-            "publishedAt": "2026-04-19T15:57:55Z"
           }
         ]
       }

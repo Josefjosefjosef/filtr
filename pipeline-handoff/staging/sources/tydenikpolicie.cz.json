@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-23T07:09:02.781627Z",
+  "ingestedAt": "2026-04-23T07:30:17.740639Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šedesátník se v Brně smál a vtipkoval. Nadýchal přes pět promile alkoholu",
+      "url": "https://tydenikpolicie.cz/sedesatnik-se-v-brne-smal-a-vtipkoval-nadychal-pres-pet-promile-alkoholu/",
+      "dt": "2026-04-23T07:23:47Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "alkoholu",
+        "brně",
+        "nadýchal",
+        "promile",
+        "pět",
+        "smál",
+        "vtipkoval",
+        "šedesátník"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,28 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nová služební vozidla pro ostravské strážníky",
-      "url": "https://tydenikpolicie.cz/nova-sluzebni-vozidla-pro-ostravske-strazniky/",
-      "dt": "2026-04-22T15:06:30Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "nová",
-        "ostravské",
-        "služební",
-        "strážníky",
-        "vozidla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16218,
+      "bytes": 16350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T04:02:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:23:47Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šedesátník se v Brně smál a vtipkoval. Nadýchal přes pět promile alkoholu",
+            "publishedAt": "2026-04-23T07:23:47Z"
+          },
           {
             "title": "Mladíci v Ústí nad Labem přepadli patnáctiletého chlapce",
             "publishedAt": "2026-04-23T04:02:11Z"
@@ -346,10 +353,6 @@
           {
             "title": "V Českých Velenicích ukradl auto, ale daleko nedojel. Došla mu nafta",
             "publishedAt": "2026-04-22T18:36:22Z"
-          },
-          {
-            "title": "Ford projel při nehodě na pražské Palmovce výlohou kadeřnictví",
-            "publishedAt": "2026-04-22T18:27:11Z"
           }
         ]
       }
