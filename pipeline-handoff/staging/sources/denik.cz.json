@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T19:52:33.886700Z",
+  "ingestedAt": "2026-04-23T20:14:36.887781Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie v Marseille při silniční kontrole zastřelila ozbrojeného mladíka",
+      "url": "https://www.denik.cz/staty-eu/marseille-policie-silnicni-kontrola-strelba.html",
+      "dt": "2026-04-23T19:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kontrole",
+        "marseille",
+        "mladíka",
+        "ozbrojeného",
+        "policie",
+        "při",
+        "silniční",
+        "zastřelila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,33 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pedofilie musela z plátna pryč. Film Michael o zpěváku Jacksonovi se rodil těžce",
-      "url": "https://www.denik.cz/film-a-televize/film-michael-vystrizene-sceny.html",
-      "dt": "2026-04-23T06:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "film",
-        "jacksonovi",
-        "michael",
-        "musela",
-        "pedofilie",
-        "plátna",
-        "pryč",
-        "rodil",
-        "těžce",
-        "zpěváku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29467,
+      "bytes": 29416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:39:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -723,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie v Marseille při silniční kontrole zastřelila ozbrojeného mladíka",
+            "publishedAt": "2026-04-23T19:39:00Z"
+          },
           {
             "title": "Tragédie v Itálii: Žena vyskočila z balkonu i se svými třemi dětmi v náručí",
             "publishedAt": "2026-04-23T18:50:00Z"
@@ -750,10 +752,6 @@
           {
             "title": "Medvědice na jihovýchodě Polska zabila ženu, která byla na procházce se synem",
             "publishedAt": "2026-04-23T14:51:00Z"
-          },
-          {
-            "title": "Ryanair začne zavírat odbavování zavazadel dříve. Komu to pomůže, zlobí se lidé",
-            "publishedAt": "2026-04-23T13:30:00Z"
           }
         ]
       }

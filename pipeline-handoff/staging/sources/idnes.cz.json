@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T19:52:33.886700Z",
+  "ingestedAt": "2026-04-23T20:14:36.887781Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump varoval Teherán, že mu dochází čas. Dohodu uzavře, až to bude dobré pro USA",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/donald-trump-usa-iran-dohoda-cas.A260423_212133_zahranicni_syko",
+      "dt": "2026-04-23T19:49:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dobré",
+        "dochází",
+        "dohodu",
+        "teherán",
+        "trump",
+        "usa",
+        "uzavře",
+        "varoval",
+        "čas"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,33 +781,6 @@
         "ukrajinu",
         "výši",
         "úleva"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zřejmě jsem se zbláznil, řekl bývalý ředitel pískovny. Za machinace dostal podmínku",
-      "url": "https://www.idnes.cz/brno/zpravy/soud-piskovna-brno-cernovice-jednatel-novotny-podminka.A260423_085207_brno-zpravy_krut",
-      "dt": "2026-04-23T13:25:24Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bývalý",
-        "dostal",
-        "jsem",
-        "machinace",
-        "podmínku",
-        "pískovny",
-        "zbláznil",
-        "zřejmě",
-        "ředitel",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50040,
+      "bytes": 49832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,7 +1613,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T19:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:49:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1631,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump varoval Teherán, že mu dochází čas. Dohodu uzavře, až to bude dobré pro USA",
+            "publishedAt": "2026-04-23T19:49:00Z"
+          },
           {
             "title": "V Teheránu se spustila protivzdušná obrana, podle médií kvůli dronům",
             "publishedAt": "2026-04-23T19:34:00Z"
@@ -1658,10 +1661,6 @@
           {
             "title": "S Českem zdvojnásobíme obchod, tvrdí Saúdové. Macinka v Rijádu nabízí radary",
             "publishedAt": "2026-04-23T17:17:00Z"
-          },
-          {
-            "title": "Dramatická záchrana na Šumpersku: k dělníkovi se lékař musel slanit z vrtulníku",
-            "publishedAt": "2026-04-23T16:59:00Z"
           }
         ]
       }

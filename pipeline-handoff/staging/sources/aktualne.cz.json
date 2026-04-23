@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T19:52:33.886700Z",
+  "ingestedAt": "2026-04-23T20:14:36.887781Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
+      "url": "https://zpravy.aktualne.cz/zahranici/na-kypru-zacal-neformalni-summit-eu-na-miste-je-i-zelenskyj/r~aaa290eb39778e3e0b148dd05044b559/",
+      "dt": "2026-04-23T18:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "kypru",
+        "místě",
+        "neformální",
+        "summit",
+        "začal",
+        "zelenskyj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Teheránu byla aktivována protivzdušná obrana. Kdo vlastně útočí?",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "aktivována",
+        "obrana",
+        "protivzdušná",
+        "teheránu",
+        "vlastně",
+        "útočí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -58,29 +104,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V Teheránu byla aktivována protivzdušná obrana. Mohly za to drony",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aktivována",
-        "drony",
-        "mohly",
-        "obrana",
-        "protivzdušná",
-        "teheránu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila kdy pošle první peníze",
       "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
       "dt": "2026-01-21T06:45:00Z",
@@ -123,29 +146,6 @@
         "reakce",
         "rychlá",
         "vešel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
-      "url": "https://zpravy.aktualne.cz/zahranici/na-kypru-zacal-neformalni-summit-eu-na-miste-je-i-zelenskyj/r~aaa290eb39778e3e0b148dd05044b559/",
-      "dt": "2026-04-23T18:37:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kypru",
-        "místě",
-        "neformální",
-        "summit",
-        "začal",
-        "zelenskyj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -530,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21605,
+      "bytes": 21708,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,9 +570,9 @@
         "raw_feed_latest_publishedAt": "2026-04-23T19:17:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 11,
           "finance": 2,
           "sport": 5,
-          "zpravy": 11,
           "other": 2
         },
         "drop_counts": {
@@ -586,6 +586,14 @@
         },
         "sample_titles": [
           {
+            "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
+            "publishedAt": "2026-04-23T18:37:00Z"
+          },
+          {
+            "title": "V Teheránu byla aktivována protivzdušná obrana. Kdo vlastně útočí?",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Hollywoodská fúze za 2,3 bilionu: Paramount převezme svého rivala",
             "publishedAt": "2026-04-23T15:14:00Z"
           },
@@ -594,20 +602,12 @@
             "publishedAt": "2026-04-23T19:17:00Z"
           },
           {
-            "title": "V Teheránu byla aktivována protivzdušná obrana. Mohly za to drony",
-            "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
             "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila kdy pošle první peníze",
             "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Muž vešel do kavárny a bodl hosta do hrudníku. Reakce byla rychlá a nečekaná",
             "publishedAt": "2026-04-23T18:38:00Z"
-          },
-          {
-            "title": "Na Kypru začal neformální summit EU, na místě je i Zelenskyj",
-            "publishedAt": "2026-04-23T18:37:00Z"
           },
           {
             "title": "Pahlaví Evropu vyzval, aby přestala s politikou ustupování vůči Íránu",
