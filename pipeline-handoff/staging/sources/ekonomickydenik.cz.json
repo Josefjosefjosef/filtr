@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T13:44:48.549129Z",
+  "ingestedAt": "2026-04-23T14:05:21.889391Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ukrajina odvrátila bankrot. EU odklepla půjčku 2,2 bilionu korun",
+      "url": "https://ekonomickydenik.cz/ukrajina-odvratila-bankrot-eu-odklepla-pujcku-22-bilionu-korun/",
+      "dt": "2026-04-23T13:53:57Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bankrot",
+        "bilionu",
+        "korun",
+        "odklepla",
+        "odvrátila",
+        "půjčku",
+        "ukrajina"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,34 +791,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Divokou regulaci cen benzinu a nafty nechceme. Senátoři se bouří proti návrhu Schillerové",
-      "url": "https://ekonomickydenik.cz/senat-divokou-regulaci-cen-benzinu-a-nafty-nechceme/",
-      "dt": "2026-04-21T13:55:28Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "benzinu",
-        "bouří",
-        "cen",
-        "divokou",
-        "nafty",
-        "nechceme",
-        "návrhu",
-        "proti",
-        "regulaci",
-        "schillerové",
-        "senátoři"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72772,
+      "bytes": 72611,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:32:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:53:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -860,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina odvrátila bankrot. EU odklepla půjčku 2,2 bilionu korun",
+            "publishedAt": "2026-04-23T13:53:57Z"
+          },
           {
             "title": "Místo slevy zadarmo. Do pasti akcí se po Reeboku chytil Myprotein",
             "publishedAt": "2026-04-23T13:32:53Z"
@@ -887,10 +887,6 @@
           {
             "title": "Přes noc k polskému moři: České dráhy přidávají lůžka, jedna novinka ale neprošla",
             "publishedAt": "2026-04-23T10:35:11Z"
-          },
-          {
-            "title": "Netflix zdražil, už podruhé za dva roky. Nejlevnější tarif přesáhl 250 korun",
-            "publishedAt": "2026-04-23T07:58:28Z"
           }
         ]
       }

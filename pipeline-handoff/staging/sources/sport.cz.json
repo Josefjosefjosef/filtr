@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T13:44:48.549129Z",
+  "ingestedAt": "2026-04-23T14:05:21.889391Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Skandální odhalení. Státem řízený doping má spojitost s pokusy o vraždu",
+      "url": "https://www.sport.cz/clanek/ostatni-skandalni-odhaleni-rusky-doping-ridili-stejni-lide-kteri-se-snazili-zavrazdit-odpurce-putina-5441903",
+      "dt": "2026-04-23T13:01:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "doping",
+        "odhalení",
+        "pokusy",
+        "skandální",
+        "spojitost",
+        "státem",
+        "vraždu",
+        "řízený"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -46,31 +71,6 @@
         "nezahraje",
         "pořádný",
         "sezony"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Investigativní web přinesl skandální odhalení v kauze ruského dopingu",
-      "url": "https://www.sport.cz/clanek/ostatni-skandalni-odhaleni-rusky-doping-ridili-stejni-lide-kteri-se-snazili-zavrazdit-odpurce-putina-5441903",
-      "dt": "2026-04-23T13:01:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dopingu",
-        "investigativní",
-        "kauze",
-        "odhalení",
-        "přinesl",
-        "ruského",
-        "skandální",
-        "web"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -790,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43723,
+      "bytes": 43735,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +830,8 @@
         "raw_feed_latest_publishedAt": "2026-04-23T13:01:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 30
+          "zpravy": 1,
+          "sport": 29
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -843,16 +844,16 @@
         },
         "sample_titles": [
           {
+            "title": "Skandální odhalení. Státem řízený doping má spojitost s pokusy o vraždu",
+            "publishedAt": "2026-04-23T13:01:45Z"
+          },
+          {
             "title": "HOKEJ ONLINE: Češi chtějí navázat na cennou výhru proti dalšímu silnému soupeři",
             "publishedAt": "2026-04-23T06:45:23Z"
           },
           {
             "title": "Pořádný flastr pro Bořila! Do konce sezony už si nezahraje",
             "publishedAt": "2026-04-23T10:06:54Z"
-          },
-          {
-            "title": "Investigativní web přinesl skandální odhalení v kauze ruského dopingu",
-            "publishedAt": "2026-04-23T13:01:45Z"
           },
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",

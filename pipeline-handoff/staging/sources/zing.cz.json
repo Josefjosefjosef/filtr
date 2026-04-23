@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-23T13:44:48.549129Z",
+  "ingestedAt": "2026-04-23T14:05:21.889391Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Vychází Masters of Albion, poslední hra od Petera Molyneuxe",
+      "url": "https://zing.cz/article/vychazi-masters-of-albion-posledni-hra-od-petera-molyneuxe",
+      "dt": "2026-04-23T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "albion",
+        "hra",
+        "masters",
+        "molyneuxe",
+        "petera",
+        "poslední",
+        "vychází"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -972,34 +996,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Uniklo datum vydání Black Flag Resynced, dočkáme se dřív, než jsme doufali",
-      "url": "https://zing.cz/article/uniklo-datum-vydani-black-flag-resynced-dockame-se-driv-nez-jsme-doufali",
-      "dt": "2026-04-17T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "black",
-        "datum",
-        "doufali",
-        "dočkáme",
-        "dřív",
-        "flag",
-        "jsme",
-        "než",
-        "resynced",
-        "uniklo",
-        "vydání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1010,7 +1006,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126154,
+      "bytes": 126063,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1047,7 +1043,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1063,6 +1059,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vychází Masters of Albion, poslední hra od Petera Molyneuxe",
+            "publishedAt": "2026-04-23T14:00:00Z"
+          },
           {
             "title": "Gran Turismo 7 obdrželo novou aktualizaci s auty a dalším obsahem",
             "publishedAt": "2026-04-23T12:00:00Z"
@@ -1090,10 +1090,6 @@
           {
             "title": "Aktivujte si zdarma na Steamu dvě hry",
             "publishedAt": "2026-04-22T16:00:00Z"
-          },
-          {
-            "title": "Konec němé postavy. Hrdina Metra 2039 bude mít podle autora knih rozhodně co říct",
-            "publishedAt": "2026-04-22T14:00:00Z"
           }
         ]
       }
