@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T19:29:56.277104Z",
+  "ingestedAt": "2026-04-23T19:52:33.886700Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump chce uzavřít dohodu s Íránem jen tehdy, když to bude dobré pro USA",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-chce-uzavrit-dohodu-s-iranem-jen-tehdy-kdyz-to-bude-dobre-pro-usa-372734",
+      "dt": "2026-04-23T19:40:04Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chce",
+        "dobré",
+        "dohodu",
+        "jen",
+        "když",
+        "tehdy",
+        "trump",
+        "usa",
+        "uzavřít",
+        "íránem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -744,31 +771,6 @@
         "ustojí",
         "zřejmě",
         "íránská"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Filmové premiéry: Komedie o mateřství, dokument o kaši a drama o Jacksonovi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/filmove-premiery-komedie-o-materstvi-dokument-o-kasi-a-drama-o-jacksonovi-372697",
-      "dt": "2026-04-23T08:42:16Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dokument",
-        "drama",
-        "filmové",
-        "jacksonovi",
-        "kaši",
-        "komedie",
-        "mateřství",
-        "premiéry"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1543,7 +1545,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43791,
+      "bytes": 43683,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1603,12 +1605,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T19:08:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T19:40:04Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
+          "zpravy": 21,
           "finance": 3,
-          "other": 7
+          "other": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1620,6 +1622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump chce uzavřít dohodu s Íránem jen tehdy, když to bude dobré pro USA",
+            "publishedAt": "2026-04-23T19:40:04Z"
+          },
           {
             "title": "„Samozřejmě že je tu nenecháme.“ Lidé se z Kramatorsku evakuují i s mazlíčky",
             "publishedAt": "2026-04-23T19:08:53Z"
@@ -1647,10 +1653,6 @@
           {
             "title": "Podle Vystrčila Rutteho potěšila Babišova slova, že Česko splní závazky vůči NATO",
             "publishedAt": "2026-04-23T15:28:13Z"
-          },
-          {
-            "title": "V Číně odhalili naleziště nepopsatelných tvorů z hlubin času",
-            "publishedAt": "2026-04-23T15:18:59Z"
           }
         ]
       }
@@ -1756,7 +1758,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77005,
+      "bytes": 77009,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

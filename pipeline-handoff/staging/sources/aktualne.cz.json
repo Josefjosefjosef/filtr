@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T19:29:56.277104Z",
+  "ingestedAt": "2026-04-23T19:52:33.886700Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hollywoodská fúze za 2,3 bilionu: Paramount převezme svého rivala",
+      "url": "https://zpravy.aktualne.cz/ekonomika/hollywoodska-fuze-za-2-3-bilionu-paramount-prevezme-sveho-rivala/r~aaa295e59459cfd232b8bd60f8e17e8a/",
+      "dt": "2026-04-23T15:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bilionu",
+        "fúze",
+        "hollywoodská",
+        "paramount",
+        "převezme",
+        "rivala",
+        "svého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -417,30 +441,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hollywoodská fúze za 2,3 bilionu: Paramount převezme svého rivala",
-      "url": "https://zpravy.aktualne.cz/ekonomika/hollywoodska-fuze-za-2-3-bilionu-paramount-prevezme-sveho-rivala/r~aaa295e59459cfd232b8bd60f8e17e8a/",
-      "dt": "2026-04-23T15:14:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bilionu",
-        "fúze",
-        "hollywoodská",
-        "paramount",
-        "převezme",
-        "rivala",
-        "svého"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "„Pořádný slizoun, níž už se klesnout nedá,“ urazil Trump exvelvyslance v Česku",
@@ -570,9 +570,9 @@
         "raw_feed_latest_publishedAt": "2026-04-23T19:17:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "sport": 5,
           "zpravy": 11,
-          "finance": 2,
           "other": 2
         },
         "drop_counts": {
@@ -585,6 +585,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hollywoodská fúze za 2,3 bilionu: Paramount převezme svého rivala",
+            "publishedAt": "2026-04-23T15:14:00Z"
+          },
           {
             "title": "Sedláka rozčilují ataky, sudí přehlédli faul. Dejte ho na tribunu, radí trenér Třince",
             "publishedAt": "2026-04-23T19:17:00Z"
@@ -612,10 +616,6 @@
           {
             "title": "Drtivý úvod Pardubice nezlomil, přesto Třinec slaví druhý triumf. Rozhodl Musil",
             "publishedAt": "2026-04-23T17:44:00Z"
-          },
-          {
-            "title": "„Překročil jste rychlost, zaplaťte pokutu.“ Policie radí, jak odhalit případný podvod",
-            "publishedAt": "2026-04-23T15:49:00Z"
           }
         ]
       }
