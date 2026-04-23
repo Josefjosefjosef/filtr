@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T12:25:14.866078Z",
+  "ingestedAt": "2026-04-23T12:45:55.479809Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Praktici i specialisté. V centru Prahy otevřeli polikliniku s komplexní péčí",
+      "url": "https://www.denik.cz/zdravotnictvi/otevreni-poliklinika-florenc-penta-hospitals-praha-centrum.html",
+      "dt": "2026-04-23T12:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "centru",
+        "komplexní",
+        "otevřeli",
+        "polikliniku",
+        "prahy",
+        "praktici",
+        "péčí",
+        "specialisté"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Z pultů zmizí čtyřicet nebezpečných kojeneckých výživ. Obsahují toxin cereulid",
+      "url": "https://www.denik.cz/z_domova/nebezpecne-kojenecke-vyzivy-toxin-cereulid.html",
+      "dt": "2026-04-23T12:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cereulid",
+        "kojeneckých",
+        "nebezpečných",
+        "obsahují",
+        "pultů",
+        "toxin",
+        "výživ",
+        "zmizí",
+        "čtyřicet"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -608,59 +659,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Petr Pavel: Do StarDance bych nešel, ale v České televizi by pořad měl zůstat",
-      "url": "https://www.denik.cz/z_domova/prezident-petr-pavel-stardance-ceska-televize-a-vlada.html",
-      "dt": "2026-04-22T18:03:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "ale",
-        "bych",
-        "měl",
-        "nešel",
-        "pavel",
-        "petr",
-        "pořad",
-        "stardance",
-        "televizi",
-        "zůstat",
-        "české"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Předního španělského matadora v Seville srazil a vážně zranil býk",
-      "url": "https://www.denik.cz/staty-eu/spanelsko-matador-sevilla-zraneni-byk-zapasy.html",
-      "dt": "2026-04-22T17:21:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "býk",
-        "matadora",
-        "předního",
-        "seville",
-        "srazil",
-        "vážně",
-        "zranil",
-        "španělského"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -671,7 +669,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29737,
+      "bytes": 29747,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -708,10 +706,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "zdravi": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -723,6 +722,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Praktici i specialisté. V centru Prahy otevřeli polikliniku s komplexní péčí",
+            "publishedAt": "2026-04-23T12:20:00Z"
+          },
+          {
+            "title": "Z pultů zmizí čtyřicet nebezpečných kojeneckých výživ. Obsahují toxin cereulid",
+            "publishedAt": "2026-04-23T12:06:00Z"
+          },
           {
             "title": "Pat v zemi nikoho. Úplné otevření Hormuzu potrvá i půl roku, rizikem jsou miny",
             "publishedAt": "2026-04-23T12:00:00Z"
@@ -746,14 +753,6 @@
           {
             "title": "Případ Bugár nebyl výjimkou. Vraždy vojáků se opakovaly každý rok, říká historik",
             "publishedAt": "2026-04-23T09:00:00Z"
-          },
-          {
-            "title": "Další pastva pro oči v Poděbradech. Záhony zdobí tisíce barevných tulipánů",
-            "publishedAt": "2026-04-23T08:32:00Z"
-          },
-          {
-            "title": "Lidl na Slovensku stahuje sýrovou rolku. Bakterie v ní může ohrozit těhotné",
-            "publishedAt": "2026-04-23T08:00:00Z"
           }
         ]
       }

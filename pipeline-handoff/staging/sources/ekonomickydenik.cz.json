@@ -1,21 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T12:25:14.866078Z",
+  "ingestedAt": "2026-04-23T12:45:55.479809Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Ano, rozdělíme se, přiznal ČEZ. Sítě a obchod převezme dceřiná podskupina",
+      "title": "Turecko zakazuje sociální sítě dětem do 15 let. Podobný krok zvažuje Babiš i Pavel",
+      "url": "https://ekonomickydenik.cz/turecko-zakazuje-socialni-site-detem-do-15-let/",
+      "dt": "2026-04-23T12:23:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "dětem",
+        "krok",
+        "let",
+        "pavel",
+        "podobný",
+        "sociální",
+        "sítě",
+        "turecko",
+        "zakazuje",
+        "zvažuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ano, rozdělíme se, přiznal ČEZ. Sítě a obchod převezme dcera",
       "url": "https://ekonomickydenik.cz/rozdelime-se-priznal-cez/",
       "dt": "2026-04-23T11:56:56Z",
       "media_raw": "Ekonomický deník",
       "media_norm": "Ekonomický deník",
       "tokens": [
         "ano",
-        "dceřiná",
+        "dcera",
         "obchod",
-        "podskupina",
         "převezme",
         "přiznal",
         "rozdělíme",
@@ -764,31 +791,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Do zbraně i sedmdesátníci? Radikální náhrada mladých odpíračů rezonuje Německem",
-      "url": "https://ekonomickydenik.cz/do-zbrane-i-sedmdesatnici-cesko-aktivni-zalohy/",
-      "dt": "2026-04-21T12:36:55Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "mladých",
-        "náhrada",
-        "německem",
-        "odpíračů",
-        "radikální",
-        "rezonuje",
-        "sedmdesátníci",
-        "zbraně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72693,
+      "bytes": 72727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:56:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:23:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -855,7 +857,11 @@
         },
         "sample_titles": [
           {
-            "title": "Ano, rozdělíme se, přiznal ČEZ. Sítě a obchod převezme dceřiná podskupina",
+            "title": "Turecko zakazuje sociální sítě dětem do 15 let. Podobný krok zvažuje Babiš i Pavel",
+            "publishedAt": "2026-04-23T12:23:48Z"
+          },
+          {
+            "title": "Ano, rozdělíme se, přiznal ČEZ. Sítě a obchod převezme dcera",
             "publishedAt": "2026-04-23T11:56:56Z"
           },
           {
@@ -881,10 +887,6 @@
           {
             "title": "Slovensko zas přijímá ropu z Ruska. Fico mění postoj k sankcím",
             "publishedAt": "2026-04-23T07:08:15Z"
-          },
-          {
-            "title": "Armáda mění pravidla: Školy otevřou dveře civilním firmám",
-            "publishedAt": "2026-04-23T05:37:43Z"
           }
         ]
       }
