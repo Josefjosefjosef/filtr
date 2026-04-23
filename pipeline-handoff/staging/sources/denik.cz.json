@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T08:14:27.191478Z",
+  "ingestedAt": "2026-04-23T08:34:48.384709Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lidl na Slovensku stahuje sýrovou rolku. Bakterie v ní může ohrozit těhotné",
+      "url": "https://www.denik.cz/staty-eu/zavadna-syrova-tatranska-rolka-lidl-bakterie-listerioza.html",
+      "dt": "2026-04-23T08:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bakterie",
+        "lidl",
+        "ohrozit",
+        "rolku",
+        "slovensku",
+        "stahuje",
+        "sýrovou",
+        "těhotné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Romantika na řece láká. Odemykání Dyje zahájilo vodáckou sezonu na Znojemsku",
-      "url": "https://znojemsky.denik.cz/ctenar-reporter/odemykani-dyje-duben-2026-dobsice-znojemsko-zahajeni-vodacke-sezony-reka.html",
-      "dt": "2026-04-22T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dyje",
-        "láká",
-        "odemykání",
-        "romantika",
-        "sezonu",
-        "vodáckou",
-        "zahájilo",
-        "znojemsku",
-        "řece"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29324,
+      "bytes": 29176,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidl na Slovensku stahuje sýrovou rolku. Bakterie v ní může ohrozit těhotné",
+            "publishedAt": "2026-04-23T08:00:00Z"
+          },
           {
             "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
             "publishedAt": "2026-04-23T07:36:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
             "publishedAt": "2026-04-23T04:05:00Z"
-          },
-          {
-            "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
-            "publishedAt": "2026-04-23T03:30:00Z"
           }
         ]
       }
