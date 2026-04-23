@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T17:44:38.147721Z",
+  "ingestedAt": "2026-04-23T18:04:47.586832Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Další vlna podvodů zasáhla Česko. Podvodníci se v SMS vydávají za policii",
+      "url": "https://www.denik.cz/krimi/podvod-sms-zpravy-podvodnici-policie-platebni-udaje.html",
+      "dt": "2026-04-23T17:38:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "další",
+        "podvodníci",
+        "podvodů",
+        "policii",
+        "sms",
+        "vlna",
+        "vydávají",
+        "zasáhla",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,31 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Útok v Louisianě: Matka zabitých dětí je zraněná. Nepamatuje si, že jsou mrtvé",
-      "url": "https://www.denik.cz/ze_sveta/strelba-v-louisiane-otec-zabil-osm-deti.html",
-      "dt": "2026-04-23T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dětí",
-        "louisianě",
-        "matka",
-        "mrtvé",
-        "nepamatuje",
-        "zabitých",
-        "zraněná",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29261,
+      "bytes": 29147,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T17:38:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -718,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další vlna podvodů zasáhla Česko. Podvodníci se v SMS vydávají za policii",
+            "publishedAt": "2026-04-23T17:38:00Z"
+          },
           {
             "title": "Zasáhněte, nebo omezíme lety. Britské aerolinky kvůli Íránu žádají vládu o pomoc",
             "publishedAt": "2026-04-23T16:00:00Z"
@@ -745,10 +750,6 @@
           {
             "title": "Na hrůzy války se zapomenout nesmí. Ve Volenicích uctili oběti transportu smrti",
             "publishedAt": "2026-04-23T13:00:00Z"
-          },
-          {
-            "title": "Velrybu Timmyho má do moře dostat nákladní loď. Nechte ho už umřít, míní experti",
-            "publishedAt": "2026-04-23T12:55:00Z"
           }
         ]
       }

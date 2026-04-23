@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T17:44:38.147721Z",
+  "ingestedAt": "2026-04-23T18:04:47.586832Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Na finančních trzích opět roste averze k riziku",
+      "url": "https://profitonline.cz/na-financnich-trzich-opet-roste-averze-k-riziku/",
+      "dt": "2026-04-23T18:00:25Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "averze",
+        "finančních",
+        "opět",
+        "riziku",
+        "roste",
+        "trzích"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,35 +287,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Diváci Dámu na kolejích znají, a právě proto na ni půjdou, říká Pečenka k titulu, který ožívá na Fidlovačce",
-      "url": "https://profitonline.cz/divaci-damu-na-kolejich-znaji-a-prave-proto-na-ni-pujdou-rika-pecenka-k-titulu-ktery-oziva-na-fidlovacce/",
-      "dt": "2026-04-22T04:00:22Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "diváci",
-        "dámu",
-        "fidlovačce",
-        "kolejích",
-        "ožívá",
-        "pečenka",
-        "proto",
-        "právě",
-        "půjdou",
-        "titulu",
-        "znají",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,9 +295,9 @@
       "source": "FAEI",
       "topic": "finance",
       "httpStatus": 200,
-      "contentType": "application/rss+xml; charset=utf-8",
+      "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18881,
+      "bytes": 18484,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +334,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T17:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T18:00:25Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -356,6 +350,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na finančních trzích opět roste averze k riziku",
+            "publishedAt": "2026-04-23T18:00:25Z"
+          },
           {
             "title": "Evropské indexy zamířily strmě dolů",
             "publishedAt": "2026-04-23T17:40:00Z"
@@ -383,10 +381,6 @@
           {
             "title": "Slovensko bojovalo proti SSSR, ale na kremelském seznamu není",
             "publishedAt": "2026-04-23T04:00:18Z"
-          },
-          {
-            "title": "Sentiment spotřebitelů v eurozóně se výrazně zhoršuje",
-            "publishedAt": "2026-04-22T21:05:43Z"
           }
         ]
       }
