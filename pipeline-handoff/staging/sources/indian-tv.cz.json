@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-23T11:44:44.247664Z",
+  "ingestedAt": "2026-04-23T12:04:34.562379Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Dokonalý upgrade s TIGO šampionem - INDIAN",
+      "url": "https://indian-tv.cz/clanek/dokonaly-upgrade-s-tigo-sampionem-r49vkf",
+      "dt": "2026-04-23T12:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "dokonalý",
+        "indian",
+        "tigo",
+        "upgrade",
+        "šampionem"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1066,34 +1088,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Mimozemská hrozba v Directive 8020 na sebe dokáže brát podobu svých obětí - INDIAN",
-      "url": "https://indian-tv.cz/clanek/mimozemska-hrozba-v-directive-8020-o9qvf9",
-      "dt": "2026-04-20T07:32:54Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "8020",
-        "brát",
-        "directive",
-        "dokáže",
-        "hrozba",
-        "indian",
-        "mimozemská",
-        "obětí",
-        "podobu",
-        "sebe",
-        "svých"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1098,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 200573,
+      "bytes": 199830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,7 +1135,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1156,6 +1150,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dokonalý upgrade s TIGO šampionem - INDIAN",
+            "publishedAt": "2026-04-23T12:00:00Z"
+          },
           {
             "title": "Příběhové rozšíření Lord of Hatred do Diabla 4 si v recenzích nevede vůbec špatně - INDIAN",
             "publishedAt": "2026-04-23T10:00:00Z"
@@ -1183,10 +1181,6 @@
           {
             "title": "Na příští týden se chystá stream hry The Blood of Dawnwalker. Dozvíme se i datum vydání - INDIAN",
             "publishedAt": "2026-04-23T07:31:02Z"
-          },
-          {
-            "title": "The Expanse: Osiris Reborn jako Mass Effect? Beta láká atmosférou, ale kulhá v soubojích - INDIAN",
-            "publishedAt": "2026-04-22T16:35:28Z"
           }
         ]
       }

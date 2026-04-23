@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-23T11:44:44.247664Z",
+  "ingestedAt": "2026-04-23T12:04:34.562379Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "těchto",
         "zkreslují",
         "šest"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "E-mailová aplikace od Seznamu přidává chytrý přehled objednávek. Rozpozná až 1800 e-shopů",
+      "url": "https://mobilmania.zive.cz/clanky/e-mailova-aplikace-od-seznamu-pridava-chytry-prehled-objednavek-rozpozna-az-1800-e-shopu/sc-3-a-1364617/default.aspx",
+      "dt": "2026-04-23T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "1800",
+        "aplikace",
+        "chytrý",
+        "mailová",
+        "objednávek",
+        "přehled",
+        "přidává",
+        "rozpozná",
+        "seznamu",
+        "shopů"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -939,34 +966,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vytvořili přeplácaný prohlížeč, teď chtějí peníze za čistou verzi. Brave Origin stojí 1300 Kč",
-      "url": "https://www.zive.cz/clanky/vytvorili-preplacany-prohlizec-ted-chteji-penize-za-cistou-verzi-brave-origin-stoji-1300-kc/sc-3-a-240786/default.aspx",
-      "dt": "2026-04-20T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "1300",
-        "brave",
-        "chtějí",
-        "origin",
-        "peníze",
-        "prohlížeč",
-        "přeplácaný",
-        "stojí",
-        "verzi",
-        "vytvořili",
-        "čistou"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +976,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22904,
+      "bytes": 22727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1013,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1031,10 @@
           {
             "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
             "publishedAt": "2026-04-23T08:45:00Z"
+          },
+          {
+            "title": "E-mailová aplikace od Seznamu přidává chytrý přehled objednávek. Rozpozná až 1800 e-shopů",
+            "publishedAt": "2026-04-23T11:45:00Z"
           },
           {
             "title": "Chytrá stolní lampa Xiaomi zlevnila pod 800 Kč. Hezky svítí a dá se ovládat i mobilem",
@@ -1056,10 +1059,6 @@
           {
             "title": "Jak Tim Cook za 15 let proměnil Apple. Česko vzal do první ligy a Prahu do mnoha reklam",
             "publishedAt": "2026-04-22T19:15:00Z"
-          },
-          {
-            "title": "WhatsApp opravdu bude mít předplatné. Za 60 Kč měsíčně získáte jiný než zelený vzhled a několik bonusů",
-            "publishedAt": "2026-04-22T14:45:00Z"
           }
         ]
       }

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-23T11:44:44.247664Z",
+  "ingestedAt": "2026-04-23T12:04:34.562379Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Úleva pro Ukrajinu. EU definitivně schválila půjčku ve výši 90 miliard eur",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/uleva-pro-ukrajinu-eu-definitivne-schvalila-pujcku-ve-vysi-90-miliard-eur.A260423_135444_zahranicni_bro",
+      "dt": "2026-04-23T11:57:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "definitivně",
+        "eur",
+        "miliard",
+        "půjčku",
+        "schválila",
+        "ukrajinu",
+        "výši",
+        "úleva"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "S prezidentem se sejdu 8. května, řekl Babiš. Mají řešit účast na summitu NATO",
+      "url": "https://www.idnes.cz/zpravy/domaci/prezident-pavel-babis-premier-schuzka.A260423_134232_domaci_aoc",
+      "dt": "2026-04-23T11:47:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "babiš",
+        "května",
+        "mají",
+        "nato",
+        "prezidentem",
+        "sejdu",
+        "summitu",
+        "účast",
+        "řekl",
+        "řešit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -727,58 +779,6 @@
         "slovenskem",
         "česko",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trumpův zmocněnec lobbuje u FIFA: Írán nahraďte na mistrovství světa Itálií",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/fifa-iran-italie-donald-trump-gianni-infantino.A260423_091202_ms-fotbal_ivt",
-      "dt": "2026-04-23T08:17:40Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "fifa",
-        "itálií",
-        "lobbuje",
-        "mistrovství",
-        "nahraďte",
-        "světa",
-        "trumpův",
-        "zmocněnec",
-        "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud ve Virginii zablokoval změny k překreslení volebních obvodů, prohlásil je za neplatné",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-virginie-volebni-obvody-zmena-volby-demokrate.A260422_092213_zahranicni_kha",
-      "dt": "2026-04-23T08:01:06Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "neplatné",
-        "obvodů",
-        "prohlásil",
-        "překreslení",
-        "soud",
-        "virginii",
-        "volebních",
-        "zablokoval",
-        "změny"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47466,
+      "bytes": 46934,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,13 +1613,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T11:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:57:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "other": 2,
-          "finance": 3,
-          "sport": 1
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1631,6 +1630,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úleva pro Ukrajinu. EU definitivně schválila půjčku ve výši 90 miliard eur",
+            "publishedAt": "2026-04-23T11:57:00Z"
+          },
+          {
+            "title": "S prezidentem se sejdu 8. května, řekl Babiš. Mají řešit účast na summitu NATO",
+            "publishedAt": "2026-04-23T11:47:00Z"
+          },
           {
             "title": "Pořádný slizoun. Trump se pustil do bývalého velvyslance USA v Česku",
             "publishedAt": "2026-04-23T11:38:00Z"
@@ -1654,14 +1661,6 @@
           {
             "title": "První z obviněných kvůli brněnské pískovně míří k soudu, sjednal si dohodu",
             "publishedAt": "2026-04-23T11:22:48Z"
-          },
-          {
-            "title": "Lukašenko má novou milenku. Vyhlédl si ji na soutěžích krásy, dělí je padesát let",
-            "publishedAt": "2026-04-23T11:05:00Z"
-          },
-          {
-            "title": "Osm z deseti Čechů trápí psychické potíže, zjistil průzkum. Pomoc vyhledá málokdo",
-            "publishedAt": "2026-04-23T10:57:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-23T11:44:44.247664Z",
+  "ingestedAt": "2026-04-23T12:04:34.562379Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nafta skoro korunu nahoru. Maximální ceny benzinu a nafty na pátek 24. dubna",
+      "url": "https://www.penize.cz/doprava/488764-nafta-skoro-korunu-nahoru-maximalni-ceny-benzinu-a-nafty-na-patek-24-dubna",
+      "dt": "2026-04-23T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "korunu",
+        "maximální",
+        "nafta",
+        "nafty",
+        "nahoru",
+        "pátek",
+        "skoro"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -482,32 +509,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Nový týden, nový strop. Maximální ceny benzinu a nafty na úterý 21. dubna",
-      "url": "https://www.penize.cz/doprava/488563-novy-tyden-novy-strop-maximalni-ceny-benzinu-a-nafty-na-utery-21-dubna",
-      "dt": "2026-04-20T14:02:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "dubna",
-        "maximální",
-        "nafty",
-        "nový",
-        "strop",
-        "týden",
-        "úterý"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18130,
+      "bytes": 18221,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,11 +556,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 3
+          "zpravy": 3,
+          "finance": 17
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +572,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nafta skoro korunu nahoru. Maximální ceny benzinu a nafty na pátek 24. dubna",
+            "publishedAt": "2026-04-23T13:59:00Z"
+          },
           {
             "title": "Hlavně rychle a pohodlně. Takhle přicházíte o peníze v e-shopu, varuje banka",
             "publishedAt": "2026-04-23T12:00:00Z"
@@ -598,10 +603,6 @@
           {
             "title": "Kyberšmejdi už letos zkusili vylákat čtyři miliardy. Jde jim to líp než dřív",
             "publishedAt": "2026-04-22T12:15:00Z"
-          },
-          {
-            "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
-            "publishedAt": "2026-04-22T11:58:00Z"
           }
         ]
       }
