@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T11:00:26.663130Z",
+  "ingestedAt": "2026-04-23T11:22:47.121067Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šok, husí kůže. Češi sami nevěří, po jaké době zařízli supervelmoc",
+      "url": "https://sport.aktualne.cz/hokej/sok-husi-kuze-cesi-sami-neveri-po-jake-dobe-zarizli-supervelmoc/r~aaa29983bceb1fd0bfdc378b6caeb9be/",
+      "dt": "2026-04-23T10:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "době",
+        "husí",
+        "jaké",
+        "kůže",
+        "nevěří",
+        "sami",
+        "supervelmoc",
+        "zařízli",
+        "češi",
+        "šok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -508,32 +535,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Amatérismus a chaos.“ Analytik tepe vládu za třesk v ČT a rozhlase. Říká, co nastane",
-      "url": "https://zpravy.aktualne.cz/spotlight/spotlight-zuzany-tvaruzkove/nejde-o-poplatky-jde-o-kontrolu-expert-o-zasahu-do-verejnopravnich-medii/r~aaa29a35db5717f1123ae76d9f8ff098/",
-      "dt": "2026-04-23T06:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "amatérismus",
-        "analytik",
-        "chaos",
-        "nastane",
-        "rozhlase",
-        "tepe",
-        "třesk",
-        "vládu",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22546,
+      "bytes": 22405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,13 +582,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T10:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 4,
           "other": 4,
-          "zpravy": 12,
-          "finance": 1,
-          "sport": 3
+          "zpravy": 11,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -599,6 +600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šok, husí kůže. Češi sami nevěří, po jaké době zařízli supervelmoc",
+            "publishedAt": "2026-04-23T10:52:00Z"
+          },
           {
             "title": "Když se do rodičů převtělí bohové. Nový český fantasy film představuje první ukázku",
             "publishedAt": "2026-04-23T10:47:00Z"
@@ -626,10 +631,6 @@
           {
             "title": "Lepší zázemí mají v každé norské vesnici, čertí se Bauer. Vidí ale i medailový příslib",
             "publishedAt": "2026-04-23T08:31:00Z"
-          },
-          {
-            "title": "Ropovod Družba je v provozu, na Slovensko opět dodává ropu",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

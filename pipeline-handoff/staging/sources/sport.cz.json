@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-23T11:00:26.663130Z",
+  "ingestedAt": "2026-04-23T11:22:47.121067Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pozdvižení v korupční kauze. Obviněný primátor volal se šéfem rozhodčích, ten reaguje",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-pozdvizeni-v-korupcni-kauze-obvineny-primator-volal-se-sefem-rozhodcich-ten-reaguje-5441900",
+      "dt": "2026-04-23T11:14:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kauze",
+        "korupční",
+        "obviněný",
+        "pozdvižení",
+        "primátor",
+        "reaguje",
+        "rozhodčích",
+        "ten",
+        "volal",
+        "šéfem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,32 +791,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ryneš: Emoce se musím naučit krotit. Šance na titul pořád existuje",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-rynes-emoce-se-musim-naucit-krotit-sance-na-titul-porad-existuje-5441869",
-      "dt": "2026-04-23T04:33:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "emoce",
-        "existuje",
-        "krotit",
-        "musím",
-        "naučit",
-        "pořád",
-        "ryneš",
-        "titul",
-        "šance"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46023,
+      "bytes": 45435,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:22:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:14:05Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pozdvižení v korupční kauze. Obviněný primátor volal se šéfem rozhodčích, ten reaguje",
+            "publishedAt": "2026-04-23T11:14:05Z"
+          },
           {
             "title": "Parksová prozradila, jakou radu jí Serena Williamsová dala pro hru na antuce. V Madridu jí to vychází",
             "publishedAt": "2026-04-23T10:22:38Z"
@@ -879,10 +884,6 @@
           {
             "title": "Obhájce titulu v NBA Oklahoma má druhou výhru, Detroit srovnal proti Orlandu",
             "publishedAt": "2026-04-23T09:07:24Z"
-          },
-          {
-            "title": "Reprezentační pivot Kárník dohraje sezonu ve španělské Gironě",
-            "publishedAt": "2026-04-23T09:05:03Z"
           }
         ]
       }

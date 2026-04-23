@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T11:00:26.663130Z",
+  "ingestedAt": "2026-04-23T11:22:47.121067Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec „Putinových očí“ nad Evropou? Francouzi mají systém, před kterým se žádný dron neschová",
+      "url": "https://ekonomickydenik.cz/konec-putinovych-oci-nad-evropou-francie-drony/",
+      "dt": "2026-04-23T11:18:50Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dron",
+        "evropou",
+        "francouzi",
+        "konec",
+        "mají",
+        "neschová",
+        "očí",
+        "putinových",
+        "systém",
+        "žádný"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Havlíček: Hrozí omezení dodávek z Německa. Paliva ze Slovnaftu potřebujeme",
+      "url": "https://ekonomickydenik.cz/havlicek-omezeni-dodavek-nemecko-paliva-slovnaft/",
+      "dt": "2026-04-23T11:08:51Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dodávek",
+        "havlíček",
+        "hrozí",
+        "německa",
+        "omezení",
+        "paliva",
+        "potřebujeme",
+        "slovnaftu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -737,59 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Fico oznámil, že chce Magyar řešit Benešovy dekrety. Extrémně citlivé téma i pro Čechy",
-      "url": "https://ekonomickydenik.cz/benesovy-dekrety-jako-rozbuska-magyar-fico/",
-      "dt": "2026-04-21T12:09:11Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "benešovy",
-        "chce",
-        "citlivé",
-        "dekrety",
-        "extrémně",
-        "fico",
-        "magyar",
-        "oznámil",
-        "téma",
-        "čechy",
-        "řešit"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Havlíček: Pokud elektřina kvůli válce zdraží, zasáhneme do cen",
-      "url": "https://ekonomickydenik.cz/havlicek-pokud-elektrina-zdrazi-stat-zasahne-do-cen/",
-      "dt": "2026-04-21T11:43:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cen",
-        "elektřina",
-        "havlíček",
-        "kvůli",
-        "pokud",
-        "válce",
-        "zasáhneme",
-        "zdraží"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73168,
+      "bytes": 73123,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,13 +836,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T10:35:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T11:18:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "sport": 1,
           "zpravy": 3,
-          "zdravi": 3
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -855,6 +854,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec „Putinových očí“ nad Evropou? Francouzi mají systém, před kterým se žádný dron neschová",
+            "publishedAt": "2026-04-23T11:18:50Z"
+          },
+          {
+            "title": "Havlíček: Hrozí omezení dodávek z Německa. Paliva ze Slovnaftu potřebujeme",
+            "publishedAt": "2026-04-23T11:08:51Z"
+          },
           {
             "title": "Přes noc k polskému moři: České dráhy přidávají lůžka, jedna novinka ale neprošla",
             "publishedAt": "2026-04-23T10:35:11Z"
@@ -878,14 +885,6 @@
           {
             "title": "Biopaliva mají špatný zvuk. Přejmenujme je po vzoru Itálie, navrhuje ministerstvo",
             "publishedAt": "2026-04-23T05:30:00Z"
-          },
-          {
-            "title": "Nová vláda odvolala dalšího člena rady ČEPS. Proč musel Lucký skončit?",
-            "publishedAt": "2026-04-23T04:40:00Z"
-          },
-          {
-            "title": "Za evropské miliardy Ukrajina vděčí také otevření „druhé fronty“ u afrických břehů",
-            "publishedAt": "2026-04-22T16:56:04Z"
           }
         ]
       }
