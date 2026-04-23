@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-23T07:52:22.523015Z",
+  "ingestedAt": "2026-04-23T08:14:27.191478Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Netflix zdražil, už podruhé za dva roky. Nejlevnější tarif přesáhl 250 korun",
+      "url": "https://ekonomickydenik.cz/netflix-zdrazil-podruhe-nejlevnejsi-tarif/",
+      "dt": "2026-04-23T07:58:28Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "250",
+        "dva",
+        "korun",
+        "nejlevnější",
+        "netflix",
+        "podruhé",
+        "přesáhl",
+        "roky",
+        "tarif",
+        "zdražil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,33 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Bezpečnost zaměstnanců je naší prioritou.“ Komise podpořila mluvčí proti ruským hrozbám",
-      "url": "https://ekonomickydenik.cz/komise-podporila-mluvci-proti-ruskym-hrozbam/",
-      "dt": "2026-04-21T09:41:22Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bezpečnost",
-        "hrozbám",
-        "komise",
-        "mluvčí",
-        "naší",
-        "podpořila",
-        "prioritou",
-        "proti",
-        "ruským",
-        "zaměstnanců"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73008,
+      "bytes": 73217,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:29:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:58:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 1,
           "finance": 23,
+          "sport": 1,
           "zpravy": 3,
           "zdravi": 3
         },
@@ -853,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Netflix zdražil, už podruhé za dva roky. Nejlevnější tarif přesáhl 250 korun",
+            "publishedAt": "2026-04-23T07:58:28Z"
+          },
           {
             "title": "Miliardy v dělostřeleckých granátech: Strnadova CSG ulovila další obří zakázku",
             "publishedAt": "2026-04-23T07:29:24Z"
@@ -880,10 +884,6 @@
           {
             "title": "Škrty už začaly. Lufthansa chystá omezení letů mezi Prahou a Mnichovem",
             "publishedAt": "2026-04-22T15:33:09Z"
-          },
-          {
-            "title": "Velký bratr v boji proti zločinu. Evropa chystá policejní cloud a umělou inteligenci",
-            "publishedAt": "2026-04-22T14:01:35Z"
           }
         ]
       }

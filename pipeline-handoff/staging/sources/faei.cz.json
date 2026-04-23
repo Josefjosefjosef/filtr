@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-23T07:52:22.523015Z",
+  "ingestedAt": "2026-04-23T08:14:27.191478Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Proč by ČNB nyní neměla zvyšovat úrokové sazby?",
+      "url": "https://profitonline.cz/proc-by-cnb-nyni-nemela-zvysovat-urokove-sazby/",
+      "dt": "2026-04-23T08:00:55Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "neměla",
+        "nyní",
+        "proč",
+        "sazby",
+        "zvyšovat",
+        "úrokové",
+        "čnb"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,28 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nafta v Česku zlevnila i pod 40 korun za litr",
-      "url": "https://profitonline.cz/nafta-v-cesku-zlevnila-i-pod-40-korun-za-litr/",
-      "dt": "2026-04-21T07:00:50Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "korun",
-        "litr",
-        "nafta",
-        "zlevnila",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19010,
+      "bytes": 19072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:00:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:00:55Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -355,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Proč by ČNB nyní neměla zvyšovat úrokové sazby?",
+            "publishedAt": "2026-04-23T08:00:55Z"
+          },
           {
             "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
             "publishedAt": "2026-04-23T07:00:32Z"
@@ -382,10 +388,6 @@
           {
             "title": "Diváci Dámu na kolejích znají, a právě proto na ni půjdou, říká Pečenka k titulu, který ožívá na Fidlovačce",
             "publishedAt": "2026-04-22T04:00:22Z"
-          },
-          {
-            "title": "Levná koupě, drahá chyba. Česko se stává vrakovištěm Evropy",
-            "publishedAt": "2026-04-21T12:00:49Z"
           }
         ]
       }

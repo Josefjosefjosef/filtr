@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-23T07:52:22.523015Z",
+  "ingestedAt": "2026-04-23T08:14:27.191478Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Archeologové objevili v Egyptě mumii. V břiše měla zašitou Iliadu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/archeologove-objevili-v-egypte-mumii-v-brise-mela-zasitou-iliadu-372696",
+      "dt": "2026-04-23T08:05:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "archeologové",
+        "břiše",
+        "egyptě",
+        "iliadu",
+        "mumii",
+        "měla",
+        "objevili",
+        "zašitou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,32 +750,6 @@
         "třetinu",
         "ubylo",
         "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Komunikace mezi lidmi a mimozemšťany by byla složitější, říká k filmu Spasitel česká exobioložka",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/komunikace-mezi-lidmi-a-mimozemstany-by-byla-slozitejsi-rika-k-filmu-spasitel-ceska-exobiolozka-372655",
-      "dt": "2026-04-22T10:20:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "exobioložka",
-        "filmu",
-        "komunikace",
-        "lidmi",
-        "mimozemšťany",
-        "složitější",
-        "spasitel",
-        "česká",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1536,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42067,
+      "bytes": 42132,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1596,11 +1595,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:01:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 8
+          "other": 8,
+          "zpravy": 22
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1612,6 +1611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Archeologové objevili v Egyptě mumii. V břiše měla zašitou Iliadu",
+            "publishedAt": "2026-04-23T08:05:00Z"
+          },
           {
             "title": "Sněmovna zřejmě schválí smlouvu mezi Českem a Slovenskem o spolupráci záchranářů",
             "publishedAt": "2026-04-23T07:01:49Z"
@@ -1639,10 +1642,6 @@
           {
             "title": "„Prostě nám umřeli před očima.“ Nabatíja je v troskách, zůstal jen zlomek rodin",
             "publishedAt": "2026-04-23T04:30:00Z"
-          },
-          {
-            "title": "eDoklady mají téměř milion uživatelů. V budoucnu aplikaci nahradí digitální peněženka",
-            "publishedAt": "2026-04-23T04:00:00Z"
           }
         ]
       }
@@ -1654,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37758,
+      "bytes": 37875,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1748,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77458,
+      "bytes": 77465,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

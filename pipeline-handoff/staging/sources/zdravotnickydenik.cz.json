@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-23T07:52:22.523015Z",
+  "ingestedAt": "2026-04-23T08:14:27.191478Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Bez cigaret na celý život? Ministr Šťastný komentuje britský plán pro mladé",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/bez-cigaret-na-cely-zivot-ministr-stastny/",
+      "dt": "2026-04-23T08:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "britský",
+        "celý",
+        "cigaret",
+        "komentuje",
+        "ministr",
+        "mladé",
+        "plán",
+        "šťastný",
+        "život"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,33 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nemocnice v Ústeckém kraji stoply růst mezd. Nechtějí ani zvyšovat počet zaměstnanců",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-ustecky-kraj-mzdy-nabor/",
-      "dt": "2026-04-22T08:13:18Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kraji",
-        "mezd",
-        "nechtějí",
-        "nemocnice",
-        "počet",
-        "růst",
-        "stoply",
-        "zaměstnanců",
-        "zvyšovat",
-        "ústeckém"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 102655,
+      "bytes": 103715,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T08:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bez cigaret na celý život? Ministr Šťastný komentuje britský plán pro mladé",
+            "publishedAt": "2026-04-23T08:00:00Z"
+          },
           {
             "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
             "publishedAt": "2026-04-23T07:00:00Z"
@@ -360,10 +363,6 @@
           {
             "title": "Pavilon ÚVN je po požáru před 4 lety stále prázdný. Rekonstrukci brzdí ostré spory",
             "publishedAt": "2026-04-22T12:00:33Z"
-          },
-          {
-            "title": "Miliony pojištěnců VZP čeká změna: Přihlášení do oblíbené aplikace už nebude jako dřív",
-            "publishedAt": "2026-04-22T10:07:13Z"
           }
         ]
       }

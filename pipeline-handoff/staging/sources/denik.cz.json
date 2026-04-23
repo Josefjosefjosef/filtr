@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T07:52:22.523015Z",
+  "ingestedAt": "2026-04-23T08:14:27.191478Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
+      "url": "https://www.denik.cz/staty-eu/dansko-kodan-srazka-vlaku-20260423.html",
+      "dt": "2026-04-23T07:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "kodaně",
+        "kritickém",
+        "lidí",
+        "srážka",
+        "stavu",
+        "vlaků",
+        "zranilo",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,29 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cenové stropy na paliva se ve čtvrtek téměř vyrovnají",
-      "url": "https://www.denik.cz/z_domova/cenove-stropy-paliv-se-temer-vyrovnaji.html",
-      "dt": "2026-04-22T12:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cenové",
-        "paliva",
-        "stropy",
-        "téměř",
-        "vyrovnají",
-        "čtvrtek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29605,
+      "bytes": 29324,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T07:36:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -713,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Srážka vlaků u Kodaně: Zranilo se 17 lidí, čtyři jsou v kritickém stavu",
+            "publishedAt": "2026-04-23T07:36:00Z"
+          },
           {
             "title": "VZP plánuje větší zabezpečení mobilní aplikace, kterou používá 2,9 mil. klientů",
             "publishedAt": "2026-04-23T06:20:00Z"
@@ -740,10 +746,6 @@
           {
             "title": "Požadavek na seznam ruských agentů v Česku byl absurdní, říká šéf BIS Koudelka",
             "publishedAt": "2026-04-23T03:30:00Z"
-          },
-          {
-            "title": "Extrémní proměny: Marek dokázal, že hendikep nemusí být překážka. Zhubl 72 kg",
-            "publishedAt": "2026-04-23T02:30:00Z"
           }
         ]
       }
