@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-23T16:11:20.804938Z",
+  "ingestedAt": "2026-04-23T16:30:46.328308Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zasáhněte, nebo omezíme lety. Britské aerolinky kvůli Íránu žádají vládu o pomoc",
+      "url": "https://www.denik.cz/staty-mimo-eu/britske-aerolinky-zdrazovani-omezovani-letu-pomoc-od-vlady.html",
+      "dt": "2026-04-23T16:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "aerolinky",
+        "britské",
+        "kvůli",
+        "lety",
+        "nebo",
+        "omezíme",
+        "pomoc",
+        "vládu",
+        "zasáhněte",
+        "íránu",
+        "žádají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,34 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kolují lži o zesnulém Janu Potměšilovi. Týkají se jeho stavu i slov, jež neřekl",
-      "url": "https://www.denik.cz/z_domova/herec-jan-potmesil-lzi-o-jeho-zdravotnim-stavu-falesne-citaty-internet.html",
-      "dt": "2026-04-23T04:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "janu",
-        "jeho",
-        "jež",
-        "kolují",
-        "lži",
-        "neřekl",
-        "potměšilovi",
-        "slov",
-        "stavu",
-        "týkají",
-        "zesnulém"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +665,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29508,
+      "bytes": 29261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T16:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -718,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zasáhněte, nebo omezíme lety. Britské aerolinky kvůli Íránu žádají vládu o pomoc",
+            "publishedAt": "2026-04-23T16:00:00Z"
+          },
           {
             "title": "Střely bez olova? Utrpení zvěře, říkají myslivci. Turek chce koalici proti oceli",
             "publishedAt": "2026-04-23T15:20:00Z"
@@ -745,10 +749,6 @@
           {
             "title": "Velrybu Timmyho má do moře dostat nákladní loď. Nechte ho už umřít, míní experti",
             "publishedAt": "2026-04-23T12:55:00Z"
-          },
-          {
-            "title": "Praktici i specialisté. V centru Prahy otevřeli polikliniku s komplexní péčí",
-            "publishedAt": "2026-04-23T12:20:00Z"
           }
         ]
       }
