@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-23T03:15:44.406077Z",
+  "ingestedAt": "2026-04-23T03:35:23.435386Z",
   "items": [
     {
       "section": "sport",
@@ -22,6 +22,34 @@
         "premier",
         "schick",
         "vede"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tam, kde se z chlívku stala vinárna. Chalupa v Krkonoších navazuje na minulost, ale srší novotou",
+      "url": "https://magazin.aktualne.cz/tam-kde-se-z-chlivku-stala-vinarna-chalupa-v-krkonosich-navazuje-na-minulost-ale-srsi-novotou/r~aaa29ef38358188227c4564a9dad2d65/",
+      "dt": "2026-04-23T03:25:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "chalupa",
+        "chlívku",
+        "krkonoších",
+        "minulost",
+        "navazuje",
+        "novotou",
+        "srší",
+        "stala",
+        "tam",
+        "vinárna"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -501,31 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Babišův klíčový poradce míří do USA. Od premiéra má delikátní úkol",
-      "url": "https://zpravy.aktualne.cz/domaci/babisuv-klicovy-poradce-miri-do-usa-od-premiera-ma-delikatni-ukol/r~aaa298f7e767130dbc60a486ed14ac48/",
-      "dt": "2026-04-22T13:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babišův",
-        "delikátní",
-        "klíčový",
-        "míří",
-        "poradce",
-        "premiéra",
-        "usa",
-        "úkol"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21616,
+      "bytes": 21685,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,7 +576,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-22T21:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-23T03:25:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 8,
@@ -593,6 +596,10 @@
           {
             "title": "Schick s Leverkusenem na finále poháru nedosáhl, Manchester City vede Premier League",
             "publishedAt": "2026-04-22T20:49:00Z"
+          },
+          {
+            "title": "Tam, kde se z chlívku stala vinárna. Chalupa v Krkonoších navazuje na minulost, ale srší novotou",
+            "publishedAt": "2026-04-23T03:25:00Z"
           },
           {
             "title": "Zlomil jsem prokletí, věří hrdina Třince. Rozhodčí na něj vytáhli „UFC takedown\"",
@@ -617,10 +624,6 @@
           {
             "title": "Kopřiva, Macháč, Plíšková a Siniaková postupují v Madridu, Valentová končí",
             "publishedAt": "2026-04-22T16:52:00Z"
-          },
-          {
-            "title": "Členství v unii se blíží. Brusel chystá přístupovou smlouvu pro Černou Horu",
-            "publishedAt": "2026-04-22T18:49:00Z"
           }
         ]
       }
