@@ -1,8 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T12:34:50.480385Z",
+  "ingestedAt": "2026-04-24T12:55:51.601593Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Itálie sní o jednom z nejlepších trenérů na světě",
+      "url": "https://www.sport.cz/clanek/fotbal-serie-a-italie-sni-o-jednom-z-nejlepsich-treneru-na-svete-5442331",
+      "dt": "2026-04-24T12:42:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "itálie",
+        "jednom",
+        "nejlepších",
+        "sní",
+        "světě",
+        "trenérů"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šulc je znovu připraven hrát",
+      "url": "https://www.sport.cz/clanek/fotbal-sulc-je-znovu-pripraven-hrat-5442365",
+      "dt": "2026-04-24T12:34:28Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hrát",
+        "připraven",
+        "znovu",
+        "šulc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -733,58 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po skvělém startu na MS krotí emoce. Hlavně ať kluci nečtou články, varuje Šmíd",
-      "url": "https://www.sport.cz/clanek/hokej-ms-po-skvelem-startu-na-ms-kroti-emoce-hlavne-at-kluci-nectou-clanky-varuje-smid-5442304",
-      "dt": "2026-04-24T04:27:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "emoce",
-        "hlavně",
-        "kluci",
-        "krotí",
-        "nečtou",
-        "skvělém",
-        "startu",
-        "varuje",
-        "články",
-        "šmíd"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stuttgart může stále snít o obhajobě, ve finále poháru potká Bayern",
-      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-stuttgart-muze-stale-snit-o-obhajobe-ve-finale-poharu-potka-bayern-5442315",
-      "dt": "2026-04-23T21:46:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bayern",
-        "finále",
-        "obhajobě",
-        "poháru",
-        "potká",
-        "snít",
-        "stuttgart",
-        "stále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44732,
+      "bytes": 43797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T12:03:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:42:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +839,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Itálie sní o jednom z nejlepších trenérů na světě",
+            "publishedAt": "2026-04-24T12:42:42Z"
+          },
+          {
+            "title": "Šulc je znovu připraven hrát",
+            "publishedAt": "2026-04-24T12:34:28Z"
+          },
           {
             "title": "Formule 1 se vrátí na známý okruh. Novinku propálil prezidentský úřad",
             "publishedAt": "2026-04-24T11:06:33Z"
@@ -870,14 +870,6 @@
           {
             "title": "V UFC roste monstrum. Král Pereira chce vypadat jako stroj",
             "publishedAt": "2026-04-24T11:40:56Z"
-          },
-          {
-            "title": "Nečas na bodovou explozi čeká. Největší favorit ale šlape i bez příspěvku největších hvězd",
-            "publishedAt": "2026-04-24T11:37:53Z"
-          },
-          {
-            "title": "Pardubický Bryant získal ocenění pro nejlepšího hráče basketbalové ligy",
-            "publishedAt": "2026-04-24T11:31:51Z"
           }
         ]
       }
