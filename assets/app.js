@@ -6198,6 +6198,9 @@ function buildVideoAsArticleCard(it) {
 
   function iuUserAddressBuildCaptureSlotIfNeeded(){
     try{
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) return;
+    }catch{}
+    try{
       if (iuUserAddressReadStoredBase()) return;
       const slot = document.getElementById("iuSilverWelcomeAddressSlot");
       if (!slot || slot.firstChild) return;
@@ -6671,46 +6674,12 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  /* STACK GEOMETRY CONTRACT (LOCKED): viz assets/app.css STOP-SHIP u #silver-slot. Malé karty = obsah;
-     #iuSilverTallScrollSection = jediný remainder; Silver shell = fixní blok (flex-grow 0); jediný vv token = --iu-silver-slot-max-h níže. */
-  /** P0 Mobile/tablet (≤900px), jen portrait: měřená max výška #silver-slot z visualViewport — tall box jako jediný flex-shrink buffer; landscape = bez viewport squeeze (page scroll). */
+  /* STACK GEOMETRY: viz assets/app.css STOP-SHIP (max-height calc(var(--iu-silver-slot-max-h) - 4px)) — proměnná zůstává v CSS pro guard; JS ji už nenastavuje → mobil/tablet scrolluje celá stránka, karty v hlavním toku. */
+  /** P0 Mobile/tablet: vždy zrušit --iu-silver-slot-max-h (document scroll; žádný locked silver-slot). */
   function iuSilverMobileStackFitApply(){
     try{
-      var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
-      var mqPortrait = window.matchMedia && window.matchMedia("(orientation: portrait)");
-      if (!mq || !mq.matches || !mqPortrait || !mqPortrait.matches){
-        var slotOff = document.getElementById("silver-slot");
-        if (slotOff) slotOff.style.removeProperty("--iu-silver-slot-max-h");
-        return;
-      }
       var slot = document.getElementById("silver-slot");
-      if (!slot) return;
-      /* Portrait ≤900px: slot max-height = only --iu-silver-slot-max-h from visualViewport (single source; CSS has no vh fallback). */
-      var vv = window.visualViewport;
-      var vh = vv && typeof vv.height === "number" ? vv.height : window.innerHeight;
-      var top = slot.getBoundingClientRect().top;
-      var pad = 6;
-      /* Real device: reserve home-indicator / safe-area so slot max-height matches usable fold (proof: firstScreenVisibleBottomPx). */
-      var safeB = 0;
-      try{
-        var probe = document.createElement("div");
-        probe.style.cssText = "position:fixed;left:0;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none;z-index:-1;";
-        document.body.appendChild(probe);
-        safeB = parseFloat(getComputedStyle(probe).paddingBottom) || 0;
-        document.body.removeChild(probe);
-      }catch(_){}
-      var maxH = Math.floor(vh - top - pad - safeB);
-      if (maxH < 120) maxH = 120;
-      /* Skip no-op updates: compare target to --iu-silver-slot-max-h (same space as setProperty). Old logic compared computed max-height (budget−4px from CSS) to maxH — systematic mismatch invited extra setProperty + layout thrash / flaky CLS on mobileTall. */
-      try {
-        var vStr = getComputedStyle(slot).getPropertyValue("--iu-silver-slot-max-h").trim();
-        var vPx = vStr && vStr.endsWith("px") ? parseFloat(vStr) : NaN;
-        /* Inline script + rAF: až ~8px rozdíl bez změny UX — méně zbytečných setProperty → nižší CLS */
-        if (!isNaN(vPx) && Math.abs(vPx - maxH) <= 8) {
-          return;
-        }
-      } catch (_) {}
-      slot.style.setProperty("--iu-silver-slot-max-h", maxH + "px");
+      if (slot) slot.style.removeProperty("--iu-silver-slot-max-h");
     }catch(_){}
   }
 
@@ -12171,6 +12140,93 @@ function buildVideoAsArticleCard(it) {
     window.iuMobileGateCloseForMainNav = iuMobileGateCloseForMainNav;
   } catch (_) {}
 
+  /** P0 Mobile/tablet: fixed bottom nav — Domů / Menu / Silver / MindMenu / Zpět (stejné hooky jako gate tabs + gate back). */
+  function iuMobileBottomNavInit() {
+    try {
+      if (window.__iuMobileBottomNavInit) return;
+      window.__iuMobileBottomNavInit = 1;
+    } catch (_) {}
+    try {
+      var root = document.getElementById("iuMobileBottomNav");
+      if (!root) return;
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var tabNav = document.getElementById("iuMobileGateTabNav");
+      var tabTools = document.getElementById("iuMobileGateTabTools");
+      var gateBack = document.getElementById("iuMobileGateBack");
+      var gateBackBar = document.getElementById("iuMobileGateBackBar");
+      var mainBack = document.getElementById("iuMobileMainBackBar");
+      root.addEventListener(
+        "click",
+        function (ev) {
+          try {
+            var t = ev.target;
+            var btn = t && t.closest ? t.closest("[data-iu-bottom-nav]") : null;
+            if (!btn) return;
+            var k = String(btn.getAttribute("data-iu-bottom-nav") || "");
+            if (k === "home") {
+              try {
+                if (wrap && typeof wrap.__iuMobileGateSetTab === "function") wrap.__iuMobileGateSetTab("");
+              } catch (_) {}
+              try {
+                document.body.classList.remove("iu-mobileMainVisible");
+              } catch (_) {}
+              try {
+                window.scrollTo(0, 0);
+              } catch (_) {}
+              try {
+                var docEl = document.scrollingElement || document.documentElement;
+                if (docEl) docEl.scrollTop = 0;
+              } catch (_) {}
+              return;
+            }
+            if (k === "menu") {
+              if (tabNav && typeof tabNav.click === "function") tabNav.click();
+              return;
+            }
+            if (k === "mindmenu") {
+              if (tabTools && typeof tabTools.click === "function") tabTools.click();
+              return;
+            }
+            if (k === "silver") {
+              try {
+                var hero = document.getElementById("iuSilverHeroPremium");
+                if (hero && typeof hero.scrollIntoView === "function") {
+                  hero.scrollIntoView({ block: "center", behavior: "smooth" });
+                }
+              } catch (_) {}
+              try {
+                var inp = document.getElementById("iuSilverHomeInput");
+                if (inp && typeof inp.focus === "function") inp.focus({ preventScroll: true });
+              } catch (_) {}
+              return;
+            }
+            if (k === "back") {
+              var gateVal = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "").trim() : "";
+              var barVis = gateBackBar && !gateBackBar.hidden;
+              if (gateVal && barVis && gateBack && typeof gateBack.click === "function") {
+                gateBack.click();
+                return;
+              }
+              try {
+                if (document.body.classList.contains("iu-mobileMainVisible") && mainBack && typeof mainBack.click === "function") {
+                  mainBack.click();
+                  return;
+                }
+              } catch (_) {}
+              try {
+                if (window.history && typeof window.history.length === "number" && window.history.length > 1) {
+                  window.history.back();
+                }
+              } catch (_) {}
+              return;
+            }
+          } catch (_) {}
+        },
+        true
+      );
+    } catch (_) {}
+  }
+
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
   function iuMobileLayoutReorder() {
     try {
@@ -12181,23 +12237,25 @@ function buildVideoAsArticleCard(it) {
       var mqTopVis = window.matchMedia && window.matchMedia("(min-width: 1025px)");
       var topbarVisible = mqTopVis ? mqTopVis.matches : window.innerWidth >= 1025;
       iuDesktopTopbarSilverComposerMountWhenWideDesktop(mobile, topbarVisible);
-      if (mobile) return;
-      var accordion = document.querySelector(".layout > aside.accordionCol");
-      var mainCol = document.querySelector(".layout > .mainCol");
-      var leftContent = document.getElementById("leftContent");
-      var block = document.getElementById("iuMobileFirstBlock");
-      var rail = document.getElementById("iuLeftRail");
-      if (!accordion || !mainCol) return;
-      if (block && block.contains(rail)) {
-        var newsList = document.getElementById("newsList");
-        if (newsList) {
-          var afterEmpty = document.getElementById("emptyBox");
-          newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+      /* Desktop-only: accordion / rail restore. Mobil musí pokračovat až k iuSilverHeroMobileInputDockApply níže. */
+      if (!mobile) {
+        var accordion = document.querySelector(".layout > aside.accordionCol");
+        var mainCol = document.querySelector(".layout > .mainCol");
+        var block = document.getElementById("iuMobileFirstBlock");
+        var rail = document.getElementById("iuLeftRail");
+        if (accordion && mainCol) {
+          if (block && block.contains(rail)) {
+            var newsList = document.getElementById("newsList");
+            if (newsList) {
+              var afterEmpty = document.getElementById("emptyBox");
+              newsList.insertBefore(rail, afterEmpty ? afterEmpty.nextSibling : newsList.firstChild);
+            }
+          }
+          if (mainCol.contains(accordion)) {
+            var layout = document.querySelector(".layout");
+            if (layout) layout.appendChild(accordion);
+          }
         }
-      }
-      if (mainCol.contains(accordion)) {
-        var layout = document.querySelector(".layout");
-        if (layout) layout.appendChild(accordion);
       }
     } catch (_) {}
     try {
@@ -18717,6 +18775,9 @@ function buildVideoAsArticleCard(it) {
       if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
     } catch (_) {}
     iuMobileGateTabInit();
+    try {
+      iuMobileBottomNavInit();
+    } catch (_) {}
     try {
       iuWebNavDetailBackBarHostInstall();
     } catch (_) {}

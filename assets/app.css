@@ -8983,7 +8983,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing: border-box !important;
     padding: 0 !important;
     margin-top: 0 !important;
-    
     overflow-x: visible !important;
     overflow-y: visible !important;
   }
@@ -20904,8 +20903,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
-/* STOP-SHIP: Silver stack geometry locked (≤900px slot); měň jen styl — layout token --iu-silver-slot-max-h v app.js */
-/* P0 Mobile/tablet only: adaptive first-viewport stack + Silver bottom visible — --iu-silver-slot-max-h z visualViewport (app.js); desktop ≥901px beze změny */
+/* STOP-SHIP: Silver stack geometry (≤900px); token --iu-silver-slot-max-h v CSS (calc guard) + mobilní override níže; desktop ≥901px beze změny */
+/* P0 Mobile/tablet: document scroll — slot výška auto, token na .silver-slot pro kompatibilitu metrik */
 @media (max-width: 900px){
   .iuSilverTopCardsStack #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
@@ -21241,40 +21240,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuSilverTasksSummaryCard.silver-calendar-summary-card,
   #iuMobileSilverSlot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     border-radius: 0 !important;
-  }
-}
-
-/* P0 Mobile/tablet landscape: žádný forced viewport fit — page vertikálně scrolluje; tall box má vnitřní scroll s rozumným stropem */
-@media (max-width: 900px) and (orientation: landscape){
-  .iuSilverTopCardsStack #silver-slot.silver-slot,
-  #iuMobileSilverSlot .silver-slot,
-  .silver-slot{
-    max-height: none !important;
-    height: auto !important;
-  }
-  #silver-slot .iuSilverWelcomeSticky,
-  #iuMobileSilverSlot #silver-slot .iuSilverWelcomeSticky{
-    flex: 0 0 auto !important;
-    overflow: visible !important;
-  }
-  #silver-slot #iuSilverWelcomeStack,
-  #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack{
-    flex: 0 0 auto !important;
-    overflow: visible !important;
-  }
-  #silver-slot #iuSilverTallScrollSection{
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-  }
-  #silver-slot .iuSilverTallScrollChromaFrame{
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-  }
-  #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
   }
 }
 
