@@ -21694,7 +21694,7 @@ function buildVideoAsArticleCard(it) {
           if (typeof done === "function") done(new Error("invoice_print_footer_invalid"));
           return;
         }
-        if (/Vytvo\u0159eno/i.test(footRaw)) {
+        if (/Vytvo\u0159eno pomoc\u00ed/i.test(footRaw)) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_print_footer_has_created_by"));
           return;
