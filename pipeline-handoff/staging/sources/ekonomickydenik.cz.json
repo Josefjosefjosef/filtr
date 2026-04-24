@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T14:10:01.243461Z",
+  "ingestedAt": "2026-04-24T14:35:12.845183Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Příští premiér? Lidovci mají nového šéfa, čím zaujal a jaké má vize",
+      "url": "https://ekonomickydenik.cz/pristi-premier-lidovci-grolich/",
+      "dt": "2026-04-24T14:16:49Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "jaké",
+        "lidovci",
+        "mají",
+        "nového",
+        "premiér",
+        "příští",
+        "vize",
+        "zaujal",
+        "čím",
+        "šéfa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,33 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Za evropské miliardy Ukrajina vděčí také otevření „druhé fronty“ u afrických břehů",
-      "url": "https://ekonomickydenik.cz/za-evropske-miliardy-ukrajina-druhe-fronty-u-africkych-brehu/",
-      "dt": "2026-04-22T16:56:04Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "afrických",
-        "břehů",
-        "druhé",
-        "evropské",
-        "fronty",
-        "miliardy",
-        "otevření",
-        "také",
-        "ukrajina",
-        "vděčí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73313,
+      "bytes": 73042,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T12:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T14:16:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -859,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příští premiér? Lidovci mají nového šéfa, čím zaujal a jaké má vize",
+            "publishedAt": "2026-04-24T14:16:49Z"
+          },
           {
             "title": "Írán proměnil Hormuzský průliv v ničivou zbraň. Evropa tomu nedokáže zabránit",
             "publishedAt": "2026-04-24T12:54:00Z"
@@ -886,10 +890,6 @@
           {
             "title": "Milionová korupce na ŘSD: Za úplatek hrozí bývalému pracovníkovi 10 let",
             "publishedAt": "2026-04-24T10:02:47Z"
-          },
-          {
-            "title": "Reaktor Rolls-Royce vyroste v Temelíně později. Zapojení českého průmyslu zůstává nejisté",
-            "publishedAt": "2026-04-24T09:36:10Z"
           }
         ]
       }
