@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-24T12:55:51.601593Z",
+  "ingestedAt": "2026-04-24T13:22:30.338418Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,33 @@
         "položek",
         "toto",
         "vypnuté"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Recenze hry Saros. Náročná, ale férová akce v záři zlověstného slunce",
+      "url": "https://doupe.zive.cz/saros-recenze-ps5",
+      "dt": "2026-04-24T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "akce",
+        "ale",
+        "férová",
+        "hry",
+        "náročná",
+        "recenze",
+        "saros",
+        "slunce",
+        "zlověstného",
+        "záři"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -938,35 +965,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Tohle není reklama, ale mohla by být. Astronaut natočil dechberoucí video „západu Země“ na svůj iPhone",
-      "url": "https://mobilmania.zive.cz/clanky/tohle-neni-reklama-ale-mohla-by-byt-astronaut-natocil-dechberouci-video-zapadu-zeme-na-svuj-iphone/sc-3-a-1364600/default.aspx",
-      "dt": "2026-04-21T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ale",
-        "astronaut",
-        "být",
-        "dechberoucí",
-        "iphone",
-        "natočil",
-        "reklama",
-        "svůj",
-        "tohle",
-        "video",
-        "země",
-        "západu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -977,7 +975,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23568,
+      "bytes": 23621,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1014,7 +1012,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1032,6 +1030,10 @@
           {
             "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
             "publishedAt": "2026-04-24T10:45:00Z"
+          },
+          {
+            "title": "Recenze hry Saros. Náročná, ale férová akce v záři zlověstného slunce",
+            "publishedAt": "2026-04-24T12:45:00Z"
           },
           {
             "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
@@ -1056,10 +1058,6 @@
           {
             "title": "DJI Lito jsou „blbuvzdorné“ drony, které nenarazí do prvního stromu. Lidar z profi modelů dostanete za dosud nevídanou cenu",
             "publishedAt": "2026-04-24T05:45:00Z"
-          },
-          {
-            "title": "Hry zadarmo, nebo se slevou: Festival středověku a tři hry pro PC zdarma",
-            "publishedAt": "2026-04-24T05:10:00Z"
           }
         ]
       }

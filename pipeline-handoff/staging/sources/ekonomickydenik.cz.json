@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T12:55:51.601593Z",
+  "ingestedAt": "2026-04-24T13:22:30.338418Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Írán proměnil Hormuzský průliv v ničivou zbraň. Evropa tomu nedokáže zabránit",
+      "url": "https://ekonomickydenik.cz/iran-promenil-hormuzsky-pruliv-v-nicivou-zbran/",
+      "dt": "2026-04-24T12:54:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evropa",
+        "hormuzský",
+        "nedokáže",
+        "ničivou",
+        "proměnil",
+        "průliv",
+        "tomu",
+        "zabránit",
+        "zbraň",
+        "írán"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,31 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Škrty už začaly. Lufthansa chystá omezení letů mezi Prahou a Mnichovem",
-      "url": "https://ekonomickydenik.cz/lufthansa-praha-mnichov-lety/",
-      "dt": "2026-04-22T15:33:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chystá",
-        "letů",
-        "lufthansa",
-        "mnichovem",
-        "omezení",
-        "prahou",
-        "začaly",
-        "škrty"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73164,
+      "bytes": 73313,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T12:44:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:54:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -857,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Írán proměnil Hormuzský průliv v ničivou zbraň. Evropa tomu nedokáže zabránit",
+            "publishedAt": "2026-04-24T12:54:00Z"
+          },
           {
             "title": "Macinka znovu brání Turka. Slovy o parazitech a deratizaci vytočil i Babiše",
             "publishedAt": "2026-04-24T12:44:49Z"
@@ -884,10 +890,6 @@
           {
             "title": "Reaktor Rolls-Royce vyroste v Temelíně později. Zapojení českého průmyslu zůstává nejisté",
             "publishedAt": "2026-04-24T09:36:10Z"
-          },
-          {
-            "title": "Platíme to my všichni, Babiš kritizuje zisky z prodeje zemního plynu i rozpočet EU",
-            "publishedAt": "2026-04-24T09:14:10Z"
           }
         ]
       }
