@@ -1,24 +1,75 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T15:20:40.295396Z",
+  "ingestedAt": "2026-04-24T15:44:33.753172Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Rakousko 0:0. Příprava na MS pokračuje, hokejisté hrají v Jihlavě",
+      "title": "ONLINE: Česko - Rakousko 1:0. Povedená přesilovka, Tomášek zařizuje vedení",
       "url": "https://www.idnes.cz/hokej/ms-2026/priprava-rakousko-cesko-online-zpravodajstvi.A260424_132308_reprezentace_luji",
-      "dt": "2026-04-24T15:10:52Z",
+      "dt": "2026-04-24T15:38:56Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "hokejisté",
-        "hrají",
-        "jihlavě",
-        "pokračuje",
-        "příprava",
+        "povedená",
+        "přesilovka",
         "rakousko",
+        "tomášek",
+        "vedení",
+        "zařizuje",
         "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kdo nemá ambice, pro něj ve Spartě není místo. Rosický o problémech i budoucnosti",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/tomas-rosicky-sparta-praha-rozhovor-hodnoceni.A260424_152724_fotbal_duff",
+      "dt": "2026-04-24T15:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ambice",
+        "budoucnosti",
+        "místo",
+        "nemá",
+        "něj",
+        "problémech",
+        "rosický",
+        "spartě"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pogačarův bývalý parťák Mu&#241;oz zemřel, po pádu ho přemohla agresivní infekce",
+      "url": "https://www.idnes.cz/sport/cyklistika/kolumbijsky-cyklista-cristian-camilo-munoz-pad-umrti-necekana-infekce.A260424_165245_cyklistika_mrg",
+      "dt": "2026-04-24T15:24:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "241",
+        "agresivní",
+        "bývalý",
+        "infekce",
+        "parťák",
+        "pogačarův",
+        "pádu",
+        "přemohla",
+        "zemřel"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -737,58 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Atlanta znovu zdolala Knicks o bod, Toronto ukončilo nelichotivou sérii",
-      "url": "https://www.idnes.cz/sport/basket/mccollum-rozhodl-v-dramatickem-zaveru-o-druhe-vyhre-atlanty-v-play-off-nba.A260424_084244_sport-basket_tit",
-      "dt": "2026-04-24T06:48:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "atlanta",
-        "bod",
-        "knicks",
-        "nelichotivou",
-        "sérii",
-        "toronto",
-        "ukončilo",
-        "zdolala",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Spor o místa pro liberecké fandy. Slovan o podmínkách Jablonce: Byly nestandardní",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/spor-o-mista-pro-liberecke-fandy-slovan-o-podminkach-jablonce-byly-nestandardni.A260424_928359_fotbal_tit",
-      "dt": "2026-04-24T06:16:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "byly",
-        "fandy",
-        "jablonce",
-        "liberecké",
-        "místa",
-        "nestandardní",
-        "podmínkách",
-        "slovan",
-        "spor"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45527,
+      "bytes": 45923,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T15:10:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T15:38:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,8 +851,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Rakousko 0:0. Příprava na MS pokračuje, hokejisté hrají v Jihlavě",
-            "publishedAt": "2026-04-24T15:10:52Z"
+            "title": "ONLINE: Česko - Rakousko 1:0. Povedená přesilovka, Tomášek zařizuje vedení",
+            "publishedAt": "2026-04-24T15:38:56Z"
+          },
+          {
+            "title": "Kdo nemá ambice, pro něj ve Spartě není místo. Rosický o problémech i budoucnosti",
+            "publishedAt": "2026-04-24T15:27:00Z"
+          },
+          {
+            "title": "Pogačarův bývalý parťák Mu&#241;oz zemřel, po pádu ho přemohla agresivní infekce",
+            "publishedAt": "2026-04-24T15:24:00Z"
           },
           {
             "title": "Šulc je po zranění zpátky. Tvrdě jsem dřel, říká. Mluvil o přízni v Lyonu i šampionátu",
@@ -874,14 +881,6 @@
           {
             "title": "Arsenal, či City? Paříž, nebo Lens? Němci versus Španělé. O co jde v elitních ligách",
             "publishedAt": "2026-04-24T13:19:00Z"
-          },
-          {
-            "title": "Prestianni si nezahraje šestkrát, urážka Viníciuse nebyla rasistická, ale homofobní",
-            "publishedAt": "2026-04-24T13:18:00Z"
-          },
-          {
-            "title": "Dozvuk Kaderkovy éry. Tenisový svaz musí uhradit téměř 25 milionů korun",
-            "publishedAt": "2026-04-24T13:00:00Z"
           }
         ]
       }

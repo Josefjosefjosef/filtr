@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T15:20:40.295396Z",
+  "ingestedAt": "2026-04-24T15:44:33.753172Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "HOKEJ ONLINE: Češi proti Rakousku udeřili v přesilovce",
+      "url": "https://www.sport.cz/clanek/hokej-ms-priprava-jihlava-cesko-rakousko-online-5442321",
+      "dt": "2026-04-24T08:24:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hokej",
+        "online",
+        "proti",
+        "přesilovce",
+        "rakousku",
+        "udeřili",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rosický: V létě přijde nový brankář",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-rosicky-otazku-trenera-jsme-neresili-5442382",
+      "dt": "2026-04-24T15:16:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brankář",
+        "létě",
+        "nový",
+        "přijde",
+        "rosický"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -71,34 +117,6 @@
         "pardubicích",
         "pivot",
         "zůstane"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "HOKEJ ONLINE: Reprezentace hraje s Rakouskem odvetu v Jihlavě, zápas opozdil výpadek proudu",
-      "url": "https://www.sport.cz/clanek/hokej-ms-priprava-jihlava-cesko-rakousko-online-5442321",
-      "dt": "2026-04-24T08:24:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hokej",
-        "hraje",
-        "jihlavě",
-        "odvetu",
-        "online",
-        "opozdil",
-        "proudu",
-        "rakouskem",
-        "reprezentace",
-        "výpadek",
-        "zápas"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -751,33 +769,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šéf FIFA sliboval, že MS přiláká davy. Z amerických hotelů zní údiv: A kde jako jsou?",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-sef-fifa-sliboval-ze-ms-prilaka-davy-z-americkych-hotelu-zni-udiv-a-kde-jako-jsou-5441895",
-      "dt": "2026-04-24T08:28:30Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "amerických",
-        "davy",
-        "fifa",
-        "hotelů",
-        "jako",
-        "přiláká",
-        "sliboval",
-        "zní",
-        "údiv",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42744,
+      "bytes": 42436,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +816,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T15:11:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T15:16:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +832,14 @@
         },
         "sample_titles": [
           {
+            "title": "HOKEJ ONLINE: Češi proti Rakousku udeřili v přesilovce",
+            "publishedAt": "2026-04-24T08:24:43Z"
+          },
+          {
+            "title": "Rosický: V létě přijde nový brankář",
+            "publishedAt": "2026-04-24T15:16:32Z"
+          },
+          {
             "title": "Stáj F1 Audi má náhradu za Wheatleyho. Vedení posílí trojnásobný šampion z Le Mans McNish",
             "publishedAt": "2026-04-24T14:48:30Z"
           },
@@ -853,10 +852,6 @@
             "publishedAt": "2026-04-24T15:11:09Z"
           },
           {
-            "title": "HOKEJ ONLINE: Reprezentace hraje s Rakouskem odvetu v Jihlavě, zápas opozdil výpadek proudu",
-            "publishedAt": "2026-04-24T08:24:43Z"
-          },
-          {
             "title": "Posila od rivala. Brankářský tandem ve Vítkovicích doplnil odchovanec Třince",
             "publishedAt": "2026-04-24T15:04:52Z"
           },
@@ -867,10 +862,6 @@
           {
             "title": "Ligový finiš slibuje pořádné drama. Ve hře jsou bizarní bodové shody i boje o klíčová místa",
             "publishedAt": "2026-04-24T14:41:02Z"
-          },
-          {
-            "title": "Formule 1 se vrátí na známý okruh. Novinku propálil prezidentský úřad",
-            "publishedAt": "2026-04-24T11:06:33Z"
           }
         ]
       }
