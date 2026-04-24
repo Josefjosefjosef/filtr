@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T10:54:58.843261Z",
+  "ingestedAt": "2026-04-24T11:14:27.709490Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Lufthansa ruší příruční zavazadla zdarma. Lidé zuří, připlatí si stovky korun",
+      "url": "https://www.denik.cz/doprava/lufthansa-letecka-spolecnost-ruseni-prirucnich-zavazadel-zdarma-lide-si-priplati.html",
+      "dt": "2026-04-24T10:58:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "korun",
+        "lidé",
+        "lufthansa",
+        "připlatí",
+        "příruční",
+        "ruší",
+        "stovky",
+        "zavazadla",
+        "zdarma",
+        "zuří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,34 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zasáhněte, nebo omezíme lety. Britské aerolinky kvůli Íránu žádají vládu o pomoc",
-      "url": "https://www.denik.cz/staty-mimo-eu/britske-aerolinky-zdrazovani-omezovani-letu-pomoc-od-vlady.html",
-      "dt": "2026-04-23T16:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "aerolinky",
-        "britské",
-        "kvůli",
-        "lety",
-        "nebo",
-        "omezíme",
-        "pomoc",
-        "vládu",
-        "zasáhněte",
-        "íránu",
-        "žádají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30054,
+      "bytes": 29906,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:58:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -720,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lufthansa ruší příruční zavazadla zdarma. Lidé zuří, připlatí si stovky korun",
+            "publishedAt": "2026-04-24T10:58:00Z"
+          },
           {
             "title": "Ve skleničce s dětskou výživou HiPP se našlo 15 mikrogramů jedu na krysy",
             "publishedAt": "2026-04-24T10:14:00Z"
@@ -747,10 +750,6 @@
           {
             "title": "Těší mě, já jsem taky Petr! Prezident si zahrál v reklamním videu",
             "publishedAt": "2026-04-24T07:15:00Z"
-          },
-          {
-            "title": "Záchrana Timmyho pokračuje. Ochranáři hloubí přes 100 metrů dlouhé koryto",
-            "publishedAt": "2026-04-24T07:10:00Z"
           }
         ]
       }

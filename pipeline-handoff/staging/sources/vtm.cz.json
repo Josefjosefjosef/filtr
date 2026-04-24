@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-24T10:54:58.843261Z",
+  "ingestedAt": "2026-04-24T11:14:27.709490Z",
   "items": [
     {
       "section": "veda",
@@ -26,6 +26,31 @@
         "profi",
         "prvního",
         "stromu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
+      "url": "https://mobilmania.zive.cz/clanky/polozky-nastaveni-iphone-ios-ktere-byste-meli-nechat-vypnute-202604/sc-3-a-1364593/default.aspx",
+      "dt": "2026-04-24T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "byste",
+        "iphonu",
+        "měli",
+        "nastavení",
+        "nechat",
+        "položek",
+        "toto",
+        "vypnuté"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -943,33 +968,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Výkonný aku šroubovák je za 620 Kč. Mova se nabíjí pomocí USB-C a v krabičce má 24 bitů",
-      "url": "https://www.zive.cz/clanky/nejlevnejsi-aku-sroubovak-mova/sc-3-a-240798/default.aspx",
-      "dt": "2026-04-21T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "620",
-        "aku",
-        "bitů",
-        "krabičce",
-        "mova",
-        "nabíjí",
-        "pomocí",
-        "usb",
-        "výkonný",
-        "šroubovák"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -980,7 +978,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23317,
+      "bytes": 23389,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1017,7 +1015,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1035,6 +1033,10 @@
           {
             "title": "DJI Lito jsou „blbuvzdorné“ drony, které nenarazí do prvního stromu. Lidar z profi modelů dostanete za dosud nevídanou cenu",
             "publishedAt": "2026-04-24T05:45:00Z"
+          },
+          {
+            "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
+            "publishedAt": "2026-04-24T10:45:00Z"
           },
           {
             "title": "Výborný batoh za 719 Kč. Voděodolný Kingsons s objemem 30 litrů pojme notebook i oblečení na dlouhý výlet",
@@ -1059,10 +1061,6 @@
           {
             "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
             "publishedAt": "2026-04-23T08:45:00Z"
-          },
-          {
-            "title": "Polovina internetu už používá IPv6, říká Google. Česko je podprůměrné, Slovensko ostuda",
-            "publishedAt": "2026-04-23T12:45:00Z"
           }
         ]
       }
