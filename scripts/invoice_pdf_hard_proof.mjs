@@ -115,6 +115,103 @@ function printBlocks(label, obj) {
   console.log(`=== END ${label} ===`);
 }
 
+async function collectFooterDiagnostics(page) {
+  return page.evaluate(async () => {
+    const { buildInvoicePrintHtml, computeTotals, defaultFormState, emptyLine } = await import("/assets/iu-invoice-engine.js");
+    function buildState(payment) {
+      const st = defaultFormState();
+      st.supplierVatPayer = true;
+      st.supplierFo.firstName = "Jan";
+      st.supplierFo.lastName = "Dodavatel";
+      st.supplierFo.ico = "12345679";
+      st.supplierFo.address = "Testovací 1, Praha";
+      st.supplierFo.accountNumber = "123456789/0100";
+      st.buyerFo.firstName = "Eva";
+      st.buyerFo.lastName = "Odběratel";
+      st.buyerFo.address = "Kupní 2, Brno";
+      st.invoice.number = "2026-9901";
+      st.invoice.payment = payment;
+      if (payment === "transfer") st.invoice.accountNumber = "987654321/0800";
+      const long1 = ("Popis služby s mezerami a delším textem pro zalomení. ").repeat(18);
+      const long2 = ("Technický rozsah práce: analýza, implementace, testování, dokumentace. ").repeat(14);
+      const nospace = "X".repeat(140);
+      st.lines = [];
+      for (let i = 0; i < 12; i++) {
+        const ln = emptyLine(true);
+        ln.name = `Položka ${i + 1}`;
+        ln.qty = "2";
+        ln.unit = "hod";
+        ln.unitPrice = "500";
+        ln.vatRate = "21";
+        if (i === 0) ln.description = long1;
+        else if (i === 1) ln.description = long2;
+        else if (i === 2) ln.description = nospace;
+        st.lines.push(ln);
+      }
+      return st;
+    }
+    const st = buildState("cash");
+    const totals = computeTotals(st);
+    const html = buildInvoicePrintHtml(st, totals);
+    const host = document.createElement("div");
+    host.setAttribute("data-iu-invoice-print-host", "");
+    host.innerHTML = "<div class=\"iu-invoice-print-page\">" + html + "</div>";
+    document.body.appendChild(host);
+    try {
+      const pageEl = host.querySelector(".iu-invoice-print-page");
+      const printHostExists = !!(host && host.hasAttribute("data-iu-invoice-print-host"));
+      const printPageExists = !!pageEl;
+      const footList = pageEl ? pageEl.querySelectorAll(".iu-invoice-print-footer") : [];
+      const foot = footList.length ? footList[footList.length - 1] : null;
+      const header = pageEl ? pageEl.querySelector(".iu-invoice-print-header") : null;
+      const footRaw = foot ? String(foot.textContent || "").replace(/[\u200B-\u200D\uFEFF\u00AD]/g, "") : "";
+      const footerText = footRaw.replace(/\s+/g, " ").trim();
+      const headerRaw = header ? String(header.textContent || "").replace(/\s+/g, " ").trim() : "";
+      const footerOnlyWwwInfoUzel = footerText === "www.infoUzel.cz";
+      const createdByInFooter = /Vytvořeno pomocí/i.test(footRaw);
+      const createdByInHeader = /Vytvořeno pomocí/i.test(headerRaw);
+      const containsWwwInfoUzel = footRaw.indexOf("www.infoUzel.cz") !== -1;
+      const containsCreatedByInfoUzel = /infoUzel\.cz/i.test(footRaw);
+      const pageTextTail = pageEl
+        ? String(pageEl.textContent || "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(-220)
+        : "";
+      let rootCause = "ok";
+      if (!foot) rootCause = "footer_missing";
+      else if (footerText !== "www.infoUzel.cz") rootCause = "footer_norm_mismatch";
+      else if (createdByInFooter) rootCause = "created_by_in_footer";
+      return {
+        printHostExists,
+        printPageExists,
+        footerExists: !!foot,
+        footerText,
+        footerOnlyWwwInfoUzel,
+        createdByInFooter,
+        createdByInHeader,
+        containsWwwInfoUzel,
+        containsCreatedByInfoUzel,
+        pageTextTail,
+        footerSelector: ".iu-invoice-print-footer",
+        rootCause,
+      };
+    } finally {
+      try {
+        host.remove();
+      } catch (_) {}
+    }
+  });
+}
+
+function safeGit(args) {
+  try {
+    return execSync(`git ${args}`, { encoding: "utf8", cwd: ROOT }).trim();
+  } catch {
+    return "";
+  }
+}
+
 async function collectExporterDiagnostics(page, appUrl, consoleErrors, appErrors) {
   const d = await page.evaluate(() => {
     const scripts = Array.from(document.querySelectorAll("script[src]"));
@@ -244,8 +341,13 @@ async function run() {
     const pageEl = host.querySelector(".iu-invoice-print-page");
     const cs = (el) => (el ? window.getComputedStyle(el) : null);
     const brand = pageEl.querySelector(".iu-invoice-print-brand");
+    const hdr = pageEl.querySelector(".iu-invoice-print-header");
     const h1 = pageEl.querySelector(".iu-invoice-print-title");
-    const foot = pageEl.querySelector(".iu-invoice-print-footer");
+    const footList = pageEl.querySelectorAll(".iu-invoice-print-footer");
+    const foot = footList.length ? footList[footList.length - 1] : null;
+    const footRaw = foot ? String(foot.textContent || "").replace(/[\u200B-\u200D\uFEFF\u00AD]/g, "") : "";
+    const footNorm = footRaw.replace(/\s+/g, " ").trim();
+    const hdrRaw = hdr ? String(hdr.textContent || "").replace(/\s+/g, " ").trim() : "";
     const bar = pageEl.querySelector(".iu-invoice-print-title-bar");
     const pageInk = pageEl ? cs(pageEl).color : "";
     const brandInk = brand ? cs(brand).color : "";
@@ -298,8 +400,10 @@ async function run() {
         const n = parseFloat(w);
         return w === "bold" || w === "bolder" || (!isNaN(n) && n >= 700);
       })(),
-      footerOnlyWwwInfoUzel: foot && String(foot.textContent || "").replace(/\s+/g, " ").trim() === "www.infoUzel.cz",
-      createdByRemovedFromFooter: foot && String(foot.textContent || "").indexOf("Vytvořeno") === -1,
+      footerOnlyWwwInfoUzel: !!foot && footNorm === "www.infoUzel.cz",
+      createdByInFooter: /Vytvořeno pomocí/i.test(footRaw),
+      createdByInHeader: /Vytvořeno pomocí/i.test(hdrRaw),
+      createdByRemovedFromFooter: !!foot && !/Vytvořeno pomocí/i.test(footRaw),
       quantityAlignedUnderHeader: !!(rd && rq && Math.abs(rd.top - rq.top) < 3),
       longTextWrapsInsideDescription: desc
         ? desc.scrollWidth <= desc.clientWidth + 8 || desc.scrollHeight > (parseFloat(window.getComputedStyle(desc).lineHeight) || 18) * 1.8
@@ -353,6 +457,9 @@ async function run() {
     buyerHeadingBold: layout.buyerHeadingBold,
     paymentCashBold: layout.paymentCashBold,
     footerOnlyWwwInfoUzel: layout.footerOnlyWwwInfoUzel,
+    createdByRemovedFromFooter: layout.createdByRemovedFromFooter,
+    createdByInHeader: layout.createdByInHeader,
+    createdByInFooter: layout.createdByInFooter,
     paymentTransferRendered: xferStyle.paymentTransferRendered,
   });
 
@@ -439,6 +546,9 @@ async function run() {
     process.exit(1);
   }
   await page.waitForTimeout(useLocalStaticServer ? 400 : 800);
+
+  const footerDiag = await collectFooterDiagnostics(page);
+  printBlocks("FOOTER_DIAGNOSTICS", footerDiag);
 
   const evalPdf = () =>
     page.evaluate(async () => {
@@ -542,6 +652,12 @@ async function run() {
         reason: "no_exporter",
         detail: "evaluate path: typeof window.iuPdfExportHtmlStringToBlobForInvoice !== function",
       });
+    } else if (/invoice_print_footer_invalid/i.test(String(pdfOut.err))) {
+      printBlocks("FIRST_BLOCKER", {
+        part: "pdf_generation",
+        reason: "invoice_print_footer_invalid",
+        evidence: String(pdfOut.err),
+      });
     }
     printBlocks("PDF_EXPORT_PROOF", {
       pdfGenerated: false,
@@ -600,6 +716,15 @@ async function run() {
     overflowX: overflowX,
   });
 
+  const gitPaths = safeGit("diff --name-only");
+  printBlocks("CHANGED_FILES", {
+    paths: gitPaths ? gitPaths.replace(/\r?\n/g, " | ") : "(clean)",
+  });
+  const gitSb = safeGit("status -sb");
+  printBlocks("GIT_STATUS", {
+    line: gitSb ? gitSb.replace(/\r?\n/g, " | ") : "(none)",
+  });
+
   const gh = tryGhPrInfo();
   printBlocks("PR_INFO", {
     url: gh.url || "(none)",
@@ -615,6 +740,9 @@ async function run() {
     !layout.buyerHeadingBold ||
     !layout.paymentCashBold ||
     !layout.footerOnlyWwwInfoUzel ||
+    !layout.createdByInHeader ||
+    layout.createdByInFooter ||
+    !layout.createdByRemovedFromFooter ||
     !xferStyle.paymentTransferRendered ||
     !layout.quantityAlignedUnderHeader ||
     !layout.longTextDoesNotOverlapNumericColumns ||
@@ -633,9 +761,10 @@ async function run() {
     plainTextOnly ||
     contentClipped ||
     overflowX ||
-    consoleErrors.length > 0;
+    consoleErrors.length > 0 ||
+    appErrors.length > 0;
 
-  const reason = fail ? "proof_assertion_failed" : "pdf_print_proof_harness_passed";
+  const reason = fail ? "proof_assertion_failed" : "invoice_print_footer_guard_passed";
 
   await browser.close();
   if (server) server.close();

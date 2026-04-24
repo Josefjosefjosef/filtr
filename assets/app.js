@@ -21680,19 +21680,21 @@ function buildVideoAsArticleCard(it) {
           if (typeof done === "function") done(new Error("invoice_print_missing_brand"));
           return;
         }
-        var footEl = pageEl.querySelector(".iu-invoice-print-footer");
+        var footList = pageEl.querySelectorAll(".iu-invoice-print-footer");
+        var footEl = footList.length ? footList[footList.length - 1] : null;
         if (!footEl) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_print_footer_missing"));
           return;
         }
-        var footTrim = String(footEl.textContent || "").replace(/\s+/g, " ").trim();
+        var footRaw = String(footEl.textContent || "").replace(/[\u200B-\u200D\uFEFF\u00AD]/g, "");
+        var footTrim = footRaw.replace(/\s+/g, " ").trim();
         if (footTrim !== "www.infoUzel.cz") {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_print_footer_invalid"));
           return;
         }
-        if (String(footEl.textContent || "").indexOf("Vytvořeno") !== -1) {
+        if (/Vytvo\u0159eno pomoc\u00ed/i.test(footRaw)) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_print_footer_has_created_by"));
           return;
@@ -21828,7 +21830,7 @@ function buildVideoAsArticleCard(it) {
             paymentCashBold: payCashBold,
             paymentTransferRendered: payTransferSpan,
             footerOnlyWwwInfoUzel: footTrim === "www.infoUzel.cz",
-            createdByRemovedFromFooter: String(footEl.textContent || "").indexOf("Vytvořeno") === -1,
+            createdByRemovedFromFooter: !/Vytvo\u0159eno pomoc\u00ed/i.test(footRaw),
             spaceBeforeSubtotal: gapBeforeSub,
             totalDueBold: totalDueBold,
             totalDueAmountInline: totalAmtInline,
