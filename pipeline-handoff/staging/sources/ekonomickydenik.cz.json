@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T07:39:28.684958Z",
+  "ingestedAt": "2026-04-24T08:00:36.717706Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tři ceny u jednoho výrobku? Lidé se cítí zmateně, říká ombudsman Fialka",
+      "url": "https://ekonomickydenik.cz/slevy-ceny-ombudsman/",
+      "dt": "2026-04-24T07:55:23Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ceny",
+        "cítí",
+        "fialka",
+        "jednoho",
+        "lidé",
+        "ombudsman",
+        "tři",
+        "výrobku",
+        "zmateně",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -770,30 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Z Brna letecky k moři do Chorvatska? O lince do Zadaru se už jedná",
-      "url": "https://ekonomickydenik.cz/brno-zadar-letecka-linka/",
-      "dt": "2026-04-22T07:01:27Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "brna",
-        "chorvatska",
-        "jedná",
-        "letecky",
-        "lince",
-        "moři",
-        "zadaru"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71943,
+      "bytes": 72125,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,11 +844,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:54:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T07:55:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 25,
+          "zdravi": 1,
           "zpravy": 3,
           "sport": 1
         },
@@ -859,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tři ceny u jednoho výrobku? Lidé se cítí zmateně, říká ombudsman Fialka",
+            "publishedAt": "2026-04-24T07:55:23Z"
+          },
           {
             "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
             "publishedAt": "2026-04-24T06:54:50Z"
@@ -886,10 +893,6 @@
           {
             "title": "Místo slevy zadarmo. Do pasti akcí se po Reeboku chytil Myprotein",
             "publishedAt": "2026-04-23T13:32:53Z"
-          },
-          {
-            "title": "Evropa tlačí zelenou agendu opět do popředí. Slunce a vítr mají porazit Putina a další diktátory",
-            "publishedAt": "2026-04-23T13:19:52Z"
           }
         ]
       }
