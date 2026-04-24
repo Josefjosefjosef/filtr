@@ -138,6 +138,7 @@ function renderFormShell() {
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-copy>Kopírovat text</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share>Stáhnout / sdílet PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet připravené PDF</button>
     </div>
   </section>
 
@@ -147,6 +148,7 @@ function renderFormShell() {
     <div class="iu-inv-previewToolbar">
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-back>Zpět do formuláře</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share>Stáhnout / sdílet PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet připravené PDF</button>
     </div>
     <div class="iu-inv-previewScroll" data-inv-preview-host></div>
   </div>
@@ -488,6 +490,7 @@ export function initIuInvoiceOverlay(deps) {
   let state = loadFormState() || defaultFormState();
   let saveTimer = 0;
   let rootEl = null;
+  let preparedPdfBundle = null;
 
   function setLock(on) {
     try {
@@ -750,7 +753,108 @@ export function initIuInvoiceOverlay(deps) {
       });
     }
 
+    function resetPreparedShareUi() {
+      preparedPdfBundle = null;
+      try {
+        root.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
+          b.hidden = true;
+        });
+      } catch (_) {}
+    }
+
+    function runPdfDownloadFallback(blob, name) {
+      try {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = name;
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+      } catch (_) {
+        setStatus(root, "Stažení PDF se nezdařilo.");
+      }
+    }
+
+    function isNarrowShareTwoStep() {
+      try {
+        if (!window.matchMedia("(max-width: 1024px)").matches) return false;
+        const nav = typeof navigator !== "undefined" ? navigator : null;
+        const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+        const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
+        return !!(shareFn && canShareFn);
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function prepareSharePdfFlow() {
+      resetPreparedShareUi();
+      setStatus(root, "Připravuji PDF…");
+      exportInvoicePdfBlob((err, blob, fileName) => {
+        if (err || !blob) {
+          setStatus(root, "PDF se nepodařilo vygenerovat.");
+          return;
+        }
+        const name = fileName || "faktura.pdf";
+        const nav = typeof navigator !== "undefined" ? navigator : null;
+        const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+        const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
+        const file = new File([blob], name, { type: "application/pdf" });
+        const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+        if (shareFn && canShareFiles) {
+          preparedPdfBundle = { blob, fileName: name };
+          root.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
+            b.hidden = false;
+          });
+          setStatus(root, "PDF připravené ke sdílení. Klepněte na „Sdílet připravené PDF“.");
+          return;
+        }
+        runPdfDownloadFallback(blob, name);
+        setStatus(root, "PDF staženo.");
+      });
+    }
+
+    async function sharePreparedPdfNow() {
+      const prep = preparedPdfBundle;
+      if (!prep || !prep.blob) {
+        setStatus(root, "Nejdřív připravte PDF (tlačítko „Stáhnout / sdílet PDF“).");
+        return;
+      }
+      const name = prep.fileName || "faktura.pdf";
+      const file = new File([prep.blob], name, { type: "application/pdf" });
+      const nav = typeof navigator !== "undefined" ? navigator : null;
+      const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+      const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
+      const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+      if (!shareFn || !canShareFiles) {
+        runPdfDownloadFallback(prep.blob, name);
+        resetPreparedShareUi();
+        setStatus(root, "PDF staženo.");
+        return;
+      }
+      try {
+        await shareFn.call(nav, { files: [file], title: "Faktura" });
+        setStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
+      } catch (e) {
+        const aborted = e && (e.name === "AbortError" || String(e.name) === "AbortError");
+        if (aborted) {
+          setStatus(root, "Sdílení zrušeno.");
+          return;
+        }
+        setStatus(root, "Sdílení PDF se nezdařilo.");
+        return;
+      }
+      resetPreparedShareUi();
+    }
+
     async function doShare() {
+      if (isNarrowShareTwoStep()) {
+        prepareSharePdfFlow();
+        return;
+      }
       exportInvoicePdfBlob(async (err, blob, fileName) => {
         if (err || !blob) return;
         const name = fileName || "faktura.pdf";
@@ -774,21 +878,41 @@ export function initIuInvoiceOverlay(deps) {
             return;
           }
         }
-        try {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = name;
-          a.rel = "noopener";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.setTimeout(() => URL.revokeObjectURL(url), 2000);
-          setStatus(root, "PDF staženo.");
-        } catch (_) {
-          setStatus(root, "Stažení PDF se nezdařilo.");
-        }
+        runPdfDownloadFallback(blob, name);
+        setStatus(root, "PDF staženo.");
       });
+    }
+
+    function syncInvoicePreviewLayout() {
+      const host = root.querySelector("[data-inv-preview-host]");
+      if (!host) return;
+      const viewport = host.querySelector(".iu-invoice-preview-viewport");
+      const scaleEl = host.querySelector(".iu-invoice-preview-scale");
+      const paper = host.querySelector(".iu-invoice-paper");
+      if (!viewport || !scaleEl || !paper) return;
+      let wide = false;
+      try {
+        wide = window.matchMedia("(min-width: 1025px)").matches;
+      } catch (_) {
+        wide = false;
+      }
+      if (wide) {
+        scaleEl.style.transform = "";
+        scaleEl.style.transformOrigin = "";
+        scaleEl.style.height = "";
+        scaleEl.style.width = "794px";
+        return;
+      }
+      const csw = window.getComputedStyle(viewport);
+      const padL = parseFloat(csw.paddingLeft) || 0;
+      const padR = parseFloat(csw.paddingRight) || 0;
+      const avail = Math.max(260, viewport.clientWidth - padL - padR - 4);
+      const sc = Math.min(1, avail / 794);
+      scaleEl.style.width = "794px";
+      scaleEl.style.transform = "scale(" + sc + ")";
+      scaleEl.style.transformOrigin = "top center";
+      const ph = paper.offsetHeight || 1;
+      scaleEl.style.height = ph * sc + "px";
     }
 
     function openPreview() {
@@ -798,27 +922,27 @@ export function initIuInvoiceOverlay(deps) {
         setStatus(root, v.errors.join(" · "));
         return;
       }
+      resetPreparedShareUi();
       const totals = computeTotals(state);
       const host = root.querySelector("[data-inv-preview-host]");
       const layer = root.querySelector("[data-inv-preview-layer]");
       if (!host || !layer) return;
       const inner = buildInvoiceHtmlPreview(state, totals);
       host.innerHTML =
-        '<div class="iu-invoice-preview-scale"><div class="iu-invoice-paper">' + inner + "</div></div>";
+        '<div class="iu-invoice-preview-viewport">' +
+        '<div class="iu-invoice-preview-scale"><div class="iu-invoice-paper">' +
+        inner +
+        "</div></div></div>";
       layer.hidden = false;
       layer.classList.remove("iu-inv-guard-hidden");
       try {
-        const scaleEl = host.querySelector(".iu-invoice-preview-scale");
-        if (scaleEl) {
-          const vw = window.innerWidth || document.documentElement.clientWidth || 794;
-          if (vw >= 1025) {
-            scaleEl.style.transform = "";
-            scaleEl.style.transformOrigin = "";
-          } else {
-            scaleEl.style.transform = "scale(" + vw / 794 + ")";
-            scaleEl.style.transformOrigin = "top left";
-          }
-        }
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            try {
+              syncInvoicePreviewLayout();
+            } catch (_) {}
+          });
+        });
       } catch (_) {}
       try {
         scrollHost.scrollTop = 0;
@@ -847,6 +971,11 @@ export function initIuInvoiceOverlay(deps) {
     });
     root.querySelector("[data-inv-preview-share]")?.addEventListener("click", () => {
       doShare();
+    });
+    root.querySelectorAll("[data-inv-share-prepared]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        void sharePreparedPdfNow();
+      });
     });
 
     root.querySelector("[data-inv-supplier-load]")?.addEventListener("click", () => {
@@ -946,6 +1075,12 @@ export function initIuInvoiceOverlay(deps) {
 
   function closeSurface() {
     if (rootEl) {
+      try {
+        preparedPdfBundle = null;
+        rootEl.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
+          b.hidden = true;
+        });
+      } catch (_) {}
       readStateFromDom(rootEl, state);
       persistFormState(state);
     }
