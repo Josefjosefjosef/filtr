@@ -16311,6 +16311,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     width: 100%;
     max-width: 100%;
   }
+  /* Mobile/tablet-only hero + holiday flow — DOM exists for ≤1024 proof; desktop grid placement hides from layout. */
+  #silver-slot #iuSilverHeroPremium,
+  #silver-slot #iuSilverWelcomeStackSeparatorHeroHoliday,
+  #silver-slot #iuHolidayMonetizeCard,
+  #silver-slot #iuSilverWelcomeStackSeparatorHolidayWeather{
+    display: none !important;
+  }
   #silver-slot #iuSilverWelcomeCard{
     grid-column: 1;
     grid-row: 1;
@@ -16327,6 +16334,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     max-width: 100%;
     box-sizing: border-box;
   }
+  /* DOM order differs from ≤1024; explicit rows restore původní desktop stack (tall → kalendář → úkoly). */
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore{
     grid-column: 1 / -1;
     grid-row: 2;
@@ -16335,7 +16343,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     grid-column: 1 / -1;
     grid-row: 3;
   }
-  #silver-slot #iuSilverWelcomeStackSeparatorCal{
+  #silver-slot #iuSilverWelcomeStackSeparatorWeatherCal{
     grid-column: 1 / -1;
     grid-row: 4;
   }
@@ -16343,7 +16351,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     grid-column: 1 / -1;
     grid-row: 5;
   }
-  #silver-slot #iuSilverWelcomeStackSeparatorTasks{
+  #silver-slot #iuSilverWelcomeStackSeparatorCal{
     grid-column: 1 / -1;
     grid-row: 6;
   }
@@ -16856,7 +16864,7 @@ Porušení = regres + CLS risk
     margin: 0 !important;
   }
   /* P0 CLS: separator mezi kalendářem a úkoly — stabilní 1px (desktop stack attribution). */
-  #silver-slot #iuSilverWelcomeStackSeparatorTasks.silver-welcome-stack__separator{
+  #silver-slot #iuSilverWelcomeStackSeparatorCal.silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     height: 1px !important;
     min-height: 1px !important;
