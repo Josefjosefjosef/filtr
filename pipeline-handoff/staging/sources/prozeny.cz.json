@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-24T19:04:23.891337Z",
+  "ingestedAt": "2026-04-24T20:10:06.473364Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Miláčku, otoč se! Aneb jak to máte rádi zezadu? Muži milují vyšpulené zadečky",
+      "url": "https://www.prozeny.cz/clanek/polohy-zezadu-jedna-velka-chlipnost-27330",
+      "dt": "2026-04-24T20:00:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "aneb",
+        "milují",
+        "miláčku",
+        "muži",
+        "máte",
+        "otoč",
+        "rádi",
+        "vyšpulené",
+        "zadečky",
+        "zezadu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -804,37 +831,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Spěch je tichý zabiják srdce. Jak poznáte, že byste měli zpomalit dřív, než vás zastaví vaše tělo",
-      "url": "https://www.prozeny.cz/clanek/zdravi-spech-jako-tichy-zabijak-aneb-proc-byste-meli-zpomalit-driv-nez-vas-zastavi-telo-103136",
-      "dt": "2026-04-23T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "byste",
-        "dřív",
-        "měli",
-        "než",
-        "poznáte",
-        "spěch",
-        "srdce",
-        "tichý",
-        "tělo",
-        "vaše",
-        "vás",
-        "zabiják",
-        "zastaví",
-        "zpomalit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -845,7 +841,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39999,
+      "bytes": 39798,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -882,7 +878,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:25:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T20:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -898,6 +894,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miláčku, otoč se! Aneb jak to máte rádi zezadu? Muži milují vyšpulené zadečky",
+            "publishedAt": "2026-04-24T20:00:00Z"
+          },
           {
             "title": "„Rozvod byl pro mě šok!“ říká maminka Leoše Mareše. Původně se měl jmenovat Michal. A co ještě prozradila?",
             "publishedAt": "2026-04-24T09:25:17Z"
@@ -924,10 +924,6 @@
           },
           {
             "title": "Blíží se změna počasí a velké ochlazení! Kompletní přehled, jak ochránit zahradu před mrazíky",
-            "publishedAt": "2026-04-24T03:00:00Z"
-          },
-          {
-            "title": "Leoš Mareš: Self-made hvězda i křehký kluk. Dokument ho ukáže tak, jak ho neznáme",
             "publishedAt": "2026-04-24T03:00:00Z"
           }
         ]

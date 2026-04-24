@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-24T19:04:23.891337Z",
+  "ingestedAt": "2026-04-24T20:10:06.473364Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/kos-z-prahy-na-tyden-se-snidani",
+      "dt": "2026-04-24T19:12:28Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "664",
+        "kos",
+        "prahy",
+        "snídaní",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -476,29 +499,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Severní Makedonie z Bratislavy v červnu. Letenky od 688 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/severni-makedonie-z-bratislavy-v-cervnu",
-      "dt": "2026-04-20T19:18:31Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "688",
-        "bratislavy",
-        "letenky",
-        "makedonie",
-        "severní",
-        "červnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44992,
+      "bytes": 46096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +546,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:56:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T19:12:28Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -561,6 +561,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
+            "publishedAt": "2026-04-24T19:12:28Z"
+          },
           {
             "title": "Open-jaw letenky s United do Jižní Ameriky i Karibiku. Letenky od 12 490 Kč",
             "publishedAt": "2026-04-24T14:56:34Z"
@@ -588,10 +592,6 @@
           {
             "title": "Kréta z Prahy na týden s polopenzí. Zájezd od 7 990 Kč",
             "publishedAt": "2026-04-23T11:18:38Z"
-          },
-          {
-            "title": "Mykonos z Bratislavy o letních prázdninách. Letenky od 1 952 Kč",
-            "publishedAt": "2026-04-23T09:37:23Z"
           }
         ]
       }
