@@ -21580,6 +21580,10 @@ function buildVideoAsArticleCard(it) {
       if (typeof done === "function") done(new Error("empty html"));
       return;
     }
+    if (html.indexOf("<div") === -1 && html.indexOf("<table") === -1) {
+      if (typeof done === "function") done(new Error("invoice_pdf_plain_text_only"));
+      return;
+    }
     loadHtml2Pdf(function (e0) {
       if (e0 || typeof window.html2pdf === "undefined") {
         if (typeof done === "function") done(e0 || new Error("html2pdf"));
@@ -21587,15 +21591,21 @@ function buildVideoAsArticleCard(it) {
       }
       var exportRoot = document.createElement("div");
       exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
-      exportRoot.className = "iu-pdf-render-mode";
+      exportRoot.setAttribute("data-iu-invoice-pdf-host", "");
+      exportRoot.className = "iu-pdf-render-mode iu-invoice-pdf-export-root";
       exportRoot.innerHTML =
-        "<div class=\"iu-invoice-pdf-export-inner\" style=\"width:794px;max-width:794px;margin:0;box-sizing:border-box;transform:none;position:relative;overflow:visible\">" +
+        "<div class=\"iu-invoice-pdf-export-inner\" style=\"width:794px;max-width:794px;margin:0 auto;box-sizing:border-box;transform:none;position:relative;overflow:visible;left:0;top:0\">" +
         "<div class=\"iu-invoice-paper iu-invoice-pdf-paper\">" +
         html +
         "</div></div>";
       document.body.appendChild(exportRoot);
       try {
-        window._iuInvoicePdfExportMeta = { renderSource: "isolated_pdf_dom", generatedFromScaledPreview: false };
+        window._iuInvoicePdfExportMeta = {
+          renderSource: "isolated_pdf_dom",
+          generatedFromScaledPreview: false,
+          visualTemplateUsed: true,
+          plainTextOnly: false,
+        };
       } catch (eMeta) {}
       var opts = {
         image: { type: "png", quality: 1.0 },
@@ -21621,6 +21631,11 @@ function buildVideoAsArticleCard(it) {
         }
         var rect = paper.getBoundingClientRect();
         var textBody = paper.textContent || "";
+        if (rect.left < -0.5) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_paper_negative_left"));
+          return;
+        }
         if (rect.width < 700 || rect.height < 200) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_pdf_layout_invalid"));
@@ -21644,6 +21659,11 @@ function buildVideoAsArticleCard(it) {
         if (textBody.indexOf("infoUzel") === -1) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_pdf_missing_brand"));
+          return;
+        }
+        if (textBody.indexOf("Vytvořeno pomocí infoUzel") === -1) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_missing_created_by"));
           return;
         }
         window
