@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T05:14:37.035404Z",
+  "ingestedAt": "2026-04-24T05:36:26.261234Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nečas je krok od postupu, pro Pastrňáka se Zachou se situace komplikuje",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-zacha-necas.A260424_071504_nhl_mkr",
+      "dt": "2026-04-24T05:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "komplikuje",
+        "krok",
+        "nečas",
+        "pastrňáka",
+        "postupu",
+        "situace",
+        "zachou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Sedmý obránce jako hrdina. Na ledě byl přes dvě minuty, přesto Musil rozhodl",
+      "url": "https://www.idnes.cz/hokej/extraliga/david-musil-ocelari-trinec.A260423_215308_hokej_jsl",
+      "dt": "2026-04-24T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dvě",
+        "hrdina",
+        "jako",
+        "ledě",
+        "minuty",
+        "musil",
+        "obránce",
+        "přesto",
+        "rozhodl",
+        "sedmý"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -729,59 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třineckému gólu ofsajd nepředcházel, říká extraliga. Ukázala záběry z modré čáry",
-      "url": "https://www.idnes.cz/hokej/extraliga/trinec-pardubcie-treti-finale-ofsajd-sporny-moment-video.A260423_105422_hokej_drev",
-      "dt": "2026-04-23T09:25:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "extraliga",
-        "gólu",
-        "modré",
-        "nepředcházel",
-        "ofsajd",
-        "třineckému",
-        "ukázala",
-        "záběry",
-        "čáry",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
-      "url": "https://www.idnes.cz/sport/motorsport/rallye-sumava-klatovy-2026.A260414_114342_motorsport_ald",
-      "dt": "2026-04-23T09:20:28Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "klatovy",
-        "listina",
-        "program",
-        "rallye",
-        "startovní",
-        "trasa",
-        "výsledky",
-        "šumava"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45979,
+      "bytes": 46298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T05:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nečas je krok od postupu, pro Pastrňáka se Zachou se situace komplikuje",
+            "publishedAt": "2026-04-24T05:15:00Z"
+          },
+          {
+            "title": "Sedmý obránce jako hrdina. Na ledě byl přes dvě minuty, přesto Musil rozhodl",
+            "publishedAt": "2026-04-24T05:00:00Z"
+          },
           {
             "title": "Nejlepší na světě. Čeští brankáři táhnou týmy v NHL, opora by se hodila i Rulíkovi",
             "publishedAt": "2026-04-23T22:00:00Z"
@@ -867,14 +873,6 @@
           {
             "title": "Třinec - Pardubice 4:2, finále je srovnáno. Will po dvou gólech střídal ve třetí minutě",
             "publishedAt": "2026-04-23T19:28:14Z"
-          },
-          {
-            "title": "Česko - Rakousko 5:1, národní tým vyhrál v přípravě. Rulík: Bylo to pod kontrolou",
-            "publishedAt": "2026-04-23T19:26:12Z"
-          },
-          {
-            "title": "Písek vyhrál i v Praze, v play off vyzve Pardubice. USK nastřílel 100 bodů",
-            "publishedAt": "2026-04-23T19:07:00Z"
           }
         ]
       }
