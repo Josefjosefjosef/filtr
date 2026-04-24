@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T20:10:06.473364Z",
+  "ingestedAt": "2026-04-24T20:36:34.434092Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Cukrová vata s CBD i sazeničky konopí. Ostrava žije Konopexem, láká i důchodce",
+      "url": "https://www.denik.cz/regiony/ostrava-trojhali-karolina-konopex-9-rocnik-sortiment-juniori-duchodci-prodejci.html",
+      "dt": "2026-04-24T19:47:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cbd",
+        "cukrová",
+        "důchodce",
+        "konopexem",
+        "konopí",
+        "láká",
+        "ostrava",
+        "sazeničky",
+        "vata",
+        "žije"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -627,33 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Město Enid v Oklahomě zasáhlo tornádo. Živel srovnal se zemí řadu domů",
-      "url": "https://www.denik.cz/ze_sveta/oklahoma-enid-tornado-skody.html",
-      "dt": "2026-04-24T05:57:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "domů",
-        "enid",
-        "město",
-        "oklahomě",
-        "srovnal",
-        "tornádo",
-        "zasáhlo",
-        "zemí",
-        "řadu",
-        "živel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31097,
+      "bytes": 31298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T19:47:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 23,
+          "finance": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -718,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cukrová vata s CBD i sazeničky konopí. Ostrava žije Konopexem, láká i důchodce",
+            "publishedAt": "2026-04-24T19:47:00Z"
+          },
           {
             "title": "Čína uvalila exportní sankce na české zbrojařské firmy. Macinka chce vysvětlení",
             "publishedAt": "2026-04-24T16:31:00Z"
@@ -745,10 +749,6 @@
           {
             "title": "Deratizace a paraziti? Turka za výrok cupují: Hlupák. Neví, o čem mluví, zaznívá",
             "publishedAt": "2026-04-24T12:42:00Z"
-          },
-          {
-            "title": "Novým předsedou KDU-ČSL se stal jihomoravský hejtman Jan Grolich",
-            "publishedAt": "2026-04-24T12:30:00Z"
           }
         ]
       }

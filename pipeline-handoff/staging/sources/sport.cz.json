@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T20:10:06.473364Z",
+  "ingestedAt": "2026-04-24T20:36:34.434092Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Basketbalisté Barcelony si čtvrtfinále Evropské ligy nezahrají",
+      "url": "https://www.sport.cz/clanek/basketbal-basketbaliste-barcelony-si-ctvrtfinale-evropske-ligy-nezahraji-5442541",
+      "dt": "2026-04-24T20:13:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "barcelony",
+        "basketbalisté",
+        "evropské",
+        "ligy",
+        "nezahrají",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -721,28 +744,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slavícím házenkářům nad hlavami vzplanuly konfety",
-      "url": "https://www.sport.cz/clanek/hazena-slavicim-hazenkarum-nad-hlavami-vzplanuly-konfety-5442363",
-      "dt": "2026-04-24T13:09:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hlavami",
-        "házenkářům",
-        "konfety",
-        "slavícím",
-        "vzplanuly"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -753,7 +754,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40289,
+      "bytes": 40359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -790,7 +791,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T20:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T20:13:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -805,6 +806,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Basketbalisté Barcelony si čtvrtfinále Evropské ligy nezahrají",
+            "publishedAt": "2026-04-24T20:13:07Z"
+          },
           {
             "title": "Futsalisté Chrudimi mají sedmnáctý titul",
             "publishedAt": "2026-04-24T20:05:00Z"
@@ -832,10 +837,6 @@
           {
             "title": "Do finále volejbalové extraligy vstoupilo lépe Karlovarsko",
             "publishedAt": "2026-04-24T18:56:59Z"
-          },
-          {
-            "title": "Posledním čtvrtfinalistou basketbalové ligy je Ostrava",
-            "publishedAt": "2026-04-24T18:49:30Z"
           }
         ]
       }
