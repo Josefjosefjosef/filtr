@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-24T17:19:39.759268Z",
+  "ingestedAt": "2026-04-24T17:39:30.603633Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "UFC Vegas 116: Bývalý šampion narazí na bojovníka s drtivou sérií. Zápasová karta turnaje a kde jej sledovat",
+      "url": "https://www.mmamag.cz/ufc-vegas-zapasova-karta-kde-sledovat/",
+      "dt": "2026-04-24T17:19:20Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "116",
+        "bojovníka",
+        "bývalý",
+        "drtivou",
+        "jej",
+        "karta",
+        "narazí",
+        "sledovat",
+        "sérií",
+        "turnaje",
+        "ufc",
+        "vegas",
+        "zápasová",
+        "šampion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1099,37 +1130,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zranění může Procházkovu soupeři změnit život. Lékař prozradil, proč už Ulbergovo koleno nikdy nebude jako dřív",
-      "url": "https://www.mmamag.cz/ulberg-zraneni-koleno-stopka-operace/",
-      "dt": "2026-04-17T13:37:12Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "dřív",
-        "jako",
-        "koleno",
-        "lékař",
-        "nebude",
-        "nikdy",
-        "procházkovu",
-        "prozradil",
-        "proč",
-        "soupeři",
-        "ulbergovo",
-        "změnit",
-        "zranění",
-        "život"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1140,7 +1140,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 78149,
+      "bytes": 78037,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1177,7 +1177,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:39:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T17:19:20Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1192,6 +1192,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC Vegas 116: Bývalý šampion narazí na bojovníka s drtivou sérií. Zápasová karta turnaje a kde jej sledovat",
+            "publishedAt": "2026-04-24T17:19:20Z"
+          },
           {
             "title": "Lež a pozlátko. Jiří Procházka tvrdě odsoudil Clash a poslal jasný vzkaz všem, kdo ho sledují",
             "publishedAt": "2026-04-24T16:39:25Z"
@@ -1219,10 +1223,6 @@
           {
             "title": "Ulberg už zase chodí. Šampion UFC je pár dnů po operaci kolene na nohou",
             "publishedAt": "2026-04-23T10:25:15Z"
-          },
-          {
-            "title": "Má nulu na kontě porážek a stále váhá s přestupem do UFC. Slovenská šampionka prozradila, co ji drží v Oktagonu",
-            "publishedAt": "2026-04-23T10:07:42Z"
           }
         ]
       }
