@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T12:15:27.209027Z",
+  "ingestedAt": "2026-04-24T12:34:50.480385Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Osmnáctku chválil i Rulík. Šmíd apeloval na hráče: Ať vám to nestoupne do hlavy",
+      "url": "https://www.idnes.cz/hokej/reprezentace/hokej-reprezentace-ms-v-hokeji-hracu-do-18-let.A260424_090144_reprezentace_luji",
+      "dt": "2026-04-24T12:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "apeloval",
+        "chválil",
+        "hlavy",
+        "hráče",
+        "nestoupne",
+        "osmnáctku",
+        "rulík",
+        "vám",
+        "šmíd"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,31 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Rakousko 5:1, národní tým vyhrál v přípravě. Rulík: Bylo to pod kontrolou",
-      "url": "https://www.idnes.cz/hokej/ms-2026/priprava-rakousko-cesko-online-zpravodajstvi.A260423_145305_ms-hokej-2026_drev",
-      "dt": "2026-04-23T19:26:12Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "kontrolou",
-        "národní",
-        "přípravě",
-        "rakousko",
-        "rulík",
-        "tým",
-        "vyhrál",
-        "česko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46565,
+      "bytes": 46817,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Osmnáctku chválil i Rulík. Šmíd apeloval na hráče: Ať vám to nestoupne do hlavy",
+            "publishedAt": "2026-04-24T12:01:00Z"
+          },
           {
             "title": "Pět hráčů a dva zápasy. Policisté prověřují podezřelá utkání fotbalové Chrudimi",
             "publishedAt": "2026-04-24T11:41:00Z"
@@ -874,10 +879,6 @@
           {
             "title": "Netradiční příprava na baráž. Hradecký manažer si proti Zlínu přímo zahrál",
             "publishedAt": "2026-04-24T09:54:00Z"
-          },
-          {
-            "title": "Být na jaře třetí? Fantazie! Mladík Jelínek si pardubické tažení užívá",
-            "publishedAt": "2026-04-24T09:33:00Z"
           }
         ]
       }
