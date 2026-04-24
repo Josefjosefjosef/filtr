@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-24T09:24:46.941967Z",
+  "ingestedAt": "2026-04-24T09:46:31.177356Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Palermo z Bratislavy v květnu. Letenky od 733 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/palermo-z-bratislavy-v-kvetnu",
+      "dt": "2026-04-24T09:31:49Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "733",
+        "bratislavy",
+        "květnu",
+        "letenky",
+        "palermo"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -481,30 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Bali v září a říjnu z Vídně se Saudia. Letenky od 13 696 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/bali-v-zari-a-rijnu-z-vidne-se-saudia",
-      "dt": "2026-04-19T14:42:08Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "696",
-        "bali",
-        "letenky",
-        "saudia",
-        "vídně",
-        "září",
-        "říjnu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 45568,
+      "bytes": 45188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T14:38:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:31:49Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Palermo z Bratislavy v květnu. Letenky od 733 Kč",
+            "publishedAt": "2026-04-24T09:31:49Z"
+          },
           {
             "title": "Červnový týden na řeckém Samosu v hotelu přímo u pláže s polopenzí. Zájezd od 11 990 Kč",
             "publishedAt": "2026-04-23T14:38:15Z"
@@ -594,10 +596,6 @@
           {
             "title": "Chorvatsko z Vídně: Dubrovník, Pula i Zadar před letní sezónou. Letenky od 733 Kč",
             "publishedAt": "2026-04-22T10:32:35Z"
-          },
-          {
-            "title": "Kréta z Brna do 4* hotelu s all-inclusive na začátku května. Zájezd od 9 990 Kč",
-            "publishedAt": "2026-04-22T09:10:50Z"
           }
         ]
       }
