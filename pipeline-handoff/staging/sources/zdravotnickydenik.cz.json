@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotníci umí víc, než jim systém dovolí. Soukromí poskytovatelé chtějí změnu kompetencí",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soukromi-poskytovatele-tlaci-na-zmenu-kompetenci/",
+      "dt": "2026-04-24T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chtějí",
+        "dovolí",
+        "jim",
+        "kompetencí",
+        "než",
+        "poskytovatelé",
+        "soukromí",
+        "systém",
+        "umí",
+        "víc",
+        "zdravotníci",
+        "změnu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Bez cigaret na celý život? Ministr Šťastný komentuje britský plán pro mladé",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/bez-cigaret-na-cely-zivot-ministr-stastny/",
-      "dt": "2026-04-23T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "britský",
-        "celý",
-        "cigaret",
-        "komentuje",
-        "ministr",
-        "mladé",
-        "plán",
-        "šťastný",
-        "život"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 92157,
+      "bytes": 95189,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +322,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotníci umí víc, než jim systém dovolí. Soukromí poskytovatelé chtějí změnu kompetencí",
+            "publishedAt": "2026-04-24T07:00:00Z"
+          },
           {
             "title": "Drahá léčba bez efektu? Následnou intenzivní péči brzdí chaos i špatná rozhodnutí",
             "publishedAt": "2026-04-24T06:00:00Z"
@@ -361,10 +368,6 @@
           {
             "title": "Hazard nad nemocnicí: Neznámý dron ohrozil vrtulník libereckých záchranářů",
             "publishedAt": "2026-04-23T10:25:14Z"
-          },
-          {
-            "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
-            "publishedAt": "2026-04-23T09:41:13Z"
           }
         ]
       }

@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jak dnes žije Marek z Extrémních proměn: Denně cvičí, nabral svaly, ale holku nemá. Musí mě ulovit, říká",
+      "url": "https://www.vlasta.cz/inspirace/marek-vala-dnes-extremni-promeny/",
+      "dt": "2026-04-24T07:02:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "ale",
+        "cvičí",
+        "denně",
+        "extrémních",
+        "holku",
+        "marek",
+        "musí",
+        "nabral",
+        "nemá",
+        "proměn",
+        "svaly",
+        "ulovit",
+        "říká",
+        "žije"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1117,33 +1148,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Horoskop na 20.–26. dubna: Lvi, přichází láska jako trám, Býci, připravte se na změny",
-      "url": "https://www.vlasta.cz/horoskopy/horoskop-konec-dubna-tyden-dnes-lev-byk-ryby-panna-rak-vodnar-beran/",
-      "dt": "2026-04-20T04:04:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "býci",
-        "dubna",
-        "horoskop",
-        "jako",
-        "lvi",
-        "láska",
-        "přichází",
-        "připravte",
-        "trám",
-        "změny"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1154,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62704,
+      "bytes": 62575,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1191,11 +1195,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T07:02:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "other": 38
+          "other": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1207,6 +1211,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak dnes žije Marek z Extrémních proměn: Denně cvičí, nabral svaly, ale holku nemá. Musí mě ulovit, říká",
+            "publishedAt": "2026-04-24T07:02:00Z"
+          },
           {
             "title": "Dnes v Ulici: Lukáš bojuje o Helenu, chce ji zpět. A Roman odhalil, že plánuje vraždu",
             "publishedAt": "2026-04-24T06:33:00Z"
@@ -1234,10 +1242,6 @@
           {
             "title": "David z Výměny manželek šokoval diváky. „Nevěrník, buran a jednoduchý pán. Chudák Jitka,“ míní",
             "publishedAt": "2026-04-23T08:56:28Z"
-          },
-          {
-            "title": "Marek z Extrémních proměn zhubl 72 kilo a je z něj fešák. „Ženský se o něj porvou,“ předpovídají diváci",
-            "publishedAt": "2026-04-23T07:57:53Z"
           }
         ]
       }

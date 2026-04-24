@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zmařený atentát v Moskvě: FSB zadržela sedm lidí, jednoho zastřelila",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "atentát",
+        "fsb",
+        "jednoho",
+        "lidí",
+        "moskvě",
+        "sedm",
+        "zadržela",
+        "zastřelila",
+        "zmařený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -102,33 +128,6 @@
         "válce",
         "zbraň",
         "írán"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila, kdy pošle první peníze",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "der",
-        "děkuje",
-        "leyenová",
-        "peníze",
-        "pošle",
-        "prozradila",
-        "první",
-        "půjčku",
-        "von",
-        "zelenskyj"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -541,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21932,
+      "bytes": 21851,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,8 +580,8 @@
         "raw_feed_latest_publishedAt": "2026-04-24T06:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 2,
           "zpravy": 14,
+          "sport": 2,
           "other": 2,
           "finance": 2
         },
@@ -596,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zmařený atentát v Moskvě: FSB zadržela sedm lidí, jednoho zastřelila",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
           {
             "title": "Pastrňák za nula, neuspěl ani jako brankář. A Boston v sérii zase ztrácí",
             "publishedAt": "2026-04-24T06:28:00Z"
@@ -611,10 +614,6 @@
           {
             "title": "„Írán má silnější zbraň než jadernou.“ Expert mluví o válce nervů a krátkozraké Evropě",
             "publishedAt": "2026-04-24T06:00:00Z"
-          },
-          {
-            "title": "Zelenskyj děkuje za půjčku od EU. Von der Leyenová prozradila, kdy pošle první peníze",
-            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "Příměří Izraele s Libanonem potrvá déle, Trump hlásí šanci na mír „ještě letos“",

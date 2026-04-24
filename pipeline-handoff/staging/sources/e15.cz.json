@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čistý zisk Monety vzrostl o osm procent, banka těží z levnějších vkladů i zájmu o investice",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/cisty-zisk-monety-vzrostl-o-osm-procent-banka-tezi-z-levnejsich-vkladu-i-zajmu-o-investice-1432362",
+      "dt": "2026-04-24T06:20:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "banka",
+        "investice",
+        "levnějších",
+        "monety",
+        "osm",
+        "procent",
+        "těží",
+        "vkladů",
+        "vzrostl",
+        "zisk",
+        "zájmu",
+        "čistý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1050,34 +1079,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Letoví dispečeři vydělali na aerolinkách půl miliardy, Babišově vládě navrhují tučnou dividendu",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/letovi-dispeceri-vydelali-na-aerolinkach-pul-miliardy-babisove-vlade-navrhuji-tucnou-dividendu-1432324",
-      "dt": "2026-04-22T16:50:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aerolinkách",
-        "babišově",
-        "dispečeři",
-        "dividendu",
-        "letoví",
-        "miliardy",
-        "navrhují",
-        "půl",
-        "tučnou",
-        "vládě",
-        "vydělali"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1088,7 +1089,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55025,
+      "bytes": 55126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1125,11 +1126,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
-          "zpravy": 6,
+          "finance": 34,
+          "zpravy": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1142,6 +1143,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čistý zisk Monety vzrostl o osm procent, banka těží z levnějších vkladů i zájmu o investice",
+            "publishedAt": "2026-04-24T06:20:00Z"
+          },
           {
             "title": "Sandberg a ARX vstupují do Itálie. Kupují firmu, která digitalizuje kempy na jednom z nejsilnějších trhů",
             "publishedAt": "2026-04-24T05:00:00Z"
@@ -1169,10 +1174,6 @@
           {
             "title": "INVESTIČNÍ ONLINE: Ceny ropy rostou po Trumpových hrozbách útoky na lodě kladoucí miny v Hormuzu",
             "publishedAt": "2026-04-23T18:20:00Z"
-          },
-          {
-            "title": "Praha koupí zámek Veleslavín, díky taktice čekání ušetřila stovky milionů",
-            "publishedAt": "2026-04-23T18:11:00Z"
           }
         ]
       }

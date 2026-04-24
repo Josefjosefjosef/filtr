@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Recenze Saros – psychologie zatmění slunce",
+      "url": "https://zing.cz/article/recenze-saros-psychologie-zatmeni-slunce",
+      "dt": "2026-04-24T07:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "psychologie",
+        "recenze",
+        "saros",
+        "slunce",
+        "zatmění"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -978,29 +1000,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Iniciativa Stop Killing Games uspěla v EU parlamentu",
-      "url": "https://zing.cz/article/iniciativa-stop-killing-games-uspela-v-eu-parlamentu",
-      "dt": "2026-04-18T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "games",
-        "iniciativa",
-        "killing",
-        "parlamentu",
-        "stop",
-        "uspěla"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1011,7 +1010,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 126049,
+      "bytes": 125989,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1048,7 +1047,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T07:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1064,6 +1063,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Recenze Saros – psychologie zatmění slunce",
+            "publishedAt": "2026-04-24T07:00:00Z"
+          },
           {
             "title": "Bondovka 007 First Light se blíží, podívejte se na několik nových ukázek",
             "publishedAt": "2026-04-24T06:00:00Z"
@@ -1091,10 +1094,6 @@
           {
             "title": "Gran Turismo 7 obdrželo novou aktualizaci s auty a dalším obsahem",
             "publishedAt": "2026-04-23T12:00:00Z"
-          },
-          {
-            "title": "Veteráni z CD Projektu ukážou již brzy vše podstatné z The Blood of Dawnwalker",
-            "publishedAt": "2026-04-23T10:00:00Z"
           }
         ]
       }

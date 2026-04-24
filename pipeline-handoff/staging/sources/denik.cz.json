@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlna podpory pro Jonáška z Chomutovska. Po zranění založili lidé sbírku",
+      "url": "https://www.denik.cz/regiony/blatno-jonasek-nestastna-udalost-sbirka-donio.html",
+      "dt": "2026-04-24T06:45:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chomutovska",
+        "jonáška",
+        "lidé",
+        "podpory",
+        "sbírku",
+        "vlna",
+        "založili",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -636,31 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "EU schválila balík sankcí proti Rusku a finálně schválila půjčku Ukrajině",
-      "url": "https://www.denik.cz/staty-eu/eu-balik-sankci-rusko-pujcka-ukrajina.html",
-      "dt": "2026-04-23T12:18:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "balík",
-        "finálně",
-        "proti",
-        "půjčku",
-        "rusku",
-        "sankcí",
-        "schválila",
-        "ukrajině"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -671,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29120,
+      "bytes": 29244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -708,7 +708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:45:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -724,6 +724,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlna podpory pro Jonáška z Chomutovska. Po zranění založili lidé sbírku",
+            "publishedAt": "2026-04-24T06:45:00Z"
+          },
           {
             "title": "Voják USA vyhrál miliony na sázkách. Díky tajným informací vsadil na pád Madura",
             "publishedAt": "2026-04-24T06:20:00Z"
@@ -750,10 +754,6 @@
           },
           {
             "title": "Motorkáři z celé republiky se sjeli do Hněvětic. Otec Ondřej požehnal účastníkům",
-            "publishedAt": "2026-04-24T03:00:00Z"
-          },
-          {
-            "title": "Do Cessny nasedla bez kalhotek. A jako jediná přežila náraz do vysoké hory",
             "publishedAt": "2026-04-24T03:00:00Z"
           }
         ]

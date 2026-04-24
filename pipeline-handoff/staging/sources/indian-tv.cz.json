@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Saros kráčí po vyšlapané cestě - INDIAN",
+      "url": "https://indian-tv.cz/recenze/saros-6ht5xv",
+      "dt": "2026-04-24T07:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "cestě",
+        "indian",
+        "kráčí",
+        "saros",
+        "vyšlapané"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1050,36 +1072,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Heroes of Might & Magic: Olden Era, Kiln, Aphelion a další tituly míří do Game Passu - INDIAN",
-      "url": "https://indian-tv.cz/clanek/heroes-of-might-magic-olden-era-kiln-aphelion-a-dalsi-4iug0m",
-      "dt": "2026-04-20T15:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "aphelion",
-        "další",
-        "era",
-        "game",
-        "heroes",
-        "indian",
-        "kiln",
-        "magic",
-        "might",
-        "míří",
-        "olden",
-        "passu",
-        "tituly"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 209463,
+      "bytes": 212130,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,7 +1119,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:50:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T07:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1142,6 +1134,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Saros kráčí po vyšlapané cestě - INDIAN",
+            "publishedAt": "2026-04-24T07:00:00Z"
+          },
           {
             "title": "Xbox přiznává problémy, mění směr a přehodnotí přístup k exkluzivitě - INDIAN",
             "publishedAt": "2026-04-24T05:50:18Z"
@@ -1169,10 +1165,6 @@
           {
             "title": "Dokonalý upgrade s TIGO šampionem - INDIAN",
             "publishedAt": "2026-04-23T12:00:00Z"
-          },
-          {
-            "title": "Příběhové rozšíření Lord of Hatred do Diabla 4 si v recenzích nevede vůbec špatně - INDIAN",
-            "publishedAt": "2026-04-23T10:00:00Z"
           }
         ]
       }

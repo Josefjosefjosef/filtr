@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T07:00:03.153652Z",
+  "ingestedAt": "2026-04-24T07:20:04.017347Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Atlanta znovu zdolala Knicks o bod, Toronto ukončilo nelichotivou sérii",
+      "url": "https://www.idnes.cz/sport/basket/mccollum-rozhodl-v-dramatickem-zaveru-o-druhe-vyhre-atlanty-v-play-off-nba.A260424_084244_sport-basket_tit",
+      "dt": "2026-04-24T06:48:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "atlanta",
+        "bod",
+        "knicks",
+        "nelichotivou",
+        "sérii",
+        "toronto",
+        "ukončilo",
+        "zdolala",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,32 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Žádné další kamery. Roland Garros zareaguje na australský incident Gauffové",
-      "url": "https://www.idnes.cz/sport/trendy/coco-gauffova-roland-garros-zabery-ze-zazemi.A260423_103009_trendy_blah",
-      "dt": "2026-04-23T11:13:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "australský",
-        "další",
-        "garros",
-        "gauffové",
-        "incident",
-        "kamery",
-        "roland",
-        "zareaguje",
-        "žádné"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45970,
+      "bytes": 46033,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:48:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Atlanta znovu zdolala Knicks o bod, Toronto ukončilo nelichotivou sérii",
+            "publishedAt": "2026-04-24T06:48:00Z"
+          },
           {
             "title": "Spor o místa pro liberecké fandy. Slovan o podmínkách Jablonce: Byly nestandardní",
             "publishedAt": "2026-04-24T06:16:00Z"
@@ -869,10 +873,6 @@
           {
             "title": "Fandové, pozor. Hrozí porušení soukromí i zadržení, varují organizace před MS",
             "publishedAt": "2026-04-23T20:05:00Z"
-          },
-          {
-            "title": "Z Třince bez výhry? Špatní z toho nejsme. Sedlák před vítězným gólem schytal ránu",
-            "publishedAt": "2026-04-23T19:53:00Z"
           }
         ]
       }
