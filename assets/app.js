@@ -21830,7 +21830,7 @@ function buildVideoAsArticleCard(it) {
             paymentCashBold: payCashBold,
             paymentTransferRendered: payTransferSpan,
             footerOnlyWwwInfoUzel: footTrim === "www.infoUzel.cz",
-            createdByRemovedFromFooter: String(footEl.textContent || "").indexOf("Vytvořeno") === -1,
+            createdByRemovedFromFooter: !/Vytvo\u0159eno pomoc\u00ed/i.test(footRaw),
             spaceBeforeSubtotal: gapBeforeSub,
             totalDueBold: totalDueBold,
             totalDueAmountInline: totalAmtInline,
