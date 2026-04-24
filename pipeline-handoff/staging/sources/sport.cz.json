@@ -1,23 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T04:33:13.638804Z",
+  "ingestedAt": "2026-04-24T04:55:21.643156Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pastrňák neuspěl. Boston v sérii znovu prohrává",
+      "title": "Pastrňák těžce v mínusu, Boston sérii znovu prohrává. Nečas blízko postupu",
       "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-neuspel-boston-v-serii-znovu-prohrava-5442317",
       "dt": "2026-04-24T04:00:00Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "blízko",
         "boston",
-        "neuspěl",
+        "mínusu",
+        "nečas",
         "pastrňák",
+        "postupu",
         "prohrává",
         "sérii",
+        "těžce",
         "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Po skvělém startu na MS krotí emoce. Hlavně ať kluci nečtou články, varuje Šmíd",
+      "url": "https://www.sport.cz/clanek/hokej-ms-po-skvelem-startu-na-ms-kroti-emoce-hlavne-at-kluci-nectou-clanky-varuje-smid-5442304",
+      "dt": "2026-04-24T04:27:29Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "emoce",
+        "hlavně",
+        "kluci",
+        "krotí",
+        "nečtou",
+        "skvělém",
+        "startu",
+        "varuje",
+        "články",
+        "šmíd"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -753,31 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Prezident FIS Eliasch se bude ucházet o znovuzvolení jako kandidát Gruzie",
-      "url": "https://www.sport.cz/clanek/zimni-sporty-lyzovani-prezident-fis-eliasch-se-bude-uchazet-o-znovuzvoleni-jako-kandidat-gruzie-5441946",
-      "dt": "2026-04-23T14:24:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "eliasch",
-        "fis",
-        "gruzie",
-        "jako",
-        "kandidát",
-        "prezident",
-        "ucházet",
-        "znovuzvolení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44392,
+      "bytes": 45170,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T04:27:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,8 +847,12 @@
         },
         "sample_titles": [
           {
-            "title": "Pastrňák neuspěl. Boston v sérii znovu prohrává",
+            "title": "Pastrňák těžce v mínusu, Boston sérii znovu prohrává. Nečas blízko postupu",
             "publishedAt": "2026-04-24T04:00:00Z"
+          },
+          {
+            "title": "Po skvělém startu na MS krotí emoce. Hlavně ať kluci nečtou články, varuje Šmíd",
+            "publishedAt": "2026-04-24T04:27:29Z"
           },
           {
             "title": "Stuttgart může stále snít o obhajobě, ve finále poháru potká Bayern",
@@ -867,10 +877,6 @@
           {
             "title": "SESTŘIH: Čeští hokejisté drží v přípravě na MS neporazitelnost, na vídeňském ledě dominovali",
             "publishedAt": "2026-04-23T06:50:09Z"
-          },
-          {
-            "title": "Basketbalisté Písku i podruhé porazili USK a zahrají si play off s Pardubicemi",
-            "publishedAt": "2026-04-23T18:52:33Z"
           }
         ]
       }

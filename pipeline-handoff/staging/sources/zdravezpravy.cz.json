@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-24T04:33:13.638804Z",
+  "ingestedAt": "2026-04-24T04:55:21.643156Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nákaz dengue rychle přibývá. Lidé si je vozí z dovolených",
+      "url": "https://www.zdravezpravy.cz/2026/04/24/nakaz-dengue-v-cesku-rychle-roste-lide-si-je-dovazi-z-dovolenych/",
+      "dt": "2026-04-24T04:16:21Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dengue",
+        "dovolených",
+        "lidé",
+        "nákaz",
+        "přibývá",
+        "rychle",
+        "vozí"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -471,29 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rezort zemědělství chce kupovat více českých potravin",
-      "url": "https://www.zdravezpravy.cz/2026/04/15/rezort-zemedelstvi-chce-kupovat-vice-ceskych-potravin/",
-      "dt": "2026-04-15T12:20:13Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "chce",
-        "kupovat",
-        "potravin",
-        "rezort",
-        "zemědělství",
-        "českých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 213461,
+      "bytes": 216549,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T16:20:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T04:16:21Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -556,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nákaz dengue rychle přibývá. Lidé si je vozí z dovolených",
+            "publishedAt": "2026-04-24T04:16:21Z"
+          },
           {
             "title": "Veterinární správa zakázala prodej 44 výživ pro kojence",
             "publishedAt": "2026-04-23T16:20:41Z"
@@ -583,10 +588,6 @@
           {
             "title": "Respirační nemoci se nyní sledují téměř v reálném čase",
             "publishedAt": "2026-04-21T17:13:24Z"
-          },
-          {
-            "title": "Zdravotní pojišťovny se do JMHZ nezahrnuly, přehledy mají zvlášť",
-            "publishedAt": "2026-04-21T09:21:39Z"
           }
         ]
       }
