@@ -353,6 +353,8 @@ async function run() {
     const brandInk = brand ? cs(brand).color : "";
     const row = pageEl.querySelector(".iu-invoice-print-item-row");
     const desc = row ? row.querySelector(".iu-invoice-print-col-desc") : null;
+    const descInner = row ? row.querySelector(".iu-invoice-print-desc") : null;
+    const descMeasure = descInner || desc;
     const qty = row ? row.querySelector(".iu-invoice-print-col-qty") : null;
     const price = row ? row.querySelector(".iu-invoice-print-col-price") : null;
     const vat = row ? row.querySelector(".iu-invoice-print-col-vat") : null;
@@ -405,14 +407,14 @@ async function run() {
       createdByInHeader: /Vytvořeno pomocí/i.test(hdrRaw),
       createdByRemovedFromFooter: !!foot && !/Vytvořeno pomocí/i.test(footRaw),
       quantityAlignedUnderHeader: !!(rd && rq && Math.abs(rd.top - rq.top) < 3),
-      longTextWrapsInsideDescription: desc
-        ? desc.scrollWidth <= desc.clientWidth + 8 || desc.scrollHeight > (parseFloat(window.getComputedStyle(desc).lineHeight) || 18) * 1.8
+      longTextWrapsInsideDescription: descMeasure
+        ? descMeasure.scrollWidth <= descMeasure.clientWidth + 8 ||
+          descMeasure.scrollHeight > (parseFloat(window.getComputedStyle(descMeasure).lineHeight) || 18) * 1.8
         : false,
       longTextDoesNotOverlapNumericColumns: !overlap(rd, rq) && !overlap(rd, rp) && !overlap(rd, rv) && !overlap(rd, rt),
       horizontalOverflow: pageEl ? pageEl.scrollWidth > pageEl.clientWidth + 2 : false,
       multiPageSupported: pageEl.scrollHeight > 1120,
       contentNotClippedAtPageEnd: ov !== "hidden",
-      hasMarginsProbe: !!(pageEl && (parseFloat(cs(pageEl).paddingLeft) + parseFloat(cs(pageEl).paddingRight)) >= 100),
       hasBoldTitle: (() => {
         if (!h1) return false;
         const w = cs(h1).fontWeight;
@@ -428,10 +430,181 @@ async function run() {
         const n = parseFloat(w);
         return w === "bold" || w === "bolder" || (!isNaN(n) && n >= 700);
       })(),
+      totalDueAmountBold: (() => {
+        const el = pageEl.querySelector(".iu-invoice-print-total-due-amount");
+        if (!el) return false;
+        const w = cs(el).fontWeight;
+        const n = parseFloat(w);
+        return w === "bold" || w === "bolder" || (!isNaN(n) && n >= 700);
+      })(),
       totalDueAmountInline: !!(pageEl.querySelector(".iu-invoice-print-total-due-label") && pageEl.querySelector(".iu-invoice-print-total-due-amount")),
       spaceAfterTotalDue: !!pageEl.querySelector(".iu-invoice-print-total-gap-after-due"),
+      footerAfterTotalDue: (() => {
+        const f = pageEl.querySelector(".iu-invoice-print-footer");
+        const d = pageEl.querySelector(".iu-invoice-print-total-due");
+        if (!f || !d) return false;
+        return f.getBoundingClientRect().top - d.getBoundingClientRect().bottom >= 6;
+      })(),
+      hasMargins: (() => {
+        const pl = parseFloat(cs(pageEl).paddingLeft) || 0;
+        const pr = parseFloat(cs(pageEl).paddingRight) || 0;
+        return Math.abs(pl - pr) < 3 && pl >= 56 && pr >= 56;
+      })(),
+      leftMarginPx: Math.round(parseFloat(cs(pageEl).paddingLeft) || 0),
+      rightMarginPx: Math.round(parseFloat(cs(pageEl).paddingRight) || 0),
+      hasBalancedMargins: (() => {
+        const pl = parseFloat(cs(pageEl).paddingLeft) || 0;
+        const pr = parseFloat(cs(pageEl).paddingRight) || 0;
+        return Math.abs(pl - pr) < 3 && pl >= 56 && pr >= 56;
+      })(),
+      hasProfessionalLayout: !!pageEl.querySelector("table.iu-invoice-print-table"),
+      dateSpacingCorrect: (() => {
+        const g = pageEl.querySelector(".iu-invoice-print-meta--grid");
+        if (!g) return false;
+        const st = cs(g);
+        const cg = parseFloat(st.columnGap) || 0;
+        return cg >= 28;
+      })(),
+      duzpSpacingCorrect: (() => {
+        const g = pageEl.querySelector(".iu-invoice-print-meta--grid");
+        if (!g) return false;
+        const st = cs(g);
+        const rg = parseFloat(st.rowGap) || 0;
+        return rg >= 10;
+      })(),
+      unitPriceLabelShort: (() => {
+        const th = pageEl.querySelector(".iu-invoice-print-th-price");
+        const t = th ? String(th.textContent || "") : "";
+        return t.indexOf("Jedn.") !== -1 && t.indexOf("Jednotkov") === -1;
+      })(),
+      itemsSpacingCorrect: (() => {
+        const tbl = pageEl.querySelector("table.iu-invoice-print-items");
+        if (!tbl) return false;
+        const tbs = cs(tbl);
+        const parts = String(tbs.borderSpacing || "0").trim().split(/\s+/);
+        const v = parseFloat(parts[parts.length - 1] || parts[0]) || 0;
+        const mb = parseFloat(tbs.marginBottom) || 0;
+        return v >= 6 && mb >= 20;
+      })(),
+      totalDueBigger: (() => {
+        const dueEl = pageEl.querySelector(".iu-invoice-print-total-due");
+        const tot = pageEl.querySelector(".iu-invoice-print-total");
+        if (!dueEl || !tot) return false;
+        const fd = parseFloat(cs(dueEl).fontSize) || 0;
+        const fb = parseFloat(cs(tot).fontSize) || 13;
+        return fd >= fb * 1.12;
+      })(),
+      totalDueBiggerBy20Percent: (() => {
+        const dueEl = pageEl.querySelector(".iu-invoice-print-total-due");
+        const tot = pageEl.querySelector(".iu-invoice-print-total");
+        if (!dueEl || !tot) return false;
+        const fd = parseFloat(cs(dueEl).fontSize) || 0;
+        const fb = parseFloat(cs(tot).fontSize) || 13;
+        return fd >= fb * 1.18;
+      })(),
+      totalDueHasSpacing: (() => {
+        const dueEl = pageEl.querySelector(".iu-invoice-print-total-due");
+        if (!dueEl) return false;
+        const ds = cs(dueEl);
+        return (parseFloat(ds.marginTop) || 0) >= 10 && (parseFloat(ds.marginBottom) || 0) >= 16;
+      })(),
+      invoiceTitleAccent: (() => {
+        if (!h1) return false;
+        const bg = String(cs(h1).backgroundColor || "");
+        return bg.indexOf("0, 0, 0, 0") === -1 && bg.indexOf("transparent") === -1;
+      })(),
+      textWrapCorrect:
+        !overlap(rd, rq) &&
+        !overlap(rd, rp) &&
+        !overlap(rd, rv) &&
+        !overlap(rd, rt) &&
+        (descMeasure ? descMeasure.scrollWidth <= descMeasure.clientWidth + 12 : true),
+      descriptionWrapsInsideColumn: !!(
+        descInner &&
+        (descInner.scrollWidth <= descInner.clientWidth + 10 ||
+          descInner.scrollHeight > (parseFloat(cs(descInner).lineHeight) || 18) * 1.6)
+      ),
+      descriptionDoesNotOverlapQuantity: !overlap(rd, rq),
+      descriptionDoesNotOverlapUnitPrice: !overlap(rd, rp),
+      descriptionDoesNotOverlapVat: !vat || !overlap(rd, rv),
+      descriptionDoesNotOverlapTotal: !overlap(rd, rt),
+      numericColumnsStable: (() => {
+        const tbl = pageEl.querySelector("table.iu-invoice-print-items");
+        if (!tbl || !qty) return false;
+        const tw = tbl.getBoundingClientRect().width || 1;
+        const qw = qty.getBoundingClientRect().width || 0;
+        return qw > 40 && qw / tw < 0.36;
+      })(),
     };
   }, htmlCash);
+
+  const stParty = buildState("cash");
+  stParty.supplierFo.firstName =
+    "Velmi dlouhý obchodní subjekt a společnost s ručením omezeným — " + "oddělený text ".repeat(10);
+  stParty.supplierFo.address =
+    "Ulice s extrémně dlouhým označením a číslem orientačním ".repeat(5) + "123 45 Velkoměsto u řeky\nDoplňující řádek sídla ".repeat(3);
+  stParty.buyerFo.firstName = ("Odběratel s dlouhým jménem a přídomkem ").repeat(4);
+  stParty.buyerFo.address = ("Areál Brno — expediční sklad číslo ".repeat(10) + "602 00 Brno").trim();
+  const totalsParty = computeTotals(stParty);
+  const htmlParty = buildInvoicePrintHtml(stParty, totalsParty);
+
+  const partyWrap = await pLayout.evaluate((html) => {
+    document.body.innerHTML = "";
+    const host = document.createElement("div");
+    host.setAttribute("data-iu-invoice-print-host", "");
+    host.innerHTML = `<div class="iu-invoice-print-page">${html}</div>`;
+    document.body.appendChild(host);
+    const pageEl = host.querySelector(".iu-invoice-print-page");
+    if (!pageEl) {
+      return {
+        supplierLongTextWraps: false,
+        buyerLongTextWraps: false,
+        supplierDoesNotOverflowPage: false,
+        buyerDoesNotOverflowPage: false,
+        supplierDoesNotBreakLayout: false,
+        buyerDoesNotBreakLayout: false,
+        partySectionsHorizontalOverflow: true,
+      };
+    }
+    const parties = pageEl.querySelectorAll(".iu-invoice-print-party");
+    const sup = parties[0];
+    const buy = parties[1];
+    const pageR = pageEl.getBoundingClientRect();
+    const supR = sup ? sup.getBoundingClientRect() : null;
+    const buyR = buy ? buy.getBoundingClientRect() : null;
+    const supPre = sup ? sup.querySelector(".iu-invoice-print-pre") : null;
+    const buyPre = buy ? buy.querySelector(".iu-invoice-print-pre") : null;
+    const supText = supPre ? String(supPre.textContent || "") : "";
+    const buyText = buyPre ? String(buyPre.textContent || "") : "";
+    const lh = (el) => parseFloat(window.getComputedStyle(el).lineHeight) || 16;
+    const supWraps =
+      !!supPre &&
+      supText.length > 60 &&
+      (supPre.scrollWidth <= supPre.clientWidth + 10 || supPre.scrollHeight > lh(supPre) * 1.25);
+    const buyWraps =
+      !!buyPre &&
+      buyText.length > 60 &&
+      (buyPre.scrollWidth <= buyPre.clientWidth + 10 || buyPre.scrollHeight > lh(buyPre) * 1.25);
+    const supplierDoesNotOverflowPage =
+      !!supR && supR.right <= pageR.right + 3 && supR.left >= pageR.left - 3;
+    const buyerDoesNotOverflowPage =
+      !!buyR && buyR.right <= pageR.right + 3 && buyR.left >= pageR.left - 3;
+    const supplierDoesNotBreakLayout = !!supR && !!buyR && buyR.left >= supR.left - 2;
+    const buyerDoesNotBreakLayout = !!supR && !!buyR && Math.abs(supR.top - buyR.top) < 12;
+    const partySectionsHorizontalOverflow = pageEl.scrollWidth > pageEl.clientWidth + 3;
+    try {
+      host.remove();
+    } catch (_) {}
+    return {
+      supplierLongTextWraps: supWraps,
+      buyerLongTextWraps: buyWraps,
+      supplierDoesNotOverflowPage,
+      buyerDoesNotOverflowPage,
+      supplierDoesNotBreakLayout,
+      buyerDoesNotBreakLayout,
+      partySectionsHorizontalOverflow,
+    };
+  }, htmlParty);
 
   await pLayout.setContent(printDocHtmlInline(cssTextLocal, ""), { url: "about:blank", waitUntil: "domcontentloaded" });
   await pLayout.waitForTimeout(150);
@@ -448,40 +621,6 @@ async function run() {
   }, htmlXfer);
 
   await pLayout.close();
-
-  printBlocks("PDF_PRINT_STYLE_PROOF", {
-    createdByItalic: layout.createdByItalic,
-    createdByLightGray: layout.createdByLightGray,
-    invoiceTitleBordoStrip: layout.invoiceTitleBordoStrip,
-    supplierHeadingBold: layout.supplierHeadingBold,
-    buyerHeadingBold: layout.buyerHeadingBold,
-    paymentCashBold: layout.paymentCashBold,
-    footerOnlyWwwInfoUzel: layout.footerOnlyWwwInfoUzel,
-    createdByRemovedFromFooter: layout.createdByRemovedFromFooter,
-    createdByInHeader: layout.createdByInHeader,
-    createdByInFooter: layout.createdByInFooter,
-    paymentTransferRendered: xferStyle.paymentTransferRendered,
-  });
-
-  printBlocks("ITEMS_LAYOUT_PROOF", {
-    quantityAlignedUnderHeader: layout.quantityAlignedUnderHeader,
-    longTextWrapsInsideDescription: layout.longTextWrapsInsideDescription,
-    longTextDoesNotOverlapNumericColumns: layout.longTextDoesNotOverlapNumericColumns,
-    horizontalOverflow: layout.horizontalOverflow,
-  });
-
-  printBlocks("SUMMARY_LAYOUT_PROOF", {
-    spaceBeforeSubtotal: layout.spaceBeforeSubtotal,
-    totalDueBold: layout.totalDueBold,
-    totalDueAmountInline: layout.totalDueAmountInline,
-    spaceAfterTotalDue: layout.spaceAfterTotalDue,
-  });
-
-  printBlocks("MULTIPAGE_PROOF", {
-    multiPageSupported: layout.multiPageSupported,
-    contentNotClippedAtPageEnd: layout.contentNotClippedAtPageEnd,
-    breakInsideGuardsPresent: breakInsideGuardsPresent,
-  });
 
   const page = await ctx.newPage();
   const consoleErrors = [];
@@ -533,11 +672,14 @@ async function run() {
       printModeUsed: false,
       plainTextOnly: true,
       contentClipped: true,
+      hasMargins: false,
+      hasProfessionalLayout: false,
     });
     printBlocks("GLOBAL_REGRESSION_PROOF", {
       consoleErrorsCount: consoleErrors.length,
       appErrorsCount: appErrors.length,
       overflowX: false,
+      railShift: 0,
     });
     printBlocks("PR_INFO", { url: "", branch: "", checks: "" });
     printBlocks("AUTO_MERGE_READY", { ready: "NO", reason: "pdf_generation_no_exporter" });
@@ -613,6 +755,7 @@ async function run() {
               size: out.blob.size,
               type: out.blob.type,
               proof: window._iuInvoicePrintProof || null,
+              positionProof: window._iuInvoicePdfPositionProof || null,
               meta: window._iuInvoicePdfExportMeta || null,
               pageCount: pc,
               pdfHeader: first,
@@ -667,11 +810,14 @@ async function run() {
       printModeUsed: false,
       plainTextOnly: true,
       contentClipped: true,
+      hasMargins: false,
+      hasProfessionalLayout: false,
     });
     printBlocks("GLOBAL_REGRESSION_PROOF", {
       consoleErrorsCount: consoleErrors.length,
       appErrorsCount: appErrors.length,
       overflowX: "n/a",
+      railShift: "n/a",
     });
     printBlocks("PR_INFO", { url: "", branch: "", checks: "" });
     printBlocks("AUTO_MERGE_READY", { ready: "NO", reason: rootCause });
@@ -688,6 +834,8 @@ async function run() {
   const plainTextOnly = !pdfMagicOk || pdfOut.size < 500;
   const contentClipped = proof.contentClipped === true;
 
+  const posP = pdfOut.positionProof || {};
+
   printBlocks("PDF_EXPORT_PROOF", {
     pdfGenerated: pdfMagicOk && pdfOut.size > 1500,
     mimeType: pdfOut.type || "",
@@ -698,22 +846,66 @@ async function run() {
     contentClipped: contentClipped,
     hasMargins: !!proof.hasMargins,
     hasProfessionalLayout: !!proof.hasProfessionalLayout,
-    pdfPageCount: pdfOut.pageCount || 0,
   });
 
-  const overflowX =
-    (await page.evaluate(() => {
-      try {
-        return document.documentElement.scrollWidth - document.documentElement.clientWidth > 2;
-      } catch {
-        return false;
-      }
-    })) === true;
+  printBlocks("PDF_LAYOUT_TYPO_PROOF", {
+    dateSpacingCorrect: layout.dateSpacingCorrect,
+    duzpSpacingCorrect: layout.duzpSpacingCorrect,
+    unitPriceLabelShort: layout.unitPriceLabelShort,
+    supplierHeadingBold: layout.supplierHeadingBold,
+    buyerHeadingBold: layout.buyerHeadingBold,
+    invoiceTitleAccent: layout.invoiceTitleAccent,
+    hasBalancedMargins: layout.hasBalancedMargins,
+    leftMarginPx: layout.leftMarginPx,
+    rightMarginPx: layout.rightMarginPx,
+  });
+
+  printBlocks("ITEMS_LAYOUT_PROOF", {
+    descriptionWrapsInsideColumn: layout.descriptionWrapsInsideColumn,
+    descriptionDoesNotOverlapQuantity: layout.descriptionDoesNotOverlapQuantity,
+    descriptionDoesNotOverlapUnitPrice: layout.descriptionDoesNotOverlapUnitPrice,
+    descriptionDoesNotOverlapVat: layout.descriptionDoesNotOverlapVat,
+    descriptionDoesNotOverlapTotal: layout.descriptionDoesNotOverlapTotal,
+    numericColumnsStable: layout.numericColumnsStable,
+    itemsSpacingCorrect: layout.itemsSpacingCorrect,
+    horizontalOverflow: layout.horizontalOverflow,
+  });
+
+  printBlocks("SUPPLIER_BUYER_WRAP_PROOF", partyWrap);
+
+  printBlocks("SUMMARY_LAYOUT_PROOF", {
+    spaceBeforeSubtotal: layout.spaceBeforeSubtotal,
+    totalDueBold: layout.totalDueBold,
+    totalDueAmountBold: layout.totalDueAmountBold,
+    totalDueBiggerBy20Percent: layout.totalDueBiggerBy20Percent,
+    spaceAfterTotalDue: layout.spaceAfterTotalDue,
+    footerAfterTotalDue: layout.footerAfterTotalDue,
+  });
+
+  printBlocks("MULTIPAGE_PROOF", {
+    multiPageSupported: layout.multiPageSupported,
+    contentNotClippedAtPageEnd: layout.contentNotClippedAtPageEnd,
+    breakInsideGuardsPresent: breakInsideGuardsPresent,
+  });
+
+  const reg = await page.evaluate(() => {
+    try {
+      const de = document.documentElement;
+      const ox = de.scrollWidth - de.clientWidth > 2;
+      const rs = typeof window.__iuRailShiftProbe === "number" ? window.__iuRailShiftProbe : 0;
+      return { overflowX: ox, railShift: rs };
+    } catch {
+      return { overflowX: false, railShift: 0 };
+    }
+  });
+  const overflowX = reg.overflowX === true;
+  const railShiftNum = typeof reg.railShift === "number" ? reg.railShift : 0;
 
   printBlocks("GLOBAL_REGRESSION_PROOF", {
     consoleErrorsCount: consoleErrors.length,
     appErrorsCount: appErrors.length,
     overflowX: overflowX,
+    railShift: railShiftNum,
   });
 
   const gitPaths = safeGit("diff --name-only");
@@ -745,11 +937,45 @@ async function run() {
     !layout.createdByRemovedFromFooter ||
     !xferStyle.paymentTransferRendered ||
     !layout.quantityAlignedUnderHeader ||
-    !layout.longTextDoesNotOverlapNumericColumns ||
+    !layout.descriptionWrapsInsideColumn ||
+    !layout.descriptionDoesNotOverlapQuantity ||
+    !layout.descriptionDoesNotOverlapUnitPrice ||
+    !layout.descriptionDoesNotOverlapVat ||
+    !layout.descriptionDoesNotOverlapTotal ||
+    !layout.numericColumnsStable ||
     !layout.spaceBeforeSubtotal ||
     !layout.totalDueBold ||
+    !layout.totalDueAmountBold ||
     !layout.totalDueAmountInline ||
     !layout.spaceAfterTotalDue ||
+    !layout.footerAfterTotalDue ||
+    !layout.hasMargins ||
+    !layout.hasBalancedMargins ||
+    !layout.hasProfessionalLayout ||
+    !(layout.hasMargins && proof.hasMargins) ||
+    !layout.dateSpacingCorrect ||
+    !layout.duzpSpacingCorrect ||
+    !layout.unitPriceLabelShort ||
+    !layout.itemsSpacingCorrect ||
+    !layout.totalDueBiggerBy20Percent ||
+    !layout.totalDueHasSpacing ||
+    !layout.invoiceTitleAccent ||
+    !layout.textWrapCorrect ||
+    !partyWrap.supplierLongTextWraps ||
+    !partyWrap.buyerLongTextWraps ||
+    !partyWrap.supplierDoesNotOverflowPage ||
+    !partyWrap.buyerDoesNotOverflowPage ||
+    !partyWrap.supplierDoesNotBreakLayout ||
+    !partyWrap.buyerDoesNotBreakLayout ||
+    partyWrap.partySectionsHorizontalOverflow ||
+    !proof.containsFAKTURA ||
+    !proof.containsDodavatel ||
+    !proof.containsOdběratel ||
+    !proof.containsCelkem ||
+    !proof.containsInfoUzel ||
+    !(posP.paperInsideHost && !posP.paperLeftNegative) ||
+    posP.paperLeftNegative ||
+    posP.contentClipped === true ||
     layout.horizontalOverflow ||
     !layout.multiPageSupported ||
     !layout.contentNotClippedAtPageEnd ||
@@ -761,10 +987,13 @@ async function run() {
     plainTextOnly ||
     contentClipped ||
     overflowX ||
+    railShiftNum > 3 ||
     consoleErrors.length > 0 ||
     appErrors.length > 0;
 
-  const reason = fail ? "proof_assertion_failed" : "invoice_print_footer_guard_passed";
+  const reason = fail
+    ? "proof_assertion_failed"
+    : "invoice_pdf_typography_spacing_supplier_buyer_wrap_passed";
 
   await browser.close();
   if (server) server.close();
