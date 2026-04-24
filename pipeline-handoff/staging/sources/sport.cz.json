@@ -1,12 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T06:00:09.609269Z",
+  "ingestedAt": "2026-04-24T06:20:41.674431Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+      "title": "Nová formule poprvé na trati. Ohromila i Verstappena",
+      "url": "https://www.sport.cz/clanek/moto-formule-1-nova-formule-poprve-na-trati-ohromila-i-verstappena-5441919",
+      "dt": "2026-04-24T06:01:12Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "formule",
+        "nová",
+        "ohromila",
+        "poprvé",
+        "trati",
+        "verstappena"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
       "url": "https://www.sport.cz/clanek/nazory-komentare-analyza-dilema-sparty-za-ctvrt-miliardy-rekordni-ceskou-posilu-brzdi-zahada-tape-i-drahy-cizinec-5441395",
       "dt": "2026-04-24T05:54:28Z",
       "media_raw": "Sport.cz",
@@ -762,34 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Anglická nula. Ať už Premier League vyhraje City nebo Arsenal, neuvěřitelná anomálie bude platit dál",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-anglicka-nula-at-uz-premier-league-vyhraje-city-nebo-arsenal-neuveritelna-anomalie-bude-platit-dal-5441902",
-      "dt": "2026-04-23T14:57:49Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anglická",
-        "anomálie",
-        "arsenal",
-        "city",
-        "league",
-        "nebo",
-        "neuvěřitelná",
-        "nula",
-        "platit",
-        "premier",
-        "vyhraje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44938,
+      "bytes": 45376,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:54:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:01:12Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,7 +848,11 @@
         },
         "sample_titles": [
           {
-            "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+            "title": "Nová formule poprvé na trati. Ohromila i Verstappena",
+            "publishedAt": "2026-04-24T06:01:12Z"
+          },
+          {
+            "title": "Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
             "publishedAt": "2026-04-24T05:54:28Z"
           },
           {
@@ -879,10 +878,6 @@
           {
             "title": "Tvrďák Musil jako rozený kanonýr. Přikopl si Flynnovu bramboru a vystřelil Třinci druhý bod",
             "publishedAt": "2026-04-23T19:59:19Z"
-          },
-          {
-            "title": "Král čekal, kdo se k jeho gólu bude hlásit. Nakonec mi zůstal, usmál se",
-            "publishedAt": "2026-04-23T20:39:16Z"
           }
         ]
       }

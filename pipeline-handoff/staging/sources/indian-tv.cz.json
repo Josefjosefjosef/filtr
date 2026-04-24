@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-24T06:00:09.609269Z",
+  "ingestedAt": "2026-04-24T06:20:41.674431Z",
   "items": [
     {
       "section": "hry",
@@ -21,6 +21,32 @@
         "přístup",
         "směr",
         "xbox"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Koupí hry Kingdom Come podpoříte obnovu hradu Pirkštejn - INDIAN",
+      "url": "https://indian-tv.cz/clanek/koupi-hry-kingdom-come-podporite-obnovu-hradu-pirkstejn-o95f7v",
+      "dt": "2026-04-24T05:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "come",
+        "hradu",
+        "hry",
+        "indian",
+        "kingdom",
+        "koupí",
+        "obnovu",
+        "pirkštejn",
+        "podpoříte"
       ],
       "feedCategory": "hry",
       "feedType": "rss",
@@ -1056,36 +1082,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Akční RPG Beast of Reincarnation od studia Game Freak spouští předobjednávky a odhaluje datum vydání - INDIAN",
-      "url": "https://indian-tv.cz/clanek/beast-of-reincarnation-predobjednavky-a-datum-vydani-r6j1q8",
-      "dt": "2026-04-20T13:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "akční",
-        "beast",
-        "datum",
-        "freak",
-        "game",
-        "indian",
-        "odhaluje",
-        "předobjednávky",
-        "reincarnation",
-        "rpg",
-        "spouští",
-        "studia",
-        "vydání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1096,7 +1092,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 207768,
+      "bytes": 209309,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1153,6 +1149,10 @@
             "publishedAt": "2026-04-24T05:50:18Z"
           },
           {
+            "title": "Koupí hry Kingdom Come podpoříte obnovu hradu Pirkštejn - INDIAN",
+            "publishedAt": "2026-04-24T05:30:00Z"
+          },
+          {
             "title": "Assassin’s Creed Black Flag Resynced představeno. Remake vylepšuje grafiku i hratelnost a přidává nový obsah - INDIAN",
             "publishedAt": "2026-04-23T16:15:00Z"
           },
@@ -1175,10 +1175,6 @@
           {
             "title": "Předčasně unikly ceny i datum vydání chystaného Assassin’s Creed: Black Flag Resynced - INDIAN",
             "publishedAt": "2026-04-23T09:00:00Z"
-          },
-          {
-            "title": "Masivní update do Crimson Desert přidává volbu obtížnosti, nové mazlíčky nebo úpravu ovládání - INDIAN",
-            "publishedAt": "2026-04-23T08:45:00Z"
           }
         ]
       }

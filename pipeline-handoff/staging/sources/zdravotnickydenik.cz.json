@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T06:00:09.609269Z",
+  "ingestedAt": "2026-04-24T06:20:41.674431Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Drahá léčba bez efektu? Následnou intenzivní péči brzdí chaos i špatná rozhodnutí",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nasledna-intenzivni-pece/",
+      "dt": "2026-04-24T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brzdí",
+        "chaos",
+        "drahá",
+        "efektu",
+        "intenzivní",
+        "léčba",
+        "následnou",
+        "péči",
+        "rozhodnutí",
+        "špatná"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Třetinu péče lze řešit na dálku. Bez úhrad ale telemedicína nefunguje, říká Vachta",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/bez-uhrad-telemedicina-nefunguje-vachta/",
-      "dt": "2026-04-23T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "dálku",
-        "lze",
-        "nefunguje",
-        "péče",
-        "telemedicína",
-        "třetinu",
-        "vachta",
-        "úhrad",
-        "řešit",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94503,
+      "bytes": 92157,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -335,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drahá léčba bez efektu? Následnou intenzivní péči brzdí chaos i špatná rozhodnutí",
+            "publishedAt": "2026-04-24T06:00:00Z"
+          },
           {
             "title": "Toxický koktejl v každém šluku: Nelegální tabák je výrazně nebezpečnější než běžné cigarety",
             "publishedAt": "2026-04-24T05:00:00Z"
@@ -362,10 +365,6 @@
           {
             "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
             "publishedAt": "2026-04-23T09:41:13Z"
-          },
-          {
-            "title": "Absurdita u zaměstnaneckých benefitů: Více peněz má jít na zábavu než na prevenci rakoviny",
-            "publishedAt": "2026-04-23T09:02:15Z"
           }
         ]
       }

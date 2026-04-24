@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-24T06:00:09.609269Z",
+  "ingestedAt": "2026-04-24T06:20:41.674431Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Miriam Fellingerová novou ředitelkou OMV v Česku",
+      "url": "https://profitonline.cz/miriam-fellingerova-novou-reditelkou-omv-v-cesku/",
+      "dt": "2026-04-24T06:00:48Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "fellingerová",
+        "miriam",
+        "novou",
+        "omv",
+        "česku",
+        "ředitelkou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Je Tesla jen předraženou automobilkou? Dnešek ukáže",
-      "url": "https://profitonline.cz/je-tesla-jen-predrazenou-automobilkou-dnesek-ukaze/",
-      "dt": "2026-04-22T08:00:38Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "automobilkou",
-        "dnešek",
-        "jen",
-        "předraženou",
-        "tesla",
-        "ukáže"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18773,
+      "bytes": 18726,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:00:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:00:48Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -356,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miriam Fellingerová novou ředitelkou OMV v Česku",
+            "publishedAt": "2026-04-24T06:00:48Z"
+          },
           {
             "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
             "publishedAt": "2026-04-24T04:00:05Z"
@@ -383,10 +387,6 @@
           {
             "title": "Proč by ČNB nyní neměla zvyšovat úrokové sazby?",
             "publishedAt": "2026-04-23T08:00:55Z"
-          },
-          {
-            "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
-            "publishedAt": "2026-04-23T07:00:32Z"
           }
         ]
       }
