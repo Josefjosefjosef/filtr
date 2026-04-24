@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T22:06:16.161417Z",
+  "ingestedAt": "2026-04-24T23:10:14.060383Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trutnovští kriminalisté objasnili během čtyřiadvaceti hodin vloupání do domu v Pilníkově",
+      "url": "https://tydenikpolicie.cz/trutnovsti-kriminaliste-objasnili-behem-ctyriadvaceti-hodin-vloupani-do-domu-v-pilnikove/",
+      "dt": "2026-04-24T22:02:51Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "během",
+        "domu",
+        "hodin",
+        "kriminalisté",
+        "objasnili",
+        "pilníkově",
+        "trutnovští",
+        "vloupání",
+        "čtyřiadvaceti"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,30 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Strážníci se v Hradci Králové podíleli na další úspěšné resuscitaci",
-      "url": "https://tydenikpolicie.cz/straznici-se-v-hradci-kralove-podileli-na-dalsi-uspesne-resuscitaci/",
-      "dt": "2026-04-24T07:46:44Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "další",
-        "hradci",
-        "králové",
-        "podíleli",
-        "resuscitaci",
-        "strážníci",
-        "úspěšné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15758,
+      "bytes": 15900,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:02:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T22:02:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trutnovští kriminalisté objasnili během čtyřiadvaceti hodin vloupání do domu v Pilníkově",
+            "publishedAt": "2026-04-24T22:02:51Z"
+          },
           {
             "title": "Řidič kamionu poškodil na železničním přejezdu na Třebíčsku spouštějící se závoru",
             "publishedAt": "2026-04-24T16:02:31Z"
@@ -345,10 +351,6 @@
           {
             "title": "Zloděj okradl u hlavního nádraží v Ostravě spícího muže",
             "publishedAt": "2026-04-24T08:03:26Z"
-          },
-          {
-            "title": "Hledaný cizinec řekl plzeňským strážníkům, že zná svá práva, a oni že nemají právo po něm požadovat jeho totožnost",
-            "publishedAt": "2026-04-24T07:54:24Z"
           }
         ]
       }

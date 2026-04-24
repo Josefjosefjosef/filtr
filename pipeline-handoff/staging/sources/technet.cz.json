@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-24T22:06:16.161417Z",
+  "ingestedAt": "2026-04-24T23:10:14.060383Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Roste zájem o mrtvý produkt od Applu. Proč ho lidé oprašují?",
+      "url": "https://www.idnes.cz/technet/audio-foto-video/apple-ipod-hudebni-prehravac-vzkriseni-classic-touch-mini-nano-shuffle.A260414_114249_audio-foto-video_vse",
+      "dt": "2026-04-24T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "applu",
+        "lidé",
+        "mrtvý",
+        "oprašují",
+        "produkt",
+        "proč",
+        "roste",
+        "zájem"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -744,32 +769,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Největší Čech“ byl i velký manipulátor. Autoři odhalují taje politiky Karla IV.",
-      "url": "https://www.idnes.cz/technet/veda/manipulace-fake-news-rusko-plyn-kolomaznik-rod-rozstrel.A260414_132526_veda_vov",
-      "dt": "2026-04-15T08:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "autoři",
-        "karla",
-        "manipulátor",
-        "největší",
-        "odhalují",
-        "politiky",
-        "taje",
-        "velký",
-        "čech"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45203,
+      "bytes": 44949,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,11 +816,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T18:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 22,
-          "zpravy": 8
+          "other": 23,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -833,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Roste zájem o mrtvý produkt od Applu. Proč ho lidé oprašují?",
+            "publishedAt": "2026-04-24T22:00:00Z"
+          },
           {
             "title": "V Polsku našli téměř tříkilogramový železný meteorit. Díky českým výpočtům",
             "publishedAt": "2026-04-24T18:24:00Z"
@@ -859,10 +862,6 @@
           },
           {
             "title": "Možná vás překvapí, na co se soustředí přicházející Wi-Fi 8",
-            "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Toyota demonstruje svůj posun v robotice na basketbalistovi. Nový CUE7 září",
             "publishedAt": "2026-04-22T22:00:00Z"
           }
         ]

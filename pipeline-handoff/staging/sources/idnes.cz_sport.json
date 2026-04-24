@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T22:06:16.161417Z",
+  "ingestedAt": "2026-04-24T23:10:14.060383Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skotský sparťan Irving: Teď už prý se Součkem kamarádi nebudeme",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/soucek-ted-uz-pry-kamaradi-nebudeme.A260424_162806_fotbal_ten",
+      "dt": "2026-04-24T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "irving",
+        "kamarádi",
+        "nebudeme",
+        "prý",
+        "skotský",
+        "součkem",
+        "sparťan"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -767,33 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pět hráčů a dva zápasy. Policisté prověřují podezřelá utkání fotbalové Chrudimi",
-      "url": "https://www.idnes.cz/pardubice/zpravy/fotbal-fk-chrudim-b-fk-caslav-zapas-policie-branky-sazky-mafie.A260423_193827_pardubice-zpravy_lati",
-      "dt": "2026-04-24T11:41:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chrudimi",
-        "dva",
-        "fotbalové",
-        "hráčů",
-        "podezřelá",
-        "policisté",
-        "prověřují",
-        "pět",
-        "utkání",
-        "zápasy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46653,
+      "bytes": 46941,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T21:37:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skotský sparťan Irving: Teď už prý se Součkem kamarádi nebudeme",
+            "publishedAt": "2026-04-24T22:00:00Z"
+          },
           {
             "title": "Satoranský odstoupil, Barcelona padla v Monaku a do play off Euroligy se nepodívá",
             "publishedAt": "2026-04-24T21:37:51Z"
@@ -883,10 +884,6 @@
           {
             "title": "Chrudim předvedla obrat a obhájila titul. Futsalové lize vládne už posedmnácté",
             "publishedAt": "2026-04-24T19:43:00Z"
-          },
-          {
-            "title": "Klapka si musí nominaci vybojovat. Rulík sleduje i AHL: Víme, jaké hráče tam máme",
-            "publishedAt": "2026-04-24T19:30:00Z"
           }
         ]
       }
