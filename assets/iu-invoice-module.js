@@ -3,6 +3,7 @@
  */
 import {
   applyBuyerSnapshot,
+  applySupplierSnapshot,
   buildInvoiceHtmlPreview,
   buildPlainText,
   computeTotals,
@@ -10,11 +11,15 @@ import {
   emptyLine,
   loadFormState,
   loadRecipients,
+  loadSuppliers,
   nextAutoInvoiceNumber,
   persistFormState,
   saveRecipients,
+  saveSuppliers,
   snapshotBuyer,
+  snapshotSupplier,
   validateForm,
+  validateSupplierProfile,
 } from "./iu-invoice-engine.js";
 
 function esc(s) {
@@ -51,16 +56,24 @@ function kindRadios(name, current) {
 }
 
 function renderFormShell() {
-  return `<div class="iu-inv-root" data-iu-invoice-root>
+  return `<div class="iu-inv-root" data-iu-invoice-root data-export-mode="pdf_only">
   <p class="iu-inv-intro">Údaje se ukládají pouze v tomto prohlížeči. Slouží jako pomůcka — před použitím vždy zkontrolujte správnost.</p>
 
-  <section class="iu-inv-block" aria-labelledby="iu-inv-h-sup">
+  <section class="iu-inv-block iu-inv-supplierBlock" aria-labelledby="iu-inv-h-sup" data-iu-inv-supplier-active="fo">
     <h3 class="iu-inv-h" id="iu-inv-h-sup">Dodavatel</h3>
+    <div class="iu-inv-recipientRow">
+      <label class="iu-inv-field iu-inv-field--grow"><span class="iu-inv-label">Uložení dodavatele</span>
+        <select class="iu-inv-select" data-inv-supplier-select><option value="">— Vyberte uloženého —</option></select>
+      </label>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-supplier-load>Načíst</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-supplier-save>Uložit dodavatele</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-supplier-delete>Smazat z listu</button>
+    </div>
     <div class="iu-inv-seg" role="group" aria-label="Typ dodavatele">
       ${kindRadios("iu-sup-kind", "fo")}
     </div>
-    <div class="iu-inv-fieldGrid" data-inv-panel="supplierFo"></div>
-    <div class="iu-inv-fieldGrid iu-inv-guard-hidden" data-inv-panel="supplierPo" hidden></div>
+    <div class="iu-inv-fieldGrid iu-inv-formPanel" data-inv-panel="supplierFo" data-iu-inv-form-role="supplier-fo"></div>
+    <div class="iu-inv-fieldGrid iu-inv-formPanel iu-inv-guard-layout-off" data-inv-panel="supplierPo" data-iu-inv-form-role="supplier-po" hidden></div>
     <div class="iu-inv-fieldGrid">
       ${fieldSelect("supplierVatPayer", "Režim DPH", "1", [
         { v: "1", l: "Plátce DPH" },
@@ -69,7 +82,7 @@ function renderFormShell() {
     </div>
   </section>
 
-  <section class="iu-inv-block" aria-labelledby="iu-inv-h-buy">
+  <section class="iu-inv-block iu-inv-buyerBlock" aria-labelledby="iu-inv-h-buy" data-iu-inv-buyer-active="fo">
     <h3 class="iu-inv-h" id="iu-inv-h-buy">Odběratel</h3>
     <div class="iu-inv-recipientRow">
       <label class="iu-inv-field iu-inv-field--grow"><span class="iu-inv-label">Uložení odběratele</span>
@@ -82,8 +95,8 @@ function renderFormShell() {
     <div class="iu-inv-seg" role="group" aria-label="Typ odběratele">
       ${kindRadios("iu-buy-kind", "fo")}
     </div>
-    <div class="iu-inv-fieldGrid" data-inv-panel="buyerFo"></div>
-    <div class="iu-inv-fieldGrid iu-inv-guard-hidden" data-inv-panel="buyerPo" hidden></div>
+    <div class="iu-inv-fieldGrid iu-inv-formPanel" data-inv-panel="buyerFo" data-iu-inv-form-role="buyer-fo"></div>
+    <div class="iu-inv-fieldGrid iu-inv-formPanel iu-inv-guard-layout-off" data-inv-panel="buyerPo" data-iu-inv-form-role="buyer-po" hidden></div>
   </section>
 
   <section class="iu-inv-block" aria-labelledby="iu-inv-h-inv">
@@ -121,20 +134,19 @@ function renderFormShell() {
   <section class="iu-inv-block" aria-labelledby="iu-inv-h-sum">
     <h3 class="iu-inv-h" id="iu-inv-h-sum">Souhrn</h3>
     <div class="iu-inv-summary" data-inv-summary></div>
+    <div class="iu-invoice-actions-static iu-inv-actionsRow" data-inv-actions>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-copy>Kopírovat text</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share>Stáhnout / sdílet PDF</button>
+    </div>
   </section>
-
-  <div class="iu-inv-stickyBar" data-inv-actions>
-    <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-copy>Kopírovat text</button>
-    <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
-    <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share>Sdílet / exportovat</button>
-  </div>
 
   <div class="iu-inv-status" data-inv-status role="status" aria-live="polite"></div>
 
   <div class="iu-inv-previewLayer iu-inv-guard-hidden" data-inv-preview-layer hidden>
     <div class="iu-inv-previewToolbar">
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-back>Zpět do formuláře</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share>Sdílet / exportovat</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share>Stáhnout / sdílet PDF</button>
     </div>
     <div class="iu-inv-previewScroll" data-inv-preview-host></div>
   </div>
@@ -270,6 +282,12 @@ function readLineFromCard(card, st) {
 }
 
 function readStateFromDom(root, st) {
+  const sk = root.querySelector('input[name="iu-sup-kind"]:checked');
+  if (sk) st.supplierKind = sk.value === "po" ? "po" : "fo";
+  const bk = root.querySelector('input[name="iu-buy-kind"]:checked');
+  if (bk) st.buyerKind = bk.value === "po" ? "po" : "fo";
+  const activeSup = st.supplierKind === "po" ? "supplierPo" : "supplierFo";
+  const activeBuy = st.buyerKind === "po" ? "buyerPo" : "buyerFo";
   root.querySelectorAll("[data-inv]").forEach((el) => {
     const path = el.getAttribute("data-inv");
     if (!path) return;
@@ -277,6 +295,12 @@ function readStateFromDom(root, st) {
     if (segs.length < 2) return;
     const a = segs[0];
     const b = segs[1];
+    if (a === "supplierFo" || a === "supplierPo") {
+      if (a !== activeSup) return;
+    }
+    if (a === "buyerFo" || a === "buyerPo") {
+      if (a !== activeBuy) return;
+    }
     if (a === "supplierFo" || a === "supplierPo" || a === "buyerFo" || a === "buyerPo" || a === "invoice") {
       if (!st[a]) st[a] = {};
       st[a][b] = el.value;
@@ -289,11 +313,6 @@ function readStateFromDom(root, st) {
   if (auto) st.invoice.autoNumber = !!auto.checked;
 
   root.querySelectorAll(".iu-inv-lineCard").forEach((card) => readLineFromCard(card, st));
-
-  const sk = root.querySelector('input[name="iu-sup-kind"]:checked');
-  if (sk) st.supplierKind = sk.value === "po" ? "po" : "fo";
-  const bk = root.querySelector('input[name="iu-buy-kind"]:checked');
-  if (bk) st.buyerKind = bk.value === "po" ? "po" : "fo";
 }
 
 function writeStateToDom(root, st) {
@@ -336,14 +355,38 @@ function writeStateToDom(root, st) {
 }
 
 function syncPanels(root, st) {
+  const supSec = root.querySelector(".iu-inv-supplierBlock");
+  if (supSec) supSec.setAttribute("data-iu-inv-supplier-active", st.supplierKind === "po" ? "po" : "fo");
+  const buySec = root.querySelector(".iu-inv-buyerBlock");
+  if (buySec) buySec.setAttribute("data-iu-inv-buyer-active", st.buyerKind === "po" ? "po" : "fo");
   const pfo = root.querySelector('[data-inv-panel="supplierFo"]');
   const ppo = root.querySelector('[data-inv-panel="supplierPo"]');
   const bfo = root.querySelector('[data-inv-panel="buyerFo"]');
   const bpo = root.querySelector('[data-inv-panel="buyerPo"]');
-  if (pfo) pfo.hidden = st.supplierKind !== "fo";
-  if (ppo) ppo.hidden = st.supplierKind !== "po";
-  if (bfo) bfo.hidden = st.buyerKind !== "fo";
-  if (bpo) bpo.hidden = st.buyerKind !== "po";
+  const showSupFo = st.supplierKind === "fo";
+  const showSupPo = st.supplierKind === "po";
+  const showBuyFo = st.buyerKind === "fo";
+  const showBuyPo = st.buyerKind === "po";
+  if (pfo) {
+    pfo.hidden = !showSupFo;
+    pfo.classList.toggle("iu-inv-guard-layout-off", !showSupFo);
+    pfo.classList.toggle("iu-inv-active-form", showSupFo);
+  }
+  if (ppo) {
+    ppo.hidden = !showSupPo;
+    ppo.classList.toggle("iu-inv-guard-layout-off", !showSupPo);
+    ppo.classList.toggle("iu-inv-active-form", showSupPo);
+  }
+  if (bfo) {
+    bfo.hidden = !showBuyFo;
+    bfo.classList.toggle("iu-inv-guard-layout-off", !showBuyFo);
+    bfo.classList.toggle("iu-inv-active-form", showBuyFo);
+  }
+  if (bpo) {
+    bpo.hidden = !showBuyPo;
+    bpo.classList.toggle("iu-inv-guard-layout-off", !showBuyPo);
+    bpo.classList.toggle("iu-inv-active-form", showBuyPo);
+  }
 }
 
 function updateBankBlock(root, st) {
@@ -378,6 +421,33 @@ function fmtMoneyNum(n) {
 
 function fillRecipientSelect(root, list) {
   const sel = root.querySelector("[data-inv-recipient-select]");
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Vyberte uloženého —</option>';
+  list.forEach((r) => {
+    const op = document.createElement("option");
+    op.value = r.id;
+    op.textContent = r.label;
+    sel.appendChild(op);
+  });
+  if (cur && list.some((x) => x.id === cur)) sel.value = cur;
+}
+
+function supplierListLabel(snap) {
+  if (snap.supplierKind === "po") {
+    const nm = String((snap.supplierPo && snap.supplierPo.companyName) || "").trim();
+    const ico = String((snap.supplierPo && snap.supplierPo.ico) || "").trim();
+    return (nm || "Firma") + (ico ? " · IČ " + ico : "");
+  }
+  const fn = String((snap.supplierFo && snap.supplierFo.firstName) || "").trim();
+  const ln = String((snap.supplierFo && snap.supplierFo.lastName) || "").trim();
+  const ico = String((snap.supplierFo && snap.supplierFo.ico) || "").trim();
+  const nm = (fn + " " + ln).trim();
+  return (nm || "FO") + (ico ? " · IČ " + ico : "");
+}
+
+function fillSupplierSelect(root, list) {
+  const sel = root.querySelector("[data-inv-supplier-select]");
   if (!sel) return;
   const cur = sel.value;
   sel.innerHTML = '<option value="">— Vyberte uloženého —</option>';
@@ -645,38 +715,68 @@ export function initIuInvoiceOverlay(deps) {
       }
     }
 
-    async function doShare() {
+    function exportInvoicePdfBlob(cb) {
       readStateFromDom(root, state);
       const v = validateForm(state);
       if (!v.ok) {
         setStatus(root, v.errors.join(" · "));
+        cb(new Error("validate"));
         return;
       }
       const totals = computeTotals(state);
-      const text = buildPlainText(state, totals);
-      const title = "Faktura " + String((state.invoice && state.invoice.number) || "").trim();
-      if (typeof navigator !== "undefined" && navigator.share) {
-        try {
-          await navigator.share({ title: title, text: text });
-          setStatus(root, "Sdílení dokončeno nebo zrušeno uživatelem.");
-          return;
-        } catch (_) {}
+      const html = buildInvoiceHtmlPreview(state, totals);
+      const fn =
+        typeof window !== "undefined" && typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function"
+          ? window.iuPdfExportHtmlStringToBlobForInvoice
+          : null;
+      if (!fn) {
+        setStatus(root, "PDF export není k dispozici — obnovte stránku.");
+        cb(new Error("no exporter"));
+        return;
       }
+      const num = String((state.invoice && state.invoice.number) || "faktura").replace(/[^\w.\-]+/g, "_");
+      const fileName = "Faktura_" + num + ".pdf";
       try {
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = (title.replace(/\s+/g, "_") || "faktura") + ".txt";
-        a.rel = "noopener";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.setTimeout(() => URL.revokeObjectURL(url), 2000);
-        setStatus(root, "Stažen textový soubor (fallback).");
-      } catch (_) {
-        setStatus(root, "Sdílení není k dispozici — zkopírujte text.");
-      }
+        window._iuInvoiceExportMode = "pdf_only";
+        window._iuInvoiceWordPdfStackUsed = true;
+      } catch (_) {}
+      fn(html, fileName, (err, out) => {
+        if (err || !out || !out.blob) {
+          setStatus(root, "PDF se nepodařilo vygenerovat.");
+          cb(err || new Error("pdf"));
+          return;
+        }
+        cb(null, out.blob, out.fileName || fileName);
+      });
+    }
+
+    async function doShare() {
+      exportInvoicePdfBlob(async (err, blob, fileName) => {
+        if (err || !blob) return;
+        const name = fileName || "faktura.pdf";
+        const file = new File([blob], name, { type: "application/pdf" });
+        if (typeof navigator !== "undefined" && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: name });
+            setStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
+            return;
+          } catch (_) {}
+        }
+        try {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          a.rel = "noopener";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+          setStatus(root, "PDF staženo.");
+        } catch (_) {
+          setStatus(root, "Stažení PDF se nezdařilo.");
+        }
+      });
     }
 
     function openPreview() {
@@ -721,6 +821,59 @@ export function initIuInvoiceOverlay(deps) {
     root.querySelector("[data-inv-preview-share]")?.addEventListener("click", () => {
       doShare();
     });
+
+    root.querySelector("[data-inv-supplier-load]")?.addEventListener("click", () => {
+      const sel = root.querySelector("[data-inv-supplier-select]");
+      const id = sel && sel.value;
+      if (!id) return;
+      const list = loadSuppliers();
+      const hit = list.find((x) => x.id === id);
+      if (!hit || !hit.data) return;
+      readStateFromDom(root, state);
+      state = applySupplierSnapshot(state, hit.data);
+      hit.lastUsed = Date.now();
+      const list2 = loadSuppliers()
+        .map((x) => (x.id === id ? Object.assign({}, x, { lastUsed: Date.now() }) : x))
+        .sort((a, b) => b.lastUsed - a.lastUsed);
+      saveSuppliers(list2);
+      fillSupplierSelect(root, list2);
+      refreshPanelsContent();
+      writeStateToDom(root, state);
+      setStatus(root, "Dodavatel načten.");
+      scheduleSave();
+    });
+
+    root.querySelector("[data-inv-supplier-save]")?.addEventListener("click", () => {
+      readStateFromDom(root, state);
+      const v = validateSupplierProfile(state);
+      if (!v.ok) {
+        setStatus(root, v.errors.join(" · "));
+        return;
+      }
+      const snap = snapshotSupplier(state);
+      const label = supplierListLabel(snap);
+      const list = loadSuppliers().filter((x) => x && x.id);
+      let id = "";
+      try {
+        id = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "s_" + String(Date.now());
+      } catch (_) {
+        id = "s_" + String(Date.now());
+      }
+      list.push({ id, label: label.trim() || "Dodavatel", lastUsed: Date.now(), data: snap });
+      saveSuppliers(list);
+      fillSupplierSelect(root, list);
+      setStatus(root, "Dodavatel uložen do seznamu.");
+    });
+
+    root.querySelector("[data-inv-supplier-delete]")?.addEventListener("click", () => {
+      const sel = root.querySelector("[data-inv-supplier-select]");
+      const id = sel && sel.value;
+      if (!id) return;
+      const list = loadSuppliers().filter((x) => x.id !== id);
+      saveSuppliers(list);
+      fillSupplierSelect(root, list);
+      setStatus(root, "Dodavatel smazán ze seznamu.");
+    });
   }
 
   function openSurface() {
@@ -753,6 +906,7 @@ export function initIuInvoiceOverlay(deps) {
 
     writeStateToDom(rootEl, state);
     fillRecipientSelect(rootEl, loadRecipients());
+    fillSupplierSelect(rootEl, loadSuppliers());
     wire(rootEl);
 
     try {

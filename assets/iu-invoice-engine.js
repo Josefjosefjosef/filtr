@@ -4,6 +4,7 @@
 
 export const IU_INVOICE_FORM_KEY = "iu_invoice_form_state_v1";
 export const IU_INVOICE_RECIPIENTS_KEY = "iu_invoice_recipients_v1";
+export const IU_INVOICE_SUPPLIERS_KEY = "iu_invoice_suppliers_v1";
 export const IU_INVOICE_COUNTER_KEY = "iu_invoice_counter_year_v1";
 
 export function escHtml(s) {
@@ -254,6 +255,34 @@ export function validateForm(state) {
   return { ok: err.length === 0, errors: err };
 }
 
+/** Uložení profilu dodavatele — bez validace odběratele / položek. */
+export function validateSupplierProfile(state) {
+  const err = [];
+  const icoOk = (s, required) => {
+    const d = parseIco(s);
+    if (!required && !d) return true;
+    return d.length === 8;
+  };
+  if (state.supplierKind === "fo") {
+    const fo = state.supplierFo || {};
+    if (!String(fo.firstName || "").trim()) err.push("Dodavatel: jméno");
+    if (!String(fo.lastName || "").trim()) err.push("Dodavatel: příjmení");
+    if (!icoOk(fo.ico, true)) err.push("Dodavatel: IČO (8 číslic)");
+    if (!String(fo.address || "").trim()) err.push("Dodavatel: adresa");
+    if (!String(fo.accountNumber || "").trim()) err.push("Dodavatel: číslo účtu");
+  } else {
+    const po = state.supplierPo || {};
+    if (!String(po.companyName || "").trim()) err.push("Dodavatel: název společnosti");
+    if (!String(po.legalForm || "").trim()) err.push("Dodavatel: právní forma");
+    if (!icoOk(po.ico, true)) err.push("Dodavatel: IČO (8 číslic)");
+    if (!String(po.address || "").trim()) err.push("Dodavatel: sídlo");
+    if (!String(po.fileMark || "").trim()) err.push("Dodavatel: spisová značka");
+    if (!String(po.courtRegistry || "").trim()) err.push("Dodavatel: zápis u soudu / rejstříku");
+    if (!String(po.accountNumber || "").trim()) err.push("Dodavatel: číslo účtu");
+  }
+  return { ok: err.length === 0, errors: err };
+}
+
 function fmtMoney(n) {
   if (!Number.isFinite(n)) return "—";
   try {
@@ -439,9 +468,9 @@ export function buildInvoiceHtmlPreview(state, totals) {
     "<div class=\"iu-inv-pr-head\" style=\"border-left:4px solid " +
     brand +
     ";\">" +
-    "<div class=\"iu-inv-pr-brand\">infoUzel.cz</div>" +
+    "<div class=\"iu-inv-pr-created\">Vytvořeno pomocí infoUzel.cz</div>" +
     "<div class=\"iu-inv-pr-title\">FAKTURA</div>" +
-    "<div class=\"iu-inv-pr-no\">č. " +
+    "<div class=\"iu-inv-pr-no\">číslo faktury " +
     escHtml(inv.number) +
     "</div></div>" +
     "<div class=\"iu-inv-pr-grid\">" +
@@ -514,6 +543,53 @@ export function saveRecipients(list) {
   try {
     if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_RECIPIENTS_KEY, JSON.stringify(list));
   } catch (_) {}
+}
+
+export function loadSuppliers() {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_INVOICE_SUPPLIERS_KEY) : null;
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .filter((x) => x && x.id && x.data)
+      .map((x) => ({
+        id: String(x.id),
+        label: String(x.label || ""),
+        lastUsed: typeof x.lastUsed === "number" ? x.lastUsed : 0,
+        data: x.data,
+      }))
+      .sort((a, b) => {
+        if (b.lastUsed !== a.lastUsed) return b.lastUsed - a.lastUsed;
+        return String(a.label).localeCompare(String(b.label), "cs");
+      });
+  } catch (_) {
+    return [];
+  }
+}
+
+export function saveSuppliers(list) {
+  try {
+    if (typeof localStorage !== "undefined") localStorage.setItem(IU_INVOICE_SUPPLIERS_KEY, JSON.stringify(list));
+  } catch (_) {}
+}
+
+export function snapshotSupplier(state) {
+  return {
+    supplierKind: state.supplierKind,
+    supplierVatPayer: !!state.supplierVatPayer,
+    supplierFo: Object.assign({}, state.supplierFo),
+    supplierPo: Object.assign({}, state.supplierPo),
+  };
+}
+
+export function applySupplierSnapshot(state, snap) {
+  const next = Object.assign({}, state);
+  next.supplierKind = snap.supplierKind === "po" ? "po" : "fo";
+  next.supplierVatPayer = !!snap.supplierVatPayer;
+  next.supplierFo = Object.assign({}, state.supplierFo, snap.supplierFo || {});
+  next.supplierPo = Object.assign({}, state.supplierPo, snap.supplierPo || {});
+  return next;
 }
 
 export function snapshotBuyer(state) {
