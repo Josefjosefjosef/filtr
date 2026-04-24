@@ -6528,6 +6528,10 @@ function buildVideoAsArticleCard(it) {
           cardEl.setAttribute("data-iu-nameday-gender", namedayGender);
         }catch{}
         try{
+          const hol = document.getElementById("iuHolidayMonetizeCard");
+          if (hol) hol.setAttribute("data-iu-nameday-gender", namedayGender);
+        }catch{}
+        try{
           const doc = metaEl.ownerDocument;
           metaEl.textContent = "";
           metaEl.appendChild(doc.createTextNode("Dnes je "));
@@ -6586,6 +6590,33 @@ function buildVideoAsArticleCard(it) {
         } else {
           try{ metaEl.style.removeProperty("font-size"); }catch{}
         }
+        try{
+          const mc = document.getElementById("iuHolidayMicrocopy");
+          if (mc){
+            let voc = "";
+            try{
+              if (typeof window.getNamedayPersonFromWelcomeBox === "function"){
+                voc = String(window.getNamedayPersonFromWelcomeBox() || "").trim();
+              }
+            }catch(_){}
+            let raw = "";
+            try{
+              const spanN = metaEl.querySelector(".iuNameStrong");
+              raw = spanN ? String(spanN.textContent || "").trim() : "";
+            }catch(_){}
+            let line = "Popřej oslavenci 🎉";
+            if (voc){
+              line = "Popřej " + voc + " 🎉";
+            } else if (raw && raw !== "—" && !/[;,]/.test(raw)){
+              if ((namedayGender === "female") && /ie$/i.test(raw)){
+                line = "Popřej " + raw.slice(0, -2) + "ii 🎉";
+              } else {
+                line = "Popřej " + raw + " 🎉";
+              }
+            }
+            mc.textContent = line;
+          }
+        }catch{}
       }catch{}
     }
 
@@ -10212,7 +10243,7 @@ function buildVideoAsArticleCard(it) {
     const silverSlot = document.getElementById("silver-slot");
     const calCard = document.getElementById("iuSilverCalendarSummaryCard");
     const tasksCard = document.getElementById("iuSilverTasksSummaryCard");
-    const sepTasks = document.getElementById("iuSilverWelcomeStackSeparatorTasks");
+    const sepBeforeTasks = document.getElementById("iuSilverWelcomeStackSeparatorCal");
     const insertTasksBefore = document.getElementById("iuSilverWelcomeStackSeparatorBeforeSilver");
     const stack = calCard && calCard.parentNode ? calCard.parentNode : null;
     const hostCal = document.getElementById("iuMmHoverSummaryHostCalendar");
@@ -10221,7 +10252,7 @@ function buildVideoAsArticleCard(it) {
     const shellTasks = document.getElementById("iuMmHoverSummaryPanelShellTasks");
     const bridgeCal = document.getElementById("iuMmHoverSummaryBridgeCalendar");
     const bridgeTasks = document.getElementById("iuMmHoverSummaryBridgeTasks");
-    if (!calCard || !tasksCard || !stack || !hostCal || !hostTasks || !shellCal || !shellTasks || !insertTasksBefore){
+    if (!calCard || !tasksCard || !stack || !hostCal || !hostTasks || !shellCal || !shellTasks || !insertTasksBefore || !sepBeforeTasks){
       try{
         const n = Number(window.__iuMmHoverSummaryInitTry || 0);
         if (n < 16){
@@ -10264,7 +10295,7 @@ function buildVideoAsArticleCard(it) {
         setDesktopMode(true);
       } else {
         try{
-          if (sepTasks && sepTasks.parentNode === stack) stack.insertBefore(calCard, sepTasks);
+          if (sepBeforeTasks && sepBeforeTasks.parentNode === stack) stack.insertBefore(calCard, sepBeforeTasks);
           else stack.insertBefore(calCard, insertTasksBefore);
         }catch{}
         try{ stack.insertBefore(tasksCard, insertTasksBefore); }catch{}
@@ -10659,13 +10690,13 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     const overlay = document.getElementById("iuNamedayWishOverlay");
-    const btnWish = document.querySelector(".iu-nameday-wish");
-    const btnFlowers = document.querySelector(".iu-nameday-flowers");
+    const btnWishEls = document.querySelectorAll(".iu-nameday-wish");
+    const btnFlowersEls = document.querySelectorAll(".iu-nameday-flowers");
     const btnTykat = document.querySelector(".iu-nameday-wish-mode--tykat");
     const btnVykat = document.querySelector(".iu-nameday-wish-mode--vykat");
     const ta = document.getElementById("iuNamedayWishTextarea");
     const btnCopy = document.getElementById("iuNamedayWishCopy");
-    if (!overlay || !btnWish || !btnTykat || !btnVykat || !ta || !btnCopy) return;
+    if (!overlay || !btnWishEls.length || !btnTykat || !btnVykat || !ta || !btnCopy) return;
 
     let mode = "tykat";
 
@@ -10748,16 +10779,18 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
-    btnWish.addEventListener("click", (e) => {
-      try{ e.preventDefault(); }catch{}
-      openOverlay();
+    btnWishEls.forEach((btnWish) => {
+      btnWish.addEventListener("click", (e) => {
+        try{ e.preventDefault(); }catch{}
+        openOverlay();
+      });
     });
 
-    if (btnFlowers) {
+    btnFlowersEls.forEach((btnFlowers) => {
       btnFlowers.addEventListener("click", (e) => {
         try{ e.preventDefault(); }catch{}
       });
-    }
+    });
 
     btnTykat.addEventListener("click", () => setMode("tykat"));
     btnVykat.addEventListener("click", () => setMode("vykat"));
@@ -11276,6 +11309,101 @@ function buildVideoAsArticleCard(it) {
         if (tb) tb.classList.add("iuTopbarHost--silverComposer");
       } catch (_) {}
     } catch (_) {}
+  }
+
+  /** P0 Mobile/tablet (≤1024px, bez desktop topbar composer): Silver input do hero hostu; před přesunem shell z topbaru musí být wrap zpět v .silver-compose. */
+  function iuSilverHeroInputEnsureInComposeForShellMove() {
+    try {
+      var mqW = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+      var wide = mqW ? mqW.matches : window.innerWidth >= 1025;
+      var topbar = false;
+      try {
+        topbar = document.body.classList.contains("iu-desktop-silver-composer-topbar");
+      } catch (_) {}
+      var wrap = document.querySelector(".iuSilverHomeInputWrap");
+      var compose = document.querySelector("#iuSilverHomeShell .silver-compose");
+      if (!wrap || !compose) return;
+      if (wide || topbar) {
+        if (wrap.parentElement !== compose) {
+          var out = compose.querySelector(".silver-output");
+          try {
+            if (out && out.nextSibling) compose.insertBefore(wrap, out.nextSibling);
+            else compose.appendChild(wrap);
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+  }
+
+  function iuSilverHeroMobileInputDockApply() {
+    try {
+      var mqN = window.matchMedia && window.matchMedia("(max-width: 1024px)");
+      var narrow = mqN ? mqN.matches : window.innerWidth <= 1024;
+      var topbar = false;
+      try {
+        topbar = document.body.classList.contains("iu-desktop-silver-composer-topbar");
+      } catch (_) {}
+      var host = document.getElementById("iuSilverHeroInputHost");
+      var wrap = document.querySelector(".iuSilverHomeInputWrap");
+      var compose = document.querySelector("#iuSilverHomeShell .silver-compose");
+      if (!wrap || !compose) return;
+      if (narrow && !topbar && host) {
+        if (wrap.parentElement !== host) host.appendChild(wrap);
+      } else {
+        if (wrap.parentElement !== compose) {
+          var out0 = compose.querySelector(".silver-output");
+          try {
+            if (out0 && out0.nextSibling) compose.insertBefore(wrap, out0.nextSibling);
+            else compose.appendChild(wrap);
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+  }
+
+  /** P0 Hero quick actions (≤1024): stejné cíle jako MindMenu dlaždice Kalendář / Úkoly / Poznámky. */
+  function iuSilverHeroQuickActionsInit() {
+    try {
+      if (window.__iuSilverHeroQuickActionsInit) return;
+      window.__iuSilverHeroQuickActionsInit = 1;
+    } catch (_) {}
+    function clickMindTool(sel) {
+      try {
+        var root = document.querySelector(".mindMenu");
+        var btn = root ? root.querySelector(sel) : null;
+        if (btn && typeof btn.click === "function") btn.click();
+      } catch (_) {}
+    }
+    document.addEventListener(
+      "click",
+      (e) => {
+        try {
+          var t = e.target;
+          var b =
+            t && t.closest
+              ? t.closest("[data-iu-hero-quick]")
+              : null;
+          if (!b) return;
+          var k = String(b.getAttribute("data-iu-hero-quick") || "");
+          if (k === "cal") {
+            e.preventDefault();
+            clickMindTool(".iu-mmTopTool--cal");
+            return;
+          }
+          if (k === "tasks") {
+            e.preventDefault();
+            clickMindTool(".iu-mmTopTool--tasks");
+            return;
+          }
+          if (k === "notes") {
+            e.preventDefault();
+            clickMindTool(".iu-mmTopTool--notes");
+            return;
+          }
+        } catch (_) {}
+      },
+      true
+    );
   }
 
   /** P0 Mobile gate: on mobile move Silver + rail + MindMenu into gate; on desktop restore. Tab state: nav | tools | none. */
@@ -12046,6 +12174,7 @@ function buildVideoAsArticleCard(it) {
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
   function iuMobileLayoutReorder() {
     try {
+      iuSilverHeroInputEnsureInComposeForShellMove();
       iuMobileGateReorder();
       var mq = window.matchMedia && window.matchMedia("(max-width: 900px)");
       var mobile = mq ? mq.matches : (window.innerWidth <= 900);
@@ -12070,6 +12199,9 @@ function buildVideoAsArticleCard(it) {
         var layout = document.querySelector(".layout");
         if (layout) layout.appendChild(accordion);
       }
+    } catch (_) {}
+    try {
+      iuSilverHeroMobileInputDockApply();
     } catch (_) {}
   }
   try { window.iuMobileLayoutReorder = iuMobileLayoutReorder; } catch (_) {}
@@ -18626,6 +18758,7 @@ function buildVideoAsArticleCard(it) {
       }, 900);
     }catch{}
     try{ iuNamedayWishInit(); }catch{}
+    try{ iuSilverHeroQuickActionsInit(); }catch{}
 
     if (btnToggleDebug) {
       btnToggleDebug.addEventListener("click", () => {
@@ -31168,7 +31301,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:hover{transform:translateY(-1px)}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopTools>.iu-mmTopToolHoverHost>.iu-mmTopTool.iu-mmTopTool--imageTile:active{transform:translateY(0.5px)}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell.iu-mmHoverSummaryPanelShell--closed{position:fixed!important;left:-12000px!important;top:0!important;width:min(380px,calc(100vw - 20px))!important;max-height:min(72vh,560px)!important;opacity:0!important;pointer-events:none!important;z-index:-1!important;overflow:hidden!important}" +
-    "#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorTasks{display:none!important}" +
+    "#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorCal,#silver-slot.iu-silver-slot--mm-summary-desktop #iuSilverWelcomeStackSeparatorWeatherCal{display:none!important}" +
     "body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){position:fixed!important;left:auto!important;top:auto!important;right:auto!important;z-index:10150!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;box-sizing:border-box;max-height:min(72vh,560px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(15,35,55,.16);background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(7,12,19,.22);padding:10px 10px 12px;color:#0b1f33}" +
     ".dark body.iu-desktop-hover-summary-enabled .iu-mmHoverSummaryPanelShell:not(.iu-mmHoverSummaryPanelShell--closed){background:rgba(15,23,42,.96);border-color:rgba(148,163,184,.28);color:rgba(241,245,249,.95)}" +
     "body.iu-desktop-hover-summary-enabled .accordionCol .mindMenu .iu-mmTopToolHoverHost>.iu-mmTopTool.iu-has-hover-summary{position:relative;z-index:10058}" +

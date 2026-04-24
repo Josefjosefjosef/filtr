@@ -391,7 +391,7 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                           <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
                           </div>
-                          <div class="iu-nameday-cta" id="iuNamedayCta" data-iu-nameday-cta>
+                          <div class="iu-nameday-cta iu-nameday-cta--slotDesktop" id="iuNamedayCta" data-iu-nameday-cta>
                             <button type="button" class="silver-weather-btn iu-nameday-wish">
                               Přání k svátku
                             </button>
@@ -401,7 +401,39 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparator" aria-hidden="true"></div>
-                        <div class="silver-weather-card" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="loading" data-iu-silver-wx-layout="ready">
+                        <section id="iuSilverHeroPremium" class="iu-hero-silver-premium" aria-label="Silver" data-iu-silver-hero-premium>
+                          <div class="iu-hero-silver-premiumInner">
+                            <div class="iu-hero-silver-premiumMain">
+                              <div class="iu-hero-figure" aria-hidden="true">
+                                <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="" width="320" height="320" decoding="async" fetchpriority="high" />
+                              </div>
+                              <div class="iu-hero-silverCopy">
+                                <h2 class="iu-hero-silverTitle">Jsem Silver.</h2>
+                                <p class="iu-hero-silverLead">Pomůžu ti se vším na infoUzelu.</p>
+                                <div id="iuSilverHeroInputHost" class="iu-hero-silverInputHost" data-iu-silver-hero-input-host></div>
+                                <div class="iu-hero-quickActions" role="group" aria-label="Rychlé nástroje">
+                                  <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--cal" id="iuHeroQuickCal" data-iu-hero-quick="cal">Kalendář</button>
+                                  <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--tasks" id="iuHeroQuickTasks" data-iu-hero-quick="tasks">Úkoly</button>
+                                  <button type="button" class="iu-hero-quickBtn iu-hero-quickBtn--notes" id="iuHeroQuickNotes" data-iu-hero-quick="notes">Poznámky</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
+                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card" data-iu-nameday-gender="unknown" aria-label="Svátek">
+                          <p class="iu-holiday-monetize__microcopy" id="iuHolidayMicrocopy">Popřej oslavenci 🎉</p>
+                          <div class="iu-nameday-cta iu-nameday-cta--slotMobile" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
+                            <button type="button" class="silver-weather-btn iu-nameday-wish">
+                              Vytvořit přání
+                            </button>
+                            <button type="button" class="silver-weather-btn iu-nameday-flowers">
+                              Poslat květiny
+                            </button>
+                          </div>
+                        </section>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
+                        <div class="silver-weather-card iu-mini-overview-card iu-mini-overview-card--weather" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="loading" data-iu-silver-wx-layout="ready">
                           <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary"></div>
                           <div class="silver-weather-line2 iu-silver-actionRow" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip"></div>
                           <p class="silver-weather-privacy" id="iuSilverWeatherPrivacy" hidden data-iu-silver-weather-privacy>🔒 Polohu neukládáme.</p>
@@ -410,27 +442,8 @@ style-src 'self' 'unsafe-inline' https:;
                             <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnCity" data-iu-silver-wx-action="manual-city">Nastavit moje město</button>
                           </div>
                         </div>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
-                        <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
-                          <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
-                            <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
-                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount></div>
-                              <div class="iuSportPreviewCardMount" id="iuSportPreviewCardMount" data-iu-sport-preview-mount></div>
-                              <div class="iuFinancePreviewCardMount" id="iuFinancePreviewCardMount" data-iu-finance-preview-mount></div>
-                              <div class="iuHealthPreviewCardMount" id="iuHealthPreviewCardMount" data-iu-health-preview-mount></div>
-                              <div class="iuTravelPreviewCardMount" id="iuTravelPreviewCardMount" data-iu-travel-preview-mount></div>
-                              <div class="iuGamesPreviewCardMount" id="iuGamesPreviewCardMount" data-iu-games-preview-mount></div>
-                              <div class="iuCulturePreviewCardMount" id="iuCulturePreviewCardMount" data-iu-culture-preview-mount></div>
-                              <div class="iuScienceHistoryPreviewCardMount" id="iuScienceHistoryPreviewCardMount" data-iu-science-history-preview-mount></div>
-                              <div class="iuEducationPreviewCardMount" id="iuEducationPreviewCardMount" data-iu-education-preview-mount></div>
-                              <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
-                              <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
-                              <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
-                            </div>
-                          </div>
-                        </section>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorCal" aria-hidden="true"></div>
-                        <div class="silver-calendar-summary-card" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorWeatherCal" aria-hidden="true"></div>
+                        <div class="silver-calendar-summary-card iu-mini-overview-card iu-mini-overview-card--calendar" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
                             <span class="silver-calendar-summary-iconCal iuCalendarSummary__icon" aria-hidden="true">
                               <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
@@ -447,8 +460,8 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                           </div>
                         </div>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTasks" aria-hidden="true"></div>
-                        <div class="silver-calendar-summary-card" id="iuSilverTasksSummaryCard" data-iu-tasks-summary>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorCal" aria-hidden="true"></div>
+                        <div class="silver-calendar-summary-card iu-mini-overview-card iu-mini-overview-card--tasks" id="iuSilverTasksSummaryCard" data-iu-tasks-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
                             <span class="silver-calendar-summary-iconCal iuTasksIcon" aria-hidden="true">
                               <svg class="silver-calendar-summary-svg" viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
@@ -471,6 +484,25 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                           </div>
                         </div>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
+                        <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
+                          <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
+                            <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
+                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount></div>
+                              <div class="iuSportPreviewCardMount" id="iuSportPreviewCardMount" data-iu-sport-preview-mount></div>
+                              <div class="iuFinancePreviewCardMount" id="iuFinancePreviewCardMount" data-iu-finance-preview-mount></div>
+                              <div class="iuHealthPreviewCardMount" id="iuHealthPreviewCardMount" data-iu-health-preview-mount></div>
+                              <div class="iuTravelPreviewCardMount" id="iuTravelPreviewCardMount" data-iu-travel-preview-mount></div>
+                              <div class="iuGamesPreviewCardMount" id="iuGamesPreviewCardMount" data-iu-games-preview-mount></div>
+                              <div class="iuCulturePreviewCardMount" id="iuCulturePreviewCardMount" data-iu-culture-preview-mount></div>
+                              <div class="iuScienceHistoryPreviewCardMount" id="iuScienceHistoryPreviewCardMount" data-iu-science-history-preview-mount></div>
+                              <div class="iuEducationPreviewCardMount" id="iuEducationPreviewCardMount" data-iu-education-preview-mount></div>
+                              <p class="iuSilverTallScrollPlaceholder" data-iu-silver-tall-scroll-placeholder>Obsah připravíme — zde bude scrollovací plocha.</p>
+                              <p class="iuSilverTallScrollProbeLines" aria-hidden="true" data-iu-silver-tall-scroll-probe>Řádek 2 · neutrální shell<br>Řádek 3 · neutrální shell<br>Řádek 4 · neutrální shell<br>Řádek 5 · neutrální shell<br>Řádek 6 · neutrální shell<br>Řádek 7 · neutrální shell<br>Řádek 8 · neutrální shell<br>Řádek 9 · neutrální shell<br>Řádek 10 · neutrální shell</p>
+                              <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
+                            </div>
+                          </div>
+                        </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorBeforeSilver" aria-hidden="true"></div>
                         <div id="iuSilverHomeShellMountPoint" class="iuSilverHomeShellMountPoint" data-iu-silver-shell-mount-point="" aria-hidden="true"></div>
                         <div id="iuSilverHomeShell" class="silver-shell silver-shell--stackConnected">
