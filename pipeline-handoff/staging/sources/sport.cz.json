@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T05:36:26.261234Z",
+  "ingestedAt": "2026-04-24T06:00:09.609269Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-analyza-dilema-sparty-za-ctvrt-miliardy-rekordni-ceskou-posilu-brzdi-zahada-tape-i-drahy-cizinec-5441395",
+      "dt": "2026-04-24T05:54:28Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brzdí",
+        "cizinec",
+        "dilema",
+        "drahý",
+        "miliardy",
+        "posilu",
+        "rekordní",
+        "sparty",
+        "tápe",
+        "záhada",
+        "českou",
+        "čtvrt"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,29 +790,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pořádný flastr pro Bořila! Do konce sezony už si nezahraje",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-disciplinarka-bude-resit-trest-pro-borila-5441899",
-      "dt": "2026-04-23T10:06:54Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bořila",
-        "flastr",
-        "konce",
-        "nezahraje",
-        "pořádný",
-        "sezony"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45169,
+      "bytes": 44938,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:27:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T05:54:28Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+            "publishedAt": "2026-04-24T05:54:28Z"
+          },
           {
             "title": "Pastrňák těžce v mínusu, Boston sérii znovu prohrává. Nečas blízko postupu",
             "publishedAt": "2026-04-24T04:00:00Z"
@@ -873,10 +883,6 @@
           {
             "title": "Král čekal, kdo se k jeho gólu bude hlásit. Nakonec mi zůstal, usmál se",
             "publishedAt": "2026-04-23T20:39:16Z"
-          },
-          {
-            "title": "SESTŘIH: Čeští hokejisté drží v přípravě na MS neporazitelnost, na vídeňském ledě dominovali",
-            "publishedAt": "2026-04-23T06:50:09Z"
           }
         ]
       }

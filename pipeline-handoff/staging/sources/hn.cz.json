@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T05:36:26.261234Z",
+  "ingestedAt": "2026-04-24T06:00:09.609269Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "James Bond v limuzíně ze Šen-čenu. Miliardy na reklamu se čínským automobilkám začínají v Evropě vyplácet, mají za sebou rekordní měsíc",
+      "url": "https://byznys.hn.cz/c1-67870450-james-bond-v-limuzine-ze-sen-cenu-miliardy-za-reklamu-se-cinskym-automobilkam-zacinaji-v-evrope-vyplacet-maji-za-sebou-rekordni-mesic",
+      "dt": "2026-04-24T05:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "automobilkám",
+        "bond",
+        "evropě",
+        "james",
+        "limuzíně",
+        "mají",
+        "miliardy",
+        "měsíc",
+        "reklamu",
+        "rekordní",
+        "sebou",
+        "vyplácet",
+        "začínají",
+        "čenu",
+        "čínským",
+        "šen"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1113,35 +1146,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Skupina Twist se rychle zmenšuje. Přišla o desítky poboček, propouští a chystá reorganizaci se zkušeným spojencem",
-      "url": "https://archiv.hn.cz/c1-67870240-skupina-twist-se-rychle-zmensuje-prisla-o-desitky-pobocek-propousti-a-chysta-reorganizaci-se-zkusenym-spojencem",
-      "dt": "2026-04-23T11:54:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chystá",
-        "desítky",
-        "poboček",
-        "propouští",
-        "přišla",
-        "reorganizaci",
-        "rychle",
-        "skupina",
-        "spojencem",
-        "twist",
-        "zkušeným",
-        "zmenšuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1152,7 +1156,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184136,
+      "bytes": 184156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1189,11 +1193,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T05:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 36,
+          "zdravi": 2,
           "zpravy": 2
         },
         "drop_counts": {
@@ -1206,6 +1210,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "James Bond v limuzíně ze Šen-čenu. Miliardy na reklamu se čínským automobilkám začínají v Evropě vyplácet, mají za sebou rekordní měsíc",
+            "publishedAt": "2026-04-24T05:40:00Z"
+          },
           {
             "title": "Dezinformace o větrných elektrárnách nabírají na síle. Kdo a proč je šíří v Česku?",
             "publishedAt": "2026-04-24T04:05:00Z"
@@ -1232,10 +1240,6 @@
           },
           {
             "title": "SpringTEEN letos nabídne program také dětem s poruchou autistického spektra",
-            "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "Debut Belcea Quartet na Pražském jaru bude jako dýchat vzduch z jiné planety",
             "publishedAt": "2026-04-23T22:00:00Z"
           }
         ]
