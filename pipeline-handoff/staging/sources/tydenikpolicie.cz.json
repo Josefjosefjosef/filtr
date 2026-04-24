@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T16:05:10.888161Z",
+  "ingestedAt": "2026-04-24T16:30:07.182890Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič kamionu poškodil na železničním přejezdu na Třebíčsku spouštějící se závoru",
+      "url": "https://tydenikpolicie.cz/ridic-kamionu-poskodil-na-zeleznicnim-prejezdu-na-trebicsku-spoustejici-se-zavoru/",
+      "dt": "2026-04-24T16:02:31Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kamionu",
+        "poškodil",
+        "přejezdu",
+        "spouštějící",
+        "třebíčsku",
+        "závoru",
+        "řidič",
+        "železničním"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,29 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dva výrazné sportovní úspěchy ostravských strážníků",
-      "url": "https://tydenikpolicie.cz/dva-vyrazne-sportovni-uspechy-ostravskych-strazniku/",
-      "dt": "2026-04-24T07:18:10Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dva",
-        "ostravských",
-        "sportovní",
-        "strážníků",
-        "výrazné",
-        "úspěchy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -264,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15489,
+      "bytes": 15758,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -301,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:43:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:02:31Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -316,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič kamionu poškodil na železničním přejezdu na Třebíčsku spouštějící se závoru",
+            "publishedAt": "2026-04-24T16:02:31Z"
+          },
           {
             "title": "Policisté na Zlínsku pátrali po mladistvém chlapci",
             "publishedAt": "2026-04-24T11:43:57Z"
@@ -343,10 +349,6 @@
           {
             "title": "Hledaný cizinec řekl plzeňským strážníkům, že zná svá práva, a oni že nemají právo po něm požadovat jeho totožnost",
             "publishedAt": "2026-04-24T07:54:24Z"
-          },
-          {
-            "title": "Strážníci v Brně velmi rychle dopadli ženu podezřelou z okradení spícího muže",
-            "publishedAt": "2026-04-24T07:50:06Z"
           }
         ]
       }

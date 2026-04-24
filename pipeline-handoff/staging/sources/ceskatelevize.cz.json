@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T16:05:10.888161Z",
+  "ingestedAt": "2026-04-24T16:30:07.182890Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Potřebujeme nové zdroje, uvedla k rozpočtu šéfka Evropské komise",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/potrebujeme-nove-zdroje-uvedla-k-rozpoctu-sefka-evropske-komise-372773",
+      "dt": "2026-04-24T16:06:41Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropské",
+        "komise",
+        "nové",
+        "potřebujeme",
+        "rozpočtu",
+        "uvedla",
+        "zdroje",
+        "šéfka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,27 +770,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Praha a Středočeský kraj diskutují o vzniku kampusu pro tisíce středoškolských studentů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/praha-a-stredocesky-kraj-diskutuji-o-vzniku-kampusu-pro-tisice-stredoskolskych-studentu-372727",
-      "dt": "2026-04-24T04:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Alcaraz nebude obhajovat titul na Roland Garros, zradilo ho zraněné zápěstí",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/alcaraz-nebude-obhajovat-titul-na-roland-garros-zradilo-ho-zranene-zapesti-156433",
+      "dt": "2026-04-24T16:19:26Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "diskutují",
-        "kampusu",
-        "kraj",
-        "praha",
-        "studentů",
-        "středočeský",
-        "středoškolských",
-        "tisíce",
-        "vzniku"
+        "alcaraz",
+        "garros",
+        "nebude",
+        "obhajovat",
+        "roland",
+        "titul",
+        "zradilo",
+        "zraněné",
+        "zápěstí"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -773,7 +798,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko – Rakousko 1:0",
+      "title": "Česko – Rakousko 2:0",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-rakousko-156432",
       "dt": "2026-04-24T14:43:00Z",
       "media_raw": "ČT sport",
@@ -1503,31 +1528,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kopřiva v Madridu dovolil čínskému soupeři jen dva gemy",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/kopriva-v-madridu-dovolil-cinskemu-souperi-jen-dva-gemy-156403",
-      "dt": "2026-04-22T10:50:19Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dovolil",
-        "dva",
-        "gemy",
-        "jen",
-        "kopřiva",
-        "madridu",
-        "soupeři",
-        "čínskému"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1538,7 +1538,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42912,
+      "bytes": 42545,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1598,7 +1598,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:55:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:06:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1615,6 +1615,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Potřebujeme nové zdroje, uvedla k rozpočtu šéfka Evropské komise",
+            "publishedAt": "2026-04-24T16:06:41Z"
+          },
           {
             "title": "Celníci letos zadrželi už přes sto zásilek nelegálních léků, hlavně steroidy či přípravky na erekci",
             "publishedAt": "2026-04-24T14:55:33Z"
@@ -1642,10 +1646,6 @@
           {
             "title": "Rakouská dětská výživa obsahovala patnáct mikrogramů jedu",
             "publishedAt": "2026-04-24T13:10:52Z"
-          },
-          {
-            "title": "Válka s Íránem vyčerpala zásoby klíčových zbraní armády USA, píší NYT",
-            "publishedAt": "2026-04-24T13:08:29Z"
           }
         ]
       }
@@ -1657,7 +1657,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38207,
+      "bytes": 38253,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1694,7 +1694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:19:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1710,7 +1710,11 @@
         },
         "sample_titles": [
           {
-            "title": "Česko – Rakousko 1:0",
+            "title": "Alcaraz nebude obhajovat titul na Roland Garros, zradilo ho zraněné zápěstí",
+            "publishedAt": "2026-04-24T16:19:26Z"
+          },
+          {
+            "title": "Česko – Rakousko 2:0",
             "publishedAt": "2026-04-24T14:43:00Z"
           },
           {
@@ -1736,10 +1740,6 @@
           {
             "title": "Aktivitu Třince korunoval sváteční střelec. Davidovi jsem poslal brambor na nohy, smál se Flynn",
             "publishedAt": "2026-04-24T04:00:00Z"
-          },
-          {
-            "title": "Prospali jsme začátek. Nemá cenu se v tom babrat, řekl o porážce Sedlák",
-            "publishedAt": "2026-04-23T20:51:17Z"
           }
         ]
       }
@@ -1751,7 +1751,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77444,
+      "bytes": 77454,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

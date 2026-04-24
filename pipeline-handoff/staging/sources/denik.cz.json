@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T16:05:10.888161Z",
+  "ingestedAt": "2026-04-24T16:30:07.182890Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Americké ministerstvo spravedlnosti chce zavést federální popravy zastřelením",
+      "url": "https://www.denik.cz/ze_sveta/popravy-zastrelenim-usa-donald-trump.html",
+      "dt": "2026-04-24T16:07:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "americké",
+        "chce",
+        "federální",
+        "ministerstvo",
+        "popravy",
+        "spravedlnosti",
+        "zastřelením",
+        "zavést"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA pozvou na summit G20 na Floridě Rusko, mluví se o účasti Putina",
-      "url": "https://www.denik.cz/ze_sveta/summit-zemi-g20-rusko-vladimir-putin-pozvanka.html",
-      "dt": "2026-04-24T05:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "floridě",
-        "g20",
-        "mluví",
-        "pozvou",
-        "putina",
-        "rusko",
-        "summit",
-        "usa",
-        "účasti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31107,
+      "bytes": 30979,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:07:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -715,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Americké ministerstvo spravedlnosti chce zavést federální popravy zastřelením",
+            "publishedAt": "2026-04-24T16:07:00Z"
+          },
           {
             "title": "Nemocnice ve Varech posílila bezpečnost, první v ČR spustila detekci dronů",
             "publishedAt": "2026-04-24T14:10:00Z"
@@ -742,10 +745,6 @@
           {
             "title": "Neviděli jste ho? Policisté pátrají po pohřešovaném a nemocném muži z Opavy",
             "publishedAt": "2026-04-24T12:20:00Z"
-          },
-          {
-            "title": "Ve Španělsku odsoudili Čecha na 30 let. Měl zabít celníka",
-            "publishedAt": "2026-04-24T12:16:00Z"
           }
         ]
       }
