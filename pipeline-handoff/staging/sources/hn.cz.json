@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T13:45:07.995267Z",
+  "ingestedAt": "2026-04-24T14:10:01.243461Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ceny benzinu a nafty bude nově regulovat vláda. Poslanci koalice přehlasovali Senát",
+      "url": "https://domaci.hn.cz/c1-67870920-ceny-benzinu-a-nafty-bude-moci-regulovat-vlada-poslanci-koalice-prehlasovali-senat",
+      "dt": "2026-04-24T13:47:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "koalice",
+        "nafty",
+        "nově",
+        "poslanci",
+        "přehlasovali",
+        "regulovat",
+        "senát",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1101,38 +1128,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Změny mají 200 stran, to je jako román přečtený za víkend, odmítá Mrázová kritiku rozsáhlých úprav stavebního zákona",
-      "url": "https://domaci.hn.cz/c1-67870410-zmeny-maji-200-stran-to-je-jako-roman-precteny-za-vikend-odmita-mrazova-kritiku-rozsahlych-uprav-stavebniho-zakona",
-      "dt": "2026-04-23T15:30:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "200",
-        "jako",
-        "kritiku",
-        "mají",
-        "mrázová",
-        "odmítá",
-        "přečtený",
-        "román",
-        "rozsáhlých",
-        "stavebního",
-        "stran",
-        "víkend",
-        "změny",
-        "zákona",
-        "úprav"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1143,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184398,
+      "bytes": 184414,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1180,12 +1175,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T13:47:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
+          "finance": 38,
           "zdravi": 1,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1197,6 +1192,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ceny benzinu a nafty bude nově regulovat vláda. Poslanci koalice přehlasovali Senát",
+            "publishedAt": "2026-04-24T13:47:00Z"
+          },
           {
             "title": "Lidovci zvolili hejtmana Grolicha svým předsedou. Chce &bdquo;nové lidovce&ldquo; a tlustou čáru za minulostí",
             "publishedAt": "2026-04-24T13:00:00Z"
@@ -1224,10 +1223,6 @@
           {
             "title": "Chcete lékařskou diagnózu od AI chatbota? Bezpečnější bude, když si hodíte korunou",
             "publishedAt": "2026-04-24T10:06:00Z"
-          },
-          {
-            "title": "Američanům došly některé klíčové zbraně, píše NYT. Konflikt na Blízkém východě ohrozil jejich schopnost čelit Rusku a Číně",
-            "publishedAt": "2026-04-24T10:02:00Z"
           }
         ]
       }

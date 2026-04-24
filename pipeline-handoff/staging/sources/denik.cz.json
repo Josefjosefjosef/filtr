@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T13:45:07.995267Z",
+  "ingestedAt": "2026-04-24T14:10:01.243461Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Chorvatsko hodlá přitvrdit pravidla. Dotkne se to turistických ubytování",
+      "url": "https://www.denik.cz/staty-eu/chorvatsko-tvrdsi-pravidla-ubytovani-seda-zona-pronajimani.html",
+      "dt": "2026-04-24T13:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chorvatsko",
+        "dotkne",
+        "hodlá",
+        "pravidla",
+        "přitvrdit",
+        "turistických",
+        "ubytování"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Motorkáři z celé republiky se sjeli do Hněvětic. Otec Ondřej požehnal účastníkům",
-      "url": "https://www.denik.cz/ctenar-reporter/motorkari-z-cele-republiky-se-sjeli-do-hnevetic-otec-ondrej-pozehnal-ucastnikum.html",
-      "dt": "2026-04-24T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "celé",
-        "hněvětic",
-        "motorkáři",
-        "ondřej",
-        "otec",
-        "požehnal",
-        "republiky",
-        "sjeli",
-        "účastníkům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30158,
+      "bytes": 30040,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T13:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T13:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -718,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chorvatsko hodlá přitvrdit pravidla. Dotkne se to turistických ubytování",
+            "publishedAt": "2026-04-24T13:10:00Z"
+          },
           {
             "title": "Maximální ceny nafty i benzinu o víkendu opět o vyšší desítky haléřů vzrostou",
             "publishedAt": "2026-04-24T13:03:00Z"
@@ -745,10 +747,6 @@
           {
             "title": "Fatální útok medvěda v Polsku: Bylo slyšet kvílení a řev, popsal smrt ženy bratr",
             "publishedAt": "2026-04-24T11:27:00Z"
-          },
-          {
-            "title": "Utajená akce. Ukrajina prý drony zasáhla stanoviště kontrarozvědky FBS. Je video",
-            "publishedAt": "2026-04-24T11:16:00Z"
           }
         ]
       }

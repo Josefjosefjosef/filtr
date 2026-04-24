@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T13:45:07.995267Z",
+  "ingestedAt": "2026-04-24T14:10:01.243461Z",
   "items": [
     {
       "section": "aktualne",
@@ -438,21 +438,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Novým šéfem lidovců je Grolich. Už nechceme jen přežívat, chceme vyhrávat, řekl",
+      "title": "Novým šéfem lidovců je Grolich. Prvním místopředsedou byl zvolen Činčila",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/lidovci-si-zvoli-nove-vedeni-vyborneho-zrejme-vystrida-grolich-372749",
       "dt": "2026-04-24T08:16:54Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "chceme",
         "grolich",
-        "jen",
         "lidovců",
-        "nechceme",
+        "místopředsedou",
         "novým",
-        "přežívat",
-        "vyhrávat",
-        "řekl",
+        "prvním",
+        "zvolen",
+        "činčila",
         "šéfem"
       ],
       "feedCategory": "zpravy",
@@ -760,6 +758,35 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šulc ohlásil v Lyonu návrat po zranění. Liga mistrů je pro nás cíl už od startu sezony, říká",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sulc-ohlasil-v-lyonu-navrat-po-zraneni-liga-mistru-je-pro-nas-cil-uz-od-startu-sezony-rika-156431",
+      "dt": "2026-04-24T13:46:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "cíl",
+        "liga",
+        "lyonu",
+        "mistrů",
+        "nás",
+        "návrat",
+        "ohlásil",
+        "sezony",
+        "startu",
+        "zranění",
+        "říká",
+        "šulc"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1497,30 +1524,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chrudim ukončila neporazitelnost Plzně a sahá po obhajobě titulu",
-      "url": "https://sport.ceskatelevize.cz/clanek/futsal/chrudim-ukoncila-neporazitelnost-plzne-a-saha-po-obhajobe-titulu-156401",
-      "dt": "2026-04-22T08:57:03Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chrudim",
-        "neporazitelnost",
-        "obhajobě",
-        "plzně",
-        "sahá",
-        "titulu",
-        "ukončila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1531,7 +1534,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43839,
+      "bytes": 43852,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1650,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37861,
+      "bytes": 38079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1687,7 +1690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:49:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T13:46:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1702,6 +1705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šulc ohlásil v Lyonu návrat po zranění. Liga mistrů je pro nás cíl už od startu sezony, říká",
+            "publishedAt": "2026-04-24T13:46:45Z"
+          },
           {
             "title": "Plíšková porazila Sakkariovou a postoupila v Madridu do třetího kola",
             "publishedAt": "2026-04-24T11:49:39Z"
@@ -1729,10 +1736,6 @@
           {
             "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
             "publishedAt": "2026-04-23T18:55:41Z"
-          },
-          {
-            "title": "Šelmy oddálily konec, Liberec porazily 3:0",
-            "publishedAt": "2026-04-23T18:24:44Z"
           }
         ]
       }
@@ -1744,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77185,
+      "bytes": 77324,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
