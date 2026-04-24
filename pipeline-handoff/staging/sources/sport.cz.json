@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T06:40:37.690221Z",
+  "ingestedAt": "2026-04-24T07:00:03.153652Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "McCollum rozhodl v dramatickém závěru o druhé výhře Atlanty v play off NBA",
+      "url": "https://www.sport.cz/clanek/basketbal-mccollum-rozhodl-v-dramatickem-zaveru-o-druhe-vyhre-atlanty-v-play-off-nba-5442320",
+      "dt": "2026-04-24T06:41:21Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "atlanty",
+        "dramatickém",
+        "druhé",
+        "mccollum",
+        "nba",
+        "off",
+        "play",
+        "rozhodl",
+        "výhře",
+        "závěru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Druholigový Černihiv bez střely na bránu a navíc po dlouhém oslabení postoupil do finále poháru",
-      "url": "https://www.sport.cz/clanek/fotbal-druholigovy-cernihiv-bez-strely-na-branu-a-navic-po-dlouhem-oslabeni-postoupil-do-finale-poharu-5441982",
-      "dt": "2026-04-23T15:06:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bránu",
-        "dlouhém",
-        "druholigový",
-        "finále",
-        "navíc",
-        "oslabení",
-        "poháru",
-        "postoupil",
-        "střely",
-        "černihiv"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45338,
+      "bytes": 45424,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:01:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:41:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "McCollum rozhodl v dramatickém závěru o druhé výhře Atlanty v play off NBA",
+            "publishedAt": "2026-04-24T06:41:21Z"
+          },
           {
             "title": "Nová formule poprvé na trati. Ohromila i Verstappena",
             "publishedAt": "2026-04-24T06:01:12Z"
@@ -874,10 +878,6 @@
           {
             "title": "Saúdskou Arábii povede na MS řecký trenér Donis",
             "publishedAt": "2026-04-23T21:03:06Z"
-          },
-          {
-            "title": "Tvrďák Musil jako rozený kanonýr. Přikopl si Flynnovu bramboru a vystřelil Třinci druhý bod",
-            "publishedAt": "2026-04-23T19:59:19Z"
           }
         ]
       }

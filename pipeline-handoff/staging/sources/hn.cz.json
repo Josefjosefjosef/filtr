@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T06:40:37.690221Z",
+  "ingestedAt": "2026-04-24T07:00:03.153652Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bance Moneta vzrostl zisk v prvním čtvrtletí o osm procent, vydělala 1,6 miliardy korun",
+      "url": "https://byznys.hn.cz/c1-67870700-bance-moneta-vzrostl-zisk-v-prvnim-ctvrtleti-o-osm-procent-vydelala-1-6-miliardy-korun",
+      "dt": "2026-04-24T06:26:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bance",
+        "korun",
+        "miliardy",
+        "moneta",
+        "osm",
+        "procent",
+        "prvním",
+        "vydělala",
+        "vzrostl",
+        "zisk",
+        "čtvrtletí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1122,31 +1150,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Schváleno. Ukrajina dostane půjčku 90 miliard od EU, zemi má zachránit před bankrotem",
-      "url": "https://zahranicni.hn.cz/c1-67870460-schvaleno-ukrajina-dostane-pujcku-90-miliard-od-eu-zemi-ma-zachranit-pred-bankrotem",
-      "dt": "2026-04-23T12:16:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bankrotem",
-        "dostane",
-        "miliard",
-        "půjčku",
-        "schváleno",
-        "ukrajina",
-        "zachránit",
-        "zemi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184731,
+      "bytes": 184574,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1194,7 +1197,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:26:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1211,6 +1214,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bance Moneta vzrostl zisk v prvním čtvrtletí o osm procent, vydělala 1,6 miliardy korun",
+            "publishedAt": "2026-04-24T06:26:00Z"
+          },
           {
             "title": "James Bond v limuzíně ze Šen-čenu. Miliardy na reklamu se čínským automobilkám začínají v Evropě vyplácet, mají za sebou rekordní měsíc",
             "publishedAt": "2026-04-24T05:40:00Z"
@@ -1237,10 +1244,6 @@
           },
           {
             "title": "Když kolo spojuje i vydělává. Jak v Česku sílí fenomén social rides a čím jsou společné vyjížďky zajímavé nejen pro firmy",
-            "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "Floex Ensemble s robotickým bubeníkem Josefem. Zazní nejen herní soundtracky a mladí si naprogramují beaty",
             "publishedAt": "2026-04-23T22:00:00Z"
           }
         ]

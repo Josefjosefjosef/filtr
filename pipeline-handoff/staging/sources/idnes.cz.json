@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-24T06:40:37.690221Z",
+  "ingestedAt": "2026-04-24T07:00:03.153652Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "VIDEO: V americkém státu Oklahoma řádilo tornádo. Řada budov je srovnaná se zemí",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/oklahomske-mesto-enid-zasahlo-tornado-nikdo-nebyl-tezce-zranen.A260424_075553_zahranicni_lysa",
+      "dt": "2026-04-24T06:40:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "americkém",
+        "budov",
+        "oklahoma",
+        "srovnaná",
+        "státu",
+        "tornádo",
+        "zemí",
+        "řada",
+        "řádilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -754,32 +780,6 @@
         "vystrčil",
         "vůči",
         "závazky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opozice jednala s šéfy ČT a ČRo, Klempíř chyběl. Srabáctví, vzkázal mu Rakušan",
-      "url": "https://www.idnes.cz/zpravy/domaci/opozice-koalice-stan-klempir-rene-zavoral-hynek-chudarek.A260423_093818_domaci_ikro",
-      "dt": "2026-04-23T15:01:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chyběl",
-        "jednala",
-        "klempíř",
-        "opozice",
-        "rakušan",
-        "srabáctví",
-        "vzkázal",
-        "čro",
-        "šéfy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50581,
+      "bytes": 50164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,7 +1613,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1630,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VIDEO: V americkém státu Oklahoma řádilo tornádo. Řada budov je srovnaná se zemí",
+            "publishedAt": "2026-04-24T06:40:00Z"
+          },
           {
             "title": "Pilot u Křivoklátu ignoroval čtyři varování. Nové detaily k letu, který dělily vteřiny od tragédie",
             "publishedAt": "2026-04-24T06:19:00Z"
@@ -1657,10 +1661,6 @@
           {
             "title": "Jak platit za rezidentní parkování? Zjistěte si sami, vzkázal soud řidičům v Brně",
             "publishedAt": "2026-04-24T04:13:00Z"
-          },
-          {
-            "title": "Sněmovna znovu řeší zákon o regulaci cen pohonných hmot, novelu vrátil Senát",
-            "publishedAt": "2026-04-24T04:10:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T06:40:37.690221Z",
+  "ingestedAt": "2026-04-24T07:00:03.153652Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
+      "url": "https://ekonomickydenik.cz/cesi-kteri-koupili-dluhopisy-soleku-nedostanou-nic/",
+      "dt": "2026-04-24T06:54:50Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "byznys",
+        "chile",
+        "dluhopisy",
+        "koupili",
+        "kteří",
+        "nedostanou",
+        "nic",
+        "padl",
+        "skoro",
+        "soleku",
+        "solární",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -765,33 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "105 spících miliard na účtech. Mají peníze připadnout státu nebo bance?",
-      "url": "https://ekonomickydenik.cz/105-spicich-miliard-na-uctech/",
-      "dt": "2026-04-22T06:52:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "105",
-        "bance",
-        "mají",
-        "miliard",
-        "nebo",
-        "peníze",
-        "připadnout",
-        "spících",
-        "státu",
-        "účtech"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72147,
+      "bytes": 71943,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,10 +841,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:54:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:54:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
+          "zdravi": 1,
+          "finance": 25,
           "zpravy": 3,
           "sport": 1
         },
@@ -856,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
+            "publishedAt": "2026-04-24T06:54:50Z"
+          },
           {
             "title": "Až 15 tisíc korun měsíčně a stáž. CSG Nadační fond podpoří vysokoškoláky",
             "publishedAt": "2026-04-24T05:54:51Z"
@@ -883,10 +890,6 @@
           {
             "title": "Evropa tlačí zelenou agendu opět do popředí. Slunce a vítr mají porazit Putina a další diktátory",
             "publishedAt": "2026-04-23T13:19:52Z"
-          },
-          {
-            "title": "Turecko zakazuje sociální sítě dětem do 15 let. Podobný krok zvažuje Babiš i Pavel",
-            "publishedAt": "2026-04-23T12:23:48Z"
           }
         ]
       }
