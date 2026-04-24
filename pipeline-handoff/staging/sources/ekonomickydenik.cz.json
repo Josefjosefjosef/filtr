@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T17:39:30.603633Z",
+  "ingestedAt": "2026-04-24T18:01:10.244752Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Princ Harry odstraňoval miny na Ukrajině. Připomněl i princeznu Dianu",
+      "url": "https://ekonomickydenik.cz/princ-harry-miny-ukrajina-diana/",
+      "dt": "2026-04-24T17:44:45Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dianu",
+        "harry",
+        "miny",
+        "odstraňoval",
+        "princ",
+        "princeznu",
+        "připomněl",
+        "ukrajině"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,31 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Armáda mění pravidla: Školy otevřou dveře civilním firmám",
-      "url": "https://ekonomickydenik.cz/armada-meni-pravidla-stredoskolskeho-vzdelavani/",
-      "dt": "2026-04-23T05:37:43Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armáda",
-        "civilním",
-        "dveře",
-        "firmám",
-        "mění",
-        "otevřou",
-        "pravidla",
-        "školy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72648,
+      "bytes": 72279,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T17:05:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T17:44:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -857,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Princ Harry odstraňoval miny na Ukrajině. Připomněl i princeznu Dianu",
+            "publishedAt": "2026-04-24T17:44:45Z"
+          },
           {
             "title": "Lidovci mění vizuál i vedení. Mají nového předsedu i logo",
             "publishedAt": "2026-04-24T17:05:48Z"
@@ -884,10 +888,6 @@
           {
             "title": "Civilista s puškou v ruce: Proč tisíce Čechů dobrovolně mění pohodlí za armádní dril?",
             "publishedAt": "2026-04-24T10:48:24Z"
-          },
-          {
-            "title": "Omluví se Turek? Za parazity a chátru ho tepe Středula i Babiš",
-            "publishedAt": "2026-04-24T10:39:39Z"
           }
         ]
       }
