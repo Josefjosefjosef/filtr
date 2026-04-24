@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-24T20:36:34.434092Z",
+  "ingestedAt": "2026-04-24T20:59:19.575422Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie v Třebíči odhalila v týdnu tři padělané řidičáky. Pomohl alkohol",
+      "url": "https://www.idnes.cz/jihlava/zpravy/cizinecka-police-vysocina-ridicsky-prukaz-padelek.A260424_212944_jihlava-zpravy_herp",
+      "dt": "2026-04-24T20:25:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "alkohol",
+        "odhalila",
+        "padělané",
+        "policie",
+        "pomohl",
+        "týdnu",
+        "třebíči",
+        "tři",
+        "řidičáky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -760,30 +786,6 @@
         "spor",
         "tykačův",
         "španělským"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Putin by se mohl zúčastnit summitu G20 na Floridě, uvedl Kreml",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-putin-usa-florida-summit-g20.A260424_145245_zahranicni_kha",
-      "dt": "2026-04-24T13:16:57Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "floridě",
-        "g20",
-        "kreml",
-        "putin",
-        "summitu",
-        "uvedl",
-        "zúčastnit"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,8 +1583,8 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48844,
-      "reason": "fetch_timeout",
+      "bytes": 48918,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 30,
@@ -1618,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T19:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T20:25:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1635,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie v Třebíči odhalila v týdnu tři padělané řidičáky. Pomohl alkohol",
+            "publishedAt": "2026-04-24T20:25:00Z"
+          },
           {
             "title": "Lufthansa s dceřinými aerolinkami zpoplatní kabinový kufr. Kolik to bude stát",
             "publishedAt": "2026-04-24T19:16:00Z"
@@ -1662,10 +1668,6 @@
           {
             "title": "Popravčí četa, smrtící injekce. Trumpova vláda chce rozšířit škálu trestů smrti",
             "publishedAt": "2026-04-24T17:25:00Z"
-          },
-          {
-            "title": "Rusko nestíhá nahrazovat ztráty, mobilizace je ve hře, hlásí estonská rozvědka",
-            "publishedAt": "2026-04-24T17:20:00Z"
           }
         ]
       }

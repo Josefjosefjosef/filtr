@@ -1,8 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T20:36:34.434092Z",
+  "ingestedAt": "2026-04-24T20:59:19.575422Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neapol přejela Cremonu",
+      "url": "https://www.sport.cz/clanek/fotbal-serie-a-neapol-prejela-cremonu-5442547",
+      "dt": "2026-04-24T20:50:32Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "cremonu",
+        "neapol",
+        "přejela"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Union Berlín ani druhý zápas pod trenérkou Etaovou nevyhrál",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-union-berlin-ani-druhy-zapas-pod-trenerkou-etaovou-nevyhral-5442544",
+      "dt": "2026-04-24T20:32:05Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "berlín",
+        "druhý",
+        "etaovou",
+        "nevyhrál",
+        "trenérkou",
+        "union",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -694,56 +738,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "FANTASY: Stejný kapitán! Redaktoři poslali pásku do Edenu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-fantasy-stejny-kapitan-redaktori-poslali-pasku-do-edenu-5442346",
-      "dt": "2026-04-24T13:42:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "edenu",
-        "fantasy",
-        "kapitán",
-        "poslali",
-        "pásku",
-        "redaktoři",
-        "stejný"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Salač byl v tréninku Moto2 v Jerezu dvacátý a pojede už první část kvalifikace",
-      "url": "https://www.sport.cz/clanek/moto-motocykly-salac-byl-v-treninku-moto2-v-jerezu-dvacaty-a-pojede-uz-prvni-cast-kvalifikace-5442367",
-      "dt": "2026-04-24T13:35:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dvacátý",
-        "jerezu",
-        "kvalifikace",
-        "moto2",
-        "pojede",
-        "první",
-        "salač",
-        "tréninku",
-        "část"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -754,7 +748,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40359,
+      "bytes": 39819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -791,7 +785,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T20:13:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T20:50:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -806,6 +800,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neapol přejela Cremonu",
+            "publishedAt": "2026-04-24T20:50:32Z"
+          },
+          {
+            "title": "Union Berlín ani druhý zápas pod trenérkou Etaovou nevyhrál",
+            "publishedAt": "2026-04-24T20:32:05Z"
+          },
           {
             "title": "Basketbalisté Barcelony si čtvrtfinále Evropské ligy nezahrají",
             "publishedAt": "2026-04-24T20:13:07Z"
@@ -829,14 +831,6 @@
           {
             "title": "Ze zámoří se k reprezentaci připojí šest hokejistů",
             "publishedAt": "2026-04-24T18:26:59Z"
-          },
-          {
-            "title": "Zimní olympiáda v průšvihu. V Itálii sčítají obří ztráty",
-            "publishedAt": "2026-04-24T17:33:43Z"
-          },
-          {
-            "title": "Do finále volejbalové extraligy vstoupilo lépe Karlovarsko",
-            "publishedAt": "2026-04-24T18:56:59Z"
           }
         ]
       }
