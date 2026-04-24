@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-24T11:54:20.493302Z",
+  "ingestedAt": "2026-04-24T12:15:27.209027Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Zdražení na víkend. Tady jsou nové maximální ceny benzinu a nafty",
+      "url": "https://www.penize.cz/doprava/488813-maximalni-ceny-benzinu-a-nafty-na-vikend-a-pondeli",
+      "dt": "2026-04-24T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "maximální",
+        "nafty",
+        "nové",
+        "tady",
+        "víkend",
+        "zdražení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -480,29 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vláda změní penzijko. Jak by pomohlo snížení poplatků",
-      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488597-proc-v-penzijnim-sporeni-nenasporite-poplatky-sezerou-i-pul-vynosu",
-      "dt": "2026-04-21T06:12:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "penzijko",
-        "pomohlo",
-        "poplatků",
-        "snížení",
-        "vláda",
-        "změní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17967,
+      "bytes": 18064,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,11 +552,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 3
+          "zpravy": 4,
+          "finance": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -566,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdražení na víkend. Tady jsou nové maximální ceny benzinu a nafty",
+            "publishedAt": "2026-04-24T13:58:00Z"
+          },
           {
             "title": "Důchodci jako OSVČ: Jak získat novou slevu a ušetřit na odvodech",
             "publishedAt": "2026-04-24T05:05:00Z"
@@ -593,10 +599,6 @@
           {
             "title": "Změna pro pracující důchodce. Dostanou další odměnu, chystá Juchelka",
             "publishedAt": "2026-04-23T05:00:00Z"
-          },
-          {
-            "title": "Spořitelna má soutěž a speciální karty k filmu Star Wars: Mandalorian a Grogu",
-            "publishedAt": "2026-04-22T18:30:00Z"
           }
         ]
       }

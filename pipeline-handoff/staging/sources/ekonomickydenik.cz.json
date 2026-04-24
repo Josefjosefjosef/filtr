@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T11:54:20.493302Z",
+  "ingestedAt": "2026-04-24T12:15:27.209027Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Bývalý ministr odchází z Přísahy. Je to neférové a účelové, zní z hnutí",
+      "url": "https://ekonomickydenik.cz/byvaly-ministr-odchazi-prisaha/",
+      "dt": "2026-04-24T11:53:26Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bývalý",
+        "hnutí",
+        "ministr",
+        "neférové",
+        "odchází",
+        "přísahy",
+        "zní",
+        "účelové"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,32 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec cigaret pro ročníky po roce 2008. Inspirace pro Česko? Šťastný nesouhlasí",
-      "url": "https://ekonomickydenik.cz/konec-cigaret-pro-rocniky-po-roce-2008/",
-      "dt": "2026-04-22T13:53:33Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "2008",
-        "cigaret",
-        "inspirace",
-        "konec",
-        "nesouhlasí",
-        "roce",
-        "ročníky",
-        "česko",
-        "šťastný"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72849,
+      "bytes": 73118,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:48:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:53:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -860,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bývalý ministr odchází z Přísahy. Je to neférové a účelové, zní z hnutí",
+            "publishedAt": "2026-04-24T11:53:26Z"
+          },
           {
             "title": "Civilista s puškou v ruce: Proč tisíce Čechů dobrovolně mění pohodlí za armádní dril?",
             "publishedAt": "2026-04-24T10:48:24Z"
@@ -887,10 +890,6 @@
           {
             "title": "Tři ceny u jednoho výrobku? Lidé se cítí zmateně, říká ombudsman Fialka",
             "publishedAt": "2026-04-24T07:55:23Z"
-          },
-          {
-            "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
-            "publishedAt": "2026-04-24T06:54:50Z"
           }
         ]
       }

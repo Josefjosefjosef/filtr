@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T11:54:20.493302Z",
+  "ingestedAt": "2026-04-24T12:15:27.209027Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "5 chyb, kvůli kterým spíte hůř. Dělá je skoro každý",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/co-muze-stat-za-spatnym-spankem-5-veci/",
+      "dt": "2026-04-24T12:03:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chyb",
+        "dělá",
+        "hůř",
+        "každý",
+        "kvůli",
+        "skoro",
+        "spíte"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -249,34 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nebezpecny-toxin-obsahuje-44-kojeneckych-vyziv-podivejte-se-zda-nekterou-nemate-doma/",
-      "dt": "2026-04-23T12:03:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "doma",
-        "kojeneckých",
-        "nemáte",
-        "obsahuje",
-        "orgánů",
-        "podívejte",
-        "selhání",
-        "toxin",
-        "vede",
-        "výživ",
-        "zda"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97145,
+      "bytes": 99101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,11 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:41:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:03:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -340,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "5 chyb, kvůli kterým spíte hůř. Dělá je skoro každý",
+            "publishedAt": "2026-04-24T12:03:00Z"
+          },
           {
             "title": "Mohla být dávka jedu na krysy v dětské výživě smrtelná? Policie už zná její množství",
             "publishedAt": "2026-04-24T10:41:29Z"
@@ -367,10 +367,6 @@
           {
             "title": "Toxický koktejl v každém šluku: Nelegální tabák je výrazně nebezpečnější než běžné cigarety",
             "publishedAt": "2026-04-24T05:00:00Z"
-          },
-          {
-            "title": "Rakovinu může odhalit dříve, než přijdou příznaky. Nový krevní test přijde na pár stovek",
-            "publishedAt": "2026-04-23T14:39:00Z"
           }
         ]
       }

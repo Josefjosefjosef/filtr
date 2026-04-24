@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-24T11:54:20.493302Z",
+  "ingestedAt": "2026-04-24T12:15:27.209027Z",
   "items": [
     {
       "section": "veda",
@@ -20,6 +20,33 @@
         "položek",
         "toto",
         "vypnuté"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
+      "url": "https://www.zive.cz/clanky/chatgpt-utika-konkurenci-novy-model-gpt-55-pokoril-claude-opus-47-i-gemini-31-pro/sc-3-a-240855/default.aspx",
+      "dt": "2026-04-24T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chatgpt",
+        "claude",
+        "gemini",
+        "gpt",
+        "konkurenci",
+        "model",
+        "nový",
+        "opus",
+        "pokořil",
+        "utíká"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -940,34 +967,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Velké změny pro mobily v roce 2027. Návrat vyměnitelných baterií může zhatit klička v zákoně",
-      "url": "https://mobilmania.zive.cz/clanky/velke-zmeny-pro-mobily-v-roce-2027-navrat-vymenitelnych-baterii-muze-zhatit-klicka-v-zakone/sc-3-a-1364603/default.aspx",
-      "dt": "2026-04-21T14:15:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "2027",
-        "baterií",
-        "klička",
-        "mobily",
-        "návrat",
-        "roce",
-        "velké",
-        "vyměnitelných",
-        "zhatit",
-        "změny",
-        "zákoně"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -978,7 +977,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23389,
+      "bytes": 23559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1015,7 +1014,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1033,6 +1032,10 @@
           {
             "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
             "publishedAt": "2026-04-24T10:45:00Z"
+          },
+          {
+            "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
+            "publishedAt": "2026-04-24T11:45:00Z"
           },
           {
             "title": "Výborný batoh za 719 Kč. Voděodolný Kingsons s objemem 30 litrů pojme notebook i oblečení na dlouhý výlet",
@@ -1057,10 +1060,6 @@
           {
             "title": "Hry zadarmo, nebo se slevou: Festival středověku a tři hry pro PC zdarma",
             "publishedAt": "2026-04-24T05:10:00Z"
-          },
-          {
-            "title": "Chytré hodinky neměří tak přesně, jak se tváří. Těchto šest parametrů zkreslují nejvíc",
-            "publishedAt": "2026-04-23T08:45:00Z"
           }
         ]
       }

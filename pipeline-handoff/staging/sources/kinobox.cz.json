@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-24T11:54:20.493302Z",
+  "ingestedAt": "2026-04-24T12:15:27.209027Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kojot a největší filmová katastrofa. Zachráněný film o „procesu století“ baví v prvním traileru",
+      "url": "https://www.kinobox.cz/clanky/filmy/52932-kojot-a-nejvetsi-filmova-katastrofa-nechteny-a-zachraneny-film-o-procesu-stoleti-v-prvnim-traileru",
+      "dt": "2026-04-24T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "baví",
+        "film",
+        "filmová",
+        "katastrofa",
+        "kojot",
+        "největší",
+        "procesu",
+        "prvním",
+        "století",
+        "traileru",
+        "zachráněný"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -521,32 +549,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kinobox Daily: Shyamalanův šílený risk za všechny prachy, který se pořádně vyplatil",
-      "url": "https://www.kinobox.cz/clanky/daily/52927-kinobox-daily-shyamalanuv-risk-za-vsechny-prachy-ktery-se-poradne-vyplatil",
-      "dt": "2026-04-22T10:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "daily",
-        "kinobox",
-        "pořádně",
-        "prachy",
-        "risk",
-        "shyamalanův",
-        "vyplatil",
-        "všechny",
-        "šílený"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +559,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 26911,
+      "bytes": 27054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,7 +596,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -609,6 +611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kojot a největší filmová katastrofa. Zachráněný film o „procesu století“ baví v prvním traileru",
+            "publishedAt": "2026-04-24T12:00:00Z"
+          },
           {
             "title": "Extrémní podmínky i zdravotní problémy. Štáb Asia Express odhalil šílenou dřinu za kamerou",
             "publishedAt": "2026-04-24T11:30:00Z"
@@ -636,10 +642,6 @@
           {
             "title": "„Kdybych měla nohy, tak ti nakopu,“ sténá hrdinka úzkostného dramatu. Film je mateřskou noční můrou",
             "publishedAt": "2026-04-23T15:00:00Z"
-          },
-          {
-            "title": "Ryan Reynolds má s Deadpoolem další filmové plány. Jsou ale jiné, než byste čekali",
-            "publishedAt": "2026-04-23T14:00:00Z"
           }
         ]
       }
