@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Voják USA vyhrál miliony na sázkách. Díky tajným informací vsadil na pád Madura",
+      "url": "https://www.denik.cz/ze_sveta/nicolas-maduro-zajeti-vojak-tajne-informace-sazka.html",
+      "dt": "2026-04-24T06:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "díky",
+        "informací",
+        "madura",
+        "miliony",
+        "pád",
+        "sázkách",
+        "tajným",
+        "usa",
+        "voják",
+        "vsadil",
+        "vyhrál"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,32 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Experti bijí na poplach: Ve stovce šarží kojeneckých výživ je nebezpečný toxin",
-      "url": "https://www.denik.cz/z_domova/nebezpecne-kojenecke-vyzivy-toxin-cereulid.html",
-      "dt": "2026-04-23T12:06:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bijí",
-        "experti",
-        "kojeneckých",
-        "nebezpečný",
-        "poplach",
-        "stovce",
-        "toxin",
-        "výživ",
-        "šarží"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29178,
+      "bytes": 29120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -722,6 +724,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Voják USA vyhrál miliony na sázkách. Díky tajným informací vsadil na pád Madura",
+            "publishedAt": "2026-04-24T06:20:00Z"
+          },
           {
             "title": "Město Enid v Oklahomě zasáhlo tornádo. Živel srovnal se zemí řadu domů",
             "publishedAt": "2026-04-24T05:57:00Z"
@@ -749,10 +755,6 @@
           {
             "title": "Do Cessny nasedla bez kalhotek. A jako jediná přežila náraz do vysoké hory",
             "publishedAt": "2026-04-24T03:00:00Z"
-          },
-          {
-            "title": "MAPA: Po jarním počasí přijde teplotní šok. Arktický vzduch sestřelí teploty",
-            "publishedAt": "2026-04-24T02:30:00Z"
           }
         ]
       }

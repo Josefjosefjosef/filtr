@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pilot u Křivoklátu ignoroval čtyři varování. Nové detaily k letu, který dělily vteřiny od tragédie",
+      "url": "https://www.idnes.cz/zpravy/domaci/pilot-ktery-se-u-krivoklatu-dostal-nizko-nad-zem-ignoroval-opakovana-varovani.A260424_080953_domaci_iluj",
+      "dt": "2026-04-24T06:19:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "detaily",
+        "dělily",
+        "ignoroval",
+        "křivoklátu",
+        "letu",
+        "nové",
+        "pilot",
+        "tragédie",
+        "varování",
+        "vteřiny",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,32 +780,6 @@
         "vzkázal",
         "čro",
         "šéfy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zemědělský fond ukázal analýzy k dotacím Agrofertu, chce předejít spekulacím",
-      "url": "https://www.idnes.cz/zpravy/domaci/szif-agrofert-dotace-pravni-analyza-andrej-babis.A260423_162831_domaci_pari",
-      "dt": "2026-04-23T15:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "agrofertu",
-        "analýzy",
-        "chce",
-        "dotacím",
-        "fond",
-        "předejít",
-        "spekulacím",
-        "ukázal",
-        "zemědělský"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1574,7 +1576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50617,
+      "bytes": 50581,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1613,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T05:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1628,6 +1630,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pilot u Křivoklátu ignoroval čtyři varování. Nové detaily k letu, který dělily vteřiny od tragédie",
+            "publishedAt": "2026-04-24T06:19:00Z"
+          },
           {
             "title": "Na Blízký východ připlula další americká letadlová loď, již třetí",
             "publishedAt": "2026-04-24T05:49:00Z"
@@ -1655,10 +1661,6 @@
           {
             "title": "Sněmovna znovu řeší zákon o regulaci cen pohonných hmot, novelu vrátil Senát",
             "publishedAt": "2026-04-24T04:10:00Z"
-          },
-          {
-            "title": "V sobotu bude skoro léto, v neděli zas zima. Mapa ukazuje velký rozdíl teplot",
-            "publishedAt": "2026-04-24T03:30:00Z"
           }
         ]
       }

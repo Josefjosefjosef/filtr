@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Deratizace parazitů aneb úřaduje hranatý nevzdělanec",
+      "url": "https://www.epenize.eu/deratizace-parazitu-aneb-uraduje-hranaty-nevzdelanec/",
+      "dt": "2026-04-24T06:15:55Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "aneb",
+        "deratizace",
+        "hranatý",
+        "nevzdělanec",
+        "parazitů",
+        "úřaduje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -479,29 +502,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Telička na síti: Macinka potvrdil, že je politický hulvát",
-      "url": "https://www.epenize.eu/telicka-na-siti-macinka-potvrdil-ze-je-politicky-hulvat/",
-      "dt": "2026-04-16T08:00:49Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "hulvát",
-        "macinka",
-        "politický",
-        "potvrdil",
-        "síti",
-        "telička"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 113748,
+      "bytes": 113914,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-23T23:00:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:15:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 17,
@@ -567,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Deratizace parazitů aneb úřaduje hranatý nevzdělanec",
+            "publishedAt": "2026-04-24T06:15:55Z"
+          },
           {
             "title": "Střílejte a zabíjejte: Trumpova námořní kovbojka v Hormuzském průlivu",
             "publishedAt": "2026-04-23T23:00:44Z"
@@ -594,10 +598,6 @@
           {
             "title": "Když dochází finance: Je životní pojištění opravdu výdaj, na kterém šetřit?",
             "publishedAt": "2026-04-21T09:51:56Z"
-          },
-          {
-            "title": "Němcová na síti: Babiš nastoluje zrůdné bolševické manýry",
-            "publishedAt": "2026-04-21T07:16:52Z"
           }
         ]
       }

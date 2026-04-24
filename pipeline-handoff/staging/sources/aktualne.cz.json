@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák za nula, neuspěl ani jako brankář. A Boston v sérii zase ztrácí",
+      "url": "https://sport.aktualne.cz/pastrnak-za-nula-neuspel-ani-jako-brankar-a-boston-v-serii-zase-ztraci/r~aaa294e49afd66b8ac9fa48a71bd0aed/",
+      "dt": "2026-04-24T06:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "boston",
+        "brankář",
+        "jako",
+        "neuspěl",
+        "nula",
+        "pastrňák",
+        "sérii",
+        "zase",
+        "ztrácí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Makakové na Gibraltaru jedí sladkosti od turistů, pak „léčí“ žaludek hlínou",
+      "title": "Makakové na Gibraltaru jedí sladkosti od turistů, pak léčí žaludek hlínou",
       "url": "https://zpravy.aktualne.cz/zahranici/makakove-na-gibraltaru-jedi-sladkosti-od-turistu-pak-leci-zaludek-hlinou/r~aaa299eb8d3520a404a0c4c711a8dd36/",
       "dt": "2026-04-24T06:11:00Z",
       "media_raw": "Aktuálně",
@@ -325,23 +351,24 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Je to život? Zatím nedokážeme říct,“ zní z NASA. Na Marsu objevili molekuly, které nikdo nečekal",
+      "title": "Objev, který na Marsu být neměl. Vědci mluví o životě na Rudé planetě, nový nález je překvapil",
       "url": "https://magazin.aktualne.cz/je-to-zivot-zatim-nedokazeme-rict-zni-z-nasa-na-marsu-objevili-molekuly-ktere-nikdo-necekal/r~aaa29cc78ff91e4d9d2cc8401ca3ba1f/",
       "dt": "2026-04-24T03:45:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
+        "být",
         "marsu",
-        "molekuly",
-        "nasa",
-        "nedokážeme",
-        "nečekal",
-        "nikdo",
-        "objevili",
-        "zatím",
-        "zní",
-        "říct",
-        "život"
+        "mluví",
+        "neměl",
+        "nový",
+        "nález",
+        "objev",
+        "planetě",
+        "překvapil",
+        "rudé",
+        "vědci",
+        "životě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -504,34 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sedláka rozčilují ataky, sudí přehlédli faul. Dejte ho na tribunu, radí trenér Třince",
-      "url": "https://sport.aktualne.cz/hokej/sedlaka-rozciluji-ataky-sudi-prehledli-faul-dejte-ho-na-tribunu-radi-trener-trince/r~aaa29dffc072740470a826bd3a5a8734/",
-      "dt": "2026-04-23T19:17:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ataky",
-        "dejte",
-        "faul",
-        "přehlédli",
-        "radí",
-        "rozčilují",
-        "sedláka",
-        "sudí",
-        "trenér",
-        "tribunu",
-        "třince"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22043,
+      "bytes": 21941,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,12 +578,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:11:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 2,
           "zpravy": 14,
           "other": 2,
-          "sport": 2,
           "finance": 2
         },
         "drop_counts": {
@@ -598,7 +597,11 @@
         },
         "sample_titles": [
           {
-            "title": "Makakové na Gibraltaru jedí sladkosti od turistů, pak „léčí“ žaludek hlínou",
+            "title": "Pastrňák za nula, neuspěl ani jako brankář. A Boston v sérii zase ztrácí",
+            "publishedAt": "2026-04-24T06:28:00Z"
+          },
+          {
+            "title": "Makakové na Gibraltaru jedí sladkosti od turistů, pak léčí žaludek hlínou",
             "publishedAt": "2026-04-24T06:11:00Z"
           },
           {
@@ -624,10 +627,6 @@
           {
             "title": "To nejlepší z české architektury: Podívejte se na stavby, které berou dech",
             "publishedAt": "2026-04-24T05:30:00Z"
-          },
-          {
-            "title": "Voják vsadil na pád Madura a vydělal miliony. Použil tajné informace",
-            "publishedAt": "2026-04-24T05:19:00Z"
           }
         ]
       }

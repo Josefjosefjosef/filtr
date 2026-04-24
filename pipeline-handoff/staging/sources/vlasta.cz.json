@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dnes v Ulici: Lukáš bojuje o Helenu, chce ji zpět. A Roman odhalil, že plánuje vraždu",
+      "url": "https://www.vlasta.cz/inspirace/dnes-v-ulici-novy-dil-patek-dej-herci-lukas-helena-roman-zofka-karla/",
+      "dt": "2026-04-24T06:33:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "bojuje",
+        "chce",
+        "helenu",
+        "lukáš",
+        "odhalil",
+        "plánuje",
+        "roman",
+        "ulici",
+        "vraždu",
+        "zpět"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1117,33 +1144,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Šéfkuchař Riccardo Lucque: Na vojně vařil důstojníkům, dnes má sedm špičkových restaurací v Praze",
-      "url": "https://www.vlasta.cz/osobnosti/riccardo-lucque-sefkuchar-restaurace-farina-rozhovor-zivotopis/",
-      "dt": "2026-04-19T07:04:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "důstojníkům",
-        "lucque",
-        "praze",
-        "restaurací",
-        "riccardo",
-        "sedm",
-        "vařil",
-        "vojně",
-        "špičkových",
-        "šéfkuchař"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1154,7 +1154,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62671,
+      "bytes": 62704,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1191,11 +1191,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:33:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "zpravy": 2,
+          "other": 38
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1207,6 +1207,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dnes v Ulici: Lukáš bojuje o Helenu, chce ji zpět. A Roman odhalil, že plánuje vraždu",
+            "publishedAt": "2026-04-24T06:33:00Z"
+          },
           {
             "title": "Tip na knihu Víry Anny Beaty Háblové. Jak snadné je stát se sexuální pracovnicí, když jste naivní a matka",
             "publishedAt": "2026-04-24T06:02:00Z"
@@ -1234,10 +1238,6 @@
           {
             "title": "Marek z Extrémních proměn zhubl 72 kilo a je z něj fešák. „Ženský se o něj porvou,“ předpovídají diváci",
             "publishedAt": "2026-04-23T07:57:53Z"
-          },
-          {
-            "title": "Dnes v Ulici: Kristýnu polyamorní vztah ničí. Nevěří Denisovi ani Daniele, bojí se, že bude sama",
-            "publishedAt": "2026-04-23T07:38:43Z"
           }
         ]
       }

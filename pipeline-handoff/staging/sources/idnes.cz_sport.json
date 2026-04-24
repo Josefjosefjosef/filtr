@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Spor o místa pro liberecké fandy. Slovan o podmínkách Jablonce: Byly nestandardní",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/spor-o-mista-pro-liberecke-fandy-slovan-o-podminkach-jablonce-byly-nestandardni.A260424_928359_fotbal_tit",
+      "dt": "2026-04-24T06:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "byly",
+        "fandy",
+        "jablonce",
+        "liberecké",
+        "místa",
+        "nestandardní",
+        "podmínkách",
+        "slovan",
+        "spor"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,33 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Před sérií bychom takový stav brali, hlásil Kondelík. A co dál? Hodit kolaps za hlavu",
-      "url": "https://www.idnes.cz/hokej/extraliga/play-off-hokej-extraliga-finale-pardubice-trinec.A260423_080718_hokej_mvo",
-      "dt": "2026-04-23T10:50:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brali",
-        "bychom",
-        "hlavu",
-        "hlásil",
-        "hodit",
-        "kolaps",
-        "kondelík",
-        "stav",
-        "sérií",
-        "takový"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46224,
+      "bytes": 45970,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spor o místa pro liberecké fandy. Slovan o podmínkách Jablonce: Byly nestandardní",
+            "publishedAt": "2026-04-24T06:16:00Z"
+          },
           {
             "title": "Pištěk: Držíme hlavy v klidu, víme, co má Jihlava za sebou. Doma baráž ukončíme",
             "publishedAt": "2026-04-24T06:09:00Z"
@@ -870,10 +873,6 @@
           {
             "title": "Z Třince bez výhry? Špatní z toho nejsme. Sedlák před vítězným gólem schytal ránu",
             "publishedAt": "2026-04-23T19:53:00Z"
-          },
-          {
-            "title": "Play off hokejové extraligy 2026: program, systém, finálová dvojice, kde sledovat",
-            "publishedAt": "2026-04-23T19:46:00Z"
           }
         ]
       }

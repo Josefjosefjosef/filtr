@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na spolkové úrovni ke spolupráci s AfD nedojde rychle, říká německý sociolog",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/na-spolkove-urovni-ke-spolupraci-s-afd-nedojde-rychle-rika-nemecky-sociolog-372739",
+      "dt": "2026-04-24T06:15:08Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "afd",
+        "nedojde",
+        "německý",
+        "rychle",
+        "sociolog",
+        "spolkové",
+        "spolupráci",
+        "úrovni",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -746,28 +772,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Babiš a Pavel se sejdou ohledně účasti na summitu NATO 8. května, řekl premiér",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-a-pavel-se-sejdou-ohledne-ucasti-na-summitu-nato-8-kvetna-rekl-premier-372712",
-      "dt": "2026-04-23T11:41:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Boston podlehl Buffalu a v sérii opět prohrává. Nečasovo Colorado se přiblížilo postupu",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/boston-podlehl-buffalu-a-v-serii-opet-prohrava-naopak-necasovo-colorado-se-priblizilo-postupu-156428",
+      "dt": "2026-04-24T06:23:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "babiš",
-        "května",
-        "nato",
-        "ohledně",
-        "pavel",
-        "premiér",
-        "sejdou",
-        "summitu",
-        "účasti",
-        "řekl"
+        "boston",
+        "buffalu",
+        "colorado",
+        "nečasovo",
+        "opět",
+        "podlehl",
+        "postupu",
+        "prohrává",
+        "přiblížilo",
+        "sérii"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1506,35 +1532,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Táborsko pokukuje po první lize. Cíl je baráž, jdeme krůček po krůčku, popisuje ředitel klubu",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/taborsko-pokukuje-po-prvni-lize-cil-je-baraz-jdeme-krucek-po-krucku-popisuje-reditel-klubu-156390",
-      "dt": "2026-04-22T06:11:48Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "baráž",
-        "cíl",
-        "jdeme",
-        "klubu",
-        "krůček",
-        "krůčku",
-        "lize",
-        "pokukuje",
-        "popisuje",
-        "první",
-        "táborsko",
-        "ředitel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1545,7 +1542,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43139,
+      "bytes": 43503,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1605,7 +1602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:11:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:15:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -1622,6 +1619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na spolkové úrovni ke spolupráci s AfD nedojde rychle, říká německý sociolog",
+            "publishedAt": "2026-04-24T06:15:08Z"
+          },
           {
             "title": "Voják USA se podílel na zajetí Madura, zároveň sázel na jeho pád. Obvinili ho",
             "publishedAt": "2026-04-24T06:11:20Z"
@@ -1649,10 +1650,6 @@
           {
             "title": "Poslanci mají znovu schvalovat zákon k regulaci cen pohonných hmot",
             "publishedAt": "2026-04-24T01:08:00Z"
-          },
-          {
-            "title": "Příměří mezi Izraelem a Libanonem se prodlouží o tři týdny, oznámil Trump",
-            "publishedAt": "2026-04-23T21:53:59Z"
           }
         ]
       }
@@ -1664,7 +1661,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38085,
+      "bytes": 38174,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1701,7 +1698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T06:23:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1716,6 +1713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boston podlehl Buffalu a v sérii opět prohrává. Nečasovo Colorado se přiblížilo postupu",
+            "publishedAt": "2026-04-24T06:23:41Z"
+          },
           {
             "title": "Rulík po Rakousku ocenil hráče, chválil ale hlavně výkon osmnáctky",
             "publishedAt": "2026-04-24T04:00:00Z"
@@ -1743,10 +1744,6 @@
           {
             "title": "Reprezentace v přípravném utkání smetla Rakušany",
             "publishedAt": "2026-04-23T16:40:00Z"
-          },
-          {
-            "title": "Česká osmnáctka přehrála po Američanech i Švédy. Rozhodla trefa v čase 59:39",
-            "publishedAt": "2026-04-23T13:58:00Z"
           }
         ]
       }
@@ -1758,7 +1755,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77005,
+      "bytes": 77011,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

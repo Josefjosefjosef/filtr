@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T06:20:41.674431Z",
+  "ingestedAt": "2026-04-24T06:40:37.690221Z",
   "items": [
     {
       "section": "finance",
@@ -53,6 +53,37 @@
         "větrných",
         "česku",
         "šíří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "GPT-5.5 je nový &bdquo;nejchytřejší&ldquo; model od OpenAI. Vyniká v programování, ale je dražší a v některých oblastech se zhoršil",
+      "url": "https://tech.hn.cz/c1-67870650-gpt-5-5-je-novy-bdquo-nejchytrejsi-ldquo-model-od-openai-vynika-v-programovani-ale-je-drazsi-a-v-nekterych-oblastech-se-zhorsil",
+      "dt": "2026-04-24T03:17:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "bdquo",
+        "dražší",
+        "gpt",
+        "ldquo",
+        "model",
+        "nejchytřejší",
+        "nový",
+        "některých",
+        "oblastech",
+        "openai",
+        "programování",
+        "vyniká",
+        "zhoršil"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1116,36 +1147,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "První krok na cestě k zestátnění. ČEZ chystá novou dceru, do které chce převést prodej energií a obchod",
-      "url": "https://byznys.hn.cz/c1-67870440-prvni-krok-na-ceste-k-zestatneni-cez-chysta-novou-dceru-do-ktere-chce-prevest-prodej-energii-a-obchod",
-      "dt": "2026-04-23T11:57:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "cestě",
-        "chce",
-        "chystá",
-        "dceru",
-        "energií",
-        "krok",
-        "novou",
-        "obchod",
-        "prodej",
-        "první",
-        "převést",
-        "zestátnění",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1156,7 +1157,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184160,
+      "bytes": 184731,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,9 +1197,9 @@
         "raw_feed_latest_publishedAt": "2026-04-24T05:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "finance": 35,
           "zdravi": 2,
-          "zpravy": 2
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1219,6 +1220,10 @@
             "publishedAt": "2026-04-24T04:05:00Z"
           },
           {
+            "title": "GPT-5.5 je nový &bdquo;nejchytřejší&ldquo; model od OpenAI. Vyniká v programování, ale je dražší a v některých oblastech se zhoršil",
+            "publishedAt": "2026-04-24T03:17:00Z"
+          },
+          {
             "title": "Týden s technologiemi: Umělá inteligence nejvíc pomáhá lidem, kteří jsou schopní a úspěšní sami o sobě, záleží i na věku",
             "publishedAt": "2026-04-23T22:00:00Z"
           },
@@ -1236,10 +1241,6 @@
           },
           {
             "title": "Floex Ensemble s robotickým bubeníkem Josefem. Zazní nejen herní soundtracky a mladí si naprogramují beaty",
-            "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "SpringTEEN letos nabídne program také dětem s poruchou autistického spektra",
             "publishedAt": "2026-04-23T22:00:00Z"
           }
         ]
