@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T03:50:58.617021Z",
+  "ingestedAt": "2026-04-24T04:11:20.706880Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák neuspěl. Boston v sérii znovu prohrává",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-neuspel-boston-v-serii-znovu-prohrava-5442317",
+      "dt": "2026-04-24T04:00:00Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boston",
+        "neuspěl",
+        "pastrňák",
+        "prohrává",
+        "sérii",
+        "znovu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,35 +778,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Skandální odhalení. Ruský doping řídili stejní lidé, kteří se snažili zabít odpůrce Putina",
-      "url": "https://www.sport.cz/clanek/ostatni-skandalni-odhaleni-rusky-doping-ridili-stejni-lide-kteri-se-snazili-zavrazdit-odpurce-putina-5441903",
-      "dt": "2026-04-23T13:01:45Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "doping",
-        "kteří",
-        "lidé",
-        "odhalení",
-        "odpůrce",
-        "putina",
-        "ruský",
-        "skandální",
-        "snažili",
-        "stejní",
-        "zabít",
-        "řídili"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44580,
+      "bytes": 44390,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T21:46:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák neuspěl. Boston v sérii znovu prohrává",
+            "publishedAt": "2026-04-24T04:00:00Z"
+          },
           {
             "title": "Stuttgart může stále snít o obhajobě, ve finále poháru potká Bayern",
             "publishedAt": "2026-04-23T21:46:09Z"
@@ -873,10 +871,6 @@
           {
             "title": "Basketbalisté Písku i podruhé porazili USK a zahrají si play off s Pardubicemi",
             "publishedAt": "2026-04-23T18:52:33Z"
-          },
-          {
-            "title": "Pozice Neymara je před MS vrtkavá. Měli se proti němu postavit i hvězdní spoluhráči",
-            "publishedAt": "2026-04-23T20:14:22Z"
           }
         ]
       }

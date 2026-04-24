@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-24T03:50:58.617021Z",
+  "ingestedAt": "2026-04-24T04:11:20.706880Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
+      "url": "https://profitonline.cz/voda-tece-skody-rostou-soused-zapira-jaka-mate-prava-kdyz-jde-do-tuheho/",
+      "dt": "2026-04-24T04:00:05Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "jaká",
+        "jde",
+        "když",
+        "máte",
+        "práva",
+        "rostou",
+        "soused",
+        "teče",
+        "tuhého",
+        "voda",
+        "zapírá",
+        "škody"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hana Libecajtová předsedkyní správní rady Nadace KB",
-      "url": "https://profitonline.cz/hana-libecajtova-predsedkyni-spravni-rady-nadace-kb/",
-      "dt": "2026-04-22T06:00:26Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "hana",
-        "libecajtová",
-        "nadace",
-        "předsedkyní",
-        "rady",
-        "správní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18484,
+      "bytes": 18773,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -334,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-23T18:00:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T04:00:05Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -350,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
+            "publishedAt": "2026-04-24T04:00:05Z"
+          },
           {
             "title": "Na finančních trzích opět roste averze k riziku",
             "publishedAt": "2026-04-23T18:00:25Z"
@@ -377,10 +387,6 @@
           {
             "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
             "publishedAt": "2026-04-23T07:00:32Z"
-          },
-          {
-            "title": "Slovensko bojovalo proti SSSR, ale na kremelském seznamu není",
-            "publishedAt": "2026-04-23T04:00:18Z"
           }
         ]
       }
