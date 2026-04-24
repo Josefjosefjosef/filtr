@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-24T09:46:31.177356Z",
+  "ingestedAt": "2026-04-24T10:09:19.727812Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Extrémní bič na řidiče v Rakousku. Za vysokou rychlost přijdete o vůz i řidičák",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/extremni-bic-na-ridice-v-rakousku-za-vysokou-rychlost-prijdete-o-vuz-i-ridicak-1432370",
+      "dt": "2026-04-24T09:42:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bič",
+        "extrémní",
+        "přijdete",
+        "rakousku",
+        "rychlost",
+        "vysokou",
+        "vůz",
+        "řidiče",
+        "řidičák"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1055,30 +1081,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Válka v Íránu rozdělila republikány. Může to být šance pro J. D. Vance",
-      "url": "https://www.e15.cz/zahranicni/geopolitika/valka-v-iranu-rozdelila-republikany-muze-to-byt-sance-pro-j-d-vance-1432310",
-      "dt": "2026-04-23T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "být",
-        "republikány",
-        "rozdělila",
-        "vance",
-        "válka",
-        "íránu",
-        "šance"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,7 +1091,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55331,
+      "bytes": 55158,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,11 +1128,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:42:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 33,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1143,6 +1145,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Extrémní bič na řidiče v Rakousku. Za vysokou rychlost přijdete o vůz i řidičák",
+            "publishedAt": "2026-04-24T09:42:00Z"
+          },
           {
             "title": "Draží se unikáty za 85 milionů, táhne rekordní zlato i sběratelské mince",
             "publishedAt": "2026-04-24T09:20:00Z"
@@ -1170,10 +1176,6 @@
           {
             "title": "Národní zájem v hodnotě miliard. Přesun agendy pod ministerstvo průmyslu má zajistit cash flow pro české firmy",
             "publishedAt": "2026-04-24T04:00:00Z"
-          },
-          {
-            "title": "Objev století. Šímova Evropa z USA je originál, zjistili čeští experti. Cena obrazu přepíše historický rekord",
-            "publishedAt": "2026-04-24T03:30:00Z"
           }
         ]
       }

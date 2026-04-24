@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T09:46:31.177356Z",
+  "ingestedAt": "2026-04-24T10:09:19.727812Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladík v Praze riskoval jízdou na spřáhle tramvaje",
+      "url": "https://tydenikpolicie.cz/mladik-v-praze-riskoval-jizdou-na-sprahle-tramvaje/",
+      "dt": "2026-04-24T10:05:30Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jízdou",
+        "mladík",
+        "praze",
+        "riskoval",
+        "spřáhle",
+        "tramvaje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,34 +258,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policistům v Ostravě ujížděl řidič mercedesu. Hledají svědky, které svou zběsilou jízdou ohrozil",
-      "url": "https://tydenikpolicie.cz/policistum-v-ostrave-ujizdel-ridic-mercedesu-hledaji-svedky-ktere-svou-zbesilou-jizdou-ohrozil/",
-      "dt": "2026-04-24T07:08:02Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "hledají",
-        "jízdou",
-        "mercedesu",
-        "ohrozil",
-        "ostravě",
-        "policistům",
-        "svou",
-        "svědky",
-        "ujížděl",
-        "zběsilou",
-        "řidič"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +268,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15780,
+      "bytes": 15657,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +305,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:16:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:05:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +320,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladík v Praze riskoval jízdou na spřáhle tramvaje",
+            "publishedAt": "2026-04-24T10:05:30Z"
+          },
           {
             "title": "U ženy trpící schizofrenií zasahovali českolipští strážníci během týdne čtyřikrát. Skončila na psychiatrii",
             "publishedAt": "2026-04-24T08:16:35Z"
@@ -352,10 +351,6 @@
           {
             "title": "Dva výrazné sportovní úspěchy ostravských strážníků",
             "publishedAt": "2026-04-24T07:18:10Z"
-          },
-          {
-            "title": "Neznámý řidič škodovky měl na Frýdecko-Místecku ohrozit motorkáře. Pátrají po něm policisté",
-            "publishedAt": "2026-04-24T07:15:19Z"
           }
         ]
       }

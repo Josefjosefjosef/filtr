@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T09:46:31.177356Z",
+  "ingestedAt": "2026-04-24T10:09:19.727812Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Neviditelná epidemie na pracovištích: Europoslanci volají po ochraně před stresem a vyhořením",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/neviditelna-epidemie-na-pracovistich-europoslanci-stres-a-vyhoreni/",
+      "dt": "2026-04-24T10:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "epidemie",
+        "europoslanci",
+        "neviditelná",
+        "ochraně",
+        "pracovištích",
+        "stresem",
+        "volají",
+        "vyhořením"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,31 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hazard nad nemocnicí: Neznámý dron ohrozil vrtulník libereckých záchranářů",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/dron-vrtulnik-libereckych-zachranaru/",
-      "dt": "2026-04-23T10:25:14Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dron",
-        "hazard",
-        "libereckých",
-        "nemocnicí",
-        "neznámý",
-        "ohrozil",
-        "vrtulník",
-        "záchranářů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95096,
+      "bytes": 97183,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:02:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neviditelná epidemie na pracovištích: Europoslanci volají po ochraně před stresem a vyhořením",
+            "publishedAt": "2026-04-24T10:00:00Z"
+          },
           {
             "title": "Zákaz kojenecké výživy je zbytečný, tvrdí výrobce. Toxické šarže jsme stáhli už dávno, tvrdí",
             "publishedAt": "2026-04-24T09:02:56Z"
@@ -363,10 +367,6 @@
           {
             "title": "Komentář: Slova o „tlustém parchantovi“ jako motivace? Tudy cesta z dětské obezity nevede",
             "publishedAt": "2026-04-23T13:15:00Z"
-          },
-          {
-            "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
-            "publishedAt": "2026-04-23T12:03:02Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-24T09:46:31.177356Z",
+  "ingestedAt": "2026-04-24T10:09:19.727812Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš je mistr taktiky. Tlačí prezidenta tam, kam potřebuje",
+      "url": "https://profitonline.cz/babis-je-mistr-taktiky-tlaci-prezidenta-tam-kam-potrebuje/",
+      "dt": "2026-04-24T10:00:46Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "babiš",
+        "kam",
+        "mistr",
+        "potřebuje",
+        "prezidenta",
+        "taktiky",
+        "tam",
+        "tlačí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -269,28 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sentiment spotřebitelů v eurozóně se výrazně zhoršuje",
-      "url": "https://profitonline.cz/sentiment-spotrebitelu-v-eurozone-se-vyrazne-zhorsuje/",
-      "dt": "2026-04-22T21:05:43Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "eurozóně",
-        "sentiment",
-        "spotřebitelů",
-        "výrazně",
-        "zhoršuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18592,
+      "bytes": 18687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,11 +341,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:00:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:00:46Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zdravi": 2,
-          "finance": 10
+          "finance": 10,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -354,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš je mistr taktiky. Tlačí prezidenta tam, kam potřebuje",
+            "publishedAt": "2026-04-24T10:00:46Z"
+          },
           {
             "title": "ČEZ upřesnil první kroky k postátnění výroby elektřiny",
             "publishedAt": "2026-04-24T08:00:14Z"
@@ -381,10 +388,6 @@
           {
             "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
             "publishedAt": "2026-04-23T10:00:03Z"
-          },
-          {
-            "title": "Přijít o tisíce kvůli chybě v daňovém přiznání je snazší, než se zdá",
-            "publishedAt": "2026-04-23T09:00:46Z"
           }
         ]
       }

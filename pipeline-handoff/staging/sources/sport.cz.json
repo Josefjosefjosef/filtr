@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T09:46:31.177356Z",
+  "ingestedAt": "2026-04-24T10:09:19.727812Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Útočník Ekitiké je po operaci achilovky, rehabilitovat bude až deset měsíců",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-utocnik-ekitike-je-po-operaci-achilovky-rehabilitovat-bude-az-deset-mesicu-5442334",
+      "dt": "2026-04-24T09:51:16Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "achilovky",
+        "deset",
+        "ekitiké",
+        "měsíců",
+        "operaci",
+        "rehabilitovat",
+        "útočník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -762,32 +786,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Životní boj českého bouřliváka. Chci ještě víc peněz! hlásí",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-zivotni-boj-ceskeho-bourlivaka-chci-jeste-vic-penez-hlasi-5441907",
-      "dt": "2026-04-23T19:03:56Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "boj",
-        "bouřliváka",
-        "chci",
-        "hlásí",
-        "ještě",
-        "peněz",
-        "víc",
-        "českého",
-        "životní"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 47321,
+      "bytes": 46681,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:23:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:51:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útočník Ekitiké je po operaci achilovky, rehabilitovat bude až deset měsíců",
+            "publishedAt": "2026-04-24T09:51:16Z"
+          },
           {
             "title": "Pastrňáka a spol. čeká tvrdá zkouška charakteru",
             "publishedAt": "2026-04-24T08:45:53Z"
@@ -877,10 +879,6 @@
           {
             "title": "Prožívá fantastickou sezonu, povýší do Premier League? Scénářů je hodně, říká obletovaný Čech",
             "publishedAt": "2026-04-24T07:28:50Z"
-          },
-          {
-            "title": "Nevěřícné pohledy a hlavy v dlaních. Paráda českého gólmana přivedla soupeře k zoufalství",
-            "publishedAt": "2026-04-24T07:55:30Z"
           }
         ]
       }
