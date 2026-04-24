@@ -530,28 +530,35 @@ export function buildInvoicePrintHtml(state, totals) {
       const vr = totals.payer ? parseVatRate(ln.vatRate) : 0;
       const a = lineAmounts(Number.isFinite(qty) ? qty : 0, Number.isFinite(up) ? up : 0, vr, totals.payer);
       return (
-        "<tr><td>" +
+        "<tr class=\"iu-invoice-print-item-row\">" +
+        "<td class=\"iu-invoice-print-col-desc\">" +
+        "<span class=\"iu-invoice-print-line-no\">" +
         escHtml(String(i + 1)) +
-        "</td><td>" +
+        ".</span> " +
         escHtml(ln.name) +
         (ln.description
           ? "<div class=\"iu-invoice-print-desc\">" + escHtml(ln.description) + "</div>"
           : "") +
-        "</td><td class=\"iu-invoice-print-num\">" +
+        "</td><td class=\"iu-invoice-print-col-qty iu-invoice-print-num\">" +
         escHtml(String(ln.qty)) +
-        "</td><td>" +
+        " " +
         escHtml(ln.unit || "ks") +
-        "</td><td class=\"iu-invoice-print-num\">" +
+        "</td><td class=\"iu-invoice-print-col-price iu-invoice-print-num\">" +
         escHtml(fmtMoney(up)) +
         "</td>" +
-        (totals.payer ? "<td class=\"iu-invoice-print-num\">" + escHtml(String(vr)) + "%</td>" : "") +
-        "<td class=\"iu-invoice-print-num iu-invoice-print-strong\">" +
+        (totals.payer
+          ? "<td class=\"iu-invoice-print-col-vat iu-invoice-print-num\">" + escHtml(String(vr)) + "%</td>"
+          : "") +
+        "<td class=\"iu-invoice-print-col-total iu-invoice-print-num iu-invoice-print-strong\">" +
         escHtml(fmtMoney(a.gross)) +
         "</td></tr>"
       );
     })
     .join("");
-  const payLabel = inv.payment === "cash" ? "Hotově" : "Převodem";
+  const payCash = inv.payment === "cash";
+  const payCell = payCash
+    ? "<strong class=\"iu-invoice-print-pay iu-invoice-print-pay--cash\">Hotově</strong>"
+    : "<span class=\"iu-invoice-print-pay iu-invoice-print-pay--transfer\">Převodem</span>";
   let bankHtml = "";
   if (inv.payment === "transfer") {
     bankHtml =
@@ -562,48 +569,60 @@ export function buildInvoicePrintHtml(state, totals) {
       (inv.swift ? "<br/>SWIFT: " + escHtml(inv.swift) : "") +
       "</div>";
   }
+  const theadCols =
+    "<th class=\"iu-invoice-print-th-desc\">Popis</th>" +
+    "<th class=\"iu-invoice-print-th-qty\">Množství</th>" +
+    "<th class=\"iu-invoice-print-th-price\">Jednotková cena</th>" +
+    (totals.payer ? "<th class=\"iu-invoice-print-th-vat\">DPH</th>" : "") +
+    "<th class=\"iu-invoice-print-th-total\">Celkem</th>";
   return (
     "<header class=\"iu-invoice-print-header\">" +
-    "<div class=\"iu-invoice-print-brand\">Vytvořeno pomocí infoUzel.cz</div>" +
+    "<em class=\"iu-invoice-print-brand\">Vytvořeno pomocí infoUzel.cz</em>" +
     "</header>" +
+    "<div class=\"iu-invoice-print-title-bar\">" +
     "<h1 class=\"iu-invoice-print-title\">FAKTURA</h1>" +
+    "</div>" +
     "<div class=\"iu-invoice-print-docno\">číslo faktury " +
     escHtml(inv.number) +
     "</div>" +
+    "<div class=\"iu-invoice-print-docno-gap\" aria-hidden=\"true\"></div>" +
     "<div class=\"iu-invoice-print-parties\">" +
     "<div class=\"iu-invoice-print-party\">" +
-    "<div class=\"iu-invoice-print-section-label\">Dodavatel</div>" +
+    "<div class=\"iu-invoice-print-section-label iu-invoice-print-section-label--bold\">Dodavatel</div>" +
     "<pre class=\"iu-invoice-print-pre\">" +
     escHtml(supplierBlockText(state)) +
     "</pre></div>" +
     "<div class=\"iu-invoice-print-party\">" +
-    "<div class=\"iu-invoice-print-section-label\">Odběratel</div>" +
+    "<div class=\"iu-invoice-print-section-label iu-invoice-print-section-label--bold\">Odběratel</div>" +
     "<pre class=\"iu-invoice-print-pre\">" +
     escHtml(buyerBlockText(state)) +
     "</pre></div></div>" +
     "<section class=\"iu-invoice-print-section\">" +
     "<table class=\"iu-invoice-print-meta\"><tbody>" +
-    "<tr><th>Datum vystavení</th><td>" +
+    "<tr><th>Datum vystavení</th><td class=\"iu-invoice-print-meta-cell-gap-r\">" +
     escHtml(fmtDateCs(inv.issueDate)) +
-    "</td><th>Datum splatnosti</th><td>" +
+    "</td><th class=\"iu-invoice-print-meta-th-gap-l\">Datum splatnosti</th><td>" +
     escHtml(fmtDateCs(inv.dueDate)) +
     "</td></tr>" +
-    "<tr><th>DUZP</th><td>" +
+    "<tr><th>DUZP</th><td class=\"iu-invoice-print-meta-cell-gap-r\">" +
     escHtml(fmtDateCs(inv.taxableDate)) +
-    "</td><th>Způsob úhrady</th><td>" +
-    escHtml(payLabel) +
+    "</td><th class=\"iu-invoice-print-meta-th-gap-l\">Způsob úhrady</th><td class=\"iu-invoice-print-pay-cell\">" +
+    payCell +
     "</td></tr>" +
     (inv.variableSymbol
       ? "<tr><th>Variabilní symbol</th><td colspan=\"3\">" + escHtml(inv.variableSymbol) + "</td></tr>"
       : "") +
     "</tbody></table></section>" +
     bankHtml +
-    "<table class=\"iu-invoice-print-table\"><thead><tr><th>#</th><th>Položka</th><th>Množ.</th><th>Jedn.</th><th>Cena / j.</th>" +
-    (totals.payer ? "<th>DPH</th>" : "") +
-    "<th>Celkem</th></tr></thead><tbody>" +
+    "<table class=\"iu-invoice-print-table iu-invoice-print-items" +
+    (totals.payer ? " iu-invoice-print-items--vat" : "") +
+    "\"><thead><tr>" +
+    theadCols +
+    "</tr></thead><tbody>" +
     rows +
     "</tbody></table>" +
     "<div class=\"iu-invoice-print-total\">" +
+    (totals.payer ? "<div class=\"iu-invoice-print-total-gap-before-sub\"></div>" : "") +
     (totals.payer
       ? "<div class=\"iu-invoice-print-total-line\">Mezisoučet bez DPH: <span class=\"iu-invoice-print-strong\">" +
         escHtml(fmtMoney(totals.sumBase)) +
@@ -611,10 +630,12 @@ export function buildInvoicePrintHtml(state, totals) {
         escHtml(fmtMoney(totals.sumVat)) +
         "</span></div>"
       : "") +
-    "<div class=\"iu-invoice-print-total-due\">Celkem k úhradě: " +
+    "<div class=\"iu-invoice-print-total-due\"><strong class=\"iu-invoice-print-total-due-label\">Celkem k úhradě</strong> " +
+    "<span class=\"iu-invoice-print-total-due-amount\">" +
     escHtml(fmtMoney(totals.sumGross)) +
-    "</div></div>" +
-    "<footer class=\"iu-invoice-print-footer\">www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz</footer>"
+    "</span></div>" +
+    "<div class=\"iu-invoice-print-total-gap-after-due\" aria-hidden=\"true\"></div></div>" +
+    "<footer class=\"iu-invoice-print-footer\">www.infoUzel.cz</footer>"
   );
 }
 

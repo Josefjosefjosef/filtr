@@ -21680,6 +21680,31 @@ function buildVideoAsArticleCard(it) {
           if (typeof done === "function") done(new Error("invoice_print_missing_brand"));
           return;
         }
+        var footEl = pageEl.querySelector(".iu-invoice-print-footer");
+        if (!footEl) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_print_footer_missing"));
+          return;
+        }
+        var footTrim = String(footEl.textContent || "").replace(/\s+/g, " ").trim();
+        if (footTrim !== "www.infoUzel.cz") {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_print_footer_invalid"));
+          return;
+        }
+        if (String(footEl.textContent || "").indexOf("Vytvořeno") !== -1) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_print_footer_has_created_by"));
+          return;
+        }
+        try {
+          var csOv = window.getComputedStyle(pageEl);
+          if (String(csOv.overflow || "") === "hidden" || String(csOv.overflowX || "") === "hidden") {
+            if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            if (typeof done === "function") done(new Error("invoice_print_page_overflow_hidden"));
+            return;
+          }
+        } catch (eOv) {}
         var pad = 0;
         try {
           var cs = window.getComputedStyle(pageEl);
@@ -21690,14 +21715,87 @@ function buildVideoAsArticleCard(it) {
           pad = pt + pr + pb + pl;
         } catch (ePad) {}
         var boldOk = false;
+        var titleAlignOk = true;
+        var brandItalic = false;
+        var brandGrayOk = false;
+        var bordoBarOk = false;
+        var gapAfterDocno = false;
+        var supLblBold = false;
+        var buyLblBold = false;
+        var payCashBold = false;
+        var payTransferSpan = false;
+        var gapBeforeSub = false;
+        var totalDueBold = false;
+        var totalAmtInline = false;
+        var gapAfterDue = false;
         try {
           var h1b = pageEl.querySelector(".iu-invoice-print-title");
           if (h1b) {
             var fwb = String(window.getComputedStyle(h1b).fontWeight || "");
             var fnb = parseFloat(fwb);
             boldOk = fwb === "bold" || fwb === "bolder" || (!isNaN(fnb) && fnb >= 600);
+            var ta = String(window.getComputedStyle(h1b).textAlign || "").toLowerCase();
+            titleAlignOk = ta !== "center";
           }
+          var brand = pageEl.querySelector(".iu-invoice-print-brand");
+          if (brand) {
+            var fs = String(window.getComputedStyle(brand).fontStyle || "");
+            brandItalic = fs === "italic" || fs === "oblique";
+            try {
+              var pageInk = String(window.getComputedStyle(pageEl).color || "");
+              var brandInk = String(window.getComputedStyle(brand).color || "");
+              brandGrayOk = !!brandInk && brandInk !== pageInk;
+            } catch (eBr) {
+              brandGrayOk = false;
+            }
+          }
+          bordoBarOk = !!pageEl.querySelector(".iu-invoice-print-title-bar");
+          gapAfterDocno = !!pageEl.querySelector(".iu-invoice-print-docno-gap");
+          var supLbl = pageEl.querySelector(".iu-invoice-print-party .iu-invoice-print-section-label--bold");
+          if (supLbl && String(supLbl.textContent || "").indexOf("Dodavatel") !== -1) {
+            var sw = String(window.getComputedStyle(supLbl).fontWeight || "");
+            var sn = parseFloat(sw);
+            supLblBold = sw === "bold" || sw === "bolder" || (!isNaN(sn) && sn >= 700);
+          }
+          var labs = pageEl.querySelectorAll(".iu-invoice-print-section-label--bold");
+          for (var li = 0; li < labs.length; li++) {
+            if (String(labs[li].textContent || "").indexOf("Odběratel") !== -1) {
+              var bw = String(window.getComputedStyle(labs[li]).fontWeight || "");
+              var bn = parseFloat(bw);
+              buyLblBold = bw === "bold" || bw === "bolder" || (!isNaN(bn) && bn >= 700);
+              break;
+            }
+          }
+          var cashEl = pageEl.querySelector(".iu-invoice-print-pay--cash");
+          var xferEl = pageEl.querySelector(".iu-invoice-print-pay--transfer");
+          if (cashEl && cashEl.tagName === "STRONG") {
+            var cw = String(window.getComputedStyle(cashEl).fontWeight || "");
+            var cn = parseFloat(cw);
+            payCashBold = cw === "bold" || cw === "bolder" || (!isNaN(cn) && cn >= 700);
+          }
+          if (xferEl && xferEl.tagName === "SPAN") {
+            payTransferSpan = String(xferEl.textContent || "").trim() === "Převodem";
+          }
+          gapBeforeSub = !!pageEl.querySelector(".iu-invoice-print-total-gap-before-sub");
+          var dueLbl = pageEl.querySelector(".iu-invoice-print-total-due-label");
+          var dueAmt = pageEl.querySelector(".iu-invoice-print-total-due-amount");
+          if (dueLbl) {
+            var dw = String(window.getComputedStyle(dueLbl).fontWeight || "");
+            var dn = parseFloat(dw);
+            totalDueBold = dw === "bold" || dw === "bolder" || (!isNaN(dn) && dn >= 700);
+          }
+          totalAmtInline = !!(dueLbl && dueAmt && dueLbl.parentNode === dueAmt.parentNode);
+          gapAfterDue = !!pageEl.querySelector(".iu-invoice-print-total-gap-after-due");
         } catch (eTw) {}
+        try {
+          var shCanvas = pageEl.scrollHeight || exportRoot.scrollHeight || 1400;
+          opts.html2canvas.windowHeight = Math.max(shCanvas, 1400);
+        } catch (eSh) {}
+        if (!titleAlignOk) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_print_title_centered"));
+          return;
+        }
         try {
           window._iuInvoicePrintProof = {
             printHostExists: true,
@@ -21720,6 +21818,21 @@ function buildVideoAsArticleCard(it) {
             hasBoldSections: boldOk,
             hasProfessionalLayout: !!pageEl.querySelector(".iu-invoice-print-table"),
             contentClipped: false,
+            createdByItalic: brandItalic,
+            createdByLightGray: brandGrayOk,
+            invoiceTitleBordoStrip: bordoBarOk,
+            invoiceTitlePositionUnchanged: titleAlignOk,
+            spaceAfterInvoiceNumber: gapAfterDocno,
+            supplierHeadingBold: supLblBold,
+            buyerHeadingBold: buyLblBold,
+            paymentCashBold: payCashBold,
+            paymentTransferRendered: payTransferSpan,
+            footerOnlyWwwInfoUzel: footTrim === "www.infoUzel.cz",
+            createdByRemovedFromFooter: String(footEl.textContent || "").indexOf("Vytvořeno") === -1,
+            spaceBeforeSubtotal: gapBeforeSub,
+            totalDueBold: totalDueBold,
+            totalDueAmountInline: totalAmtInline,
+            spaceAfterTotalDue: gapAfterDue,
           };
         } catch (ePr) {}
         try {
@@ -21776,8 +21889,11 @@ function buildVideoAsArticleCard(it) {
       });
     });
   }
+
   try {
-    window.iuPdfExportHtmlStringToBlobForInvoice = iuPdfExportHtmlStringToBlobForInvoice;
+    if (typeof iuPdfExportHtmlStringToBlobForInvoice === "function") {
+      window.iuPdfExportHtmlStringToBlobForInvoice = iuPdfExportHtmlStringToBlobForInvoice;
+    }
   } catch (_) {}
 
   function iuApplyMobileQuickFeedLayout(quick) {
