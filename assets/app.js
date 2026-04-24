@@ -21587,8 +21587,7 @@ function buildVideoAsArticleCard(it) {
       }
       var exportRoot = document.createElement("div");
       exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
-      exportRoot.style.cssText =
-        "position:fixed;left:-10000px;top:0;width:794px;height:auto;overflow:visible;background:#fff;color:#000;z-index:-1;pointer-events:none;box-sizing:border-box;padding:12px;font-family:system-ui,-apple-system,sans-serif;";
+      exportRoot.className = "iu-pdf-render-mode";
       exportRoot.innerHTML = html;
       document.body.appendChild(exportRoot);
       var opts = {
@@ -21605,28 +21604,35 @@ function buildVideoAsArticleCard(it) {
         jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css", "legacy"] },
       };
-      window
-        .html2pdf()
-        .set(opts)
-        .from(exportRoot)
-        .toPdf()
-        .outputPdf("blob")
-        .then(function (blob) {
-          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-          if (!blob || blob.size < 200) {
-            if (typeof done === "function") done(new Error("small pdf"));
-            return;
-          }
+      function runHtml2Pdf() {
+        window
+          .html2pdf()
+          .set(opts)
+          .from(exportRoot)
+          .toPdf()
+          .outputPdf("blob")
+          .then(function (blob) {
+            if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            if (!blob || blob.size < 1000) {
+              if (typeof done === "function") done(new Error("pdf_empty_or_invalid"));
+              return;
+            }
           try {
             window._iuPdfLastEngine = "invoice-html2pdf";
             window._iuPdfLastSource = "invoice-html";
           } catch (_) {}
-          if (typeof done === "function") done(null, { blob: blob, fileName: fileName || "faktura.pdf" });
-        })
-        .catch(function (e) {
-          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-          if (typeof done === "function") done(e);
+            if (typeof done === "function") done(null, { blob: blob, fileName: fileName || "faktura.pdf" });
+          })
+          .catch(function (e) {
+            if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+            if (typeof done === "function") done(e);
+          });
+      }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          runHtml2Pdf();
         });
+      });
     });
   }
   try {

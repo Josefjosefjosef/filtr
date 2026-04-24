@@ -755,12 +755,24 @@ export function initIuInvoiceOverlay(deps) {
         if (err || !blob) return;
         const name = fileName || "faktura.pdf";
         const file = new File([blob], name, { type: "application/pdf" });
-        if (typeof navigator !== "undefined" && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        const nav = typeof navigator !== "undefined" ? navigator : null;
+        const shareFn = nav && typeof nav.share === "function" ? nav.share : null;
+        const canShareFn = nav && typeof nav.canShare === "function" ? nav.canShare.bind(nav) : null;
+        const canShareFiles = !!(shareFn && canShareFn && canShareFn({ files: [file] }));
+        if (shareFn && canShareFiles) {
           try {
-            await navigator.share({ files: [file], title: name });
+            await shareFn.call(nav, { files: [file], title: "Faktura" });
             setStatus(root, "PDF sdíleno nebo zrušeno uživatelem.");
             return;
-          } catch (_) {}
+          } catch (e) {
+            const aborted = e && (e.name === "AbortError" || String(e.name) === "AbortError");
+            if (aborted) {
+              setStatus(root, "Sdílení zrušeno.");
+              return;
+            }
+            setStatus(root, "Sdílení PDF se nezdařilo.");
+            return;
+          }
         }
         try {
           const url = URL.createObjectURL(blob);
@@ -790,9 +802,24 @@ export function initIuInvoiceOverlay(deps) {
       const host = root.querySelector("[data-inv-preview-host]");
       const layer = root.querySelector("[data-inv-preview-layer]");
       if (!host || !layer) return;
-      host.innerHTML = buildInvoiceHtmlPreview(state, totals);
+      const inner = buildInvoiceHtmlPreview(state, totals);
+      host.innerHTML =
+        '<div class="iu-invoice-preview-scale"><div class="iu-invoice-paper">' + inner + "</div></div>";
       layer.hidden = false;
       layer.classList.remove("iu-inv-guard-hidden");
+      try {
+        const scaleEl = host.querySelector(".iu-invoice-preview-scale");
+        if (scaleEl) {
+          const vw = window.innerWidth || document.documentElement.clientWidth || 794;
+          if (vw >= 1025) {
+            scaleEl.style.transform = "";
+            scaleEl.style.transformOrigin = "";
+          } else {
+            scaleEl.style.transform = "scale(" + vw / 794 + ")";
+            scaleEl.style.transformOrigin = "top left";
+          }
+        }
+      } catch (_) {}
       try {
         scrollHost.scrollTop = 0;
       } catch (_) {}
