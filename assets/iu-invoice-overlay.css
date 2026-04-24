@@ -693,36 +693,63 @@
 [data-iu-invoice-print-host] .iu-invoice-print-page{
   width: 794px;
   min-height: 1123px;
+  max-height: none;
   margin: 0 auto;
   padding: 64px;
   box-sizing: border-box;
   background: #fff;
   color: #0f172a;
   transform: none;
+  overflow: visible;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-header{
-  border-bottom: 1px solid rgba(136, 19, 55, 0.2);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-title-bar{
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-brand{
+  display: block;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #881337;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(100, 116, 139, 0.95);
+}
+[data-iu-invoice-print-host] .iu-invoice-print-title-bar{
+  width: calc(100% + 128px);
+  margin-left: -64px;
+  margin-right: -64px;
+  margin-bottom: 10px;
+  padding: 14px 64px 14px 64px;
+  box-sizing: border-box;
+  background: rgba(136, 19, 55, 0.12);
+  border-top: 1px solid rgba(136, 19, 55, 0.18);
+  border-bottom: 1px solid rgba(136, 19, 55, 0.18);
 }
 [data-iu-invoice-print-host] .iu-invoice-print-title{
-  margin: 0 0 6px;
+  margin: 0;
   font-size: 28px;
   font-weight: 800;
   line-height: 1.15;
   color: #0f172a;
+  text-align: left;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-docno{
   font-size: 14px;
   color: rgba(15, 23, 42, 0.72);
-  margin-bottom: 22px;
+  margin-bottom: 0;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-docno-gap{
+  height: 14px;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-parties{
   display: grid;
@@ -737,6 +764,10 @@
   letter-spacing: 0.06em;
   color: #881337;
   margin-bottom: 8px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-section-label--bold{
+  font-weight: 800;
+  color: #0f172a;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-pre{
   margin: 0;
@@ -766,6 +797,23 @@
   background: rgba(15, 23, 42, 0.04);
   font-weight: 650;
 }
+[data-iu-invoice-print-host] .iu-invoice-print-meta-cell-gap-r{
+  padding-right: 22px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-meta-th-gap-l{
+  padding-left: 18px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-pay-cell{
+  font-weight: 500;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-pay--cash{
+  font-weight: 800;
+  color: #0f172a;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-pay--transfer{
+  font-weight: 650;
+  color: #0f172a;
+}
 [data-iu-invoice-print-host] .iu-invoice-print-bank{
   font-size: 12px;
   margin: 0 0 16px;
@@ -776,14 +824,25 @@
 }
 [data-iu-invoice-print-host] .iu-invoice-print-table{
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
+  table-layout: fixed;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items thead{
+  display: table-header-group;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items tbody{
+  display: table-row-group;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items thead th{
+  vertical-align: bottom;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-table th,
 [data-iu-invoice-print-host] .iu-invoice-print-table td{
   border: 1px solid rgba(15, 23, 42, 0.12);
-  padding: 8px 7px;
+  padding: 10px 8px;
   text-align: left;
   vertical-align: top;
 }
@@ -791,9 +850,79 @@
   background: rgba(136, 19, 55, 0.08);
   font-weight: 700;
 }
+[data-iu-invoice-print-host] .iu-invoice-print-items thead{
+  display: table-header-group;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items tbody{
+  display: table-row-group;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items .iu-invoice-print-th-desc{
+  width: 40%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items .iu-invoice-print-th-qty{
+  width: 12%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items .iu-invoice-print-th-price{
+  width: 18%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items .iu-invoice-print-th-vat{
+  width: 10%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items .iu-invoice-print-th-total{
+  width: 20%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items:not(.iu-invoice-print-items--vat) .iu-invoice-print-th-desc{
+  width: 46%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items:not(.iu-invoice-print-items--vat) .iu-invoice-print-th-qty{
+  width: 14%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items:not(.iu-invoice-print-items--vat) .iu-invoice-print-th-price{
+  width: 22%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-items:not(.iu-invoice-print-items--vat) .iu-invoice-print-th-total{
+  width: 18%;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-item-row td + td{
+  border-left-width: 1px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-col-desc{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+  hyphens: auto;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-line-no{
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.55);
+  margin-right: 2px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-col-qty,
+[data-iu-invoice-print-host] .iu-invoice-print-col-price,
+[data-iu-invoice-print-host] .iu-invoice-print-col-vat,
+[data-iu-invoice-print-host] .iu-invoice-print-col-total{
+  white-space: nowrap;
+  vertical-align: top;
+  max-width: none;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-col-qty{
+  padding-left: 12px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-col-price,
+[data-iu-invoice-print-host] .iu-invoice-print-col-vat,
+[data-iu-invoice-print-host] .iu-invoice-print-col-total{
+  padding-left: 10px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-item-row{
+  break-inside: auto;
+  page-break-inside: auto;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-item-row td{
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
 [data-iu-invoice-print-host] .iu-invoice-print-num{
   text-align: right;
-  white-space: nowrap;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-strong{
   font-weight: 800;
@@ -801,29 +930,54 @@
 [data-iu-invoice-print-host] .iu-invoice-print-desc{
   font-size: 11px;
   color: rgba(15, 23, 42, 0.62);
-  margin-top: 4px;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-total{
-  margin-top: 8px;
+  margin-top: 10px;
   text-align: right;
   font-size: 13px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-total-gap-before-sub{
+  height: 14px;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-total-line{
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-total-due{
-  margin-top: 12px;
-  font-size: 20px;
+  margin-top: 14px;
+  font-size: 18px;
   font-weight: 800;
   color: #881337;
+  line-height: 1.35;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-total-due-label{
+  font-weight: 800;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-total-due-amount{
+  font-weight: 800;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-total-gap-after-due{
+  height: 16px;
+}
+[data-iu-invoice-print-host] .iu-invoice-print-bank{
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 [data-iu-invoice-print-host] .iu-invoice-print-footer{
-  margin-top: 28px;
-  padding-top: 14px;
+  margin-top: 24px;
+  padding-top: 12px;
   border-top: 1px solid rgba(15, 23, 42, 0.1);
   font-size: 11px;
   color: rgba(15, 23, 42, 0.5);
   text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  position: static;
 }
 
 /* PC náhled — bez transformu, pouze centrovaný papír v overlayi */
