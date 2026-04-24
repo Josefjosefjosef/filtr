@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T11:14:27.709490Z",
+  "ingestedAt": "2026-04-24T11:34:26.872281Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bulharsko vydalo do Česka podezřelého ze žhářského útoku v Pardubicích",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/bulharsko-vydalo-do-ceska-podezreleho-ze-zharskeho-utoku-v-pardubicich-372757",
+      "dt": "2026-04-24T11:12:32Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bulharsko",
+        "pardubicích",
+        "podezřelého",
+        "vydalo",
+        "útoku",
+        "česka",
+        "žhářského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -213,23 +237,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Musíme být štítem proti populismu, řekl na sjezdu lidovců končící předseda Výborný",
+      "title": "Projev kandidáta na předsedu KDU-ČSL Jana Grolicha",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/lidovci-si-zvoli-nove-vedeni-vyborneho-zrejme-vystrida-grolich-372749",
       "dt": "2026-04-24T08:16:54Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "být",
-        "končící",
-        "lidovců",
-        "musíme",
-        "populismu",
-        "proti",
-        "předseda",
-        "sjezdu",
-        "výborný",
-        "řekl",
-        "štítem"
+        "grolicha",
+        "jana",
+        "kandidáta",
+        "kdu",
+        "projev",
+        "předsedu",
+        "čsl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -738,30 +758,6 @@
         "vůči",
         "závazky",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "V Číně odhalili naleziště bizarních tvorů z hlubin času",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/v-cine-odhalili-naleziste-nepopsatelnych-tvoru-z-hlubin-casu-372720",
-      "dt": "2026-04-23T15:18:59Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bizarních",
-        "hlubin",
-        "naleziště",
-        "odhalili",
-        "tvorů",
-        "času",
-        "číně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1541,7 +1537,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43840,
+      "bytes": 43907,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1601,11 +1597,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:58:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:12:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 6,
+          "zpravy": 23,
+          "other": 5,
           "finance": 2
         },
         "drop_counts": {
@@ -1618,6 +1614,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bulharsko vydalo do Česka podezřelého ze žhářského útoku v Pardubicích",
+            "publishedAt": "2026-04-24T11:12:32Z"
+          },
           {
             "title": "V Hradci se otevře křižovatka Mileta. Úseky dálnic budou opět zpoplatněné",
             "publishedAt": "2026-04-24T10:58:23Z"
@@ -1645,10 +1645,6 @@
           {
             "title": "Česko by mělo opustit model subdodavatelské ekonomiky, řekl Středula na sjezdu ČMKOS",
             "publishedAt": "2026-04-24T08:28:53Z"
-          },
-          {
-            "title": "Trump pomoc odmítal, v Saúdské Arábii ale USA údajně využívají ukrajinskou technologii",
-            "publishedAt": "2026-04-24T08:23:07Z"
           }
         ]
       }
@@ -1754,7 +1750,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76993,
+      "bytes": 76998,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

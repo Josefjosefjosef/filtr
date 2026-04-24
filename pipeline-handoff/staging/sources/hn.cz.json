@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T11:14:27.709490Z",
+  "ingestedAt": "2026-04-24T11:34:26.872281Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Oto Klempíř mezi Bohem a volem. A panda za vystrčení Miloše Vystrčila z vládního speciálu bude?",
+      "url": "https://podcasty.hn.cz/c1-67870790-oto-klempir-mezi-bohem-a-volem-a-panda-za-vystrceni-milose-vystrcila-z-vladniho-specialu-bude",
+      "dt": "2026-04-24T11:03:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bohem",
+        "klempíř",
+        "miloše",
+        "oto",
+        "panda",
+        "speciálu",
+        "vládního",
+        "volem",
+        "vystrčení",
+        "vystrčila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1114,33 +1141,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Český národ ztratil duchovní hybnost a žádá si probuzení. Jak se pokát za neodpustitelný hřích?",
-      "url": "https://archiv.hn.cz/c1-67870620-cesky-narod-ztratil-duchovni-hybnost-a-zada-si-probuzeni-jak-se-pokat-za-neodpustitelny-hrich",
-      "dt": "2026-04-23T14:30:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "duchovní",
-        "hybnost",
-        "hřích",
-        "neodpustitelný",
-        "národ",
-        "pokát",
-        "probuzení",
-        "ztratil",
-        "český",
-        "žádá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1151,7 +1151,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184501,
+      "bytes": 184301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1188,7 +1188,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:03:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1205,6 +1205,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Oto Klempíř mezi Bohem a volem. A panda za vystrčení Miloše Vystrčila z vládního speciálu bude?",
+            "publishedAt": "2026-04-24T11:03:00Z"
+          },
           {
             "title": "Má vychovávat rodič, nebo stát? Počet zákonných zákazů určených mladistvým roste",
             "publishedAt": "2026-04-24T11:02:00Z"
@@ -1232,10 +1236,6 @@
           {
             "title": "Podepsáno. ČEZ a Rolls-Royce se dohodly na vývoji modulárních reaktorů, v Česku má jeden být v Temelíně",
             "publishedAt": "2026-04-24T08:46:00Z"
-          },
-          {
-            "title": "Nálada mezi podnikateli se v Německu opět zhoršila. Je nejnižší od března 2020",
-            "publishedAt": "2026-04-24T08:26:00Z"
           }
         ]
       }

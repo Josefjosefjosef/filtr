@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-24T11:14:27.709490Z",
+  "ingestedAt": "2026-04-24T11:34:26.872281Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Plíšková si v Madridu vyšlápla na nasazenou třináctku",
+      "url": "https://sport.aktualne.cz/pliskova-si-v-madridu-vyslapla-na-nasazenou-trinactku/r~aaa293678c1762f9ef0d4a28917cbfcf/",
+      "dt": "2026-04-24T11:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "madridu",
+        "nasazenou",
+        "plíšková",
+        "třináctku",
+        "vyšlápla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sudetoněmecký sjezd poprvé v Česku, přijede i německý ministr",
+      "url": "https://zpravy.aktualne.cz/zahranici/sudetonemecky-sjezd-poprve-v-cesku-prijede-i-nemecky-ministr/r~aaa29633a4cc556ed595119dbb62413b/",
+      "dt": "2026-04-24T11:12:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ministr",
+        "německý",
+        "poprvé",
+        "přijede",
+        "sjezd",
+        "sudetoněmecký",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -471,59 +517,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Makakové na Gibraltaru jedí sladkosti od turistů, pak léčí žaludek hlínou",
-      "url": "https://zpravy.aktualne.cz/zahranici/makakove-na-gibraltaru-jedi-sladkosti-od-turistu-pak-leci-zaludek-hlinou/r~aaa299eb8d3520a404a0c4c711a8dd36/",
-      "dt": "2026-04-24T06:11:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "gibraltaru",
-        "hlínou",
-        "jedí",
-        "léčí",
-        "makakové",
-        "pak",
-        "sladkosti",
-        "turistů",
-        "žaludek"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump chce drsně účtovat se členy NATO, kteří mu nepomohli. Má speciální seznam",
-      "url": "https://zpravy.aktualne.cz/zahranici/vernym-prizen-neposlusnym-trest-trump-tasi-seznam-hodnych-a-zlobivych-spojencu/r~aaa2903ccddfa4e8e01adeb64a2648fb/",
-      "dt": "2026-04-24T06:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "chce",
-        "drsně",
-        "kteří",
-        "nato",
-        "nepomohli",
-        "seznam",
-        "speciální",
-        "trump",
-        "účtovat",
-        "členy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +527,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22036,
+      "bytes": 21806,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,12 +564,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:24:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "sport": 4,
+          "zpravy": 11,
           "finance": 3,
-          "sport": 3,
           "other": 2
         },
         "drop_counts": {
@@ -589,6 +582,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Plíšková si v Madridu vyšlápla na nasazenou třináctku",
+            "publishedAt": "2026-04-24T11:24:00Z"
+          },
+          {
+            "title": "Sudetoněmecký sjezd poprvé v Česku, přijede i německý ministr",
+            "publishedAt": "2026-04-24T11:12:00Z"
+          },
           {
             "title": "Putin může dostat pozvánku na summit G20 v USA, píší AFP a WP",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -612,14 +613,6 @@
           {
             "title": "Volá Lavrov. Maďarský ministr mu slíbil pomoc, vysmívali se evropskému politikovi",
             "publishedAt": "2026-03-31T12:22:00Z"
-          },
-          {
-            "title": "Další otřesy, Vondroušová hýbe světem tenisu. Případ zburcoval i americkou superstar",
-            "publishedAt": "2026-04-24T09:37:00Z"
-          },
-          {
-            "title": "Soud ukončil záchranu Barrandova, televize zůstává v insolvenci",
-            "publishedAt": "2026-04-24T09:31:00Z"
           }
         ]
       }

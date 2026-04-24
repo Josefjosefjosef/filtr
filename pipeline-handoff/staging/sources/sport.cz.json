@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T11:14:27.709490Z",
+  "ingestedAt": "2026-04-24T11:34:26.872281Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Atletické mistrovství Evropy 2028 se uskuteční v Chorzówě",
+      "url": "https://www.sport.cz/clanek/atletika-atleticke-mistrovstvi-evropy-2028-se-uskutecni-v-chorzowe-5442356",
+      "dt": "2026-04-24T11:28:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "2028",
+        "atletické",
+        "chorzówě",
+        "evropy",
+        "mistrovství",
+        "uskuteční"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pozice Neymara je před MS vrtkavá. Měli se proti němu postavit i hvězdní spoluhráči",
-      "url": "https://www.sport.cz/clanek/fotbal-ms-pozice-neymara-je-pred-ms-vrtkava-meli-se-proti-nemu-postavit-i-hvezdni-spoluhraci-5441901",
-      "dt": "2026-04-23T20:14:22Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hvězdní",
-        "měli",
-        "neymara",
-        "němu",
-        "postavit",
-        "pozice",
-        "proti",
-        "spoluhráči",
-        "vrtkavá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45742,
+      "bytes": 45808,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T11:07:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:28:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -847,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Atletické mistrovství Evropy 2028 se uskuteční v Chorzówě",
+            "publishedAt": "2026-04-24T11:28:10Z"
+          },
           {
             "title": "Beránek se bál konce sezony, přesto stihl extraligový bronz a ještě bojuje o čtvrté MS v řadě",
             "publishedAt": "2026-04-24T11:07:54Z"
@@ -874,10 +875,6 @@
           {
             "title": "Pastrňáka a spol. čeká tvrdá zkouška charakteru",
             "publishedAt": "2026-04-24T08:45:53Z"
-          },
-          {
-            "title": "Výklad pravidel a VAR? Sám už tomu nerozumím, říká šéf UEFA",
-            "publishedAt": "2026-04-24T09:23:43Z"
           }
         ]
       }
