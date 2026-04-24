@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-24T11:34:26.872281Z",
+  "ingestedAt": "2026-04-24T11:54:20.493302Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Firmy čekají velké změny v odměňování. Začnou platit nová pravidla pro zveřejňování mezd",
+      "url": "https://www.betterlife.cz/firmy-cekaji-velke-zmeny-v-odmenovani-zacnou-platit-nova-pravidla-pro-zverejnovani-mezd/",
+      "dt": "2026-04-24T11:32:51Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "firmy",
+        "mezd",
+        "nová",
+        "odměňování",
+        "platit",
+        "pravidla",
+        "velké",
+        "začnou",
+        "změny",
+        "zveřejňování",
+        "čekají"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -255,34 +283,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Příští týden v seriálu Ulice: Konec velkých iluzí, nečekané stěhování i politický kalkul",
-      "url": "https://www.betterlife.cz/pristi-tyden-v-serialu-ulice-konec-velkych-iluzi-necekane-stehovani-i-politicky-kalkul/",
-      "dt": "2026-04-19T15:57:55Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "iluzí",
-        "kalkul",
-        "konec",
-        "nečekané",
-        "politický",
-        "příští",
-        "seriálu",
-        "stěhování",
-        "týden",
-        "ulice",
-        "velkých"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 69273,
+      "bytes": 64804,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -353,11 +353,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T15:57:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T11:32:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "finance": 1,
           "zdravi": 7,
+          "finance": 1,
           "zpravy": 1,
           "sport": 1
         },
@@ -371,6 +371,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Firmy čekají velké změny v odměňování. Začnou platit nová pravidla pro zveřejňování mezd",
+            "publishedAt": "2026-04-24T11:32:51Z"
+          },
           {
             "title": "Fialový motýl nad postýlkou novorozence jako symbol velké ztráty",
             "publishedAt": "2026-04-23T15:57:21Z"
@@ -398,10 +402,6 @@
           {
             "title": "Naked Attraction: Nahá zápasnice Alexandra se netají svou prací a rovnou chce vědět, zda to není problém",
             "publishedAt": "2026-04-21T07:58:32Z"
-          },
-          {
-            "title": "Sekání trávy jako přežitek. Češi na zahradách stále častěji ruší klasické trávníky a nahrazují je přírodním řešením",
-            "publishedAt": "2026-04-20T10:11:47Z"
           }
         ]
       }
