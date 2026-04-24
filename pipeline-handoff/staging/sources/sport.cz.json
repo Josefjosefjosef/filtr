@@ -1,19 +1,68 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T20:59:19.575422Z",
+  "ingestedAt": "2026-04-24T21:19:43.544277Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Neapol přejela Cremonu",
+      "title": "Nottingham udělal velký krok k záchraně",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-nottingham-udelal-velky-krok-k-zachrane-5442549",
+      "dt": "2026-04-24T21:04:16Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "krok",
+        "nottingham",
+        "udělal",
+        "velký",
+        "záchraně"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Real Madrid přišel o výhru v nastaveném čase",
+      "url": "https://www.sport.cz/clanek/fotbal-la-liga-real-madrid-prisel-o-vyhru-v-nastavenem-case-5442550",
+      "dt": "2026-04-24T21:10:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "madrid",
+        "nastaveném",
+        "přišel",
+        "real",
+        "výhru",
+        "čase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neapol přejela Cremonu a odložila mistrovské oslavy Interu",
       "url": "https://www.sport.cz/clanek/fotbal-serie-a-neapol-prejela-cremonu-5442547",
       "dt": "2026-04-24T20:50:32Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "cremonu",
+        "interu",
+        "mistrovské",
         "neapol",
+        "odložila",
+        "oslavy",
         "přejela"
       ],
       "feedCategory": "sport",
@@ -690,54 +739,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Skvělá zpráva pro reprezentaci ohledně Šulce",
-      "url": "https://www.sport.cz/clanek/fotbal-sulc-je-znovu-pripraven-hrat-5442365",
-      "dt": "2026-04-24T12:34:28Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ohledně",
-        "reprezentaci",
-        "skvělá",
-        "zpráva",
-        "šulce"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Po fiasku v kvalifikaci o MS hledají nového trenéra. V Itálii rezonuje ambiciózní myšlenka",
-      "url": "https://www.sport.cz/clanek/fotbal-serie-a-italie-sni-o-jednom-z-nejlepsich-treneru-na-svete-5442331",
-      "dt": "2026-04-24T12:42:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ambiciózní",
-        "fiasku",
-        "hledají",
-        "itálii",
-        "kvalifikaci",
-        "myšlenka",
-        "nového",
-        "rezonuje",
-        "trenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -748,7 +749,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 39819,
+      "bytes": 39480,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -785,7 +786,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T20:50:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T21:10:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -801,7 +802,15 @@
         },
         "sample_titles": [
           {
-            "title": "Neapol přejela Cremonu",
+            "title": "Nottingham udělal velký krok k záchraně",
+            "publishedAt": "2026-04-24T21:04:16Z"
+          },
+          {
+            "title": "Real Madrid přišel o výhru v nastaveném čase",
+            "publishedAt": "2026-04-24T21:10:50Z"
+          },
+          {
+            "title": "Neapol přejela Cremonu a odložila mistrovské oslavy Interu",
             "publishedAt": "2026-04-24T20:50:32Z"
           },
           {
@@ -823,14 +832,6 @@
           {
             "title": "Válel za AS Řím, v Lize mistrů stál proti Realu. Teď italský obránce jezdí pro Uber",
             "publishedAt": "2026-04-24T19:48:39Z"
-          },
-          {
-            "title": "SESTŘIH: Výtečná atmosféra v Jihlavě a další jasná výhra v přípravě. Češi znovu porazili Rakušany",
-            "publishedAt": "2026-04-24T08:24:43Z"
-          },
-          {
-            "title": "Ze zámoří se k reprezentaci připojí šest hokejistů",
-            "publishedAt": "2026-04-24T18:26:59Z"
           }
         ]
       }
