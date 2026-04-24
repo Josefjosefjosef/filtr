@@ -423,7 +423,8 @@ export function buildPlainText(state, totals) {
   return lines.join("\n");
 }
 
-export function buildInvoiceHtmlPreview(state, totals) {
+/** Jednotná vizuální HTML šablona faktury (náhled + PDF). Neplain-text export. */
+export function buildInvoicePaperHtml(state, totals) {
   const inv = state.invoice || {};
   const brand = "#881337";
   const rows = (state.lines || [])
@@ -514,6 +515,11 @@ export function buildInvoiceHtmlPreview(state, totals) {
     "</div></div>" +
     "<div class=\"iu-inv-pr-foot\">www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz</div></div>"
   );
+}
+
+/** @deprecated alias — používej buildInvoicePaperHtml */
+export function buildInvoiceHtmlPreview(state, totals) {
+  return buildInvoicePaperHtml(state, totals);
 }
 
 export function loadRecipients() {

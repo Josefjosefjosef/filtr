@@ -4,7 +4,7 @@
 import {
   applyBuyerSnapshot,
   applySupplierSnapshot,
-  buildInvoiceHtmlPreview,
+  buildInvoicePaperHtml,
   buildPlainText,
   computeTotals,
   defaultFormState,
@@ -571,6 +571,47 @@ export function initIuInvoiceOverlay(deps) {
   }
 
   function wire(root) {
+    let previewLayoutMode = "";
+
+    function getPreviewScrollEl() {
+      return root.querySelector(".iu-inv-previewScroll") || root.querySelector("[data-inv-preview-host]");
+    }
+
+    function getPreviewAvailWidth() {
+      const scroll = getPreviewScrollEl();
+      if (!scroll) return 800;
+      const w = scroll.clientWidth || scroll.getBoundingClientRect().width || 800;
+      return Math.max(260, w - 24);
+    }
+
+    function isDesktopPreviewBreakpoint() {
+      try {
+        return window.matchMedia("(min-width: 1025px)").matches;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function buildPreviewHostInner(innerHtml, mode) {
+      if (mode === "desktop") {
+        return (
+          '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--desktop">' +
+          '<div class="iu-invoice-preview-desktop">' +
+          '<div class="iu-invoice-paper">' +
+          innerHtml +
+          "</div></div></div>"
+        );
+      }
+      return (
+        '<div class="iu-invoice-preview-viewport iu-invoice-preview-viewport--mobile">' +
+        '<div class="iu-invoice-preview-mobile">' +
+        '<div class="iu-invoice-preview-scale">' +
+        '<div class="iu-invoice-paper">' +
+        innerHtml +
+        "</div></div></div></div>"
+      );
+    }
+
     root.addEventListener("change", (e) => {
       const t = e.target;
       readStateFromDom(root, state);
@@ -727,7 +768,7 @@ export function initIuInvoiceOverlay(deps) {
         return;
       }
       const totals = computeTotals(state);
-      const html = buildInvoiceHtmlPreview(state, totals);
+      const html = buildInvoicePaperHtml(state, totals);
       const fn =
         typeof window !== "undefined" && typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function"
           ? window.iuPdfExportHtmlStringToBlobForInvoice
@@ -886,28 +927,18 @@ export function initIuInvoiceOverlay(deps) {
     function syncInvoicePreviewLayout() {
       const host = root.querySelector("[data-inv-preview-host]");
       if (!host) return;
-      const viewport = host.querySelector(".iu-invoice-preview-viewport");
-      const scaleEl = host.querySelector(".iu-invoice-preview-scale");
       const paper = host.querySelector(".iu-invoice-paper");
-      if (!viewport || !scaleEl || !paper) return;
-      let wide = false;
-      try {
-        wide = window.matchMedia("(min-width: 1025px)").matches;
-      } catch (_) {
-        wide = false;
-      }
-      if (wide) {
-        scaleEl.style.transform = "";
-        scaleEl.style.transformOrigin = "";
-        scaleEl.style.height = "";
-        scaleEl.style.width = "794px";
+      if (!paper) return;
+      const mobileWrap = host.querySelector(".iu-invoice-preview-mobile");
+      const scaleEl = mobileWrap && mobileWrap.querySelector(".iu-invoice-preview-scale");
+      if (!scaleEl) {
         return;
       }
-      const csw = window.getComputedStyle(viewport);
-      const padL = parseFloat(csw.paddingLeft) || 0;
-      const padR = parseFloat(csw.paddingRight) || 0;
-      const avail = Math.max(260, viewport.clientWidth - padL - padR - 4);
-      const sc = Math.min(1, avail / 794);
+      const csw = mobileWrap ? window.getComputedStyle(mobileWrap) : null;
+      const padL = csw ? parseFloat(csw.paddingLeft) || 0 : 0;
+      const padR = csw ? parseFloat(csw.paddingRight) || 0 : 0;
+      const innerAvail = Math.max(260, (mobileWrap ? mobileWrap.clientWidth : host.clientWidth) - padL - padR - 4);
+      const sc = Math.min(1, innerAvail / 794);
       scaleEl.style.width = "794px";
       scaleEl.style.transform = "scale(" + sc + ")";
       scaleEl.style.transformOrigin = "top center";
@@ -927,12 +958,10 @@ export function initIuInvoiceOverlay(deps) {
       const host = root.querySelector("[data-inv-preview-host]");
       const layer = root.querySelector("[data-inv-preview-layer]");
       if (!host || !layer) return;
-      const inner = buildInvoiceHtmlPreview(state, totals);
-      host.innerHTML =
-        '<div class="iu-invoice-preview-viewport">' +
-        '<div class="iu-invoice-preview-scale"><div class="iu-invoice-paper">' +
-        inner +
-        "</div></div></div>";
+      const inner = buildInvoicePaperHtml(state, totals);
+      const mode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
+      host.innerHTML = buildPreviewHostInner(inner, mode);
+      previewLayoutMode = mode;
       layer.hidden = false;
       layer.classList.remove("iu-inv-guard-hidden");
       try {
@@ -955,6 +984,53 @@ export function initIuInvoiceOverlay(deps) {
         layer.hidden = true;
         layer.classList.add("iu-inv-guard-hidden");
       }
+      previewLayoutMode = "";
+    }
+
+    function repaintPreviewShellIfNeeded() {
+      const layer = root.querySelector("[data-inv-preview-layer]");
+      const host = root.querySelector("[data-inv-preview-host]");
+      if (!layer || layer.hidden || !host || !host.querySelector(".iu-inv-pr")) return;
+      const nextMode = isDesktopPreviewBreakpoint() ? "desktop" : "mobile";
+      if (nextMode === previewLayoutMode) {
+        syncInvoicePreviewLayout();
+        return;
+      }
+      readStateFromDom(root, state);
+      const v = validateForm(state);
+      if (!v.ok) {
+        syncInvoicePreviewLayout();
+        return;
+      }
+      const totals = computeTotals(state);
+      const inner = buildInvoicePaperHtml(state, totals);
+      host.innerHTML = buildPreviewHostInner(inner, nextMode);
+      previewLayoutMode = nextMode;
+      try {
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            try {
+              syncInvoicePreviewLayout();
+            } catch (_) {}
+          });
+        });
+      } catch (_) {}
+    }
+
+    const previewScrollForRo = getPreviewScrollEl();
+    if (previewScrollForRo && typeof ResizeObserver !== "undefined") {
+      let roT = 0;
+      const ro = new ResizeObserver(() => {
+        window.clearTimeout(roT);
+        roT = window.setTimeout(() => {
+          try {
+            repaintPreviewShellIfNeeded();
+          } catch (_) {}
+        }, 80);
+      });
+      try {
+        ro.observe(previewScrollForRo);
+      } catch (_) {}
     }
 
     root.querySelector("[data-inv-copy]")?.addEventListener("click", () => {
