@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T09:05:08.356854Z",
+  "ingestedAt": "2026-04-24T09:24:46.941967Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Platíme to my všichni, Babiš kritizuje zisky z prodeje zemního plynu i rozpočet EU",
+      "url": "https://ekonomickydenik.cz/platime-to-my-vsichni-babis-kritizuje-zisky-z-prodeje-plynu/",
+      "dt": "2026-04-24T09:14:10Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "kritizuje",
+        "platíme",
+        "plynu",
+        "prodeje",
+        "rozpočet",
+        "všichni",
+        "zemního",
+        "zisky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,32 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Česko jako evropský rekordman: Nafta u nás zdražila nejvíc z celé EU",
-      "url": "https://ekonomickydenik.cz/nafta-u-nas-zdrazila-nejvic-z-cele-eu/",
-      "dt": "2026-04-22T07:43:35Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "celé",
-        "evropský",
-        "jako",
-        "nafta",
-        "nejvíc",
-        "nás",
-        "rekordman",
-        "zdražila",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72125,
+      "bytes": 72424,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T07:55:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:14:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -862,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Platíme to my všichni, Babiš kritizuje zisky z prodeje zemního plynu i rozpočet EU",
+            "publishedAt": "2026-04-24T09:14:10Z"
+          },
           {
             "title": "Tři ceny u jednoho výrobku? Lidé se cítí zmateně, říká ombudsman Fialka",
             "publishedAt": "2026-04-24T07:55:23Z"
@@ -889,10 +893,6 @@
           {
             "title": "Ukrajina odvrátila bankrot. EU odklepla půjčku 2,2 bilionu korun",
             "publishedAt": "2026-04-23T13:53:57Z"
-          },
-          {
-            "title": "Místo slevy zadarmo. Do pasti akcí se po Reeboku chytil Myprotein",
-            "publishedAt": "2026-04-23T13:32:53Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T09:05:08.356854Z",
+  "ingestedAt": "2026-04-24T09:24:46.941967Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česká ekonomika zažívá ráznou proměnu, která není na první pohled vidět. Lidé hledající práci už ji pociťují",
+      "url": "https://podcasty.hn.cz/c1-67870740-ceska-ekonomika-zaziva-raznou-promenu-ktera-neni-na-prvni-pohled-videt-lide-hledajici-praci-uz-ji-pocituji",
+      "dt": "2026-04-24T09:12:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ekonomika",
+        "hledající",
+        "lidé",
+        "pociťují",
+        "pohled",
+        "proměnu",
+        "první",
+        "práci",
+        "ráznou",
+        "vidět",
+        "zažívá",
+        "česká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1109,35 +1138,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Donášel jste, pašování knih to nevyváží. Soud smetl Kavanovu žádost o uznání účasti na odboji",
-      "url": "https://archiv.hn.cz/c1-67870380-donasel-jste-pasovani-knih-to-nevyvazi-soud-smetl-kavanovu-zadost-o-uznani-ucasti-na-odboji",
-      "dt": "2026-04-23T13:47:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "donášel",
-        "jste",
-        "kavanovu",
-        "knih",
-        "nevyváží",
-        "odboji",
-        "pašování",
-        "smetl",
-        "soud",
-        "uznání",
-        "účasti",
-        "žádost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1148,7 +1148,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184497,
+      "bytes": 184410,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1185,12 +1185,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:12:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 35,
+          "finance": 36,
           "zdravi": 2,
-          "zpravy": 3
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1202,6 +1202,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česká ekonomika zažívá ráznou proměnu, která není na první pohled vidět. Lidé hledající práci už ji pociťují",
+            "publishedAt": "2026-04-24T09:12:00Z"
+          },
           {
             "title": "Podepsáno. ČEZ a Rolls-Royce se dohodly na vývoji modulárních reaktorů, v Česku má jeden být v Temelíně",
             "publishedAt": "2026-04-24T08:46:00Z"
@@ -1229,10 +1233,6 @@
           {
             "title": "GPT-5.5 je nový &bdquo;nejchytřejší&ldquo; model od OpenAI. Vyniká v programování, ale je dražší a v některých oblastech se zhoršil",
             "publishedAt": "2026-04-24T03:17:00Z"
-          },
-          {
-            "title": "Týden s technologiemi: Umělá inteligence nejvíc pomáhá lidem, kteří jsou schopní a úspěšní sami o sobě, záleží i na věku",
-            "publishedAt": "2026-04-23T22:00:00Z"
           }
         ]
       }

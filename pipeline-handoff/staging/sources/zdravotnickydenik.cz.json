@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T09:05:08.356854Z",
+  "ingestedAt": "2026-04-24T09:24:46.941967Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zákaz kojenecké výživy je zbytečný, tvrdí výrobce. Toxické šarže jsme stáhli už dávno, tvrdí",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zakaz-kojenecke-vyzivy-toxicke-sarze-jsme-stahli/",
+      "dt": "2026-04-24T09:02:56Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dávno",
+        "jsme",
+        "kojenecké",
+        "stáhli",
+        "toxické",
+        "tvrdí",
+        "výrobce",
+        "výživy",
+        "zbytečný",
+        "zákaz",
+        "šarže"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,34 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nebezpečná horečka útočí: Češi si ji masivně vozí z dovolených, šíří se i Evropou. Léčba neexistuje",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nebezpecna-horecka-dovolene-evropa-lecba/",
-      "dt": "2026-04-23T09:41:13Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dovolených",
-        "evropou",
-        "horečka",
-        "léčba",
-        "masivně",
-        "nebezpečná",
-        "neexistuje",
-        "vozí",
-        "útočí",
-        "češi",
-        "šíří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94116,
+      "bytes": 95096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:05:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:02:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zákaz kojenecké výživy je zbytečný, tvrdí výrobce. Toxické šarže jsme stáhli už dávno, tvrdí",
+            "publishedAt": "2026-04-24T09:02:56Z"
+          },
           {
             "title": "Ostravská lékařská fakulta slaví: Získala akreditaci na maximálních 10 let",
             "publishedAt": "2026-04-24T08:05:24Z"
@@ -363,10 +367,6 @@
           {
             "title": "44 kojeneckých výživ obsahuje toxin, který vede i k selhání orgánů. Podívejte se, zda je nemáte doma",
             "publishedAt": "2026-04-23T12:03:02Z"
-          },
-          {
-            "title": "Záchranáři budou jezdit i přes hranice. Poslanci schválili přelomovou dohodu se Slovenskem",
-            "publishedAt": "2026-04-23T11:52:15Z"
           }
         ]
       }

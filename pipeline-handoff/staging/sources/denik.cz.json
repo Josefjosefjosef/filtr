@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T09:05:08.356854Z",
+  "ingestedAt": "2026-04-24T09:24:46.941967Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Vraždu plánoval, připravil si nože. Spolužačku ubodal v den osmnáctých narozenin",
+      "url": "https://plzensky.denik.cz/krimi/daniel-miarko-vrazda-zdemyslice-spoluzacka-tereza-pribehy-zla.html",
+      "dt": "2026-04-24T09:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "den",
+        "narozenin",
+        "nože",
+        "osmnáctých",
+        "plánoval",
+        "připravil",
+        "spolužačku",
+        "ubodal",
+        "vraždu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,33 +658,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ryanair začne zavírat odbavování zavazadel dříve. Komu to pomůže, zlobí se lidé",
-      "url": "https://www.denik.cz/staty-eu/ryanair-check-in-odbavovani-zavazadel-zavira-drive-reakce-lidi.html",
-      "dt": "2026-04-23T13:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dříve",
-        "komu",
-        "lidé",
-        "odbavování",
-        "pomůže",
-        "ryanair",
-        "zavazadel",
-        "zavírat",
-        "začne",
-        "zlobí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -669,7 +668,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29453,
+      "bytes": 29872,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -706,7 +705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T08:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T09:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -721,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vraždu plánoval, připravil si nože. Spolužačku ubodal v den osmnáctých narozenin",
+            "publishedAt": "2026-04-24T09:00:00Z"
+          },
           {
             "title": "U Francie se objevil obří žralok. Monstrum měřilo 10 metrů a kroužilo kolem lodi",
             "publishedAt": "2026-04-24T08:23:00Z"
@@ -748,10 +751,6 @@
           {
             "title": "Město Enid v Oklahomě zasáhlo tornádo. Živel srovnal se zemí řadu domů",
             "publishedAt": "2026-04-24T05:57:00Z"
-          },
-          {
-            "title": "Pilot opakovaně ignoroval varování. Airbus u Křivoklátu málem narazil do země",
-            "publishedAt": "2026-04-24T05:42:00Z"
           }
         ]
       }
