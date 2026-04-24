@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T02:09:04.219480Z",
+  "ingestedAt": "2026-04-24T02:30:12.099690Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Alkohol mířící z Moldávie do Irska zadrželi středočeští celníci",
+      "url": "https://tydenikpolicie.cz/alkohol-mirici-z-moldavie-do-irska-zadrzeli-stredocesti-celnici/",
+      "dt": "2026-04-24T02:02:30Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "alkohol",
+        "celníci",
+        "irska",
+        "moldávie",
+        "mířící",
+        "středočeští",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,27 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odcizená koloběžka se mu zasekla v okně",
-      "url": "https://tydenikpolicie.cz/odcizena-kolobezka-se-mu-zasekla-v-okne/",
-      "dt": "2026-04-23T07:25:57Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "koloběžka",
-        "odcizená",
-        "okně",
-        "zasekla"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -262,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15727,
+      "bytes": 15852,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -299,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T13:23:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T02:02:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -314,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alkohol mířící z Moldávie do Irska zadrželi středočeští celníci",
+            "publishedAt": "2026-04-24T02:02:30Z"
+          },
           {
             "title": "Řidič nákladního vozu srazil v Kaplici chodce, ten na místě zemřel",
             "publishedAt": "2026-04-23T13:23:34Z"
@@ -341,10 +348,6 @@
           {
             "title": "Tři řidiči se na Hodonínsku pokusili vyhnout silniční kontrole. Neuspěl ani jeden",
             "publishedAt": "2026-04-23T09:40:40Z"
-          },
-          {
-            "title": "Celníci v Chodově zadrželi statisíce nelegálních cigaret",
-            "publishedAt": "2026-04-23T09:35:36Z"
           }
         ]
       }

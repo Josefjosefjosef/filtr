@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T02:09:04.219480Z",
+  "ingestedAt": "2026-04-24T02:30:12.099690Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nízká porodnost? Chlapi se doma málo snaží, říká poslanec Václav Pláteník",
+      "url": "https://www.denik.cz/z_domova/vaclav-platenik-kdu-csl-nizka-porodnost.html",
+      "dt": "2026-04-24T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chlapi",
+        "doma",
+        "málo",
+        "nízká",
+        "pláteník",
+        "porodnost",
+        "poslanec",
+        "snaží",
+        "václav",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,31 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Srážka vlaků u Kodaně: Zranilo se 18 lidí, pět je v kritickém stavu",
-      "url": "https://www.denik.cz/staty-eu/dansko-kodan-srazka-vlaku-20260423.html",
-      "dt": "2026-04-23T07:36:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kodaně",
-        "kritickém",
-        "lidí",
-        "pět",
-        "srážka",
-        "stavu",
-        "vlaků",
-        "zranilo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29410,
+      "bytes": 29156,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-23T20:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -721,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nízká porodnost? Chlapi se doma málo snaží, říká poslanec Václav Pláteník",
+            "publishedAt": "2026-04-24T02:00:00Z"
+          },
           {
             "title": "Přijmete francouzské jaderné letouny a stanete se cílem, varuje Rusko Evropu",
             "publishedAt": "2026-04-23T20:21:00Z"
@@ -748,10 +754,6 @@
           {
             "title": "Střely bez olova? Utrpení zvěře, říkají myslivci. Turek chce koalici proti oceli",
             "publishedAt": "2026-04-23T15:20:00Z"
-          },
-          {
-            "title": "Film Ďábel nosí Pradu Wintourovou zaskočil. Teď jsou se Streepovou kamarádky",
-            "publishedAt": "2026-04-23T15:10:00Z"
           }
         ]
       }

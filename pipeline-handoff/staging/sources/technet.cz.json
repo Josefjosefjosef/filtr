@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-24T02:09:04.219480Z",
+  "ingestedAt": "2026-04-24T02:30:12.099690Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Jak soudruzi uvěřili vlastnímu mýtu. 40 let od jaderné havárie v Černobylu",
+      "url": "https://www.idnes.cz/technet/technika/jak-soudruzi-uverili-vlastnimu-mytu-40-let-od-jaderne-havarie-v-cernobylu.A260423_093858_tec_technika_zust",
+      "dt": "2026-04-24T02:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "havárie",
+        "jaderné",
+        "let",
+        "mýtu",
+        "soudruzi",
+        "uvěřili",
+        "vlastnímu",
+        "černobylu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -737,32 +762,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bluetooth reprák z Ikea stojí méně než porce masových koulí. Jak hraje?",
-      "url": "https://www.idnes.cz/technet/audio-foto-video/ikea-kallsup-c-tech-spk-08-levne-reproduktory-reprosoustavy-bluetooth-129-kc.A260413_120320_audio-foto-video_nyv/foto",
-      "dt": "2026-04-14T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "bluetooth",
-        "hraje",
-        "ikea",
-        "koulí",
-        "masových",
-        "než",
-        "porce",
-        "reprák",
-        "stojí"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 44544,
+      "bytes": 44548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +809,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T02:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 21,
-          "zpravy": 9
+          "other": 22,
+          "zpravy": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak soudruzi uvěřili vlastnímu mýtu. 40 let od jaderné havárie v Černobylu",
+            "publishedAt": "2026-04-24T02:00:00Z"
+          },
           {
             "title": "Nouzová přistání a dramatické momenty. Kdyby Aero Ab-11 mohlo vyprávět",
             "publishedAt": "2026-04-23T22:00:00Z"
@@ -853,10 +856,6 @@
           {
             "title": "Jak vznikl Den Země, jak a proč ho slaví celý svět",
             "publishedAt": "2026-04-22T08:17:00Z"
-          },
-          {
-            "title": "Před dvaceti lety vznikl design, který měl polidštit web. Jenže se zvrtl",
-            "publishedAt": "2026-04-22T08:02:03Z"
           }
         ]
       }
