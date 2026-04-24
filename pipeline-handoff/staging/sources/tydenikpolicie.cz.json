@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T10:30:15.591835Z",
+  "ingestedAt": "2026-04-24T10:54:58.843261Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Opilý muž měl v parku v Polné manipulovat s plynovými pistolemi",
+      "url": "https://tydenikpolicie.cz/opily-muz-mel-v-parku-v-polne-manipulovat-s-plynovymi-pistolemi/",
+      "dt": "2026-04-24T10:29:06Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "manipulovat",
+        "muž",
+        "měl",
+        "opilý",
+        "parku",
+        "pistolemi",
+        "plynovými",
+        "polné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,29 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Převoz klenotů si vyžádal přísná bezpečnostní opatření",
-      "url": "https://tydenikpolicie.cz/prevoz-klenotu-si-vyzadal-prisna-bezpecnostni-opatreni/",
-      "dt": "2026-04-24T07:12:15Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bezpečnostní",
-        "klenotů",
-        "opatření",
-        "převoz",
-        "přísná",
-        "vyžádal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15657,
+      "bytes": 15645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:05:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:29:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opilý muž měl v parku v Polné manipulovat s plynovými pistolemi",
+            "publishedAt": "2026-04-24T10:29:06Z"
+          },
           {
             "title": "Mladík v Praze riskoval jízdou na spřáhle tramvaje",
             "publishedAt": "2026-04-24T10:05:30Z"
@@ -347,10 +353,6 @@
           {
             "title": "Strážníci se v Hradci Králové podíleli na další úspěšné resuscitaci",
             "publishedAt": "2026-04-24T07:46:44Z"
-          },
-          {
-            "title": "Dva výrazné sportovní úspěchy ostravských strážníků",
-            "publishedAt": "2026-04-24T07:18:10Z"
           }
         ]
       }

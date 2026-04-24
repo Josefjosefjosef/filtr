@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-24T10:30:15.591835Z",
+  "ingestedAt": "2026-04-24T10:54:58.843261Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bryant vládne všem. Basketbalista Pardubic je nejužitečnějším hráčem ligy",
+      "url": "https://www.idnes.cz/sport/basket/pardubicky-bryant-ziskal-oceneni-pro-nejlepsiho-hrace-basketbalove-ligy.A260424_120118_sport-basket_tit",
+      "dt": "2026-04-24T10:09:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "basketbalista",
+        "bryant",
+        "hráčem",
+        "ligy",
+        "nejužitečnějším",
+        "pardubic",
+        "vládne",
+        "všem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čím to je? Jindy trpí, teď i přes dohled válí. Hvězdy v play off nezvykle září",
+      "url": "https://www.idnes.cz/hokej/extraliga/play-off-prvni-lajny-zari.A260423_203221_hokej_kazdt",
+      "dt": "2026-04-24T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dohled",
+        "hvězdy",
+        "jindy",
+        "nezvykle",
+        "off",
+        "play",
+        "trpí",
+        "válí",
+        "září",
+        "čím"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -735,57 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-      "url": "https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-do-18-let-2026-na-slovensku.A260420_225719_reprezentace_ald",
-      "dt": "2026-04-23T17:19:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokeji",
-        "hrají",
-        "kým",
-        "let",
-        "program",
-        "skupiny",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stěhování Dynama do Chomutova? U nás máte zavřeno, vzkazuje Zaťko majitelce",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-vypoved-treninky-stehovani-chomutov.A260423_125928_budejovice-zpravy_pkr",
-      "dt": "2026-04-23T16:28:45Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chomutova",
-        "dynama",
-        "majitelce",
-        "máte",
-        "nás",
-        "stěhování",
-        "vzkazuje",
-        "zavřeno",
-        "zaťko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46786,
+      "bytes": 46517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +849,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bryant vládne všem. Basketbalista Pardubic je nejužitečnějším hráčem ligy",
+            "publishedAt": "2026-04-24T10:09:00Z"
+          },
+          {
+            "title": "Čím to je? Jindy trpí, teď i přes dohled válí. Hvězdy v play off nezvykle září",
+            "publishedAt": "2026-04-24T10:00:00Z"
+          },
           {
             "title": "Netradiční příprava na baráž. Hradecký manažer si proti Zlínu přímo zahrál",
             "publishedAt": "2026-04-24T09:54:00Z"
@@ -871,14 +880,6 @@
           {
             "title": "Pešán se Třinci nediví. Ocenil Sedlákovu odolnost, Žabka navrhoval: Ať je na tribuně",
             "publishedAt": "2026-04-24T08:44:00Z"
-          },
-          {
-            "title": "Věřím, že jsme rychlejší než loni, líčí Pech před Šumavou. Nervózní zatím není",
-            "publishedAt": "2026-04-24T08:27:00Z"
-          },
-          {
-            "title": "Lutych–Bastogne–Lutych 2026: Trasa, favorité, Češi na startu. Kde sledovat v TV?",
-            "publishedAt": "2026-04-24T08:00:00Z"
           }
         ]
       }

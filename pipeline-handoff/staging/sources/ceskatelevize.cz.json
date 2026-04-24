@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T10:30:15.591835Z",
+  "ingestedAt": "2026-04-24T10:54:58.843261Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "ČEZ představil detaily vzniku dceřiné firmy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/brifink-cezu-k-zalozeni-nove-dcerine-firmy-372753",
+      "dt": "2026-04-24T10:31:29Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dceřiné",
+        "detaily",
+        "firmy",
+        "představil",
+        "vzniku",
+        "čez"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -740,33 +763,6 @@
         "schválili",
         "společnosti",
         "warner"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Počet světových multimilionářů by mohl během pěti let vzrůst na skoro čtyři tisíce",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/pocet-svetovych-multimilionaru-by-mohl-behem-peti-let-vzrust-na-skoro-ctyri-tisice-372717",
-      "dt": "2026-04-23T14:34:52Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "během",
-        "let",
-        "multimilionářů",
-        "počet",
-        "pěti",
-        "skoro",
-        "světových",
-        "tisíce",
-        "vzrůst",
-        "čtyři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1546,7 +1542,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43266,
+      "bytes": 43394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,12 +1602,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:29:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:31:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 2,
           "other": 6,
-          "zpravy": 22,
-          "finance": 2
+          "zpravy": 22
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1623,6 +1619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČEZ představil detaily vzniku dceřiné firmy",
+            "publishedAt": "2026-04-24T10:31:29Z"
+          },
           {
             "title": "Makakové žerou na Gibraltaru kvůli jídlu od turistů hlínu, zjistila nová studie",
             "publishedAt": "2026-04-24T09:29:04Z"
@@ -1650,10 +1650,6 @@
           {
             "title": "Stát podepsal s ČEZem memorandum o spolupráci na modulárních reaktorech",
             "publishedAt": "2026-04-24T08:03:35Z"
-          },
-          {
-            "title": "Pilot, který se u Křivoklátu dostal nízko nad zem, ignoroval opakovaná varování",
-            "publishedAt": "2026-04-24T07:27:32Z"
           }
         ]
       }
@@ -1759,7 +1755,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76941,
+      "bytes": 76874,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

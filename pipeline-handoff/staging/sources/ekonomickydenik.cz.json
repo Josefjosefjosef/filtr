@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T10:30:15.591835Z",
+  "ingestedAt": "2026-04-24T10:54:58.843261Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Civilista s puškou v ruce: Proč tisíce Čechů dobrovolně mění pohodlí za armádní dril?",
+      "url": "https://ekonomickydenik.cz/civilista-puska-armadni-zalohy-zajem/",
+      "dt": "2026-04-24T10:48:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádní",
+        "civilista",
+        "dobrovolně",
+        "dril",
+        "mění",
+        "pohodlí",
+        "proč",
+        "puškou",
+        "ruce",
+        "tisíce",
+        "čechů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Omluví se Turek? Za parazity a chátru ho tepe Středula i Babiš",
+      "url": "https://ekonomickydenik.cz/omluvi-se-turek-za-parazity-a-chatru-ho-tepe-stredula-i-babis/",
+      "dt": "2026-04-24T10:39:39Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "chátru",
+        "omluví",
+        "parazity",
+        "středula",
+        "tepe",
+        "turek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -743,60 +795,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kdy zaplatit daň z nemovitosti? Úřady rozesílají platební údaje a varují před podvody",
-      "url": "https://ekonomickydenik.cz/kdy-zaplatit-dan-z-nemovitosti/",
-      "dt": "2026-04-22T12:23:19Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "daň",
-        "nemovitosti",
-        "platební",
-        "podvody",
-        "rozesílají",
-        "varují",
-        "zaplatit",
-        "údaje",
-        "úřady"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Izrael rozdělil Evropu. Španělsko a Irsko chtějí tvrdý trest, Itálie a Německo říkají ne",
-      "url": "https://ekonomickydenik.cz/izrael-rozdelil-evropu-spanelsko-a-irsko-chteji-tvrdy-trest/",
-      "dt": "2026-04-22T12:02:18Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "chtějí",
-        "evropu",
-        "irsko",
-        "itálie",
-        "izrael",
-        "německo",
-        "rozdělil",
-        "trest",
-        "tvrdý",
-        "říkají",
-        "španělsko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72559,
+      "bytes": 72840,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,12 +842,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:15:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:48:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
+          "finance": 27,
           "zdravi": 1,
-          "zpravy": 3,
+          "zpravy": 1,
           "sport": 1
         },
         "drop_counts": {
@@ -862,6 +860,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Civilista s puškou v ruce: Proč tisíce Čechů dobrovolně mění pohodlí za armádní dril?",
+            "publishedAt": "2026-04-24T10:48:24Z"
+          },
+          {
+            "title": "Omluví se Turek? Za parazity a chátru ho tepe Středula i Babiš",
+            "publishedAt": "2026-04-24T10:39:39Z"
+          },
           {
             "title": "Po miliardách z Evropy touží Zelenskyj po rychlém přijetí do Unie. Nejlépe už příští rok",
             "publishedAt": "2026-04-24T10:15:37Z"
@@ -885,14 +891,6 @@
           {
             "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
             "publishedAt": "2026-04-24T06:54:50Z"
-          },
-          {
-            "title": "Až 15 tisíc korun měsíčně a stáž. CSG Nadační fond podpoří vysokoškoláky",
-            "publishedAt": "2026-04-24T05:54:51Z"
-          },
-          {
-            "title": "Manuál proti neviditelnému nepříteli: Jak má vypadat neprostupný štít do roku 2027",
-            "publishedAt": "2026-04-24T04:05:00Z"
           }
         ]
       }

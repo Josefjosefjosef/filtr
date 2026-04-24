@@ -1,21 +1,46 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T10:30:15.591835Z",
+  "ingestedAt": "2026-04-24T10:54:58.843261Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ve skleničce s dětskou výživou HiPP se našlo 15 mikrogramů jedu na krysy",
+      "url": "https://www.denik.cz/staty-eu/hipp-detska-vyziva-hipp-rakousko-jed-na-krysy.html",
+      "dt": "2026-04-24T10:14:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětskou",
+        "hipp",
+        "jedu",
+        "krysy",
+        "mikrogramů",
+        "našlo",
+        "skleničce",
+        "výživou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Horečka dengue útočí i v ČR. Češi si ji vozí dovolenkového ráje, je ale i v EU",
+      "title": "Horečka dengue útočí. Češi ji vozí z dovolenkového ráje, nakazit se dá i v EU",
       "url": "https://www.denik.cz/zdravotnictvi/horecka-dengue-cesko-eu-kde-se-lez-nakazit-dovolena-maledivy.html",
       "dt": "2026-04-24T10:03:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "ale",
         "dengue",
         "dovolenkového",
         "horečka",
+        "nakazit",
         "ráje",
         "vozí",
         "útočí",
@@ -632,34 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Střely bez olova? Utrpení zvěře, říkají myslivci. Turek chce koalici proti oceli",
-      "url": "https://www.denik.cz/z_domova/strely-bez-olova-eu-koalice-proti-oceli-filip-turek.html",
-      "dt": "2026-04-23T15:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chce",
-        "koalici",
-        "myslivci",
-        "oceli",
-        "olova",
-        "proti",
-        "střely",
-        "turek",
-        "utrpení",
-        "zvěře",
-        "říkají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30330,
+      "bytes": 30054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,11 +704,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:14:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -724,7 +721,11 @@
         },
         "sample_titles": [
           {
-            "title": "Horečka dengue útočí i v ČR. Češi si ji vozí dovolenkového ráje, je ale i v EU",
+            "title": "Ve skleničce s dětskou výživou HiPP se našlo 15 mikrogramů jedu na krysy",
+            "publishedAt": "2026-04-24T10:14:00Z"
+          },
+          {
+            "title": "Horečka dengue útočí. Češi ji vozí z dovolenkového ráje, nakazit se dá i v EU",
             "publishedAt": "2026-04-24T10:03:00Z"
           },
           {
@@ -750,10 +751,6 @@
           {
             "title": "Záchrana Timmyho pokračuje. Ochranáři hloubí přes 100 metrů dlouhé koryto",
             "publishedAt": "2026-04-24T07:10:00Z"
-          },
-          {
-            "title": "Vlna podpory pro Jonáška z Chomutovska. Po zranění založili lidé sbírku",
-            "publishedAt": "2026-04-24T06:45:00Z"
           }
         ]
       }
