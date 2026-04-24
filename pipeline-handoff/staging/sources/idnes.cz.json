@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-24T03:29:40.013656Z",
+  "ingestedAt": "2026-04-24T03:50:58.617021Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V sobotu bude skoro léto, v neděli zas zima. Mapa ukazuje velký rozdíl teplot",
+      "url": "https://www.idnes.cz/zpravy/domaci/v-sobotu-bude-skoro-leto-v-nedeli-zas-zima-mapa-ukazuje-velky-rozdil-teplot.A260423_155614_domaci_hrat",
+      "dt": "2026-04-24T03:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "léto",
+        "mapa",
+        "neděli",
+        "rozdíl",
+        "skoro",
+        "sobotu",
+        "teplot",
+        "ukazuje",
+        "velký",
+        "zas",
+        "zima"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lidovci si zvolí nové vedení, polít živou vodou se je pokusí hejtman Grolich",
+      "url": "https://www.idnes.cz/zpravy/domaci/lidovci-si-zvoli-nove-vedeni-polit-zivou-vodou-se-je-pokusi-hejtman-grolich.A260424_034357_domaci_kop",
+      "dt": "2026-04-24T03:25:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "grolich",
+        "hejtman",
+        "lidovci",
+        "nové",
+        "pokusí",
+        "polít",
+        "vedení",
+        "vodou",
+        "zvolí",
+        "živou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -720,56 +775,6 @@
         "statisíce",
         "superúřad",
         "sídlo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA snížily hodnocení nebezpečnosti marihuany, už není v kategorii jako heroin",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-snizily-hodnoceni-nebezpecnosti-licencovane-marihuany.A260423_155441_zahranicni_kha",
-      "dt": "2026-04-23T14:06:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "heroin",
-        "hodnocení",
-        "jako",
-        "kategorii",
-        "marihuany",
-        "nebezpečnosti",
-        "snížily",
-        "usa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "RECENZE: Už nemá sílu ani na to, aby jim nakopala. Ale Oscara za to měla blízko",
-      "url": "https://www.idnes.cz/kultura/film-televize/recenze-kdybych-mela-nohy-tak-ti-nakopu.A260420_110202_filmvideo_spm",
-      "dt": "2026-04-23T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "blízko",
-        "jim",
-        "měla",
-        "nakopala",
-        "nemá",
-        "oscara",
-        "sílu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1566,7 +1571,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49569,
+      "bytes": 49439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1603,12 +1608,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-23T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T03:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 26,
           "finance": 3,
-          "other": 2,
-          "zpravy": 25
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1620,6 +1625,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V sobotu bude skoro léto, v neděli zas zima. Mapa ukazuje velký rozdíl teplot",
+            "publishedAt": "2026-04-24T03:30:00Z"
+          },
+          {
+            "title": "Lidovci si zvolí nové vedení, polít živou vodou se je pokusí hejtman Grolich",
+            "publishedAt": "2026-04-24T03:25:00Z"
+          },
           {
             "title": "Půdu v Česku investoři skupovat nebudou, mimo EU je to jednodušší, říká odborník",
             "publishedAt": "2026-04-23T22:00:00Z"
@@ -1643,14 +1656,6 @@
           {
             "title": "Příměří mezi Libanonem a Izraelem bude prodlouženo o tři týdny, oznámil Trump",
             "publishedAt": "2026-04-23T21:55:35Z"
-          },
-          {
-            "title": "Pražští radní schválili koupi Národního domu na Vinohradech a zámku Veleslavín",
-            "publishedAt": "2026-04-23T20:22:00Z"
-          },
-          {
-            "title": "Šest lidí zranila střelba v nákupním centru v Louisianě, dva jsou v kritickém stavu",
-            "publishedAt": "2026-04-23T19:56:00Z"
           }
         ]
       }
