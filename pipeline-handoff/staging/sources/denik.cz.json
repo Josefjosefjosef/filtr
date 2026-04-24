@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T10:09:19.727812Z",
+  "ingestedAt": "2026-04-24T10:30:15.591835Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Horečka dengue útočí i v ČR. Češi si ji vozí dovolenkového ráje, je ale i v EU",
+      "url": "https://www.denik.cz/zdravotnictvi/horecka-dengue-cesko-eu-kde-se-lez-nakazit-dovolena-maledivy.html",
+      "dt": "2026-04-24T10:03:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ale",
+        "dengue",
+        "dovolenkového",
+        "horečka",
+        "ráje",
+        "vozí",
+        "útočí",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Bohumíně opravili vzácné varhany. Uvnitř mechanismu objevili hlavu Stalina",
+      "url": "https://www.denik.cz/regiony/sokujici-objev-bohumin-oprava-varhany-kostel-stalin-svoboda-nesouhlas-2026.html",
+      "dt": "2026-04-24T10:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bohumíně",
+        "hlavu",
+        "mechanismu",
+        "objevili",
+        "opravili",
+        "stalina",
+        "uvnitř",
+        "varhany",
+        "vzácné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -609,55 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Film Ďábel nosí Pradu Wintourovou zaskočil. Teď jsou se Streepovou kamarádky",
-      "url": "https://www.denik.cz/film-a-televize/dabel-nosi-pradu-2-anna-wintour-portret-meryl-streep.html",
-      "dt": "2026-04-23T15:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "film",
-        "kamarádky",
-        "nosí",
-        "pradu",
-        "streepovou",
-        "wintourovou",
-        "zaskočil",
-        "ďábel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Medvědice na jihovýchodě Polska zabila ženu, která byla na procházce se synem",
-      "url": "https://www.denik.cz/staty-eu/polsko-medved-utok-medvedice-zabila-zenu.html",
-      "dt": "2026-04-23T14:51:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jihovýchodě",
-        "medvědice",
-        "polska",
-        "procházce",
-        "synem",
-        "zabila",
-        "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29872,
+      "bytes": 30330,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,10 +707,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:03:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 25
+          "zdravi": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -720,6 +723,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Horečka dengue útočí i v ČR. Češi si ji vozí dovolenkového ráje, je ale i v EU",
+            "publishedAt": "2026-04-24T10:03:00Z"
+          },
+          {
+            "title": "V Bohumíně opravili vzácné varhany. Uvnitř mechanismu objevili hlavu Stalina",
+            "publishedAt": "2026-04-24T10:00:00Z"
+          },
           {
             "title": "Vraždu plánoval, připravil si nože. Spolužačku ubodal v den osmnáctých narozenin",
             "publishedAt": "2026-04-24T09:00:00Z"
@@ -743,14 +754,6 @@
           {
             "title": "Vlna podpory pro Jonáška z Chomutovska. Po zranění založili lidé sbírku",
             "publishedAt": "2026-04-24T06:45:00Z"
-          },
-          {
-            "title": "Voják USA vyhrál miliony na sázkách. Díky tajným informací vsadil na pád Madura",
-            "publishedAt": "2026-04-24T06:20:00Z"
-          },
-          {
-            "title": "Město Enid v Oklahomě zasáhlo tornádo. Živel srovnal se zemí řadu domů",
-            "publishedAt": "2026-04-24T05:57:00Z"
           }
         ]
       }

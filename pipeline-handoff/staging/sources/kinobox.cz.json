@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-24T10:09:19.727812Z",
+  "ingestedAt": "2026-04-24T10:30:15.591835Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Zodiac se silou svého finále vyrovná Fincherovým nejslavnějším opusům",
+      "url": "https://www.kinobox.cz/clanky/daily/52972-kinobox-daily-zodiac-se-silou-sveho-finale-vyrovna-fincherovym-nejslavnejsim-opusum",
+      "dt": "2026-04-24T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "fincherovým",
+        "finále",
+        "kinobox",
+        "nejslavnějším",
+        "opusům",
+        "silou",
+        "svého",
+        "vyrovná",
+        "zodiac"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -520,33 +547,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Základní instinkt zvráceného scenáristu neopustil. Sharon Stone by v napsaném pokračování uvítal",
-      "url": "https://www.kinobox.cz/clanky/filmy/52865-zakladni-instinkt-zvraceneho-scenaristu-neopustil-sharon-stone-by-v-napsanem-pokracovani-uvital",
-      "dt": "2026-04-22T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "instinkt",
-        "napsaném",
-        "neopustil",
-        "pokračování",
-        "scenáristu",
-        "sharon",
-        "stone",
-        "uvítal",
-        "zvráceného",
-        "základní"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -557,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27580,
+      "bytes": 27111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -594,7 +594,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -609,6 +609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Zodiac se silou svého finále vyrovná Fincherovým nejslavnějším opusům",
+            "publishedAt": "2026-04-24T10:00:00Z"
+          },
           {
             "title": "Když světu vládnou jen ženy. Hvězda Borata se v nové komedii naučí, že dámy mají přednost",
             "publishedAt": "2026-04-24T09:00:00Z"
@@ -636,10 +640,6 @@
           {
             "title": "Kinovýhled: Zazpívá nám Michael Jackson. Podvratnou zábavu nabídne oceňovaná černá komedie",
             "publishedAt": "2026-04-23T13:00:00Z"
-          },
-          {
-            "title": "Lesní duch se nikdy takhle nečinil. Smrtelné zlo se v nelítostném traileru chvěje v plamenech",
-            "publishedAt": "2026-04-23T12:00:00Z"
           }
         ]
       }

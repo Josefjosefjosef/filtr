@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T10:09:19.727812Z",
+  "ingestedAt": "2026-04-24T10:30:15.591835Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Po miliardách z Evropy touží Zelenskyj po rychlém přijetí do Unie. Nejlépe už příští rok",
+      "url": "https://ekonomickydenik.cz/po-miliardach-z-evropy-touzi-zelenskyj-po-rychlem-prijeti-do-unie/",
+      "dt": "2026-04-24T10:15:37Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evropy",
+        "miliardách",
+        "nejlépe",
+        "přijetí",
+        "příští",
+        "rok",
+        "rychlém",
+        "touží",
+        "unie",
+        "zelenskyj"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -770,34 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Družba se opět plní, ropa na Slovensko dorazí ve čtvrtek. Fico mluví o narušení důvěry",
-      "url": "https://ekonomickydenik.cz/druzba-se-opet-plni-ropa-dorazi-ve-ctvrtek/",
-      "dt": "2026-04-22T10:50:45Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dorazí",
-        "družba",
-        "důvěry",
-        "fico",
-        "mluví",
-        "narušení",
-        "opět",
-        "plní",
-        "ropa",
-        "slovensko",
-        "čtvrtek"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72154,
+      "bytes": 72559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:02:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:15:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -863,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po miliardách z Evropy touží Zelenskyj po rychlém přijetí do Unie. Nejlépe už příští rok",
+            "publishedAt": "2026-04-24T10:15:37Z"
+          },
           {
             "title": "Milionová korupce na ŘSD: Za úplatek hrozí bývalému pracovníkovi 10 let",
             "publishedAt": "2026-04-24T10:02:47Z"
@@ -890,10 +893,6 @@
           {
             "title": "Manuál proti neviditelnému nepříteli: Jak má vypadat neprostupný štít do roku 2027",
             "publishedAt": "2026-04-24T04:05:00Z"
-          },
-          {
-            "title": "Problém pro německé tanky a stíhačky? Berlín přijde o ropu z Kazachstánu",
-            "publishedAt": "2026-04-23T16:44:14Z"
           }
         ]
       }

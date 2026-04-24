@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-24T10:09:19.727812Z",
+  "ingestedAt": "2026-04-24T10:30:15.591835Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Data Check: Kdo v NATO zbrojí nejrychleji? Zkuste uhádnout stát, který překonal USA",
+      "url": "https://www.e15.cz/zahranicni/geopolitika/data-check-kdo-v-nato-zbroji-nejrychleji-zkuste-uhadnout-stat-ktery-prekonal-usa-1431694",
+      "dt": "2026-04-24T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "check",
+        "data",
+        "nato",
+        "nejrychleji",
+        "překonal",
+        "stát",
+        "uhádnout",
+        "usa",
+        "zbrojí",
+        "zkuste"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1056,31 +1083,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slovensko po opravě ropovodu Družba obnovilo odběr ruské ropy",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/slovensko-po-oprave-ropovodu-druzba-obnovilo-odber-ruske-ropy-1432326",
-      "dt": "2026-04-23T06:32:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "družba",
-        "obnovilo",
-        "odběr",
-        "opravě",
-        "ropovodu",
-        "ropy",
-        "ruské",
-        "slovensko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1093,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55158,
+      "bytes": 54892,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,11 +1130,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T09:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 33,
+          "zpravy": 6,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1145,6 +1147,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Data Check: Kdo v NATO zbrojí nejrychleji? Zkuste uhádnout stát, který překonal USA",
+            "publishedAt": "2026-04-24T10:00:00Z"
+          },
           {
             "title": "Extrémní bič na řidiče v Rakousku. Za vysokou rychlost přijdete o vůz i řidičák",
             "publishedAt": "2026-04-24T09:42:00Z"
@@ -1172,10 +1178,6 @@
           {
             "title": "Naděje na mír trvá. Trump prodloužil příměří v Libanonu a plánuje summit lídrů",
             "publishedAt": "2026-04-24T04:55:00Z"
-          },
-          {
-            "title": "Národní zájem v hodnotě miliard. Přesun agendy pod ministerstvo průmyslu má zajistit cash flow pro české firmy",
-            "publishedAt": "2026-04-24T04:00:00Z"
           }
         ]
       }
