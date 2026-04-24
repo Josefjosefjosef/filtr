@@ -5,6 +5,7 @@ import {
   applyBuyerSnapshot,
   applySupplierSnapshot,
   buildInvoicePaperHtml,
+  buildInvoicePrintHtml,
   buildPlainText,
   computeTotals,
   defaultFormState,
@@ -770,7 +771,7 @@ export function initIuInvoiceOverlay(deps) {
         return;
       }
       const totals = computeTotals(state);
-      const html = buildInvoicePaperHtml(state, totals);
+      const html = buildInvoicePrintHtml(state, totals);
       const fn =
         typeof window !== "undefined" && typeof window.iuPdfExportHtmlStringToBlobForInvoice === "function"
           ? window.iuPdfExportHtmlStringToBlobForInvoice

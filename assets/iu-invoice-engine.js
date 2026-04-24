@@ -517,6 +517,107 @@ export function buildInvoicePaperHtml(state, totals) {
   );
 }
 
+/**
+ * Samostatná A4 / PDF šablona (print režim). Nesmí být plain text.
+ * Náhled overlay používá buildInvoicePaperHtml — tato funkce je jen pro PDF/tisk.
+ */
+export function buildInvoicePrintHtml(state, totals) {
+  const inv = state.invoice || {};
+  const rows = (state.lines || [])
+    .map((ln, i) => {
+      const qty = parseNum(ln.qty);
+      const up = parseNum(ln.unitPrice);
+      const vr = totals.payer ? parseVatRate(ln.vatRate) : 0;
+      const a = lineAmounts(Number.isFinite(qty) ? qty : 0, Number.isFinite(up) ? up : 0, vr, totals.payer);
+      return (
+        "<tr><td>" +
+        escHtml(String(i + 1)) +
+        "</td><td>" +
+        escHtml(ln.name) +
+        (ln.description
+          ? "<div class=\"iu-invoice-print-desc\">" + escHtml(ln.description) + "</div>"
+          : "") +
+        "</td><td class=\"iu-invoice-print-num\">" +
+        escHtml(String(ln.qty)) +
+        "</td><td>" +
+        escHtml(ln.unit || "ks") +
+        "</td><td class=\"iu-invoice-print-num\">" +
+        escHtml(fmtMoney(up)) +
+        "</td>" +
+        (totals.payer ? "<td class=\"iu-invoice-print-num\">" + escHtml(String(vr)) + "%</td>" : "") +
+        "<td class=\"iu-invoice-print-num iu-invoice-print-strong\">" +
+        escHtml(fmtMoney(a.gross)) +
+        "</td></tr>"
+      );
+    })
+    .join("");
+  const payLabel = inv.payment === "cash" ? "Hotově" : "Převodem";
+  let bankHtml = "";
+  if (inv.payment === "transfer") {
+    bankHtml =
+      "<div class=\"iu-invoice-print-bank\"><strong>Platební údaje</strong><br/>Účet: " +
+      escHtml(inv.accountNumber) +
+      (inv.bankCode ? " / " + escHtml(inv.bankCode) : "") +
+      (inv.iban ? "<br/>IBAN: " + escHtml(inv.iban) : "") +
+      (inv.swift ? "<br/>SWIFT: " + escHtml(inv.swift) : "") +
+      "</div>";
+  }
+  return (
+    "<header class=\"iu-invoice-print-header\">" +
+    "<div class=\"iu-invoice-print-brand\">Vytvořeno pomocí infoUzel.cz</div>" +
+    "</header>" +
+    "<h1 class=\"iu-invoice-print-title\">FAKTURA</h1>" +
+    "<div class=\"iu-invoice-print-docno\">číslo faktury " +
+    escHtml(inv.number) +
+    "</div>" +
+    "<div class=\"iu-invoice-print-parties\">" +
+    "<div class=\"iu-invoice-print-party\">" +
+    "<div class=\"iu-invoice-print-section-label\">Dodavatel</div>" +
+    "<pre class=\"iu-invoice-print-pre\">" +
+    escHtml(supplierBlockText(state)) +
+    "</pre></div>" +
+    "<div class=\"iu-invoice-print-party\">" +
+    "<div class=\"iu-invoice-print-section-label\">Odběratel</div>" +
+    "<pre class=\"iu-invoice-print-pre\">" +
+    escHtml(buyerBlockText(state)) +
+    "</pre></div></div>" +
+    "<section class=\"iu-invoice-print-section\">" +
+    "<table class=\"iu-invoice-print-meta\"><tbody>" +
+    "<tr><th>Datum vystavení</th><td>" +
+    escHtml(fmtDateCs(inv.issueDate)) +
+    "</td><th>Datum splatnosti</th><td>" +
+    escHtml(fmtDateCs(inv.dueDate)) +
+    "</td></tr>" +
+    "<tr><th>DUZP</th><td>" +
+    escHtml(fmtDateCs(inv.taxableDate)) +
+    "</td><th>Způsob úhrady</th><td>" +
+    escHtml(payLabel) +
+    "</td></tr>" +
+    (inv.variableSymbol
+      ? "<tr><th>Variabilní symbol</th><td colspan=\"3\">" + escHtml(inv.variableSymbol) + "</td></tr>"
+      : "") +
+    "</tbody></table></section>" +
+    bankHtml +
+    "<table class=\"iu-invoice-print-table\"><thead><tr><th>#</th><th>Položka</th><th>Množ.</th><th>Jedn.</th><th>Cena / j.</th>" +
+    (totals.payer ? "<th>DPH</th>" : "") +
+    "<th>Celkem</th></tr></thead><tbody>" +
+    rows +
+    "</tbody></table>" +
+    "<div class=\"iu-invoice-print-total\">" +
+    (totals.payer
+      ? "<div class=\"iu-invoice-print-total-line\">Mezisoučet bez DPH: <span class=\"iu-invoice-print-strong\">" +
+        escHtml(fmtMoney(totals.sumBase)) +
+        "</span></div><div class=\"iu-invoice-print-total-line\">DPH: <span class=\"iu-invoice-print-strong\">" +
+        escHtml(fmtMoney(totals.sumVat)) +
+        "</span></div>"
+      : "") +
+    "<div class=\"iu-invoice-print-total-due\">Celkem k úhradě: " +
+    escHtml(fmtMoney(totals.sumGross)) +
+    "</div></div>" +
+    "<footer class=\"iu-invoice-print-footer\">www.infoUzel.cz · Vytvořeno pomocí infoUzel.cz</footer>"
+  );
+}
+
 /** @deprecated alias — používej buildInvoicePaperHtml */
 export function buildInvoiceHtmlPreview(state, totals) {
   return buildInvoicePaperHtml(state, totals);
