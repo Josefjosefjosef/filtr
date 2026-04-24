@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T04:55:21.643156Z",
+  "ingestedAt": "2026-04-24T05:14:37.035404Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Spiklenci vystihli atmosféru po komunistickém převratu. Na překlad čekali 75 let",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/spiklenci-vystihli-atmosferu-po-komunistickem-prevratu-na-preklad-cekali-75-let-372716",
+      "dt": "2026-04-24T05:05:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "atmosféru",
+        "komunistickém",
+        "let",
+        "překlad",
+        "převratu",
+        "spiklenci",
+        "vystihli",
+        "čekali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,31 +770,6 @@
         "smrti",
         "vědců",
         "zmizení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pozvěte do pracovní skupiny k ČT a ČRo i opozici, vyzval Rakušan Babiše",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pozvete-do-pracovni-skupiny-k-ct-a-cro-i-opozici-vyzval-rakusan-babise-372705",
-      "dt": "2026-04-23T10:22:49Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babiše",
-        "opozici",
-        "pozvěte",
-        "pracovní",
-        "rakušan",
-        "skupiny",
-        "vyzval",
-        "čro"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1551,7 +1551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43902,
+      "bytes": 43752,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,12 +1611,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T05:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 3,
-          "other": 5
+          "other": 6,
+          "zpravy": 21,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1628,6 +1628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spiklenci vystihli atmosféru po komunistickém převratu. Na překlad čekali 75 let",
+            "publishedAt": "2026-04-24T05:05:00Z"
+          },
           {
             "title": "Praha a Středočeský kraj diskutují o vzniku kampusu pro tisíce středoškolských studentů",
             "publishedAt": "2026-04-24T04:30:00Z"
@@ -1655,10 +1659,6 @@
           {
             "title": "„Samozřejmě že je tu nenecháme.“ Lidé se z Kramatorsku evakuují i s mazlíčky",
             "publishedAt": "2026-04-23T19:08:53Z"
-          },
-          {
-            "title": "Zelenskyj vyzval EU, aby dále pracovala na sankcích proti Rusku",
-            "publishedAt": "2026-04-23T19:01:59Z"
           }
         ]
       }
@@ -1764,7 +1764,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77044,
+      "bytes": 77030,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

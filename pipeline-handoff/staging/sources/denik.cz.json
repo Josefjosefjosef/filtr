@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T04:55:21.643156Z",
+  "ingestedAt": "2026-04-24T05:14:37.035404Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nosí rolexky s diamanty a honí divočáky. Robot Edward pobláznil polský internet",
+      "url": "https://www.denik.cz/staty-eu/robot-edward-warchocki-polsko-divocaci-video.html",
+      "dt": "2026-04-24T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "diamanty",
+        "divočáky",
+        "edward",
+        "honí",
+        "internet",
+        "nosí",
+        "pobláznil",
+        "polský",
+        "robot",
+        "rolexky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -633,31 +660,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Letecké záchranáře v Liberci ohrozil dron nad heliportem. Bezohlednost, zlobí se",
-      "url": "https://www.denik.cz/regiony/ohrozeni-zivota-i-posadky-vrtulniku-vztek-clouma-libereckymi-zachranari-20260423.html",
-      "dt": "2026-04-23T09:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bezohlednost",
-        "dron",
-        "heliportem",
-        "letecké",
-        "liberci",
-        "ohrozil",
-        "zlobí",
-        "záchranáře"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +670,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29510,
+      "bytes": 29377,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T03:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -721,6 +723,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nosí rolexky s diamanty a honí divočáky. Robot Edward pobláznil polský internet",
+            "publishedAt": "2026-04-24T05:00:00Z"
+          },
           {
             "title": "Lávka přes Dyji zpřístupnila nové trasy turistům, projekt pomohl i přírodě",
             "publishedAt": "2026-04-24T03:55:00Z"
@@ -748,10 +754,6 @@
           {
             "title": "Policie v Marseille při silniční kontrole zastřelila ozbrojeného mladíka",
             "publishedAt": "2026-04-23T19:39:00Z"
-          },
-          {
-            "title": "Tragédie v Itálii: Žena vyskočila z balkonu i se svými třemi dětmi v náručí",
-            "publishedAt": "2026-04-23T18:50:00Z"
           }
         ]
       }
