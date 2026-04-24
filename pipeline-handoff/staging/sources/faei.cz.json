@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-24T08:00:36.717706Z",
+  "ingestedAt": "2026-04-24T08:19:39.833633Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "ČEZ upřesnil první kroky k postátnění výroby elektřiny",
+      "url": "https://profitonline.cz/cez-upresnil-prvni-kroky-k-postatneni-vyroby-elektriny/",
+      "dt": "2026-04-24T08:00:14Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "elektřiny",
+        "kroky",
+        "postátnění",
+        "první",
+        "upřesnil",
+        "výroby",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -267,32 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Babiš se už vidí v Pekingu, proto Vystrčilovi zatrhnul letoun na Tchaj-wan",
-      "url": "https://profitonline.cz/babis-se-uz-vidi-v-pekingu-proto-vystrcilovi-zatrhnul-letoun-na-tchaj-wan/",
-      "dt": "2026-04-22T10:00:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "babiš",
-        "letoun",
-        "pekingu",
-        "proto",
-        "tchaj",
-        "vidí",
-        "vystrčilovi",
-        "wan",
-        "zatrhnul"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18726,
+      "bytes": 18592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,11 +338,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-24T06:00:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T08:00:14Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "zdravi": 2,
+          "finance": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ČEZ upřesnil první kroky k postátnění výroby elektřiny",
+            "publishedAt": "2026-04-24T08:00:14Z"
+          },
           {
             "title": "Miriam Fellingerová novou ředitelkou OMV v Česku",
             "publishedAt": "2026-04-24T06:00:48Z"
@@ -383,10 +385,6 @@
           {
             "title": "Přijít o tisíce kvůli chybě v daňovém přiznání je snazší, než se zdá",
             "publishedAt": "2026-04-23T09:00:46Z"
-          },
-          {
-            "title": "Proč by ČNB nyní neměla zvyšovat úrokové sazby?",
-            "publishedAt": "2026-04-23T08:00:55Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-24T08:00:36.717706Z",
+  "ingestedAt": "2026-04-24T08:19:39.833633Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Ostravská lékařská fakulta slaví: Získala akreditaci na maximálních 10 let",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/ostravska-lekarska-fakulta-akreditace-10-let/",
+      "dt": "2026-04-24T08:05:24Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "akreditaci",
+        "fakulta",
+        "let",
+        "lékařská",
+        "maximálních",
+        "ostravská",
+        "slaví",
+        "získala"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,32 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Absurdita u zaměstnaneckých benefitů: Více peněz má jít na zábavu než na prevenci rakoviny",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vice-penez-na-zabavu-nez-na-prevenci-rakoviny-navrh/",
-      "dt": "2026-04-23T09:02:15Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "absurdita",
-        "benefitů",
-        "jít",
-        "než",
-        "peněz",
-        "prevenci",
-        "rakoviny",
-        "zaměstnaneckých",
-        "zábavu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 95189,
+      "bytes": 94116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T08:05:24Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -337,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ostravská lékařská fakulta slaví: Získala akreditaci na maximálních 10 let",
+            "publishedAt": "2026-04-24T08:05:24Z"
+          },
           {
             "title": "Zdravotníci umí víc, než jim systém dovolí. Soukromí poskytovatelé chtějí změnu kompetencí",
             "publishedAt": "2026-04-24T07:00:00Z"
@@ -364,10 +367,6 @@
           {
             "title": "Záchranáři budou jezdit i přes hranice. Poslanci schválili přelomovou dohodu se Slovenskem",
             "publishedAt": "2026-04-23T11:52:15Z"
-          },
-          {
-            "title": "Hazard nad nemocnicí: Neznámý dron ohrozil vrtulník libereckých záchranářů",
-            "publishedAt": "2026-04-23T10:25:14Z"
           }
         ]
       }

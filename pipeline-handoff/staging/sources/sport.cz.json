@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-24T08:00:36.717706Z",
+  "ingestedAt": "2026-04-24T08:19:39.833633Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Prožívá fantastickou sezonu, povýší do Premier League? Scénářů je hodně, říká obletovaný Čech",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-dvojka-v-manchesteru-united-chci-chytat-na-premier-league-bych-si-troufl-rika-obletovany-cech-5442311",
+      "dt": "2026-04-24T07:28:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fantastickou",
+        "hodně",
+        "league",
+        "obletovaný",
+        "povýší",
+        "premier",
+        "prožívá",
+        "scénářů",
+        "sezonu",
+        "čech",
+        "říká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -33,7 +61,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+      "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
       "url": "https://www.sport.cz/clanek/nazory-komentare-analyza-dilema-sparty-za-ctvrt-miliardy-rekordni-ceskou-posilu-brzdi-zahada-tape-i-drahy-cizinec-5441395",
       "dt": "2026-04-24T05:54:28Z",
       "media_raw": "Sport.cz",
@@ -87,17 +115,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "V pustině se stanem. Tenisová jednička k nepoznání!",
+      "title": "Žádný luxus, tenisová hvězda k nepoznání! V pustině se stanem",
       "url": "https://www.sport.cz/clanek/tenis-tenisova-jednicka-ve-stanu-s-turbanem-na-hlave-prekvapila-vyletem-do-pustiny-5441909",
       "dt": "2026-04-24T07:37:41Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "jednička",
+        "hvězda",
+        "luxus",
         "nepoznání",
         "pustině",
         "stanem",
-        "tenisová"
+        "tenisová",
+        "žádný"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -109,48 +139,18 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Dvojka v Manchesteru United? Chci chytat. Na Premier League bych si troufl, říká obletovaný Čech",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-dvojka-v-manchesteru-united-chci-chytat-na-premier-league-bych-si-troufl-rika-obletovany-cech-5442311",
-      "dt": "2026-04-24T07:28:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bych",
-        "chci",
-        "chytat",
-        "dvojka",
-        "league",
-        "manchesteru",
-        "obletovaný",
-        "premier",
-        "troufl",
-        "united",
-        "čech",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vypadni! běsnilo tenisové publikum při třaskavém souboji",
+      "title": "Skandál. Vypadni, řvalo běsnící publikum na tenistu",
       "url": "https://www.sport.cz/clanek/tenis-zadna-noblesa-vypadni-besnilo-tenisove-publikum-vse-koncilo-vybuchy-jak-na-fotbale-5442322",
       "dt": "2026-04-24T07:26:32Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "běsnilo",
+        "běsnící",
         "publikum",
-        "při",
-        "souboji",
-        "tenisové",
-        "třaskavém",
-        "vypadni"
+        "skandál",
+        "tenistu",
+        "vypadni",
+        "řvalo"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45935,
+      "bytes": 46006,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -847,11 +847,15 @@
         },
         "sample_titles": [
           {
+            "title": "Prožívá fantastickou sezonu, povýší do Premier League? Scénářů je hodně, říká obletovaný Čech",
+            "publishedAt": "2026-04-24T07:28:50Z"
+          },
+          {
             "title": "Nevěřícné pohledy a hlavy v dlaních. Paráda českého gólmana přivedla soupeře k zoufalství",
             "publishedAt": "2026-04-24T07:55:30Z"
           },
           {
-            "title": "Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
+            "title": "ANALÝZA: Dilema Sparty za čtvrt miliardy. Rekordní českou posilu brzdí záhada, tápe i drahý cizinec",
             "publishedAt": "2026-04-24T05:54:28Z"
           },
           {
@@ -859,15 +863,11 @@
             "publishedAt": "2026-04-24T07:47:41Z"
           },
           {
-            "title": "V pustině se stanem. Tenisová jednička k nepoznání!",
+            "title": "Žádný luxus, tenisová hvězda k nepoznání! V pustině se stanem",
             "publishedAt": "2026-04-24T07:37:41Z"
           },
           {
-            "title": "Dvojka v Manchesteru United? Chci chytat. Na Premier League bych si troufl, říká obletovaný Čech",
-            "publishedAt": "2026-04-24T07:28:50Z"
-          },
-          {
-            "title": "Vypadni! běsnilo tenisové publikum při třaskavém souboji",
+            "title": "Skandál. Vypadni, řvalo běsnící publikum na tenistu",
             "publishedAt": "2026-04-24T07:26:32Z"
           },
           {
