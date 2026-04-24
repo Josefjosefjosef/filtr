@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-24T15:44:33.753172Z",
+  "ingestedAt": "2026-04-24T16:05:10.888161Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Shrek byl před 25 lety animovanou revolucí. Film chtěl natočit Spielberg, obsazení zlobra bylo prokletím",
+      "url": "https://www.kinobox.cz/clanky/filmy/52998-shrek-byl-pred-25-let-animovanou-revoluci-film-chtel-natocit-spielberg-obsazeni-zlobra-bylo-prokletim",
+      "dt": "2026-04-24T16:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "animovanou",
+        "chtěl",
+        "film",
+        "lety",
+        "natočit",
+        "obsazení",
+        "prokletím",
+        "revolucí",
+        "shrek",
+        "spielberg",
+        "zlobra"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -523,35 +551,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "K novému Rambovi se připojila známá tvář. Postavu z původní série ztvární hvězda Stranger Things",
-      "url": "https://www.kinobox.cz/clanky/filmy/52870-k-novemu-rambovi-se-pripojila-nova-tvar-postavu-z-puvodni-serie-ztvarni-hvezda-stranger-things",
-      "dt": "2026-04-22T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "hvězda",
-        "novému",
-        "postavu",
-        "připojila",
-        "původní",
-        "rambovi",
-        "stranger",
-        "série",
-        "things",
-        "tvář",
-        "známá",
-        "ztvární"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -562,7 +561,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27726,
+      "bytes": 27913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,7 +598,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -614,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Shrek byl před 25 lety animovanou revolucí. Film chtěl natočit Spielberg, obsazení zlobra bylo prokletím",
+            "publishedAt": "2026-04-24T16:00:00Z"
+          },
           {
             "title": "Krokodýl Dundee je po 40 letech největší Australan historie. Co na tom, že hlavní hvězda nebyla hercem",
             "publishedAt": "2026-04-24T15:00:00Z"
@@ -641,10 +644,6 @@
           {
             "title": "Supermanovo komiksové univerzum se rozroste o horor. Clayface děsí v prvním traileru",
             "publishedAt": "2026-04-24T07:00:00Z"
-          },
-          {
-            "title": "Přízraky Dejvického divadla končí na scéně. Zůstávají ale online",
-            "publishedAt": "2026-04-24T06:00:00Z"
           }
         ]
       }

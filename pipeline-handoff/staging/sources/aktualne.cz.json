@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-24T15:44:33.753172Z",
+  "ingestedAt": "2026-04-24T16:05:10.888161Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bitcoinová kauza pokračuje. Tejc podal trestní oznámení kvůli výsledkům auditu",
+      "url": "https://zpravy.aktualne.cz/domaci/bitcoinova-kauza-pokracuje-tejc-podal-trestni-oznameni-kvuli-vysledkum-auditu/r~aaa29d8b95036faaeaf6843e01c2519f/",
+      "dt": "2026-04-24T15:44:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "auditu",
+        "bitcoinová",
+        "kauza",
+        "kvůli",
+        "oznámení",
+        "podal",
+        "pokračuje",
+        "tejc",
+        "trestní",
+        "výsledkům"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,31 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sbírka potravin v sobotu startuje: zapojí se rekordní počet obchodů",
-      "url": "https://zpravy.aktualne.cz/ekonomika/sbirka-potravin-v-sobotu-startuje-zapoji-se-rekordni-pocet-obchodu/r~aaa296c06766533d54f1c656eb94ca05/",
-      "dt": "2026-04-24T09:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "obchodů",
-        "potravin",
-        "počet",
-        "rekordní",
-        "sbírka",
-        "sobotu",
-        "startuje",
-        "zapojí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22040,
+      "bytes": 22101,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,12 +576,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T15:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T15:44:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 16,
-          "sport": 3,
-          "finance": 1
+          "zpravy": 17,
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -591,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bitcoinová kauza pokračuje. Tejc podal trestní oznámení kvůli výsledkům auditu",
+            "publishedAt": "2026-04-24T15:44:00Z"
+          },
           {
             "title": "Putin může dostat pozvánku na summit G20 ve Spojených státech, tvrdí Kreml",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -618,10 +623,6 @@
           {
             "title": "Pavel se nepovažuje za lídra opozice. Jsem jen proti lžím a hulvátství, prohlásil",
             "publishedAt": "2026-04-24T14:52:00Z"
-          },
-          {
-            "title": "Poslanci přehlasovali Senát, zákon o cenách pohonných hmot putuje k prezidentovi",
-            "publishedAt": "2026-04-24T14:23:00Z"
           }
         ]
       }
