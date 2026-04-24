@@ -535,3 +535,56 @@
 #iuInvoicePanel .iu-invoice-overlay-cardShell{
   position: relative;
 }
+
+/* Off-DOM invoice PDF capture — html2canvas must see painted layout (no z-index:-1 / offscreen). */
+.iu-pdf-render-mode{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 794px;
+  max-width: 794px;
+  min-height: 200px;
+  background: #fff;
+  color: #000;
+  z-index: 2147483000;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  overflow: visible;
+  box-sizing: border-box;
+  padding: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Mobile/tablet preview: fixed paper width, scale to viewport (PDF-like, not fluid table reflow). */
+#iuInvoicePanel .iu-inv-previewScroll .iu-invoice-preview-scale{
+  width: 794px;
+  max-width: 794px;
+  transform-origin: top left;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+#iuInvoicePanel .iu-inv-previewScroll .iu-invoice-paper{
+  width: 794px;
+  max-width: 794px;
+  background: #fff;
+  box-sizing: border-box;
+}
+@media (max-width: 1024px){
+  #iuInvoicePanel .iu-inv-previewScroll .iu-invoice-preview-scale{
+    transform: scale(calc(100vw / 794));
+  }
+}
+@media (min-width: 1025px){
+  #iuInvoicePanel .iu-inv-previewScroll .iu-invoice-preview-scale{
+    transform: none;
+  }
+}
+#iuInvoicePanel .iu-invoice-paper .iu-inv-pr{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+#iuInvoicePanel .iu-invoice-paper .iu-inv-pr-grid{
+  grid-template-columns: 1fr 1fr;
+}
