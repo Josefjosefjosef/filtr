@@ -21594,14 +21594,14 @@ function buildVideoAsArticleCard(it) {
       exportRoot.setAttribute("data-iu-invoice-pdf-host", "");
       exportRoot.className = "iu-pdf-render-mode iu-invoice-pdf-export-root";
       exportRoot.innerHTML =
-        "<div class=\"iu-invoice-pdf-export-inner\" style=\"width:794px;max-width:794px;margin:0 auto;box-sizing:border-box;transform:none;position:relative;overflow:visible;left:0;top:0\">" +
+        "<div class=\"iu-invoice-pdf-page\">" +
         "<div class=\"iu-invoice-paper iu-invoice-pdf-paper\">" +
         html +
         "</div></div>";
       document.body.appendChild(exportRoot);
       try {
         window._iuInvoicePdfExportMeta = {
-          renderSource: "isolated_pdf_dom",
+          renderSource: "isolated_pdf_host",
           generatedFromScaledPreview: false,
           visualTemplateUsed: true,
           plainTextOnly: false,
@@ -21613,9 +21613,11 @@ function buildVideoAsArticleCard(it) {
           scale: 2,
           scrollX: 0,
           scrollY: 0,
+          x: 0,
+          y: 0,
           width: 794,
-          windowWidth: 794,
-          windowHeight: exportRoot.scrollHeight,
+          windowWidth: 1000,
+          windowHeight: Math.max(exportRoot.scrollHeight || 0, 1200),
           useCORS: false,
           backgroundColor: "#ffffff",
         },
@@ -21623,17 +21625,24 @@ function buildVideoAsArticleCard(it) {
         pagebreak: { mode: ["css", "legacy"] },
       };
       function runHtml2Pdf() {
+        var pageEl = exportRoot.querySelector(".iu-invoice-pdf-page");
         var paper = exportRoot.querySelector(".iu-invoice-pdf-paper");
-        if (!paper) {
+        if (!pageEl || !paper) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-          if (typeof done === "function") done(new Error("invoice_pdf_paper_missing"));
+          if (typeof done === "function") done(new Error("invoice_pdf_page_missing"));
           return;
         }
+        var hostRect = exportRoot.getBoundingClientRect();
         var rect = paper.getBoundingClientRect();
         var textBody = paper.textContent || "";
-        if (rect.left < -0.5) {
+        if (rect.left < hostRect.left - 0.5) {
           if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
           if (typeof done === "function") done(new Error("invoice_pdf_paper_negative_left"));
+          return;
+        }
+        if (rect.right > hostRect.right + 0.5) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_paper_overflow_host"));
           return;
         }
         if (rect.width < 700 || rect.height < 200) {
@@ -21666,10 +21675,21 @@ function buildVideoAsArticleCard(it) {
           if (typeof done === "function") done(new Error("invoice_pdf_missing_created_by"));
           return;
         }
+        try {
+          window._iuInvoicePdfPositionProof = {
+            hostRectLeft: hostRect.left,
+            paperRectLeft: rect.left,
+            paperRectRight: rect.right,
+            paperRectWidth: rect.width,
+            paperInsideHost: !!(rect.left >= hostRect.left - 1 && rect.right <= hostRect.right + 1),
+            paperLeftNegative: rect.left < -0.5,
+            contentClipped: false,
+          };
+        } catch (ePos) {}
         window
           .html2pdf()
           .set(opts)
-          .from(paper)
+          .from(pageEl)
           .toPdf()
           .outputPdf("blob")
           .then(function (blob) {
@@ -21689,6 +21709,9 @@ function buildVideoAsArticleCard(it) {
             if (typeof done === "function") done(null, { blob: blob, fileName: fileName || "faktura.pdf" });
           })
           .catch(function (e) {
+            try {
+              window._iuInvoicePdfPositionProof = null;
+            } catch (_) {}
             if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
             if (typeof done === "function") done(e);
           });

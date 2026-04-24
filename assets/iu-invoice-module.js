@@ -137,8 +137,9 @@ function renderFormShell() {
     <div class="iu-invoice-actions-static iu-inv-actionsRow" data-inv-actions>
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-copy>Kopírovat text</button>
       <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview>Náhled faktury</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share>Stáhnout / sdílet PDF</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet připravené PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-download>Stáhnout</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-pdf>Sdílet PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet PDF</button>
     </div>
   </section>
 
@@ -147,8 +148,9 @@ function renderFormShell() {
   <div class="iu-inv-previewLayer iu-inv-guard-hidden" data-inv-preview-layer hidden>
     <div class="iu-inv-previewToolbar">
       <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-back>Zpět do formuláře</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share>Stáhnout / sdílet PDF</button>
-      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet připravené PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--ghost" data-inv-preview-download>Stáhnout fakturu</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-preview-share-pdf>Sdílet PDF</button>
+      <button type="button" class="iu-inv-btn iu-inv-btn--primary" data-inv-share-prepared hidden>Sdílet PDF</button>
     </div>
     <div class="iu-inv-previewScroll" data-inv-preview-host></div>
   </div>
@@ -850,7 +852,7 @@ export function initIuInvoiceOverlay(deps) {
           root.querySelectorAll("[data-inv-share-prepared]").forEach((b) => {
             b.hidden = false;
           });
-          setStatus(root, "PDF připravené ke sdílení. Klepněte na „Sdílet připravené PDF“.");
+          setStatus(root, "PDF připravené ke sdílení. Klepněte na „Sdílet PDF“.");
           return;
         }
         runPdfDownloadFallback(blob, name);
@@ -861,7 +863,7 @@ export function initIuInvoiceOverlay(deps) {
     async function sharePreparedPdfNow() {
       const prep = preparedPdfBundle;
       if (!prep || !prep.blob) {
-        setStatus(root, "Nejdřív připravte PDF (tlačítko „Stáhnout / sdílet PDF“).");
+        setStatus(root, "Nejdřív připravte PDF (tlačítko „Sdílet PDF“).");
         return;
       }
       const name = prep.fileName || "faktura.pdf";
@@ -891,7 +893,23 @@ export function initIuInvoiceOverlay(deps) {
       resetPreparedShareUi();
     }
 
-    async function doShare() {
+    function doDownloadPdf() {
+      readStateFromDom(root, state);
+      const v = validateForm(state);
+      if (!v.ok) {
+        setStatus(root, v.errors.join(" · "));
+        return;
+      }
+      resetPreparedShareUi();
+      exportInvoicePdfBlob((err, blob, fileName) => {
+        if (err || !blob) return;
+        const name = fileName || "faktura.pdf";
+        runPdfDownloadFallback(blob, name);
+        setStatus(root, "PDF staženo.");
+      });
+    }
+
+    async function doSharePdf() {
       if (isNarrowShareTwoStep()) {
         prepareSharePdfFlow();
         return;
@@ -1039,14 +1057,20 @@ export function initIuInvoiceOverlay(deps) {
     root.querySelector("[data-inv-preview]")?.addEventListener("click", () => {
       openPreview();
     });
-    root.querySelector("[data-inv-share]")?.addEventListener("click", () => {
-      doShare();
+    root.querySelector("[data-inv-download]")?.addEventListener("click", () => {
+      doDownloadPdf();
+    });
+    root.querySelector("[data-inv-share-pdf]")?.addEventListener("click", () => {
+      void doSharePdf();
     });
     root.querySelector("[data-inv-preview-back]")?.addEventListener("click", () => {
       closePreview();
     });
-    root.querySelector("[data-inv-preview-share]")?.addEventListener("click", () => {
-      doShare();
+    root.querySelector("[data-inv-preview-download]")?.addEventListener("click", () => {
+      doDownloadPdf();
+    });
+    root.querySelector("[data-inv-preview-share-pdf]")?.addEventListener("click", () => {
+      void doSharePdf();
     });
     root.querySelectorAll("[data-inv-share-prepared]").forEach((btn) => {
       btn.addEventListener("click", () => {
