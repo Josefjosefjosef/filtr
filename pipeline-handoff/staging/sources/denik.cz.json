@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T14:35:12.845183Z",
+  "ingestedAt": "2026-04-24T14:59:24.999970Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nemocnice ve Varech posílila bezpečnost, první v ČR spustila detekci dronů",
+      "url": "https://www.denik.cz/regiony/nemocnice-vary-posiluje-bezpecnost-jako-prvni-v-republice-ma-detekci-dronu-20260.html",
+      "dt": "2026-04-24T14:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bezpečnost",
+        "detekci",
+        "dronů",
+        "nemocnice",
+        "posílila",
+        "první",
+        "spustila",
+        "varech"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,6 +254,33 @@
         "utajená",
         "video",
         "zasáhla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Praze nefunguje vůbec nic. Piráti a ANO se pohádali kvůli školství a Bartošovi",
+      "url": "https://prazsky.denik.cz/zpravy_region/v-praze-nefunguje-vubec-nic-pirati-a-ano-se-pohadali-kvuli-skolstvi-a-bartosovi.html",
+      "dt": "2026-04-24T11:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "ano",
+        "bartošovi",
+        "kvůli",
+        "nefunguje",
+        "nic",
+        "piráti",
+        "pohádali",
+        "praze",
+        "vůbec",
+        "školství"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -600,59 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nosí rolexky s diamanty a honí divočáky. Robot Edward pobláznil polský internet",
-      "url": "https://www.denik.cz/staty-eu/robot-edward-warchocki-polsko-divocaci-video.html",
-      "dt": "2026-04-24T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "diamanty",
-        "divočáky",
-        "edward",
-        "honí",
-        "internet",
-        "nosí",
-        "pobláznil",
-        "polský",
-        "robot",
-        "rolexky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lávka přes Dyji zpřístupnila nové trasy turistům, projekt pomohl i přírodě",
-      "url": "https://www.denik.cz/cesko-a-eu/narodni-park-podyji-nova-lavka-mmr-eu-dotace.html",
-      "dt": "2026-04-24T03:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dyji",
-        "lávka",
-        "nové",
-        "pomohl",
-        "projekt",
-        "přírodě",
-        "trasy",
-        "turistům",
-        "zpřístupnila"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30040,
+      "bytes": 30746,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T13:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T14:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -716,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemocnice ve Varech posílila bezpečnost, první v ČR spustila detekci dronů",
+            "publishedAt": "2026-04-24T14:10:00Z"
+          },
           {
             "title": "Chorvatsko hodlá přitvrdit pravidla. Dotkne se to turistických ubytování",
             "publishedAt": "2026-04-24T13:10:00Z"
@@ -743,10 +746,6 @@
           {
             "title": "Ve Španělsku odsoudili Čecha na 30 let. Měl zabít celníka",
             "publishedAt": "2026-04-24T12:16:00Z"
-          },
-          {
-            "title": "Fatální útok medvěda v Polsku: Bylo slyšet kvílení a řev, popsal smrt ženy bratr",
-            "publishedAt": "2026-04-24T11:27:00Z"
           }
         ]
       }

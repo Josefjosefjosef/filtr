@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T14:35:12.845183Z",
+  "ingestedAt": "2026-04-24T14:59:24.999970Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
+      "url": "https://domaci.hn.cz/c1-67870810-uz-zadne-mobily-v-lavicich-cesko-plosne-omezi-chytre-telefony-ve-skolach-zavelel-babis",
+      "dt": "2026-04-24T14:51:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiš",
+        "chytré",
+        "lavicích",
+        "mobily",
+        "omezí",
+        "plošně",
+        "telefony",
+        "zavelel",
+        "česko",
+        "školách",
+        "žádné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1102,32 +1130,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jak se stalo, že je pro nás v Japonsku lacino, a co znamená, když přijde demografický kolaps",
-      "url": "https://investice.hn.cz/c1-67870510-jak-se-stalo-ze-je-pro-nas-v-japonsku-lacino-a-co-znamena-kdyz-prijde-demograficky-kolaps",
-      "dt": "2026-04-23T15:53:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "demografický",
-        "japonsku",
-        "když",
-        "kolaps",
-        "lacino",
-        "nás",
-        "přijde",
-        "stalo",
-        "znamená"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1138,7 +1140,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184269,
+      "bytes": 184236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1175,7 +1177,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T14:51:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1192,6 +1194,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
+            "publishedAt": "2026-04-24T14:51:00Z"
+          },
           {
             "title": "Turkovy výroky o deratizaci jsou nepřijatelné, řekl Babiš. Macinka kolegu brání, prý jde o nekonečnou hilsneriádu",
             "publishedAt": "2026-04-24T13:59:00Z"
@@ -1219,10 +1225,6 @@
           {
             "title": "Čína dala na sankční seznam čtyři české firmy. Rozesmálo mě to, říká zakladatel jedné z nich",
             "publishedAt": "2026-04-24T10:42:00Z"
-          },
-          {
-            "title": "AI mění pořádky na pracovním trhu. Největším rizikem je, že nás stát začne zachraňovat",
-            "publishedAt": "2026-04-24T10:11:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-24T14:35:12.845183Z",
+  "ingestedAt": "2026-04-24T14:59:24.999970Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Děsivá fotka sloní nohy v Černobylu. Sověti do smrtící hmoty stříleli kalašnikovem",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/slavne-fotografie-sloni-noha-havarie-cernobyl-1986-artur-kornejev.A230620_123839_zahranicni_aha",
+      "dt": "2026-04-24T14:44:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "děsivá",
+        "fotka",
+        "hmoty",
+        "kalašnikovem",
+        "nohy",
+        "sloní",
+        "smrtící",
+        "sověti",
+        "stříleli",
+        "černobylu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -745,31 +772,6 @@
         "skeptičtí",
         "testuje",
         "uklízí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stojíme za ČT a ČRo, řekl Středula. Kritizoval Turkův výrok o parazitech",
-      "url": "https://www.idnes.cz/zpravy/domaci/stredula-statni-zamestnanci-cekaji-od-turka-omluvu-za-vyroky-o-parazitech.A260424_110520_domaci_kurl",
-      "dt": "2026-04-24T11:48:01Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "kritizoval",
-        "parazitech",
-        "stojíme",
-        "středula",
-        "turkův",
-        "výrok",
-        "čro",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1567,7 +1569,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50074,
+      "bytes": 50102,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1604,7 +1606,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T14:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1621,6 +1623,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děsivá fotka sloní nohy v Černobylu. Sověti do smrtící hmoty stříleli kalašnikovem",
+            "publishedAt": "2026-04-24T14:44:00Z"
+          },
           {
             "title": "Pili dešťovou vodu, ztráceli vědomí. Ukrajinská brigáda byla měsíce o hladu",
             "publishedAt": "2026-04-24T14:18:00Z"
@@ -1648,10 +1654,6 @@
           {
             "title": "Kadyrovův syn rozjel vlastní byznys. Energy drink se podobá západní značce",
             "publishedAt": "2026-04-24T13:50:00Z"
-          },
-          {
-            "title": "Trump pobouřil Indii. Sdílel příspěvek, který zemi označuje za špinavou díru",
-            "publishedAt": "2026-04-24T13:33:00Z"
           }
         ]
       }
