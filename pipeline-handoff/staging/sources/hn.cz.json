@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T04:11:20.706880Z",
+  "ingestedAt": "2026-04-24T04:33:13.638804Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dezinformace o větrných elektrárnách nabírají na síle. Kdo a proč je šíří v Česku?",
+      "url": "https://podcasty.hn.cz/c1-67870560-dezinformace-o-vetrnych-elektrarnach-nabiraji-na-sile-kdo-a-proc-je-siri-v-cesku",
+      "dt": "2026-04-24T04:05:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dezinformace",
+        "elektrárnách",
+        "nabírají",
+        "proč",
+        "síle",
+        "větrných",
+        "česku",
+        "šíří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1117,33 +1142,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Leo Express představil novou soupravu pro mezinárodní linky. Jezdit s ní začne už brzy",
-      "url": "https://byznys.hn.cz/c1-67870420-leo-express-predstavil-novou-soupravu-pro-mezinarodni-linky-jezdit-s-ni-zacne-uz-brzy",
-      "dt": "2026-04-23T11:31:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "brzy",
-        "express",
-        "jezdit",
-        "leo",
-        "linky",
-        "mezinárodní",
-        "novou",
-        "představil",
-        "soupravu",
-        "začne"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1154,7 +1152,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184343,
+      "bytes": 184136,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1191,12 +1189,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-23T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T04:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 2,
-          "zdravi": 1
+          "zdravi": 2,
+          "finance": 36,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1208,6 +1206,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dezinformace o větrných elektrárnách nabírají na síle. Kdo a proč je šíří v Česku?",
+            "publishedAt": "2026-04-24T04:05:00Z"
+          },
           {
             "title": "Týden s technologiemi: Umělá inteligence nejvíc pomáhá lidem, kteří jsou schopní a úspěšní sami o sobě, záleží i na věku",
             "publishedAt": "2026-04-23T22:00:00Z"
@@ -1234,10 +1236,6 @@
           },
           {
             "title": "Debut Belcea Quartet na Pražském jaru bude jako dýchat vzduch z jiné planety",
-            "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "Třetí ročník výstavy Pražské jaro Art Salon se ponese ve znamení jara a vyvrcholí benefiční aukcí",
             "publishedAt": "2026-04-23T22:00:00Z"
           }
         ]
