@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-24T16:30:07.182890Z",
+  "ingestedAt": "2026-04-24T16:54:52.625319Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Čína uvalila exportní sankce na české zbrojařské firmy. Macinka chce vysvětlení",
+      "url": "https://www.denik.cz/ekonomika/cina-exportni-sankce-petr-macinka.html",
+      "dt": "2026-04-24T16:31:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chce",
+        "exportní",
+        "firmy",
+        "macinka",
+        "sankce",
+        "uvalila",
+        "vysvětlení",
+        "zbrojařské",
+        "české",
+        "čína"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Americké ministerstvo spravedlnosti chce zavést federální popravy zastřelením",
+      "title": "Trumpovy popravčí čety. V USA chtějí zavést federální popravy zastřelením",
       "url": "https://www.denik.cz/ze_sveta/popravy-zastrelenim-usa-donald-trump.html",
       "dt": "2026-04-24T16:07:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "americké",
-        "chce",
+        "chtějí",
         "federální",
-        "ministerstvo",
         "popravy",
-        "spravedlnosti",
+        "popravčí",
+        "trumpovy",
+        "usa",
         "zastřelením",
-        "zavést"
+        "zavést",
+        "čety"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -625,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pilot opakovaně ignoroval varování. Airbus u Křivoklátu málem narazil do země",
-      "url": "https://www.denik.cz/regiony/pilot-ignoroval-varovani-airbus-u-krivoklatu-malem-narazil-do-zeme-20260424.html",
-      "dt": "2026-04-24T05:42:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "airbus",
-        "ignoroval",
-        "křivoklátu",
-        "málem",
-        "narazil",
-        "opakovaně",
-        "pilot",
-        "varování",
-        "země"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30979,
+      "bytes": 31092,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,10 +700,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:31:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "finance": 1,
+          "zpravy": 23,
           "zdravi": 1
         },
         "drop_counts": {
@@ -715,7 +718,11 @@
         },
         "sample_titles": [
           {
-            "title": "Americké ministerstvo spravedlnosti chce zavést federální popravy zastřelením",
+            "title": "Čína uvalila exportní sankce na české zbrojařské firmy. Macinka chce vysvětlení",
+            "publishedAt": "2026-04-24T16:31:00Z"
+          },
+          {
+            "title": "Trumpovy popravčí čety. V USA chtějí zavést federální popravy zastřelením",
             "publishedAt": "2026-04-24T16:07:00Z"
           },
           {
@@ -741,10 +748,6 @@
           {
             "title": "Novým předsedou KDU-ČSL se stal jihomoravský hejtman Jan Grolich",
             "publishedAt": "2026-04-24T12:30:00Z"
-          },
-          {
-            "title": "Neviděli jste ho? Policisté pátrají po pohřešovaném a nemocném muži z Opavy",
-            "publishedAt": "2026-04-24T12:20:00Z"
           }
         ]
       }

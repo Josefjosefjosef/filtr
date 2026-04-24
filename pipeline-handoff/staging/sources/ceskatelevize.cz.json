@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T16:30:07.182890Z",
+  "ingestedAt": "2026-04-24T16:54:52.625319Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události pátku 24. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-patku-24-dubna-372766",
+      "dt": "2026-04-24T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "pátku",
+        "souhrn",
+        "události",
+        "zásadní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -736,31 +758,6 @@
         "komunikují",
         "studují",
         "vědci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Spiklenci vystihli atmosféru po komunistickém převratu. Na překlad čekali 75 let",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/spiklenci-vystihli-atmosferu-po-komunistickem-prevratu-na-preklad-cekali-75-let-372716",
-      "dt": "2026-04-24T05:05:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "atmosféru",
-        "komunistickém",
-        "let",
-        "překlad",
-        "převratu",
-        "spiklenci",
-        "vystihli",
-        "čekali"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1538,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42545,
+      "bytes": 42303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1598,11 +1595,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:06:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "other": 7,
+          "zpravy": 23,
+          "other": 6,
           "finance": 1
         },
         "drop_counts": {
@@ -1615,6 +1612,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události pátku 24. dubna",
+            "publishedAt": "2026-04-24T16:29:00Z"
+          },
           {
             "title": "Potřebujeme nové zdroje, uvedla k rozpočtu šéfka Evropské komise",
             "publishedAt": "2026-04-24T16:06:41Z"
@@ -1642,10 +1643,6 @@
           {
             "title": "Školy řeší, co s nevydanými obědy. V Jihlavě je nabízejí v automatu",
             "publishedAt": "2026-04-24T13:11:00Z"
-          },
-          {
-            "title": "Rakouská dětská výživa obsahovala patnáct mikrogramů jedu",
-            "publishedAt": "2026-04-24T13:10:52Z"
           }
         ]
       }
@@ -1751,7 +1748,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77454,
+      "bytes": 77450,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

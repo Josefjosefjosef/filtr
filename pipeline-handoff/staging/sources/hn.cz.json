@@ -1,8 +1,43 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-24T16:30:07.182890Z",
+  "ingestedAt": "2026-04-24T16:54:52.625319Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "K mání bude část ČEZ, která tvoří čtvrtinu jeho provozního zisku. &bdquo;Všechno je možné, nic není rozhodnuté,&ldquo; říká Beneš ke způsobu prodeje",
+      "url": "https://byznys.hn.cz/c1-67870960-k-mani-bude-cast-cez-ktera-tvori-ctvrtinu-jeho-provozniho-zisku-bdquo-vsechno-je-mozne-nic-neni-rozhodnute-ldquo-rika-benes-ke-zpusobu-prodeje",
+      "dt": "2026-04-24T15:30:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "beneš",
+        "jeho",
+        "ldquo",
+        "možné",
+        "mání",
+        "nic",
+        "prodeje",
+        "provozního",
+        "rozhodnuté",
+        "tvoří",
+        "všechno",
+        "zisku",
+        "způsobu",
+        "čez",
+        "čtvrtinu",
+        "část",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1107,34 +1142,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Budoucí šéf Fedu Warsh chystá změny. Připravte se na překvapení a prudší pohyby na trhu",
-      "url": "https://archiv.hn.cz/c1-67870500-budouci-sef-fedu-warsh-chysta-zmeny-pripravte-se-na-prekvapeni-a-prudsi-pohyby-na-trhu",
-      "dt": "2026-04-23T16:03:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "budoucí",
-        "chystá",
-        "fedu",
-        "pohyby",
-        "prudší",
-        "překvapení",
-        "připravte",
-        "trhu",
-        "warsh",
-        "změny",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1145,7 +1152,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184335,
+      "bytes": 184521,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1182,7 +1189,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T14:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T15:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1199,6 +1206,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K mání bude část ČEZ, která tvoří čtvrtinu jeho provozního zisku. &bdquo;Všechno je možné, nic není rozhodnuté,&ldquo; říká Beneš ke způsobu prodeje",
+            "publishedAt": "2026-04-24T15:30:00Z"
+          },
           {
             "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
             "publishedAt": "2026-04-24T14:51:00Z"
@@ -1226,10 +1237,6 @@
           {
             "title": "Má vychovávat rodič, nebo stát? Počet zákonných zákazů určených mladistvým roste",
             "publishedAt": "2026-04-24T11:02:00Z"
-          },
-          {
-            "title": "Čína dala na sankční seznam čtyři české firmy. Rozesmálo mě to, říká zakladatel jedné z nich",
-            "publishedAt": "2026-04-24T10:42:00Z"
           }
         ]
       }
