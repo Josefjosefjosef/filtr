@@ -21588,15 +21588,23 @@ function buildVideoAsArticleCard(it) {
       var exportRoot = document.createElement("div");
       exportRoot.setAttribute("data-iu", "pdf-invoice-export-root");
       exportRoot.className = "iu-pdf-render-mode";
-      exportRoot.innerHTML = html;
+      exportRoot.innerHTML =
+        "<div class=\"iu-invoice-pdf-export-inner\" style=\"width:794px;max-width:794px;margin:0;box-sizing:border-box;transform:none;position:relative;overflow:visible\">" +
+        "<div class=\"iu-invoice-paper iu-invoice-pdf-paper\">" +
+        html +
+        "</div></div>";
       document.body.appendChild(exportRoot);
+      try {
+        window._iuInvoicePdfExportMeta = { renderSource: "isolated_pdf_dom", generatedFromScaledPreview: false };
+      } catch (eMeta) {}
       var opts = {
         image: { type: "png", quality: 1.0 },
         html2canvas: {
           scale: 2,
           scrollX: 0,
           scrollY: 0,
-          windowWidth: exportRoot.scrollWidth,
+          width: 794,
+          windowWidth: 794,
           windowHeight: exportRoot.scrollHeight,
           useCORS: false,
           backgroundColor: "#ffffff",
@@ -21605,16 +21613,53 @@ function buildVideoAsArticleCard(it) {
         pagebreak: { mode: ["css", "legacy"] },
       };
       function runHtml2Pdf() {
+        var paper = exportRoot.querySelector(".iu-invoice-pdf-paper");
+        if (!paper) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_paper_missing"));
+          return;
+        }
+        var rect = paper.getBoundingClientRect();
+        var textBody = paper.textContent || "";
+        if (rect.width < 700 || rect.height < 200) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_layout_invalid"));
+          return;
+        }
+        if (textBody.length < 200) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_text_too_short"));
+          return;
+        }
+        if (textBody.indexOf("FAKTURA") === -1) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_missing_faktura"));
+          return;
+        }
+        if (textBody.indexOf("Celkem") === -1) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_missing_total"));
+          return;
+        }
+        if (textBody.indexOf("infoUzel") === -1) {
+          if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
+          if (typeof done === "function") done(new Error("invoice_pdf_missing_brand"));
+          return;
+        }
         window
           .html2pdf()
           .set(opts)
-          .from(exportRoot)
+          .from(paper)
           .toPdf()
           .outputPdf("blob")
           .then(function (blob) {
             if (exportRoot.parentNode) exportRoot.parentNode.removeChild(exportRoot);
-            if (!blob || blob.size < 1000) {
-              if (typeof done === "function") done(new Error("pdf_empty_or_invalid"));
+            if (!blob || blob.type !== "application/pdf") {
+              if (typeof done === "function") done(new Error("invoice_pdf_blob_invalid_type"));
+              return;
+            }
+            if (!blob || blob.size < 1500) {
+              if (typeof done === "function") done(new Error("invoice_pdf_blob_too_small"));
               return;
             }
           try {
