@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-24T16:54:52.625319Z",
+  "ingestedAt": "2026-04-24T17:19:39.759268Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
+      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-index-px-oslabil-vice-nez-evropske-akcie/",
+      "dt": "2026-04-24T17:00:37Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akcie",
+        "akciových",
+        "evropské",
+        "index",
+        "než",
+        "oslabil",
+        "trzích",
+        "týden"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,30 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slovensko bojovalo proti SSSR, ale na kremelském seznamu není",
-      "url": "https://profitonline.cz/slovensko-bojovalo-proti-sssr-ale-na-kremelskem-seznamu-neni/",
-      "dt": "2026-04-23T04:00:18Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "bojovalo",
-        "kremelském",
-        "proti",
-        "seznamu",
-        "slovensko",
-        "sssr"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18687,
+      "bytes": 18597,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:00:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T17:00:37Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -357,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
+            "publishedAt": "2026-04-24T17:00:37Z"
+          },
           {
             "title": "Babiš je mistr taktiky. Tlačí prezidenta tam, kam potřebuje",
             "publishedAt": "2026-04-24T10:00:46Z"
@@ -384,10 +389,6 @@
           {
             "title": "Vedení Applu přebírá John Ternus",
             "publishedAt": "2026-04-23T17:20:52Z"
-          },
-          {
-            "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
-            "publishedAt": "2026-04-23T10:00:03Z"
           }
         ]
       }

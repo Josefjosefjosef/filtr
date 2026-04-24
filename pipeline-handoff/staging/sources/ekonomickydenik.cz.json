@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-24T16:54:52.625319Z",
+  "ingestedAt": "2026-04-24T17:19:39.759268Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lidovci mění vizuál i vedení. Mají nového předsedu i logo",
+      "url": "https://ekonomickydenik.cz/lidovci-meni-vizual-vedeni-grolich/",
+      "dt": "2026-04-24T17:05:48Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "lidovci",
+        "logo",
+        "mají",
+        "mění",
+        "nového",
+        "předsedu",
+        "vedení",
+        "vizuál"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,32 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Biopaliva mají špatný zvuk. Přejmenujme je po vzoru Itálie, navrhuje ministerstvo",
-      "url": "https://ekonomickydenik.cz/biopaliva-maji-spatny-marketing-prejmenujme-je/",
-      "dt": "2026-04-23T05:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "biopaliva",
-        "itálie",
-        "mají",
-        "ministerstvo",
-        "navrhuje",
-        "přejmenujme",
-        "vzoru",
-        "zvuk",
-        "špatný"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72072,
+      "bytes": 72648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T15:22:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T17:05:48Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -858,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lidovci mění vizuál i vedení. Mají nového předsedu i logo",
+            "publishedAt": "2026-04-24T17:05:48Z"
+          },
           {
             "title": "Zapomenutý rekordman ožívá: Otevřené letecké muzeum odhalí tajemství Modrého ptáka",
             "publishedAt": "2026-04-24T15:22:12Z"
@@ -885,10 +888,6 @@
           {
             "title": "Omluví se Turek? Za parazity a chátru ho tepe Středula i Babiš",
             "publishedAt": "2026-04-24T10:39:39Z"
-          },
-          {
-            "title": "Po miliardách z Evropy touží Zelenskyj po rychlém přijetí do Unie. Nejlépe už příští rok",
-            "publishedAt": "2026-04-24T10:15:37Z"
           }
         ]
       }

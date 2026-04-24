@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-24T16:54:52.625319Z",
+  "ingestedAt": "2026-04-24T17:19:39.759268Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA chtějí zavést popravčí čety",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-chteji-zavest-popravci-cety-372776",
+      "dt": "2026-04-24T17:07:30Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chtějí",
+        "popravčí",
+        "usa",
+        "zavést",
+        "čety"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -744,29 +766,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vědci studují, jak komunikují děti s kochleárním implantátem",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-studuji-jak-komunikuji-deti-s-kochlearnim-implantatem-372589",
-      "dt": "2026-04-24T06:04:48Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "děti",
-        "implantátem",
-        "kochleárním",
-        "komunikují",
-        "studují",
-        "vědci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Alcaraz nebude obhajovat titul na Roland Garros, zradilo ho zraněné zápěstí",
@@ -795,7 +794,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Česko – Rakousko 2:0",
+      "title": "Česko – Rakousko 3:0",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/cesko-rakousko-156432",
       "dt": "2026-04-24T14:43:00Z",
       "media_raw": "ČT sport",
@@ -1535,7 +1534,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42303,
+      "bytes": 42363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1595,11 +1594,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T16:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-24T17:07:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 6,
+          "zpravy": 24,
+          "other": 5,
           "finance": 1
         },
         "drop_counts": {
@@ -1612,6 +1611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA chtějí zavést popravčí čety",
+            "publishedAt": "2026-04-24T17:07:30Z"
+          },
           {
             "title": "SOUHRN: Zásadní události pátku 24. dubna",
             "publishedAt": "2026-04-24T16:29:00Z"
@@ -1639,10 +1642,6 @@
           {
             "title": "Maximální ceny paliv o víkendu opět o vyšší desítky haléřů vzrostou",
             "publishedAt": "2026-04-24T13:29:40Z"
-          },
-          {
-            "title": "Školy řeší, co s nevydanými obědy. V Jihlavě je nabízejí v automatu",
-            "publishedAt": "2026-04-24T13:11:00Z"
           }
         ]
       }
@@ -1654,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38253,
+      "bytes": 38321,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1711,7 +1710,7 @@
             "publishedAt": "2026-04-24T16:19:26Z"
           },
           {
-            "title": "Česko – Rakousko 2:0",
+            "title": "Česko – Rakousko 3:0",
             "publishedAt": "2026-04-24T14:43:00Z"
           },
           {
@@ -1748,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77450,
+      "bytes": 77412,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
