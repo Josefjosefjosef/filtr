@@ -10219,7 +10219,7 @@ function buildVideoAsArticleCard(it) {
     const tasksCard = document.getElementById("iuSilverTasksSummaryCard");
     const sepBeforeTasks = document.getElementById("iuSilverWelcomeStackSeparatorCal");
     const insertTasksBefore = document.getElementById("iuSilverWelcomeStackSeparatorBeforeSilver");
-    const stack = calCard && calCard.parentNode ? calCard.parentNode : null;
+    const stack = document.getElementById("iuSilverWelcomeStack");
     const hostCal = document.getElementById("iuMmHoverSummaryHostCalendar");
     const hostTasks = document.getElementById("iuMmHoverSummaryHostTasks");
     const shellCal = document.getElementById("iuMmHoverSummaryPanelShellCalendar");
@@ -10269,10 +10269,20 @@ function buildVideoAsArticleCard(it) {
         setDesktopMode(true);
       } else {
         try{
-          if (sepBeforeTasks && sepBeforeTasks.parentNode === stack) stack.insertBefore(calCard, sepBeforeTasks);
-          else stack.insertBefore(calCard, insertTasksBefore);
+          const calParent = sepBeforeTasks && sepBeforeTasks.parentNode;
+          if (calParent) calParent.insertBefore(calCard, sepBeforeTasks);
+          else if (stack && insertTasksBefore) stack.insertBefore(calCard, insertTasksBefore);
         }catch{}
-        try{ stack.insertBefore(tasksCard, insertTasksBefore); }catch{}
+        try{
+          const taskParent = sepBeforeTasks && sepBeforeTasks.parentNode;
+          if (taskParent) {
+            const refAfterSepCal = sepBeforeTasks.nextSibling;
+            if (refAfterSepCal) taskParent.insertBefore(tasksCard, refAfterSepCal);
+            else taskParent.appendChild(tasksCard);
+          } else if (stack && insertTasksBefore) {
+            stack.insertBefore(tasksCard, insertTasksBefore);
+          }
+        }catch{}
         setDesktopMode(false);
       }
       try{ if (typeof iuSilverMobileStackFitSchedule === "function") iuSilverMobileStackFitSchedule(); }catch{}

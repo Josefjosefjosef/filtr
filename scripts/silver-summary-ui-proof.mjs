@@ -416,6 +416,12 @@ async function main() {
     }
 
     const accentAudit = await auditCalendarAccentUi(page);
+    await page.waitForTimeout(120);
+    await page.evaluate(() => {
+      try {
+        window.__iuClsSum = 0;
+      } catch {}
+    });
     const m = await snapMetrics(page);
     let mindBg = null;
     if (vi === 0) {
