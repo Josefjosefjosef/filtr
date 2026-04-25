@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-25T16:39:19.013028Z",
+  "ingestedAt": "2026-04-25T17:04:29.274669Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Máme všechny trumfy“. Trump zrušil mírovou cestu vyjednavačů do Pákistánu",
+      "url": "https://ekonomickydenik.cz/trump-vyjednavaci-pakistan-mir/",
+      "dt": "2026-04-25T17:02:09Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cestu",
+        "máme",
+        "mírovou",
+        "pákistánu",
+        "trumfy",
+        "trump",
+        "vyjednavačů",
+        "všechny",
+        "zrušil"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,30 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ukrajina odvrátila bankrot. EU odklepla půjčku 2,2 bilionu korun",
-      "url": "https://ekonomickydenik.cz/ukrajina-odvratila-bankrot-eu-odklepla-pujcku-22-bilionu-korun/",
-      "dt": "2026-04-23T13:53:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bankrot",
-        "bilionu",
-        "korun",
-        "odklepla",
-        "odvrátila",
-        "půjčku",
-        "ukrajina"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71961,
+      "bytes": 71631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T15:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:02:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 29,
@@ -843,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Máme všechny trumfy“. Trump zrušil mírovou cestu vyjednavačů do Pákistánu",
+            "publishedAt": "2026-04-25T17:02:09Z"
+          },
           {
             "title": "Spor o světelnou závoru. Praha ji stopla, kritici varují: jde o hazard s bezpečností dětí",
             "publishedAt": "2026-04-25T15:17:00Z"
@@ -870,10 +876,6 @@
           {
             "title": "Přetlak u letních brigád v maskáčích: Armáda láká na bonusy i moderní zázemí",
             "publishedAt": "2026-04-25T08:36:00Z"
-          },
-          {
-            "title": "Zkrácení ucha a kastrace. O opuštěná zvířata se mají postarat obce",
-            "publishedAt": "2026-04-25T06:58:22Z"
           }
         ]
       }
