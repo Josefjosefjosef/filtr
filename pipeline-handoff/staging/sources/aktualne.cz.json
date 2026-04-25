@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T21:35:02.683614Z",
+  "ingestedAt": "2026-04-25T22:00:35.285004Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sedm mrtvých. Kolumbií otřásl před prezidentskými volbami bombový útok",
+      "url": "https://zpravy.aktualne.cz/zahranici/sedm-mrtvych-kolumbii-otrasl-pred-prezidentskymi-volbami-bombovy-utok/r~aaa2989f4cfd3d9e9229361be2025334/",
+      "dt": "2026-04-25T21:47:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bombový",
+        "kolumbií",
+        "mrtvých",
+        "otřásl",
+        "prezidentskými",
+        "sedm",
+        "volbami",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -499,33 +524,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Lyžování v poušti se ruší. Středisko se stalo další obětí války proti Íránu",
-      "url": "https://zpravy.aktualne.cz/ekonomika/lyzovani-v-pousti-se-rusi-stredisko-se-stalo-dalsi-obeti-valky-proti-iranu/r~aaa298afe23f122c7ce0b3220e9867c4/",
-      "dt": "2026-04-25T12:05:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "další",
-        "lyžování",
-        "obětí",
-        "poušti",
-        "proti",
-        "ruší",
-        "stalo",
-        "středisko",
-        "války",
-        "íránu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22164,
+      "bytes": 22014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,12 +571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T20:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T21:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 11,
           "sport": 8,
-          "zpravy": 10,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -590,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sedm mrtvých. Kolumbií otřásl před prezidentskými volbami bombový útok",
+            "publishedAt": "2026-04-25T21:47:00Z"
+          },
           {
             "title": "Litvínov si oddechl, zůstává v extralize. Postup Jihlavy? Prý jen otázka času",
             "publishedAt": "2026-04-25T20:52:00Z"
@@ -617,10 +619,6 @@
           {
             "title": "Skvělý Schick. Dvěma góly zařídil vítězství a dosáhl na další výrazný milník",
             "publishedAt": "2026-04-25T16:55:00Z"
-          },
-          {
-            "title": "West Ham velebí Součka, nasměroval ho k důležité výhře. Kinský má první čisté konto",
-            "publishedAt": "2026-04-25T16:39:00Z"
           }
         ]
       }
