@@ -261,6 +261,14 @@ async function main() {
         return el && /Venku\s+je/i.test(el.textContent || "");
       }, null, { timeout: 30000 });
 
+      /* Po stabilním „Venku je …“ vynulovat CLS: měří jen posuny po finálním paintu (grid / řádky Silver). */
+      await page.waitForTimeout(120);
+      await page.evaluate(() => {
+        try {
+          window.__iuClsSum = 0;
+        } catch {}
+      });
+
       const check = await page.evaluate(() => {
         function parseRgb(cssColor) {
           const s = String(cssColor || "").trim();
