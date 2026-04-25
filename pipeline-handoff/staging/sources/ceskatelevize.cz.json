@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T17:25:08.960924Z",
+  "ingestedAt": "2026-04-25T17:49:59.460223Z",
   "items": [
     {
       "section": "aktualne",
@@ -736,6 +736,31 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Toyota dominuje Rallye Kanárských ostrovů, v čele je Ogier před Solbergem",
+      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/rallye/toyota-dominuje-rallye-kanarskych-ostrovu-v-cele-je-ogier-pred-solbergem-156448",
+      "dt": "2026-04-25T17:39:39Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dominuje",
+        "kanárských",
+        "ogier",
+        "ostrovů",
+        "rallye",
+        "solbergem",
+        "toyota",
+        "čele"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1478,30 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bořilovi skončila sezona. Dostal vysoký sedmizápasový trest",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/borilovi-skoncila-sezona-dostal-vysoky-sedmizapasovy-trest-156418",
-      "dt": "2026-04-23T13:35:48Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bořilovi",
-        "dostal",
-        "sedmizápasový",
-        "sezona",
-        "skončila",
-        "trest",
-        "vysoký"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1631,7 +1632,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39351,
+      "bytes": 39334,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1668,7 +1669,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:58:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:39:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,6 +1684,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Toyota dominuje Rallye Kanárských ostrovů, v čele je Ogier před Solbergem",
+            "publishedAt": "2026-04-25T17:39:39Z"
+          },
           {
             "title": "Prokletí Barcelony na hřišti Getafe skončilo po výhře 2:0, Real remizoval v Seville",
             "publishedAt": "2026-04-25T16:58:59Z"
@@ -1710,10 +1715,6 @@
           {
             "title": "Superfinále florbalistů. O ženském titulu se rozhodlo čtyři vteřiny před sirénou",
             "publishedAt": "2026-04-25T12:05:00Z"
-          },
-          {
-            "title": "Hokejová osmnáctka padla s Německem v prodloužení. Rozhodl Krestan z trestného střílení",
-            "publishedAt": "2026-04-25T09:59:00Z"
           }
         ]
       }
@@ -1725,7 +1726,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77731,
+      "bytes": 77721,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

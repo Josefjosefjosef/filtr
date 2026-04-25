@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T17:25:08.960924Z",
+  "ingestedAt": "2026-04-25T17:49:59.460223Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hasiči na severu Japonska bojují s lesními požáry, evakuovaly se tisíce lidí",
+      "url": "https://zpravy.aktualne.cz/zahranici/hasici-na-severu-japonska-bojuji-s-lesnimi-pozary-evakuovaly-se-tisice-lidi/r~aaa296f7f25e8ab38005af7b2eb70a1f/",
+      "dt": "2026-04-25T17:24:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bojují",
+        "evakuovaly",
+        "hasiči",
+        "japonska",
+        "lesními",
+        "lidí",
+        "požáry",
+        "severu",
+        "tisíce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -503,31 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ukrajinské inovace nekončí. „Lovce dronů“ vybavili podstatným vylepšením",
-      "url": "https://zpravy.aktualne.cz/zahranici/ukrajinske-inovace-nekonci-lovce-dronu-vybavili-podstatnym-vylepsenim/r~aaa299e1696822af10898961355e9cd4/",
-      "dt": "2026-04-25T10:36:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dronů",
-        "inovace",
-        "lovce",
-        "nekončí",
-        "podstatným",
-        "ukrajinské",
-        "vybavili",
-        "vylepšením"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22221,
+      "bytes": 22231,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,11 +576,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:24:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 7,
           "zpravy": 11,
+          "sport": 7,
           "finance": 2
         },
         "drop_counts": {
@@ -592,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hasiči na severu Japonska bojují s lesními požáry, evakuovaly se tisíce lidí",
+            "publishedAt": "2026-04-25T17:24:00Z"
+          },
           {
             "title": "Skvělý Schick. Dvěma góly zařídil vítězství a dosáhl na další výrazný milník",
             "publishedAt": "2026-04-25T16:55:00Z"
@@ -619,10 +624,6 @@
           {
             "title": "Fotbalová liga živě: Oslabená Sparta padla v Ďolíčku, Slavia duel otočila",
             "publishedAt": "2026-04-25T13:40:00Z"
-          },
-          {
-            "title": "„Trump by měl mít radost.“ Francie a Řecko posilují evropský pilíř NATO",
-            "publishedAt": "2026-04-25T15:03:00Z"
           }
         ]
       }
