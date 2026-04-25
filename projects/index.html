@@ -137,11 +137,11 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverWelcomeStack.silver-welcome-stack--afternoon #iuSilverHeroPremium{background:radial-gradient(ellipse 85% 70% at 20% 88%,rgba(255,190,120,.18) 0%,transparent 54%),linear-gradient(165deg,rgba(30,42,58,.9) 0%,rgba(24,38,54,.92) 100%)}
         .iu-hero-silver-premiumInner{width:100%;max-width:100%;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:0!important}
         .iu-hero-silver-premiumMain{display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
-        .iu-hero-silverHeadlines{margin:0 0 10px 0;width:100%;max-width:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:8px}
-        .iu-hero-silverFigureRow{display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-start;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;gap:0}
-        .iu-hero-figure{flex:0 0 auto;width:44%;max-width:46%;min-width:0;margin:0!important;margin-bottom:0!important;display:flex;align-items:flex-end;justify-content:flex-start;box-sizing:border-box;aspect-ratio:4/5;max-height:168px;position:relative;align-self:flex-end}
+        .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:end;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0}
+        .iu-hero-copy{min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;gap:8px;box-sizing:border-box;margin:0;padding:0}
+        .iu-hero-figure{min-width:0;margin:0!important;padding:0;width:100%;max-width:100%;display:flex;align-items:flex-end;justify-content:flex-start;box-sizing:border-box;aspect-ratio:4/5;max-height:168px;position:relative;align-self:end}
         .iu-hero-figure::after{content:"";position:absolute;inset:8% 4% 4% 4%;border-radius:50%;background:radial-gradient(circle at 50% 55%,rgba(120,200,255,.35) 0%,rgba(167,139,250,.12) 42%,transparent 70%);filter:blur(12px);opacity:.85;pointer-events:none;z-index:0}
-        .iu-hero-figureImg{position:relative;z-index:1;display:block;width:100%;height:100%;max-height:168px;margin:0;object-fit:contain;object-position:left bottom;box-sizing:border-box}
+        .iu-hero-figureImg{position:relative;z-index:1;display:block;width:100%;height:auto;max-height:168px;margin:0;padding:0;object-fit:contain;object-position:left bottom;box-sizing:border-box}
         .iu-hero-silverTitle{margin:0;padding:0;font-size:clamp(1.15rem,4.2vw,1.35rem);font-weight:750;letter-spacing:-.03em;line-height:1.15;color:rgba(248,250,252,.96)}
         .iu-hero-silverLead{margin:0;padding:0;font-size:clamp(.8rem,2.9vw,.95rem);line-height:1.35;font-weight:500;color:rgba(226,232,240,.88)}
         .iu-hero-silverInputHost{width:100%;max-width:100%;min-width:0;box-sizing:border-box;min-height:48px;margin:0;padding:0;flex:0 0 auto}
@@ -167,9 +167,8 @@ style-src 'self' 'unsafe-inline' https:;
       }
       @media(min-width:1025px){#iuNamedayCtaMobile,#iuHolidayMonetizeCard{display:none!important}}
       @media(min-width:768px) and (max-width:1024px){
-        .iu-hero-figure{width:38%;max-width:40%;max-height:220px}
+        .iu-hero-figure{max-height:220px}
         .iu-hero-figureImg{max-height:220px}
-        .iu-hero-silverFigureRow{align-items:flex-end}
       }
       /* P0 mobile ≤900: document scroll + bottom nav + skrytí capture a starých gate tabů (inline → css_debt_guard na app.css). */
       @media(max-width:900px){
@@ -486,13 +485,13 @@ style-src 'self' 'unsafe-inline' https:;
                         <section id="iuSilverHeroPremium" class="iu-hero-silver-premium" aria-label="Silver" data-iu-silver-hero-premium>
                           <div class="iu-hero-silver-premiumInner">
                             <div class="iu-hero-silver-premiumMain">
-                              <div class="iu-hero-silverHeadlines">
-                                <h2 class="iu-hero-silverTitle">Jsem Silver.</h2>
-                                <p class="iu-hero-silverLead">Pomůžu ti se vším na infoUzel.cz</p>
-                              </div>
-                              <div class="iu-hero-silverFigureRow">
+                              <div class="iu-hero-topRow">
                                 <div class="iu-hero-figure" aria-hidden="true">
-                                  <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="" width="1296" height="1213" decoding="async" fetchpriority="high" />
+                                  <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="Silver" width="1296" height="1213" decoding="async" fetchpriority="high" />
+                                </div>
+                                <div class="iu-hero-copy">
+                                  <h2 class="iu-hero-silverTitle">Jsem Silver.</h2>
+                                  <p class="iu-hero-silverLead">Pomůžu ti se vším na infoUzel.cz</p>
                                 </div>
                               </div>
                               <div id="iuSilverHeroInputHost" class="iu-hero-silverInputHost" data-iu-silver-hero-input-host></div>
