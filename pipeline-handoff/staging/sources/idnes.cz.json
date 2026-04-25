@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T11:04:25.989739Z",
+  "ingestedAt": "2026-04-25T11:24:57.518475Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lidovci odmítli převedení financování ČT pod rozpočet i fašizující rétoriku",
+      "url": "https://www.idnes.cz/zpravy/domaci/lidovci-odmitli-prevedeni-financovani-ct-pod-rozpocet-i-fasizujici-retoriku.A260425_122818_domaci_kop",
+      "dt": "2026-04-25T11:02:49Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "fašizující",
+        "financování",
+        "lidovci",
+        "odmítli",
+        "převedení",
+        "rozpočet",
+        "rétoriku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Přibyl se ujal funkce arcibiskupa, ve Vítu kázal Pavlovi a dalším o Evropě a mostech",
+      "url": "https://www.idnes.cz/zpravy/domaci/stanislav-pribyl-arciviskup-katedrala-sv-vita-cirkev.A260425_073953_domaci_dyn",
+      "dt": "2026-04-25T11:01:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "arcibiskupa",
+        "dalším",
+        "evropě",
+        "funkce",
+        "kázal",
+        "mostech",
+        "pavlovi",
+        "přibyl",
+        "ujal",
+        "vítu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -50,30 +101,6 @@
         "páchaných",
         "zločinů",
         "útoků"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lidovci odmítli převedení financování ČT pod rozpočet i fašizující rétoriku",
-      "url": "https://www.idnes.cz/zpravy/domaci/lidovci-odmitli-prevedeni-financovani-ct-pod-rozpocet-i-fasizujici-retoriku.A260425_122818_domaci_kop",
-      "dt": "2026-04-25T10:59:19Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "fašizující",
-        "financování",
-        "lidovci",
-        "odmítli",
-        "převedení",
-        "rozpočet",
-        "rétoriku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -154,33 +181,6 @@
         "vedení",
         "volební",
         "života"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přibyl se ujal funkce arcibiskupa, ve Vítu kázal Pavlovi a dalším o Evropě a mostech",
-      "url": "https://www.idnes.cz/zpravy/domaci/stanislav-pribyl-arciviskup-katedrala-sv-vita-cirkev.A260425_073953_domaci_dyn",
-      "dt": "2026-04-25T10:35:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "arcibiskupa",
-        "dalším",
-        "evropě",
-        "funkce",
-        "kázal",
-        "mostech",
-        "pavlovi",
-        "přibyl",
-        "ujal",
-        "vítu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1579,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48483,
+      "bytes": 48360,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,11 +1616,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:02:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
           "zpravy": 22,
+          "finance": 6,
           "other": 2
         },
         "drop_counts": {
@@ -1634,16 +1634,20 @@
         },
         "sample_titles": [
           {
+            "title": "Lidovci odmítli převedení financování ČT pod rozpočet i fašizující rétoriku",
+            "publishedAt": "2026-04-25T11:02:49Z"
+          },
+          {
+            "title": "Přibyl se ujal funkce arcibiskupa, ve Vítu kázal Pavlovi a dalším o Evropě a mostech",
+            "publishedAt": "2026-04-25T11:01:00Z"
+          },
+          {
             "title": "Vzhůru do Kanady, velí Američané. Čím dál víc turistů láká tamní příroda i ceny",
             "publishedAt": "2026-04-25T11:00:00Z"
           },
           {
             "title": "80 útoků nožem každý den. V Německu narůstá počet zločinů páchaných cizinci",
             "publishedAt": "2026-04-25T11:00:00Z"
-          },
-          {
-            "title": "Lidovci odmítli převedení financování ČT pod rozpočet i fašizující rétoriku",
-            "publishedAt": "2026-04-25T10:59:19Z"
           },
           {
             "title": "Turek se omluvil za výrok o parazitech. Myslel jsem aktivisty, ne úředníky, tvrdí",
@@ -1656,10 +1660,6 @@
           {
             "title": "Lidovci nemají kecat lidem do života. Volební lídry určí užší vedení",
             "publishedAt": "2026-04-25T10:40:00Z"
-          },
-          {
-            "title": "Přibyl se ujal funkce arcibiskupa, ve Vítu kázal Pavlovi a dalším o Evropě a mostech",
-            "publishedAt": "2026-04-25T10:35:00Z"
           },
           {
             "title": "Mají tři podniky, pražírnu i výrobnu zákusků. Kavárníci se nově spojili s architekty",

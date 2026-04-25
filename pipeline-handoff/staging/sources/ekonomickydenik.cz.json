@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-25T11:04:25.989739Z",
+  "ingestedAt": "2026-04-25T11:24:57.518475Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Odstupte, vzkazuje opozice ministrovi financí. Slovensku spadl rating",
+      "url": "https://ekonomickydenik.cz/rating-slovensko-ministr-financi/",
+      "dt": "2026-04-25T11:16:13Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "financí",
+        "ministrovi",
+        "odstupte",
+        "opozice",
+        "rating",
+        "slovensku",
+        "spadl",
+        "vzkazuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,33 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec „Putinových očí“ nad Evropou? Francouzi mají systém, před kterým se žádný dron neschová",
-      "url": "https://ekonomickydenik.cz/konec-putinovych-oci-nad-evropou-francie-drony/",
-      "dt": "2026-04-23T11:18:50Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dron",
-        "evropou",
-        "francouzi",
-        "konec",
-        "mají",
-        "neschová",
-        "očí",
-        "putinových",
-        "systém",
-        "žádný"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71791,
+      "bytes": 71634,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T10:23:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:16:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -851,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Odstupte, vzkazuje opozice ministrovi financí. Slovensku spadl rating",
+            "publishedAt": "2026-04-25T11:16:13Z"
+          },
           {
             "title": "Spor o miliardy z Bruselu. Pokorná Jermanová varuje před škrty, Nerudová ji „setřela“",
             "publishedAt": "2026-04-25T10:23:03Z"
@@ -878,10 +880,6 @@
           {
             "title": "Lidovci mění vizuál i vedení. Mají nového předsedu i logo",
             "publishedAt": "2026-04-24T17:05:48Z"
-          },
-          {
-            "title": "Zapomenutý rekordman ožívá: Otevřené letecké muzeum odhalí tajemství Modrého ptáka",
-            "publishedAt": "2026-04-24T15:22:12Z"
           }
         ]
       }
