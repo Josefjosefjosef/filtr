@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T14:45:09.124818Z",
+  "ingestedAt": "2026-04-25T15:09:33.809957Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Kavkách se už zase šturmuje za svobodu a demokracii. Tak jako kdysi",
+      "url": "https://zpravy.aktualne.cz/galerie-a-videa/na-kavkach-se-uz-zase-sturmuje-za-svobodu-a-demokracii-tak-jako-kdysi/r~aaa298a05c87759b28a5c3347006608c/",
+      "dt": "2026-04-25T14:37:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "demokracii",
+        "jako",
+        "kavkách",
+        "kdysi",
+        "svobodu",
+        "tak",
+        "zase",
+        "šturmuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -112,7 +137,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Fotbalová liga živě: Slavia doma prohrává s Olomoucí, Sparta je v deseti",
+      "title": "Fotbalová liga živě: Slavia doma prohrává s oslabenou Olomoucí, Sparta je v deseti",
       "url": "https://sport.aktualne.cz/fotbal/ceska-liga/fotbalova-liga-zive-zakladni-cast-vrcholi-derby-se-hraje-v-praze-i-na-severu/r~aaa293ae96b3b00842467cf93051a472/",
       "dt": "2026-04-25T13:40:00Z",
       "media_raw": "Aktuálně",
@@ -123,6 +148,7 @@
         "fotbalová",
         "liga",
         "olomoucí",
+        "oslabenou",
         "prohrává",
         "slavia",
         "sparta",
@@ -488,33 +514,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ve Spartě roste zboží pro Bundesligu. Drsek popsal, v čem vyniká oproti ostatním",
-      "url": "https://sport.aktualne.cz/fotbal/ve-sparte-roste-zbozi-pro-bundesligu-drsek-popsal-v-cem-vynika-oproti-ostatnim/r~aaa295a9fa4d127decfc8d85286fe8de/",
-      "dt": "2026-04-25T08:50:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bundesligu",
-        "drsek",
-        "oproti",
-        "ostatním",
-        "popsal",
-        "roste",
-        "spartě",
-        "vyniká",
-        "zboží",
-        "čem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -525,7 +524,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21830,
+      "bytes": 21958,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -562,12 +561,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T14:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T14:37:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 12,
           "finance": 3,
-          "zpravy": 11,
-          "sport": 6
+          "sport": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -579,6 +578,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Kavkách se už zase šturmuje za svobodu a demokracii. Tak jako kdysi",
+            "publishedAt": "2026-04-25T14:37:00Z"
+          },
           {
             "title": "Dřívější odchod do důchodu i kratší pracovní týden, požadují odboráři",
             "publishedAt": "2026-04-25T14:14:00Z"
@@ -596,7 +599,7 @@
             "publishedAt": "2026-04-25T13:40:00Z"
           },
           {
-            "title": "Fotbalová liga živě: Slavia doma prohrává s Olomoucí, Sparta je v deseti",
+            "title": "Fotbalová liga živě: Slavia doma prohrává s oslabenou Olomoucí, Sparta je v deseti",
             "publishedAt": "2026-04-25T13:40:00Z"
           },
           {
@@ -606,10 +609,6 @@
           {
             "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Americký syn české hvězdy neměl nárok. Menšík ho vyřídil za 67 minut",
-            "publishedAt": "2026-04-25T12:51:00Z"
           }
         ]
       }

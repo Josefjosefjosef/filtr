@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-25T14:45:09.124818Z",
+  "ingestedAt": "2026-04-25T15:09:33.809957Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Žádné opatření z alkoholika abstinenta neudělá, řekl Válek. Prozradil, s čím v Evropě pohořel",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/akohol-valek-opatreni-evropa/",
+      "dt": "2026-04-25T14:51:17Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "abstinenta",
+        "alkoholika",
+        "evropě",
+        "neudělá",
+        "opatření",
+        "pohořel",
+        "prozradil",
+        "válek",
+        "čím",
+        "řekl",
+        "žádné"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,35 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravotníci umí víc, než jim systém dovolí. Soukromí poskytovatelé chtějí změnu kompetencí",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/soukromi-poskytovatele-tlaci-na-zmenu-kompetenci/",
-      "dt": "2026-04-24T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chtějí",
-        "dovolí",
-        "jim",
-        "kompetencí",
-        "než",
-        "poskytovatelé",
-        "soukromí",
-        "systém",
-        "umí",
-        "víc",
-        "zdravotníci",
-        "změnu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 115353,
+      "bytes": 111081,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T14:51:17Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -329,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žádné opatření z alkoholika abstinenta neudělá, řekl Válek. Prozradil, s čím v Evropě pohořel",
+            "publishedAt": "2026-04-25T14:51:17Z"
+          },
           {
             "title": "Exkluzivně: Zdravotnictví bude vítězem příštího rozpočtu EU, říká eurokomisař. Popisuje priority",
             "publishedAt": "2026-04-25T05:00:00Z"
@@ -356,10 +359,6 @@
           {
             "title": "Neviditelná epidemie na pracovištích: Europoslanci volají po ochraně před stresem a vyhořením",
             "publishedAt": "2026-04-24T10:00:00Z"
-          },
-          {
-            "title": "Zákaz kojenecké výživy je zbytečný, tvrdí výrobce. Toxické šarže jsme stáhli už dávno, tvrdí",
-            "publishedAt": "2026-04-24T09:02:56Z"
           }
         ]
       }

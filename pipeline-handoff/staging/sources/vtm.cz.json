@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-25T14:45:09.124818Z",
+  "ingestedAt": "2026-04-25T15:09:33.809957Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Od května zlevní doplatkový roaming v zemích EU i mezinárodní hovory. Díky silnější koruně vůči euru",
+      "url": "https://mobilmania.zive.cz/clanky/od-kvetna-zdrazil-doplatkovy-roaming-v-zemich-eu-muze-za-to-slaba-koruna-vuci-euru-202604/sc-3-a-1364618/default.aspx",
+      "dt": "2026-04-25T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "doplatkový",
+        "díky",
+        "euru",
+        "hovory",
+        "koruně",
+        "května",
+        "mezinárodní",
+        "roaming",
+        "silnější",
+        "vůči",
+        "zemích",
+        "zlevní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -948,34 +977,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "AI v lékařské praxi. Primář Oddělení zobrazovacích metod SurGal Clinic mluví o schopnostech AI v radiologii",
-      "url": "https://www.zive.cz/clanky/ai-v-lekarske-praxi-primar-oddeleni-zobrazovacich-metod-surgal-clinic-mluvi-o-schopnostech-ai-v-radiologii/sc-3-a-240689/default.aspx",
-      "dt": "2026-04-22T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "clinic",
-        "lékařské",
-        "metod",
-        "mluví",
-        "oddělení",
-        "praxi",
-        "primář",
-        "radiologii",
-        "schopnostech",
-        "surgal",
-        "zobrazovacích"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23240,
+      "bytes": 23010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-25T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1038,6 +1039,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od května zlevní doplatkový roaming v zemích EU i mezinárodní hovory. Díky silnější koruně vůči euru",
+            "publishedAt": "2026-04-25T14:45:00Z"
+          },
           {
             "title": "Evropský unikát v Česku. Infinix GT 50 Pro má herní design a šikovná dotyková tlačítka",
             "publishedAt": "2026-04-25T12:45:00Z"
@@ -1065,10 +1070,6 @@
           {
             "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
             "publishedAt": "2026-04-24T11:45:00Z"
-          },
-          {
-            "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
-            "publishedAt": "2026-04-24T10:45:00Z"
           }
         ]
       }
