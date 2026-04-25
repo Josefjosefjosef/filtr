@@ -6340,8 +6340,8 @@ function buildVideoAsArticleCard(it) {
       const css =
         "@media (max-width:1024px){" +
         "#iuHolidayMonetizeCard.iu-holiday-monetize-card{overflow:hidden}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle,#iuHolidayMonetizeCard .poprej-icon{width:30px!important;height:30px!important;min-width:30px!important;max-width:30px!important;box-sizing:border-box!important;flex-shrink:0!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg{display:block!important;transform:scale(0.85);transform-origin:center}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle,#iuHolidayMonetizeCard .poprej-icon,#iuNamedayCtaMobile .poprej-icon{width:26px!important;height:26px!important;min-width:26px!important;max-width:26px!important;box-sizing:border-box!important;flex-shrink:0!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg,#iuHolidayMonetizeCard .poprej-icon svg,#iuNamedayCtaMobile .poprej-icon svg{display:block!important;transform:scale(0.8);transform-origin:center}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle{color:var(--iuNamedayMaleAccent)}" +
         "#iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{color:var(--iuNamedayFemaleAccent)}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}" +
@@ -6352,7 +6352,7 @@ function buildVideoAsArticleCard(it) {
         "#iuHolidayMonetizeCard .iu-holiday-card__row{display:flex!important;flex-flow:row wrap!important;align-items:center!important;gap:8px!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftWrap{flex:0 0 auto!important;align-self:center!important}" +
         "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:8px!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}" +
-        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;padding:6px 8px!important}" +
+        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;min-height:44px!important;padding-top:10px!important;padding-bottom:10px!important;padding-left:8px!important;padding-right:8px!important}" +
         "#iuHolidayMonetizeCard #iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
         "#iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard .iu-holiday-card__line1{font-weight:400!important}" +
         "#iuHolidayMonetizeCard .poprej-bold{font-weight:600!important}" +
