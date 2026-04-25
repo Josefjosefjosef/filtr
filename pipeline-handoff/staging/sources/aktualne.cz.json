@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T04:34:55.658393Z",
+  "ingestedAt": "2026-04-25T04:54:49.182662Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "KVÍZ: Jeden je tu navíc. Odhalte postavu, která do románu nepatří",
+      "url": "https://magazin.aktualne.cz/kultura/literatura/kviz-jeden-je-tu-navic-odhalte-postavu-ktera-do-romanu-nepatri/r~aaa29123103176d93af26178c3a088ad/",
+      "dt": "2026-04-25T04:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jeden",
+        "kvíz",
+        "navíc",
+        "nepatří",
+        "odhalte",
+        "postavu",
+        "románu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -506,33 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel se nepovažuje za lídra opozice. Jsem jen proti lžím a hulvátství, prohlásil",
-      "url": "https://zpravy.aktualne.cz/domaci/pavel-se-nepovazuje-za-lidra-opozice-jsem-jen-proti-lzim-a-hulvatstvi-prohlasil/r~aaa29aee671c32815af2197ffb4059ba/",
-      "dt": "2026-04-24T14:52:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hulvátství",
-        "jen",
-        "jsem",
-        "lídra",
-        "lžím",
-        "nepovažuje",
-        "opozice",
-        "pavel",
-        "prohlásil",
-        "proti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22509,
+      "bytes": 22520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,11 +577,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 1,
           "finance": 1,
-          "zpravy": 15,
+          "zpravy": 14,
           "sport": 4
         },
         "drop_counts": {
@@ -597,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KVÍZ: Jeden je tu navíc. Odhalte postavu, která do románu nepatří",
+            "publishedAt": "2026-04-25T04:30:00Z"
+          },
           {
             "title": "Evropa řeší penalty, Čína vyrábí auta. Šéfdesignér Jozef Kabaň popisuje střet dvou světů",
             "publishedAt": "2026-04-25T04:14:00Z"
@@ -624,10 +626,6 @@
           {
             "title": "Reprezentace sčítá před MS posily ze zámoří. Šestice se zapojí už do Českých her",
             "publishedAt": "2026-04-24T18:47:00Z"
-          },
-          {
-            "title": "Turkovi „paraziti“ vyvolali bouři. Babiš se do něj drsně opřel, Macinka mluvil o hilsneriádě",
-            "publishedAt": "2026-04-24T12:21:00Z"
           }
         ]
       }
