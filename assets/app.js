@@ -6346,9 +6346,12 @@ function buildVideoAsArticleCard(it) {
         "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg path{fill:currentColor!important;stroke:currentColor!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard #iuHolidayLine1{white-space:nowrap;min-width:0;max-width:100%}" +
-        "#iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;gap:8px!important;flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;margin:0!important}" +
-        "#iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important}" +
-        "#iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__row{display:flex!important;flex-flow:row wrap!important;align-items:center!important;gap:10px!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftWrap{flex:0 0 auto!important;align-self:center!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__text{flex:1 1 0!important;min-width:0!important;align-self:center!important}" +
+        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:8px!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}" +
+        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;padding:6px 8px!important}" +
+        "#iuHolidayMonetizeCard #iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
         "}";
       const node = document.createElement("style");
       node.id = "iuPoprejMobileCss";
