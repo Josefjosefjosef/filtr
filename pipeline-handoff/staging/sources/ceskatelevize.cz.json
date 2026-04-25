@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T04:15:05.895345Z",
+  "ingestedAt": "2026-04-25T04:34:55.658393Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Autobusy na zavolání jsou v kurzu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/autobusy-na-zavolani-jsou-v-kurzu-372771",
+      "dt": "2026-04-25T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "autobusy",
+        "kurzu",
+        "zavolání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -719,33 +739,6 @@
         "omluvu",
         "turka",
         "žádají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Česko by mělo opustit model subdodavatelské ekonomiky, řekl Středula na sjezdu ČMKOS",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-praze-zacal-sjezd-cmkos-odborari-si-zvoli-vedeni-na-dalsi-ctyri-roky-372750",
-      "dt": "2026-04-24T08:28:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ekonomiky",
-        "model",
-        "mělo",
-        "opustit",
-        "sjezdu",
-        "středula",
-        "subdodavatelské",
-        "česko",
-        "čmkos",
-        "řekl"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1524,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42257,
+      "bytes": 42169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1584,11 +1577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 23,
+          "finance": 2,
           "other": 5
         },
         "drop_counts": {
@@ -1601,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Autobusy na zavolání jsou v kurzu",
+            "publishedAt": "2026-04-25T04:30:00Z"
+          },
           {
             "title": "Ceny leteckého paliva mohou zkomplikovat dovolené v zahraničí",
             "publishedAt": "2026-04-25T04:00:00Z"
@@ -1628,10 +1625,6 @@
           {
             "title": "Středula byl znovu zvolen do čela odborové konfederace ČMKOS",
             "publishedAt": "2026-04-24T17:35:57Z"
-          },
-          {
-            "title": "USA chtějí zavést popravčí čety",
-            "publishedAt": "2026-04-24T17:07:30Z"
           }
         ]
       }
@@ -1737,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77779,
+      "bytes": 77785,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

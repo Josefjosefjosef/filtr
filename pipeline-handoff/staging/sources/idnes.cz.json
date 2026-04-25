@@ -1,27 +1,26 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T04:15:05.895345Z",
+  "ingestedAt": "2026-04-25T04:34:55.658393Z",
   "items": [
     {
-      "section": "finance",
+      "section": "aktualne",
       "contentType": "article",
-      "title": "Vládní regulace dusí malé pumpy. Mohou kvůli nim i skončit, varuje čerpadlář",
-      "url": "https://www.idnes.cz/ekonomika/domaci/radek-kunc-pohonne-hmoty-dobrichovice.A260424_143553_ekonomika_vebe",
-      "dt": "2026-04-24T22:00:00Z",
+      "title": "Lidovci proberou své směřování, Grolich nechce, aby lidem kecali do života",
+      "url": "https://www.idnes.cz/zpravy/domaci/lidovci-budou-na-sjezdu-diskutovat-o-smerovani-strany-pod-novym-vedenim.A260425_035602_domaci_kop",
+      "dt": "2026-04-25T04:05:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "dusí",
-        "kvůli",
-        "malé",
-        "nim",
-        "pumpy",
-        "regulace",
-        "skončit",
-        "varuje",
-        "vládní",
-        "čerpadlář"
+        "grolich",
+        "kecali",
+        "lidem",
+        "lidovci",
+        "nechce",
+        "proberou",
+        "směřování",
+        "své",
+        "života"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -102,6 +101,33 @@
         "podnikatel",
         "světa",
         "ukrajiny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vládní regulace dusí malé pumpy. Mohou kvůli nim i skončit, varuje čerpadlář",
+      "url": "https://www.idnes.cz/ekonomika/domaci/radek-kunc-pohonne-hmoty-dobrichovice.A260424_143553_ekonomika_vebe",
+      "dt": "2026-04-24T22:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dusí",
+        "kvůli",
+        "malé",
+        "nim",
+        "pumpy",
+        "regulace",
+        "skončit",
+        "varuje",
+        "vládní",
+        "čerpadlář"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -762,33 +788,6 @@
         "muž",
         "německá",
         "stěžuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kadyrovův syn rozjel vlastní byznys. Energy drink se podobá západní značce",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-cecensko-ramzan-adam-kadyrov-energeticky-napoj.A260424_144343_zahranicni_dtt",
-      "dt": "2026-04-24T13:50:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "byznys",
-        "drink",
-        "energy",
-        "kadyrovův",
-        "podobá",
-        "rozjel",
-        "syn",
-        "vlastní",
-        "značce",
-        "západní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49563,
+      "bytes": 49697,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,11 +1622,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 26,
+          "finance": 3,
           "other": 1
         },
         "drop_counts": {
@@ -1641,8 +1640,8 @@
         },
         "sample_titles": [
           {
-            "title": "Vládní regulace dusí malé pumpy. Mohou kvůli nim i skončit, varuje čerpadlář",
-            "publishedAt": "2026-04-24T22:00:00Z"
+            "title": "Lidovci proberou své směřování, Grolich nechce, aby lidem kecali do života",
+            "publishedAt": "2026-04-25T04:05:00Z"
           },
           {
             "title": "Američané vpadli do Kanady, pochod smrti na Québec skončil potupnou porážkou",
@@ -1657,6 +1656,10 @@
             "publishedAt": "2026-04-24T22:00:00Z"
           },
           {
+            "title": "Vládní regulace dusí malé pumpy. Mohou kvůli nim i skončit, varuje čerpadlář",
+            "publishedAt": "2026-04-24T22:00:00Z"
+          },
+          {
             "title": "Policie v Třebíči odhalila v týdnu tři padělané řidičáky. Pomohl alkohol",
             "publishedAt": "2026-04-24T20:25:00Z"
           },
@@ -1667,10 +1670,6 @@
           {
             "title": "Středula zůstává předsedou odborářů. Uspěl už v prvním kole těsnou většinou",
             "publishedAt": "2026-04-24T19:03:00Z"
-          },
-          {
-            "title": "Čerstvé záběry nové Pobřežní hlídky jsou na světě. Kdo je kdo a jak jim sluší červená",
-            "publishedAt": "2026-04-24T18:22:00Z"
           }
         ]
       }

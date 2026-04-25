@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T04:15:05.895345Z",
+  "ingestedAt": "2026-04-25T04:34:55.658393Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa řeší penalty, Čína vyrábí auta. Šéfdesignér Jozef Kabaň popisuje střet dvou světů",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/technika-a-design/evropa-resi-penalty-cina-vyrabi-auta-sefdesigner-jozef-kaban-popisuje-stret-dvou-svetu/r~aaa294deb0b5e38bedff2efbd127fb0a/",
+      "dt": "2026-04-25T04:14:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "auta",
+        "dvou",
+        "evropa",
+        "jozef",
+        "kabaň",
+        "penalty",
+        "popisuje",
+        "střet",
+        "světů",
+        "vyrábí",
+        "čína",
+        "řeší",
+        "šéfdesignér"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,32 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Poslanci přehlasovali Senát, zákon o cenách pohonných hmot putuje k prezidentovi",
-      "url": "https://zpravy.aktualne.cz/domaci/poslanci-prehlasovali-senat-zakon-o-cenach-pohonnych-hmot-putuje-k-pavlovi/r~aaa294c3b358fefa594de62ce2ba0cae/",
-      "dt": "2026-04-24T14:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cenách",
-        "hmot",
-        "pohonných",
-        "poslanci",
-        "prezidentovi",
-        "putuje",
-        "přehlasovali",
-        "senát",
-        "zákon"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22541,
+      "bytes": 22509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,10 +580,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:14:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 16,
+          "finance": 1,
+          "zpravy": 15,
           "sport": 4
         },
         "drop_counts": {
@@ -592,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa řeší penalty, Čína vyrábí auta. Šéfdesignér Jozef Kabaň popisuje střet dvou světů",
+            "publishedAt": "2026-04-25T04:14:00Z"
+          },
           {
             "title": "Záhada íránského vůdce, kterého nikdo neviděl. Kam zmizel Modžtaba Chameneí?",
             "publishedAt": "2026-04-25T03:30:00Z"
@@ -619,10 +628,6 @@
           {
             "title": "Turkovi „paraziti“ vyvolali bouři. Babiš se do něj drsně opřel, Macinka mluvil o hilsneriádě",
             "publishedAt": "2026-04-24T12:21:00Z"
-          },
-          {
-            "title": "„Nepříjemný problém pro Rusko.“ Ukrajinci chystají odpověď na Putinovu superzbraň",
-            "publishedAt": "2026-04-24T17:56:00Z"
           }
         ]
       }
