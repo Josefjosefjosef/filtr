@@ -6331,6 +6331,94 @@ function buildVideoAsArticleCard(it) {
     /* Capture input se vkládá jen z iuSilverWelcomeRefresh — až po doplnění pozdravu; předčasný build v init způsoboval prázdný greet + layout skok. */
   }
 
+  /** P0 poprej: ≤1024px CSS injekt (kvůli css_debt_guard app.css bytes) — jen projects route. */
+  function iuPoprejEnsureMobileCssInjected(){
+    try{
+      if (typeof iuIsProjectsRoute === "function" && !iuIsProjectsRoute()) return;
+      if (typeof document === "undefined" || !document || !document.head) return;
+      if (document.getElementById("iuPoprejMobileCss")) return;
+      const css =
+        "@media (max-width:1024px){" +
+        "#iuHolidayMonetizeCard.iu-holiday-monetize-card{overflow:hidden}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__text{overflow-x:hidden;min-width:0}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle{color:var(--iuNamedayMaleAccent)}" +
+        "#iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{color:var(--iuNamedayFemaleAccent)}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg path{fill:currentColor!important;stroke:currentColor!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard #iuHolidayLine1{white-space:nowrap;min-width:0;max-width:100%}" +
+        "#iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;gap:8px!important;flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;margin:0!important}" +
+        "#iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important}" +
+        "#iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
+        "}";
+      const node = document.createElement("style");
+      node.id = "iuPoprejMobileCss";
+      node.setAttribute("data-iu-poprej-css", "1");
+      node.textContent = css;
+      document.head.appendChild(node);
+    }catch(_){}
+  }
+
+  /** P0 poprej box (≤1024px): hooks + CTA inline SVG + scrollWidth font fit — mobile/tablet welcome row. */
+  function iuPoprejMobileUiSync(){
+    try{
+      iuPoprejEnsureMobileCssInjected();
+      const mm = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 1024px)") : null;
+      if (!mm || !mm.matches){
+        try{
+          const t0 = document.getElementById("iuHolidayLine1");
+          if (t0) t0.style.removeProperty("font-size");
+        }catch(_){}
+        return;
+      }
+      const card = document.getElementById("iuHolidayMonetizeCard");
+      const cta = document.getElementById("iuNamedayCtaMobile");
+      const title = document.getElementById("iuHolidayLine1");
+      if (!card || !cta || !title) return;
+      try{ card.classList.add("poprej-box"); }catch(_){}
+      try{ cta.classList.add("poprej-buttons"); }catch(_){}
+      try{ title.classList.add("poprej-title"); }catch(_){}
+      function iuPoprejEnsureBtnIcon(btn, kind){
+        try{
+          if (!btn || btn.getAttribute("data-iu-poprej-icon") === "1") return;
+          const svgGift =
+            "<svg class=\"iu-poprej-btnIcon\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\" focusable=\"false\">" +
+            "<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2\" fill=\"currentColor\"/>" +
+            "<path d=\"M12 10V21\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" fill=\"none\"/>" +
+            "<path d=\"M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z\" fill=\"currentColor\"/>" +
+            "<ellipse cx=\"9\" cy=\"6.5\" rx=\"2.2\" ry=\"2.5\" fill=\"currentColor\"/>" +
+            "<ellipse cx=\"15\" cy=\"6.5\" rx=\"2.2\" ry=\"2.5\" fill=\"currentColor\"/>" +
+            "</svg>";
+          const svgFlower =
+            "<svg class=\"iu-poprej-btnIcon\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\" focusable=\"false\">" +
+            "<circle cx=\"12\" cy=\"9\" r=\"3.5\" fill=\"currentColor\"/>" +
+            "<circle cx=\"8\" cy=\"14\" r=\"3.2\" fill=\"currentColor\"/>" +
+            "<circle cx=\"16\" cy=\"14\" r=\"3.2\" fill=\"currentColor\"/>" +
+            "<path fill=\"currentColor\" d=\"M11 17h2v5h-2z\"/>" +
+            "</svg>";
+          const html = kind === "flowers" ? svgFlower : svgGift;
+          btn.insertAdjacentHTML("afterbegin", html);
+          btn.setAttribute("data-iu-poprej-icon", "1");
+        }catch(_){}
+      }
+      try{
+        iuPoprejEnsureBtnIcon(cta.querySelector(".iu-nameday-wish"), "wish");
+        iuPoprejEnsureBtnIcon(cta.querySelector(".iu-nameday-flowers"), "flowers");
+      }catch(_){}
+      const parent = title.parentElement;
+      if (!parent) return;
+      try{ title.style.removeProperty("font-size"); }catch(_){}
+      try{ void title.offsetWidth; }catch(_){}
+      let scale = 1;
+      while (title.scrollWidth > parent.clientWidth && scale > 0.75){
+        scale -= 0.02;
+        title.style.fontSize = String(scale * 100) + "%";
+      }
+    }catch(_){}
+  }
+  try{
+    if (typeof window !== "undefined") window.iuPoprejMobileUiSync = iuPoprejMobileUiSync;
+  }catch(_){}
+
   /** P0 Silver: sticky welcome card — date + svátek reuse stejného zdroje jako topbar (#iuDailyNameday / #iuTopbarNameday + projects/data/namedays.json přes iuDailyPanelInit). */
   function iuSilverWelcomeInit(){
     try{
@@ -6645,13 +6733,39 @@ function buildVideoAsArticleCard(it) {
             holLine1.textContent = line;
           }
         }catch{}
+        try{
+          if (typeof requestAnimationFrame === "function"){
+            requestAnimationFrame(function(){
+              requestAnimationFrame(function(){
+                try{ iuPoprejMobileUiSync(); }catch(_){}
+              });
+            });
+          } else {
+            try{ iuPoprejMobileUiSync(); }catch(_){}
+          }
+        }catch(_){}
       }catch{}
     }
 
     window.iuSilverWelcomeRefresh = refresh;
     window.iuSilverWelcomeScheduleFit = scheduleSilverWelcomeFit;
 
+    try{
+      iuPoprejEnsureMobileCssInjected();
+    }catch(_){}
     refresh();
+    try{
+      if (!window.__iuPoprejResizeWired){
+        window.__iuPoprejResizeWired = 1;
+        window.addEventListener(
+          "resize",
+          function(){
+            try{ iuPoprejMobileUiSync(); }catch(_){}
+          },
+          { passive: true }
+        );
+      }
+    }catch(_){}
     try{
       const obsSrc = document.getElementById("iuDailyNameday");
       const obsTop = document.getElementById("iuTopbarNameday");
