@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T18:59:21.244971Z",
+  "ingestedAt": "2026-04-25T19:19:29.857749Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "\"Porušili jste příměří.\" Netanjahu nařídil razantní útoky proti Hizballáhu",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hizballáhu",
+        "jste",
+        "nařídil",
+        "netanjahu",
+        "porušili",
+        "proti",
+        "příměří",
+        "razantní",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -125,33 +151,6 @@
         "vítězství",
         "výrazný",
         "zařídil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "další",
-        "komerční",
-        "letiště",
-        "lety",
-        "lodě",
-        "obnovilo",
-        "potvrdili",
-        "teheránu",
-        "zadržení",
-        "íránci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -535,7 +534,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22292,
+      "bytes": 22125,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,8 +574,8 @@
         "raw_feed_latest_publishedAt": "2026-04-25T18:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 8,
           "zpravy": 10,
+          "sport": 8,
           "finance": 2
         },
         "drop_counts": {
@@ -589,6 +588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "\"Porušili jste příměří.\" Netanjahu nařídil razantní útoky proti Hizballáhu",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
           {
             "title": "Haraslín překvapil svými výroky. Na tomhle bych se neotáčel, divili se i experti",
             "publishedAt": "2026-04-25T18:19:00Z"
@@ -608,10 +611,6 @@
           {
             "title": "Skvělý Schick. Dvěma góly zařídil vítězství a dosáhl na další výrazný milník",
             "publishedAt": "2026-04-25T16:55:00Z"
-          },
-          {
-            "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
-            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "West Ham velebí Součka, nasměroval ho k důležité výhře. Kinský má první čisté konto",
