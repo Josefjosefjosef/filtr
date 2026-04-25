@@ -15761,8 +15761,48 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
     min-height: 120px !important;
   }
+  /* P0 ≤1024: Silver + holiday — vertikální symetrie kolem CTA (flex + auto margins; skutečný inner = .iu-hero-silver-premiumInner / Main, holiday CTA = #iuNamedayCtaMobile). */
+  #iuSilverHeroPremium{
+    display: flex;
+    flex-direction: column;
+  }
+  #iuSilverHeroPremium .iu-hero-silver-premiumInner{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
+  #iuSilverHeroPremium .iu-hero-silver-premiumMain{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
+  #iuHolidayMonetizeCard.iu-holiday-monetize-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #iuHolidayMonetizeCard.iu-holiday-monetize-card .iu-holiday-card__row{
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: center;
+  }
+  #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
+  /* Silver: rezerva výšky (dvh) → skutečný slack pro margin:auto na Quick actions; jen silver-slot / mobilní slot. */
+  #silver-slot #iuSilverHeroPremium,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
+    min-height: 38dvh;
   }
   #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame{
     background: transparent !important;
