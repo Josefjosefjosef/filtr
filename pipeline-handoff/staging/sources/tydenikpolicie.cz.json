@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-24T23:55:23.762219Z",
+  "ingestedAt": "2026-04-25T00:14:49.391561Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Uprchlý vězeň strávil na svobodě čtyři hodiny. Teď mu hrozí dalších pět let navrch",
+      "url": "https://tydenikpolicie.cz/uprchly-vezen-stravil-na-svobode-ctyri-hodiny-ted-mu-hrozi-dalsich-pet-let-navrch/",
+      "dt": "2026-04-25T00:02:49Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dalších",
+        "hodiny",
+        "hrozí",
+        "let",
+        "navrch",
+        "pět",
+        "strávil",
+        "svobodě",
+        "uprchlý",
+        "vězeň",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,33 +259,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Strážníci v Brně velmi rychle dopadli ženu podezřelou z okradení spícího muže",
-      "url": "https://tydenikpolicie.cz/straznici-v-brne-velmi-rychle-dopadli-zenu-podezrelou-z-okradeni-spiciho-muze/",
-      "dt": "2026-04-24T07:50:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brně",
-        "dopadli",
-        "muže",
-        "okradení",
-        "podezřelou",
-        "rychle",
-        "spícího",
-        "strážníci",
-        "velmi",
-        "ženu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,7 +269,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15900,
+      "bytes": 15920,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -305,7 +306,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T22:02:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T00:02:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -320,6 +321,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Uprchlý vězeň strávil na svobodě čtyři hodiny. Teď mu hrozí dalších pět let navrch",
+            "publishedAt": "2026-04-25T00:02:49Z"
+          },
           {
             "title": "Trutnovští kriminalisté objasnili během čtyřiadvaceti hodin vloupání do domu v Pilníkově",
             "publishedAt": "2026-04-24T22:02:51Z"
@@ -347,10 +352,6 @@
           {
             "title": "Pohřešovaného seniora na Pelhřimovsku velmi rychle vypátrali policisté",
             "publishedAt": "2026-04-24T08:05:57Z"
-          },
-          {
-            "title": "Zloděj okradl u hlavního nádraží v Ostravě spícího muže",
-            "publishedAt": "2026-04-24T08:03:26Z"
           }
         ]
       }
