@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T04:54:49.182662Z",
+  "ingestedAt": "2026-04-25T05:14:46.165664Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "I dům lze předělat za málo. Řadovka ze slavného sídliště se dočkala citlivé rekonstrukce",
+      "url": "https://magazin.aktualne.cz/bydleni/i-dum-lze-predelat-za-malo-radovka-ze-slavneho-sidliste-se-dockala-citlive-rekonstrukce/r~aaa29904932a147779d53ac69223d149/",
+      "dt": "2026-04-25T04:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "citlivé",
+        "dočkala",
+        "dům",
+        "lze",
+        "málo",
+        "předělat",
+        "rekonstrukce",
+        "slavného",
+        "sídliště",
+        "řadovka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -502,34 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Drahý cukr, nebo lék? Španělé po patnáctiletém zkoumání homeopatie vynesli drsný verdikt",
-      "url": "https://magazin.aktualne.cz/drahy-cukr-nebo-lek-spanele-po-patnactiletem-zkoumani-homeopatie-vynesli-drsny-verdikt/r~aaa294d08ce972bfd0ad654e0386989d/",
-      "dt": "2026-04-24T15:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cukr",
-        "drahý",
-        "drsný",
-        "homeopatie",
-        "lék",
-        "nebo",
-        "patnáctiletém",
-        "verdikt",
-        "vynesli",
-        "zkoumání",
-        "španělé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -540,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22520,
+      "bytes": 22677,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -577,12 +576,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 14,
           "other": 1,
           "finance": 1,
-          "zpravy": 14,
           "sport": 4
         },
         "drop_counts": {
@@ -595,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I dům lze předělat za málo. Řadovka ze slavného sídliště se dočkala citlivé rekonstrukce",
+            "publishedAt": "2026-04-25T04:59:00Z"
+          },
           {
             "title": "KVÍZ: Jeden je tu navíc. Odhalte postavu, která do románu nepatří",
             "publishedAt": "2026-04-25T04:30:00Z"
@@ -622,10 +625,6 @@
           {
             "title": "Středula bude dále šéfovat odborům, zvolili ho už v prvním kole",
             "publishedAt": "2026-04-24T19:00:00Z"
-          },
-          {
-            "title": "Reprezentace sčítá před MS posily ze zámoří. Šestice se zapojí už do Českých her",
-            "publishedAt": "2026-04-24T18:47:00Z"
           }
         ]
       }

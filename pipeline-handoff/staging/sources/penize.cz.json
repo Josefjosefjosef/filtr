@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-25T04:54:49.182662Z",
+  "ingestedAt": "2026-04-25T05:14:46.165664Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Těžaři už letos prodali víc bitcoinů než loni za rok. Zažili jsme megahack",
+      "url": "https://www.penize.cz/nakupy/488863-tezari-uz-letos-prodali-vic-bitcoinu-nez-loni-za-rok-zazili-jsme-megahack",
+      "dt": "2026-04-25T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bitcoinů",
+        "jsme",
+        "letos",
+        "loni",
+        "megahack",
+        "než",
+        "prodali",
+        "rok",
+        "těžaři",
+        "víc",
+        "zažili"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -481,30 +509,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dividendu Monety schválila valná hromada. Kdy a kolik vyplatí?",
-      "url": "https://www.penize.cz/burza-cennych-papiru-praha/488621-dividenda-moneta-bank-2026-vyse-rozhodny-den-vyplata",
-      "dt": "2026-04-21T12:35:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dividendu",
-        "hromada",
-        "kolik",
-        "monety",
-        "schválila",
-        "valná",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18064,
+      "bytes": 18304,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +556,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T13:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 16
+          "finance": 16,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +572,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Těžaři už letos prodali víc bitcoinů než loni za rok. Zažili jsme megahack",
+            "publishedAt": "2026-04-25T07:00:00Z"
+          },
           {
             "title": "Zdražení na víkend. Tady jsou nové maximální ceny benzinu a nafty",
             "publishedAt": "2026-04-24T13:58:00Z"
@@ -595,10 +603,6 @@
           {
             "title": "Kde se bere sebevědomí. A proč rozhoduje víc, než si myslíte",
             "publishedAt": "2026-04-23T05:05:00Z"
-          },
-          {
-            "title": "Změna pro pracující důchodce. Dostanou další odměnu, chystá Juchelka",
-            "publishedAt": "2026-04-23T05:00:00Z"
           }
         ]
       }
