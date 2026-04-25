@@ -21293,13 +21293,13 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     box-shadow: none !important;
   }
   #silver-slot[data-iu-silver-welcome-variant="morning"]{
-    background: linear-gradient(135deg, #fff5e8 0%, #ffe8cc 45%, #ffd8a8 100%);
-  }
-  #silver-slot[data-iu-silver-welcome-variant="lateMorning"]{
     background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
   }
+  #silver-slot[data-iu-silver-welcome-variant="lateMorning"]{
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  }
   #silver-slot[data-iu-silver-welcome-variant="afternoon"]{
-    background: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"]{
     background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
