@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T19:39:22.972358Z",
+  "ingestedAt": "2026-04-25T20:45:03.129709Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Předvolební diskusi v Maďarsku dominovali na síti X zahraniční aktéři",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/predvolebni-diskusi-v-madarsku-dominovali-na-siti-x-zahranicni-akteri-372795",
+      "dt": "2026-04-25T19:44:44Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "aktéři",
+        "diskusi",
+        "dominovali",
+        "maďarsku",
+        "předvolební",
+        "síti",
+        "zahraniční"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,23 +741,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "USA chtějí zavést popravčí čety",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-chteji-zavest-popravci-cety-372776",
-      "dt": "2026-04-24T17:07:30Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Je brzo mluvit o tom, že je o titulu rozhodnuto, řekl Priske po prohře v Ďolíčku",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/je-brzo-mluvit-o-tom-ze-je-o-titulu-rozhodnuto-rekl-priske-po-prohre-v-dolicku-156454",
+      "dt": "2026-04-25T19:36:20Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "chtějí",
-        "popravčí",
-        "usa",
-        "zavést",
-        "čety"
+        "brzo",
+        "mluvit",
+        "priske",
+        "prohře",
+        "rozhodnuto",
+        "titulu",
+        "tom",
+        "ďolíčku",
+        "řekl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1480,30 +1508,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Písek i podruhé vyzrál na USK a zahraje si play-off",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/pisek-i-podruhe-vyzral-na-usk-a-zahraje-si-play-off-156424",
-      "dt": "2026-04-23T18:55:41Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "off",
-        "play",
-        "podruhé",
-        "písek",
-        "usk",
-        "vyzrál",
-        "zahraje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1514,7 +1518,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44441,
+      "bytes": 45013,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1574,7 +1578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T19:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T19:44:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1592,6 +1596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předvolební diskusi v Maďarsku dominovali na síti X zahraniční aktéři",
+            "publishedAt": "2026-04-25T19:44:44Z"
+          },
           {
             "title": "Netanjahu nařídil provést razantní útoky proti hnutí Hizballáh",
             "publishedAt": "2026-04-25T19:32:00Z"
@@ -1619,10 +1627,6 @@
           {
             "title": "Trump zrušil cestu svých vyjednavačů do Pákistánu. Íránci se s nimi nechtěli setkat",
             "publishedAt": "2026-04-25T12:53:25Z"
-          },
-          {
-            "title": "O prvním setkání se sovětským vojákem mohl Vladimír Leman vyprávět jen známým",
-            "publishedAt": "2026-04-25T12:46:09Z"
           }
         ]
       }
@@ -1634,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39007,
+      "bytes": 39048,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1671,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T19:25:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T19:36:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je brzo mluvit o tom, že je o titulu rozhodnuto, řekl Priske po prohře v Ďolíčku",
+            "publishedAt": "2026-04-25T19:36:20Z"
+          },
           {
             "title": "Volejbalové Šelmy řádily v Liberci a vynutily si páté finále",
             "publishedAt": "2026-04-25T19:25:11Z"
@@ -1713,10 +1721,6 @@
           {
             "title": "Prokletí Barcelony na hřišti Getafe skončilo po výhře 2:0, Real remizoval v Seville",
             "publishedAt": "2026-04-25T16:58:59Z"
-          },
-          {
-            "title": "Mareš je ve vedení Rallye Šumava Klatovy, z druhého místa bude dotahovat Kopecký",
-            "publishedAt": "2026-04-25T16:37:05Z"
           }
         ]
       }
@@ -1728,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77696,
+      "bytes": 77722,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

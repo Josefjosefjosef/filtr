@@ -1,14 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T19:39:22.972358Z",
+  "ingestedAt": "2026-04-25T20:45:03.129709Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Máme trumfy v ruce, 18 hodin tam nepoletíte.“ Trump zrušil cestu vyjednavačů",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-podle-stanice-fox-news-zrusil-cestu-americkych-vyjednavacu-witkoffa-a-kushnera-do-pakistanu-kd.A260425_180304_zahranicni_kurl",
+      "dt": "2026-04-25T20:16:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cestu",
+        "hodin",
+        "máme",
+        "nepoletíte",
+        "ruce",
+        "tam",
+        "trumfy",
+        "trump",
+        "vyjednavačů",
+        "zrušil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Netanjahu nařídil zaútočit proti hnutí Hizballáh. Porušilo příměří, tvrdí Izrael",
       "url": "https://www.idnes.cz/zpravy/zahranicni/premier-netanjahu-libanon-hizballah-izrael-armada-primeri.A260425_203722_zahranicni_mikp",
-      "dt": "2026-04-25T19:13:00Z",
+      "dt": "2026-04-25T20:13:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -246,33 +273,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "„Máme trumfy v ruce, 18 hodin tam nepoletíte.“ Trump zrušil cestu vyjednavačů",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-podle-stanice-fox-news-zrusil-cestu-americkych-vyjednavacu-witkoffa-a-kushnera-do-pakistanu-kd.A260425_180304_zahranicni_kurl",
-      "dt": "2026-04-25T16:47:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cestu",
-        "hodin",
-        "máme",
-        "nepoletíte",
-        "ruce",
-        "tam",
-        "trumfy",
-        "trump",
-        "vyjednavačů",
-        "zrušil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Orbán se vzdá svého křesla v parlamentu. Jsem potřeba jinde, vysvětlil",
       "url": "https://www.idnes.cz/zpravy/zahranicni/madarsky-premier-viktor-orban-poslanec-madarsko-volby.A260425_181334_zahranicni_mikp",
       "dt": "2026-04-25T16:32:00Z",
@@ -456,7 +456,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Tragická nehoda na Berounsku. Hasiči jeli k nehodě, srazili se s osobním autem",
+      "title": "Tragická srážka na Berounsku. Hasiči jeli k nehodě, střetli se s osobním autem",
       "url": "https://www.idnes.cz/praha/zpravy/hasici-auto-nehoda-stret-hyskov-smrt-policie.A260425_153045_praha-zpravy_herp",
       "dt": "2026-04-25T13:41:00Z",
       "media_raw": "iDNES / Zprávy",
@@ -466,10 +466,10 @@
         "berounsku",
         "hasiči",
         "jeli",
-        "nehoda",
         "nehodě",
         "osobním",
-        "srazili",
+        "srážka",
+        "střetli",
         "tragická"
       ],
       "feedCategory": "zpravy",
@@ -1585,7 +1585,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50668,
+      "bytes": 50799,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,7 +1622,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T19:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T20:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1640,8 +1640,12 @@
         },
         "sample_titles": [
           {
+            "title": "„Máme trumfy v ruce, 18 hodin tam nepoletíte.“ Trump zrušil cestu vyjednavačů",
+            "publishedAt": "2026-04-25T20:16:00Z"
+          },
+          {
             "title": "Netanjahu nařídil zaútočit proti hnutí Hizballáh. Porušilo příměří, tvrdí Izrael",
-            "publishedAt": "2026-04-25T19:13:00Z"
+            "publishedAt": "2026-04-25T20:13:00Z"
           },
           {
             "title": "První volby v Pásmu Gazy za 20 let. Palestinci si vybírali místní zastupitele",
@@ -1666,10 +1670,6 @@
           {
             "title": "Ceny nájmů narazily, u hranic už klesají. V okolí Prahy však stále letí vzhůru",
             "publishedAt": "2026-04-25T18:00:00Z"
-          },
-          {
-            "title": "Klíčový bod pro evakuační operace. Kypr zmodernizuje základny, peníze dají i USA",
-            "publishedAt": "2026-04-25T17:19:00Z"
           }
         ]
       }
