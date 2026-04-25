@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T20:45:03.129709Z",
+  "ingestedAt": "2026-04-25T21:09:47.247846Z",
   "items": [
     {
       "section": "aktualne",
@@ -736,6 +736,33 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ondřej Kaše: Nervy jsme měli velké, dneska jsme předvedli ukázkový výkon",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/ondrej-kase-nervy-jsme-meli-velke-dneska-jsme-predvedli-ukazkovy-vykon-156455",
+      "dt": "2026-04-25T20:56:53Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dneska",
+        "jsme",
+        "kaše",
+        "měli",
+        "nervy",
+        "ondřej",
+        "předvedli",
+        "ukázkový",
+        "velké",
+        "výkon"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1481,33 +1508,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Prospali jsme začátek. Nemá cenu se v tom babrat, řekl o porážce Sedlák",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/prospali-jsme-zacatek-nema-cenu-se-v-tom-babrat-rekl-o-porazce-sedlak-156427",
-      "dt": "2026-04-23T20:51:17Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "babrat",
-        "cenu",
-        "jsme",
-        "nemá",
-        "porážce",
-        "prospali",
-        "sedlák",
-        "tom",
-        "začátek",
-        "řekl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1638,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39048,
+      "bytes": 39106,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T19:36:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T20:56:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ondřej Kaše: Nervy jsme měli velké, dneska jsme předvedli ukázkový výkon",
+            "publishedAt": "2026-04-25T20:56:53Z"
+          },
           {
             "title": "Je brzo mluvit o tom, že je o titulu rozhodnuto, řekl Priske po prohře v Ďolíčku",
             "publishedAt": "2026-04-25T19:36:20Z"
@@ -1717,10 +1721,6 @@
           {
             "title": "Toyota dominuje Rallye Kanárských ostrovů, v čele je Ogier před Solbergem",
             "publishedAt": "2026-04-25T17:39:39Z"
-          },
-          {
-            "title": "Prokletí Barcelony na hřišti Getafe skončilo po výhře 2:0, Real remizoval v Seville",
-            "publishedAt": "2026-04-25T16:58:59Z"
           }
         ]
       }
@@ -1732,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77722,
+      "bytes": 77743,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

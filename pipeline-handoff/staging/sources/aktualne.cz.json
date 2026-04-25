@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T20:45:03.129709Z",
+  "ingestedAt": "2026-04-25T21:09:47.247846Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Litvínov si oddechl, zůstává v extralize. Postup Jihlavy? Prý jen otázka času",
+      "url": "https://sport.aktualne.cz/hokej/litvinov-si-oddechl-zustava-v-extralize-postup-jihlavy-pry-jen-otazka-casu/r~aaa29dd084df82519fea9a566e24f2c1/",
+      "dt": "2026-04-25T20:52:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "extralize",
+        "jen",
+        "jihlavy",
+        "litvínov",
+        "oddechl",
+        "otázka",
+        "postup",
+        "prý",
+        "zůstává",
+        "času"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -499,31 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Viděli jste, jak se mu smáli?“ Experti rozebírají zvrat v extraligovém finále",
-      "url": "https://sport.aktualne.cz/hokej/videli-jste-jak-se-mu-smali-experti-rozebiraji-zvrat-v-extraligovem-finale/r~aaa29a5644555fe2677e1bf944f756b5/",
-      "dt": "2026-04-25T11:41:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "experti",
-        "extraligovém",
-        "finále",
-        "jste",
-        "rozebírají",
-        "smáli",
-        "viděli",
-        "zvrat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -534,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22107,
+      "bytes": 22164,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -571,11 +573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T18:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T20:52:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
           "sport": 8,
+          "zpravy": 10,
           "finance": 2
         },
         "drop_counts": {
@@ -588,6 +590,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Litvínov si oddechl, zůstává v extralize. Postup Jihlavy? Prý jen otázka času",
+            "publishedAt": "2026-04-25T20:52:00Z"
+          },
           {
             "title": "\"Porušili jste příměří.\" Netanjahu nařídil razantní útoky proti Hizballáhu",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -615,10 +621,6 @@
           {
             "title": "West Ham velebí Součka, nasměroval ho k důležité výhře. Kinský má první čisté konto",
             "publishedAt": "2026-04-25T16:39:00Z"
-          },
-          {
-            "title": "„Většinou se spíš křičí.“ Finský prezident poodhalil svůj speciální vztah s Trumpem",
-            "publishedAt": "2026-04-25T16:24:00Z"
           }
         ]
       }
