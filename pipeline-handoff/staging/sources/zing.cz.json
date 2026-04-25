@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Poznejte svůj vesmírný domov ve hře Exodus",
+      "url": "https://zing.cz/article/poznejte-svuj-vesmirny-domov-ve-hre-exodus",
+      "dt": "2026-04-25T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "domov",
+        "exodus",
+        "hře",
+        "poznejte",
+        "svůj",
+        "vesmírný"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -984,31 +1007,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Kingdom Come: Deliverance 2 získalo prestižní ocenění za nejlepší příběh",
-      "url": "https://zing.cz/article/kingdom-come-deliverance-2-ziskalo-prestizni-oceneni-za-nejlepsi-pribeh",
-      "dt": "2026-04-20T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "come",
-        "deliverance",
-        "kingdom",
-        "nejlepší",
-        "ocenění",
-        "prestižní",
-        "příběh",
-        "získalo"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1019,7 +1017,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125571,
+      "bytes": 125547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1056,7 +1054,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1072,6 +1070,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poznejte svůj vesmírný domov ve hře Exodus",
+            "publishedAt": "2026-04-25T06:00:00Z"
+          },
           {
             "title": "Nejnovější update Dying Light: The Beast Restored Land vychází vstříc pohodlí",
             "publishedAt": "2026-04-25T04:00:00Z"
@@ -1099,10 +1101,6 @@
           {
             "title": "Česká hra Brno Transit je venku, tvůrce láká na skutečný horor",
             "publishedAt": "2026-04-24T08:00:00Z"
-          },
-          {
-            "title": "Recenze Saros – psychologie zatmění slunce",
-            "publishedAt": "2026-04-24T07:00:00Z"
           }
         ]
       }

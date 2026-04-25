@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
       "title": "Dobeš, Vejmelka i Dostál vychytali výhry a vedení v sériích play off",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-dobes-vejmelka-dostal.A260425_071402_nhl_mkr",
-      "dt": "2026-04-25T05:43:19Z",
+      "dt": "2026-04-25T05:59:23Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -21,6 +21,30 @@
         "vejmelka",
         "vychytali",
         "výhry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Treml o Kadlecové: Na americké univerzitě byla jen figurka na šachovnici",
+      "url": "https://www.idnes.cz/sport/basket/basketbalistka-valentyna-kadlecova-ocima-petra-tremla.A260425_004510_sport-basket_pbi",
+      "dt": "2026-04-25T05:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "americké",
+        "figurka",
+        "jen",
+        "kadlecové",
+        "treml",
+        "univerzitě",
+        "šachovnici"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -763,32 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Formule 1 se vrátí do Turecka. Ukážeme, že naše země je bezpečná, tvrdí prezident",
-      "url": "https://www.idnes.cz/sport/motorsport/formule-1-se-vrati-do-turecka-ukazeme-ze-nase-zeme-je-bezpecna-tvrdi-prezident.A260424_144649_motorsport_tit",
-      "dt": "2026-04-24T12:53:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bezpečná",
-        "formule",
-        "naše",
-        "prezident",
-        "turecka",
-        "tvrdí",
-        "ukážeme",
-        "vrátí",
-        "země"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46725,
+      "bytes": 47057,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:43:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:59:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,7 +851,11 @@
         "sample_titles": [
           {
             "title": "Dobeš, Vejmelka i Dostál vychytali výhry a vedení v sériích play off",
-            "publishedAt": "2026-04-25T05:43:19Z"
+            "publishedAt": "2026-04-25T05:59:23Z"
+          },
+          {
+            "title": "Treml o Kadlecové: Na americké univerzitě byla jen figurka na šachovnici",
+            "publishedAt": "2026-04-25T05:45:00Z"
           },
           {
             "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
@@ -878,10 +880,6 @@
           {
             "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
             "publishedAt": "2026-04-24T20:14:00Z"
-          },
-          {
-            "title": "Přípravné zápasy a aktuální soupiska českých hokejistů před MS 2026",
-            "publishedAt": "2026-04-24T20:06:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Státy EU se neshodnou na přístupu k emisním povolenkám, Komise chystá revizi",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/staty-eu-se-neshodnou-na-pristupu-k-emisnim-povolenkam-komise-chysta-revizi-372206",
+      "dt": "2026-04-25T06:02:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chystá",
+        "emisním",
+        "komise",
+        "neshodnou",
+        "povolenkám",
+        "přístupu",
+        "revizi",
+        "státy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,24 +751,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "sport",
       "contentType": "article",
-      "title": "ČEZ představil detaily vzniku dceřiné firmy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/brifink-cezu-k-zalozeni-nove-dcerine-firmy-372753",
-      "dt": "2026-04-24T10:31:29Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Úspěchy českých gólmanů. Radují se Dobeš a Dostál, Vejmelka byl dokonce druhou hvězdou",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/uspechy-ceskych-golmanu-raduji-se-dobes-a-dostal-vejmelka-byl-dokonce-druhou-hvezdou-156438",
+      "dt": "2026-04-25T06:06:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dceřiné",
-        "detaily",
-        "firmy",
-        "představil",
-        "vzniku",
-        "čez"
+        "dobeš",
+        "dokonce",
+        "dostál",
+        "druhou",
+        "gólmanů",
+        "hvězdou",
+        "radují",
+        "vejmelka",
+        "úspěchy",
+        "českých"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1484,30 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Karviná vyřadila Zubří a o titul si znovu zahraje s Plzní",
-      "url": "https://sport.ceskatelevize.cz/clanek/hazena/karvina-vyradila-zubri-a-o-titul-si-znovu-zahraje-s-plzni-156410",
-      "dt": "2026-04-22T18:25:50Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "karviná",
-        "plzní",
-        "titul",
-        "vyřadila",
-        "zahraje",
-        "znovu",
-        "zubří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1518,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43028,
+      "bytes": 43266,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1578,11 +1583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:44:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 2,
+          "zpravy": 26,
+          "finance": 1,
           "other": 3
         },
         "drop_counts": {
@@ -1595,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Státy EU se neshodnou na přístupu k emisním povolenkám, Komise chystá revizi",
+            "publishedAt": "2026-04-25T06:02:00Z"
+          },
           {
             "title": "Vládní regulace cen paliv je jen pro mimořádné situace, říká Mach. Omezené šance na přezkum, namítá Volpe",
             "publishedAt": "2026-04-25T05:44:26Z"
@@ -1622,10 +1631,6 @@
           {
             "title": "Mezi Izraelem a Hizballáhem proběhla další vlna útoků",
             "publishedAt": "2026-04-24T22:19:36Z"
-          },
-          {
-            "title": "Soud zablokoval Trumpův výnos o zastavení přístupu k azylu na hranici s Mexikem",
-            "publishedAt": "2026-04-24T19:58:54Z"
           }
         ]
       }
@@ -1637,7 +1642,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38898,
+      "bytes": 39175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1674,7 +1679,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T19:44:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:06:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,6 +1694,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úspěchy českých gólmanů. Radují se Dobeš a Dostál, Vejmelka byl dokonce druhou hvězdou",
+            "publishedAt": "2026-04-25T06:06:17Z"
+          },
           {
             "title": "Futsalisté Chrudimi slaví další titul, již sedmnáctý",
             "publishedAt": "2026-04-24T19:44:02Z"
@@ -1716,10 +1725,6 @@
           {
             "title": "Šulc ohlásil v Lyonu návrat po zranění. Liga mistrů je pro nás cíl už od startu sezony, říká",
             "publishedAt": "2026-04-24T13:46:45Z"
-          },
-          {
-            "title": "Čechům se v Madridu daří, Kopřiva překvapil vyřazením Rubljova",
-            "publishedAt": "2026-04-24T11:49:39Z"
           }
         ]
       }
@@ -1731,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77737,
+      "bytes": 77776,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dostala jsem prezidentskou milost. Husák ani nevěděl, že ji podepsal",
+      "url": "https://hlidacipes.org/dostala-jsem-prezidentskou-milost-husak-ani-nevedel-ze-ji-podepsal/",
+      "dt": "2026-04-25T06:00:31Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "dostala",
+        "husák",
+        "jsem",
+        "milost",
+        "nevěděl",
+        "podepsal",
+        "prezidentskou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,33 +261,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Putin dekret podepsal, český souhlas chybí. Ruská výměna velvyslanců zamrzla",
-      "url": "https://hlidacipes.org/putin-dekret-podepsal-cesky-souhlas-chybi-ruska-vymena-velvyslancu-zamrzla/",
-      "dt": "2026-04-21T04:30:19Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "chybí",
-        "dekret",
-        "podepsal",
-        "putin",
-        "ruská",
-        "souhlas",
-        "velvyslanců",
-        "výměna",
-        "zamrzla",
-        "český"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17538,
+      "bytes": 17534,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:30:57Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:00:31Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dostala jsem prezidentskou milost. Husák ani nevěděl, že ji podepsal",
+            "publishedAt": "2026-04-25T06:00:31Z"
+          },
           {
             "title": "Pracovala pro GRU, šířila dezinfo a teď žaluje Česko. Kdo je Natallia Sudlianková",
             "publishedAt": "2026-04-25T05:30:57Z"
@@ -353,10 +354,6 @@
           {
             "title": "Banka pro obcházení sankcí je v likvidaci. Peníze prala i pro Medveděva",
             "publishedAt": "2026-04-22T10:30:49Z"
-          },
-          {
-            "title": "Jan Urban: V novém světě žvástu neplatí historická paměť, pravda ani lidská práva",
-            "publishedAt": "2026-04-22T04:30:12Z"
           }
         ]
       }

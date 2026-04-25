@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Arm bude nově konkurovat svým dosavadním klíčovým zákazníkům",
+      "url": "https://profitonline.cz/arm-bude-nove-konkurovat-svym-dosavadnim-klicovym-zakaznikum/",
+      "dt": "2026-04-25T06:00:17Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "arm",
+        "dosavadním",
+        "klíčovým",
+        "konkurovat",
+        "nově",
+        "svým",
+        "zákazníkům"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -271,30 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Proč by ČNB nyní neměla zvyšovat úrokové sazby?",
-      "url": "https://profitonline.cz/proc-by-cnb-nyni-nemela-zvysovat-urokove-sazby/",
-      "dt": "2026-04-23T08:00:55Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "neměla",
-        "nyní",
-        "proč",
-        "sazby",
-        "zvyšovat",
-        "úrokové",
-        "čnb"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18601,
+      "bytes": 18472,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:00:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:00:17Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -358,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Arm bude nově konkurovat svým dosavadním klíčovým zákazníkům",
+            "publishedAt": "2026-04-25T06:00:17Z"
+          },
           {
             "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
             "publishedAt": "2026-04-25T04:00:32Z"
@@ -385,10 +389,6 @@
           {
             "title": "Na finančních trzích opět roste averze k riziku",
             "publishedAt": "2026-04-23T18:00:25Z"
-          },
-          {
-            "title": "Evropské indexy zamířily strmě dolů",
-            "publishedAt": "2026-04-23T17:40:00Z"
           }
         ]
       }

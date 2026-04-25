@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ukrajina čelila rozsáhlému ruskému útoku, v Dnipru je zraněno 14 lidí",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/dnipro-rusky-utok-ukrajina-valka-raneni-drony.A260425_071922_zahranicni_dyn",
+      "dt": "2026-04-25T05:55:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dnipru",
+        "lidí",
+        "rozsáhlému",
+        "ruskému",
+        "ukrajina",
+        "zraněno",
+        "útoku",
+        "čelila"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -764,30 +789,6 @@
         "problémy",
         "sebevraždou",
         "tají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jako Alcatraz. Německá extremistka, která byla muž, si stěžuje na Bory",
-      "url": "https://www.idnes.cz/zpravy/domaci/nemecka-extremistka-plzen-dopisy-vazba-stiznost.A260424_153615_domaci_aoc",
-      "dt": "2026-04-24T13:58:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "alcatraz",
-        "bory",
-        "extremistka",
-        "jako",
-        "muž",
-        "německá",
-        "stěžuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49697,
+      "bytes": 50046,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,7 +1623,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1639,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ukrajina čelila rozsáhlému ruskému útoku, v Dnipru je zraněno 14 lidí",
+            "publishedAt": "2026-04-25T05:55:00Z"
+          },
           {
             "title": "Lidovci proberou své směřování, Grolich nechce, aby lidem kecali do života",
             "publishedAt": "2026-04-25T04:05:00Z"
@@ -1666,10 +1671,6 @@
           {
             "title": "Lufthansa s dceřinými aerolinkami zpoplatní kabinový kufr. Kolik to bude stát",
             "publishedAt": "2026-04-24T19:16:00Z"
-          },
-          {
-            "title": "Středula zůstává předsedou odborářů. Uspěl už v prvním kole těsnou většinou",
-            "publishedAt": "2026-04-24T19:03:00Z"
           }
         ]
       }

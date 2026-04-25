@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T05:54:53.213272Z",
+  "ingestedAt": "2026-04-25T06:16:18.877875Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Skvělá práce českých gólmanů v play off NHL! Vejmelka byl druhou hvězdou, Dobeš vychytal další výhru",
+      "title": "Skvělá práce českých gólmanů v play off NHL! Vejmelka byl druhou hvězdou, výhry vychytali Dobeš i Dostál",
       "url": "https://www.sport.cz/clanek/hokej-nhl-dobes-vychytal-v-play-off-nhl-vyhru-montrealu-5442564",
       "dt": "2026-04-25T04:14:45Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "další",
         "dobeš",
+        "dostál",
         "druhou",
         "gólmanů",
         "hvězdou",
@@ -23,9 +23,33 @@
         "práce",
         "skvělá",
         "vejmelka",
-        "vychytal",
-        "výhru",
+        "vychytali",
+        "výhry",
         "českých"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Osm zápasů naráz! Poslední ligové kolo před nadstavbou je tu",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-osm-zapasu-naraz-posledni-ligove-kolo-pred-nadstavbou-je-tu-5442558",
+      "dt": "2026-04-25T05:58:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kolo",
+        "ligové",
+        "nadstavbou",
+        "naráz",
+        "osm",
+        "poslední",
+        "zápasů"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -732,30 +756,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Etická komise v sázkařské kauze přerušila řízení se Suchým",
-      "url": "https://www.sport.cz/clanek/fotbal-eticka-komise-v-sazkarske-kauze-prerusila-rizeni-se-suchym-5442427",
-      "dt": "2026-04-24T15:41:35Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "etická",
-        "kauze",
-        "komise",
-        "přerušila",
-        "suchým",
-        "sázkařské",
-        "řízení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -766,7 +766,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41840,
+      "bytes": 42485,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -803,7 +803,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:04:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:58:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -819,8 +819,12 @@
         },
         "sample_titles": [
           {
-            "title": "Skvělá práce českých gólmanů v play off NHL! Vejmelka byl druhou hvězdou, Dobeš vychytal další výhru",
+            "title": "Skvělá práce českých gólmanů v play off NHL! Vejmelka byl druhou hvězdou, výhry vychytali Dobeš i Dostál",
             "publishedAt": "2026-04-25T04:14:45Z"
+          },
+          {
+            "title": "Osm zápasů naráz! Poslední ligové kolo před nadstavbou je tu",
+            "publishedAt": "2026-04-25T05:58:42Z"
           },
           {
             "title": "Netradiční pocta v Nizozemsku. Fanoušci vytáhli choreo pro uznávanou ženu",
@@ -845,10 +849,6 @@
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-24T20:03:00Z"
-          },
-          {
-            "title": "Real Madrid přišel o výhru v nastaveném čase",
-            "publishedAt": "2026-04-24T21:10:50Z"
           }
         ]
       }
