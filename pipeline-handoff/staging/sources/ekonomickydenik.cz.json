@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-25T06:16:18.877875Z",
+  "ingestedAt": "2026-04-25T07:19:59.344562Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zkrácení ucha a kastrace. O opuštěná zvířata se mají postarat obce",
+      "url": "https://ekonomickydenik.cz/opustena-zvirata-kastrace-obce/",
+      "dt": "2026-04-25T06:58:22Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "kastrace",
+        "mají",
+        "obce",
+        "opuštěná",
+        "postarat",
+        "ucha",
+        "zkrácení",
+        "zvířata"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,33 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Netflix zdražil, už podruhé za dva roky. Nejlevnější tarif přesáhl 250 korun",
-      "url": "https://ekonomickydenik.cz/netflix-zdrazil-podruhe-nejlevnejsi-tarif/",
-      "dt": "2026-04-23T07:58:28Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "250",
-        "dva",
-        "korun",
-        "nejlevnější",
-        "netflix",
-        "podruhé",
-        "přesáhl",
-        "roky",
-        "tarif",
-        "zdražil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72218,
+      "bytes": 72068,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:38:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:58:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zkrácení ucha a kastrace. O opuštěná zvířata se mají postarat obce",
+            "publishedAt": "2026-04-25T06:58:22Z"
+          },
           {
             "title": "Investoři cítí krev. Zapomeňte na IT, teď letí zbrojní startupy",
             "publishedAt": "2026-04-25T05:38:27Z"
@@ -881,10 +883,6 @@
           {
             "title": "Írán proměnil Hormuzský průliv v ničivou zbraň. Evropa tomu nedokáže zabránit",
             "publishedAt": "2026-04-24T12:54:00Z"
-          },
-          {
-            "title": "Macinka znovu brání Turka. Slovy o parazitech a deratizaci vytočil i Babiše",
-            "publishedAt": "2026-04-24T12:44:49Z"
           }
         ]
       }

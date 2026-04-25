@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T06:16:18.877875Z",
+  "ingestedAt": "2026-04-25T07:19:59.344562Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lakers jsou blízko postupu, Krejčí s Portlandem prohrává se Spurs",
+      "url": "https://www.idnes.cz/sport/basket/nba-lakers-blizko-postupu-portland-prohrava-se-spurs.A260425_082928_sport-basket_ald",
+      "dt": "2026-04-25T06:29:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "blízko",
+        "krejčí",
+        "lakers",
+        "portlandem",
+        "postupu",
+        "prohrává",
+        "spurs"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,33 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dozvuk Kaderkovy éry. Tenisový svaz musí uhradit téměř 25 milionů korun",
-      "url": "https://www.idnes.cz/sport/tenis/dozvuk-kaderkovy-ery-tenisovy-svaz-musi-uhradit-temer-25-milionu-korun.A260424_145534_tenis_tit",
-      "dt": "2026-04-24T13:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dozvuk",
-        "kaderkovy",
-        "korun",
-        "milionů",
-        "musí",
-        "svaz",
-        "tenisový",
-        "téměř",
-        "uhradit",
-        "éry"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47057,
+      "bytes": 47012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T05:59:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T06:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lakers jsou blízko postupu, Krejčí s Portlandem prohrává se Spurs",
+            "publishedAt": "2026-04-25T06:29:00Z"
+          },
           {
             "title": "Dobeš, Vejmelka i Dostál vychytali výhry a vedení v sériích play off",
             "publishedAt": "2026-04-25T05:59:23Z"
@@ -876,10 +877,6 @@
           {
             "title": "Ústí v druholigové předehrávce porazilo Žižkov, Vlašim remizovala s Prostějovem",
             "publishedAt": "2026-04-24T20:21:50Z"
-          },
-          {
-            "title": "MS v hokeji 2026: Program, složení skupin, kde a s kým budou hrát Češi?",
-            "publishedAt": "2026-04-24T20:14:00Z"
           }
         ]
       }
