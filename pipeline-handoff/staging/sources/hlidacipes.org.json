@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-25T05:14:46.165664Z",
+  "ingestedAt": "2026-04-25T05:35:07.618546Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pracovala pro GRU, šířila dezinfo a teď žaluje Česko. Kdo je Natallia Sudlianková",
+      "url": "https://hlidacipes.org/pracovala-pro-gru-sirila-dezinfo-a-ted-zaluje-cesko-kdo-je-natallia-sudliankova/",
+      "dt": "2026-04-25T05:30:57Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "dezinfo",
+        "gru",
+        "natallia",
+        "pracovala",
+        "sudlianková",
+        "česko",
+        "šířila",
+        "žaluje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,33 +264,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jan Vávra: Čím větší populista, tím větší iluze suverenity národního státu",
-      "url": "https://hlidacipes.org/jan-vavra-cim-vetsi-populista-tim-vetsi-iluze-suverenity-narodniho-statu/",
-      "dt": "2026-04-20T11:30:07Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "iluze",
-        "jan",
-        "národního",
-        "populista",
-        "státu",
-        "suverenity",
-        "tím",
-        "vávra",
-        "větší",
-        "čím"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,9 +272,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "text/xml;charset=utf-8",
+      "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 17440,
+      "bytes": 17538,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-24T10:30:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:30:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -328,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pracovala pro GRU, šířila dezinfo a teď žaluje Česko. Kdo je Natallia Sudlianková",
+            "publishedAt": "2026-04-25T05:30:57Z"
+          },
           {
             "title": "Aleš Rozehnal: Zákon o médiích veřejné služby je legislativně-technicky paskvil",
             "publishedAt": "2026-04-24T10:30:34Z"
@@ -355,10 +357,6 @@
           {
             "title": "Jan Urban: V novém světě žvástu neplatí historická paměť, pravda ani lidská práva",
             "publishedAt": "2026-04-22T04:30:12Z"
-          },
-          {
-            "title": "Němečtí extremisté píší Babišovi: Ať dá Česko azyl neonacistovi zatčenému u Aše",
-            "publishedAt": "2026-04-21T10:30:51Z"
           }
         ]
       }

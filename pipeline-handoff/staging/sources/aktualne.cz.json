@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T05:14:46.165664Z",
+  "ingestedAt": "2026-04-25T05:35:07.618546Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velká noc českých brankářů. Všichni tři vychytali v play off NHL výhru",
+      "url": "https://sport.aktualne.cz/velka-noc-ceskych-brankaru-vsichni-tri-vychytali-v-play-off-nhl-vyhru/r~aaa2957b25b320a202500b43077c874a/",
+      "dt": "2026-04-25T05:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brankářů",
+        "nhl",
+        "noc",
+        "off",
+        "play",
+        "tři",
+        "velká",
+        "vychytali",
+        "výhru",
+        "všichni",
+        "českých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "„Co je tohle za úroveň?\" pěnil vydeptaný Rus. Kopřiva ho přinutil házet raketou",
+      "url": "https://sport.aktualne.cz/tenis/co-je-tohle-za-uroven-penil-vydeptany-rus-kopriva-ho-prinutil-hazet-raketou/r~aaa2960f7957e2c3561113788a2feb32/",
+      "dt": "2026-04-25T05:12:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "házet",
+        "kopřiva",
+        "pěnil",
+        "přinutil",
+        "raketou",
+        "rus",
+        "tohle",
+        "vydeptaný",
+        "úroveň"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -479,56 +533,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zabránil druhé katastrofě v Černobylu. Teď ho pronásledují ruské drony",
-      "url": "https://zpravy.aktualne.cz/zahranici/zabranil-druhe-katastrofe-v-cernobylu-ted-ho-pronasleduji-ruske-drony/r~aaa292126a458368447c9116bccae4c7/",
-      "dt": "2026-04-24T15:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "drony",
-        "druhé",
-        "katastrofě",
-        "pronásledují",
-        "ruské",
-        "zabránil",
-        "černobylu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Závislí na Červenkovi. Růžička popisuje, jak na něj. Třinec má obrovskou výhodu, říká",
-      "url": "https://sport.aktualne.cz/hokej/zavisli-na-cervenkovi-ruzicka-popisuje-jak-na-nej-trinec-ma-obrovskou-vyhodu-rika/r~aaa298eb17bf0c4a2f6e694071f26bbf/",
-      "dt": "2026-04-24T15:12:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "něj",
-        "obrovskou",
-        "popisuje",
-        "růžička",
-        "třinec",
-        "výhodu",
-        "závislí",
-        "červenkovi",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +543,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22677,
+      "bytes": 22674,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,13 +580,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
+          "sport": 5,
+          "zpravy": 13,
           "other": 1,
-          "finance": 1,
-          "sport": 4
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -594,6 +598,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velká noc českých brankářů. Všichni tři vychytali v play off NHL výhru",
+            "publishedAt": "2026-04-25T05:19:00Z"
+          },
+          {
+            "title": "„Co je tohle za úroveň?\" pěnil vydeptaný Rus. Kopřiva ho přinutil házet raketou",
+            "publishedAt": "2026-04-25T05:12:00Z"
+          },
           {
             "title": "I dům lze předělat za málo. Řadovka ze slavného sídliště se dočkala citlivé rekonstrukce",
             "publishedAt": "2026-04-25T04:59:00Z"
@@ -617,14 +629,6 @@
           {
             "title": "Příměří Izraele s Libanonem potrvá déle, Trump hlásí šanci na mír „ještě letos“",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Putin může dostat pozvánku na summit G20 ve Spojených státech, tvrdí Kreml",
-            "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Středula bude dále šéfovat odborům, zvolili ho už v prvním kole",
-            "publishedAt": "2026-04-24T19:00:00Z"
           }
         ]
       }

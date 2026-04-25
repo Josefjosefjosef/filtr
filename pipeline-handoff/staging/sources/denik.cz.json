@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-25T05:14:46.165664Z",
+  "ingestedAt": "2026-04-25T05:35:07.618546Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Orbán vesele slavil s Havlem Sorosovu cenu, říká György Varga",
+      "url": "https://www.denik.cz/evropa-pro-cechy/viktor-orbn-vaclav-havel-gyorgy-varga.html",
+      "dt": "2026-04-25T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cenu",
+        "györgy",
+        "havlem",
+        "orbán",
+        "slavil",
+        "sorosovu",
+        "varga",
+        "vesele",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,32 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Vraždu plánoval, připravil si nože. Spolužačku ubodal v den osmnáctých narozenin",
-      "url": "https://plzensky.denik.cz/krimi/daniel-miarko-vrazda-zdemyslice-spoluzacka-tereza-pribehy-zla.html",
-      "dt": "2026-04-24T09:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "den",
-        "narozenin",
-        "nože",
-        "osmnáctých",
-        "plánoval",
-        "připravil",
-        "spolužačku",
-        "ubodal",
-        "vraždu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31414,
+      "bytes": 31128,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-25T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -718,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Orbán vesele slavil s Havlem Sorosovu cenu, říká György Varga",
+            "publishedAt": "2026-04-25T05:00:00Z"
+          },
           {
             "title": "Chorvatský Rovinj je jako malé Benátky. Magické uličky a nejlepší zmrzlina",
             "publishedAt": "2026-04-25T03:30:00Z"
@@ -745,10 +749,6 @@
           {
             "title": "Cukrová vata s CBD i sazeničky konopí. Ostrava žije Konopexem, láká i důchodce",
             "publishedAt": "2026-04-24T19:47:00Z"
-          },
-          {
-            "title": "Čína uvalila exportní sankce na české zbrojařské firmy. Macinka chce vysvětlení",
-            "publishedAt": "2026-04-24T16:31:00Z"
           }
         ]
       }
