@@ -21266,12 +21266,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
  * Mind Menu Kalendář: .mindMenu .iu-mmTopTool--cal.iuMindMenuButton (+ text/icon overrides) in Mind Menu section above.
  * To change accent behavior: edit those blocks only, never add a second copy at EOF. */
 
-/* P0 mobile/tablet: feed cards sit directly on page background (no shared wrapper panel). */
 @media (max-width: 1024px){
   #feedWrap,
-  .feed-wrapper,
-  .section-list,
-  .cards-container,
   .main-feed{
     background: transparent !important;
     padding: 0 !important;
@@ -21281,7 +21277,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* Desktop guard: keep original wrapper behavior above tablet breakpoint. */
 @media (min-width: 1025px){
   #feedWrap,
   .feed-wrapper{
