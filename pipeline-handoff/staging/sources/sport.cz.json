@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T07:39:45.604268Z",
+  "ingestedAt": "2026-04-25T07:59:45.481496Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tak dlouho mi zvyšovali tep, až mě to zabilo. Trenér norského nároďáku popsal setkání se smrtí",
+      "url": "https://www.sport.cz/clanek/fotbal-trener-norskeho-narodaku-popsal-setkani-se-smrti-pro-svuj-podivny-zazitek-nema-zadne-vysvetleni-5442355",
+      "dt": "2026-04-25T07:42:35Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dlouho",
+        "norského",
+        "nároďáku",
+        "popsal",
+        "setkání",
+        "smrtí",
+        "tak",
+        "tep",
+        "trenér",
+        "zabilo",
+        "zvyšovali"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -734,27 +762,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kladivář Myslyvčuk byl v Nairobi třetí",
-      "url": "https://www.sport.cz/clanek/atletika-kladivar-myslyvcuk-byl-v-nairobi-treti-5442530",
-      "dt": "2026-04-24T18:21:31Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kladivář",
-        "myslyvčuk",
-        "nairobi",
-        "třetí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -765,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42713,
+      "bytes": 42943,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -802,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T07:35:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T07:42:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -817,6 +824,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tak dlouho mi zvyšovali tep, až mě to zabilo. Trenér norského nároďáku popsal setkání se smrtí",
+            "publishedAt": "2026-04-25T07:42:35Z"
+          },
           {
             "title": "Procházkův kat se rychle uzdravuje. Má vzkaz pro vyzyvatele",
             "publishedAt": "2026-04-25T07:35:27Z"
@@ -844,10 +855,6 @@
           {
             "title": "Osm zápasů naráz! Poslední ligové kolo před nadstavbou je tu",
             "publishedAt": "2026-04-25T05:58:42Z"
-          },
-          {
-            "title": "Netradiční pocta v Nizozemsku. Fanoušci vytáhli choreo pro uznávanou ženu",
-            "publishedAt": "2026-04-25T05:04:29Z"
           }
         ]
       }
