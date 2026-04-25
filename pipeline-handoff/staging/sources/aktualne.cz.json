@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T17:49:59.460223Z",
+  "ingestedAt": "2026-04-25T18:14:28.302190Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "\"Už nebudu poslancem.\" Orbán opouští maďarský parlament",
+      "url": "https://zpravy.aktualne.cz/zahranici/uz-nebudu-poslancem-orban-opousti-madarsky-parlament/r~aaa29d601c7ac28e7a07e94925d7f030/",
+      "dt": "2026-04-25T17:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "maďarský",
+        "nebudu",
+        "opouští",
+        "orbán",
+        "parlament",
+        "poslancem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,33 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Všem se omlouvám.“  Turek tvrdí, že „parazity“ nemyslel úředníky, ale někoho jiného",
-      "url": "https://zpravy.aktualne.cz/domaci/vsem-se-omlouvam-turek-pry-parazity-nemyslel-uredniky-ale-aktivisty/r~aaa295ab40e4373dad8ce9df13760502/",
-      "dt": "2026-04-25T11:23:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "jiného",
-        "nemyslel",
-        "někoho",
-        "omlouvám",
-        "parazity",
-        "turek",
-        "tvrdí",
-        "všem",
-        "úředníky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22231,
+      "bytes": 22253,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,7 +572,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T17:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 11,
@@ -593,6 +589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "\"Už nebudu poslancem.\" Orbán opouští maďarský parlament",
+            "publishedAt": "2026-04-25T17:50:00Z"
+          },
           {
             "title": "Hasiči na severu Japonska bojují s lesními požáry, evakuovaly se tisíce lidí",
             "publishedAt": "2026-04-25T17:24:00Z"
@@ -620,10 +620,6 @@
           {
             "title": "Malijští povstalci udeřili na vojenské základny a ovládli dvě města",
             "publishedAt": "2026-04-25T16:00:00Z"
-          },
-          {
-            "title": "Fotbalová liga živě: Oslabená Sparta padla v Ďolíčku, Slavia duel otočila",
-            "publishedAt": "2026-04-25T13:40:00Z"
           }
         ]
       }

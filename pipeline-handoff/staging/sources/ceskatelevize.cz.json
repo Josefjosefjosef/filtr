@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T17:49:59.460223Z",
+  "ingestedAt": "2026-04-25T18:14:28.302190Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Německo jedná o vyslání minolovek do Hormuzského průlivu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/nemecko-jedna-o-vyslani-minolovek-do-hormuzskeho-prulivu-372793",
+      "dt": "2026-04-25T18:03:51Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hormuzského",
+        "jedná",
+        "minolovek",
+        "německo",
+        "průlivu",
+        "vyslání"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,25 +740,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "„Prázdné Španělsko“ láká migranty do vylidněných venkovských oblastí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/prazdne-spanelsko-laka-migranty-do-vylidnenych-venkovskych-oblasti-372765",
-      "dt": "2026-04-24T14:54:21Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Litvínov zachránil extraligu, v pátém zápase deklasoval Jihlavu",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/litvinov-zachranil-extraligu-v-patem-zapase-deklasoval-jihlavu-156449",
+      "dt": "2026-04-25T18:03:43Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "láká",
-        "migranty",
-        "oblastí",
-        "prázdné",
-        "venkovských",
-        "vylidněných",
-        "španělsko"
+        "deklasoval",
+        "extraligu",
+        "jihlavu",
+        "litvínov",
+        "pátém",
+        "zachránil",
+        "zápase"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -927,13 +950,16 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Superfinále florbalistů. O ženském titulu se rozhodlo čtyři vteřiny před sirénou",
+      "title": "Superfinále florbalistů ovládla Mladá Boleslav, o ženském titulu se rozhodlo čtyři vteřiny před sirénou",
       "url": "https://sport.ceskatelevize.cz/clanek/florbal/superfinale-florbalistek-1sc-vitkovice-bulldogs-brno-156441",
       "dt": "2026-04-25T12:05:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "boleslav",
         "florbalistů",
+        "mladá",
+        "ovládla",
         "rozhodlo",
         "sirénou",
         "superfinále",
@@ -1476,33 +1502,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Basketbal fokus podcast: Jak bude vypadat superhrdinské play-off? A obhájí Nymburk titul?",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/basketbal-fokus-podcast-jak-bude-vypadat-superhrdinske-play-off-a-obhaji-nymburk-titul-156419",
-      "dt": "2026-04-23T13:42:09Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "basketbal",
-        "fokus",
-        "nymburk",
-        "obhájí",
-        "off",
-        "play",
-        "podcast",
-        "superhrdinské",
-        "titul",
-        "vypadat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1513,7 +1512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43888,
+      "bytes": 43912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1573,7 +1572,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:29:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T18:03:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1590,6 +1589,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Německo jedná o vyslání minolovek do Hormuzského průlivu",
+            "publishedAt": "2026-04-25T18:03:51Z"
+          },
           {
             "title": "SOUHRN: Zásadní události soboty 25. dubna",
             "publishedAt": "2026-04-25T16:29:02Z"
@@ -1617,10 +1620,6 @@
           {
             "title": "Místopředsedkyně Senátu Seitlová nebude na podzim obhajovat mandát",
             "publishedAt": "2026-04-25T09:51:40Z"
-          },
-          {
-            "title": "Slabý růst, pomalé ozdravení. Agentura S&P o stupeň snížila rating Slovenska",
-            "publishedAt": "2026-04-25T09:06:00Z"
           }
         ]
       }
@@ -1632,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39334,
+      "bytes": 39198,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1669,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T17:39:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T18:03:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1684,6 +1683,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Litvínov zachránil extraligu, v pátém zápase deklasoval Jihlavu",
+            "publishedAt": "2026-04-25T18:03:43Z"
+          },
           {
             "title": "Toyota dominuje Rallye Kanárských ostrovů, v čele je Ogier před Solbergem",
             "publishedAt": "2026-04-25T17:39:39Z"
@@ -1711,10 +1714,6 @@
           {
             "title": "Menšík začal turnaj v Madridu hladkou výhrou. Končí Samson",
             "publishedAt": "2026-04-25T12:45:59Z"
-          },
-          {
-            "title": "Superfinále florbalistů. O ženském titulu se rozhodlo čtyři vteřiny před sirénou",
-            "publishedAt": "2026-04-25T12:05:00Z"
           }
         ]
       }
@@ -1726,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77721,
+      "bytes": 77741,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
