@@ -15759,20 +15759,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #silver-slot #iuHolidayMonetizeCard,
   #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
-    min-height: 112px !important;
+    min-height: 0 !important;
   }
-  /* P0 ≤1024: zmenšit spodní hranu Silver + Holiday (padding-bottom); margin-top u holiday +6px vykompenzuje kratší Silver → stejná Y tlačítek ve viewportu. */
+  /* P0 ≤1024: mezera input→Quick actions ≈ mezera Quick actions→spodek #iuSilverHeroPremium (jen padding boxu; .iu-hero-quickActions beze změny). */
   #silver-slot #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
-    padding-bottom: 6px !important;
+    padding-bottom: 11px !important;
   }
+  /* P0 ≤1024: mezera horní karta→CTA ≈ CTA→spodek #iuHolidayMonetizeCard (padding + min-height slack pryč; #iuNamedayCtaMobile beze změny). */
   #iuHolidayMonetizeCard.iu-holiday-monetize-card{
-    padding-bottom: 6px !important;
-    margin-top: 18px !important;
+    padding-bottom: 10px !important;
+    margin-top: 13px !important;
+    min-height: 0 !important;
   }
   @media (min-width: 768px) and (max-width: 1024px){
     #iuHolidayMonetizeCard.iu-holiday-monetize-card{
-      margin-top: 20px !important;
+      margin-top: 14px !important;
     }
   }
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
@@ -21178,7 +21180,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
   #silver-slot #iuHolidayMonetizeCard,
   #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
-    min-height: 112px !important;
+    min-height: 0 !important;
   }
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
