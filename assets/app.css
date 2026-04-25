@@ -15564,6 +15564,22 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   --iuNamedayFemaleAccent: color-mix(in srgb, #fbcfe8 86%, var(--iuTasksAccent) 14%);
 }
 
+@media (max-width: 1024px){
+  .silver-welcome-stack--morning{
+    --iu-stack-ambient-bg: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+  }
+  .silver-welcome-stack--lateMorning{
+    --iu-stack-ambient-bg: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #e4ecfa 100%);
+  }
+  .silver-welcome-stack--afternoon{
+    --iu-stack-ambient-bg: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
+  }
+  .silver-welcome-stack--evening{
+    --iu-stack-ambient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%);
+  }
+}
+
 .silver-welcome-stack > *{
   position: relative;
   z-index: 0;
