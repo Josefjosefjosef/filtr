@@ -6532,7 +6532,12 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         try{
           const hol = document.getElementById("iuHolidayMonetizeCard");
-          if (hol) hol.setAttribute("data-iu-nameday-gender", namedayGender);
+          if (hol) {
+            hol.setAttribute("data-iu-nameday-gender", namedayGender);
+            hol.classList.remove("iu-holiday-card--male", "iu-holiday-card--female");
+            if (namedayGender === "male") hol.classList.add("iu-holiday-card--male");
+            else if (namedayGender === "female") hol.classList.add("iu-holiday-card--female");
+          }
         }catch{}
         try{
           const doc = metaEl.ownerDocument;
@@ -6594,8 +6599,8 @@ function buildVideoAsArticleCard(it) {
           try{ metaEl.style.removeProperty("font-size"); }catch{}
         }
         try{
-          const mc = document.getElementById("iuHolidayMicrocopy");
-          if (mc){
+          const holLine1 = document.getElementById("iuHolidayLine1");
+          if (holLine1){
             let voc = "";
             try{
               if (typeof window.getNamedayPersonFromWelcomeBox === "function"){
@@ -6607,17 +6612,17 @@ function buildVideoAsArticleCard(it) {
               const spanN = metaEl.querySelector(".iuNameStrong");
               raw = spanN ? String(spanN.textContent || "").trim() : "";
             }catch(_){}
-            let line = "Popřej oslavenci 🎉";
+            let line = "Popřej oslavence";
             if (voc){
-              line = "Popřej " + voc + " 🎉";
+              line = "Popřej " + voc;
             } else if (raw && raw !== "—" && !/[;,]/.test(raw)){
               if ((namedayGender === "female") && /ie$/i.test(raw)){
-                line = "Popřej " + raw.slice(0, -2) + "ii 🎉";
+                line = "Popřej " + raw.slice(0, -2) + "ii";
               } else {
-                line = "Popřej " + raw + " 🎉";
+                line = "Popřej " + raw;
               }
             }
-            mc.textContent = line;
+            holLine1.textContent = line;
           }
         }catch{}
       }catch{}
