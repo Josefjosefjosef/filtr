@@ -214,8 +214,10 @@ style-src 'self' 'unsafe-inline' https:;
         html[data-iu-silver-welcome-paint="evening"] body,html[data-iu-silver-welcome-paint="evening"] #content,html[data-iu-silver-welcome-paint="evening"] #page,html[data-iu-silver-welcome-paint="evening"] .mainCol{background:radial-gradient(ellipse 88% 60% at 5% 0%,rgba(56,189,248,.09) 0%,transparent 46%),radial-gradient(ellipse 85% 55% at 98% 100%,rgba(124,58,246,.08) 0%,transparent 50%),linear-gradient(180deg,#07101f 0%,#0b1430 42%,#111827 100%)!important;background-color:#07101f!important}
         #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;box-shadow:0 4px 14px rgba(34,197,94,.35),inset 0 1px 0 rgba(255,255,255,.15);font-weight:600}
         #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn:active{transform:translateY(1px);box-shadow:0 2px 8px rgba(34,197,94,.3),inset 0 1px 0 rgba(255,255,255,.1)}
-        #iuNamedayWishOverlay .iu-overlay-close{position:absolute;top:12px;right:12px;width:38px;height:38px;background:#eef2f7;color:#0f172a;border:none;border-radius:10px;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
-        #iuNamedayWishOverlay .iu-overlay-close:active{transform:scale(.96)}
+        #iuNamedayWishCard.iuModalCard{position:relative}
+        #iuNamedayWishCard #iuNamedayWishTitle{padding-right:46px;box-sizing:border-box}
+        #iuNamedayWishCard .iu-overlay-close{position:absolute;top:12px;right:12px;width:38px;height:38px;background:#eef2f7;color:#0f172a;border:none;border-radius:10px;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5}
+        #iuNamedayWishCard .iu-overlay-close:active{transform:scale(.96)}
       }
       /* P0: Počasí/Kalendář/Úkoly 3 karty ≤1023 — inline (css_debt_guard app.css baseline). */
       @media(min-width:1024px){#silver-slot .iu-info-cards-mobile-tablet{display:contents}}
@@ -3780,8 +3782,8 @@ style-src 'self' 'unsafe-inline' https:;
     </div>
 
     <div id="iuNamedayWishOverlay" class="iuModal" hidden aria-hidden="true">
-      <button type="button" class="iu-overlay-close" aria-label="Zavřít">×</button>
       <div class="iuModalCard" id="iuNamedayWishCard" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
+        <button type="button" class="iu-overlay-close" aria-label="Zavřít">×</button>
         <h2 id="iuNamedayWishTitle">Vyber styl přání</h2>
         <div class="iu-nameday-wish-mode-row">
           <button type="button" class="silver-weather-btn iu-nameday-wish-mode--tykat" data-iu-nameday-mode="tykat" aria-pressed="true">Tykat</button>
