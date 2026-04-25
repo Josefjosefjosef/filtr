@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T11:49:15.423363Z",
+  "ingestedAt": "2026-04-25T12:09:51.363353Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vyrovnaný první set, pak rychlý konec. Samson v Madridu dohrála ve třetím kole",
+      "url": "https://www.idnes.cz/sport/tenis/tenistka-samson-ztroskotala-na-tisicovce-v-madridu-ve-tretim-kole.A260425_132841_tenis_ald",
+      "dt": "2026-04-25T11:35:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dohrála",
+        "kole",
+        "konec",
+        "madridu",
+        "pak",
+        "první",
+        "rychlý",
+        "samson",
+        "set",
+        "třetím",
+        "vyrovnaný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,33 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Posily ze zámoří před MS: dorazí Hronek, Klapka i Chmelař. Rulík zkusí i nová jména",
-      "url": "https://www.idnes.cz/hokej/ms-2026/radim-rulik-posily-nhl-priprava-ceske-hry.A260424_192427_ms-hokej-2026_ivt",
-      "dt": "2026-04-24T18:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chmelař",
-        "dorazí",
-        "hronek",
-        "jména",
-        "klapka",
-        "nová",
-        "posily",
-        "rulík",
-        "zkusí",
-        "zámoří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46236,
+      "bytes": 45918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:35:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyrovnaný první set, pak rychlý konec. Samson v Madridu dohrála ve třetím kole",
+            "publishedAt": "2026-04-25T11:35:00Z"
+          },
           {
             "title": "ONLINE: Fulham čelí Aston Ville, pak Wolverhampton vyzve Tottenham",
             "publishedAt": "2026-04-25T11:16:00Z"
@@ -868,10 +873,6 @@
           {
             "title": "Jediné téma Lutychu: Pogačar vs. Seixas. I titán Evenepoel je ve stínu holobrádka",
             "publishedAt": "2026-04-25T07:57:00Z"
-          },
-          {
-            "title": "Konec s titulem? Chci pomoci co nejvíc, líčí plzeňský Šafránek",
-            "publishedAt": "2026-04-25T07:49:00Z"
           }
         ]
       }
