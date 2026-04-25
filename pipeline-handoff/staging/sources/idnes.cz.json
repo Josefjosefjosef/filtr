@@ -1,14 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T16:14:13.870766Z",
+  "ingestedAt": "2026-04-25T16:39:19.013028Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Reportér vyrazil z gauče rovnou na slavný pochod do Prčice. Magor, vyslechl si",
+      "url": "https://www.idnes.cz/zpravy/domaci/praha-prcice-pochod-reporter-trasa-trasa.A260422_083947_domaci_linh",
+      "dt": "2026-04-25T16:28:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "gauče",
+        "magor",
+        "pochod",
+        "prčice",
+        "reportér",
+        "rovnou",
+        "slavný",
+        "vyrazil",
+        "vyslechl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
       "title": "Trump zrušil cestu amerických vyjednavačů do Pákistánu, tvrdí televize",
       "url": "https://www.idnes.cz/zpravy/zahranicni/trump-podle-stanice-fox-news-zrusil-cestu-americkych-vyjednavacu-witkoffa-a-kushnera-do-pakistanu-kd.A260425_180304_zahranicni_kurl",
-      "dt": "2026-04-25T16:05:00Z",
+      "dt": "2026-04-25T16:14:07Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -759,32 +785,6 @@
         "proti",
         "proudu",
         "snadné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "První volby v Pásmu Gazy za 20 let. Palestinci vybírají místní zastupitele",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izarel-palestina-zapadni-breh-volby-pasmo-gazy.A260425_095014_zahranicni_dtt",
-      "dt": "2026-04-25T08:35:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "gazy",
-        "let",
-        "místní",
-        "palestinci",
-        "první",
-        "pásmu",
-        "volby",
-        "vybírají",
-        "zastupitele"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1582,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50396,
+      "bytes": 50072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1619,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T16:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1637,8 +1637,12 @@
         },
         "sample_titles": [
           {
+            "title": "Reportér vyrazil z gauče rovnou na slavný pochod do Prčice. Magor, vyslechl si",
+            "publishedAt": "2026-04-25T16:28:00Z"
+          },
+          {
             "title": "Trump zrušil cestu amerických vyjednavačů do Pákistánu, tvrdí televize",
-            "publishedAt": "2026-04-25T16:05:00Z"
+            "publishedAt": "2026-04-25T16:14:07Z"
           },
           {
             "title": "OBRAZEM: Náměstí u Kapitolu zaplnili plyšáci. Připomněli unesené ukrajinské děti",
@@ -1663,10 +1667,6 @@
           {
             "title": "Ukrajinské drony poprvé útočily v Jekatěrinburgu, ruské údery zabily sedm lidí",
             "publishedAt": "2026-04-25T13:49:51Z"
-          },
-          {
-            "title": "Tragická nehoda na Berounsku. Hasiči jeli k nehodě, srazili se s osobním autem",
-            "publishedAt": "2026-04-25T13:41:00Z"
           }
         ]
       }
