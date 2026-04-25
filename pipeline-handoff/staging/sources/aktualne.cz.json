@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T15:54:41.497299Z",
+  "ingestedAt": "2026-04-25T16:14:13.870766Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Malijští povstalci udeřili na vojenské základny a ovládli dvě města",
+      "url": "https://zpravy.aktualne.cz/zahranici/ozbrojenci-v-mali-na-rade-mist-napadli-vojenske-zakladny-a-ovladli-dve-mesta/r~aaa29fdbc74fdfc5078e9982a55b7ee5/",
+      "dt": "2026-04-25T16:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dvě",
+        "malijští",
+        "města",
+        "ovládli",
+        "povstalci",
+        "udeřili",
+        "vojenské",
+        "základny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -493,31 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ratingová agentura S&P snížila rating Slovenska o jeden stupeň na úroveň A",
-      "url": "https://zpravy.aktualne.cz/ekonomika/ratingova-agentura-s-p-snizila-rating-slovenska-o-jeden-stupen-na-uroven-a/r~aaa292869550317e5672c7f1713da879/",
-      "dt": "2026-04-25T09:20:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "agentura",
-        "jeden",
-        "rating",
-        "ratingová",
-        "slovenska",
-        "snížila",
-        "stupeň",
-        "úroveň"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -528,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22056,
+      "bytes": 22088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -565,12 +565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T15:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "sport": 5,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -582,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Malijští povstalci udeřili na vojenské základny a ovládli dvě města",
+            "publishedAt": "2026-04-25T16:00:00Z"
+          },
           {
             "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -609,10 +613,6 @@
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Pro zvířata je lepší jaderná havárie než přítomnost lidí. Co se ukázalo za 40 let od Černobylu?",
-            "publishedAt": "2026-04-25T13:40:00Z"
           }
         ]
       }

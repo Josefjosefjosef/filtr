@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-25T15:54:41.497299Z",
+  "ingestedAt": "2026-04-25T16:14:13.870766Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při nehodě na Žďársku zemřel řidič motocyklu",
+      "url": "https://tydenikpolicie.cz/pri-nehode-na-zdarsku-zemrel-ridic-motocyklu/",
+      "dt": "2026-04-25T16:03:40Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "motocyklu",
+        "nehodě",
+        "při",
+        "zemřel",
+        "řidič",
+        "žďársku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,31 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilá řidička toyoty najela na Karlovarsku na chodník a nabourala do lampy",
-      "url": "https://tydenikpolicie.cz/opila-ridicka-toyoty-najela-na-karlovarsku-na-chodnik-a-nabourala-do-lampy/",
-      "dt": "2026-04-25T06:02:56Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chodník",
-        "karlovarsku",
-        "lampy",
-        "nabourala",
-        "najela",
-        "opilá",
-        "toyoty",
-        "řidička"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16664,
+      "bytes": 16654,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T12:47:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T16:03:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při nehodě na Žďársku zemřel řidič motocyklu",
+            "publishedAt": "2026-04-25T16:03:40Z"
+          },
           {
             "title": "V Praze přibylo nehod s chodci. Policisté připravili dopravní akci, která se na ně zaměřila",
             "publishedAt": "2026-04-25T12:47:07Z"
@@ -354,10 +356,6 @@
           {
             "title": "Při nehodě u Buchlovic zemřel řidič volkswagenu",
             "publishedAt": "2026-04-25T10:49:01Z"
-          },
-          {
-            "title": "Muž měl v Kraslicích napadnout postupně několik lidí, včetně policistů",
-            "publishedAt": "2026-04-25T10:02:22Z"
           }
         ]
       }

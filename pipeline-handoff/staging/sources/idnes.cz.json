@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T15:54:41.497299Z",
+  "ingestedAt": "2026-04-25T16:14:13.870766Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump zrušil cestu amerických vyjednavačů do Pákistánu, tvrdí televize",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-podle-stanice-fox-news-zrusil-cestu-americkych-vyjednavacu-witkoffa-a-kushnera-do-pakistanu-kd.A260425_180304_zahranicni_kurl",
+      "dt": "2026-04-25T16:05:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "amerických",
+        "cestu",
+        "pákistánu",
+        "televize",
+        "trump",
+        "tvrdí",
+        "vyjednavačů",
+        "zrušil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,30 +785,6 @@
         "volby",
         "vybírají",
         "zastupitele"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pobodání ve stanovém městečku v Mostě. Policie zadržela podezřelého",
-      "url": "https://www.idnes.cz/usti/zpravy/policie-most-napadeni-pobodani-muz-vysetrovani.A260425_101547_usti-zpravy_herp",
-      "dt": "2026-04-25T08:27:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "mostě",
-        "městečku",
-        "pobodání",
-        "podezřelého",
-        "policie",
-        "stanovém",
-        "zadržela"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50308,
+      "bytes": 50396,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T15:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T16:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1635,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump zrušil cestu amerických vyjednavačů do Pákistánu, tvrdí televize",
+            "publishedAt": "2026-04-25T16:05:00Z"
+          },
           {
             "title": "OBRAZEM: Náměstí u Kapitolu zaplnili plyšáci. Připomněli unesené ukrajinské děti",
             "publishedAt": "2026-04-25T15:32:00Z"
@@ -1662,10 +1667,6 @@
           {
             "title": "Tragická nehoda na Berounsku. Hasiči jeli k nehodě, srazili se s osobním autem",
             "publishedAt": "2026-04-25T13:41:00Z"
-          },
-          {
-            "title": "Trump zvažuje reset vztahů s „africkou KLDR“, chce ochránit trasy v Rudém moři",
-            "publishedAt": "2026-04-25T13:14:00Z"
           }
         ]
       }
