@@ -21265,3 +21265,22 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
  * Silver row: #iuSilverCalendarSummaryCard .iuCalendarSummary__label | __icon | __rest (~silver kalendář box).
  * Mind Menu Kalendář: .mindMenu .iu-mmTopTool--cal.iuMindMenuButton (+ text/icon overrides) in Mind Menu section above.
  * To change accent behavior: edit those blocks only, never add a second copy at EOF. */
+
+@media (max-width: 1024px){
+  #feedWrap,
+  .main-feed{
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}
+
+@media (min-width: 1025px){
+  #feedWrap,
+  .feed-wrapper{
+    background: revert;
+    padding: revert;
+  }
+}
