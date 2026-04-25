@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-25T03:10:02.724683Z",
+  "ingestedAt": "2026-04-25T04:15:05.895345Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
+      "url": "https://profitonline.cz/evropska-digitalni-zavislost-kdyz-nas-usa-vypnou-bude-to-katastrofa/",
+      "dt": "2026-04-25T04:00:32Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "digitální",
+        "evropská",
+        "katastrofa",
+        "když",
+        "nás",
+        "usa",
+        "vypnou",
+        "závislost"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,31 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jeden trh pro kapitál: Odvážný evropský plán s hrozbou fiaska",
-      "url": "https://profitonline.cz/jeden-trh-pro-kapital-odvazny-evropsky-plan-s-hrozbou-fiaska/",
-      "dt": "2026-04-23T07:00:32Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "evropský",
-        "fiaska",
-        "hrozbou",
-        "jeden",
-        "kapitál",
-        "odvážný",
-        "plán",
-        "trh"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18597,
+      "bytes": 18601,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-24T17:00:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:00:32Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -358,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
+            "publishedAt": "2026-04-25T04:00:32Z"
+          },
           {
             "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
             "publishedAt": "2026-04-24T17:00:37Z"
@@ -385,10 +389,6 @@
           {
             "title": "Evropské indexy zamířily strmě dolů",
             "publishedAt": "2026-04-23T17:40:00Z"
-          },
-          {
-            "title": "Vedení Applu přebírá John Ternus",
-            "publishedAt": "2026-04-23T17:20:52Z"
           }
         ]
       }

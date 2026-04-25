@@ -1,12 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T03:10:02.724683Z",
+  "ingestedAt": "2026-04-25T04:15:05.895345Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ceny leteckého paliva mohou zkomplikovat dovolené v zahraničí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-leteckeho-paliva-mohou-zkomplikovat-dovolene-v-zahranici-372777",
+      "dt": "2026-04-25T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ceny",
+        "dovolené",
+        "leteckého",
+        "paliva",
+        "zahraničí",
+        "zkomplikovat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusko rozsáhle útočí na Ukrajinu, zásahy hlásí Charkov a Dnipro",
+      "title": "Rusko rozsáhle útočilo na Ukrajinu, zásahy hlásí Charkov a Dnipro",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-rozsahle-utoci-na-ukrajinu-zasahy-hlasi-charkov-a-dnipro-372781",
       "dt": "2026-04-25T01:59:09Z",
       "media_raw": "ČT24 / Domácí",
@@ -19,7 +42,7 @@
         "rusko",
         "ukrajinu",
         "zásahy",
-        "útočí"
+        "útočilo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -723,34 +746,6 @@
         "česko",
         "čmkos",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump pomoc odmítal, v Saúdské Arábii ale USA údajně využívají ukrajinskou technologii",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-pomoc-odmital-v-saudske-arabie-ale-usa-udajne-vyuzivaji-ukrajinskou-technologii-372729",
-      "dt": "2026-04-24T08:23:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ale",
-        "arábii",
-        "odmítal",
-        "pomoc",
-        "saúdské",
-        "technologii",
-        "trump",
-        "ukrajinskou",
-        "usa",
-        "využívají",
-        "údajně"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1529,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42169,
+      "bytes": 42257,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1589,12 +1584,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T01:59:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "other": 5,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 23,
+          "other": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1607,7 +1602,11 @@
         },
         "sample_titles": [
           {
-            "title": "Rusko rozsáhle útočí na Ukrajinu, zásahy hlásí Charkov a Dnipro",
+            "title": "Ceny leteckého paliva mohou zkomplikovat dovolené v zahraničí",
+            "publishedAt": "2026-04-25T04:00:00Z"
+          },
+          {
+            "title": "Rusko rozsáhle útočilo na Ukrajinu, zásahy hlásí Charkov a Dnipro",
             "publishedAt": "2026-04-25T01:59:09Z"
           },
           {
@@ -1633,10 +1632,6 @@
           {
             "title": "USA chtějí zavést popravčí čety",
             "publishedAt": "2026-04-24T17:07:30Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události pátku 24. dubna",
-            "publishedAt": "2026-04-24T16:29:00Z"
           }
         ]
       }
@@ -1742,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77687,
+      "bytes": 77779,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

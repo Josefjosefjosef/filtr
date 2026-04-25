@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-25T03:10:02.724683Z",
+  "ingestedAt": "2026-04-25T04:15:05.895345Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Plášť už lidstvo nechrání. Proč je Černobyl 40 let po katastrofě znovu hrozbou",
+      "url": "https://zahranicni.hn.cz/c1-67870950-plast-uz-lidstvo-nechrani-proc-je-cernobyl-40-let-po-katastrofe-znovu-hrozbou",
+      "dt": "2026-04-25T04:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "hrozbou",
+        "katastrofě",
+        "let",
+        "lidstvo",
+        "nechrání",
+        "plášť",
+        "proč",
+        "znovu",
+        "černobyl"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1117,35 +1143,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Začíná 81. Pražské jaro. S programem světové úrovně a plány pro novou éru, které vyžadují silné spojence",
-      "url": "https://archiv.hn.cz/c1-67862940-zacina-81-prazske-jaro-s-programem-svetove-urovne-a-plany-pro-novou-eru-ktere-vyzaduji-silne-spojence",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "jaro",
-        "novou",
-        "plány",
-        "pražské",
-        "programem",
-        "silné",
-        "spojence",
-        "světové",
-        "vyžadují",
-        "začíná",
-        "éru",
-        "úrovně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1156,7 +1153,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184363,
+      "bytes": 184394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,7 +1190,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-24T18:42:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1210,6 +1207,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Plášť už lidstvo nechrání. Proč je Černobyl 40 let po katastrofě znovu hrozbou",
+            "publishedAt": "2026-04-25T04:00:00Z"
+          },
           {
             "title": "Hlavní odborář Středula má pozici silnou, ČMKOS povede dál. Česko by podle něj mělo upustit od modelu levné práce",
             "publishedAt": "2026-04-24T18:42:00Z"
@@ -1237,10 +1238,6 @@
           {
             "title": "Musíme udělat tlustou čáru za poučováním lidí, jak mají žít. Hejtman Grolich chce prorazit s &bdquo;novými lidovci&ldquo;",
             "publishedAt": "2026-04-24T13:00:00Z"
-          },
-          {
-            "title": "Zpátky na vrchol. Intel zažívá zmrtvýchvstání, akcie konečně překonaly maxima z dob internetové bubliny",
-            "publishedAt": "2026-04-24T11:33:00Z"
           }
         ]
       }

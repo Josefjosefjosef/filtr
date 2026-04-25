@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T03:10:02.724683Z",
+  "ingestedAt": "2026-04-25T04:15:05.895345Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Z Brozan až na Nový Zéland! Český fotbalista kope za účastníka MS klubů",
+      "url": "https://www.sport.cz/clanek/fotbal-z-brozan-az-na-novy-zeland-cesky-fotbalista-kope-za-ucastnika-ms-klubu-5442557",
+      "dt": "2026-04-25T03:52:01Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brozan",
+        "fotbalista",
+        "klubů",
+        "kope",
+        "nový",
+        "zéland",
+        "účastníka",
+        "český"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -712,35 +737,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ligový finiš slibuje pořádné drama. Ve hře jsou bizarní bodové shody i boje o klíčová místa",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-ligovy-finis-slibuje-poradne-drama-ve-hre-jsou-bizarni-bodove-shody-i-boje-o-klicova-mista-5442337",
-      "dt": "2026-04-24T14:41:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bizarní",
-        "bodové",
-        "boje",
-        "drama",
-        "finiš",
-        "hře",
-        "klíčová",
-        "ligový",
-        "místa",
-        "pořádné",
-        "shody",
-        "slibuje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -751,7 +747,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 39138,
+      "bytes": 39434,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -788,7 +784,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T21:10:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T03:52:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -803,6 +799,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Brozan až na Nový Zéland! Český fotbalista kope za účastníka MS klubů",
+            "publishedAt": "2026-04-25T03:52:01Z"
+          },
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-24T20:03:00Z"
@@ -830,10 +830,6 @@
           {
             "title": "Futsalisté Chrudimi mají sedmnáctý titul",
             "publishedAt": "2026-04-24T20:05:00Z"
-          },
-          {
-            "title": "Úspěšný český den v Madridu. Skvělý obrat Lehečky, Kopřiva přehrál favorita, postup slaví i Plíšková s Noskovou a Siniakovou",
-            "publishedAt": "2026-04-24T10:51:13Z"
           }
         ]
       }
