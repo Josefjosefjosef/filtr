@@ -15575,8 +15575,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     --iu-stack-ambient-bg: linear-gradient(135deg, #fff9f0 0%, #fff0dc 55%, #ffe4c4 100%);
   }
   .silver-welcome-stack--evening{
-    --iu-stack-ambient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%);
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%);
+    --iu-stack-ambient-bg:
+      radial-gradient(ellipse 95% 70% at 0% -5%, rgba(56, 189, 248, 0.11) 0%, transparent 48%),
+      radial-gradient(ellipse 90% 75% at 105% 108%, rgba(124, 58, 246, 0.1) 0%, transparent 52%),
+      linear-gradient(180deg, #07101f 0%, #0b1430 44%, #111827 100%);
+    background:
+      radial-gradient(ellipse 95% 70% at 0% -5%, rgba(56, 189, 248, 0.11) 0%, transparent 48%),
+      radial-gradient(ellipse 90% 75% at 105% 108%, rgba(124, 58, 246, 0.1) 0%, transparent 52%),
+      linear-gradient(180deg, #07101f 0%, #0b1430 44%, #111827 100%);
   }
 }
 
@@ -15774,7 +15780,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     min-height: 0 !important;
   }
   @media (min-width: 768px) and (max-width: 1024px){
-    #iuHolidayMonetizeCard.iu-holiday-monetize-card{
+    #silver-slot #iuHolidayMonetizeCard.iu-holiday-monetize-card,
+    #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard.iu-holiday-monetize-card{
       margin-top: 14px !important;
     }
   }
@@ -15807,6 +15814,40 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-placeholder],
   #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-probe]{
     display: none !important;
+  }
+  .silver-welcome-stack--evening #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+    border-color: rgba(190, 205, 255, 0.15) !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.028) 100%),
+      rgba(5, 10, 22, 0.58) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+    color: rgba(230, 238, 248, 0.94) !important;
+  }
+  .silver-welcome-stack--evening #iuSilverTallScrollViewport .iuNewsPreviewHeader{
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  html[data-iu-silver-welcome-paint="evening"] body,
+  html[data-iu-silver-welcome-paint="evening"] #content,
+  html[data-iu-silver-welcome-paint="evening"] .container,
+  html[data-iu-silver-welcome-paint="evening"] .iuFrame,
+  html[data-iu-silver-welcome-paint="evening"] .iuLayout,
+  html[data-iu-silver-welcome-paint="evening"] #iuLeftRail,
+  html[data-iu-silver-welcome-paint="evening"] .iu-rightContent,
+  html[data-iu-silver-welcome-paint="evening"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] #page,
+  html[data-iu-silver-welcome-paint="evening"] .mainCol,
+  html[data-iu-silver-welcome-paint="evening"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] #leftContent {
+    background:
+      radial-gradient(ellipse 88% 60% at 5% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 46%),
+      radial-gradient(ellipse 85% 55% at 98% 100%, rgba(124, 58, 246, 0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #07101f 0%, #0b1430 42%, #111827 100%) !important;
+    background-color: #07101f !important;
+    background-image:
+      radial-gradient(ellipse 88% 60% at 5% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 46%),
+      radial-gradient(ellipse 85% 55% at 98% 100%, rgba(124, 58, 246, 0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #07101f 0%, #0b1430 42%, #111827 100%) !important;
   }
 }
 
@@ -21388,7 +21429,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   }
   #silver-slot[data-iu-silver-welcome-variant="evening"]{
-    background: linear-gradient(135deg, #0f2438 0%, #162d45 55%, #203a52 100%);
+    background:
+      radial-gradient(ellipse 95% 70% at 0% -5%, rgba(56, 189, 248, 0.11) 0%, transparent 48%),
+      radial-gradient(ellipse 90% 75% at 105% 108%, rgba(124, 58, 246, 0.1) 0%, transparent 52%),
+      linear-gradient(180deg, #07101f 0%, #0b1430 44%, #111827 100%);
   }
 }
 
