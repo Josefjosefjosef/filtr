@@ -15754,7 +15754,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-/* P0: True single scroll na desktopu — základ .iuSilverTallScrollViewport má overflow-x:hidden + overflow-y:auto. CSS spec: pokud je jedna osa hidden a druhá visible, „visible“ se přepočítá na auto → mrtvý track/gutter. Proto musí být shorthand overflow:visible (ne jen overflow-y), + scrollbar-gutter reset. Rodič #iuSilverTallScrollSection drží overflow-x:hidden. */
 @media (min-width: 901px){
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
     overflow: visible !important;
@@ -17480,7 +17479,7 @@ Porušení = regres + CLS risk
     position: relative;
     overflow: hidden;
     padding: 12px;
-    background:radial-gradient(120% 100% at 0 0,#7850ff59,transparent 58%),linear-gradient(180deg,#0b1220,#0f172a);
+    background:radial-gradient(120% 100% at 0 0,#7850ff59,transparent 58%),linear-gradient(#0b1220,#0f172a);
   }
   .iuSilverDisambiguationCard::before{
     content: "";
@@ -17496,8 +17495,7 @@ Porušení = regres + CLS risk
   }
   .iuSilverDisambiguationCard__actions{
     margin: 14px 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 10px;
   }
   .iuSilverDisambiguationBtn{
@@ -20976,8 +20974,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
-/* STOP-SHIP: Silver stack geometry (≤900px); token --iu-silver-slot-max-h v CSS (calc guard) + mobilní override níže; desktop ≥901px beze změny */
-/* P0 Mobile/tablet: document scroll — slot výška auto, token na .silver-slot pro kompatibilitu metrik */
 @media (max-width: 900px){
   .iuSilverTopCardsStack #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
@@ -20987,9 +20983,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-width: 100%;
   }
   .silver-slot{
-    /* min = max = slot budget → konečná výška sloupce pro flex (třetí box roste bez ThirdMinH tokenu) */
     min-height: calc(var(--iu-silver-slot-max-h) - 4px) !important;
-    /* Single source of truth: app.js sets --iu-silver-slot-max-h from visualViewport; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
     max-height: calc(var(--iu-silver-slot-max-h) - 4px);
     height: auto !important;
     display: flex;
