@@ -21259,6 +21259,61 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
+/* P0 homepage (projects): clean card layout on mobile/tablet
+   - no visible separators in Silver stack
+   - unified vertical spacing between main homepage boxes
+   - unified side inset aligned to weather/tasks row */
+body.iu-home #silver-slot #iuSilverWelcomeStack > .silver-welcome-stack__separator{
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  opacity: 0 !important;
+}
+@media (max-width: 1024px){
+  body.iu-home #silver-slot{
+    --iu-homepage-side-inset: 10px;
+    --iu-homepage-vertical-gap: 12px;
+  }
+  @media (min-width: 768px){
+    body.iu-home #silver-slot{
+      --iu-homepage-vertical-gap: 14px;
+    }
+  }
+  body.iu-home #silver-slot #iuSilverHeroPremium,
+  body.iu-home #silver-slot #iuHolidayMonetizeCard,
+  body.iu-home #silver-slot #iuSilverTallScrollSection{
+    width: calc(100% - (var(--iu-homepage-side-inset) * 2)) !important;
+    max-width: calc(100% - (var(--iu-homepage-side-inset) * 2)) !important;
+    margin-left: var(--iu-homepage-side-inset) !important;
+    margin-right: var(--iu-homepage-side-inset) !important;
+  }
+  body.iu-home #silver-slot #iuSilverHeroPremium{
+    margin-top: var(--iu-homepage-vertical-gap) !important;
+    margin-bottom: 0 !important;
+  }
+  body.iu-home #silver-slot #iuHolidayMonetizeCard{
+    margin-top: var(--iu-homepage-vertical-gap) !important;
+    margin-bottom: 0 !important;
+  }
+  body.iu-home #silver-slot #iuInfoCardsMobileTablet{
+    padding-left: var(--iu-homepage-side-inset) !important;
+    padding-right: var(--iu-homepage-side-inset) !important;
+    margin-top: var(--iu-homepage-vertical-gap) !important;
+    margin-bottom: 0 !important;
+  }
+  body.iu-home #silver-slot #iuSilverTallScrollSection{
+    margin-top: var(--iu-homepage-vertical-gap) !important;
+  }
+  body.iu-home #silver-slot #iuSilverHomeShell{
+    margin-top: var(--iu-homepage-vertical-gap) !important;
+  }
+}
+
 /* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
 /* Canonical rules only — no duplicate selectors here (css_debt_guard / risk-zone patterns).
  * --iu-calendar-accent: #1c8748 in :root above.
