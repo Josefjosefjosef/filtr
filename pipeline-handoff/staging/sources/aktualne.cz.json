@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T10:24:32.333024Z",
+  "ingestedAt": "2026-04-25T10:44:26.447311Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Místopředsedkyně horní komory Seitlová nebude na podzim obhajovat mandát",
+      "url": "https://zpravy.aktualne.cz/domaci/mistopredsedkyne-horni-komory-seitlova-nebude-na-podzim-obhajovat-mandat/r~aaa297a26a8da8591eab5fb002a304ec/",
+      "dt": "2026-04-25T10:34:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "horní",
+        "komory",
+        "mandát",
+        "místopředsedkyně",
+        "nebude",
+        "obhajovat",
+        "podzim",
+        "seitlová"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -493,36 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropa řeší penalty, Čína vyrábí auta. Šéfdesignér Jozef Kabaň popisuje střet dvou světů",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/technika-a-design/evropa-resi-penalty-cina-vyrabi-auta-sefdesigner-jozef-kaban-popisuje-stret-dvou-svetu/r~aaa294deb0b5e38bedff2efbd127fb0a/",
-      "dt": "2026-04-25T04:14:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "auta",
-        "dvou",
-        "evropa",
-        "jozef",
-        "kabaň",
-        "penalty",
-        "popisuje",
-        "střet",
-        "světů",
-        "vyrábí",
-        "čína",
-        "řeší",
-        "šéfdesignér"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -533,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22449,
+      "bytes": 22381,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -570,12 +565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T10:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:34:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "zpravy": 14,
           "sport": 4,
-          "finance": 2,
+          "finance": 1,
           "other": 1
         },
         "drop_counts": {
@@ -588,6 +583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Místopředsedkyně horní komory Seitlová nebude na podzim obhajovat mandát",
+            "publishedAt": "2026-04-25T10:34:00Z"
+          },
           {
             "title": "Přibyl se stal pražským arcibiskupem, při mši převzal úřad od Graubnera",
             "publishedAt": "2026-04-25T09:35:00Z"
@@ -615,10 +614,6 @@
           {
             "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Noční ruské útoky na Ukrajinu zabily nejméně čtyři lidi, více než 30 utrpělo zranění",
-            "publishedAt": "2026-01-21T06:45:00Z"
           }
         ]
       }

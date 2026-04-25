@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T10:24:32.333024Z",
+  "ingestedAt": "2026-04-25T10:44:26.447311Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Gól! Česká osmnáctka bleskově otevírá skóre",
+      "title": "HOKEJ ONLINE: Rána pro českou osmnáctku, outsider rychle vrací úder",
       "url": "https://www.sport.cz/clanek/hokej-ms-ceska-osmnactka-poprve-v-roli-favorita-proti-nemcum-zautoci-na-treti-vyhru-5442347",
       "dt": "2026-04-25T04:36:15Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bleskově",
-        "gól",
         "hokej",
         "online",
-        "osmnáctka",
-        "otevírá",
-        "skóre",
-        "česká"
+        "osmnáctku",
+        "outsider",
+        "rychle",
+        "rána",
+        "vrací",
+        "úder",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ujeď a dej gól! Anaheim dál deptá McDavida, gólman Oilers sklízel posměch",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-ujed-a-dej-gol-anaheim-dal-depta-mcdavida-golman-oilers-sklizel-posmech-5442574",
+      "dt": "2026-04-25T10:30:21Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anaheim",
+        "dej",
+        "deptá",
+        "gól",
+        "gólman",
+        "mcdavida",
+        "oilers",
+        "posměch",
+        "sklízel",
+        "ujeď"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -740,35 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Výtečná atmosféra v Jihlavě a další jasná výhra v přípravě. Češi znovu porazili Rakušany",
-      "url": "https://www.sport.cz/clanek/hokej-ms-priprava-jihlava-cesko-rakousko-online-5442321",
-      "dt": "2026-04-24T08:24:43Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "atmosféra",
-        "další",
-        "jasná",
-        "jihlavě",
-        "porazili",
-        "přípravě",
-        "rakušany",
-        "sestřih",
-        "výhra",
-        "výtečná",
-        "znovu",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44321,
+      "bytes": 43634,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T09:10:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:30:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -832,8 +831,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Gól! Česká osmnáctka bleskově otevírá skóre",
+            "title": "HOKEJ ONLINE: Rána pro českou osmnáctku, outsider rychle vrací úder",
             "publishedAt": "2026-04-25T04:36:15Z"
+          },
+          {
+            "title": "Ujeď a dej gól! Anaheim dál deptá McDavida, gólman Oilers sklízel posměch",
+            "publishedAt": "2026-04-25T10:30:21Z"
           },
           {
             "title": "Videomomenty. Litvínov má druhý pokus ukončit barážovou sérii",
@@ -858,10 +861,6 @@
           {
             "title": "Šest příběhů k Podještědskému derby. Boj o fandy i Evropu či Kozlova neporazitelnost",
             "publishedAt": "2026-04-25T08:18:54Z"
-          },
-          {
-            "title": "Trenér norského nároďáku popsal setkání se smrtí. Pro svůj podivný zážitek nemá žádné vysvětlení",
-            "publishedAt": "2026-04-25T07:42:35Z"
           }
         ]
       }

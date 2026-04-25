@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-25T10:24:32.333024Z",
+  "ingestedAt": "2026-04-25T10:44:26.447311Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Přibyl se stal pražským arcibiskupem, převzal úřad od Gaubnera. Katedrála sv. Víta byla plná",
+      "url": "https://domaci.hn.cz/c1-67871030-pribyl-se-stal-prazskym-arcibiskupem-prevzal-urad-od-gaubnera-katedrala-sv-vita-byla-plna",
+      "dt": "2026-04-25T10:19:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "arcibiskupem",
+        "gaubnera",
+        "katedrála",
+        "plná",
+        "pražským",
+        "převzal",
+        "přibyl",
+        "stal",
+        "víta",
+        "úřad"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1123,31 +1150,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Massenetova Máří Magdaléna? Romantická fikce, jejímž poselstvím je láska",
-      "url": "https://archiv.hn.cz/c1-67864990-massenetova-mari-magdalena-romanticka-fikce-jejimz-poselstvim-je-laska",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "fikce",
-        "jejímž",
-        "láska",
-        "magdaléna",
-        "massenetova",
-        "máří",
-        "poselstvím",
-        "romantická"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1158,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184350,
+      "bytes": 184360,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1195,7 +1197,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T09:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:19:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1212,6 +1214,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Přibyl se stal pražským arcibiskupem, převzal úřad od Gaubnera. Katedrála sv. Víta byla plná",
+            "publishedAt": "2026-04-25T10:19:00Z"
+          },
           {
             "title": "Ratingová agentura S&P snížila rating Slovenska. Zemi trápí slabý růst a veřejné finance",
             "publishedAt": "2026-04-25T09:28:00Z"
@@ -1239,10 +1245,6 @@
           {
             "title": "K mání bude část ČEZ, která tvoří čtvrtinu jeho provozního zisku. &bdquo;Všechno je možné, nic není rozhodnuté,&ldquo; říká Beneš ke způsobu prodeje",
             "publishedAt": "2026-04-24T15:30:00Z"
-          },
-          {
-            "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
-            "publishedAt": "2026-04-24T14:51:00Z"
           }
         ]
       }
