@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-25T21:11:12.837578Z",
+  "updatedAt": "2026-04-25T21:36:38.261278Z",
   "feeds": {
     "https://www.aktualne.cz/rss/": {
       "topic": "aktualne",
@@ -91,7 +91,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77743,
+      "bytes": 77749,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
@@ -265,7 +265,7 @@
       "itemsParsed": 10,
       "itemsKept": 10,
       "httpStatus": 200,
-      "contentType": "application/rss+xml; charset=utf-8",
+      "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
       "bytes": 17534,
       "reason": "",
@@ -331,7 +331,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46679,
+      "bytes": 46652,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +699,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 52369,
+      "bytes": 51845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,7 +844,7 @@
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
       "bytes": 96153,
-      "reason": "",
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "bozo_but_used": false
