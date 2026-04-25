@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-25T10:44:26.447311Z",
+  "ingestedAt": "2026-04-25T11:04:25.989739Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při nehodě u Buchlovic zemřel řidič volkswagenu",
+      "url": "https://tydenikpolicie.cz/pri-nehode-u-buchlovic-zemrel-ridic-volkswagenu/",
+      "dt": "2026-04-25T10:49:01Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "buchlovic",
+        "nehodě",
+        "při",
+        "volkswagenu",
+        "zemřel",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,31 +254,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opilý muž měl v parku v Polné manipulovat s plynovými pistolemi",
-      "url": "https://tydenikpolicie.cz/opily-muz-mel-v-parku-v-polne-manipulovat-s-plynovymi-pistolemi/",
-      "dt": "2026-04-24T10:29:06Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "manipulovat",
-        "muž",
-        "měl",
-        "opilý",
-        "parku",
-        "pistolemi",
-        "plynovými",
-        "polné"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +264,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16243,
+      "bytes": 16331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +301,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T10:02:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:49:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +316,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při nehodě u Buchlovic zemřel řidič volkswagenu",
+            "publishedAt": "2026-04-25T10:49:01Z"
+          },
           {
             "title": "Muž měl v Kraslicích napadnout postupně několik lidí, včetně policistů",
             "publishedAt": "2026-04-25T10:02:22Z"
@@ -345,10 +347,6 @@
           {
             "title": "Trutnovští kriminalisté objasnili během čtyřiadvaceti hodin vloupání do domu v Pilníkově",
             "publishedAt": "2026-04-24T22:02:51Z"
-          },
-          {
-            "title": "Řidič kamionu poškodil na železničním přejezdu na Třebíčsku spouštějící se závoru",
-            "publishedAt": "2026-04-24T16:02:31Z"
           }
         ]
       }
