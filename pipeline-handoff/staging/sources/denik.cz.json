@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-25T17:04:29.274669Z",
+  "ingestedAt": "2026-04-25T17:25:08.960924Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "První pomoc v metru či na ulici. Školáky učí zachraňovat život virtuální realita",
+      "url": "https://www.denik.cz/zdravotnictvi/prvni-pomoc-virtualni-realita.html",
+      "dt": "2026-04-25T17:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "metru",
+        "pomoc",
+        "první",
+        "realita",
+        "ulici",
+        "učí",
+        "virtuální",
+        "zachraňovat",
+        "školáky",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,30 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Budou obchody v ČR o svátcích otevřené? Odbory a obchodníci se do sebe pustili",
-      "url": "https://www.denik.cz/ekonomika/cesko-statni-svatky-kdy-jsou-otevrene-a-zavrene-obchody.html",
-      "dt": "2026-04-25T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "obchodníci",
-        "obchody",
-        "odbory",
-        "otevřené",
-        "pustili",
-        "sebe",
-        "svátcích"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28409,
+      "bytes": 28442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,11 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "zdravi": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -714,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První pomoc v metru či na ulici. Školáky učí zachraňovat život virtuální realita",
+            "publishedAt": "2026-04-25T17:00:00Z"
+          },
           {
             "title": "Nejsem potřeba v parlamentu. Končící maďarský premiér Orbán nebude poslancem",
             "publishedAt": "2026-04-25T16:45:00Z"
@@ -741,10 +748,6 @@
           {
             "title": "Poplach v Praze. Při vyklízení sklepa se našel arsen i radioaktivní látka",
             "publishedAt": "2026-04-25T11:45:00Z"
-          },
-          {
-            "title": "Všechny vás zabijeme. Ukrajinský voják narušil nábor ruských studentů do armády",
-            "publishedAt": "2026-04-25T11:00:00Z"
           }
         ]
       }

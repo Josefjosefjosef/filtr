@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T17:04:29.274669Z",
+  "ingestedAt": "2026-04-25T17:25:08.960924Z",
   "items": [
     {
       "section": "sport",
@@ -22,6 +22,57 @@
         "risk",
         "schytala",
         "videomomenty"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Liga zná termín derby. Sparta se znovu vydá na Slavii",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-liga-zna-termin-derby-sparta-se-znovu-vyda-na-slavii-5440974",
+      "dt": "2026-04-22T06:50:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "derby",
+        "liga",
+        "slavii",
+        "sparta",
+        "termín",
+        "vydá",
+        "znovu",
+        "zná"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Priske po výbuchu Sparty: Složité. Slavia je na tom líp než před týdnem",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-priske-po-vybuchu-sparty-slozite-slavia-je-na-tom-lip-nez-pred-tydnem-5443761",
+      "dt": "2026-04-25T17:13:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "líp",
+        "než",
+        "priske",
+        "slavia",
+        "složité",
+        "sparty",
+        "tom",
+        "týdnem",
+        "výbuchu"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -714,58 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V nominaci Finska na EHT do Českých Budějovic je i Mikael Seppälä ze Sparty",
-      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-v-nominaci-finska-na-eht-do-ceskych-budejovic-je-i-mikael-seppala-ze-sparty-5442697",
-      "dt": "2026-04-25T12:32:12Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "budějovic",
-        "eht",
-        "finska",
-        "mikael",
-        "nominaci",
-        "seppälä",
-        "sparty",
-        "českých"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ujeď a dej gól! Anaheim dál deptá McDavida, gólman Oilers sklízel posměch",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-ujed-a-dej-gol-anaheim-dal-depta-mcdavida-golman-oilers-sklizel-posmech-5442574",
-      "dt": "2026-04-25T10:30:21Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "anaheim",
-        "dej",
-        "deptá",
-        "gól",
-        "gólman",
-        "mcdavida",
-        "oilers",
-        "posměch",
-        "sklízel",
-        "ujeď"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41766,
+      "bytes": 41955,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,7 +812,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T16:54:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T17:13:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -831,6 +830,14 @@
           {
             "title": "HOKEJ ONLINE: Videomomenty. Jihlavě netradiční risk nevyšel, už schytala pátou branku",
             "publishedAt": "2026-04-25T09:10:58Z"
+          },
+          {
+            "title": "Liga zná termín derby. Sparta se znovu vydá na Slavii",
+            "publishedAt": "2026-04-22T06:50:25Z"
+          },
+          {
+            "title": "Priske po výbuchu Sparty: Složité. Slavia je na tom líp než před týdnem",
+            "publishedAt": "2026-04-25T17:13:10Z"
           },
           {
             "title": "Program finále play off Tipsport extraligy. Třinec hraje o titul s pardubickým Dynamem",
@@ -851,14 +858,6 @@
           {
             "title": "SESTŘIH: Velká rána pro české mladíky. Ztratili zápas s outsiderem a první místo už nemají ve svých rukou",
             "publishedAt": "2026-04-25T04:36:15Z"
-          },
-          {
-            "title": "Souček skóroval a West Ham vyhrál. Kinský předvedl skvělý zákrok",
-            "publishedAt": "2026-04-25T13:34:08Z"
-          },
-          {
-            "title": "Sezona snů a titul pro parťačku po úrazu! Oslavy se ségrou budou dlouhé, ví tahounka českých mistryň",
-            "publishedAt": "2026-04-25T16:30:26Z"
           }
         ]
       }
