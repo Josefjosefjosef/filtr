@@ -633,10 +633,10 @@ style-src 'self' 'unsafe-inline' https:;
                         </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="iu-info-cards-mobile-tablet" id="iuInfoCardsMobileTablet" data-iu-info-cards-mobile-tablet>
-                        <div class="silver-weather-card iu-mini-overview-card iu-mini-overview-card--weather iu-info-card" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="loading" data-iu-silver-wx-layout="ready">
-                          <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary"></div>
-                          <div class="silver-weather-line2 iu-silver-actionRow" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip"></div>
-                          <p class="silver-weather-privacy" id="iuSilverWeatherPrivacy" hidden data-iu-silver-weather-privacy>🔒 Polohu neukládáme.</p>
+                        <div class="silver-weather-card iu-mini-overview-card iu-mini-overview-card--weather iu-info-card" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="firstVisit" data-iu-silver-wx-layout="setup">
+                          <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary"><span class="silver-weather-dpart" aria-hidden="true">🌤️</span> <span>Zobrazit počasí pro tvoji polohu?</span></div>
+                          <div class="silver-weather-line2 iu-silver-actionRow" id="iuSilverWeatherLine2" data-iu-silver-weather-line="2" data-iu-silver-weather-slot="tip" data-iu-action-indicator="chevron"><span>💡📍 Povolit polohu a ukážeme ti počasí hned tady.</span></div>
+                          <p class="silver-weather-privacy" id="iuSilverWeatherPrivacy" data-iu-silver-weather-privacy>🔒 Polohu neukládáme.</p>
                           <div class="silver-weather-actions" id="iuSilverWeatherActions" hidden data-iu-silver-weather-actions="fallback">
                             <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnGeo" data-iu-silver-wx-action="geo">Použít moji polohu</button>
                             <button type="button" class="silver-weather-btn" id="iuSilverWeatherBtnCity" data-iu-silver-wx-action="manual-city">Nastavit moje město</button>
@@ -689,7 +689,28 @@ style-src 'self' 'unsafe-inline' https:;
                         <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
                           <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
                             <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
-                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount></div>
+                              <div class="iuNewsPreviewCardMount" id="iuNewsPreviewCardMount" data-iu-news-preview-mount>
+                                <button type="button" class="iuNewsPreviewCard" data-iu-news-preview-card="1" aria-label="Otevřít sekci Zprávy">
+                                  <div class="iuNewsPreviewHeader" data-iu-news-preview-header>
+                                    <div class="iuNewsPreviewTitleRow">
+                                      <span class="iuNewsPreviewBadge" data-iu-news-preview-badge>Zprávy</span>
+                                      <span class="iuNewsPreviewFreshness" data-iu-news-preview-freshness></span>
+                                    </div>
+                                    <svg class="iuNewsPreviewChevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                                      <path d="M7.5 4.5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                  </div>
+                                  <div class="iuNewsPreviewBody">
+                                    <div class="iuNewsPreviewImgWrap" aria-hidden="true">
+                                      <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt=""/>
+                                    </div>
+                                    <div class="iuNewsPreviewText">
+                                      <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
+                                      <p class="iuNewsPreviewHeadline2 iuNewsPreviewHeadline2--empty" data-iu-news-preview-title-2></p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </div>
                               <div class="iuSportPreviewCardMount" id="iuSportPreviewCardMount" data-iu-sport-preview-mount></div>
                               <div class="iuFinancePreviewCardMount" id="iuFinancePreviewCardMount" data-iu-finance-preview-mount></div>
                               <div class="iuHealthPreviewCardMount" id="iuHealthPreviewCardMount" data-iu-health-preview-mount></div>
@@ -734,6 +755,20 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                           </div>
                         </div>
+                        <script>
+                        (function(){
+                          try {
+                            if (!window.matchMedia || !window.matchMedia("(max-width: 1024px)").matches) return;
+                            var topbar = false;
+                            try { topbar = document.body && document.body.classList.contains("iu-desktop-silver-composer-topbar"); } catch (e0) {}
+                            if (topbar) return;
+                            var host = document.getElementById("iuSilverHeroInputHost");
+                            var wrap = document.querySelector(".iuSilverHomeInputWrap");
+                            if (!host || !wrap || wrap.parentElement === host) return;
+                            host.appendChild(wrap);
+                          } catch (e) {}
+                        })();
+                        </script>
                       </div>
                     </div>
                   </section>

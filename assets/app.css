@@ -15786,6 +15786,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
     margin: 0 !important;
   }
+  /* P0 CLS: news preview předvyplněný v HTML — placeholder + probe mimo layout (dřív visibility:hidden zachovávalo výšku). */
+  #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-placeholder],
+  #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-probe]{
+    display: none !important;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1024px){
