@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T12:09:51.363353Z",
+  "ingestedAt": "2026-04-25T12:29:28.888635Z",
   "items": [
     {
       "section": "aktualne",
@@ -748,7 +748,29 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS hokejistů do 18 let: Německo – Česko 1:2",
+      "title": "Superfinále florbalistek: 1. SC Vítkovice – Bulldogs Brno",
+      "url": "https://sport.ceskatelevize.cz/clanek/florbal/superfinale-florbalistek-1sc-vitkovice-bulldogs-brno-156441",
+      "dt": "2026-04-25T12:05:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "brno",
+        "bulldogs",
+        "florbalistek",
+        "superfinále",
+        "vítkovice"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MS hokejistů do 18 let: Německo – Česko 2:2",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-hokejistu-do-18-let-nemecko-cesko-156440",
       "dt": "2026-04-25T09:59:00Z",
       "media_raw": "ČT sport",
@@ -1478,31 +1500,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Manchester City už je v čele anglické ligy. Vede o skóre před Arsenalem",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/manchester-city-uz-je-v-cele-anglicke-ligy-vede-o-skore-pred-arsenalem-156413",
-      "dt": "2026-04-22T21:15:54Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anglické",
-        "arsenalem",
-        "city",
-        "ligy",
-        "manchester",
-        "skóre",
-        "vede",
-        "čele"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1633,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39416,
+      "bytes": 39304,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T09:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1686,7 +1683,11 @@
         },
         "sample_titles": [
           {
-            "title": "MS hokejistů do 18 let: Německo – Česko 1:2",
+            "title": "Superfinále florbalistek: 1. SC Vítkovice – Bulldogs Brno",
+            "publishedAt": "2026-04-25T12:05:00Z"
+          },
+          {
+            "title": "MS hokejistů do 18 let: Německo – Česko 2:2",
             "publishedAt": "2026-04-25T09:59:00Z"
           },
           {
@@ -1712,10 +1713,6 @@
           {
             "title": "Šestice ze zámoří v čele s Hronkem se připojí k hokejové reprezentaci",
             "publishedAt": "2026-04-24T18:47:48Z"
-          },
-          {
-            "title": "Alcaraz nebude obhajovat titul na Roland Garros, zradilo ho zraněné zápěstí",
-            "publishedAt": "2026-04-24T16:19:26Z"
           }
         ]
       }
@@ -1727,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77763,
+      "bytes": 77765,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

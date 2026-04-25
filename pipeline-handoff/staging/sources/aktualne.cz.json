@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T12:09:51.363353Z",
+  "ingestedAt": "2026-04-25T12:29:28.888635Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Lyžování v poušti se ruší. Středisko se stalo další obětí války proti Íránu",
+      "url": "https://zpravy.aktualne.cz/ekonomika/lyzovani-v-pousti-se-rusi-stredisko-se-stalo-dalsi-obeti-valky-proti-iranu/r~aaa298afe23f122c7ce0b3220e9867c4/",
+      "dt": "2026-04-25T12:05:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "další",
+        "lyžování",
+        "obětí",
+        "poušti",
+        "proti",
+        "ruší",
+        "stalo",
+        "středisko",
+        "války",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -491,32 +518,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "KVÍZ: Zapomeňte na Pytlíka. Poznáte brouky, které můžete potkat v české přírodě?",
-      "url": "https://magazin.aktualne.cz/kviz-zapomente-na-brouka-pytlika-poznate-brouky-ktere-muzete-potkat-v-ceske-prirode/r~aaa29120446df0d2a70e466ec8d721c0/",
-      "dt": "2026-04-25T06:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brouky",
-        "kvíz",
-        "můžete",
-        "potkat",
-        "poznáte",
-        "pytlíka",
-        "přírodě",
-        "zapomeňte",
-        "české"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -527,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22281,
+      "bytes": 22419,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -564,12 +565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 15,
-          "sport": 4,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 14,
+          "sport": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -581,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lyžování v poušti se ruší. Středisko se stalo další obětí války proti Íránu",
+            "publishedAt": "2026-04-25T12:05:00Z"
+          },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -608,10 +613,6 @@
           {
             "title": "Přibyl se stal pražským arcibiskupem, při mši převzal úřad od Graubnera",
             "publishedAt": "2026-04-25T09:35:00Z"
-          },
-          {
-            "title": "Tohle není Photoshop: Nizozemská pole každé jaro explodují barvami",
-            "publishedAt": "2026-04-25T10:03:00Z"
           }
         ]
       }

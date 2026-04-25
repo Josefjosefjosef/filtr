@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-25T12:09:51.363353Z",
+  "ingestedAt": "2026-04-25T12:29:28.888635Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při vyklízení sklepa v Praze byly nalezeny chemikálie, včetně radioaktivní látky, či výbušné kyseliny",
+      "url": "https://tydenikpolicie.cz/pri-vyklizeni-sklepa-v-praze-byly-nalezeny-chemikalie-vcetne-radioaktivni-latky-ci-vybusne-kyseliny/",
+      "dt": "2026-04-25T12:18:35Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "byly",
+        "chemikálie",
+        "kyseliny",
+        "látky",
+        "nalezeny",
+        "praze",
+        "při",
+        "radioaktivní",
+        "sklepa",
+        "vyklízení",
+        "výbušné",
+        "včetně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,34 +265,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Uprchlý vězeň strávil na svobodě čtyři hodiny. Teď mu hrozí dalších pět let navrch",
-      "url": "https://tydenikpolicie.cz/uprchly-vezen-stravil-na-svobode-ctyri-hodiny-ted-mu-hrozi-dalsich-pet-let-navrch/",
-      "dt": "2026-04-25T00:02:49Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dalších",
-        "hodiny",
-        "hrozí",
-        "let",
-        "navrch",
-        "pět",
-        "strávil",
-        "svobodě",
-        "uprchlý",
-        "vězeň",
-        "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16489,
+      "bytes": 16660,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T12:02:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:18:35Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při vyklízení sklepa v Praze byly nalezeny chemikálie, včetně radioaktivní látky, či výbušné kyseliny",
+            "publishedAt": "2026-04-25T12:18:35Z"
+          },
           {
             "title": "Napadení v Brně natočil pohotový svědek. Díky záběrům strážníci rychle vypátrali podezřelého",
             "publishedAt": "2026-04-25T12:02:05Z"
@@ -353,10 +358,6 @@
           {
             "title": "Opilá řidička toyoty najela na Karlovarsku na chodník a nabourala do lampy",
             "publishedAt": "2026-04-25T06:02:56Z"
-          },
-          {
-            "title": "Senior v Jihlavě sešlápl místo brzdy plynový pedál a s kiou naboural do budovy",
-            "publishedAt": "2026-04-25T04:02:21Z"
           }
         ]
       }
