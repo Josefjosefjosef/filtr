@@ -6389,16 +6389,20 @@ function buildVideoAsArticleCard(it) {
       return candidate ? "svátek má " + candidate : "svátek má —";
     }
     /** Must match synchronous Silver welcome bootstrap in projects/index.html (first paint). */
-    function greetingKeyFromHour(h){
+    function daypartKeyFromHour(h){
       if (h >= 5 && h < 9) return "morning";
-      if (h >= 9 && h < 12) return "lateMorning";
+      if (h >= 9 && h < 12) return "forenoon";
       if (h >= 12 && h < 18) return "afternoon";
       return "evening";
     }
-    function phraseFromKey(k){
-      if (k === "morning") return "Dobré ráno";
-      if (k === "lateMorning") return "Hezké dopoledne";
-      if (k === "afternoon") return "Příjemné odpoledne";
+    function greetingKeyFromDaypart(daypart){
+      if (daypart === "forenoon") return "lateMorning";
+      return daypart;
+    }
+    function phraseFromKey(daypart){
+      if (daypart === "morning") return "Dobré ráno";
+      if (daypart === "forenoon") return "Hezké dopoledne";
+      if (daypart === "afternoon") return "Příjemné odpoledne";
       return "Dobrý večer";
     }
     /** Oslovení uživatele — jeden zdroj přes window.iuGetUserAddressVocativeForWelcome (iu_user_address). */
@@ -6443,8 +6447,9 @@ function buildVideoAsArticleCard(it) {
         });
       }catch{}
     }
-    function applyVariantClass(k){
+    function applyVariantClass(daypart){
       try{
+        const k = greetingKeyFromDaypart(daypart);
         const variants = ["morning", "lateMorning", "afternoon", "evening"];
         const prefix = "silver-welcome-stack--";
         const want = prefix + k;
@@ -6455,9 +6460,12 @@ function buildVideoAsArticleCard(it) {
             stackEl &&
             stackEl.classList.contains(want) &&
             stackEl.getAttribute("data-iu-silver-welcome-variant") === k &&
+            stackEl.getAttribute("data-iu-daypart") === daypart &&
             slotEl0 &&
             slotEl0.getAttribute("data-iu-silver-welcome-variant") === k &&
+            slotEl0.getAttribute("data-iu-daypart") === daypart &&
             cardEl.getAttribute("data-iu-silver-welcome-variant") === k &&
+            cardEl.getAttribute("data-iu-daypart") === daypart &&
             (!hostTop0 || hostTop0.getAttribute("data-iu-silver-welcome-variant") === k)
           ){
             return;
@@ -6469,16 +6477,28 @@ function buildVideoAsArticleCard(it) {
           }
           stackEl.classList.add(want);
           stackEl.setAttribute("data-iu-silver-welcome-variant", k);
+          stackEl.setAttribute("data-iu-daypart", daypart);
         }
         try{
           const slotEl = document.getElementById("silver-slot");
-          if (slotEl) slotEl.setAttribute("data-iu-silver-welcome-variant", k);
+          if (slotEl) {
+            slotEl.setAttribute("data-iu-silver-welcome-variant", k);
+            slotEl.setAttribute("data-iu-daypart", daypart);
+          }
+        }catch{}
+        try{
+          document.documentElement.setAttribute("data-iu-daypart", daypart);
         }catch{}
         try{
           const hostTop = document.getElementById("iuTopbarSilverComposerHost");
           if (hostTop) hostTop.setAttribute("data-iu-silver-welcome-variant", k);
         }catch{}
         cardEl.setAttribute("data-iu-silver-welcome-variant", k);
+        cardEl.setAttribute("data-iu-daypart", daypart);
+        try{
+          const holidayCard = document.getElementById("iuHolidayMonetizeCard");
+          if (holidayCard) holidayCard.setAttribute("data-iu-daypart", daypart);
+        }catch{}
       }catch{}
     }
     function refresh(opts){
@@ -6486,9 +6506,9 @@ function buildVideoAsArticleCard(it) {
         opts = opts || {};
         const refDate = opts.now instanceof Date ? opts.now : new Date();
         const h = typeof opts.hour === "number" ? opts.hour : refDate.getHours();
-        const k = greetingKeyFromHour(h);
-        applyVariantClass(k);
-        const phrase = phraseFromKey(k);
+        const daypart = daypartKeyFromHour(h);
+        applyVariantClass(daypart);
+        const phrase = phraseFromKey(daypart);
         try{ window.__iuSilverWelcomeLastPhrase = phrase; }catch{}
         const displayName = readSilverDisplayName();
         const nm = String(displayName || "").trim();
