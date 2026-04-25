@@ -15754,7 +15754,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-/* P0: True single scroll na desktopu — základ .iuSilverTallScrollViewport má overflow-x:hidden + overflow-y:auto. CSS spec: pokud je jedna osa hidden a druhá visible, „visible“ se přepočítá na auto → mrtvý track/gutter. Proto musí být shorthand overflow:visible (ne jen overflow-y), + scrollbar-gutter reset. Rodič #iuSilverTallScrollSection drží overflow-x:hidden. */
 @media (min-width: 901px){
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
     overflow: visible !important;
@@ -16269,7 +16268,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     outline-color: rgba(165, 210, 245, 0.95) !important;
   }
 
-  /* P0 desktop-only: prémiový brand gradient + meta řádek — pouze paint pod .iuTopbarPaint, čitelný fallback, bez layout dopadu */
   header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand{
     color: #0b1f33 !important;
   }
@@ -16444,7 +16442,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overscroll-behavior: auto;
     box-sizing: border-box;
   }
-  /* P0: Neukrývat placeholder/probe dřív než Silver preview tlačítka (defer app.js) — jinak ≥1025px prázdná deska bez textu. */
   body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-placeholder],
   body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-probe],
   body.iu-desktop-home-grid #iuSilverTallScrollViewport:has([class$="PreviewCardMount"] > button) [data-iu-silver-tall-scroll-spacer]{
@@ -16480,14 +16477,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline2{
     display: none !important;
   }
-  /* P0 desktop-only: primární headline až 4 řádky (globálně 2 řádky v .iuSilverTallScrollViewport); mobile/tablet beze změny */
   body.iu-desktop-home-grid #iuSilverTallScrollViewport .iuNewsPreviewHeadline{
     min-height: 0;
     -webkit-line-clamp: 4;
     line-clamp: 4;
   }
 
-  /* P0 desktop-only: zrušit vizuální „chroma“ obal kolem sekčního gridu — dlaždice přímo na tmavém podkladu Silver slotu (DOM beze změny). */
   body.iu-desktop-home-grid #silver-slot #iuSilverTallScrollSection .iuSilverTallScrollChromaFrame.iuSilverStackChromaFrame{
     border: none !important;
     border-width: 0 !important;
@@ -17425,11 +17420,20 @@ Porušení = regres + CLS risk
   background: linear-gradient(180deg, #f8fafc 0%, #eef2f8 100%);
   border: 1px solid #c6d2e5;
   box-sizing: border-box;
+  --iu-disambig-actions-m: 0;
+  --iu-disambig-actions-cols: 1fr;
+  --iu-disambig-btn-h: 52px;
+  --iu-disambig-btn-pad: 12px 14px;
+  --iu-disambig-btn-radius: 14px;
+  --iu-disambig-btn-gap: 10px;
+  --iu-disambig-btn-justify: flex-start;
+  --iu-disambig-btn-fs: max(16px,0.95rem);
 }
 .iuSilverDisambiguationCard__actions{
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: var(--iu-disambig-actions-cols);
   gap: 10px;
+  margin: var(--iu-disambig-actions-m);
 }
 @media (min-width: 420px){
   .iuSilverDisambiguationCard__actions{
@@ -17440,17 +17444,18 @@ Porušení = regres + CLS risk
 .iuSilverDisambiguationBtn{
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: var(--iu-disambig-btn-justify);
+  gap: var(--iu-disambig-btn-gap);
   width: 100%;
-  min-height: 52px;
-  padding: 12px 14px;
-  border-radius: 14px;
+  min-height: var(--iu-disambig-btn-h);
+  height: var(--iu-disambig-btn-h);
+  padding: var(--iu-disambig-btn-pad);
+  border-radius: var(--iu-disambig-btn-radius);
   border: 1px solid #b8c6dc;
   background: #fff;
   color: #1a2f4d;
   font: inherit;
-  font-size: max(16px, 0.95rem);
+  font-size: var(--iu-disambig-btn-fs);
   font-weight: 700;
   cursor: pointer;
   touch-action: manipulation;
@@ -17477,57 +17482,32 @@ Porušení = regres + CLS risk
 
 @media (max-width: 1024px){
   .iuSilverDisambiguationCard{
+    --iu-disambig-actions-m: 14px 0;
+    --iu-disambig-actions-cols: repeat(3,1fr);
+    --iu-disambig-btn-h: 44px;
+    --iu-disambig-btn-pad: 0 14px;
+    --iu-disambig-btn-radius: 12px;
+    --iu-disambig-btn-gap: 8px;
+    --iu-disambig-btn-justify: center;
+    --iu-disambig-btn-fs: .875rem;
     position: relative;
     overflow: hidden;
     padding: 12px;
-    background:
-      radial-gradient(120% 100% at 0% 0%, rgba(120, 80, 255, 0.35) 0%, transparent 60%),
-      radial-gradient(100% 120% at 100% 0%, rgba(0, 200, 255, 0.25) 0%, transparent 60%),
-      radial-gradient(120% 120% at 50% 100%, rgba(0, 255, 150, 0.15) 0%, transparent 70%),
-      linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+    background:radial-gradient(120% 100% at 0 0,#7850ff59,transparent 58%),linear-gradient(#0b1220,#0f172a);
   }
   .iuSilverDisambiguationCard::before{
     content: "";
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 40%),
-      radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05), transparent 45%);
-    pointer-events: none;
-  }
-  .iuSilverDisambiguationCard::after{
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow:
-      inset 0 0 60px rgba(255,255,255,0.03),
-      inset 0 -40px 80px rgba(0,0,0,0.35);
+    background:radial-gradient(circle at 32% 18%,#ffffff14,transparent 42%);
+    box-shadow:inset 0 0 46px #ffffff08,inset 0 -30px 60px #0005;
     pointer-events: none;
   }
   .iuSilverDisambiguationCard > *{
     position: relative;
     z-index: 1;
   }
-  .iuSilverDisambiguationCard__actions{
-    margin-top: 14px;
-    margin-bottom: 14px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .iuSilverDisambiguationBtn{
-    height: 44px;
-    min-height: 44px;
-    padding: 0 14px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 14px;
-    line-height: 1;
-  }
+  .iuSilverDisambiguationBtn{line-height:1}
 }
 
 .iuSilverDraftGrid--edit{
@@ -20994,8 +20974,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   text-underline-offset: 2px;
 }
 
-/* STOP-SHIP: Silver stack geometry (≤900px); token --iu-silver-slot-max-h v CSS (calc guard) + mobilní override níže; desktop ≥901px beze změny */
-/* P0 Mobile/tablet: document scroll — slot výška auto, token na .silver-slot pro kompatibilitu metrik */
 @media (max-width: 900px){
   .iuSilverTopCardsStack #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
@@ -21005,9 +20983,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-width: 100%;
   }
   .silver-slot{
-    /* min = max = slot budget → konečná výška sloupce pro flex (třetí box roste bez ThirdMinH tokenu) */
     min-height: calc(var(--iu-silver-slot-max-h) - 4px) !important;
-    /* Single source of truth: app.js sets --iu-silver-slot-max-h from visualViewport; −4px avoids sticky.bottom > vv (Chromium mobile rounding). */
     max-height: calc(var(--iu-silver-slot-max-h) - 4px);
     height: auto !important;
     display: flex;
