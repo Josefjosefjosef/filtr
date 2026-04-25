@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-25T08:59:41.170090Z",
+  "ingestedAt": "2026-04-25T09:19:11.803340Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Herní tip: Saros mění pravidla roguelite stříleček. Smrt pořád bolí, ale už nebere chuť hrát dál",
+      "url": "https://tech.hn.cz/c1-67870980-herni-tip-strilecka-saros-meni-pravidla-zanru-smrt-tolik-neboli-o-to-zabavnejsi-je-balet-mezi-projektily",
+      "dt": "2026-04-25T08:36:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "bolí",
+        "chuť",
+        "herní",
+        "hrát",
+        "mění",
+        "nebere",
+        "pořád",
+        "pravidla",
+        "roguelite",
+        "saros",
+        "smrt",
+        "stříleček",
+        "tip"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1117,35 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "&bdquo;Pro dokonalou skladbu bych prodala duši,&ldquo; říká jihokorejská skladatelka Unsuk Chin",
-      "url": "https://archiv.hn.cz/c1-67863120-bdquo-pro-dokonalou-skladbu-bych-prodala-dusi-ldquo-rika-jihokorejska-skladatelka-unsuk-chin",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "bych",
-        "chin",
-        "dokonalou",
-        "duši",
-        "jihokorejská",
-        "ldquo",
-        "prodala",
-        "skladatelka",
-        "skladbu",
-        "unsuk",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1156,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184625,
+      "bytes": 184544,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1193,12 +1195,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T07:54:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T08:36:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zdravi": 1,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 37,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1210,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Herní tip: Saros mění pravidla roguelite stříleček. Smrt pořád bolí, ale už nebere chuť hrát dál",
+            "publishedAt": "2026-04-25T08:36:00Z"
+          },
           {
             "title": "Trumpova popularita je na dně, za pět měsíců přitom začínají volby. Spojené státy jsou na křižovatce, bude hlasování svobodné?",
             "publishedAt": "2026-04-25T07:54:00Z"
@@ -1237,10 +1243,6 @@
           {
             "title": "Turkovy výroky o deratizaci jsou nepřijatelné, řekl Babiš. Macinka kolegu brání, prý jde o nekonečnou hilsneriádu",
             "publishedAt": "2026-04-24T13:59:00Z"
-          },
-          {
-            "title": "Ceny benzinu a nafty bude nově regulovat vláda. Poslanci koalice přehlasovali Senát",
-            "publishedAt": "2026-04-24T13:47:00Z"
           }
         ]
       }

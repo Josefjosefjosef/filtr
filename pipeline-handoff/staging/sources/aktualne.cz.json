@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T08:59:41.170090Z",
+  "ingestedAt": "2026-04-25T09:19:11.803340Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sklapni, blbečku! Výzva, která stála za posledním soubojem v Evropě",
+      "url": "https://zpravy.aktualne.cz/zahranici/sklapni-blbecku-vyzva-ktera-stala-za-poslednim-soubojem-v-evrope/r~aaa29debb6dd8c91dbf1d2cc64a5bf0d/",
+      "dt": "2026-04-25T09:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "blbečku",
+        "evropě",
+        "posledním",
+        "sklapni",
+        "soubojem",
+        "stála",
+        "výzva"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -503,34 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Turkovi „paraziti“ vyvolali bouři. Babiš se do něj drsně opřel, Macinka mluvil o hilsneriádě",
-      "url": "https://zpravy.aktualne.cz/domaci/vyroky-turka-o-parazitech-vyvolaly-bouri-babis-je-oznacil-za-neprijatelne-macinka-se-ohradil/r~aaa291a9efebbb87286e6885458f048f/",
-      "dt": "2026-04-24T12:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiš",
-        "bouři",
-        "drsně",
-        "hilsneriádě",
-        "macinka",
-        "mluvil",
-        "něj",
-        "opřel",
-        "paraziti",
-        "turkovi",
-        "vyvolali"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22591,
+      "bytes": 22519,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,11 +574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T09:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 14,
+          "sport": 4,
           "other": 1,
           "finance": 1
         },
@@ -596,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sklapni, blbečku! Výzva, která stála za posledním soubojem v Evropě",
+            "publishedAt": "2026-04-25T09:03:00Z"
+          },
           {
             "title": "Ve Spartě roste zboží pro Bundesligu. Drsek popsal, v čem vyniká oproti ostatním",
             "publishedAt": "2026-04-25T08:50:00Z"
@@ -623,10 +623,6 @@
           {
             "title": ",,U nás ochutnáte jezevce,“ představuje restauraci se dvěma michelinskými hvězdami  šéfkuchař Knedla",
             "publishedAt": "2026-04-25T07:45:00Z"
-          },
-          {
-            "title": "„Všichni už umřeli.“ Likvidátor z Černobylu vypráví, jak pomohl kolegům",
-            "publishedAt": "2026-04-25T07:27:00Z"
           }
         ]
       }

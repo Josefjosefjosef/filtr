@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-25T08:59:41.170090Z",
+  "ingestedAt": "2026-04-25T09:19:11.803340Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
+      "url": "https://www.zdravezpravy.cz/2026/04/25/miroslav-ledl-ma-400-odberu-chce-jich-ale-mit-500/",
+      "dt": "2026-04-25T09:00:22Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "400",
+        "500",
+        "ale",
+        "chce",
+        "jich",
+        "krve",
+        "lédl",
+        "miroslav",
+        "mít",
+        "odběrů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -469,32 +496,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravotní dotazník: Nejhorší je, když žadatel musí něco hledat, přemýšlet",
-      "url": "https://www.zdravezpravy.cz/2026/04/15/zdravotni-dotaznik-nejhorsi-je-kdyz-zadatel-musi-neco-hledat-premyslet/",
-      "dt": "2026-04-15T15:30:28Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dotazník",
-        "hledat",
-        "když",
-        "musí",
-        "nejhorší",
-        "něco",
-        "přemýšlet",
-        "zdravotní",
-        "žadatel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +506,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 216549,
+      "bytes": 211134,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +543,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T04:16:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T09:00:22Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +558,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
+            "publishedAt": "2026-04-25T09:00:22Z"
+          },
           {
             "title": "Nákaz dengue rychle přibývá. Lidé si je vozí z dovolených",
             "publishedAt": "2026-04-24T04:16:21Z"
@@ -584,10 +589,6 @@
           {
             "title": "Ne papírové obálky, ale telefonní hovory zvýší účast na prevenci",
             "publishedAt": "2026-04-22T07:23:01Z"
-          },
-          {
-            "title": "Respirační nemoci se nyní sledují téměř v reálném čase",
-            "publishedAt": "2026-04-21T17:13:24Z"
           }
         ]
       }
