@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-25T02:45:07.592238Z",
+  "ingestedAt": "2026-04-25T03:10:02.724683Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V italském národním parku někdo tráví vlky. Mrtvých zvířat už jsou desítky",
+      "url": "https://www.denik.cz/staty-eu/italie-vlci-otravene-navnady-narodni-park-abruzzo.html",
+      "dt": "2026-04-25T02:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "desítky",
+        "italském",
+        "mrtvých",
+        "národním",
+        "někdo",
+        "parku",
+        "tráví",
+        "vlky",
+        "zvířat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hlas pro nezávislost. Role veřejnoprávních médií očima nastupující generace",
+      "url": "https://www.denik.cz/ctenar-reporter/hlas-pro-nezavislost-role-verejnopravnich-medii-ocima-nastupujici-generace-20260.html",
+      "dt": "2026-04-25T02:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "generace",
+        "hlas",
+        "médií",
+        "nastupující",
+        "nezávislost",
+        "očima",
+        "role",
+        "veřejnoprávních"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -599,57 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Záchrana Timmyho pokračuje. Ochranáři hloubí přes 100 metrů dlouhé koryto",
-      "url": "https://www.denik.cz/staty-eu/timmy-velryba-keporkak-zachrana-pokracuje.html",
-      "dt": "2026-04-24T07:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "100",
-        "dlouhé",
-        "hloubí",
-        "koryto",
-        "metrů",
-        "ochranáři",
-        "pokračuje",
-        "timmyho",
-        "záchrana"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vlna podpory pro Jonáška z Chomutovska. Po zranění založili lidé sbírku",
-      "url": "https://www.denik.cz/regiony/blatno-jonasek-nestastna-udalost-sbirka-donio.html",
-      "dt": "2026-04-24T06:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chomutovska",
-        "jonáška",
-        "lidé",
-        "podpory",
-        "sbírku",
-        "vlna",
-        "založili",
-        "zranění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31537,
+      "bytes": 31163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-25T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T02:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -714,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V italském národním parku někdo tráví vlky. Mrtvých zvířat už jsou desítky",
+            "publishedAt": "2026-04-25T02:25:00Z"
+          },
+          {
+            "title": "Hlas pro nezávislost. Role veřejnoprávních médií očima nastupující generace",
+            "publishedAt": "2026-04-25T02:20:00Z"
+          },
           {
             "title": "Budou obchody v ČR o svátcích otevřené? Odbory a obchodníci se do sebe pustili",
             "publishedAt": "2026-04-25T02:00:00Z"
@@ -737,14 +745,6 @@
           {
             "title": "Chorvatsko hodlá přitvrdit pravidla. Dotkne se to turistických ubytování",
             "publishedAt": "2026-04-24T13:10:00Z"
-          },
-          {
-            "title": "Maximální ceny nafty i benzinu o víkendu opět o vyšší desítky haléřů vzrostou",
-            "publishedAt": "2026-04-24T13:03:00Z"
-          },
-          {
-            "title": "Císařské manévry v proměnách času. Přeštice přilákaly diváky všech generací",
-            "publishedAt": "2026-04-24T13:00:00Z"
           }
         ]
       }
