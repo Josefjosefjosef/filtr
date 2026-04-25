@@ -15735,10 +15735,34 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (max-width: 1024px){
+  /* P0 CLS: reserve vertical space before async Silver hydrate — wins over projects/index.html min-height:0 (≤900) */
   #iuSilverTallScrollSection{
     padding-top: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+  #silver-slot #iuSilverTallScrollSection,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection{
+    min-height: 180px !important;
+  }
+  #silver-slot #iuSilverTallScrollViewport,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport{
+    min-height: 180px !important;
+  }
+  #silver-slot #iuInfoCardsMobileTablet,
+  #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet{
+    min-height: 160px !important;
+  }
+  #silver-slot #iuSilverWeatherCard,
+  #iuMobileSilverSlot #silver-slot #iuSilverWeatherCard{
+    min-height: 120px !important;
+  }
+  #silver-slot #iuHolidayMonetizeCard,
+  #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
+    min-height: 120px !important;
+  }
+  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
+    min-height: 72px !important;
   }
   #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame{
     background: transparent !important;
@@ -21037,7 +21061,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     min-height: 0 !important;
   }
   /* Počasí / Kalendář / Úkoly — jen výška obsahu (2 řádky), malý padding; žádný RowMinH token */
-  #silver-slot #iuSilverWeatherCard.silver-weather-card,
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
@@ -21045,6 +21068,17 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
     height: auto !important;
     min-height: unset !important;
+    max-height: none !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    box-sizing: border-box;
+  }
+  #silver-slot #iuSilverWeatherCard.silver-weather-card{
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    align-self: stretch !important;
+    height: auto !important;
+    min-height: 120px !important;
     max-height: none !important;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
@@ -21094,27 +21128,41 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
-  /* Jediný pružný remainder sloupec (basis auto + grow 1; min-height 0 = může se zmenšit při SETUP počasí) */
-  #silver-slot #iuSilverTallScrollSection{
+  /* Jediný pružný remainder sloupec — min-height rezervace přebije index.html min-height:0 (≤900) kvůli CLS */
+  #silver-slot #iuSilverTallScrollSection,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection{
+    flex: 1 1 auto;
+    min-height: 180px !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #silver-slot .iuSilverTallScrollChromaFrame,
+  #iuMobileSilverSlot #silver-slot .iuSilverTallScrollChromaFrame{
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
-  #silver-slot .iuSilverTallScrollChromaFrame{
+  #silver-slot #iuSilverTallScrollViewport,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport{
     flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  #silver-slot #iuSilverTallScrollViewport{
-    flex: 1 1 auto;
-    min-height: 0 !important;
+    min-height: 180px !important;
     max-height: none !important;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+  #silver-slot #iuInfoCardsMobileTablet,
+  #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet{
+    min-height: 160px !important;
+  }
+  #silver-slot #iuHolidayMonetizeCard,
+  #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
+    min-height: 120px !important;
+  }
+  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
+    min-height: 72px !important;
   }
   /* Full-width Silver: žádný shell inset — stejná horizontální logika jako stack boxy (padding jen uvnitř chroma rámu) */
   #silver-slot.silver-slot,
