@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-25T02:04:46.336869Z",
+  "ingestedAt": "2026-04-25T02:25:26.341609Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Budou obchody v ČR o svátcích otevřené? Odbory a obchodníci se do sebe pustili",
+      "url": "https://www.denik.cz/ekonomika/cesko-statni-svatky-kdy-jsou-otevrene-a-zavrene-obchody.html",
+      "dt": "2026-04-25T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "obchodníci",
+        "obchody",
+        "odbory",
+        "otevřené",
+        "pustili",
+        "sebe",
+        "svátcích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,34 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Voják USA vyhrál miliony na sázkách. Díky tajným informací vsadil na pád Madura",
-      "url": "https://www.denik.cz/ze_sveta/nicolas-maduro-zajeti-vojak-tajne-informace-sazka.html",
-      "dt": "2026-04-24T06:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "díky",
-        "informací",
-        "madura",
-        "miliony",
-        "pád",
-        "sázkách",
-        "tajným",
-        "usa",
-        "voják",
-        "vsadil",
-        "vyhrál"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 31298,
+      "bytes": 31537,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-24T19:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 22,
           "zdravi": 1
         },
         "drop_counts": {
@@ -718,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Budou obchody v ČR o svátcích otevřené? Odbory a obchodníci se do sebe pustili",
+            "publishedAt": "2026-04-25T02:00:00Z"
+          },
           {
             "title": "Cukrová vata s CBD i sazeničky konopí. Ostrava žije Konopexem, láká i důchodce",
             "publishedAt": "2026-04-24T19:47:00Z"
@@ -745,10 +745,6 @@
           {
             "title": "Císařské manévry v proměnách času. Přeštice přilákaly diváky všech generací",
             "publishedAt": "2026-04-24T13:00:00Z"
-          },
-          {
-            "title": "Deratizace a paraziti? Turka za výrok cupují: Hlupák. Neví, o čem mluví, zaznívá",
-            "publishedAt": "2026-04-24T12:42:00Z"
           }
         ]
       }
