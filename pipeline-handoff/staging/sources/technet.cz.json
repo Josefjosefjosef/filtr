@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-25T12:55:10.408745Z",
+  "ingestedAt": "2026-04-25T13:59:57.280268Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Dědictví Černobylu. Havárie byla i k něčemu dobrá, vysvětluje jaderný vědec",
+      "url": "https://www.idnes.cz/technet/veda/dedictvi-cernobylu-jaderna-elektrarna-havarie.A260423_205147_veda_bury",
+      "dt": "2026-04-25T13:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "dobrá",
+        "dědictví",
+        "havárie",
+        "jaderný",
+        "něčemu",
+        "vysvětluje",
+        "vědec",
+        "černobylu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -743,32 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lidi, přestaňte na webu sdílet screenshoty místo textu. Je to čisté zlo",
-      "url": "https://www.lidovky.cz/nazory/screenshot-web-internet-sdileni-socialni-site-text-obrazek-citelnost-pristupnost-zrakove-postizeni-k.A260413_162432_ln_nazory_lrj",
-      "dt": "2026-04-15T08:02:02Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "lidi",
-        "místo",
-        "přestaňte",
-        "screenshoty",
-        "sdílet",
-        "textu",
-        "webu",
-        "zlo",
-        "čisté"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 44949,
+      "bytes": 45341,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T13:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 23,
-          "zpravy": 7
+          "other": 24,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -832,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dědictví Černobylu. Havárie byla i k něčemu dobrá, vysvětluje jaderný vědec",
+            "publishedAt": "2026-04-25T13:00:00Z"
+          },
           {
             "title": "Roste zájem o mrtvý produkt od Applu. Proč ho lidé oprašují?",
             "publishedAt": "2026-04-24T22:00:00Z"
@@ -859,10 +862,6 @@
           {
             "title": "Sonda Voyager 1 se pomalu blíží svému konci. NASA vypnula další instrument",
             "publishedAt": "2026-04-23T16:55:00Z"
-          },
-          {
-            "title": "Možná vás překvapí, na co se soustředí přicházející Wi-Fi 8",
-            "publishedAt": "2026-04-22T22:00:00Z"
           }
         ]
       }
