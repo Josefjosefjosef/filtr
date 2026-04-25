@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T11:24:57.518475Z",
+  "ingestedAt": "2026-04-25T11:49:15.423363Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Fulham čelí Aston Ville, pak Wolverhampton vyzve Tottenham",
+      "url": "https://www.idnes.cz/fotbal/zahranici/fulhamaston-villa.A260425_090803_fot_zahranici_duff",
+      "dt": "2026-04-25T11:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "aston",
+        "fulham",
+        "pak",
+        "tottenham",
+        "ville",
+        "vyzve",
+        "wolverhampton",
+        "čelí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,33 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Rakousko 4:0. Kváča má první nulu v reprezentaci, dva góly zařídil Špaček",
-      "url": "https://www.idnes.cz/hokej/ms-2026/priprava-rakousko-cesko-online-zpravodajstvi.A260424_132308_reprezentace_luji",
-      "dt": "2026-04-24T17:34:28Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dva",
-        "góly",
-        "kváča",
-        "nulu",
-        "první",
-        "rakousko",
-        "reprezentaci",
-        "zařídil",
-        "česko",
-        "špaček"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46811,
+      "bytes": 46236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ONLINE: Fulham čelí Aston Ville, pak Wolverhampton vyzve Tottenham",
+            "publishedAt": "2026-04-25T11:16:00Z"
+          },
           {
             "title": "Konečně vystupuje z vlastního stínu. Bernal se vrací do popředí, akorát včas",
             "publishedAt": "2026-04-25T11:00:00Z"
@@ -870,10 +872,6 @@
           {
             "title": "Konec s titulem? Chci pomoci co nejvíc, líčí plzeňský Šafránek",
             "publishedAt": "2026-04-25T07:49:00Z"
-          },
-          {
-            "title": "Uhrinčať: Víme, o co hrajeme. Nechceme jen koukat, co se děje kolem nás",
-            "publishedAt": "2026-04-25T07:41:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-25T11:24:57.518475Z",
+  "ingestedAt": "2026-04-25T11:49:15.423363Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejdříve slova o parazitech, teď omluva. Turek si sype popel na hlavu",
+      "url": "https://ekonomickydenik.cz/turek-paraziti-urednici-omluva/",
+      "dt": "2026-04-25T11:37:35Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hlavu",
+        "nejdříve",
+        "omluva",
+        "parazitech",
+        "popel",
+        "slova",
+        "sype",
+        "turek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,31 +785,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ano, rozdělíme se, přiznal ČEZ. Sítě a obchod převezme dcera",
-      "url": "https://ekonomickydenik.cz/rozdelime-se-priznal-cez/",
-      "dt": "2026-04-23T11:56:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ano",
-        "dcera",
-        "obchod",
-        "převezme",
-        "přiznal",
-        "rozdělíme",
-        "sítě",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71634,
+      "bytes": 71928,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:16:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:37:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 28,
@@ -849,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejdříve slova o parazitech, teď omluva. Turek si sype popel na hlavu",
+            "publishedAt": "2026-04-25T11:37:35Z"
+          },
           {
             "title": "Odstupte, vzkazuje opozice ministrovi financí. Slovensku spadl rating",
             "publishedAt": "2026-04-25T11:16:13Z"
@@ -876,10 +880,6 @@
           {
             "title": "Princ Harry odstraňoval miny na Ukrajině. Připomněl i princeznu Dianu",
             "publishedAt": "2026-04-24T17:44:45Z"
-          },
-          {
-            "title": "Lidovci mění vizuál i vedení. Mají nového předsedu i logo",
-            "publishedAt": "2026-04-24T17:05:48Z"
           }
         ]
       }

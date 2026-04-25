@@ -1,28 +1,47 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T11:24:57.518475Z",
+  "ingestedAt": "2026-04-25T11:49:15.423363Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Češi pálí šance, znovu zvoní tyčka! Outsider zatím odolává",
+      "title": "HOKEJ ONLINE: Gól! Češi podruhé v zápase vedou",
       "url": "https://www.sport.cz/clanek/hokej-ms-ceska-osmnactka-poprve-v-roli-favorita-proti-nemcum-zautoci-na-treti-vyhru-5442347",
       "dt": "2026-04-25T04:36:15Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "gól",
         "hokej",
-        "odolává",
         "online",
-        "outsider",
-        "pálí",
-        "tyčka",
-        "zatím",
-        "znovu",
-        "zvoní",
-        "češi",
-        "šance"
+        "podruhé",
+        "vedou",
+        "zápase",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tenistka Samson ztroskotala v Madridu ve třetím kole",
+      "url": "https://www.sport.cz/clanek/tenis-tenistka-samson-ztroskotala-v-madridu-ve-tretim-kole-5442648",
+      "dt": "2026-04-25T11:28:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kole",
+        "madridu",
+        "samson",
+        "tenistka",
+        "třetím",
+        "ztroskotala"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -742,34 +761,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Válel za AS Řím, v Lize mistrů stál proti Realu. Teď italský obránce jezdí pro Uber",
-      "url": "https://www.sport.cz/clanek/fotbal-serie-a-valel-za-as-rim-v-lize-mistru-stal-proti-realu-ted-italsky-obrance-jezdi-pro-uber-5442330",
-      "dt": "2026-04-24T19:48:39Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "italský",
-        "jezdí",
-        "lize",
-        "mistrů",
-        "obránce",
-        "proti",
-        "realu",
-        "stál",
-        "uber",
-        "válel",
-        "řím"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +771,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43660,
+      "bytes": 43188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,7 +808,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T10:30:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T11:28:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,8 +824,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Češi pálí šance, znovu zvoní tyčka! Outsider zatím odolává",
+            "title": "HOKEJ ONLINE: Gól! Češi podruhé v zápase vedou",
             "publishedAt": "2026-04-25T04:36:15Z"
+          },
+          {
+            "title": "Tenistka Samson ztroskotala v Madridu ve třetím kole",
+            "publishedAt": "2026-04-25T11:28:02Z"
           },
           {
             "title": "Ujeď a dej gól! Anaheim dál deptá McDavida, gólman Oilers sklízel posměch",
@@ -859,10 +854,6 @@
           {
             "title": "Kučerov se poškleboval Dobešovi. Karma si ruského útočníka našla, jásali v Montrealu",
             "publishedAt": "2026-04-25T08:28:29Z"
-          },
-          {
-            "title": "Šest příběhů k Podještědskému derby. Boj o fandy i Evropu či Kozlova neporazitelnost",
-            "publishedAt": "2026-04-25T08:18:54Z"
           }
         ]
       }
