@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-25T07:59:45.481496Z",
+  "ingestedAt": "2026-04-25T08:20:20.211546Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "U Bumbrlíčka vznikla před 100 lety současná největší ochranářská organizace",
+      "url": "https://profitonline.cz/u-bumbrlicka-vznikla-pred-100-lety-soucasna-nejvetsi-ochranarska-organizace/",
+      "dt": "2026-04-25T08:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "100",
+        "bumbrlíčka",
+        "lety",
+        "největší",
+        "ochranářská",
+        "organizace",
+        "současná",
+        "vznikla"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,32 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přijít o tisíce kvůli chybě v daňovém přiznání je snazší, než se zdá",
-      "url": "https://profitonline.cz/prijit-o-tisice-kvuli-chybe-v-danovem-priznani-je-snazsi-nez-se-zda/",
-      "dt": "2026-04-23T09:00:46Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chybě",
-        "daňovém",
-        "kvůli",
-        "než",
-        "přijít",
-        "přiznání",
-        "snazší",
-        "tisíce",
-        "zdá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18473,
+      "bytes": 18407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-25T06:00:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T08:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -358,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U Bumbrlíčka vznikla před 100 lety současná největší ochranářská organizace",
+            "publishedAt": "2026-04-25T08:00:21Z"
+          },
           {
             "title": "Arm bude nově konkurovat svým dosavadním klíčovým zákazníkům",
             "publishedAt": "2026-04-25T06:00:17Z"
@@ -385,10 +388,6 @@
           {
             "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
             "publishedAt": "2026-04-24T04:00:05Z"
-          },
-          {
-            "title": "Na finančních trzích opět roste averze k riziku",
-            "publishedAt": "2026-04-23T18:00:25Z"
           }
         ]
       }

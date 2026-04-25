@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T07:59:45.481496Z",
+  "ingestedAt": "2026-04-25T08:20:20.211546Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jediné téma Lutychu: Pogačar vs. Seixas. I titán Evenepoel je ve stínu holobrádka",
+      "url": "https://www.idnes.cz/sport/cyklistika/lutych-bastogne-liege-remco-evenpoel-korunni-prince-paul-seixas.A260424_163647_cyklistika_ten",
+      "dt": "2026-04-25T07:57:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "evenepoel",
+        "holobrádka",
+        "jediné",
+        "lutychu",
+        "pogačar",
+        "seixas",
+        "stínu",
+        "titán",
+        "téma"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Uhrinčať: Víme, o co hrajeme. Nechceme jen koukat, co se děje kolem nás",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/jakub-uhrincat-rozhovor.A260425_092915_fotbal_ald",
+      "dt": "2026-04-25T07:41:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "děje",
+        "hrajeme",
+        "jen",
+        "kolem",
+        "koukat",
+        "nechceme",
+        "nás",
+        "uhrinčať",
+        "víme"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -729,59 +781,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Příští rok šance na povolání do NHL bude, cítí Melovský. Musí se zlepšit v soubojích",
-      "url": "https://www.idnes.cz/hokej/nhl/matyas-melovsky-new-jersey-devils-ahl-nhl-nova-smlouva.A260423_112927_nhl_jaku",
-      "dt": "2026-04-24T14:15:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "cítí",
-        "melovský",
-        "musí",
-        "nhl",
-        "povolání",
-        "příští",
-        "rok",
-        "soubojích",
-        "zlepšit",
-        "šance"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Karvinský kouč před finále extraligy: Rozhodnou detaily. Jako každý rok",
-      "url": "https://www.idnes.cz/sport/ostatni/banik-karvina-michal-bruna-hazena-finale-extraliga.A260424_152822_sporty_jsl",
-      "dt": "2026-04-24T13:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "detaily",
-        "extraligy",
-        "finále",
-        "jako",
-        "karvinský",
-        "každý",
-        "kouč",
-        "rok",
-        "rozhodnou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46340,
+      "bytes": 46755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T07:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T07:57:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +843,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jediné téma Lutychu: Pogačar vs. Seixas. I titán Evenepoel je ve stínu holobrádka",
+            "publishedAt": "2026-04-25T07:57:00Z"
+          },
+          {
+            "title": "Uhrinčať: Víme, o co hrajeme. Nechceme jen koukat, co se děje kolem nás",
+            "publishedAt": "2026-04-25T07:41:00Z"
+          },
           {
             "title": "Olomouc v boji o šestku doufá v zázrak na Slavii. Kováč před derby burcuje",
             "publishedAt": "2026-04-25T07:19:00Z"
@@ -867,14 +874,6 @@
           {
             "title": "Treml o Kadlecové: Na americké univerzitě byla jen figurka na šachovnici",
             "publishedAt": "2026-04-25T05:45:00Z"
-          },
-          {
-            "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
-            "publishedAt": "2026-04-25T05:07:00Z"
-          },
-          {
-            "title": "Skotský sparťan Irving: Teď už prý se Součkem kamarádi nebudeme",
-            "publishedAt": "2026-04-24T22:00:00Z"
           }
         ]
       }

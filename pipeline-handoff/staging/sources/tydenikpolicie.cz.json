@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-25T07:59:45.481496Z",
+  "ingestedAt": "2026-04-25T08:20:20.211546Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Kriminalisté obvinili muže, který měl v Plzni přepadnout seniorku",
+      "url": "https://tydenikpolicie.cz/kriminaliste-obvinili-muze-ktery-mel-v-plzni-prepadnout-seniorku/",
+      "dt": "2026-04-25T08:02:51Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kriminalisté",
+        "muže",
+        "měl",
+        "obvinili",
+        "plzni",
+        "přepadnout",
+        "seniorku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,34 +253,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "U ženy trpící schizofrenií zasahovali českolipští strážníci během týdne čtyřikrát. Skončila na psychiatrii",
-      "url": "https://tydenikpolicie.cz/zena-skoncila-na-psychiatrii/",
-      "dt": "2026-04-24T08:16:35Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "během",
-        "psychiatrii",
-        "schizofrenií",
-        "skončila",
-        "strážníci",
-        "trpící",
-        "týdne",
-        "zasahovali",
-        "českolipští",
-        "čtyřikrát",
-        "ženy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +263,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15899,
+      "bytes": 16224,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +300,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T06:02:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T08:02:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +315,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminalisté obvinili muže, který měl v Plzni přepadnout seniorku",
+            "publishedAt": "2026-04-25T08:02:51Z"
+          },
           {
             "title": "Opilá řidička toyoty najela na Karlovarsku na chodník a nabourala do lampy",
             "publishedAt": "2026-04-25T06:02:56Z"
@@ -346,10 +346,6 @@
           {
             "title": "Policisté na Zlínsku pátrali po mladistvém chlapci",
             "publishedAt": "2026-04-24T11:43:57Z"
-          },
-          {
-            "title": "Opilý muž měl v parku v Polné manipulovat s plynovými pistolemi",
-            "publishedAt": "2026-04-24T10:29:06Z"
           }
         ]
       }
