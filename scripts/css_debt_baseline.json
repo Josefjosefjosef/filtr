@@ -1,21 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 272,
-  "duplicate_rule_occurrences_in_groups": 729,
+  "duplicate_selector_groups": 274,
+  "duplicate_rule_occurrences_in_groups": 737,
   "classification_counts": {
-    "breakpoint_specific": 144,
-    "risky_layout_coupled": 103,
+    "breakpoint_specific": 151,
+    "risky_layout_coupled": 98,
     "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 97,
-    "risk_now": 175
+    "intentional_non_debt": 103,
+    "risk_now": 171
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 277,
-    "risk_now": 452
+    "intentional_non_debt": 292,
+    "risk_now": 445
   },
-  "app_css_bytes": 592362,
+  "app_css_bytes": 597006,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -31,19 +31,11 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "#feed > .news-card:first-child .news-title, #feed > article:first-child .news-title",
+      "selector_normalized": "#feed > article.news-card",
       "classification": "breakpoint_specific"
     },
     {
-      "selector_normalized": "#feed > .news-card:first-child .news-titleLink, #feed > article:first-child .news-titleLink",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#feed > .news-card:first-child, #feed > article:first-child",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#feed > .news-card:not(:first-child), #feed > article:not(:first-child)",
+      "selector_normalized": "#feed > article.news-card .news-title, #feed > article.news-card .news-titleLink",
       "classification": "breakpoint_specific"
     },
     {
@@ -131,22 +123,6 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": "#iuTopbarRight .iuRightTopCtas",
-      "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "#iuTopbarRight .iuRightTopCtas > .iuRightCta, #topbarWrap .iuRightTopCtas > .iuRightCta",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#iuTopbarRight .iuRightTopCtas > .iuRightCta.iuRightCta--services, #topbarWrap .iuRightTopCtas > .iuRightCta.iuRightCta--services",
-      "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "#iuTopbarRight .iuRightTopCtas, #topbarWrap .iuRightTopCtas",
-      "classification": "breakpoint_specific"
-    },
-    {
       "selector_normalized": "#iuTopbarToday",
       "classification": "breakpoint_specific"
     },
@@ -167,15 +143,11 @@
       "classification": "breakpoint_specific"
     },
     {
+      "selector_normalized": "#silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout=\"ready\"]",
+      "classification": "breakpoint_specific"
+    },
+    {
       "selector_normalized": "#topbarWrap #iuTopbarRight",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#topbarWrap #iuTopbarRight .iuRightTopCtas",
-      "classification": "breakpoint_specific"
-    },
-    {
-      "selector_normalized": "#topbarWrap #iuTopbarRight .iuRightTopCtas, #topbarWrap .iuRightTopCtas",
       "classification": "breakpoint_specific"
     },
     {
@@ -287,10 +259,6 @@
       "classification": "intentional_cascade_candidate"
     },
     {
-      "selector_normalized": ".iu-parcels-modal",
-      "classification": "breakpoint_specific"
-    },
-    {
       "selector_normalized": ".iuQuickFeed .iuAiCard:hover, .iuQuickFeed .iuAiCard:focus-visible",
       "classification": "risky_layout_coupled"
     },
@@ -397,18 +365,6 @@
     {
       "selector_normalized": "aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"finance\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"home\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"zdravi\"] .iu-leftNavIcon svg, aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent=\"travel\"] .iu-leftNavIcon svg",
       "classification": "intentional_cascade_candidate"
-    },
-    {
-      "selector_normalized": "aside.accordionCol > .iuRightTopCtas",
-      "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "aside.accordionCol > .iuRightTopCtas > .iuRightCta",
-      "classification": "risky_layout_coupled"
-    },
-    {
-      "selector_normalized": "aside.accordionCol > .iuRightTopCtas > .iuRightCta:hover",
-      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": "body #iuLeftRail",
@@ -644,11 +600,35 @@
     },
     {
       "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar",
-      "classification": "risky_layout_coupled"
+      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar .topbar-new-inner",
       "classification": "risky_layout_coupled"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__menu",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__sep",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__silver",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrandSubtitle__tail",
+      "classification": "breakpoint_specific"
     },
     {
       "selector_normalized": "header#topbarWrap.topbar-new.iuTopbar::after",
