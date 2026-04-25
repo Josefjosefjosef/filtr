@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-25T22:00:35.285004Z",
+  "ingestedAt": "2026-04-25T22:19:14.667376Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Radiací poškozená buňka „páchá sebevraždu“. Jak probíhá nemoc z ozáření",
+      "url": "https://www.idnes.cz/technet/veda/cernobyl-vyroci-ozareni-lidske-telo.A260420_134845_veda_alv",
+      "dt": "2026-04-25T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "buňka",
+        "nemoc",
+        "ozáření",
+        "poškozená",
+        "probíhá",
+        "páchá",
+        "radiací",
+        "sebevraždu"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -741,33 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škola získala humanoidního robota. Při uvedení předvedl Jacksona, Elvise i kung-fu",
-      "url": "https://www.idnes.cz/zlin/zpravy/skola-orbis-zlin-humanoidni-robot-programovani.A260415_121130_zlin-zpravy_stoj",
-      "dt": "2026-04-15T13:07:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "elvise",
-        "humanoidního",
-        "jacksona",
-        "kung",
-        "předvedl",
-        "při",
-        "robota",
-        "uvedení",
-        "získala",
-        "škola"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -778,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45341,
+      "bytes": 45448,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -815,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 22,
-          "zpravy": 8
+          "other": 23,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -831,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Radiací poškozená buňka „páchá sebevraždu“. Jak probíhá nemoc z ozáření",
+            "publishedAt": "2026-04-25T22:00:00Z"
+          },
           {
             "title": "Dědictví Černobylu. Havárie byla i k něčemu dobrá, vysvětluje jaderný vědec",
             "publishedAt": "2026-04-25T13:00:00Z"
@@ -858,10 +860,6 @@
           {
             "title": "Sluneční bouře mohou napáchat škody za miliardy. Ale už víme, kdy přijdou, líčí expert",
             "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "Sonda Voyager 1 se pomalu blíží svému konci. NASA vypnula další instrument",
-            "publishedAt": "2026-04-23T16:55:00Z"
           }
         ]
       }
