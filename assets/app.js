@@ -10991,6 +10991,16 @@ function buildVideoAsArticleCard(it) {
       }catch{}
     }
 
+    try{
+      const btnClose = overlay.querySelector(".iu-overlay-close");
+      if (btnClose) {
+        btnClose.addEventListener("click", (e) => {
+          try{ e.preventDefault(); }catch{}
+          closeOverlay();
+        });
+      }
+    }catch{}
+
     btnWishEls.forEach((btnWish) => {
       btnWish.addEventListener("click", (e) => {
         try{ e.preventDefault(); }catch{}
