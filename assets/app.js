@@ -6340,20 +6340,23 @@ function buildVideoAsArticleCard(it) {
       const css =
         "@media (max-width:1024px){" +
         "#iuHolidayMonetizeCard.iu-holiday-monetize-card{overflow:hidden}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle{width:36px!important;height:36px!important;min-width:36px!important;max-width:36px!important;box-sizing:border-box!important;flex-shrink:0!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg{display:block!important;transform:scale(0.9);transform-origin:center}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle,#iuHolidayMonetizeCard .poprej-icon{width:30px!important;height:30px!important;min-width:30px!important;max-width:30px!important;box-sizing:border-box!important;flex-shrink:0!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg{display:block!important;transform:scale(0.85);transform-origin:center}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle{color:var(--iuNamedayMaleAccent)}" +
         "#iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{color:var(--iuNamedayFemaleAccent)}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg path{fill:currentColor!important;stroke:currentColor!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__text{display:block!important;flex:1 1 0!important;min-width:0!important;max-width:100%!important;align-self:center!important;overflow-x:hidden!important;white-space:normal!important;overflow-wrap:anywhere!important;font:inherit!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .poprej-title,#iuHolidayMonetizeCard .poprej-subtitle{display:inline!important;font:inherit!important;margin:0!important;padding:0!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__line2::before,#iuHolidayMonetizeCard #iuHolidayLine2::before,#iuHolidayMonetizeCard .poprej-subtitle::before{content:\" – \"!important}" +
+        "#iuHolidayMonetizeCard .iu-holiday-card__line2::before,#iuHolidayMonetizeCard #iuHolidayLine2::before,#iuHolidayMonetizeCard .poprej-subtitle::before{content:\" – \"!important;font-weight:400!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__row{display:flex!important;flex-flow:row wrap!important;align-items:center!important;gap:8px!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}" +
         "#iuHolidayMonetizeCard .iu-holiday-card__giftWrap{flex:0 0 auto!important;align-self:center!important}" +
         "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:8px!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}" +
         "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;padding:6px 8px!important}" +
         "#iuHolidayMonetizeCard #iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
+        "#iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard .iu-holiday-card__line1{font-weight:400!important}" +
+        "#iuHolidayMonetizeCard .poprej-bold{font-weight:600!important}" +
+        "#iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard .poprej-subtitle{font-weight:400!important}" +
         "}";
       const node = document.createElement("style");
       node.id = "iuPoprejMobileCss";
@@ -6392,6 +6395,57 @@ function buildVideoAsArticleCard(it) {
         const textHost = title.parentElement;
         if (textHost && textHost.classList && textHost.classList.contains("iu-holiday-card__text")) {
           textHost.classList.add("poprej-header");
+        }
+      }catch(_){}
+      try{
+        const circ = card.querySelector(".iu-holiday-card__giftCircle");
+        if (circ) circ.classList.add("poprej-icon");
+      }catch(_){}
+      try{
+        const rawT = String(title.textContent || "").trim();
+        if (rawT){
+          const doc = title.ownerDocument;
+          let prefix = rawT;
+          let suffix = "";
+          const enSep = " – ";
+          const ascSep = " - ";
+          const ixEn = rawT.indexOf(enSep);
+          const ixAsc = rawT.indexOf(ascSep);
+          if (ixEn >= 0 && (ixAsc < 0 || ixEn <= ixAsc)){
+            prefix = rawT.slice(0, ixEn).trim();
+            suffix = rawT.slice(ixEn);
+          } else if (ixAsc >= 0){
+            prefix = rawT.slice(0, ixAsc).trim();
+            suffix = rawT.slice(ixAsc);
+          }
+          if (!prefix){
+            prefix = rawT;
+            suffix = "";
+          }
+          const bold0 = title.querySelector(":scope > .poprej-bold");
+          let tailText = "";
+          try{
+            const ch = title.childNodes;
+            for (let i = 0; i < ch.length; i++){
+              const n = ch[i];
+              if (n && n.nodeType === 3) tailText += String(n.textContent || "");
+            }
+          }catch(_){}
+          const same =
+            bold0 &&
+            String(bold0.textContent || "").trim() === prefix &&
+            tailText === suffix &&
+            (suffix ? title.childNodes.length <= 3 : title.childNodes.length <= 2);
+          if (same){
+            /* DOM už odpovídá → žádný rewrite → méně CLS */
+          } else {
+            title.textContent = "";
+            const spanB = doc.createElement("span");
+            spanB.className = "poprej-bold";
+            spanB.appendChild(doc.createTextNode(prefix));
+            title.appendChild(spanB);
+            if (suffix) title.appendChild(doc.createTextNode(suffix));
+          }
         }
       }catch(_){}
       function iuPoprejEnsureBtnIcon(btn, kind){
