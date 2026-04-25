@@ -15718,6 +15718,26 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   padding-right: 8px;
 }
 
+/* P0 mobile/tablet (≤1024px): odstranit sdílený chroma „panel“ okolo skupiny Silver sekčních náhledových karet; jednotlivé karty (.iuNewsPreviewCard / .box-…) si drží vlastní border a pozadí. Desktop ≥1025px beze změny. */
+@media (max-width: 1024px){
+  #silver-slot #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame{
+    background: transparent !important;
+    background-image: none !important;
+    border-width: 0 !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+  #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
+    border-radius: 0;
+  }
+}
+
 /* P0: True single scroll na desktopu — základ .iuSilverTallScrollViewport má overflow-x:hidden + overflow-y:auto. CSS spec: pokud je jedna osa hidden a druhá visible, „visible“ se přepočítá na auto → mrtvý track/gutter. Proto musí být shorthand overflow:visible (ne jen overflow-y), + scrollbar-gutter reset. Rodič #iuSilverTallScrollSection drží overflow-x:hidden. */
 @media (min-width: 901px){
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
