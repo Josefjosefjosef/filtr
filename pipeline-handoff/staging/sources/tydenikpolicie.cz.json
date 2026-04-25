@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-25T09:19:11.803340Z",
+  "ingestedAt": "2026-04-25T10:24:32.333024Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž měl v Kraslicích napadnout postupně několik lidí, včetně policistů",
+      "url": "https://tydenikpolicie.cz/muz-mel-v-kraslicich-napadnout-postupne-nekolik-lidi-vcetne-policistu/",
+      "dt": "2026-04-25T10:02:22Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kraslicích",
+        "lidí",
+        "muž",
+        "měl",
+        "napadnout",
+        "několik",
+        "policistů",
+        "postupně",
+        "včetně"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -230,29 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Mladík v Praze riskoval jízdou na spřáhle tramvaje",
-      "url": "https://tydenikpolicie.cz/mladik-v-praze-riskoval-jizdou-na-sprahle-tramvaje/",
-      "dt": "2026-04-24T10:05:30Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jízdou",
-        "mladík",
-        "praze",
-        "riskoval",
-        "spřáhle",
-        "tramvaje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -263,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16224,
+      "bytes": 16243,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -300,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:02:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:02:22Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -315,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž měl v Kraslicích napadnout postupně několik lidí, včetně policistů",
+            "publishedAt": "2026-04-25T10:02:22Z"
+          },
           {
             "title": "Kriminalisté obvinili muže, který měl v Plzni přepadnout seniorku",
             "publishedAt": "2026-04-25T08:02:51Z"
@@ -342,10 +349,6 @@
           {
             "title": "Řidič kamionu poškodil na železničním přejezdu na Třebíčsku spouštějící se závoru",
             "publishedAt": "2026-04-24T16:02:31Z"
-          },
-          {
-            "title": "Policisté na Zlínsku pátrali po mladistvém chlapci",
-            "publishedAt": "2026-04-24T11:43:57Z"
           }
         ]
       }

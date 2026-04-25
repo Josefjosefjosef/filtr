@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-25T09:19:11.803340Z",
+  "ingestedAt": "2026-04-25T10:24:32.333024Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ratingová agentura S&P snížila rating Slovenska. Zemi trápí slabý růst a veřejné finance",
+      "url": "https://zahranicni.hn.cz/c1-67871020-ratingova-agentura-s-p-snizila-rating-slovenska-zemi-trapi-slaby-rust-a-verejne-finance",
+      "dt": "2026-04-25T09:28:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agentura",
+        "finance",
+        "rating",
+        "ratingová",
+        "růst",
+        "slabý",
+        "slovenska",
+        "snížila",
+        "trápí",
+        "veřejné",
+        "zemi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1120,34 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zastav se, okamžiku, jsi tak krásný! Brilantní ztvárnění faustovské legendy na Pražském jaru",
-      "url": "https://archiv.hn.cz/c1-67864650-zastav-se-okamziku-jsi-tak-krasny-brilantni-ztvarneni-faustovske-legendy-na-prazskem-jaru",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "brilantní",
-        "faustovské",
-        "jaru",
-        "jsi",
-        "krásný",
-        "legendy",
-        "okamžiku",
-        "pražském",
-        "tak",
-        "zastav",
-        "ztvárnění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1158,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184544,
+      "bytes": 184350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1195,11 +1195,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T09:28:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "finance": 37,
+          "zpravy": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1212,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ratingová agentura S&P snížila rating Slovenska. Zemi trápí slabý růst a veřejné finance",
+            "publishedAt": "2026-04-25T09:28:00Z"
+          },
           {
             "title": "Herní tip: Saros mění pravidla roguelite stříleček. Smrt pořád bolí, ale už nebere chuť hrát dál",
             "publishedAt": "2026-04-25T08:36:00Z"
@@ -1239,10 +1243,6 @@
           {
             "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
             "publishedAt": "2026-04-24T14:51:00Z"
-          },
-          {
-            "title": "Turkovy výroky o deratizaci jsou nepřijatelné, řekl Babiš. Macinka kolegu brání, prý jde o nekonečnou hilsneriádu",
-            "publishedAt": "2026-04-24T13:59:00Z"
           }
         ]
       }

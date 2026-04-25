@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T09:19:11.803340Z",
+  "ingestedAt": "2026-04-25T10:24:32.333024Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Bojuju i za své předky. Jak se z tichého vojáka Humburgera stala hvězda Oktagonu",
+      "url": "https://www.idnes.cz/sport/mma/dominik-humburger-oktagon-87-liberec.A260424_130615_sport-mma_malu",
+      "dt": "2026-04-25T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bojuju",
+        "humburgera",
+        "hvězda",
+        "oktagonu",
+        "předky",
+        "stala",
+        "své",
+        "tichého",
+        "vojáka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,32 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Alcaraz vzdal obhajobu titulu na Roland Garros, zápěstí ho do Paříže nepustí",
-      "url": "https://www.idnes.cz/sport/tenis/alcaraz-kvuli-zraneni-zapesti-nebude-obhajovat-titul-na-roland-garros.A260424_180731_tenis_ten",
-      "dt": "2026-04-24T16:09:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "alcaraz",
-        "garros",
-        "nepustí",
-        "obhajobu",
-        "paříže",
-        "roland",
-        "titulu",
-        "vzdal",
-        "zápěstí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46116,
+      "bytes": 46126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bojuju i za své předky. Jak se z tichého vojáka Humburgera stala hvězda Oktagonu",
+            "publishedAt": "2026-04-25T10:00:00Z"
+          },
           {
             "title": "Životní sezona pokračuje. Kopřiva přejel hvězdného Rusa a ví: Mám na tuhle úroveň",
             "publishedAt": "2026-04-25T08:13:00Z"
@@ -871,10 +875,6 @@
           {
             "title": "Nadstavba fotbalové ligy 2026, skupina o titul: program, o jaké poháry se hraje",
             "publishedAt": "2026-04-25T06:58:00Z"
-          },
-          {
-            "title": "Lakers jsou blízko postupu, Krejčí s Portlandem prohrává se Spurs",
-            "publishedAt": "2026-04-25T06:29:00Z"
           }
         ]
       }

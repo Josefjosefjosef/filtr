@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-25T09:19:11.803340Z",
+  "ingestedAt": "2026-04-25T10:24:32.333024Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Cozy novinky s Terry #51",
+      "url": "https://zing.cz/article/cozy-novinky-s-terry-51",
+      "dt": "2026-04-25T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cozy",
+        "novinky",
+        "terry"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -980,31 +1000,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Game Pass odhalil nabídku her pro druhou půlku dubna",
-      "url": "https://zing.cz/article/game-pass-odhalil-nabidku-her-pro-druhou-pulku-dubna-3",
-      "dt": "2026-04-20T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "druhou",
-        "dubna",
-        "game",
-        "her",
-        "nabídku",
-        "odhalil",
-        "pass",
-        "půlku"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1015,7 +1010,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125562,
+      "bytes": 125278,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1052,7 +1047,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1068,6 +1063,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cozy novinky s Terry #51",
+            "publishedAt": "2026-04-25T10:00:00Z"
+          },
           {
             "title": "Noble Legacy: středověký sandbox dostává největší update",
             "publishedAt": "2026-04-25T08:00:00Z"
@@ -1095,10 +1094,6 @@
           {
             "title": "Vychází druhoválečná strategie a nová hra od ceněného studia Double Fine",
             "publishedAt": "2026-04-24T12:00:00Z"
-          },
-          {
-            "title": "Sci-fi akce Saros vychází už příští týden, k dispozici je finální série ukázek",
-            "publishedAt": "2026-04-24T10:00:00Z"
           }
         ]
       }

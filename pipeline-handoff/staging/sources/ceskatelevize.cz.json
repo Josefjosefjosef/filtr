@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T09:19:11.803340Z",
+  "ingestedAt": "2026-04-25T10:24:32.333024Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Místopředsedkyně Senátu Seitlová nebude na podzim obhajovat mandát",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/mistopredsedkyne-senatu-seitlova-nebude-na-podzim-obhajovat-mandat-372786",
+      "dt": "2026-04-25T09:51:40Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "mandát",
+        "místopředsedkyně",
+        "nebude",
+        "obhajovat",
+        "podzim",
+        "seitlová",
+        "senátu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -32,17 +56,17 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Přibyl se ujme funkce pražského arcibiskupa",
+      "title": "Přibyl se ujal úřadu pražského arcibiskupa",
       "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/pribyl-se-ujme-funkce-prazskeho-arcibiskupa-372783",
       "dt": "2026-04-25T08:30:14Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
         "arcibiskupa",
-        "funkce",
         "pražského",
         "přibyl",
-        "ujme"
+        "ujal",
+        "úřadu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -725,26 +749,22 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "„Krakeni“ z vrcholu potravní pyramidy mění představy o pravěkých mořích",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/krakeni-z-vrcholu-potravni-pyramidy-meni-predstavy-o-pravekych-morich-372742",
-      "dt": "2026-04-24T12:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "MS hokejistů do 18 let: Německo – Česko 0:1",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-hokejistu-do-18-let-nemecko-cesko-156440",
+      "dt": "2026-04-25T09:59:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "krakeni",
-        "mořích",
-        "mění",
-        "potravní",
-        "pravěkých",
-        "pyramidy",
-        "představy",
-        "vrcholu"
+        "hokejistů",
+        "let",
+        "německo",
+        "česko"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1486,31 +1506,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Valentová v Madridu rychle skončila, všichni ostatní Češi zůstávají",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/valentova-v-madridu-rychle-skoncila-kopriva-a-pliskova-zustavaji-156412",
-      "dt": "2026-04-22T18:36:47Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "madridu",
-        "ostatní",
-        "rychle",
-        "skončila",
-        "valentová",
-        "všichni",
-        "zůstávají",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1521,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43938,
+      "bytes": 44139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,13 +1576,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T09:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T09:51:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "sport": 1,
           "finance": 1,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1600,11 +1595,15 @@
         },
         "sample_titles": [
           {
+            "title": "Místopředsedkyně Senátu Seitlová nebude na podzim obhajovat mandát",
+            "publishedAt": "2026-04-25T09:51:40Z"
+          },
+          {
             "title": "Slabý růst, pomalé ozdravení. Agentura S&P o stupeň snížila rating Slovenska",
             "publishedAt": "2026-04-25T09:06:00Z"
           },
           {
-            "title": "Přibyl se ujme funkce pražského arcibiskupa",
+            "title": "Přibyl se ujal úřadu pražského arcibiskupa",
             "publishedAt": "2026-04-25T08:30:14Z"
           },
           {
@@ -1626,10 +1625,6 @@
           {
             "title": "Státy EU se neshodnou na přístupu k emisním povolenkám, Komise chystá revizi",
             "publishedAt": "2026-04-25T06:02:00Z"
-          },
-          {
-            "title": "Vládní regulace cen paliv je jen pro mimořádné situace, říká Mach. Omezené šance na přezkum, namítá Volpe",
-            "publishedAt": "2026-04-25T05:44:26Z"
           }
         ]
       }
@@ -1641,7 +1636,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39438,
+      "bytes": 39416,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1678,7 +1673,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T06:19:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T09:59:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1693,6 +1688,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MS hokejistů do 18 let: Německo – Česko 0:1",
+            "publishedAt": "2026-04-25T09:59:00Z"
+          },
           {
             "title": "Lakers v prodloužení přetlačili Rockets a jsou krok od čtvrtfinále",
             "publishedAt": "2026-04-25T06:19:44Z"
@@ -1720,10 +1719,6 @@
           {
             "title": "Alcaraz nebude obhajovat titul na Roland Garros, zradilo ho zraněné zápěstí",
             "publishedAt": "2026-04-24T16:19:26Z"
-          },
-          {
-            "title": "Národní tým zdolal Rakousko i podruhé, Tomášek potvrdil skvělou formu",
-            "publishedAt": "2026-04-24T14:43:00Z"
           }
         ]
       }
@@ -1735,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77669,
+      "bytes": 77747,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
