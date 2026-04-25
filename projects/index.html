@@ -123,15 +123,17 @@ style-src 'self' 'unsafe-inline' https:;
       #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile{gap:0!important}
       #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap{flex:1 1 auto!important;align-self:stretch!important;min-height:0!important;min-width:0!important;width:100%!important}
       /* P0: mobile/tablet Silver hero + holiday + mini overview — inline kvůli css_debt_guard (app.css size baseline). */
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn,
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:hover,
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayMaleAccent)}
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn,
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:hover,
-      #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayFemaleAccent)}
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn,
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:hover,
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayMaleAccent)}
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn,
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:hover,
+        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayFemaleAccent)}
       @media(max-width:1024px){
         .iu-nameday-cta--slotDesktop{display:none!important}
-        #iuSilverHeroPremium{position:relative;z-index:1;width:100%;max-width:100%;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 14px;margin:0;border:0;border-radius:0;overflow:hidden;background:radial-gradient(ellipse 85% 70% at 18% 88%,rgba(120,200,255,.22) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 92% 12%,rgba(167,139,250,.18) 0%,transparent 50%),linear-gradient(165deg,rgba(12,22,38,.94) 0%,rgba(18,32,52,.92) 45%,rgba(22,40,58,.9) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+        #iuSilverWelcomeStackSeparatorHeroHoliday{height:10px!important;min-height:10px!important;max-height:10px!important;margin:0!important;background:linear-gradient(180deg,#e5eef6 0%,#f2f6fa 100%)!important;opacity:1!important}
+        .silver-welcome-stack--evening #iuSilverWelcomeStackSeparatorHeroHoliday{background:linear-gradient(180deg,rgba(15,36,56,.35) 0%,rgba(22,45,68,.5) 100%)!important}
+        #iuSilverHeroPremium{position:relative;z-index:1;width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 14px;margin:8px 10px 10px 10px;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 85% 70% at 18% 88%,rgba(120,200,255,.22) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 92% 12%,rgba(167,139,250,.18) 0%,transparent 50%),linear-gradient(165deg,rgba(12,22,38,.94) 0%,rgba(18,32,52,.92) 45%,rgba(22,40,58,.9) 100%);box-shadow:0 8px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06)}
         #iuSilverWelcomeStack.silver-welcome-stack--morning #iuSilverHeroPremium{background:radial-gradient(ellipse 85% 70% at 18% 88%,rgba(255,200,140,.2) 0%,transparent 55%),linear-gradient(165deg,rgba(32,44,62,.88) 0%,rgba(28,40,58,.9) 100%)}
         #iuSilverWelcomeStack.silver-welcome-stack--lateMorning #iuSilverHeroPremium{background:radial-gradient(ellipse 80% 65% at 15% 90%,rgba(130,180,255,.2) 0%,transparent 52%),linear-gradient(165deg,rgba(24,36,56,.9) 0%,rgba(20,34,52,.92) 100%)}
         #iuSilverWelcomeStack.silver-welcome-stack--afternoon #iuSilverHeroPremium{background:radial-gradient(ellipse 85% 70% at 20% 88%,rgba(255,190,120,.18) 0%,transparent 54%),linear-gradient(165deg,rgba(30,42,58,.9) 0%,rgba(24,38,54,.92) 100%)}
@@ -165,9 +167,20 @@ style-src 'self' 'unsafe-inline' https:;
         #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverStackChromaFrame.silver-inputWrap.iuSilverHomeInputWrap,#iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputWrap{width:100%!important;max-width:100%!important;margin:0!important;padding-top:0!important;padding-left:0!important;padding-right:0!important;box-sizing:border-box!important}
         #iuSilverHeroPremium #iuSilverHeroInputHost .iu-mobileSilverGateStack--floatingSilver{width:100%!important;max-width:100%!important;min-width:0!important;align-self:stretch!important;box-sizing:border-box!important}
         #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputRow.iuSilverHomeComposerShell,#iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputRow.iuSilverHomeComposerShell{width:100%!important;max-width:100%!important;min-width:0!important;align-self:stretch!important;box-sizing:border-box!important}
-        #iuHolidayMonetizeCard.iu-holiday-monetize-card{width:100%;max-width:100%;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 14px;margin:0;border:0;border-radius:0;background:radial-gradient(ellipse 70% 80% at 12% 20%,rgba(251,113,133,.14) 0%,transparent 45%),radial-gradient(ellipse 55% 60% at 88% 80%,rgba(167,139,250,.16) 0%,transparent 50%),linear-gradient(145deg,rgba(26,32,48,.88) 0%,rgba(30,24,40,.9) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
-        .iu-holiday-monetize__microcopy{margin:0 0 10px 0;padding:0;font-size:clamp(.95rem,3.4vw,1.05rem);font-weight:700;letter-spacing:-.02em;line-height:1.25;color:rgba(252,231,243,.95)}
-        #iuNamedayCtaMobile.iu-nameday-cta{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;width:100%;justify-content:flex-start}
+        #silver-slot #iuSilverWelcomeCard{padding-top:8px!important;padding-bottom:8px!important}
+        #silver-slot #iuSilverWelcomeTextBlock{gap:2px!important}
+        #iuHolidayMonetizeCard.iu-holiday-monetize-card{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;box-sizing:border-box;padding:10px 12px 12px;margin:0 10px 8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:radial-gradient(ellipse 70% 80% at 12% 20%,rgba(251,113,133,.14) 0%,transparent 45%),radial-gradient(ellipse 55% 60% at 88% 80%,rgba(167,139,250,.16) 0%,transparent 50%),linear-gradient(145deg,rgba(26,32,48,.88) 0%,rgba(30,24,40,.9) 100%);box-shadow:0 8px 22px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06)}
+        .iu-holiday-card__row{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:stretch;gap:10px;width:100%;min-width:0;box-sizing:border-box}
+        .iu-holiday-card__giftWrap{flex:0 0 auto;display:flex;align-items:center;justify-content:center;align-self:stretch}
+        .iu-holiday-card__giftCircle{width:clamp(38px,10vw,46px);height:clamp(38px,10vw,46px);border-radius:50%;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1)}
+        .iu-holiday-card__giftSvg{display:block;flex:0 0 auto}
+        .iu-holiday-card__text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;text-align:left}
+        .iu-holiday-card__line1{margin:0;padding:0;font-size:clamp(.88rem,3.2vw,1.02rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;color:rgba(252,248,255,.98)}
+        .iu-holiday-card__line2{margin:0;padding:0;font-size:clamp(.72rem,2.4vw,.86rem);font-weight:600;letter-spacing:-.01em;line-height:1.25;color:rgba(230,232,248,.82)}
+        #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:6px!important;flex:0 1 auto!important;min-width:0!important;max-width:48%!important;margin:0!important;align-items:stretch!important}
+        #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;min-height:0!important;height:auto!important;align-self:stretch!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:4px 5px!important;font-size:clamp(10px,2.7vw,12px)!important;font-weight:650!important;line-height:1.15!important;white-space:normal!important;text-align:center!important}
+        #iuHolidayMonetizeCard.iu-holiday-card--male .iu-holiday-card__giftCircle{border-color:color-mix(in srgb,var(--iuNamedayMaleAccent) 72%,#fff 28%);box-shadow:0 0 0 1px color-mix(in srgb,var(--iuNamedayMaleAccent) 35%,transparent)}
+        #iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{border-color:color-mix(in srgb,var(--iuNamedayFemaleAccent) 75%,#fff 25%);box-shadow:0 0 0 1px color-mix(in srgb,var(--iuNamedayFemaleAccent) 38%,transparent)}
         #iuSilverWeatherCard #iuSilverWeatherActions{display:none!important}
         .iu-mini-overview-card--weather{border-radius:14px;margin:6px var(--iuSilverStackPadX,12px);padding:10px 12px!important;background:linear-gradient(155deg,rgba(30,58,95,.55) 0%,rgba(15,30,48,.72) 100%);border:1px solid rgba(125,211,252,.18);box-shadow:0 6px 20px rgba(0,0,0,.2)}
         .iu-mini-overview-card--calendar{border-radius:14px;margin:6px var(--iuSilverStackPadX,12px);padding:10px 12px!important;background:linear-gradient(155deg,rgba(55,48,120,.55) 0%,rgba(24,28,52,.78) 100%);border:1px solid rgba(167,139,250,.28);box-shadow:0 6px 20px rgba(0,0,0,.22)}
@@ -523,15 +536,31 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
-                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card" data-iu-nameday-gender="unknown" aria-label="Svátek">
-                          <p class="iu-holiday-monetize__microcopy" id="iuHolidayMicrocopy">Popřej oslavenci 🎉</p>
-                          <div class="iu-nameday-cta iu-nameday-cta--slotMobile" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
-                            <button type="button" class="silver-weather-btn iu-nameday-wish">
-                              Vytvořit přání
-                            </button>
-                            <button type="button" class="silver-weather-btn iu-nameday-flowers">
-                              Poslat květiny
-                            </button>
+                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card iu-holiday-card" data-iu-nameday-gender="unknown" aria-label="Svátek">
+                          <div class="iu-holiday-card__row">
+                            <div class="iu-holiday-card__giftWrap" aria-hidden="true">
+                              <div class="iu-holiday-card__giftCircle">
+                                <svg class="iu-holiday-card__giftSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                                  <rect x="4" y="10" width="16" height="11" rx="2" fill="#ffffff"/>
+                                  <path d="M12 10V21" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                                  <path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="#ffffff"/>
+                                  <ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
+                                  <ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
+                                </svg>
+                              </div>
+                            </div>
+                            <div class="iu-holiday-card__text">
+                              <div class="iu-holiday-card__line1" id="iuHolidayLine1">Popřej oslavence</div>
+                              <div class="iu-holiday-card__line2" id="iuHolidayLine2">Dnes má svátek</div>
+                            </div>
+                            <div class="iu-nameday-cta iu-nameday-cta--slotMobile iu-holiday-card__actions" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
+                              <button type="button" class="silver-weather-btn iu-nameday-wish">
+                                Vytvořit přání
+                              </button>
+                              <button type="button" class="silver-weather-btn iu-nameday-flowers">
+                                Poslat květiny
+                              </button>
+                            </div>
                           </div>
                         </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
