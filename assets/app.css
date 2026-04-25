@@ -15720,6 +15720,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 
 /* P0 mobile/tablet (≤1024px): odstranit sdílený chroma „panel“ okolo skupiny Silver sekčních náhledových karet; jednotlivé karty (.iuNewsPreviewCard / .box-…) si drží vlastní border a pozadí. Desktop ≥1025px beze změny. */
 @media (max-width: 1024px){
+  #silver-slot #iuSilverTallScrollSection,
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection{
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
   #silver-slot #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame,
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection > .iuSilverStackChromaFrame.iuSilverTallScrollChromaFrame{
     background: transparent !important;
@@ -15734,7 +15740,24 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport,
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport.iuSilverTallScrollViewport{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     border-radius: 0;
+  }
+  #silver-slot #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"],
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
+    margin-top: 9px !important;
+  }
+  #silver-slot #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education),
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+  #silver-slot #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"],
+  #iuMobileSilverSlot #silver-slot #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
+    margin-top: 11px !important;
   }
 }
 
