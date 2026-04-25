@@ -21265,3 +21265,27 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
  * Silver row: #iuSilverCalendarSummaryCard .iuCalendarSummary__label | __icon | __rest (~silver kalendář box).
  * Mind Menu Kalendář: .mindMenu .iu-mmTopTool--cal.iuMindMenuButton (+ text/icon overrides) in Mind Menu section above.
  * To change accent behavior: edit those blocks only, never add a second copy at EOF. */
+
+/* P0 mobile/tablet: feed cards sit directly on page background (no shared wrapper panel). */
+@media (max-width: 1024px){
+  #feedWrap,
+  .feed-wrapper,
+  .section-list,
+  .cards-container,
+  .main-feed{
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* Desktop guard: keep original wrapper behavior above tablet breakpoint. */
+@media (min-width: 1025px){
+  #feedWrap,
+  .feed-wrapper{
+    background: revert;
+    padding: revert;
+  }
+}
