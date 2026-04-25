@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T15:34:24.884551Z",
+  "ingestedAt": "2026-04-25T15:54:41.497299Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "OBRAZEM: Náměstí u Kapitolu zaplnili plyšáci. Připomněli unesené ukrajinské děti",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/valka-plysak-unesene-ukrajinske-deti-putin-usa-trump.A260424_190827_zahranicni_berr/foto",
+      "dt": "2026-04-25T15:32:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "děti",
+        "kapitolu",
+        "náměstí",
+        "obrazem",
+        "plyšáci",
+        "připomněli",
+        "ukrajinské",
+        "unesené",
+        "zaplnili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,31 +784,6 @@
         "policie",
         "stanovém",
         "zadržela"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "OBRAZEM: Bílá, kam se podíváte. Ovocné sady rozkvetly do krásy",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/obrazem-kvety-ovocne-sady-lhenice-chelcice-jaro-pocasi-stromy.A260424_130924_budejovice-zpravy_plu/foto",
-      "dt": "2026-04-25T08:15:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bílá",
-        "kam",
-        "krásy",
-        "obrazem",
-        "ovocné",
-        "podíváte",
-        "rozkvetly",
-        "sady"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49889,
+      "bytes": 50308,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T15:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T15:32:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1634,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "OBRAZEM: Náměstí u Kapitolu zaplnili plyšáci. Připomněli unesené ukrajinské děti",
+            "publishedAt": "2026-04-25T15:32:00Z"
+          },
           {
             "title": "Při vyklízení sklepa našli v Nuslích radioaktivní thorium. Případ řeší policie",
             "publishedAt": "2026-04-25T15:24:00Z"
@@ -1661,10 +1666,6 @@
           {
             "title": "Trump zvažuje reset vztahů s „africkou KLDR“, chce ochránit trasy v Rudém moři",
             "publishedAt": "2026-04-25T13:14:00Z"
-          },
-          {
-            "title": "Zatímco jiní tratí, indická bavlna zažívá boom. Íránskému konfliktu navzdory",
-            "publishedAt": "2026-04-25T13:00:00Z"
           }
         ]
       }

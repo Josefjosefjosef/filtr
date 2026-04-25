@@ -1,36 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T15:34:24.884551Z",
+  "ingestedAt": "2026-04-25T15:54:41.497299Z",
   "items": [
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalová liga živě: Oslabená Sparta bleskově inkasuje dva góly, Slavia srovnává",
-      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/fotbalova-liga-zive-zakladni-cast-vrcholi-derby-se-hraje-v-praze-i-na-severu/r~aaa293ae96b3b00842467cf93051a472/",
-      "dt": "2026-04-25T13:40:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bleskově",
-        "dva",
-        "fotbalová",
-        "góly",
-        "inkasuje",
-        "liga",
-        "oslabená",
-        "slavia",
-        "sparta",
-        "srovnává",
-        "živě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -50,6 +22,34 @@
         "teheránu",
         "zadržení",
         "íránci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalová liga živě: Oslabená Sparta bleskově inkasuje dva góly, Slavia otáčí",
+      "url": "https://sport.aktualne.cz/fotbal/ceska-liga/fotbalova-liga-zive-zakladni-cast-vrcholi-derby-se-hraje-v-praze-i-na-severu/r~aaa293ae96b3b00842467cf93051a472/",
+      "dt": "2026-04-25T13:40:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bleskově",
+        "dva",
+        "fotbalová",
+        "góly",
+        "inkasuje",
+        "liga",
+        "oslabená",
+        "otáčí",
+        "slavia",
+        "sparta",
+        "živě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -528,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22058,
+      "bytes": 22056,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,8 +568,8 @@
         "raw_feed_latest_publishedAt": "2026-04-25T15:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
           "zpravy": 12,
+          "sport": 5,
           "finance": 3
         },
         "drop_counts": {
@@ -583,12 +583,12 @@
         },
         "sample_titles": [
           {
-            "title": "Fotbalová liga živě: Oslabená Sparta bleskově inkasuje dva góly, Slavia srovnává",
-            "publishedAt": "2026-04-25T13:40:00Z"
-          },
-          {
             "title": "Íránci potvrdili zadržení další lodě, letiště v Teheránu obnovilo komerční lety",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "Fotbalová liga živě: Oslabená Sparta bleskově inkasuje dva góly, Slavia otáčí",
+            "publishedAt": "2026-04-25T13:40:00Z"
           },
           {
             "title": "„Trump by měl mít radost.“ Francie a Řecko posilují evropský pilíř NATO",
