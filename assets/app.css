@@ -15764,7 +15764,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   /* P0 ≤1024: mezera input→Quick actions ≈ mezera Quick actions→spodek #iuSilverHeroPremium (jen padding boxu; .iu-hero-quickActions beze změny). */
   #silver-slot #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
-    padding-bottom: 11px !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 1px !important;
   }
   /* P0 ≤1024: mezera horní karta→CTA ≈ CTA→spodek #iuHolidayMonetizeCard (padding + min-height slack pryč; #iuNamedayCtaMobile beze změny). */
   #iuHolidayMonetizeCard.iu-holiday-monetize-card{
