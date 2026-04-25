@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-25T12:29:28.888635Z",
+  "ingestedAt": "2026-04-25T12:55:10.408745Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "O prvním setkání se sovětským vojákem mohl Vladimír Leman vyprávět jen známým",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/o-prvnim-setkani-se-sovetskym-vojakem-mohl-vladimir-leman-vypravet-jen-znamym-372763",
+      "dt": "2026-04-25T12:46:09Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "jen",
+        "leman",
+        "prvním",
+        "setkání",
+        "sovětským",
+        "vladimír",
+        "vojákem",
+        "vyprávět",
+        "známým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -722,25 +748,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Školy řeší, co s nevydanými obědy. V Jihlavě je nabízejí v automatu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/skoly-resi-co-s-nevydanymi-obedy-v-jihlave-je-nabizeji-v-automatu-372754",
-      "dt": "2026-04-24T13:11:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Menšík začal turnaj v Madridu hladkou výhrou. Končí Samson",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/mensik-zacal-turnaj-v-madridu-hladkou-vyhrou-konci-samson-156442",
+      "dt": "2026-04-25T12:45:59Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "automatu",
-        "jihlavě",
-        "nabízejí",
-        "nevydanými",
-        "obědy",
-        "řeší",
-        "školy"
+        "hladkou",
+        "končí",
+        "madridu",
+        "menšík",
+        "samson",
+        "turnaj",
+        "výhrou",
+        "začal"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -770,16 +797,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "MS hokejistů do 18 let: Německo – Česko 2:2",
+      "title": "Hokejová osmnáctka padla s Německem v prodloužení. Rozhodl Krestan trestným střílením",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/ms-hokejistu-do-18-let-nemecko-cesko-156440",
       "dt": "2026-04-25T09:59:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "hokejistů",
-        "let",
-        "německo",
-        "česko"
+        "hokejová",
+        "krestan",
+        "německem",
+        "osmnáctka",
+        "padla",
+        "prodloužení",
+        "rozhodl",
+        "střílením",
+        "trestným"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1475,31 +1507,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Národní tým čeká v dalším programu přípravy před MS dvojzápas s Rakouskem",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/narodni-tym-ceka-v-dalsim-programu-pripravy-pred-ms-dvojzapas-s-rakouskem-156404",
-      "dt": "2026-04-23T04:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dalším",
-        "dvojzápas",
-        "národní",
-        "programu",
-        "přípravy",
-        "rakouskem",
-        "tým",
-        "čeká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1510,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44258,
+      "bytes": 44171,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1570,7 +1577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:23:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:46:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1588,6 +1595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O prvním setkání se sovětským vojákem mohl Vladimír Leman vyprávět jen známým",
+            "publishedAt": "2026-04-25T12:46:09Z"
+          },
           {
             "title": "V Praze 4 se našly v domě chemikálie i radioaktivní thorium",
             "publishedAt": "2026-04-25T11:23:53Z"
@@ -1615,10 +1626,6 @@
           {
             "title": "Palestinci na Západním břehu a v jedné obci v Pásmu Gazy volí místní zastupitele",
             "publishedAt": "2026-04-25T07:34:12Z"
-          },
-          {
-            "title": "Fotbalové mistrovství vyprodukuje obří emise. Samo se potýká s nepřízní klimatu",
-            "publishedAt": "2026-04-25T07:00:00Z"
           }
         ]
       }
@@ -1630,7 +1637,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39304,
+      "bytes": 39129,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1667,7 +1674,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T12:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:45:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1683,11 +1690,15 @@
         },
         "sample_titles": [
           {
+            "title": "Menšík začal turnaj v Madridu hladkou výhrou. Končí Samson",
+            "publishedAt": "2026-04-25T12:45:59Z"
+          },
+          {
             "title": "Superfinále florbalistek: 1. SC Vítkovice – Bulldogs Brno",
             "publishedAt": "2026-04-25T12:05:00Z"
           },
           {
-            "title": "MS hokejistů do 18 let: Německo – Česko 2:2",
+            "title": "Hokejová osmnáctka padla s Německem v prodloužení. Rozhodl Krestan trestným střílením",
             "publishedAt": "2026-04-25T09:59:00Z"
           },
           {
@@ -1709,10 +1720,6 @@
           {
             "title": "Ostravští basketbalisté pronikli do čtvrtfinále, vyzvou Nymburk",
             "publishedAt": "2026-04-24T19:09:32Z"
-          },
-          {
-            "title": "Šestice ze zámoří v čele s Hronkem se připojí k hokejové reprezentaci",
-            "publishedAt": "2026-04-24T18:47:48Z"
           }
         ]
       }
@@ -1724,7 +1731,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77765,
+      "bytes": 77769,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

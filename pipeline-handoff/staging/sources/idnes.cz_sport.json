@@ -1,28 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-25T12:29:28.888635Z",
+  "ingestedAt": "2026-04-25T12:55:10.408745Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Vyrovnaný první set, pak rychlý konec. Samson v Madridu dohrála ve třetím kole",
-      "url": "https://www.idnes.cz/sport/tenis/tenistka-samson-ztroskotala-na-tisicovce-v-madridu-ve-tretim-kole.A260425_132841_tenis_ald",
-      "dt": "2026-04-25T11:35:00Z",
+      "title": "Menšík prošel v Madridu do třetího kola, Samson do osmifinále nepostoupila",
+      "url": "https://www.idnes.cz/sport/tenis/tenis-v-madridu-mensik-postoupil.A260425_132841_tenis_ald",
+      "dt": "2026-04-25T12:47:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "dohrála",
-        "kole",
-        "konec",
+        "kola",
         "madridu",
-        "pak",
-        "první",
-        "rychlý",
+        "menšík",
+        "nepostoupila",
+        "osmifinále",
+        "prošel",
         "samson",
-        "set",
-        "třetím",
-        "vyrovnaný"
+        "třetího"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V nominaci Finska na České hokejové hry je i Mikael Seppälä ze Sparty",
+      "url": "https://www.idnes.cz/hokej/reprezentace/v-nominaci-finska-na-eht-do-ceskych-budejovic-je-i-mikael-seppala-ze-sparty.A260425_141850_reprezentace_ald",
+      "dt": "2026-04-25T12:18:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finska",
+        "hokejové",
+        "hry",
+        "mikael",
+        "nominaci",
+        "seppälä",
+        "sparty",
+        "české"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -756,30 +778,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ostrava nasázela v Olomouci stovku, vybojovala si sérii s Nymburkem",
-      "url": "https://www.idnes.cz/sport/basket/predkolo-play-off-basketbalova-liga-muzu-2-zapas-olomoucko-ostrava.A260424_203817_sport-basket_ten",
-      "dt": "2026-04-24T18:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "nasázela",
-        "nymburkem",
-        "olomouci",
-        "ostrava",
-        "stovku",
-        "sérii",
-        "vybojovala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45918,
+      "bytes": 45835,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T11:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T12:47:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,8 +841,12 @@
         },
         "sample_titles": [
           {
-            "title": "Vyrovnaný první set, pak rychlý konec. Samson v Madridu dohrála ve třetím kole",
-            "publishedAt": "2026-04-25T11:35:00Z"
+            "title": "Menšík prošel v Madridu do třetího kola, Samson do osmifinále nepostoupila",
+            "publishedAt": "2026-04-25T12:47:00Z"
+          },
+          {
+            "title": "V nominaci Finska na České hokejové hry je i Mikael Seppälä ze Sparty",
+            "publishedAt": "2026-04-25T12:18:00Z"
           },
           {
             "title": "ONLINE: Fulham čelí Aston Ville, pak Wolverhampton vyzve Tottenham",
@@ -869,10 +871,6 @@
           {
             "title": "Životní sezona pokračuje. Kopřiva přejel hvězdného Rusa a ví: Mám na tuhle úroveň",
             "publishedAt": "2026-04-25T08:13:00Z"
-          },
-          {
-            "title": "Jediné téma Lutychu: Pogačar vs. Seixas. I titán Evenepoel je ve stínu holobrádka",
-            "publishedAt": "2026-04-25T07:57:00Z"
           }
         ]
       }
