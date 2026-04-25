@@ -1,28 +1,83 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-25T14:24:45.524818Z",
+  "ingestedAt": "2026-04-25T14:45:09.124818Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Slavia rychle ztrácí! Sparta hraje na Bohemce, Baník čelí Plzni",
+      "title": "FOTBAL ONLINE: Slavia musí dotahovat, malér i pro Spartu! Baník padá na dno. Liberec udeřil v derby",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-osm-zapasu-naraz-posledni-ligove-kolo-pred-nadstavbou-je-tu-5442558",
       "dt": "2026-04-25T05:58:42Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "baník",
-        "bohemce",
+        "derby",
+        "dno",
+        "dotahovat",
         "fotbal",
-        "hraje",
+        "liberec",
+        "malér",
+        "musí",
         "online",
-        "plzni",
-        "rychle",
+        "padá",
         "slavia",
-        "sparta",
-        "ztrácí",
-        "čelí"
+        "spartu",
+        "udeřil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brněnská senzace dokonána! Florbalistky Bulldogs rozhodly čtyři sekundy před koncem",
+      "url": "https://www.sport.cz/clanek/florbal-brnenska-senzace-dokonana-florbalistky-bulldogs-rozhodly-ctyri-sekundy-pred-koncem-5442921",
+      "dt": "2026-04-25T14:23:42Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brněnská",
+        "bulldogs",
+        "dokonána",
+        "florbalistky",
+        "koncem",
+        "rozhodly",
+        "sekundy",
+        "senzace",
+        "čtyři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Salačovi se v kvalifikaci v Jerezu příliš nedařilo. Marc Márquez ovládl deštivý sprint",
+      "url": "https://www.sport.cz/clanek/moto-motocykly-salacovi-se-v-kvalifikaci-v-jerezu-prilis-nedarilo-marc-marquez-ovladl-destivy-sprint-5442958",
+      "dt": "2026-04-25T14:29:39Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "deštivý",
+        "jerezu",
+        "kvalifikaci",
+        "marc",
+        "márquez",
+        "nedařilo",
+        "ovládl",
+        "příliš",
+        "salačovi",
+        "sprint"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -727,51 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Real Madrid přišel o výhru v nastaveném čase",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-real-madrid-prisel-o-vyhru-v-nastavenem-case-5442550",
-      "dt": "2026-04-24T21:10:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "madrid",
-        "nastaveném",
-        "přišel",
-        "real",
-        "výhru",
-        "čase"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nottingham udělal velký krok k záchraně",
-      "url": "https://www.sport.cz/clanek/fotbal-premier-league-nottingham-udelal-velky-krok-k-zachrane-5442549",
-      "dt": "2026-04-24T21:04:16Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "krok",
-        "nottingham",
-        "udělal",
-        "velký",
-        "záchraně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43574,
+      "bytes": 44018,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T13:34:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T14:29:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -835,8 +845,16 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Slavia rychle ztrácí! Sparta hraje na Bohemce, Baník čelí Plzni",
+            "title": "FOTBAL ONLINE: Slavia musí dotahovat, malér i pro Spartu! Baník padá na dno. Liberec udeřil v derby",
             "publishedAt": "2026-04-25T05:58:42Z"
+          },
+          {
+            "title": "Brněnská senzace dokonána! Florbalistky Bulldogs rozhodly čtyři sekundy před koncem",
+            "publishedAt": "2026-04-25T14:23:42Z"
+          },
+          {
+            "title": "Salačovi se v kvalifikaci v Jerezu příliš nedařilo. Marc Márquez ovládl deštivý sprint",
+            "publishedAt": "2026-04-25T14:29:39Z"
           },
           {
             "title": "Fulham zdolal po třech a půl letech Aston Villu",
@@ -857,14 +875,6 @@
           {
             "title": "Mount Everest je stroj na peníze, běsní legendární horolezec Messner",
             "publishedAt": "2026-04-25T12:42:09Z"
-          },
-          {
-            "title": "SESTŘIH: Velká rána pro české mladíky. Ztratili zápas s outsiderem a první místo už nemají ve svých rukou",
-            "publishedAt": "2026-04-25T04:36:15Z"
-          },
-          {
-            "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
-            "publishedAt": "2026-04-24T20:03:00Z"
           }
         ]
       }
