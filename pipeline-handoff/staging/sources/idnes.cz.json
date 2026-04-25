@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-25T15:09:33.809957Z",
+  "ingestedAt": "2026-04-25T15:34:24.884551Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při vyklízení sklepa našli v Nuslích radioaktivní thorium. Případ řeší policie",
+      "url": "https://www.idnes.cz/praha/zpravy/hasici-praha-pankrac-chemikalie-radioaktivita-thorium.A260425_132012_praha-zpravy_herp",
+      "dt": "2026-04-25T15:24:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "našli",
+        "nuslích",
+        "policie",
+        "při",
+        "případ",
+        "radioaktivní",
+        "sklepa",
+        "thorium",
+        "vyklízení",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -47,32 +74,6 @@
         "česku",
         "říká",
         "životní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při vyklízení sklepa našli v Nuslích radioaktivní thorium. Zasahovali hasiči",
-      "url": "https://www.idnes.cz/praha/zpravy/hasici-praha-pankrac-chemikalie-radioaktivita-thorium.A260425_132012_praha-zpravy_herp",
-      "dt": "2026-04-25T14:22:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "hasiči",
-        "našli",
-        "nuslích",
-        "při",
-        "radioaktivní",
-        "sklepa",
-        "thorium",
-        "vyklízení",
-        "zasahovali"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -787,6 +788,32 @@
       "feedType": "rubric",
       "feedId": "zpr_idnes_zpravy",
       "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Třetina Čechů nakupuje online v noci. Někdy dokonce i z WC, ukázal průzkum",
+      "url": "https://www.idnes.cz/ekonomika/domaci/pruzkum-nakupy-online.A260423_094954_ekonomika_base",
+      "dt": "2026-04-25T15:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
+      "tokens": [
+        "dokonce",
+        "nakupuje",
+        "noci",
+        "někdy",
+        "online",
+        "průzkum",
+        "třetina",
+        "ukázal",
+        "čechů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rubric",
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
     },
@@ -1543,32 +1570,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ve sběru skončily spotřebiče o váze šesti žižkovských věží, potvrzuje firma",
-      "url": "https://www.idnes.cz/ekonomika/domaci/recyklace-elektroodpadu-elektrowin.A260410_133800_ekonomika_hyk",
-      "dt": "2026-04-19T09:00:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "firma",
-        "potvrzuje",
-        "sběru",
-        "skončily",
-        "spotřebiče",
-        "váze",
-        "věží",
-        "šesti",
-        "žižkovských"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1579,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49883,
+      "bytes": 49889,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1616,11 +1617,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T15:24:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 5,
           "zpravy": 24,
+          "finance": 5,
           "other": 1
         },
         "drop_counts": {
@@ -1634,16 +1635,16 @@
         },
         "sample_titles": [
           {
+            "title": "Při vyklízení sklepa našli v Nuslích radioaktivní thorium. Případ řeší policie",
+            "publishedAt": "2026-04-25T15:24:00Z"
+          },
+          {
             "title": "Třetina Čechů nakupuje online v noci. Někdy dokonce i z WC, ukázal průzkum",
             "publishedAt": "2026-04-25T15:00:00Z"
           },
           {
             "title": "Typickému dárci orgánů v Česku je přes 50 a má nezdravý životní styl, říká expert",
             "publishedAt": "2026-04-25T15:00:00Z"
-          },
-          {
-            "title": "Při vyklízení sklepa našli v Nuslích radioaktivní thorium. Zasahovali hasiči",
-            "publishedAt": "2026-04-25T14:22:00Z"
           },
           {
             "title": "Kapacity středních škol v metropoli rostou, Pražané přesto mají obavy",
@@ -1675,7 +1676,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 44426,
+      "bytes": 43973,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1712,7 +1713,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-24T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T15:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1727,6 +1728,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třetina Čechů nakupuje online v noci. Někdy dokonce i z WC, ukázal průzkum",
+            "publishedAt": "2026-04-25T15:00:00Z"
+          },
           {
             "title": "Vládní regulace dusí malé pumpy. Mohou kvůli nim i skončit, varuje čerpadlář",
             "publishedAt": "2026-04-24T22:00:00Z"
@@ -1754,10 +1759,6 @@
           {
             "title": "Půdu v Česku investoři skupovat nebudou, mimo EU je to jednodušší, říká odborník",
             "publishedAt": "2026-04-23T22:00:00Z"
-          },
-          {
-            "title": "Maximální ceny pohonných hmot v pátek vzrostou o desítky haléřů na litr",
-            "publishedAt": "2026-04-23T13:52:00Z"
           }
         ]
       }
