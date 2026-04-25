@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-25T08:20:20.211546Z",
+  "ingestedAt": "2026-04-25T08:39:59.685062Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Noční ruské útoky na Ukrajinu zabily nejméně čtyři lidi, více než 30 utrpělo zranění",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "lidi",
+        "nejméně",
+        "než",
+        "noční",
+        "ruské",
+        "ukrajinu",
+        "utrpělo",
+        "zabily",
+        "zranění",
+        "útoky",
+        "čtyři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -152,32 +180,6 @@
         "slunečná",
         "sobota",
         "šumavě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Putin může dostat pozvánku na summit G20 ve Spojených státech, tvrdí Kreml",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dostat",
-        "g20",
-        "kreml",
-        "pozvánku",
-        "putin",
-        "spojených",
-        "státech",
-        "summit",
-        "tvrdí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -538,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22722,
+      "bytes": 22622,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,8 +580,8 @@
         "raw_feed_latest_publishedAt": "2026-04-25T07:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 3,
           "zpravy": 15,
+          "sport": 3,
           "other": 1,
           "finance": 1
         },
@@ -593,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Noční ruské útoky na Ukrajinu zabily nejméně čtyři lidi, více než 30 utrpělo zranění",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
           {
             "title": "Rarita: Tři čeští gólmani vychytali v play off výhru. Start dalšího je ale v ohrožení",
             "publishedAt": "2026-04-25T05:19:00Z"
@@ -616,10 +622,6 @@
           {
             "title": "Na Šumavě bylo v noci minus osm, ale sobota má být slunečná",
             "publishedAt": "2026-04-25T07:24:00Z"
-          },
-          {
-            "title": "Putin může dostat pozvánku na summit G20 ve Spojených státech, tvrdí Kreml",
-            "publishedAt": "2026-01-21T06:45:00Z"
           },
           {
             "title": "KVÍZ: Zapomeňte na brouka Pytlíka. Poznáte brouky, které můžete potkat v české přírodě?",
