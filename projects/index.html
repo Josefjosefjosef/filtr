@@ -50,6 +50,7 @@ style-src 'self' 'unsafe-inline' https:;
           max-width: 100%;
           box-sizing: border-box;
         }
+        #iuNamedayWishOverlay .iu-overlay-close{display:none!important}
       }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
@@ -211,6 +212,10 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverWelcomeStack.silver-welcome-stack--evening .iu-mini-overview-card--calendar{background:rgba(8,15,32,.72)!important;border:1px solid rgba(100,200,190,.14)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--evening .iu-mini-overview-card--tasks{background:rgba(8,15,32,.72)!important;border:1px solid rgba(150,140,210,.16)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
         html[data-iu-silver-welcome-paint="evening"] body,html[data-iu-silver-welcome-paint="evening"] #content,html[data-iu-silver-welcome-paint="evening"] #page,html[data-iu-silver-welcome-paint="evening"] .mainCol{background:radial-gradient(ellipse 88% 60% at 5% 0%,rgba(56,189,248,.09) 0%,transparent 46%),radial-gradient(ellipse 85% 55% at 98% 100%,rgba(124,58,246,.08) 0%,transparent 50%),linear-gradient(180deg,#07101f 0%,#0b1430 42%,#111827 100%)!important;background-color:#07101f!important}
+        #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;box-shadow:0 4px 14px rgba(34,197,94,.35),inset 0 1px 0 rgba(255,255,255,.15);font-weight:600}
+        #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn:active{transform:translateY(1px);box-shadow:0 2px 8px rgba(34,197,94,.3),inset 0 1px 0 rgba(255,255,255,.1)}
+        #iuNamedayWishOverlay .iu-overlay-close{position:absolute;top:12px;right:12px;width:38px;height:38px;background:#eef2f7;color:#0f172a;border:none;border-radius:10px;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
+        #iuNamedayWishOverlay .iu-overlay-close:active{transform:scale(.96)}
       }
       /* P0: Počasí/Kalendář/Úkoly 3 karty ≤1023 — inline (css_debt_guard app.css baseline). */
       @media(min-width:1024px){#silver-slot .iu-info-cards-mobile-tablet{display:contents}}
