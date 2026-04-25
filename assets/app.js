@@ -6666,14 +6666,8 @@ function buildVideoAsArticleCard(it) {
         try{ if (document.visibilityState === "visible") refresh(); }catch{}
       });
     }catch{}
-    /* P0 CLS: na ≤900px neopakujeme refresh zbytečně po 400/1500 ms — MutationObserver + fetch callback stačí; méně layout passů. */
-    /* P0 CLS desktop (≥901px): žádné timed refresh — stejný zdroj jako mobile (MutationObserver na #iuDailyNameday); vyloučí druhý fitMetaFont pass po async nameday. */
-    try{
-      if (!silverWelcomeUseJsMetaFit()) {
-        setTimeout(() => refresh(), 400);
-        setTimeout(() => refresh(), 1500);
-      }
-    }catch{}
+    /* P0 CLS: ≤900px — bez timed 400/1500 ms refresh (jen MutationObserver + počáteční refresh); duplicitní pass přepisoval meta DOM → skok hero stacku. */
+    /* P0 CLS desktop (≥901px): žádné timed refresh — stejný zdroj jako mobile. */
     /* P0 CLS: ResizeObserver na welcome kartě jen ≤900px (meta font-fit). Desktop: žádný RO — sousední Silver sloupec mění výšku karty → zbytečné schedule + mikroshift bez sources. */
     try{
       if (typeof ResizeObserver !== "undefined" && cardEl && !silverWelcomeUseJsMetaFit()) {
@@ -7334,6 +7328,55 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuNewsPreviewHideTallScrollPlaceholder(viewport){
+    try{
+      if (!viewport) return;
+      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
+      if (placeholder) {
+        try {
+          placeholder.style.visibility = "hidden";
+          placeholder.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
+      if (probe) {
+        try {
+          probe.style.visibility = "hidden";
+          probe.setAttribute("aria-hidden", "true");
+        } catch (_) {}
+      }
+    }catch(_){}
+  }
+
+  function iuNewsPreviewWireCard(card){
+    try{
+      if (!card || card.getAttribute("data-iu-news-preview-iu-bound") === "1") return;
+      card.setAttribute("data-iu-news-preview-iu-bound", "1");
+      card.addEventListener(
+        "click",
+        function () {
+          iuMediaPreviewNavClick("zpravy");
+        },
+        { passive: true }
+      );
+      const img0 = card.querySelector(".iuNewsPreviewImg");
+      if (img0 && !img0.getAttribute("data-iu-news-preview-err-bound")) {
+        img0.setAttribute("data-iu-news-preview-err-bound", "1");
+        img0.onerror = function () {
+          const fb = "/assets/images/news-default.jpg";
+          try {
+            const cur = String(img0.getAttribute("src") || "");
+            if (cur.indexOf("news-default.jpg") !== -1) {
+              img0.onerror = null;
+              return;
+            }
+          } catch (_) {}
+          img0.src = fb;
+        };
+      }
+    }catch(_){}
+  }
+
   function iuNewsPreviewEnsureDom(){
     try{
       const viewport = document.getElementById("iuSilverTallScrollViewport");
@@ -7342,7 +7385,11 @@ function buildVideoAsArticleCard(it) {
       let card = mount
         ? mount.querySelector('[data-iu-news-preview-card="1"]')
         : viewport.querySelector('[data-iu-news-preview-card="1"]');
-      if (card) return card;
+      if (card) {
+        iuNewsPreviewHideTallScrollPlaceholder(viewport);
+        iuNewsPreviewWireCard(card);
+        return card;
+      }
 
       card = document.createElement("button");
       card.type = "button";
@@ -7371,20 +7418,7 @@ function buildVideoAsArticleCard(it) {
         </div>
       `.trim();
 
-      const placeholder = viewport.querySelector("[data-iu-silver-tall-scroll-placeholder]");
-      if (placeholder) {
-        try {
-          placeholder.style.visibility = "hidden";
-          placeholder.setAttribute("aria-hidden", "true");
-        } catch (_) {}
-      }
-      const probe = viewport.querySelector("[data-iu-silver-tall-scroll-probe]");
-      if (probe) {
-        try {
-          probe.style.visibility = "hidden";
-          probe.setAttribute("aria-hidden", "true");
-        } catch (_) {}
-      }
+      iuNewsPreviewHideTallScrollPlaceholder(viewport);
 
       if (mount) {
         mount.appendChild(card);
@@ -7392,29 +7426,7 @@ function buildVideoAsArticleCard(it) {
         viewport.insertBefore(card, viewport.firstChild || null);
       }
 
-      card.addEventListener(
-        "click",
-        function () {
-          iuMediaPreviewNavClick("zpravy");
-        },
-        { passive: true }
-      );
-
-      const img0 = card.querySelector(".iuNewsPreviewImg");
-      if (img0 && !img0.getAttribute("data-iu-news-preview-err-bound")) {
-        img0.setAttribute("data-iu-news-preview-err-bound", "1");
-        img0.onerror = function () {
-          const fb = "/assets/images/news-default.jpg";
-          try {
-            const cur = String(img0.getAttribute("src") || "");
-            if (cur.indexOf("news-default.jpg") !== -1) {
-              img0.onerror = null;
-              return;
-            }
-          } catch (_) {}
-          img0.src = fb;
-        };
-      }
+      iuNewsPreviewWireCard(card);
 
       return card;
     }catch(_){
@@ -10063,8 +10075,13 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     refresh();
-    try{ setTimeout(() => refresh(), 400); }catch{}
-    try{ setTimeout(() => refresh(), 1500); }catch{}
+    try{
+      const __iuCalSumSkipDup = typeof window.matchMedia === "function" && window.matchMedia("(max-width: 900px)").matches;
+      if (!__iuCalSumSkipDup) {
+        setTimeout(() => refresh(), 400);
+        setTimeout(() => refresh(), 1500);
+      }
+    } catch (_) {}
   }
 
   /**
@@ -10220,8 +10237,13 @@ function buildVideoAsArticleCard(it) {
 
     refresh();
     try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 0); }catch{}
-    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 400); }catch{}
-    try{ setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 1500); }catch{}
+    try{
+      const __iuTaskSumSkipDup = typeof window.matchMedia === "function" && window.matchMedia("(max-width: 900px)").matches;
+      if (!__iuTaskSumSkipDup) {
+        setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 400);
+        setTimeout(() => { refresh(); tryAttachOverlayObserver(); }, 1500);
+      }
+    } catch (_) {}
   }
 
   /**
@@ -11062,6 +11084,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuSilverWeatherRenderData(st){
+      iuSilverWeatherHideAllActions();
       const dp = iuSilverWeatherDayPartIcon(st);
       const t = typeof st.current.temperatureC === "number" ? Math.round(st.current.temperatureC) : null;
       const fl = typeof st.current.feelsLikeC === "number" ? Math.round(st.current.feelsLikeC) : null;
@@ -11089,6 +11112,7 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuSilverWeatherRenderLoading(){
+      iuSilverWeatherHideAllActions();
       line1.innerHTML =
         `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
         `<span data-iu-silver-weather-hook="summary">Počasí se načítá…</span>`;
@@ -11146,7 +11170,6 @@ function buildVideoAsArticleCard(it) {
             line2.setAttribute("data-iu-action-indicator", "chevron");
           }
         }catch{}
-        iuSilverWeatherHideAllActions();
         if (phase === "denied"){
           iuSilverWeatherRenderDenied();
           return;
@@ -13257,6 +13280,13 @@ function buildVideoAsArticleCard(it) {
     const build = getBuildStamp() || "no-build";
     const prev = localStorage.getItem("iu:lastBuildHard") || "";
     if (prev === build) return;
+    /* Cold profile: stamp current build without nuke/reload — first navigation is already this shell (avoids extra navigation + CLS/tracer races). */
+    if (!prev) {
+      try {
+        localStorage.setItem("iu:lastBuildHard", build);
+      } catch (_) {}
+      return;
+    }
     try {
       localStorage.setItem("iu:lastBuildHard", build);
     } catch (_) {}
