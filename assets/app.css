@@ -21364,89 +21364,15 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
   }
-  #iuSilverHeroPremium{
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    background-image:
-      radial-gradient(58% 52% at 18% 16%, rgba(70, 174, 255, 0.28) 0%, rgba(70, 174, 255, 0.08) 36%, rgba(70, 174, 255, 0) 74%),
-      radial-gradient(64% 58% at 90% 88%, rgba(128, 85, 255, 0.22) 0%, rgba(128, 85, 255, 0.07) 44%, rgba(128, 85, 255, 0) 78%),
-      linear-gradient(124deg, rgba(92, 175, 255, 0.14) 0%, rgba(92, 175, 255, 0) 38%),
-      linear-gradient(308deg, rgba(138, 108, 255, 0.18) 4%, rgba(138, 108, 255, 0) 42%),
-      linear-gradient(156deg, rgba(7, 15, 34, 0.96) 0%, rgba(10, 22, 44, 0.94) 58%, rgba(14, 29, 54, 0.92) 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(194, 232, 255, 0.2),
-      inset 0 -1px 0 rgba(86, 112, 154, 0.22);
-  }
-  #iuSilverHeroPremium::before{
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(46% 54% at 20% 24%, rgba(84, 222, 255, 0.38) 0%, rgba(84, 222, 255, 0.1) 42%, rgba(84, 222, 255, 0) 78%),
-      radial-gradient(38% 42% at 30% 30%, rgba(100, 132, 255, 0.28) 0%, rgba(100, 132, 255, 0) 72%),
-      radial-gradient(34% 40% at 16% 52%, rgba(124, 87, 255, 0.2) 0%, rgba(124, 87, 255, 0) 70%);
-    filter: blur(25px);
-    opacity: 0.74;
-    pointer-events: none;
-    z-index: 0;
-  }
-  #iuSilverHeroPremium::after{
-    content: "";
-    position: absolute;
-    inset: -16%;
-    background-image:
-      linear-gradient(116deg, rgba(121, 228, 255, 0.2) 0%, rgba(121, 228, 255, 0) 24%),
-      linear-gradient(140deg, rgba(121, 228, 255, 0) 28%, rgba(121, 228, 255, 0.16) 42%, rgba(121, 228, 255, 0) 58%),
-      linear-gradient(168deg, rgba(169, 140, 255, 0.18) 18%, rgba(169, 140, 255, 0) 46%),
-      repeating-linear-gradient(128deg, rgba(119, 195, 255, 0.09) 0 2px, rgba(119, 195, 255, 0) 2px 14px);
-    background-size: 170% 170%;
-    filter: blur(13px);
-    opacity: 0.44;
-    transform: rotate(-4deg);
-    pointer-events: none;
-    z-index: 0;
-  }
-  #iuSilverHeroPremium > *{
-    position: relative;
-    z-index: 1;
-  }
-  #iuSilverHeroPremium .iu-silver-quick-actions,
-  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
-    position: relative;
-    z-index: 2;
-  }
-  #iuSilverHeroPremium .iu-silver-action,
-  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a, button){
-    border-color: rgba(220, 238, 255, 0.28);
-    box-shadow:
-      0 0 0 1px rgba(220, 238, 255, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  }
-  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a, button):nth-child(1){
-    box-shadow:
-      0 0 0 1px rgba(194, 255, 216, 0.18),
-      0 8px 18px rgba(38, 191, 126, 0.22),
-      0 0 18px rgba(61, 218, 190, 0.2),
-      inset 0 1px 0 rgba(240, 255, 246, 0.22);
-    border-color: rgba(168, 240, 196, 0.48);
-  }
-  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a, button):nth-child(2){
-    box-shadow:
-      0 0 0 1px rgba(177, 228, 255, 0.18),
-      0 8px 18px rgba(44, 136, 255, 0.22),
-      0 0 18px rgba(62, 193, 255, 0.18),
-      inset 0 1px 0 rgba(232, 245, 255, 0.2);
-    border-color: rgba(152, 218, 255, 0.48);
-  }
-  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a, button):nth-child(3){
-    box-shadow:
-      0 0 0 1px rgba(216, 196, 255, 0.16),
-      0 8px 18px rgba(114, 89, 255, 0.22),
-      0 0 18px rgba(144, 124, 255, 0.2),
-      inset 0 1px 0 rgba(245, 236, 255, 0.2);
-    border-color: rgba(206, 181, 255, 0.46);
-  }
+  #iuSilverHeroPremium{position:relative;isolation:isolate;overflow:hidden;background-image:radial-gradient(56% 50% at 18% 16%,rgba(70,174,255,.26) 0,rgba(70,174,255,0) 72%),radial-gradient(60% 56% at 92% 88%,rgba(128,85,255,.22) 0,rgba(128,85,255,0) 78%),linear-gradient(132deg,rgba(88,174,255,.12) 0,rgba(88,174,255,0) 38%),linear-gradient(156deg,rgba(7,15,34,.96) 0,rgba(10,22,44,.94) 58%,rgba(14,29,54,.92) 100%);box-shadow:inset 0 1px 0 rgba(194,232,255,.2),inset 0 -1px 0 rgba(86,112,154,.22)}
+  #iuSilverHeroPremium::before{content:"";position:absolute;inset:0;background-image:radial-gradient(48% 56% at 21% 24%,rgba(84,222,255,.34) 0,rgba(84,222,255,0) 78%),radial-gradient(34% 42% at 17% 53%,rgba(124,87,255,.2) 0,rgba(124,87,255,0) 70%);filter:blur(24px);opacity:.72;pointer-events:none;z-index:0}
+  #iuSilverHeroPremium::after{content:"";position:absolute;inset:-14%;background-image:linear-gradient(118deg,rgba(121,228,255,.2) 0,rgba(121,228,255,0) 26%),linear-gradient(144deg,rgba(121,228,255,0) 28%,rgba(121,228,255,.14) 44%,rgba(121,228,255,0) 58%),repeating-linear-gradient(128deg,rgba(119,195,255,.08) 0 2px,rgba(119,195,255,0) 2px 14px);background-size:165% 165%;filter:blur(12px);opacity:.4;transform:rotate(-4deg);pointer-events:none;z-index:0}
+  #iuSilverHeroPremium>*{position:relative;z-index:1}
+  #iuSilverHeroPremium .iu-silver-quick-actions,#iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{position:relative;z-index:2}
+  #iuSilverHeroPremium .iu-silver-action,#iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a,button){border-color:rgba(220,238,255,.28);box-shadow:0 0 0 1px rgba(220,238,255,.06),inset 0 1px 0 rgba(255,255,255,.2)}
+  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a,button):nth-child(1){box-shadow:0 0 0 1px rgba(194,255,216,.18),0 8px 18px rgba(38,191,126,.2),0 0 16px rgba(61,218,190,.18),inset 0 1px 0 rgba(240,255,246,.22);border-color:rgba(168,240,196,.46)}
+  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a,button):nth-child(2){box-shadow:0 0 0 1px rgba(177,228,255,.18),0 8px 18px rgba(44,136,255,.2),0 0 16px rgba(62,193,255,.16),inset 0 1px 0 rgba(232,245,255,.2);border-color:rgba(152,218,255,.46)}
+  #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions :is(a,button):nth-child(3){box-shadow:0 0 0 1px rgba(216,196,255,.16),0 8px 18px rgba(114,89,255,.2),0 0 16px rgba(144,124,255,.18),inset 0 1px 0 rgba(245,236,255,.2);border-color:rgba(206,181,255,.44)}
   
   #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
