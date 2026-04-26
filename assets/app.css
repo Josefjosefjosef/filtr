@@ -15732,7 +15732,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (max-width: 1024px){
-  
+  html[data-iu-daypart="afternoon"],html[data-iu-daypart="afternoon"] body{background:#ffffff!important}/*iu-time-afternoon*/
+
   #iuSilverTallScrollSection{
     padding-top: 0 !important;
     padding-left: 0 !important;
