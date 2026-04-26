@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T01:20:06.468399Z",
+  "ingestedAt": "2026-04-26T01:44:43.420909Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump byl evakuován z galavečeře s novináři poté, co se ozvala střelba",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/trump-byl-evakuovan-z-galavecere-z-novinari-pote-co-se-ozvala-strelba-372803",
+      "dt": "2026-04-26T01:17:56Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evakuován",
+        "galavečeře",
+        "novináři",
+        "ozvala",
+        "poté",
+        "střelba",
+        "trump"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -709,30 +733,6 @@
         "výnos",
         "zablokoval",
         "zastavení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Začíná modernizace železniční tratě z pražské Ruzyně do Kladna",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/zacina-modernizace-zeleznicni-trate-z-prazske-ruzyne-do-kladna-372767",
-      "dt": "2026-04-24T18:09:42Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "kladna",
-        "modernizace",
-        "pražské",
-        "ruzyně",
-        "tratě",
-        "začíná",
-        "železniční"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1519,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 45009,
+      "bytes": 44810,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,7 +1579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T00:29:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T01:17:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1597,6 +1597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump byl evakuován z galavečeře s novináři poté, co se ozvala střelba",
+            "publishedAt": "2026-04-26T01:17:56Z"
+          },
           {
             "title": "Po bombovém útoku na silnici v Kolumbii je 14 mrtvých, více než 38 zraněných",
             "publishedAt": "2026-04-26T00:29:10Z"
@@ -1624,10 +1628,6 @@
           {
             "title": "Německo jedná o vyslání minolovek do Hormuzského průlivu",
             "publishedAt": "2026-04-25T18:03:51Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události soboty 25. dubna",
-            "publishedAt": "2026-04-25T16:29:02Z"
           }
         ]
       }
@@ -1733,7 +1733,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77172,
+      "bytes": 77166,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
