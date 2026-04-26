@@ -27151,6 +27151,49 @@ function buildVideoAsArticleCard(it) {
     try {
       if (window.__iuMobileWebNavReturnSuppress === true) return;
     } catch (_e) {}
+    /* P0 hub URL: žádné ?section= — vyčisti web-nav return arm; storage nesmí přebít čistou URL při dalším popstate/reload ticku. */
+    try {
+      if (
+        typeof window !== "undefined" &&
+        typeof window.iuIsProjectsRoute === "function" &&
+        window.iuIsProjectsRoute()
+      ) {
+        var pHub = new URLSearchParams(
+          (typeof location !== "undefined" && location.search) || ""
+        );
+        if (!pHub.has("section")) {
+          try {
+            sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+            sessionStorage.removeItem("iuMobileWebNavLastTarget");
+          } catch (_arm) {}
+          try {
+            window.__iuMobileWebNavReturnArmed = false;
+            delete window.__iuMobileWebNavLastTile;
+          } catch (_arm2) {}
+          try {
+            var hHub = String(
+              (typeof location !== "undefined" && location.hash) || ""
+            );
+            var hubCleanQuery =
+              !pHub.has("topic") && !pHub.has("mode");
+            if (
+              hubCleanQuery &&
+              hHub !== "#iu-nav" &&
+              hHub !== "#nav" &&
+              typeof history !== "undefined" &&
+              typeof history.replaceState === "function" &&
+              history.state &&
+              history.state.iu_nav_overlay === true
+            ) {
+              var uHub = new URL(
+                (typeof location !== "undefined" && location.href) || ""
+              );
+              history.replaceState(null, "", uHub.toString());
+            }
+          } catch (_st) {}
+        }
+      }
+    } catch (_hub) {}
     const nav = readUrlNavState();
     const section = nav.section;
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
@@ -28007,7 +28050,8 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
                 } catch (_rb) {}
               });
             });
-            return true;
+            /* P0 Back→hub: nesmíme zablokovat onUrlChange — jinak se applySectionFromURL vůbec nespustí a zůstane poslední sekce (např. Počasí) při čisté /projects/. */
+            return false;
           }
           try {
             window.__iuWebNavReturnPopAttempt = 0;
@@ -28116,11 +28160,19 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
             history.state &&
             history.state.iu_nav_overlay === true
           ) {
-            try { applyPanelFromUrl(); } catch (_){}
-            try{
-              if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
-            }catch(_){}
-            return true;
+            /* P0: autorita = aktuální URL. Bez ?section=/topic/mode je to hub homepage — zastaralý history.state nesmí přeskočit applySectionFromURL (Back ze sekce). */
+            var uSt = new URL(location.href);
+            var hubNoSectionQuery =
+              !uSt.searchParams.has("section") &&
+              !uSt.searchParams.has("topic") &&
+              !uSt.searchParams.has("mode");
+            if (!hubNoSectionQuery) {
+              try { applyPanelFromUrl(); } catch (_){}
+              try{
+                if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
+              }catch(_){}
+              return true;
+            }
           }
         } catch (_){}
       } catch (_){}
