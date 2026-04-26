@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T06:04:49.982383Z",
+  "ingestedAt": "2026-04-26T06:30:17.973825Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Znovuzrozený Kinský. Jsem na něj hrdý, pravil kouč po brankářově famózní chvíli",
+      "url": "https://sport.aktualne.cz/znovuzrozeny-kinsky-jsem-na-nej-hrdy-pravil-kouc-po-brankarove-famozni-chvili/r~aaa29dc17dfe4bdc5ba71d40c721aca2/",
+      "dt": "2026-04-26T06:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brankářově",
+        "chvíli",
+        "famózní",
+        "hrdý",
+        "jsem",
+        "kinský",
+        "kouč",
+        "něj",
+        "pravil",
+        "znovuzrozený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -505,33 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Trump by měl mít radost.“ Francie a Řecko posilují evropský pilíř NATO",
-      "url": "https://zpravy.aktualne.cz/zahranici/trump-by-mel-mit-radost-francie-a-recko-posiluji-evropsky-pilir-nato/r~aaa299186efe89b941b5100f37ac08e2/",
-      "dt": "2026-04-25T15:03:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "evropský",
-        "francie",
-        "mít",
-        "měl",
-        "nato",
-        "pilíř",
-        "posilují",
-        "radost",
-        "trump",
-        "řecko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22234,
+      "bytes": 22072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T05:17:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T06:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "sport": 7,
+          "sport": 8,
+          "zpravy": 11,
           "finance": 1
         },
         "drop_counts": {
@@ -596,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Znovuzrozený Kinský. Jsem na něj hrdý, pravil kouč po brankářově famózní chvíli",
+            "publishedAt": "2026-04-26T06:19:00Z"
+          },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -622,10 +626,6 @@
           },
           {
             "title": "Trump padá dolů. Češi vnímají negativněji pouze jediného politika",
-            "publishedAt": "2026-04-26T03:30:00Z"
-          },
-          {
-            "title": "Skok jako z 6. patra. Záběry ukazují šéfa ukrajinských špionů v neuvěřitelné situaci",
             "publishedAt": "2026-04-26T03:30:00Z"
           }
         ]
