@@ -24987,27 +24987,6 @@ function buildVideoAsArticleCard(it) {
     'myuzel-4': 'myuzel-4',
     'myuzel-5': 'myuzel-5',
   };
-  const STORAGE_KEY_WISH = "iuRadioWishDraftV1";
-  const STORAGE_KEY_WISH_OPEN = "iuRadioWishOpenV1";
-
-  // === RADIO WISH — fallback data (safe MVP, no backend) ===
-  const FALLBACK_WISH = {
-    radios: [
-      { id: "impuls", label: "Rádio Impuls", method: "email", emailTo: "impuls@impuls.cz" },
-      { id: "frekvence1", label: "Frekvence 1", method: "form", url: "https://www.frekvence1.cz/napiste-nam", hintText: "Kategorie ve formuláři: „Vysílání rádia“." },
-      { id: "evropa2", label: "Evropa 2", method: "form", url: "https://www.evropa2.cz/kontakt" },
-      { id: "cro_pisnicky_na_prani", label: "Český rozhlas – Písničky na přání", method: "form_or_sms", url: "https://program.rozhlas.cz/pisnicky-na-prani-7232426/o-poradu", smsHint: "Instrukce SMS jsou na stránce pořadu (MVP jen nápověda)." }
-    ],
-    // calendar first names (fallback subset)
-    names: ["Jana","Jan","Petr","Petra","Pavel","Lucie","Marie","Tomáš","Veronika","David","Daniel","Andrea","Eliška","Karel","Jiří","Josef","Anna","Tereza","Marek","Kristýna"],
-    // exactly 100 artists on prod via projects/data/artists_whitelist.json
-    artists: ["Queen","ABBA","The Beatles","Michael Jackson","Adele","Ed Sheeran","Coldplay","Avicii","Lucie","Kabát"],
-    // optional "Já jsem" roles
-    iam: ["kamarád/ka","partner/ka","manžel/ka","přítel/přítelkyně","kolega/kolegyně","bratr/sestra","syn/dcera","maminka/tatínek","babička/dědeček"]
-  };
-
-  let wishData = { ...FALLBACK_WISH };
-
   function escapeHtml(s){
     return String(s ?? "")
       .replace(/&/g, "&amp;")
@@ -25372,6 +25351,8 @@ function buildVideoAsArticleCard(it) {
           if (el && el.closest && el.closest("#iuJrEmptyView")) return;
           /* TV online (#iuTvOnlineView): žádný notes blok (P0). */
           if (el && el.closest && el.closest("#iuTvOnlineView")) return;
+          /* Rádio (#iuRadioView): žádný notes blok (P0). */
+          if (el && el.closest && el.closest("#iuRadioView")) return;
           iuRenderNotesHost(el, {});
         }catch{}
       });
@@ -25404,10 +25385,17 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         return;
       }
+      /* P0 Rádio: žádný section-level .iuNotesHost v #iuRadioView. */
+      if (section === "radio") {
+        try{
+          const rv = document.getElementById("iuRadioView");
+          if (rv) Array.from(rv.querySelectorAll(".iuNotesHost")).forEach((h) => { try{ h.remove(); }catch{} });
+        }catch{}
+        return;
+      }
 
       // map URL section -> storage key + view element
       const map = {
-        radio:   { key: "radio",    view: () => document.getElementById("iuRadioView"),    accentVar: "--iuNavAccent-radio",    label: "Rádia" },
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
         pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
         tvprogram:{ key:"tvprogram",view: () => document.getElementById("iuTvProgramView"),accentVar:"--iuNavAccent-tvprogram", label:"TV program" },
@@ -26070,207 +26058,12 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function isValidEmail(v){
-    const s = String(v || "").trim();
-    if (!s) return false;
-    if (/\s/.test(s)) return false;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-  }
-
-  async function loadWishDataIntoState(){
-    // NOTE: do not touch feed pipeline state; add a new safe bucket only
-    const out = {
-      radios: Array.isArray(FALLBACK_WISH.radios) ? [...FALLBACK_WISH.radios] : [],
-      names: Array.isArray(FALLBACK_WISH.names) ? [...FALLBACK_WISH.names] : [],
-      artists: Array.isArray(FALLBACK_WISH.artists) ? [...FALLBACK_WISH.artists] : [],
-      iam: Array.isArray(FALLBACK_WISH.iam) ? [...FALLBACK_WISH.iam] : []
-    };
-
-    try{
-      // Self-contained fetch (do not depend on outer helpers).
-      // Relative URLs resolve under /projects/ (same origin).
-      const withTs = (rel) => {
-        try{
-          const u = new URL(String(rel || ""), window.location.href);
-          u.searchParams.set("ts", String(Date.now()));
-          return u.toString();
-        }catch{
-          return String(rel || "");
-        }
-      };
-      const fetchJson = async (rel, timeoutMs = 4500) => {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeoutMs);
-        try{
-          const res = await fetch(withTs(rel), {
-            cache: "no-store",
-            headers: { "cache-control": "no-cache" },
-            signal: controller.signal,
-          });
-          if (!res.ok) throw new Error(`HTTP_${res.status}`);
-          return await res.json();
-        } finally {
-          clearTimeout(timer);
-        }
-      };
-
-      const [radiosJson, calendarNamesJson, artistsJson, iamJson, legacyNamesJson] = await Promise.allSettled([
-        fetchJson(iuDataUrl("radio_requests.json"), 4500),
-        fetchJson(iuDataUrl("calendar_first_names.json"), 4500),
-        fetchJson(iuDataUrl("artists_whitelist.json"), 4500),
-        fetchJson(iuDataUrl("iam_whitelist.json"), 4500),
-        // legacy fallback (older versions)
-        fetchJson(iuDataUrl("names_whitelist.json"), 4500)
-      ]);
-
-      if (radiosJson.status === "fulfilled" && radiosJson.value && Array.isArray(radiosJson.value.radios)) {
-        out.radios = radiosJson.value.radios
-          .filter((r) => r && r.id && r.label && r.method)
-          .map((r) => ({
-            id: String(r.id),
-            label: String(r.label),
-            method: String(r.method),
-            emailTo: r.emailTo ? String(r.emailTo) : undefined,
-            url: r.url ? String(r.url) : undefined,
-            hintText: r.hintText ? String(r.hintText) : undefined,
-            smsHint: r.smsHint ? String(r.smsHint) : undefined
-          }));
-      }
-
-      if (calendarNamesJson.status === "fulfilled" && calendarNamesJson.value && Array.isArray(calendarNamesJson.value.names)) {
-        out.names = toPlainStringList(calendarNamesJson.value.names);
-      } else if (legacyNamesJson.status === "fulfilled" && legacyNamesJson.value && Array.isArray(legacyNamesJson.value.names)) {
-        out.names = toPlainStringList(legacyNamesJson.value.names);
-      }
-
-      if (artistsJson.status === "fulfilled" && artistsJson.value && Array.isArray(artistsJson.value.artists)) {
-        // enforce unique + first 100 (spec: exactly 100 on prod via file contents)
-        out.artists = toPlainStringList(artistsJson.value.artists)
-          .filter((x, i, arr) => arr.indexOf(x) === i)
-          .slice(0, 100);
-      }
-
-      if (iamJson.status === "fulfilled" && iamJson.value && Array.isArray(iamJson.value.iam)) {
-        out.iam = toPlainStringList(iamJson.value.iam);
-      }
-    }catch{}
-
-    wishData = out;
-    try{
-      // Store in a non-feed bucket (UI-only) for debugging/inspection.
-      // We intentionally use window.state (not the feed's internal state closure).
-      if (!window.state || typeof window.state !== "object") {
-        window.state = {};
-      }
-      window.state.radioWish = { ...out, loadedAt: Date.now() };
-    }catch{}
-    return out;
-  }
-
   function renderRadioView(viewEl){
     const mount = viewEl && typeof viewEl.querySelector === "function"
       ? viewEl.querySelector(".iuRadioMount")
       : null;
     const target = mount || viewEl;
     if (!target) return;
-
-    const wishForm = `
-      <details class="iuRadioWish iuWishAcc" id="iuRadioWish" aria-label="Přání do rádia">
-        <summary class="iuWishAccSummary">
-          <span class="iuWishAccTitle">Přání do rádia</span>
-          <span class="iuWishAccCaret" aria-hidden="true"></span>
-        </summary>
-
-        <div class="iuWishAccBody">
-          <div class="iuWishRows" role="group" aria-label="Formulář přání">
-          <!-- Row 1: 3 equal blocks -->
-          <div class="iuWishRow iuWishRow--3" aria-label="Základní volby">
-            <div class="iuWishCard">
-              <label class="iuWishCardBody">
-                <span class="iuLabel">Typ požadavku</span>
-                <select class="iuCtrl" id="iuWishType">
-                  <option value="">— vyberte —</option>
-                  <option value="narozeniny">Narozeninám</option>
-                  <option value="svatek">Svátek</option>
-                  <option value="vyroci">Výročí</option>
-                  <option value="uspech">Úspěch / gratulace</option>
-                  <option value="jen_tak">Jen tak pro radost</option>
-                  <option value="jiny">Jiný</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="iuWishCard">
-              <div class="iuWishCardBody">
-                <label class="iuLabel" for="iuWishRadio">Rádio *</label>
-                <select class="iuCtrl" id="iuWishRadio" required>
-                  <option value="">— vyberte —</option>
-                </select>
-                <div class="iuHint" id="iuWishRadioHint" hidden></div>
-              </div>
-            </div>
-
-            <div class="iuWishCard">
-              <div class="iuWishCardBody">
-                <span class="iuLabel">Písnička od</span>
-                <select class="iuCtrl" id="iuWishSong">
-                  <option value="">— vyberte —</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Row 2: 3 equal blocks -->
-          <div class="iuWishRow iuWishRow--3" aria-label="Adresáti a text přání">
-            <div class="iuWishCard">
-              <div class="iuWishCardBody">
-                <span class="iuLabel">Pro koho *</span>
-                <input class="iuCtrl" id="iuWishTo" type="text" required placeholder="Komu je přání určeno" />
-                <div class="iuErr" id="iuWishToErr" hidden>Vyplňte pole Pro koho.</div>
-              </div>
-            </div>
-
-            <div class="iuWishCard">
-              <div class="iuWishCardBody">
-                <span class="iuLabel">Od koho *</span>
-                <input class="iuCtrl" id="iuWishFrom" type="text" required placeholder="Kdo přání posílá" />
-                <div class="iuErr" id="iuWishFromErr" hidden>Vyplňte pole Od koho.</div>
-              </div>
-            </div>
-
-            <div class="iuWishCard">
-              <label class="iuWishCardBody">
-                <span class="iuLabel">Text přání</span>
-                <textarea class="iuCtrl" id="iuWishText" placeholder="Zde můžete napsat text přání (nepovinné)"></textarea>
-              </label>
-            </div>
-          </div>
-
-          <!-- Row 3: emails -->
-          <div class="iuWishRow iuWishRow--2" aria-label="E-maily (volitelné)">
-            <div class="iuWishCard">
-              <label class="iuWishCardBody">
-                <span class="iuLabel">Email komu přeji</span>
-                <input class="iuCtrl" id="iuWishEmailTo" type="email" autocomplete="email" inputmode="email" placeholder="např. jmeno@domena.cz" />
-              </label>
-            </div>
-            <div class="iuWishCard">
-              <label class="iuWishCardBody">
-                <span class="iuLabel">Telefon komu přeji</span>
-                <input class="iuCtrl" id="iuWishPhoneTo" type="tel" autocomplete="tel" inputmode="tel" placeholder="např. 777 123 456" />
-              </label>
-            </div>
-          </div>
-          </div>
-
-          <div class="iuWishActions">
-            <button class="iuBtn" id="iuWishSendRadio" type="button">Odeslat rádiu</button>
-            <div class="iuWishStatus" id="iuWishStatus" aria-live="polite"></div>
-            <div class="iuErr iuErrBlock" id="iuWishErrors" hidden></div>
-          </div>
-        </div>
-      </details>
-    `;
 
     const chips = RADIO_ITEMS.map((it) => {
       const title = escapeHtml(it.title);
@@ -26285,7 +26078,7 @@ function buildVideoAsArticleCard(it) {
       `;
     }).join("");
 
-    target.innerHTML = wishForm + `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
+    target.innerHTML = `<div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">${chips}</div>`;
   }
 
   function ensureHomeView(){
@@ -27516,8 +27309,7 @@ function buildVideoAsArticleCard(it) {
         try{ iuMountNotesForCurrentSection(); }catch{}
         try{
           let root = document.getElementById("feed");
-          if (section === "radio") root = document.getElementById("iuRadioView");
-          else if (section === "tvonline") root = document.getElementById("iuTvOnlineView");
+          if (section === "tvonline") root = document.getElementById("iuTvOnlineView");
           else if (section === "jr") root = document.getElementById("iuJrEmptyView");
           else if (section === "mapy") root = document.getElementById("iuMapyView") || document.getElementById("iuMapsView");
           else if (section === "travel" && nav.mode === "guide") root = document.getElementById("iuTravelView");
@@ -27567,303 +27359,6 @@ function buildVideoAsArticleCard(it) {
   try { window.iuHideAllOverlaysNow = iuHideAllOverlaysNow; } catch (e) {}
   try { window.iuNavRailHideOverlaysFast = iuNavRailHideOverlaysFast; } catch (e) {}
   try { window.iuScrollMainToTopSmooth = iuScrollMainToTopSmooth; } catch (e) {}
-
-  function initRadioWish(viewEl){
-    const accEl = document.getElementById("iuRadioWish");
-    const elType = document.getElementById("iuWishType");
-    const elRadio = document.getElementById("iuWishRadio");
-    const elRadioHint = document.getElementById("iuWishRadioHint");
-    const elTo = document.getElementById("iuWishTo");
-    const elToErr = document.getElementById("iuWishToErr");
-    const elFrom = document.getElementById("iuWishFrom");
-    const elFromErr = document.getElementById("iuWishFromErr");
-    const elSong = document.getElementById("iuWishSong");
-    const elText = document.getElementById("iuWishText");
-    const elEmailTo = document.getElementById("iuWishEmailTo");
-    const elPhoneTo = document.getElementById("iuWishPhoneTo");
-    const elErrors = document.getElementById("iuWishErrors");
-    const elStatus = document.getElementById("iuWishStatus");
-    const btnSendRadio = document.getElementById("iuWishSendRadio");
-
-    if (!viewEl || !elType || !elRadio || !elTo || !elFrom || !elSong || !btnSendRadio) {
-      return { setData: () => {} };
-    }
-
-    // Accordion open/close persistence (default: closed)
-    if (accEl && String(accEl.tagName || "").toUpperCase() === "DETAILS") {
-      try{
-        const v = sessionStorage.getItem(STORAGE_KEY_WISH_OPEN);
-        accEl.open = v === "1";
-      }catch{}
-      accEl.addEventListener("toggle", () => {
-        try{
-          sessionStorage.setItem(STORAGE_KEY_WISH_OPEN, accEl.open ? "1" : "0");
-        }catch{}
-      });
-    }
-
-    let radios = Array.isArray(wishData.radios) ? wishData.radios : [];
-    let artists = Array.isArray(wishData.artists) ? wishData.artists : [];
-
-    let artistsSet = new Set(artists);
-    let radiosById = new Map(radios.map((r) => [String(r.id), r]));
-    let restoredOnce = false;
-
-    function setData(next){
-      radios = Array.isArray(next?.radios) ? next.radios : radios;
-      artists = Array.isArray(next?.artists) ? next.artists : artists;
-      artistsSet = new Set(artists);
-      radiosById = new Map(radios.map((r) => [String(r.id), r]));
-      populateRadioSelect();
-      populateArtistSelect();
-      showHintForRadio();
-      // Safe restore after data is available (prevents typed-but-not-selected restore).
-      if (!restoredOnce) restoreFromSession();
-      // if current selections are no longer valid, clear them (quietly)
-      hardValidateSelected(false);
-    }
-
-    function populateRadioSelect(){
-      const prev = String(elRadio.value || "");
-      elRadio.innerHTML = `<option value="">— vyberte —</option>` + radios
-        .map((r) => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.label)}</option>`)
-        .join("");
-      if (prev && radiosById.has(prev)) elRadio.value = prev;
-    }
-
-    function populateArtistSelect(){
-      const prev = String(elSong.value || "");
-      const sorted = (Array.isArray(artists) ? artists : [])
-        .slice()
-        .sort((a, b) => String(a).localeCompare(String(b), "cs", { sensitivity: "base" }));
-      elSong.innerHTML = `<option value="">— vyberte —</option>` + sorted
-        .map((a) => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`)
-        .join("");
-      if (prev && artistsSet.has(prev)) elSong.value = prev;
-    }
-
-    function showHintForRadio(){
-      if (!elRadioHint) return;
-      const id = String(elRadio.value || "");
-      const r = radiosById.get(id);
-      const hint = r ? (r.hintText || r.smsHint || r.url || (r.method === "email" ? r.emailTo : "")) : "";
-      if (hint) {
-        elRadioHint.hidden = false;
-        elRadioHint.textContent = hint;
-      } else {
-        elRadioHint.hidden = true;
-        elRadioHint.textContent = "";
-      }
-    }
-
-    function getDraft(){
-      return {
-        type: String(elType.value || ""),
-        radioId: String(elRadio.value || ""),
-        to: String(elTo.value || "").trim(),
-        from: String(elFrom.value || "").trim(),
-        artist: String(elSong.value || ""),
-        wishText: String(elText?.value || "").trim(),
-        emailTo: String(elEmailTo?.value || "").trim(),
-        phoneTo: String(elPhoneTo?.value || "").trim()
-      };
-    }
-
-    function sanitizeDraft(d){
-      const allowedTypes = new Set(["narozeniny","svatek","vyroci","uspech","jen_tak","jiny"]);
-      const legacyTo = String(d?.to || d?.toSelected || "");
-      const legacyFrom = String(d?.from || d?.fromSelected || "");
-      const legacyArtist = String(d?.artist || d?.songArtist || d?.songSelected || "");
-      const wishText = String(d?.wishText || d?.text || d?.message || "").trim();
-      const phoneTo = String(d?.phoneTo || d?.tel || d?.phone || "").trim();
-      const safe = {
-        type: allowedTypes.has(d?.type) ? d.type : "",
-        radioId: radiosById.has(String(d?.radioId || "")) ? String(d.radioId) : "",
-        to: legacyTo.trim().slice(0, 80),
-        from: legacyFrom.trim().slice(0, 80),
-        artist: artistsSet.has(legacyArtist) ? legacyArtist : "",
-        wishText: wishText.slice(0, 500),
-        emailTo: isValidEmail(d?.emailTo) ? String(d.emailTo).trim() : "",
-        phoneTo: phoneTo.slice(0, 40)
-      };
-      return safe;
-    }
-
-    function restoreFromSession(){
-      try{
-        const raw = sessionStorage.getItem(STORAGE_KEY_WISH);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        const d = sanitizeDraft(parsed);
-
-        if (d.type) elType.value = d.type;
-        if (d.radioId) elRadio.value = d.radioId;
-
-        elTo.value = d.to || "";
-        elFrom.value = d.from || "";
-        elSong.value = d.artist || "";
-        if (elText && d.wishText) elText.value = d.wishText;
-        if (elEmailTo && d.emailTo) elEmailTo.value = d.emailTo;
-        if (elPhoneTo && d.phoneTo) elPhoneTo.value = d.phoneTo;
-
-        showHintForRadio();
-        restoredOnce = true;
-      }catch{}
-    }
-
-    let saveTimer = 0;
-    function scheduleSave(){
-      if (saveTimer) clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        try{
-          const d = sanitizeDraft(getDraft());
-          sessionStorage.setItem(STORAGE_KEY_WISH, JSON.stringify(d));
-        }catch{}
-      }, 200);
-    }
-
-    function setErr(el, on){
-      if (!el) return;
-      el.hidden = !on;
-    }
-    function setBlockErr(msg){
-      if (!elErrors) return;
-      if (!msg) {
-        elErrors.hidden = true;
-        elErrors.textContent = "";
-        return;
-      }
-      elErrors.hidden = false;
-      elErrors.textContent = msg;
-    }
-    function setStatus(msg){
-      if (!elStatus) return;
-      elStatus.textContent = msg || "";
-    }
-
-    function hardValidateSelected(showErrors){
-      const toOk = !!String(elTo.value || "").trim();
-      const fromOk = !!String(elFrom.value || "").trim();
-      // optional: if selected, must exist in whitelist
-      const songOk = !String(elSong.value || "") || artistsSet.has(String(elSong.value));
-      if (showErrors){
-        setErr(elToErr, !toOk);
-        setErr(elFromErr, !fromOk);
-      } else {
-        setErr(elToErr, false);
-        setErr(elFromErr, false);
-      }
-      return { toOk, fromOk, songOk };
-    }
-
-    function buildTexts(d){
-      const radio = radiosById.get(d.radioId);
-      const radioLabel = radio ? radio.label : "rádio";
-      const typeLabelMap = {
-        narozeniny: "narozeninám",
-        svatek: "svátku",
-        vyroci: "výročí",
-        uspech: "úspěchu",
-        jen_tak: "jen tak pro radost",
-        jiny: "jiné příležitosti"
-      };
-      const typ = typeLabelMap[d.type] ?? String(d.type || "");
-      const proKoho = d.to;
-      const odKoho = d.from;
-      const pisnickaClause = d.artist ? ` a případně písničku od ${d.artist}` : "";
-      const pisnickaClause2 = d.artist ? ` a případně písničku od ${d.artist}` : "";
-      const contactBits = [
-        d.emailTo ? `email: ${d.emailTo}` : "",
-        d.phoneTo ? `telefon: ${d.phoneTo}` : ""
-      ].filter(Boolean);
-      const contactClause = contactBits.length ? `, kontakt: ${contactBits.join(", ")}` : "";
-      const wishTextClause = d.wishText ? `\n\nText přání:\n${d.wishText}` : "";
-
-      const subjectRadio = `Písnička / přání – ${proKoho} – žádost z infoUzel.cz`;
-      const typClause = typ ? (d.type === "jen_tak" ? typ : `k ${typ}`) : "";
-      const bodyRadio =
-`Dobrý den,
-píšu přes infoUzel.cz jménem posluchače ${odKoho}. Rád/a by popřál/a ${proKoho}${typClause ? " " + typClause : ""}.
-Pokud je to možné, prosím o pozdrav ve vysílání${pisnickaClause}.
-Děkuji a přeji hezký den.
-— infoUzel.cz (odeslal/a: ${odKoho}${contactClause})${wishTextClause}`;
-
-      const subjectRec = `Máš rádiové přání od ${odKoho} 🙂`;
-      const typClause2 = typ ? (d.type === "jen_tak" ? typ : `k ${typ}`) : "";
-      const bodyRec =
-`Ahoj ${proKoho},
-${odKoho} právě požádal/a rádio ${radioLabel} o přání${typClause2 ? " " + typClause2 : ""}${pisnickaClause2}.
-Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová 🙂
-— infoUzel.cz`;
-
-      return { subjectRadio, bodyRadio, subjectRec, bodyRec, radio };
-    }
-
-    function openMailto(to, subject, body){
-      const href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = href;
-    }
-
-    function validateRequired(){
-      const d = getDraft();
-      const errs = [];
-      if (!d.radioId) errs.push("Vyberte rádio.");
-      const { toOk, fromOk, songOk } = hardValidateSelected(true);
-      if (!toOk) errs.push("Vyplňte pole Pro koho.");
-      if (!fromOk) errs.push("Vyplňte pole Od koho.");
-      if (!songOk) errs.push("Vybraný interpret není platný.");
-      if (d.emailTo && !isValidEmail(d.emailTo)) errs.push("Email komu přeji není platný.");
-      return { ok: errs.length === 0, errs, d: sanitizeDraft(d) };
-    }
-
-    function buildAndSend(){
-      const v = validateRequired();
-      if (!v.ok) {
-        setBlockErr(v.errs.join(" "));
-        setStatus("");
-        return;
-      }
-      setBlockErr("");
-      const built = buildTexts(v.d);
-      scheduleSave();
-      const r = built.radio;
-      if (!r) return;
-
-      if (r.method === "email" && r.emailTo) {
-        setStatus("Otevírám e-mail klient (mailto)…");
-        openMailto(r.emailTo, built.subjectRadio, built.bodyRadio);
-        return;
-      }
-
-      // form / form_or_sms
-      if (r.url) {
-        try { window.open(r.url, "_blank", "noopener,noreferrer"); } catch {}
-      }
-      setStatus("Otevírám stránku rádia…");
-    }
-
-    btnSendRadio.addEventListener("click", buildAndSend);
-    elRadio.addEventListener("change", () => { showHintForRadio(); scheduleSave(); });
-    elType.addEventListener("change", scheduleSave);
-    elSong.addEventListener("change", scheduleSave);
-    elTo.addEventListener("input", scheduleSave);
-    elFrom.addEventListener("input", scheduleSave);
-    elText?.addEventListener("input", scheduleSave);
-    elEmailTo?.addEventListener("input", scheduleSave);
-    elPhoneTo?.addEventListener("input", scheduleSave);
-
-    setStatus("");
-
-    // initial
-    populateRadioSelect();
-    populateArtistSelect();
-    showHintForRadio();
-    // Restore is intentionally delayed until after wish data is loaded via setData()
-    // to guarantee whitelist-based safe restore (avoid races).
-    hardValidateSelected(false);
-
-    return { setData };
-  }
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -28326,8 +27821,6 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
 
     try {
       renderRadioView(viewEl);
-      const wishCtl = initRadioWish(viewEl);
-      loadWishDataIntoState().then((d) => { try{ wishCtl.setData(d); }catch{} });
     }catch(e){
       try{ if (typeof window.persistLastError === "function") window.persistLastError(String(e?.message || e)); }catch{}
     }
