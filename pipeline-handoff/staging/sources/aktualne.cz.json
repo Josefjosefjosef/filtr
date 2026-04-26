@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T03:39:21.330627Z",
+  "ingestedAt": "2026-04-26T04:04:40.818550Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Praskal mu podvozek a strojvedoucí kvůli němu zchudli. Šestikolák ale všechny přežil",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/historie-automobilu/praskal-mu-podvozek-a-strojvedouci-kvuli-nemu-zchudli-sestikolak-ale-vsechny-prezil/r~aaa29f20ddc6538e55443e685aa1ebae/",
+      "dt": "2026-04-26T03:40:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ale",
+        "kvůli",
+        "němu",
+        "podvozek",
+        "praskal",
+        "přežil",
+        "strojvedoucí",
+        "všechny",
+        "zchudli",
+        "šestikolák"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,33 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pro zvířata je lepší jaderná havárie než přítomnost lidí. Co se ukázalo za 40 let od Černobylu?",
-      "url": "https://zpravy.aktualne.cz/zahranici/pro-zvirata-je-lepsi-jaderna-havarie-nez-pritomnost-lidi-co-se-ukazalo-za-40-let-od-cernobylu/r~aaa2932c97337db9a76bb2f349f2a375/",
-      "dt": "2026-04-25T13:40:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "havárie",
-        "jaderná",
-        "lepší",
-        "let",
-        "lidí",
-        "než",
-        "přítomnost",
-        "ukázalo",
-        "zvířata",
-        "černobylu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22160,
+      "bytes": 22243,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,12 +576,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T03:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 6,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 12,
+          "sport": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -593,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Praskal mu podvozek a strojvedoucí kvůli němu zchudli. Šestikolák ale všechny přežil",
+            "publishedAt": "2026-04-26T03:40:00Z"
+          },
           {
             "title": "Trump jako Putin. U Čechů si výrazně pohoršil. Koho mají naopak rádi?",
             "publishedAt": "2026-04-26T03:30:00Z"
@@ -620,10 +624,6 @@
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Orbán se vzdá místa poslance. Magyar se mu vysmál",
-            "publishedAt": "2026-04-25T17:50:00Z"
           }
         ]
       }

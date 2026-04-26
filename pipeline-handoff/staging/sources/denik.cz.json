@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-26T03:39:21.330627Z",
+  "ingestedAt": "2026-04-26T04:04:40.818550Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "I snídaně mohou zvyšovat cholesterol. Mnoho Čechů chybuje, ani o tom neví",
+      "url": "https://www.denik.cz/zdravotnictvi/zdravi-zvyseny-cholesterol-snidane-cemu-se-vyhnout.html",
+      "dt": "2026-04-26T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "cholesterol",
+        "chybuje",
+        "mnoho",
+        "neví",
+        "snídaně",
+        "tom",
+        "zvyšovat",
+        "čechů"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Orbán vesele slavil s Havlem Sorosovu cenu, říká György Varga",
-      "url": "https://www.denik.cz/evropa-pro-cechy/viktor-orbn-vaclav-havel-gyorgy-varga.html",
-      "dt": "2026-04-25T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cenu",
-        "györgy",
-        "havlem",
-        "orbán",
-        "slavil",
-        "sorosovu",
-        "varga",
-        "vesele",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29002,
+      "bytes": 29057,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-26T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "zdravi": 2
+          "zdravi": 3,
+          "zpravy": 22
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "I snídaně mohou zvyšovat cholesterol. Mnoho Čechů chybuje, ani o tom neví",
+            "publishedAt": "2026-04-26T03:30:00Z"
+          },
           {
             "title": "Režim Černobyl zlehčoval. Cyklisty poslal závodit do míst zasažených radiací",
             "publishedAt": "2026-04-26T03:00:00Z"
@@ -739,10 +742,6 @@
           {
             "title": "Nejsem potřeba v parlamentu. Končící maďarský premiér Orbán nebude poslancem",
             "publishedAt": "2026-04-25T16:45:00Z"
-          },
-          {
-            "title": "Známý slovenský komik bojuje s vážnou nemocí. Skončil v nemocnici",
-            "publishedAt": "2026-04-25T15:15:00Z"
           }
         ]
       }

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-26T03:39:21.330627Z",
+  "ingestedAt": "2026-04-26T04:04:40.818550Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "„Ty se máš, jsi celý den doma s dcerou a stát ti to platí.“ „Ale ona umře, chceš si to vyměnit?“",
+      "url": "https://www.svetcestovatele.cz/ty-se-mas-jsi-cely-den-doma-s-dcerou-a-stat-ti-to-plati-ale-ona-umre-chces-si-to-vymenit/",
+      "dt": "2026-04-26T04:00:13Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "ale",
+        "celý",
+        "chceš",
+        "dcerou",
+        "den",
+        "doma",
+        "jsi",
+        "máš",
+        "ona",
+        "platí",
+        "stát",
+        "umře",
+        "vyměnit"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -510,31 +540,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Do porodnice už znovu nejdu. Na oddělení šestinedělí asi zamrzli ve středověku",
-      "url": "https://www.svetcestovatele.cz/do-porodnice-uz-znovu-nejdu-na-oddeleni-sestinedeli-asi-zamrzli-ve-stredoveku/",
-      "dt": "2026-04-12T04:00:42Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "asi",
-        "nejdu",
-        "oddělení",
-        "porodnice",
-        "středověku",
-        "zamrzli",
-        "znovu",
-        "šestinedělí"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 128876,
+      "bytes": 129186,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,7 +587,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:00:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T04:00:13Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -597,6 +602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Ty se máš, jsi celý den doma s dcerou a stát ti to platí.“ „Ale ona umře, chceš si to vyměnit?“",
+            "publishedAt": "2026-04-26T04:00:13Z"
+          },
           {
             "title": "Dala jsem tchyni ten nejlepší dárek, skončila po něm v nemocnici",
             "publishedAt": "2026-04-25T04:00:18Z"
@@ -624,10 +633,6 @@
           {
             "title": "V polovině května dorazí do Prahy přes 20 vinařů. Dovezou sedm tisíc lahví růžového vína",
             "publishedAt": "2026-04-20T07:30:09Z"
-          },
-          {
-            "title": "Kolega nesnáší svoje děti. Kvůli tomu je pořád v práci a ohrožuje nevinné lidi",
-            "publishedAt": "2026-04-20T04:00:37Z"
           }
         ]
       }
