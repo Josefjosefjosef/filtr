@@ -7362,7 +7362,7 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mb2 = document.getElementById("iuMobileMainBackBar");
-          if (mb2) mb2.hidden = false;
+          if (mb2) mb2.hidden = true;
           try {
             if (fromWebNavGateCest) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");
@@ -7434,7 +7434,7 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
         document.body.classList.add("iu-mobileMainVisible");
         var mb = document.getElementById("iuMobileMainBackBar");
-        if (mb) mb.hidden = false;
+        if (mb) mb.hidden = true;
         try {
           if (fromWebNavGateHub) document.body.classList.add("iu-webnavDetailFromGate");
           else document.body.classList.remove("iu-webnavDetailFromGate");
@@ -12078,7 +12078,17 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         }
         var bar = document.getElementById("iuMobileGateBackBar");
-        if (bar) bar.hidden = !value;
+        if (bar) {
+          try {
+            if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+              bar.hidden = true;
+            } else {
+              bar.hidden = !value;
+            }
+          } catch (_) {
+            bar.hidden = !value;
+          }
+        }
         if (panelTools && panelTools.classList) {
           if (value === "tools") panelTools.classList.add("accordionCol");
           else panelTools.classList.remove("accordionCol");
@@ -12125,7 +12135,15 @@ function buildVideoAsArticleCard(it) {
               } catch (_) {}
               try {
                 var bb = document.getElementById("iuMobileGateBack");
-                if (bb && typeof bb.focus === "function") bb.focus({ preventScroll: true });
+                var gateBarEl = document.getElementById("iuMobileGateBackBar");
+                var gateBarHidden = !gateBarEl || gateBarEl.hidden;
+                if (bb && !gateBarHidden && typeof bb.focus === "function") {
+                  bb.focus({ preventScroll: true });
+                } else if (value === "nav" || value === "tools") {
+                  var pnl = value === "tools" ? panelTools : panelNav;
+                  var fe = pnl && pnl.querySelector ? pnl.querySelector(".iu-leftNavItem, a[href], button") : null;
+                  if (fe && typeof fe.focus === "function") fe.focus({ preventScroll: true });
+                }
               } catch (_) {}
             });
           }
@@ -12454,7 +12472,6 @@ function buildVideoAsArticleCard(it) {
       var tabNav = document.getElementById("iuMobileGateTabNav");
       var tabTools = document.getElementById("iuMobileGateTabTools");
       var gateBack = document.getElementById("iuMobileGateBack");
-      var gateBackBar = document.getElementById("iuMobileGateBackBar");
       var mainBack = document.getElementById("iuMobileMainBackBar");
       root.addEventListener(
         "click",
@@ -12502,8 +12519,7 @@ function buildVideoAsArticleCard(it) {
             }
             if (k === "back") {
               var gateVal = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "").trim() : "";
-              var barVis = gateBackBar && !gateBackBar.hidden;
-              if (gateVal && barVis && gateBack && typeof gateBack.click === "function") {
+              if (gateVal && gateBack && typeof gateBack.click === "function") {
                 gateBack.click();
                 return;
               }
@@ -27330,7 +27346,7 @@ function buildVideoAsArticleCard(it) {
               } catch (_) {}
               document.body.classList.add("iu-mobileMainVisible");
               var mbVis = document.getElementById("iuMobileMainBackBar");
-              if (mbVis) mbVis.hidden = false;
+              if (mbVis) mbVis.hidden = true;
               try {
                 if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
                   document.body.classList.remove("iu-webnavDetailFromGate");
@@ -27366,7 +27382,7 @@ function buildVideoAsArticleCard(it) {
                   document.body.classList.add("iu-mobileMainVisible");
                 } catch (_) {}
                 var mbFeedTopicCold = document.getElementById("iuMobileMainBackBar");
-                if (mbFeedTopicCold) mbFeedTopicCold.hidden = false;
+                if (mbFeedTopicCold) mbFeedTopicCold.hidden = true;
               }
             }
           } catch (_) {}
@@ -27934,7 +27950,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mb = document.getElementById("iuMobileMainBackBar");
-          if (mb) mb.hidden = false;
+          if (mb) mb.hidden = true;
           try {
             if (fromWebNavGateNav) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");
@@ -27993,7 +28009,7 @@ Rádia jsou vytížená, takže to nemusí vyjít vždy, ale snaha je opravdová
           } catch (_) {}
           document.body.classList.add("iu-mobileMainVisible");
           var mbHexNav = document.getElementById("iuMobileMainBackBar");
-          if (mbHexNav) mbHexNav.hidden = false;
+          if (mbHexNav) mbHexNav.hidden = true;
           try {
             if (fromWebNavGateHex) document.body.classList.add("iu-webnavDetailFromGate");
             else document.body.classList.remove("iu-webnavDetailFromGate");

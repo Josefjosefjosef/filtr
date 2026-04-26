@@ -9451,9 +9451,27 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     -webkit-user-select: none !important;
     user-select: none !important;
   }
+  /* P0: horní duplicitní „Zpět“ lišta odstraněna — návrat jen přes #iuMobileBottomNav (JS stále volá .click() na skrytém #iuMobileMainBackBar). */
+  body.iu-mobileMainVisible #iuMobileMainBackBar,
+  body.iu-mobileGateOverlayOpen #iuMobileGateBackBar,
+  body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]){
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+  }
   body.iu-mobileMainVisible.iu-mainSectionBackBarDocked #leftContent{
-    padding-top: var(--iuWebNavDetailMainBackH, 52px) !important;
-    box-sizing: border-box !important;
+    padding-top: 0 !important;
   }
   
   #iuMobileGatePanelNav #iuLeftRail,
