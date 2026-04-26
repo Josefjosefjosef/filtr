@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T10:35:05.568199Z",
+  "ingestedAt": "2026-04-26T10:59:28.746572Z",
   "items": [
     {
       "section": "aktualne",
@@ -23,6 +23,36 @@
         "zabily",
         "zranění",
         "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česko podle NATO nedá slíbená dvě procenta HDP na obranu ani letos. Babiš chce vyjednávat",
+      "url": "https://zpravy.aktualne.cz/domaci/cesko-podle-nato-neda-slibena-dve-procenta-hdp-na-obranu-ani-letos-babis-chce-vyjednavat/r~aaa29ccf89031a7482b51bf4fe08b35c/",
+      "dt": "2026-04-26T10:38:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babiš",
+        "chce",
+        "dvě",
+        "hdp",
+        "letos",
+        "nato",
+        "nedá",
+        "obranu",
+        "podle",
+        "procenta",
+        "slíbená",
+        "vyjednávat",
+        "česko"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -507,33 +537,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Skok jako z 6. patra. Záběry ukazují šéfa ukrajinských špionů v neuvěřitelné situaci",
-      "url": "https://zpravy.aktualne.cz/zahranici/skok-jako-z-6-patra-zabery-ukazuji-sefa-ukrajinskych-spionu-v-neuveritelne-situaci/r~aaa292daa65ad807c5a5d0e781c37850/",
-      "dt": "2026-04-26T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "jako",
-        "neuvěřitelné",
-        "patra",
-        "situaci",
-        "skok",
-        "ukazují",
-        "ukrajinských",
-        "záběry",
-        "špionů",
-        "šéfa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22817,
+      "bytes": 22918,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,7 +584,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:56:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T10:38:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -601,6 +604,10 @@
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Česko podle NATO nedá slíbená dvě procenta HDP na obranu ani letos. Babiš chce vyjednávat",
+            "publishedAt": "2026-04-26T10:38:00Z"
           },
           {
             "title": "Výstřely a chaos. Cílem útoku učitele s brokovnicí byla Trumpova vláda",
@@ -625,10 +632,6 @@
           {
             "title": "Nosková je v osmifinále, přes Rusku postoupila bez boje",
             "publishedAt": "2026-04-26T08:46:00Z"
-          },
-          {
-            "title": "Střelba na Trumpově galavečeru. Prezidenta evakuovali, útočníka s brokovnicí zadrželi",
-            "publishedAt": "2026-04-26T04:46:00Z"
           }
         ]
       }
