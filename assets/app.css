@@ -20919,6 +20919,129 @@ overflow:hidden !important;
   }
 }
 
+/* P0 mobile/tablet (≤1024px): „Rychlý servis“ — 6 dlaždic (data-rail) zůstanou ve světlém denním stylu i při evening paint;
+   přebije globální tmavý stack na #iuLeftRail (.iu-leftNavItem) jen v mobilním gate / #iuMobileFirstBlock. Desktop ≥1025 nedotčeno. */
+@media (max-width: 1024px){
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"],
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"],
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"],
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"],
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"],
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"],
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"]{
+    background: linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(248,250,252,.96) 45%, rgba(241,245,249,.96) 100%) !important;
+    background-color: #f1f5f9 !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.06) !important;
+    border: 1px solid rgba(59,130,246,.28) !important;
+    outline: 0 !important;
+    filter: none !important;
+  }
+
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"]:hover,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"]:focus-visible,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"]:focus-visible,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"]:focus-visible,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"]:focus-visible,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"]:focus-visible,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"]:hover,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"]:focus-visible,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"]:focus-visible{
+    background: linear-gradient(180deg, rgba(255,255,255,.99) 0%, rgba(241,245,249,.99) 52%, rgba(235,241,250,.99) 100%) !important;
+    background-color: #e8eef5 !important;
+    filter: none !important;
+  }
+
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"] .iu-leftNavLabel,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"] .iu-leftNavLabel,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"] .iu-leftNavLabel,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavLabel,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] .iu-leftNavLabel,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] .iu-leftNavLabel,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"] .iu-leftNavLabel{
+    color: #0f172a !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+  }
+
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"] .iu-leftNavIcon{
+    color: var(--iuNavAccent, #2563eb) !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"] svg{
+    color: var(--iuNavAccent, #2563eb) !important;
+    stroke: var(--iuNavAccent, #2563eb) !important;
+    fill: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="jr"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="radio"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="weather"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="maps"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="jr"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvonline"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="radio"] svg path{
+    stroke: var(--iuNavAccent, #2563eb) !important;
+    fill: none !important;
+    filter: none !important;
+  }
+}
+
 @media (min-width: 901px){
   :root{
     --iu-right-rail-width: 360px;
