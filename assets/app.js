@@ -25377,6 +25377,8 @@ function buildVideoAsArticleCard(it) {
     try{
       const section = String(document.body?.dataset?.section || "").trim().toLowerCase();
       if (!section) return;
+      /* P0 Mapy & Navigace: žádný dynamický section-level .iuNotesHost v #iuMapyView (per HTML cleanup + proof). */
+      if (section === "mapy" || section === "maps") return;
 
       // map URL section -> storage key + view element
       const map = {
