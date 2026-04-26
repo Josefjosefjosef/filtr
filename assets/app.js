@@ -6534,6 +6534,13 @@ function buildVideoAsArticleCard(it) {
       if (daypart === "afternoon") return "Příjemné odpoledne";
       return "Dobrý večer";
     }
+    try{
+      window.__iuSilverWelcomePhraseFromHour = function (h){
+        const hh = typeof h === "number" ? h : NaN;
+        if (!Number.isFinite(hh)) return "";
+        return phraseFromKey(daypartKeyFromHour(hh));
+      };
+    }catch{}
     /** Oslovení uživatele — jeden zdroj přes window.iuGetUserAddressVocativeForWelcome (iu_user_address). */
     function readSilverDisplayName(){
       try{
@@ -10914,6 +10921,12 @@ function buildVideoAsArticleCard(it) {
       try{
         const g = typeof window.__iuSilverWelcomeLastPhrase === "string" ? window.__iuSilverWelcomeLastPhrase.trim() : "";
         if (g) return g;
+      }catch{}
+      try{
+        if (typeof window.__iuSilverWelcomePhraseFromHour === "function"){
+          const p = String(window.__iuSilverWelcomePhraseFromHour(new Date().getHours()) || "").trim();
+          if (p) return p;
+        }
       }catch{}
       const h = new Date().getHours();
       if (h >= 5 && h < 9) return "Dobré ráno";
