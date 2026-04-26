@@ -70,10 +70,10 @@
   --iu-convert-accent: #00c9a7;
   --iu-convert-glow: rgba(0,201,167,.35);
 
-  /* Calendar UI accent (also --iu-cal-accent via #iuCalendarOverlay in app.js). Lightened from #15803d for Silver „Kalendář:“ + Mind Menu Kalendář; WCAG ~4.56:1 vs white both directions at 14px. */
+  
   --iu-calendar-accent: #1c8748;
 
-  /* Silver „Úkoly:“ + řádková ikona — adaptivní fialová (evening stack / prefers-color-scheme). */
+  
   --iuTasksAccent: #8b5cf6;
 
   
@@ -290,7 +290,7 @@ html,body{ height:100%; }
 
 html{
   scrollbar-gutter: stable;
-  /* P0 desktop: overflow-y:scroll na rootu vždy kreslí lištu; body má kvůli overflow-x:hidden výpočetní overflow-y:auto a stává se skutečným scrollportem → dvojitá pravá lišta. auto na html = lišta jen na aktivním scroll kontejneru. */
+  
   overflow-y: auto;
 }
 
@@ -312,7 +312,7 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-/* P0 desktop ≥1025px: jeden vertikální scrollport na <body> — <html> overflow-y:hidden zabraňuje transient dvojité liště (html+body oba auto). Gutter jen na body (stable). */
+
 @media (min-width: 1025px){
   :root{--iu-hub-top-extra:20px}
   html{
@@ -363,7 +363,7 @@ html:not([data-iu-js]) .iuDailyWeather{
   min-height: 68px;
 }
 
-/* P0 CLS desktop: .iuTopbarFlowSpacer (první dítě v HTML) drží in-flow výšku — fixed #topbarWrap se do výšky obalu nepočítá. */
+
 @media (min-width: 901px){
   #leftStickyHeader{
     display: flex !important;
@@ -2480,7 +2480,7 @@ a.brand,
   visibility: hidden;
 }
 
-/* P0 guard: odstraněné sekční řádky — nesmí se znovu propsat do layoutu */
+
 #sectionLabel,
 #dataUpdatedAt,
 .iu-section-header,
@@ -2850,7 +2850,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   box-sizing: border-box;
 }
 
-/* Bakaláři + Zdravotní pojišťovna: fullscreen overlay na úzkém panelu (data-moje-kind; sdílené pravidla). */
+
 @media (max-width: 1023px) {
   #iu-mojeSluzbyOverlay[data-moje-kind="bakalari"],
   #iu-mojeSluzbyOverlay[data-moje-kind="pojistovna"] {
@@ -2903,7 +2903,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 }
 #iu-aiOverlay { z-index: 9998; }
 #iuDsOverlay.iu-ds-overlay { z-index: 10027; }
-/* #iu-aiPanel a #iuDsPanel: oddělené základní strip pravidla — desktop ≥1025px pro AI řeší samostatný datovka-like blok (žádný slepený override). */
+
 #iuDsPanel.iu-ds-panel {
   position: fixed;
   left: 50%;
@@ -2945,7 +2945,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
   }
 }
 
-/* P0 mobile/tablet: true fullscreen AI overlay — exact viewport box (100dvh, no 100vh), safe-area on .iu-aiModal only; desktop unchanged */
+
 @media (max-width: 1023px) {
   body.iu-ai-narrow-fullscreen #iu-aiOverlay:not([hidden]) {
     position: fixed !important;
@@ -3067,7 +3067,7 @@ body.iu-modal-open #iu-mojeSluzbyPanel {
 .iu-ds-add:disabled{opacity:.45;cursor:not-allowed}
 .iu-ds-limit-note{margin:8px 0 0;font-size:12px;color:var(--muted,rgba(11,27,43,0.55));text-align:center}
 
-/* Shared 38×38 close control — Datovka + calendar (explicit guard class) */
+
 button.iu-close-btn-38{
   box-sizing:border-box;
   width:38px;
@@ -3102,7 +3102,7 @@ button.iu-close-btn-38:focus-visible{
   outline-offset:2px;
 }
 
-/* Calendar header close: override injected toolbar styles when using shared class */
+
 #iuCalendarOverlay button.iu-calendarOverlay__close.iu-close-btn-38{
   width:38px;
   min-width:38px;
@@ -3119,7 +3119,7 @@ button.iu-close-btn-38:focus-visible{
   line-height:1;
 }
 
-/* Datovka: desktop full-viewport overlay + centered content shell (aligns with Finanční kalkulačky .iu-financial-overlay-cardShell gutters; min-width 1025px matches mobile/tablet inject max 1024px) */
+
 @media (min-width: 1025px){
   body.iu-modal-open #iuDsOverlay.iu-datovka-overlay-root:not([hidden]){
     height:100dvh;
@@ -3179,7 +3179,7 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* AI asistenti (desktop ≥1025px): 1:1 stejný model jako Datovka výše — fullscreen outer + centrování + inner card + jeden scroll host (.iu-ai-scroll-host na .iu-aiPanelBody). */
+
 @media (min-width: 1025px){
   body.iu-modal-open #iu-aiOverlay.iu-ai-overlay-root:not([hidden]){
     height:100dvh;
@@ -3239,7 +3239,7 @@ button.iu-close-btn-38:focus-visible{
   }
 }
 
-/* Internetové bankovnictví (banka) + Bakaláři (bakalari) + Zdravotní pojišťovna (pojistovna) + Převod Word/PDF (convert) + Nákup potravin online (naceneni): desktop = stejný model jako Datovka — fullscreen outer host (#iuQuickFeed) + .iu-banking-ds-modal + .iu-banking-scroll-host; jedna sada pravidel. */
+
 @media (min-width: 1025px){
   body.iu-banking-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-banking-quickfeed-root:not([hidden]),
   body.iu-bakalari-desktop-overlay-open #iuQuickFeed.iuQuickFeed.iu-bakalari-quickfeed-root:not([hidden]),
@@ -3326,7 +3326,7 @@ button.iu-close-btn-38:focus-visible{
     padding:0;
     margin:0;
   }
-  /* Nákup potravin online: scroll host = Datovka-like; vnitřní .iu-nakup-online-outerCard není .iuQCard — vlastní bílý „list“ blok uvnitř modalu. */
+  
   body.iu-grocery-desktop-overlay-open #iuQuickFeed.iu-grocery-quickfeed-root .iu-banking-scroll-host > .iu-nakup-online-outerCard{
     width:100%;
     min-width:0;
@@ -3337,7 +3337,7 @@ button.iu-close-btn-38:focus-visible{
     overflow:visible;
     max-height:none;
   }
-  /* Zdravotní pojišťovna: šířka vnitřního obsahu = stejný budget jako .iu-ds-modal na desktopu (min 720px / 100vw−80px). */
+  
   body.iu-pojistovna-desktop-overlay-open #iuQuickFeed.iu-pojistovna-quickfeed-root .iu-health-root{
     max-width: min(720px, 100%);
     width: 100%;
@@ -3351,7 +3351,7 @@ button.iu-close-btn-38:focus-visible{
   gap: 8px;
   flex: 0 0 auto;
 }
-/* P0 #iu-aiPanel: close stays in header row — no overlap with Přeposlat (.iuAiClose was position:absolute to panel) */
+
 #iu-aiPanel .iu-aiPanelHeader > span:first-child{
   flex: 1 1 auto;
   min-width: 0;
@@ -3579,7 +3579,7 @@ button.iu-close-btn-38:focus-visible{
   padding-right: 8px;
 }
 
-/* Shared #feed: Zprávy + CZ vertikály (media/hry/kultura/veda/vzdelavani) — zrcadlí data-iu-fc z index + applySectionFromURL. */
+
 html[data-section]:not([data-iu-fc="1"]) #feed,
 body[data-section]:not([data-iu-fc="1"]) #feed{
   display: none !important;
@@ -4139,7 +4139,7 @@ select.iuCtrl{
   z-index: 1;
 }
 
-/* Sekční obrázek: přímé #feed > img — reset proti card pravidlu #feed > * */
+
 #feed > img.iu-feed-section-header-img{
   background: none;
   border: none;
@@ -6078,7 +6078,7 @@ html[data-section="tvprogram"] #feed{
   display: none !important;
 }
 
-/* P0: mapy / jr / radio — stejný vzor jako pocasi/tvprogram: [hidden] na view = UA display:none !important, bez explicitního display:block se detail nevykreslí. */
+
 body[data-section="mapy"] #iuMapyView,
 html[data-section="mapy"] #iuMapyView{
   display: block !important;
@@ -6551,7 +6551,7 @@ body[data-section="travel"] #feed,
 html[data-section="travel"] #feed{
   display: none !important;
 }
-/* Travel „média“ režim: feed viditelný, poradna skrytá */
+
 body[data-section="travel"][data-travel-feed="1"] #iuTravelView,
 html[data-section="travel"][data-travel-feed="1"] #iuTravelView{
   display: none !important;
@@ -6561,7 +6561,7 @@ html[data-section="travel"][data-travel-feed="1"] #feed{
   display: block !important;
 }
 
-/* P1: přepínač Cestování média / poradna */
+
 .iuTravelNavBar{
   margin: 0 0 12px;
 }
@@ -7758,7 +7758,7 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
 .iu-mobileStack{
   display: none;
 }
-/* P0 CLS desktop: hide mobile-only #iuMobileMindMenuFlow from .layout grid (≥901px); merge with one @media to limit CSS debt. */
+
 @media (min-width: 901px){
   .iu-mobileFirstBlock{
     display: none !important;
@@ -8734,7 +8734,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   border-radius: 8px;
 }
 
-/* Transparent shell — collapse rules only on mobile; desktop needs stable in-flow height for .mainCol (fixed topbar does not fill #leftStickyHeader). */
+
 #leftStickyHeader{
   background: transparent !important;
   box-shadow: none !important;
@@ -8922,7 +8922,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   display: none !important;
 }
 
-/* Gate tabs markup lives in .silver-inputWrap for mobile/tablet width parity; hidden on desktop */
+
 @media (min-width: 901px){
   #iuMobileGateTabs.iu-mobileGateTabs{
     display: none !important;
@@ -8937,7 +8937,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     --iuMobileBtnH: 52px;
     --iu-brief-gap-top: 18px;
     --iu-brief-gap-bottom: 8px;
-    /* P0 WebNav detail (mobile/tablet): fixed main back bar height — matches touch target + padding */
+    
     --iuWebNavDetailMainBackH: 52px;
   }
 
@@ -9043,7 +9043,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #iuMobileGateWrap.iu-mobileGateWrap{
       min-height: 656px;
     }
-    /* P0 CLS (768×1024): height:auto + max-height caused #leftContent box to settle ~220ms → CLS≈0.0014. Lock viewport column height. */
+    
     #leftContent{
       display: block !important;
       height: calc(100vh - 120px);
@@ -9111,7 +9111,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100% !important;
   }
   
-  /* Avoid 100vw/50vw full-bleed: vw includes scrollbar width — shifts entire column when overlay toggles scroll lock */
+  
   #leftStickyHeader{
     width: 100% !important;
     max-width: 100% !important;
@@ -9204,7 +9204,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     gap: 6px !important;
     overflow: hidden !important;
   }
-  /* TOPBAR CONTENT GRID */
+  
   #topbarWrap .iuTopbarContent{
     display: flex !important;
     position: absolute !important;
@@ -9267,7 +9267,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow-x: hidden !important;
     box-sizing: border-box !important;
   }
-  /* P0 mobile/tablet: Navigace + MindMenu jako izolovaný fullscreen host (ne block pod Silver/CTA) */
+  
   html.iu-mobileGateOverlayOpen,
   body.iu-mobileGateOverlayOpen{
     overflow: hidden !important;
@@ -9310,11 +9310,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     border-bottom: 1px solid rgba(0,0,0,.1) !important;
     background: #eceff3 !important;
   }
-  /* GUARD:
-     - applies ONLY to overlay header (Navigace + MindMenu)
-     - MUST NOT affect global back buttons
-     - MUST NOT change layout, only text alignment
-     */
+  
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]) .iu-mobileGateBackBtn{
     width: 100% !important;
     max-width: 100% !important;
@@ -9342,7 +9338,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     display: flex !important;
     flex-direction: column !important;
   }
-  /* P0 Navigace po webu: jediný scroll host = panel; display:block + zrušení ~100vh min-height na railu (jinak boj s výškou overlaye → sekání) */
+  
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
     display: block !important;
   }
@@ -9423,9 +9419,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   body.iu-mobileMainVisible #iuMobileMainBackBar[hidden]{
     display: none !important;
   }
-  /* P0 Mobile/tablet: hlavní „Zpět“ — fixed k viewportu při iu-mainSectionBackBarDocked (JS přesune uzel na body).
-     Stejný layout pro vstup z HOME karet i z „Navigace po webu“; iu-webnavDetailFromGate zůstává jen pro návratovou větev Zpět.
-     --iuWebNavDetailMainBackTop: buď spodní hrana #topbarWrap (když je viditelný), nebo safe-area (≤1024px je topbar často display:none). */
+  
   body.iu-mobileMainVisible.iu-mainSectionBackBarDocked #iuMobileMainBackBar:not([hidden]){
     position: fixed !important;
     inset-inline: 0 !important;
@@ -10281,20 +10275,20 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-top: 14px;
 }
 
-/* === Notes overlay visual state (Silver-ready; scoped to #iuNotesOverlay.iuNotesRoot only — no global leak) === */
+
 #iuNotesOverlay.iuNotesRoot{
   --iu-notes-cal-accent: #15803d;
   --iu-notes-cal-accent-soft: rgba(21, 128, 61, 0.12);
 }
 
-/* Calendar-aligned: today / recent row (green hint, same family as #iuCalendarOverlay .iu-calDayCell.is-today) */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--recent:not(.is-active){
   background: rgba(236, 253, 245, 0.55);
   border-color: rgba(21, 128, 61, 0.28);
   box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.2) inset;
 }
 
-/* Important / pinned: blue-neutral emphasis (does not replace pin column; complements ordering) */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--active:not(.is-active){
   background: linear-gradient(180deg, rgba(238, 244, 255, 0.95), rgba(247, 249, 252, 0.98));
   border-color: rgba(31, 58, 95, 0.22);
@@ -10306,7 +10300,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.2) inset;
 }
 
-/* Older: slightly muted (no size change) */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.iuNotesState--older:not(.is-active){
   opacity: 0.9;
 }
@@ -10315,18 +10309,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   color: rgba(11, 31, 51, 0.72);
 }
 
-/* Selected: clear focus on top of existing .is-active */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn.is-active.iuNotesState--selected{
   outline: 2px solid rgba(31, 58, 95, 0.35);
   outline-offset: 1px;
 }
 
-/* Empty list / empty detail: calm, low priority */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__empty.iuNotesState--empty{
   opacity: 0.95;
 }
 
-/* Hover / focus: no layout shift (border width fixed) */
+
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__itemBtn{
   box-sizing: border-box;
   border-width: 1px;
@@ -10339,7 +10333,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   filter: brightness(0.97);
 }
 
-/* Notes mobile/tablet layout overrides live in app.js (NOTES_MOBILE_FIX_TEXT) appended after base notes styles for cascade. Visual state tokens remain below. */
+
 
 .iuMyUzelTitleLine1,
 .iuMyUzelTitleLine2{
@@ -10760,7 +10754,7 @@ main#content .layout:has(#leftStickyHeader){
   min-height: calc(100vh - var(--iuTopbarHeight)) !important;
 }
 
-/* P0 CLS desktop: bez čekání na :has() — první frame neměl mít jiný padding-top než steady (topbar je fixed + #leftStickyHeader drží výšku v .mainCol). */
+
 @media (min-width: 901px){
   main#content .layout{
     padding-top: 0 !important;
@@ -10944,7 +10938,7 @@ main#content .layout:has(#leftStickyHeader){
   }
 }
 
-/* P0 CLS: overflow:visible was global !important → tablet portrait #leftContent could not lock overflow:hidden (9265+), late reflow ~200ms. */
+
 @media (min-width: 901px){
   #leftContent{
     overflow: visible !important;
@@ -11005,7 +10999,7 @@ main#content .layout:has(#leftStickyHeader){
   background:transparent;
 }
 
-/* P0 PREMIUM SILVER (infoUzel.cz) */
+
 :root{
   --iuRailAccent-quick: #38BDF8; 
   --iuRailAccent-day:   #A78BFA; 
@@ -11138,7 +11132,7 @@ body .rightCol .mindMenu .iu-mmTopTool--cal.iuMindMenuButton .iu-mmTopToolIcon{
   stroke: currentColor;
 }
 
-/* MINDMENU — Tasks button fixed purple (scope: Úkoly tool only). */
+
 .mindMenu .iu-mmTopTool.iuMindMenuTasksBtn{
   background: #7c3aed;
   color: #fff;
@@ -11754,7 +11748,7 @@ body.iu-quickFeedOpen{
   gap: 8px;
 }
 
-/* Word/PDF convert: forward + close separated (no iuQClose on forward — avoids text-only look) */
+
 .iuQuickFeed .iu-header-actions{
   display: inline-flex;
   align-items: center;
@@ -11890,7 +11884,7 @@ body.iu-quickFeedOpen{
   color: inherit;
 }
 
-/* Nákup potravin online — mobil/tablet: .iu-nakup-online-premiumShell; desktop ≥1025: .iu-grocery-quickfeed-root + .iu-banking-ds-modal (stejný model jako Datovka, app.css výše). */
+
 .iuQuickFeed.iu-nakup-online-feed-root{
   background: transparent;
 }
@@ -11910,7 +11904,7 @@ body.iu-quickFeedOpen{
   flex-shrink: 0;
   margin-bottom: 5px;
 }
-/* Mobile/tablet: sjednotit horní rytmus (inline margin z iuApplyMobileQuickFeedLayout jen zde přebijeme) */
+
 .iuQuickFeed.iu-nakup-online-feed-root:not(.iu-grocery-quickfeed-root) .iuQHead{
   margin: 2px 0 5px !important;
 }
@@ -11963,7 +11957,7 @@ body.iu-quickFeedOpen{
   overflow: visible;
   max-height: none;
 }
-/* Jedna vertikální skládka sekcí (pořadí: skupina 1 → 2 → 3); desktop i mobil/tablet */
+
 .iuQuickFeed.iu-nakup-online-feed-root .iu-nakup-online-singleColShell{
   display: flex;
   flex-direction: column;
@@ -12840,7 +12834,7 @@ section.iu-mojeSluzby{
   flex-direction: column;
   align-items: center;
 }
-/* Internetové bankovnictví: press feedback na horní části karty (bez :has(), bez globálního přepisu tlačítek). */
+
 .iuBankCard .iuBankCardMain.iu-clickable-feedback{
   position: relative;
   overflow: hidden;
@@ -12955,8 +12949,7 @@ section.iu-mojeSluzby{
   min-width: 100px;
 }
 
-/* Internetové bankovnictví (QuickFeed): mobile/tablet — vertikální stack „Přidat vlastní banku“ + zelená horní část karty.
-   Guard: #iuQuickFeed + max-width 1023px — desktop layout beze změny. Bez :has(). */
+
 @media (max-width: 1023px) {
   #iuQuickFeed .iu-ibBankCustomForm[data-iu-ib-custom-form="1"]{
     display: flex;
@@ -13027,7 +13020,7 @@ section.iu-mojeSluzby{
     color: #ecfdf5;
   }
 }
-/* Bakaláři multi-card launcher — výhradně prefix .bakalari- */
+
 .bakalari-root{
   display: flex;
   flex-direction: column;
@@ -13213,7 +13206,7 @@ section.iu-mojeSluzby{
   color: inherit;
   border-color: rgba(255,255,255,.2);
 }
-/* Bakaláři: destruktivní akce — vždy čitelný text (scoped, bez globálního danger systému). */
+
 .bakalari-btn--danger{
   background-color: #fee2e2 !important;
   color: #b91c1c !important;
@@ -13283,7 +13276,7 @@ section.iu-mojeSluzby{
   font-size: 16px;
   line-height: 1.35;
 }
-/* QuickFeed (světlé pozadí .iuQCard): kontrast pro .bakalari-* */
+
 #iuQuickFeed .bakalari-card{
   background: rgba(15, 23, 42, 0.04);
   border-color: rgba(15, 23, 42, 0.12);
@@ -13310,7 +13303,7 @@ section.iu-mojeSluzby{
 #iuQuickFeed .bakalari-card-feedback{
   color: #1a5bb5;
 }
-/* Zdravotní pojišťovna — pouze prefix .iu-health-* + [data-iu-health-*] */
+
 .iu-health-root{
   display: flex;
   flex-direction: column;
@@ -15741,7 +15734,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (max-width: 1024px){
-  /* P0 CLS: reserve vertical space before async Silver hydrate — wins over projects/index.html min-height:0 (≤900) */
+  
   #iuSilverTallScrollSection{
     padding-top: 0 !important;
     padding-left: 0 !important;
@@ -15767,13 +15760,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
     min-height: 0 !important;
   }
-  /* P0 ≤1024: mezera input→Quick actions ≈ mezera Quick actions→spodek #iuSilverHeroPremium (jen padding boxu; .iu-hero-quickActions beze změny). */
+  
   #silver-slot #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
     padding-bottom: 10px !important;
     margin-bottom: 1px !important;
   }
-  /* P0 ≤1024: mezera horní karta→CTA ≈ CTA→spodek #iuHolidayMonetizeCard (padding + min-height slack pryč; #iuNamedayCtaMobile beze změny). */
+  
   #iuHolidayMonetizeCard.iu-holiday-monetize-card{
     padding-bottom: 10px !important;
     margin-top: 13px !important;
@@ -15810,7 +15803,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuSilverTallScrollViewport :is(.iuNewsPreviewCard,.box-sport,.box-finance,.box-health,.box-travel,.box-games,.box-culture,.box-science-history,.box-education){
     margin: 0 !important;
   }
-  /* P0 CLS: news preview předvyplněný v HTML — placeholder + probe mimo layout (dřív visibility:hidden zachovávalo výšku). */
+  
   #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-placeholder],
   #iuSilverTallScrollViewport:has([data-iu-news-preview-card="1"]) [data-iu-silver-tall-scroll-probe]{
     display: none !important;
@@ -15851,12 +15844,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-/* P0 mobile/tablet: web-nav detail opened from "Rychlý servis" tiles must stay light in evening mode.
-   Scope guard:
-   - only <=1024px
-   - only when detail came from gate nav (iu-webnavDetailFromGate + iu-mobileMainVisible)
-   - only six quick-service sections (pocasi/mapy/jr/tvprogram/tvonline/radio)
-*/
+
 @media (max-width: 1024px){
   html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #leftContent,
   html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #leftContent,
@@ -16023,7 +16011,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   min-width: 0;
 }
 
-/* Silver kalendář box: štítek + ikona = calendar accent (viz :root --iu-calendar-accent / overlay „dnes“). */
+
 #iuSilverCalendarSummaryCard .iuCalendarSummary__label{
   font-weight: 700;
   color: var(--iu-calendar-accent);
@@ -16045,7 +16033,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   font-weight: 400;
 }
 
-/* Silver úkoly box: tučný štítek + ikona = stejný accent token (--iuTasksAccent). */
+
 #iuSilverTasksSummaryCard .iuTasksLabel{
   font-weight: 700;
   color: var(--iuTasksAccent, #8b5cf6);
@@ -16144,7 +16132,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   transform: translateY(1px);
 }
 
-/* Calendar CTA arrow: row had no color; ::after currentColor inherited body text on dark evening gradient. */
+
 .silver-calendar-summary-card .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
   color: rgba(30, 40, 55, 0.82);
 }
@@ -16254,7 +16242,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  /* P0 desktop-only: první řádek — plná šířka textu počasí bez ellipsis/clippingu v #iuSilverWeatherCard */
+  
   #silver-slot #iuSilverWeatherCard .silver-weather-line1,
   #silver-slot #iuSilverWeatherCard .silver-weather-line2{
     white-space: normal;
@@ -16268,7 +16256,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  /* Topbar (i): compound selectors — distinct keys from max-width #iuTopbarInfoBtn { display:none } (debt guard) */
+  
   header#topbarWrap.topbar-new.iuTopbar #iuTopbarInfoBtn{
     position: absolute;
     right: 15px;
@@ -16305,12 +16293,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     display: none !important;
   }
 
-  /* P0 desktop-only: odstranit „Přidat na plochu“ z topbaru (bez rezervy místa) */
+  
   #topbarWrap #iuPwaInstallCta.iuPwaInstallCta--byLogo{
     display: none !important;
   }
 
-  /* P0 desktop-only (≥1025px): jeden Silver composer v top baru — host + kompaktní integrovaný řádek (bez :has()) */
+  
   #iuTopbarSilverComposerHost.iuTopbarSilverComposerHost{
     display: none;
     flex: 1 1 auto;
@@ -16476,7 +16464,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     }
   }
 
-  /* P0 desktop-only: uvítání + počasí v jednom řádku; větší podíl + gap → počasí více vlevo, text se vejde */
+  
   #silver-slot #iuSilverWelcomeStack.silver-welcome-stack{
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(300px, 46%);
@@ -16485,7 +16473,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     width: 100%;
     max-width: 100%;
   }
-  /* Mobile/tablet-only hero + holiday flow — DOM exists for ≤1024 proof; desktop grid placement hides from layout. */
+  
   #silver-slot #iuSilverHeroPremium,
   #silver-slot #iuSilverWelcomeStackSeparatorHeroHoliday,
   #silver-slot #iuHolidayMonetizeCard,
@@ -16508,7 +16496,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     max-width: 100%;
     box-sizing: border-box;
   }
-  /* DOM order differs from ≤1024; explicit rows restore původní desktop stack (tall → kalendář → úkoly). */
+  
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore{
     grid-column: 1 / -1;
     grid-row: 2;
@@ -16553,7 +16541,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     grid-row: 9;
   }
 
-  /* P0 desktop-only: skrýt „Přání k svátku“; „Poslat květiny“ vlevo bez roztažení na celou šířku */
+  
   #iuSilverWelcomeCard .iu-nameday-wish{
     display: none !important;
   }
@@ -16564,7 +16552,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     flex: 0 1 auto;
   }
 
-  /* P0 desktop-only: sekční dlaždice 2 sloupce (bez scroll feedu); guard body.iu-desktop-home-grid z app.js */
+  
   body.iu-desktop-home-grid #iuSilverTallScrollViewport{
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -16572,9 +16560,9 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     row-gap: 8px;
     align-items: start;
     align-content: start;
-    /* P0 CLS (1366×768): rezervovat výšku hostitele — přechod scroll box (max-height) → volný grid jinak skočí ~0.18 CLS. */
+    
     min-height: min(78vh, 820px);
-    /* Stejné jako @media (min-width:901px) Silver fix: hidden+visible longhand → computed overflow-y:auto + prázdný track. */
+    
     overflow: visible !important;
     scrollbar-gutter: auto !important;
     max-height: none !important;
@@ -16648,7 +16636,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     overflow-wrap: anywhere;
     word-break: break-word;
   }
-  /* P0 PR #1488: html:root key avoids extra `html` duplicate occurrence (debt guard) */
+  
   html:root {
     scroll-padding-top: max(env(safe-area-inset-top, 0px), 4px);
   }
@@ -16666,12 +16654,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     border-width: 0 !important;
     overflow: hidden !important;
   }
-  /* id key avoids duplicate group with base .iuSilverTopCardsStack (debt guard) */
+  
   #iuSilverTopCardsStack {
     padding-top: env(safe-area-inset-top, 0px);
     box-sizing: border-box;
   }
-  /* id-only: avoids +1 on #silver-slot .iuSilverWelcomeSticky duplicate group */
+  
   #iuSilverWelcomeSticky {
     top: calc(env(safe-area-inset-top, 0px) + 4px) !important;
   }
@@ -16699,7 +16687,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     border-radius: 999px;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    /* welcome card info icon: corner nudge + −20% (transform keeps layout box / grid) */
+    
     transform: translate(7px, -7px) scale(0.8);
     transform-origin: center;
   }
@@ -16723,7 +16711,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
     stroke: rgba(248, 250, 252, 0.95);
   }
 
-  /* poprej */
+  
 }
 
 .silver-weather-card[data-iu-silver-wx-phase="data"]{
@@ -16936,22 +16924,9 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   color: rgba(255, 255, 255, 0.96);
 }
 
-/* 
-⚠️ DO NOT MODIFY — WELCOME BOX LOCKED
 
-Jakýkoliv zásah do:
-- layoutu
-- typography
-- spacing
-- button sizing
-- info icon positioning
 
-je ZAKÁZANÝ bez explicitního P0 tasku.
 
-Porušení = regres + CLS risk
-*/
-
-/* === WELCOME BOX HARD LOCK (DO NOT MODIFY ANYWHERE ELSE) — narrow: weights + info icon only === */
 
 .iuWelcomeBox--LOCKED .iuSilverWelcomeMeta .iuDateStrong,
 .iuWelcomeBox--LOCKED .iuSilverWelcomeMeta .iuNameStrong{
@@ -16962,7 +16937,7 @@ Porušení = regres + CLS risk
   transform: translate(7px, -7px) scale(0.8) !important;
 }
 
-/* P0 nameday gender — jen #iuSilverWelcomeCard: barva jména + text tlačítek + inline konfeta; tokeny --iuNameday* z .silver-welcome-stack--* */
+
 #iuSilverWelcomeCard .iuSilverWelcomeMeta .iuNameStrong.iuNameStrong--namedayGender[data-iu-nameday-name-gender="male"]{
   color: var(--iuNamedayMaleAccent);
 }
@@ -17012,23 +16987,23 @@ Porušení = regres + CLS risk
 
 @media (min-width: 901px){
   .silver-slot{
-    /* Keep desktop flow natural when welcome stack grows during hydration. */
+    
     height: auto;
     min-height: 542px;
   }
-  /* P0 CLS desktop: lock weather strip box (ready layout) — loading→data innerHTML swap must not change outer height (see iuSilverWeatherRefresh). */
+  
   #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"]{
     min-height: 132px;
     max-height: 132px;
     box-sizing: border-box;
     overflow: hidden;
   }
-  /* Desktop only: CLS reserve for summary cards (not mixed into <769px tablet/mobile) */
+  
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     min-height: 155px;
   }
-  /* P0 CLS desktop: stejný 1px lock jako tablet — zabraňuje odchylce separatoru při flex dopočtu. */
+  
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     height: 1px !important;
@@ -17036,7 +17011,7 @@ Porušení = regres + CLS risk
     max-height: 1px !important;
     margin: 0 !important;
   }
-  /* P0 CLS: separator mezi kalendářem a úkoly — stabilní 1px (desktop stack attribution). */
+  
   #silver-slot #iuSilverWelcomeStackSeparatorCal.silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     height: 1px !important;
@@ -17047,7 +17022,7 @@ Porušení = regres + CLS risk
 }
 
 @media (min-width: 1025px){
-  /* P0 desktop-only: weather v první řádce — přepis 901px locku; zalamování + vyšší box, bez horizontálního ořezu */
+  
   #silver-slot #iuSilverWeatherCard.silver-weather-card{
     overflow-x: visible;
     overflow-y: visible;
@@ -17060,7 +17035,7 @@ Porušení = regres + CLS risk
   }
 }
 
-/* Silver shell is last child of #iuSilverWelcomeStack: single column flow with cards + separator */
+
 #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
   flex: 0 0 auto;
   min-height: 0;
@@ -17078,7 +17053,7 @@ Porušení = regres + CLS risk
   box-sizing: border-box;
 }
 
-/* P0: Úkoly → Silver jako jeden propojený blok (stejný gradient / radius jako stack) */
+
 .silver-shell.silver-shell--stackConnected{
   border-radius: 0 0 var(--iuSilverTopCardRadius) var(--iuSilverTopCardRadius);
 }
@@ -17099,7 +17074,7 @@ Porušení = regres + CLS risk
   background: var(--iu-stack-ambient-bg);
 }
 
-/* Silver shell lives inside #iuSilverWelcomeStack — margin below sticky only on desktop ≥901px */
+
 @media (max-width: 900px){
   #silver-slot .iuSilverWelcomeSticky{
     margin-bottom: 0 !important;
@@ -17164,7 +17139,7 @@ Porušení = regres + CLS risk
   font: inherit;
 }
 
-/* P0 Silver: homepage inline row + fullscreen calendar chat */
+
 .iuSilverHomeInputWrap{
   overflow: hidden;
 }
@@ -17227,7 +17202,7 @@ Porušení = regres + CLS risk
   display: block;
 }
 
-/* Silver odeslat: stín jemně navázaný na stejný time-of-day stav jako #silver-slot (JS synchronizuje s .silver-welcome-stack--*) */
+
 #silver-slot[data-iu-silver-welcome-variant="morning"] .iuSilverHomeSend{
   box-shadow: 0 4px 16px color-mix(in srgb, rgba(23, 138, 74, 0.32) 78%, rgba(234, 88, 12, 0.22) 22%);
 }
@@ -19579,7 +19554,7 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem .iu-leftNavLabel {
   font-weight: 600 !important;
 }
 
-/* Convert quick feed: disclaimer between in-browser tool and external link tiles */
+
 .iuQuickFeed .iu-external-notice{
   margin: 12px 16px 4px;
   font-size: 13px;
@@ -20957,8 +20932,7 @@ overflow:hidden !important;
   }
 }
 
-/* P0 mobile/tablet (≤1024px): „Rychlý servis“ — 6 dlaždic (data-rail) zůstanou ve světlém denním stylu i při evening paint;
-   přebije globální tmavý stack na #iuLeftRail (.iu-leftNavItem) jen v mobilním gate / #iuMobileFirstBlock. Desktop ≥1025 nedotčeno. */
+
 @media (max-width: 1024px){
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="weather"],
   body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="maps"],
@@ -21128,12 +21102,12 @@ overflow:hidden !important;
   }
 }
 
-/* === Topbar info (i) — compliance foundation overlay; replaces non-interactive ::after === */
+
 header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   display: none !important;
   content: none !important;
 }
-/* #iuTopbarInfoBtn base styles: @media (min-width: 1025px) only — see silver-weather @media block */
+
 .iuTopbarInfoOverlay{
   position: fixed;
   inset: 0;
@@ -21286,7 +21260,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuSilverWelcomeCard.iuSilverWelcomeCard{
     min-height: 0 !important;
   }
-  /* Počasí / Kalendář / Úkoly — jen výška obsahu (2 řádky), malý padding; žádný RowMinH token */
+  
   #silver-slot #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #silver-slot #iuSilverTasksSummaryCard.silver-calendar-summary-card{
     flex: 0 0 auto !important;
@@ -21330,7 +21304,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     flex: 0 0 auto !important;
     flex-shrink: 0 !important;
   }
-  /* Silver: LOCK — vstup + 2 tlačítka (záložky); bez vertikálního flex-grow (fixní výška bloku) */
+  
   #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected{
     flex: 0 0 auto !important;
     flex-grow: 0 !important;
@@ -21346,7 +21320,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
-  /* P0 CLS: tall-before separator must not settle 2px→1px after flex distribution (layout-shift source). */
+  
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{
     flex: 0 0 auto !important;
     height: 1px !important;
@@ -21354,7 +21328,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     max-height: 1px !important;
     margin: 0 !important;
   }
-  /* Jediný pružný remainder sloupec — min-height rezervace přebije index.html min-height:0 (≤900) kvůli CLS */
+  
   #silver-slot #iuSilverTallScrollSection,
   #iuMobileSilverSlot #silver-slot #iuSilverTallScrollSection{
     flex: 1 1 auto;
@@ -21390,7 +21364,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
   }
-  /* Full-width Silver: žádný shell inset — stejná horizontální logika jako stack boxy (padding jen uvnitř chroma rámu) */
+  
   #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
     border-radius: 0 !important;
@@ -21431,7 +21405,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding-right: 0 !important;
     padding-bottom: 0 !important;
   }
-  /* Root cause (prázdný chat): .silver-compose/.silver-output flex-grow rezervoval výšku = falešný panel pod vstupem */
+  
   #silver-slot .silver-compose:has(.silver-output:empty),
   #iuMobileSilverSlot #silver-slot .silver-compose:has(.silver-output:empty),
   #silver-slot .silver-compose:has(.silver-output:not(:has(> *))),
@@ -21599,12 +21573,8 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
-/* Canonical rules only — no duplicate selectors here (css_debt_guard / risk-zone patterns).
- * --iu-calendar-accent: #1c8748 in :root above.
- * Silver row: #iuSilverCalendarSummaryCard .iuCalendarSummary__label | __icon | __rest (~silver kalendář box).
- * Mind Menu Kalendář: .mindMenu .iu-mmTopTool--cal.iuMindMenuButton (+ text/icon overrides) in Mind Menu section above.
- * To change accent behavior: edit those blocks only, never add a second copy at EOF. */
+
+
 
 @media (max-width: 1024px){
   #feedWrap,
@@ -21624,3 +21594,5 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     padding: revert;
   }
 }
+
+/* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
