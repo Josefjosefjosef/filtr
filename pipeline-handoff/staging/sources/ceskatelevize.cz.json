@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T18:44:42.303588Z",
+  "ingestedAt": "2026-04-26T19:10:00.927125Z",
   "items": [
     {
       "section": "aktualne",
@@ -761,6 +761,32 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Rallye Šumava Klatovy ovládl Mareš a vítězně vstoupil do nové sezony",
+      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/rallye-sumava-klatovy-ovladl-mares-a-vitezne-vstoupil-do-nove-sezony-156476",
+      "dt": "2026-04-26T19:04:01Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "klatovy",
+        "mareš",
+        "nové",
+        "ovládl",
+        "rallye",
+        "sezony",
+        "vstoupil",
+        "vítězně",
+        "šumava"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Házenkáře Karviné dělí jediná výhra od obhajoby titulu",
       "url": "https://sport.ceskatelevize.cz/clanek/hazena/hazenkare-karvine-deli-jedina-vyhra-od-obhajoby-titulu-156475",
       "dt": "2026-04-26T18:04:09Z",
@@ -1467,33 +1493,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta padla, Slavia zvládla otočku, Liberec naplnil cíl a Baník je u dna",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sparta-padla-slavia-zvladla-otocku-liberec-naplnil-cil-a-banik-je-u-dna-156444",
-      "dt": "2026-04-25T16:02:02Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "baník",
-        "cíl",
-        "dna",
-        "liberec",
-        "naplnil",
-        "otočku",
-        "padla",
-        "slavia",
-        "sparta",
-        "zvládla"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1504,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43885,
+      "bytes": 43890,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,7 +1622,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37964,
+      "bytes": 37823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1660,7 +1659,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T18:04:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T19:04:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1675,6 +1674,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rallye Šumava Klatovy ovládl Mareš a vítězně vstoupil do nové sezony",
+            "publishedAt": "2026-04-26T19:04:01Z"
+          },
           {
             "title": "Házenkáře Karviné dělí jediná výhra od obhajoby titulu",
             "publishedAt": "2026-04-26T18:04:09Z"
@@ -1702,10 +1705,6 @@
           {
             "title": "Baník má už čtvrtého trenéra. Smetana končí, záchranu má zařídit Dvorník",
             "publishedAt": "2026-04-26T14:59:57Z"
-          },
-          {
-            "title": "Titul číslo dvacet. USK Praha znovu slaví",
-            "publishedAt": "2026-04-26T14:51:21Z"
           }
         ]
       }
@@ -1717,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77093,
+      "bytes": 77105,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
