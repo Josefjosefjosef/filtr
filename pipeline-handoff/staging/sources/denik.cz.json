@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-26T16:20:11.038721Z",
+  "ingestedAt": "2026-04-26T16:44:26.466590Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Choval se divně už před útokem, tvrdí rodina střelce z hotelu ve Washingtonu",
+      "url": "https://www.denik.cz/ze_sveta/washington-strelba-podezrely-donald-trump-protikrestansky-manifest.html",
+      "dt": "2026-04-26T16:12:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "choval",
+        "divně",
+        "hotelu",
+        "rodina",
+        "střelce",
+        "tvrdí",
+        "washingtonu",
+        "útokem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -132,31 +157,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
-      "url": "https://www.denik.cz/pocasi/pocasi-tyden-predpoved-carodejnice.html",
-      "dt": "2026-04-26T10:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jaké",
-        "meteorologové",
-        "noc",
-        "oblečte",
-        "počasí",
-        "teple",
-        "čarodějnice",
-        "řekli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Super táta z Číny za 30 let adoptoval na 300 dětí. Třetina z nich má dnes titul",
@@ -175,6 +175,31 @@
         "táta",
         "třetina",
         "číny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
+      "url": "https://www.denik.cz/pocasi/pocasi-tyden-predpoved-carodejnice.html",
+      "dt": "2026-04-26T10:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jaké",
+        "meteorologové",
+        "noc",
+        "oblečte",
+        "počasí",
+        "teple",
+        "čarodějnice",
+        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -622,31 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Syn otce s demencí: Zubní péče není pro nespolupracující pacienty v ČR dostupná",
-      "url": "https://www.denik.cz/zdravotnictvi/zdravotnictvi-cesko-zubni-pece-pro-lidi-s-demenci.html",
-      "dt": "2026-04-26T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "demencí",
-        "dostupná",
-        "nespolupracující",
-        "otce",
-        "pacienty",
-        "péče",
-        "syn",
-        "zubní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30478,
+      "bytes": 30391,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,12 +694,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-26T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T16:12:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "finance": 1,
-          "zpravy": 22,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -711,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Choval se divně už před útokem, tvrdí rodina střelce z hotelu ve Washingtonu",
+            "publishedAt": "2026-04-26T16:12:00Z"
+          },
           {
             "title": "Superdávka přepisuje pravidla sociální pomoci: Kdo ztratí a kdo získá nejvíc",
             "publishedAt": "2026-04-26T14:30:00Z"
@@ -732,16 +736,12 @@
             "publishedAt": "2026-04-26T11:30:00Z"
           },
           {
-            "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
-            "publishedAt": "2026-04-26T10:00:00Z"
-          },
-          {
             "title": "Super táta z Číny za 30 let adoptoval na 300 dětí. Třetina z nich má dnes titul",
             "publishedAt": "2026-04-26T10:00:00Z"
           },
           {
-            "title": "Světoví lídři i američtí politici odsoudili střelbu na galavečeři ve Washingtonu",
-            "publishedAt": "2026-04-26T09:46:00Z"
+            "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
+            "publishedAt": "2026-04-26T10:00:00Z"
           }
         ]
       }
