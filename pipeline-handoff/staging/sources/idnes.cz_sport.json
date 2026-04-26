@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-26T21:09:32.311705Z",
+  "ingestedAt": "2026-04-26T21:34:32.197609Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boston schytal doma od Buffala výprask, Pastrňák a Zacha jsou zápas od vyřazení",
+      "url": "https://www.idnes.cz/hokej/nhl/play-off-boston-buffalo-zpravodajstvi.A260426_225848_nhl_ivt",
+      "dt": "2026-04-26T21:06:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boston",
+        "buffala",
+        "doma",
+        "pastrňák",
+        "schytal",
+        "vyřazení",
+        "výprask",
+        "zacha",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,33 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Skuhravý o krizi Slovácka: Nespím z toho... Zatím jsem nenašel klíč, jak tým na**at",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/fotbal-chance-ligy-slovacko-dukla-praha-roman-skuhravy.A260425_213251_fotbal_epfoj",
-      "dt": "2026-04-26T08:34:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jsem",
-        "klíč",
-        "krizi",
-        "nenašel",
-        "nespím",
-        "skuhravý",
-        "slovácka",
-        "toho",
-        "tým",
-        "zatím"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46338,
+      "bytes": 46216,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T20:41:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T21:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +849,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boston schytal doma od Buffala výprask, Pastrňák a Zacha jsou zápas od vyřazení",
+            "publishedAt": "2026-04-26T21:06:00Z"
+          },
           {
             "title": "Nezmar Čachotský: Nádrž byla prázdná. Baráž? Zakázali nám o ní mluvit",
             "publishedAt": "2026-04-26T20:41:58Z"
@@ -877,10 +880,6 @@
           {
             "title": "Vděčný za lekce i šanci na další rok. Bašta hodnotil sezonu USK: Jako horská dráha!",
             "publishedAt": "2026-04-26T17:07:00Z"
-          },
-          {
-            "title": "Osmnáctka na MS zasypala Dány devíti góly. Zazářil Nedorost, bodoval i Tomek",
-            "publishedAt": "2026-04-26T16:50:00Z"
           }
         ]
       }
