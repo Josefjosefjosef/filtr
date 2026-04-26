@@ -139,12 +139,8 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverWelcomeStack.silver-welcome-stack--lateMorning,
         #iuSilverWelcomeStack.silver-welcome-stack--afternoon{background:linear-gradient(135deg,#f8fbff 0%,#eef5ff 50%,#e4ecfa 100%)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--evening{background:radial-gradient(ellipse 95% 70% at 0% -5%,rgba(56,189,248,.11) 0%,transparent 48%),radial-gradient(ellipse 90% 75% at 105% 108%,rgba(124,58,246,.1) 0%,transparent 52%),linear-gradient(180deg,#07101f 0%,#0b1430 44%,#111827 100%)!important}
-        #iuSilverHeroPremium{position:relative;z-index:1;width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 12px;margin:12px 10px 0 10px;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b1f3a 0%,#1e3a8a 40%,#6d28d9 100%);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.35)}
+        #iuSilverHeroPremium{position:relative;z-index:1;width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 12px;margin:12px 10px 0 10px;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 40%,#312e81 70%,#6d28d9 100%);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.35)}
         #iuSilverHeroPremium::before,#iuSilverHeroPremium::after{content:none!important;display:none!important}
-        #iuSilverWelcomeStack.silver-welcome-stack--morning #iuSilverHeroPremium{background:linear-gradient(135deg,#102743 0%,#1f3f97 42%,#6d28d9 100%)}
-        #iuSilverWelcomeStack.silver-welcome-stack--lateMorning #iuSilverHeroPremium{background:linear-gradient(135deg,#0f2440 0%,#1d3c92 42%,#5b32d8 100%)}
-        #iuSilverWelcomeStack.silver-welcome-stack--afternoon #iuSilverHeroPremium{background:linear-gradient(135deg,#0d223d 0%,#1c3a8e 42%,#5528c9 100%)}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuSilverHeroPremium{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 40%,#312e81 70%,#6d28d9 100%)}
         .iu-hero-silver-premiumInner{position:relative;z-index:2;width:100%;max-width:100%;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:0!important}
         .iu-hero-silver-premiumMain{display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
         .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:end;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0}
@@ -300,6 +296,16 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
+    <style>
+      /* P0 mobile/tablet: „Jsem Silver“ box — jedno večerní prémiové pozadí ve všech časových režimech; načteno až po app.css kvůli vyšší specificitě než #iuSilverHeroPremium { background-image: … !important }. */
+      @media (max-width: 1024px) {
+        #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
+        #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium {
+          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%) !important;
+          background-image: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%) !important;
+        }
+      }
+    </style>
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
