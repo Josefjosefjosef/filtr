@@ -1,12 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T17:54:44.063082Z",
+  "ingestedAt": "2026-04-26T18:19:37.132054Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Videomomenty. Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
+      "title": "Házenkáři Karviné jsou jediný zápas od obhajoby titulu",
+      "url": "https://www.sport.cz/clanek/hazena-hazenkari-karvine-jsou-jediny-zapas-od-obhajoby-titulu-5444114",
+      "dt": "2026-04-26T18:01:09Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "házenkáři",
+        "jediný",
+        "karviné",
+        "obhajoby",
+        "titulu",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "SESTŘIH: Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-nervy-drasajici-finale-serviruje-zapas-cislo-pet-priblizi-se-titulu-pardubice-nebo-trinec-5442316",
       "dt": "2026-04-26T10:21:29Z",
       "media_raw": "Sport.cz",
@@ -18,10 +41,10 @@
         "pardubic",
         "přiblížil",
         "sedlák",
+        "sestřih",
         "titulu",
         "třetiny",
         "třetí",
-        "videomomenty",
         "vteřin"
       ],
       "feedCategory": "sport",
@@ -721,28 +744,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "KVÍZ: Co možná nevíte o českých tenistech",
-      "url": "https://www.sport.cz/clanek/tenis-kviz-co-mozna-nevite-o-ceskych-tenistech-5433414",
-      "dt": "2026-04-10T06:30:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kvíz",
-        "možná",
-        "nevíte",
-        "tenistech",
-        "českých"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -753,7 +754,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45389,
+      "bytes": 45440,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -790,7 +791,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T17:13:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T18:01:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -806,7 +807,11 @@
         },
         "sample_titles": [
           {
-            "title": "Videomomenty. Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
+            "title": "Házenkáři Karviné jsou jediný zápas od obhajoby titulu",
+            "publishedAt": "2026-04-26T18:01:09Z"
+          },
+          {
+            "title": "SESTŘIH: Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
             "publishedAt": "2026-04-26T10:21:29Z"
           },
           {
@@ -832,10 +837,6 @@
           {
             "title": "Chelsea je po čtyřech letech ve finále Anglického poháru",
             "publishedAt": "2026-04-26T16:06:36Z"
-          },
-          {
-            "title": "Basketbalistky USK Praha mají 16. titul v řadě",
-            "publishedAt": "2026-04-26T14:52:37Z"
           }
         ]
       }

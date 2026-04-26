@@ -1,26 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-04-26T17:54:44.063082Z",
+  "ingestedAt": "2026-04-26T18:19:37.132054Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pardubice - Třinec 2:1. Sedlák rozsekl drama v závěru, Dynamo krok od titulu",
-      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474849/pardubice-trinec-2-1-sedlak-rozsekl-drama-v-zaveru-dynamo-krok-od-titulu.html",
+      "title": "NHL ONLINE: Boston - Buffalo. Pastrňák a Zacha chtějí srovnat sérii, hraje i Nečas",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474862/nhl-online-boston-buffalo-pastrnak-a-zacha-chteji-srovnat-serii-hraje-i-necas.html",
+      "dt": "2026-04-26T17:35:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "boston",
+        "buffalo",
+        "chtějí",
+        "hraje",
+        "nečas",
+        "nhl",
+        "online",
+        "pastrňák",
+        "srovnat",
+        "sérii",
+        "zacha"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice - Třinec 2:1. Dynamo krok od zlata, bitvu rozhodl v čase 58:44 Sedlák",
+      "url": "https://isport.blesk.cz/clanek/hokej-tipsport-extraliga/474849/pardubice-trinec-2-1-dynamo-krok-od-zlata-bitvu-rozhodl-v-case-58-44-sedlak.html",
       "dt": "2026-04-26T17:30:00Z",
       "media_raw": "iSport",
       "media_norm": "iSport",
       "tokens": [
-        "drama",
+        "bitvu",
         "dynamo",
         "krok",
         "pardubice",
-        "rozsekl",
+        "rozhodl",
         "sedlák",
-        "titulu",
         "třinec",
-        "závěru"
+        "zlata",
+        "čase"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -368,34 +396,6 @@
         "udělal",
         "zubil",
         "záměrně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "NHL ONLINE: Boston - Buffalo. Pastrňák a Zacha chtějí srovnat sérii, hraje i Nečas",
-      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474862/nhl-online-boston-buffalo-pastrnak-a-zacha-chteji-srovnat-serii-hraje-i-necas.html",
-      "dt": "2026-04-26T14:00:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "boston",
-        "buffalo",
-        "chtějí",
-        "hraje",
-        "nečas",
-        "nhl",
-        "online",
-        "pastrňák",
-        "srovnat",
-        "sérii",
-        "zacha"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1089,7 +1089,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 57914,
+      "bytes": 58329,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1126,7 +1126,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T17:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T17:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1142,7 +1142,11 @@
         },
         "sample_titles": [
           {
-            "title": "Pardubice - Třinec 2:1. Sedlák rozsekl drama v závěru, Dynamo krok od titulu",
+            "title": "NHL ONLINE: Boston - Buffalo. Pastrňák a Zacha chtějí srovnat sérii, hraje i Nečas",
+            "publishedAt": "2026-04-26T17:35:00Z"
+          },
+          {
+            "title": "Pardubice - Třinec 2:1. Dynamo krok od zlata, bitvu rozhodl v čase 58:44 Sedlák",
             "publishedAt": "2026-04-26T17:30:00Z"
           },
           {
@@ -1168,10 +1172,6 @@
           {
             "title": "Neporazitelné! Basketbalistky USK vyhrály všechny zápasy a berou 16. titul v řadě",
             "publishedAt": "2026-04-26T15:43:00Z"
-          },
-          {
-            "title": "Béčko Sparty proti Opavě ubojovalo bod. Zbrojovka porazila Slavii, Táborsko udrželo náskok",
-            "publishedAt": "2026-04-26T15:10:00Z"
           }
         ]
       }
