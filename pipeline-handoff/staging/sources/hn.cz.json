@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-26T10:59:28.746572Z",
+  "ingestedAt": "2026-04-26T11:24:45.243242Z",
   "items": [
     {
       "section": "finance",
@@ -23,6 +23,32 @@
         "pokulhává",
         "sebastian",
         "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Odklad novely nepovedeného stavebního zákona je tou nejlepší zprávou pro všechny",
+      "url": "https://archiv.hn.cz/c1-67871000-nazev-clanku",
+      "dt": "2026-04-26T08:04:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "nejlepší",
+        "nepovedeného",
+        "novely",
+        "odklad",
+        "stavebního",
+        "tou",
+        "všechny",
+        "zprávou",
+        "zákona"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1125,36 +1151,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Třetí ročník výstavy Pražské jaro Art Salon se ponese ve znamení jara a vyvrcholí benefiční aukcí",
-      "url": "https://archiv.hn.cz/c1-67865360-treti-rocnik-vystavy-prazske-jaro-art-salon-se-ponese-ve-znameni-jara-a-vyvrcholi-beneficni-aukci",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "art",
-        "aukcí",
-        "benefiční",
-        "jara",
-        "jaro",
-        "ponese",
-        "pražské",
-        "ročník",
-        "salon",
-        "třetí",
-        "vyvrcholí",
-        "výstavy",
-        "znamení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1165,7 +1161,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184242,
+      "bytes": 184148,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1224,6 +1220,10 @@
             "publishedAt": "2026-04-26T09:12:00Z"
           },
           {
+            "title": "Odklad novely nepovedeného stavebního zákona je tou nejlepší zprávou pro všechny",
+            "publishedAt": "2026-04-26T08:04:00Z"
+          },
+          {
             "title": "Střelba blízko Trumpa. Americký prezident byl evakuován z galavečera s novináři, cílem měli být čelní členové jeho kabinetu",
             "publishedAt": "2026-04-26T06:44:00Z"
           },
@@ -1246,10 +1246,6 @@
           {
             "title": "Trumpova popularita je na dně, za pět měsíců přitom začínají volby. Spojené státy jsou na křižovatce, bude hlasování svobodné?",
             "publishedAt": "2026-04-25T07:54:00Z"
-          },
-          {
-            "title": "Plášť už lidstvo nechrání. Proč je Černobyl 40 let po katastrofě znovu hrozbou",
-            "publishedAt": "2026-04-25T04:00:00Z"
           }
         ]
       }

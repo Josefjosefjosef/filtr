@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T10:59:28.746572Z",
+  "ingestedAt": "2026-04-26T11:24:45.243242Z",
   "items": [
     {
       "section": "aktualne",
@@ -757,6 +757,27 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Fotbalistky FC Praha podlehly Plzni 1:2",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalistky-fc-praha-podlehly-plzni-12-156461",
+      "dt": "2026-04-26T11:01:01Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "fotbalistky",
+        "plzni",
+        "podlehly",
+        "praha"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Muži poprvé běželi maraton pod dvě hodiny. Zvítězil Sawe",
       "url": "https://sport.ceskatelevize.cz/clanek/atletika/muzi-poprve-bezeli-maraton-pod-dve-hodiny-zivetil-sawe-156460",
       "dt": "2026-04-26T10:45:37Z",
@@ -1483,35 +1504,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šulc ohlásil v Lyonu návrat po zranění. Liga mistrů je pro nás cíl už od startu sezony, říká",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/sulc-ohlasil-v-lyonu-navrat-po-zraneni-liga-mistru-je-pro-nas-cil-uz-od-startu-sezony-rika-156431",
-      "dt": "2026-04-24T13:46:45Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "cíl",
-        "liga",
-        "lyonu",
-        "mistrů",
-        "nás",
-        "návrat",
-        "ohlásil",
-        "sezony",
-        "startu",
-        "zranění",
-        "říká",
-        "šulc"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1641,7 +1633,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38472,
+      "bytes": 38230,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1678,7 +1670,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:45:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T11:01:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1693,6 +1685,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalistky FC Praha podlehly Plzni 1:2",
+            "publishedAt": "2026-04-26T11:01:01Z"
+          },
           {
             "title": "Muži poprvé běželi maraton pod dvě hodiny. Zvítězil Sawe",
             "publishedAt": "2026-04-26T10:45:37Z"
@@ -1720,10 +1716,6 @@
           {
             "title": "Je brzo mluvit o tom, že je o titulu rozhodnuto, řekl Priske po prohře v Ďolíčku",
             "publishedAt": "2026-04-25T19:36:20Z"
-          },
-          {
-            "title": "Volejbalové Šelmy řádily v Liberci a vynutily si páté finále",
-            "publishedAt": "2026-04-25T19:25:11Z"
           }
         ]
       }
@@ -1735,7 +1727,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77193,
+      "bytes": 77252,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

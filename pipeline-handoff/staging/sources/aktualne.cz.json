@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T10:59:28.746572Z",
+  "ingestedAt": "2026-04-26T11:24:45.243242Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlivný pražský lidovec má na nového šéfa strany velkou prosbu. Nejspíš že ho potěší",
+      "url": "https://zpravy.aktualne.cz/domaci/vlivny-prazsky-lidovec-ma-na-noveho-sefa-strany-velkou-prosbu-nejspis-ze-ho-potesi/r~aaa29f91e2a9b8037472f03558bd3bd4/",
+      "dt": "2026-04-26T11:03:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "lidovec",
+        "nejspíš",
+        "nového",
+        "potěší",
+        "pražský",
+        "prosbu",
+        "strany",
+        "velkou",
+        "vlivný",
+        "šéfa"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -511,32 +538,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump padá dolů. Češi vnímají negativněji pouze jediného politika",
-      "url": "https://zpravy.aktualne.cz/domaci/trump-jako-putin-u-cechu-si-vyrazne-pohorsil-koho-maji-naopak-radi/r~aaa29652c96d739504e9b11ff6e56683/",
-      "dt": "2026-04-26T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dolů",
-        "jediného",
-        "negativněji",
-        "padá",
-        "politika",
-        "pouze",
-        "trump",
-        "vnímají",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22918,
+      "bytes": 22978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,7 +585,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T11:03:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -601,6 +602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlivný pražský lidovec má na nového šéfa strany velkou prosbu. Nejspíš že ho potěší",
+            "publishedAt": "2026-04-26T11:03:00Z"
+          },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -628,10 +633,6 @@
           {
             "title": "Škoda tyhle fotky minout: papež z plastu, selfie z Marsu nebo rukavice krále popu",
             "publishedAt": "2026-04-26T08:54:00Z"
-          },
-          {
-            "title": "Nosková je v osmifinále, přes Rusku postoupila bez boje",
-            "publishedAt": "2026-04-26T08:46:00Z"
           }
         ]
       }
