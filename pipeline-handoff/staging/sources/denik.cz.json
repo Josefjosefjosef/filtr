@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-26T19:34:59.420657Z",
+  "ingestedAt": "2026-04-26T19:59:30.290420Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Japonsko zachvátily lesní požáry. S ohněm bojuje 1400 hasičů",
+      "url": "https://www.denik.cz/ze_sveta/japonsko-lesni-pozary-hasici.html",
+      "dt": "2026-04-26T19:13:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "1400",
+        "bojuje",
+        "hasičů",
+        "japonsko",
+        "lesní",
+        "ohněm",
+        "požáry",
+        "zachvátily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,31 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "I snídaně mohou zvyšovat cholesterol. Mnoho Čechů chybuje, ani o tom neví",
-      "url": "https://www.denik.cz/zdravotnictvi/zdravi-zvyseny-cholesterol-snidane-cemu-se-vyhnout.html",
-      "dt": "2026-04-26T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cholesterol",
-        "chybuje",
-        "mnoho",
-        "neví",
-        "snídaně",
-        "tom",
-        "zvyšovat",
-        "čechů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29859,
+      "bytes": 29672,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,12 +696,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-26T18:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T19:13:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 1,
-          "zdravi": 1
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -713,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Japonsko zachvátily lesní požáry. S ohněm bojuje 1400 hasičů",
+            "publishedAt": "2026-04-26T19:13:00Z"
+          },
           {
             "title": "Horor na Slovensku: Z hrobu se ozývalo bušení a hlasy. Případ skončil tragicky",
             "publishedAt": "2026-04-26T18:40:00Z"
@@ -740,10 +743,6 @@
           {
             "title": "Nový rekord: V Poděbradech se sešlo nejvíc lidí narozených ve znamení Býka",
             "publishedAt": "2026-04-26T11:50:00Z"
-          },
-          {
-            "title": "Černobyl po 40 letech: Rudý les je dál toxický, Pripjať bude opuštěná ještě roky",
-            "publishedAt": "2026-04-26T11:30:00Z"
           }
         ]
       }
