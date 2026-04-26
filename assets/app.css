@@ -21599,7 +21599,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet ≤1024 #iuSilverHeroPremium base gradient (odpolední premium viz html.iu-time-afternoon níže). */
+/* P0: mobile/tablet ≤1024 #iuSilverHeroPremium base gradient (premium viz html.iu-time-* níže). */
 @media (max-width: 1024px){
   #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
@@ -21608,10 +21608,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet — Silver hero premium cinematic (jen Příjemné odpoledne: html.iu-time-afternoon). */
+/* P0: mobile/tablet — Silver hero premium cinematic (všechny časové režimy; :is() kvůli css_debt_guard bytes). */
 @media (max-width: 1024px){
-  html.iu-time-afternoon #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
-  html.iu-time-afternoon #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
     position: relative;
     overflow: hidden;
     isolation: isolate;
@@ -21632,7 +21632,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
       inset 0 -1px 0 rgba(139, 92, 246, 0.15) !important;
   }
 
-  html.iu-time-afternoon #iuSilverHeroPremium::before{
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuSilverHeroPremium::before{
     content: "" !important;
     display: block !important;
     position: absolute;
@@ -21646,7 +21646,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     transform: skewY(-6deg);
   }
 
-  html.iu-time-afternoon #iuSilverHeroPremium::after{
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuSilverHeroPremium::after{
     content: "" !important;
     display: block !important;
     position: absolute;
@@ -21660,13 +21660,12 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     opacity: 0.8;
   }
 
-  html.iu-time-afternoon #iuSilverHeroPremium > *{
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuSilverHeroPremium > *{
     position: relative;
     z-index: 1;
   }
 
-  html.iu-time-afternoon #iuSilverHeroPremium .iu-silver-quick-actions,
-  html.iu-time-afternoon #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
+  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuSilverHeroPremium :is(.iu-silver-quick-actions,.iu-hero-quickActions.iu-hero-actions){
     position: relative;
     z-index: 2;
   }

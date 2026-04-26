@@ -6583,9 +6583,25 @@ function buildVideoAsArticleCard(it) {
         });
       }catch{}
     }
+    function syncHtmlSilverTimeClass(k){
+      try{
+        const rootEl = document.documentElement;
+        const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
+        for (let i = 0; i < all.length; i++) rootEl.classList.remove(all[i]);
+        const map = {
+          morning: "iu-time-morning",
+          lateMorning: "iu-time-late-morning",
+          afternoon: "iu-time-afternoon",
+          evening: "iu-time-evening"
+        };
+        const addCls = map[k];
+        if (addCls) rootEl.classList.add(addCls);
+      }catch{}
+    }
     function applyVariantClass(daypart){
       try{
         const k = greetingKeyFromDaypart(daypart);
+        try{ syncHtmlSilverTimeClass(k); }catch{}
         const variants = ["morning", "lateMorning", "afternoon", "evening"];
         const prefix = "silver-welcome-stack--";
         const want = prefix + k;
@@ -6624,11 +6640,6 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         try{
           document.documentElement.setAttribute("data-iu-daypart", daypart);
-        }catch{}
-        try{
-          const rootEl = document.documentElement;
-          if (k === "afternoon") rootEl.classList.add("iu-time-afternoon");
-          else rootEl.classList.remove("iu-time-afternoon");
         }catch{}
         try{
           const hostTop = document.getElementById("iuTopbarSilverComposerHost");

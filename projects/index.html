@@ -291,7 +291,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=afternoon-silver-premium-cinematic-1024" />
+    <link rel="stylesheet" href="/assets/app.css?v=silver-hero-premium-all-times-1024" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
@@ -512,8 +512,13 @@ style-src 'self' 'unsafe-inline' https:;
                       try { document.documentElement.setAttribute("data-iu-daypart", daypart); } catch (e01) {}
                       try { document.documentElement.setAttribute("data-iu-silver-welcome-paint", k); } catch (e1) {}
                       try {
-                        if (k === "afternoon") document.documentElement.classList.add("iu-time-afternoon");
-                        else document.documentElement.classList.remove("iu-time-afternoon");
+                        var _iuSilverTimeAll = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
+                        for (var _iuSi = 0; _iuSi < _iuSilverTimeAll.length; _iuSi++) {
+                          document.documentElement.classList.remove(_iuSilverTimeAll[_iuSi]);
+                        }
+                        var _iuSilverTimeByK = { morning: "iu-time-morning", lateMorning: "iu-time-late-morning", afternoon: "iu-time-afternoon", evening: "iu-time-evening" };
+                        var _iuAddSilverTime = _iuSilverTimeByK[k];
+                        if (_iuAddSilverTime) document.documentElement.classList.add(_iuAddSilverTime);
                       } catch (eCls) {}
                       var slot = document.getElementById("silver-slot");
                       if (slot) {
