@@ -102,6 +102,23 @@ async function fingerprintChildTwice(page) {
   return a === b && a !== "";
 }
 
+async function fingerprintHeroRectTwice(page) {
+  const a = await page.evaluate(() => {
+    const el = document.getElementById("iuSilverHeroPremium");
+    if (!el) return "";
+    const r = el.getBoundingClientRect();
+    return [r.width, r.height, r.top, r.left].map((n) => String(Math.round(n * 10) / 10)).join("|");
+  });
+  await page.waitForTimeout(120);
+  const b = await page.evaluate(() => {
+    const el = document.getElementById("iuSilverHeroPremium");
+    if (!el) return "";
+    const r = el.getBoundingClientRect();
+    return [r.width, r.height, r.top, r.left].map((n) => String(Math.round(n * 10) / 10)).join("|");
+  });
+  return a === b && a !== "";
+}
+
 function ghMainSha() {
   try {
     return String(
@@ -157,6 +174,7 @@ async function main() {
   let badInput = false;
   let badImg = false;
   let badChild = false;
+  let badLayout = false;
   let maxCls = 0;
   let anyOverflow = false;
   let anyRail = false;
@@ -179,6 +197,7 @@ async function main() {
     if (!(await fingerprintInputTwice(page))) badInput = true;
     if (!(await fingerprintImgTwice(page))) badImg = true;
     if (!(await fingerprintChildTwice(page))) badChild = true;
+    if (!(await fingerprintHeroRectTwice(page))) badLayout = true;
     maxCls = Math.max(maxCls, await clsRead(page));
     if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) {
       anyOverflow = true;
@@ -223,7 +242,7 @@ async function main() {
     `forbiddenChildStyleChanged: ${badChild}`,
     `desktopChanged: ${Boolean(wide && premiumDesktop)}`,
     `otherBoxesChanged: ${brand0 !== brand1}`,
-    `layoutChanged: ${badChild}`,
+    `layoutChanged: ${badLayout}`,
     `CLS: ${maxCls}`,
     `overflowX: ${anyOverflow}`,
     `railShift: ${anyRail ? 1 : 0}`,
@@ -240,6 +259,7 @@ async function main() {
     badInput ||
     badImg ||
     badChild ||
+    badLayout ||
     wide && premiumDesktop ||
     brand0 !== brand1 ||
     maxCls > 0 ||
