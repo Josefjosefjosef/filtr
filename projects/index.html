@@ -291,7 +291,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=mobile-silver-afternoon-bg-1024" />
+    <link rel="stylesheet" href="/assets/app.css?v=afternoon-silver-premium-cinematic-1024" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
@@ -511,6 +511,10 @@ style-src 'self' 'unsafe-inline' https:;
                       try { window.__IU_SILVER_WELCOME_PAINT_K__ = k; } catch (e0) {}
                       try { document.documentElement.setAttribute("data-iu-daypart", daypart); } catch (e01) {}
                       try { document.documentElement.setAttribute("data-iu-silver-welcome-paint", k); } catch (e1) {}
+                      try {
+                        if (k === "afternoon") document.documentElement.classList.add("iu-time-afternoon");
+                        else document.documentElement.classList.remove("iu-time-afternoon");
+                      } catch (eCls) {}
                       var slot = document.getElementById("silver-slot");
                       if (slot) {
                         slot.setAttribute("data-iu-silver-welcome-variant", k);

@@ -6626,6 +6626,11 @@ function buildVideoAsArticleCard(it) {
           document.documentElement.setAttribute("data-iu-daypart", daypart);
         }catch{}
         try{
+          const rootEl = document.documentElement;
+          if (k === "afternoon") rootEl.classList.add("iu-time-afternoon");
+          else rootEl.classList.remove("iu-time-afternoon");
+        }catch{}
+        try{
           const hostTop = document.getElementById("iuTopbarSilverComposerHost");
           if (hostTop) hostTop.setAttribute("data-iu-silver-welcome-variant", k);
         }catch{}
