@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T06:54:42.644292Z",
+  "ingestedAt": "2026-04-26T07:19:52.717966Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Introvert Nosková? Je to dobře, líčí kouč. Útok na desítku může přijít nečekaně brzy",
+      "url": "https://sport.aktualne.cz/tenis/introvert-noskova-je-to-dobre-lici-kouc-utok-na-desitku-muze-prijit-necekane-brzy/r~aaa2945f230edfacbe779e88f0d031c3/",
+      "dt": "2026-04-26T07:09:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brzy",
+        "desítku",
+        "dobře",
+        "introvert",
+        "kouč",
+        "líčí",
+        "nečekaně",
+        "nosková",
+        "přijít",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -505,34 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta totálně vyhořela na Bohemians, Slavia zase vede o osm bodů. Baník je poslední",
-      "url": "https://sport.aktualne.cz/fotbal/sparta-totalne-vyhorela-na-bohemians-slavia-zase-vede-o-osm-bodu-banik-je-posledni/r~aaa29d7fca3da1ee561c1764b028e631/",
-      "dt": "2026-04-25T16:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "baník",
-        "bodů",
-        "bohemians",
-        "osm",
-        "poslední",
-        "slavia",
-        "sparta",
-        "totálně",
-        "vede",
-        "vyhořela",
-        "zase"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22326,
+      "bytes": 22184,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,7 +579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T07:09:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 7,
@@ -597,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Introvert Nosková? Je to dobře, líčí kouč. Útok na desítku může přijít nečekaně brzy",
+            "publishedAt": "2026-04-26T07:09:00Z"
+          },
           {
             "title": "Pochroumaný Vladař nastoupil, ale chyboval. I proto Philadelphia poprvé padla",
             "publishedAt": "2026-04-26T05:17:00Z"
@@ -624,10 +627,6 @@
           {
             "title": "Vytvořili byt v pokoji. Z fotek ani nejde poznat, jak málo místa měli architekti k mání",
             "publishedAt": "2026-04-26T04:59:00Z"
-          },
-          {
-            "title": "Střelba na Trumpově galavečeru. Prezidenta okamžitě evakuovali, útočník zranil agenta",
-            "publishedAt": "2026-04-26T04:46:00Z"
           }
         ]
       }

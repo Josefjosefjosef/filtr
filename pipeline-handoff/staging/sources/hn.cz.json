@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-26T06:54:42.644292Z",
+  "ingestedAt": "2026-04-26T07:19:52.717966Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Střelba blízko Trumpa. Americký prezident byl evakuován z galavečera s novináři, cílem měli být čelní členové jeho kabinetu",
+      "url": "https://byznys.hn.cz/c1-67871060-strelba-blizko-trumpa-americky-prezident-byl-evakuovan-z-galavecera-s-novinari",
+      "dt": "2026-04-26T06:44:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "americký",
+        "blízko",
+        "být",
+        "cílem",
+        "evakuován",
+        "galavečera",
+        "jeho",
+        "kabinetu",
+        "měli",
+        "novináři",
+        "prezident",
+        "střelba",
+        "trumpa",
+        "čelní",
+        "členové"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1124,37 +1156,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Berlínský &bdquo;think-tank&ldquo; přiváží na Pražské jaro hudbu, jež dokáže obejmout a dojímá k slzám",
-      "url": "https://archiv.hn.cz/c1-67865200-berlinsky-bdquo-think-tank-ldquo-privazi-na-prazske-jaro-hudbu-jez-dokaze-obejmout-a-dojima-k-slzam",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bdquo",
-        "berlínský",
-        "dojímá",
-        "dokáže",
-        "hudbu",
-        "jaro",
-        "jež",
-        "ldquo",
-        "obejmout",
-        "pražské",
-        "přiváží",
-        "slzám",
-        "tank",
-        "think"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1165,7 +1166,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184410,
+      "bytes": 184359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1202,7 +1203,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T10:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T06:44:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1219,6 +1220,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střelba blízko Trumpa. Americký prezident byl evakuován z galavečera s novináři, cílem měli být čelní členové jeho kabinetu",
+            "publishedAt": "2026-04-26T06:44:00Z"
+          },
           {
             "title": "Babiš vede Česko do krize, spolupráce s ním je &bdquo;no-go&ldquo;, říká nový předseda lidovců Jan Grolich",
             "publishedAt": "2026-04-25T10:31:00Z"
@@ -1246,10 +1251,6 @@
           {
             "title": "Hlavní odborář Středula má pozici silnou, ČMKOS povede dál. Česko by podle něj mělo upustit od modelu levné práce",
             "publishedAt": "2026-04-24T18:42:00Z"
-          },
-          {
-            "title": "Klamání zákazníka, nebo jen slovní hříčka? Inspekce zakázala používat zavádějící slogan Fish? Fresh!, ale jen někde",
-            "publishedAt": "2026-04-24T18:30:00Z"
           }
         ]
       }

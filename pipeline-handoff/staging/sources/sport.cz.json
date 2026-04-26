@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T06:54:42.644292Z",
+  "ingestedAt": "2026-04-26T07:19:52.717966Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Snová noc českého šampiona. Moc si toho nepamatuju, směje se",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-snova-noc-ceskeho-sampiona-moc-si-toho-nepamatuju-rozesmal-se-5443824",
+      "dt": "2026-04-26T06:55:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "moc",
+        "nepamatuju",
+        "noc",
+        "směje",
+        "snová",
+        "toho",
+        "českého",
+        "šampiona"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,30 +783,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Liberec ovládl derby, Jablonec se propadl za Plzeň",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-liberec-ovladl-derby-jablonec-se-propadl-za-plzen-5443630",
-      "dt": "2026-04-25T16:03:08Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "derby",
-        "jablonec",
-        "liberec",
-        "ovládl",
-        "plzeň",
-        "propadl",
-        "sestřih"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 50936,
+      "bytes": 51019,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T06:46:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T06:55:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Snová noc českého šampiona. Moc si toho nepamatuju, směje se",
+            "publishedAt": "2026-04-26T06:55:10Z"
+          },
           {
             "title": "KOMENTÁŘ: Ostrava do ligy patří a musí to dokázat. Rubat za Baník nesmí být jen prázdné heslo",
             "publishedAt": "2026-04-26T06:46:54Z"
@@ -872,10 +877,6 @@
           {
             "title": "Pohovory zabraly, Slavia zastavila negativní emoce a vyhrála. S Tvrdíkem jsme souhlasili, přiznal kouč",
             "publishedAt": "2026-04-26T04:19:17Z"
-          },
-          {
-            "title": "Menšík začal v Madridu vítězně, Samson končí",
-            "publishedAt": "2026-04-25T11:28:02Z"
           }
         ]
       }
