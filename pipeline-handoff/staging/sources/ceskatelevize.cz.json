@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T04:50:12.043849Z",
+  "ingestedAt": "2026-04-26T05:14:36.567419Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "V USA jsou dostupná lidská embrya na zakázku. Vědci varují před eugenikou",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/v-usa-jsou-dostupna-lidska-embrya-na-zakazku-vedci-varuji-pred-eugenikou-372724",
+      "dt": "2026-04-26T05:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dostupná",
+        "embrya",
+        "eugenikou",
+        "lidská",
+        "usa",
+        "varují",
+        "vědci",
+        "zakázku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -710,31 +735,6 @@
         "paliva",
         "zahraničí",
         "zkomplikovat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusko rozsáhle útočilo na Ukrajinu, zásahy hlásí Charkov a Dnipro",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusko-rozsahle-utoci-na-ukrajinu-zasahy-hlasi-charkov-a-dnipro-372781",
-      "dt": "2026-04-25T01:59:09Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "charkov",
-        "dnipro",
-        "hlásí",
-        "rozsáhle",
-        "rusko",
-        "ukrajinu",
-        "zásahy",
-        "útočilo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1521,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44486,
+      "bytes": 44396,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,11 +1581,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 2,
+          "other": 3,
+          "zpravy": 25,
           "sport": 1,
           "finance": 1
         },
@@ -1599,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V USA jsou dostupná lidská embrya na zakázku. Vědci varují před eugenikou",
+            "publishedAt": "2026-04-26T05:01:00Z"
+          },
           {
             "title": "Až milion korun na novou ordinaci. VZP láká lékaře do regionů s nedostatkem péče",
             "publishedAt": "2026-04-26T04:30:00Z"
@@ -1626,10 +1630,6 @@
           {
             "title": "Netanjahu nařídil provést razantní útoky proti hnutí Hizballáh",
             "publishedAt": "2026-04-25T19:32:00Z"
-          },
-          {
-            "title": "Restaurátoři opravují největší sousoší na Karlově mostě",
-            "publishedAt": "2026-04-25T19:21:39Z"
           }
         ]
       }
@@ -1735,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77195,
+      "bytes": 77240,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

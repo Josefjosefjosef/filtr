@@ -1,8 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T04:50:12.043849Z",
+  "ingestedAt": "2026-04-26T05:14:36.567419Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Skuhravého kouzlo je fuč a Slovácko čeká tuhý boj o záchranu. Nespím, mám pocit, že jsme moc hodní, přemítá kouč",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-skuhraveho-kouzlo-je-fuc-a-slovacko-ceka-tuhy-boj-o-zachranu-nespim-mam-pocit-ze-jsme-moc-hodni-premita-kouc-5443808",
+      "dt": "2026-04-26T05:06:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "boj",
+        "fuč",
+        "hodní",
+        "jsme",
+        "kouzlo",
+        "kouč",
+        "moc",
+        "mám",
+        "nespím",
+        "pocit",
+        "přemítá",
+        "skuhravého",
+        "slovácko",
+        "tuhý",
+        "záchranu",
+        "čeká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -746,32 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Hapal: Červená karta byla přísná. S žádným trenérem jsme ještě nejednali",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-hapal-cervena-karta-byla-prisna-s-zadnym-trenerem-jsme-jeste-nejednali-5443773",
-      "dt": "2026-04-25T17:43:06Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hapal",
-        "ještě",
-        "jsme",
-        "karta",
-        "nejednali",
-        "přísná",
-        "trenérem",
-        "červená",
-        "žádným"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 51493,
+      "bytes": 51709,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,11 +826,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:32:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:06:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
-          "sport": 29
+          "sport": 29,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -835,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Skuhravého kouzlo je fuč a Slovácko čeká tuhý boj o záchranu. Nespím, mám pocit, že jsme moc hodní, přemítá kouč",
+            "publishedAt": "2026-04-26T05:06:07Z"
+          },
           {
             "title": "Česká nálož adrenalinu. Bouřlivák předvedl K. O., druhá koruna pro královnu",
             "publishedAt": "2026-04-26T04:32:36Z"
@@ -862,10 +873,6 @@
           {
             "title": "Barcelona udělala další krok k titulu. Po šesti letech vyhrála na hřišti Getafe",
             "publishedAt": "2026-04-25T16:16:19Z"
-          },
-          {
-            "title": "Titul v asijské Lize mistrů obhájili fotbalisté al-Ahlí",
-            "publishedAt": "2026-04-25T21:04:01Z"
           }
         ]
       }

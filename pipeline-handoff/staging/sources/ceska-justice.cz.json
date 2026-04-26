@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-26T04:50:12.043849Z",
+  "ingestedAt": "2026-04-26T05:14:36.567419Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Psaní závěti bude jednodušší: Svědkem může být i advokát",
+      "url": "https://www.ceska-justice.cz/2026/04/psani-zaveti-bude-jednodussi-svedkem-muze-byt-i-advokat/",
+      "dt": "2026-04-26T05:01:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "advokát",
+        "být",
+        "jednodušší",
+        "psaní",
+        "svědkem",
+        "závěti"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -238,33 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Masér měl klientce dráždit klitoris. Nejvyšší soud zpochybnil znásilnění i důkazy",
-      "url": "https://www.ceska-justice.cz/2026/04/maser-mel-zene-drazdit-klitoris-nejvyssi-soud/",
-      "dt": "2026-04-23T04:30:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "dráždit",
-        "důkazy",
-        "klientce",
-        "klitoris",
-        "masér",
-        "měl",
-        "nejvyšší",
-        "soud",
-        "znásilnění",
-        "zpochybnil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 103277,
+      "bytes": 97771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-25T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:01:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Psaní závěti bude jednodušší: Svědkem může být i advokát",
+            "publishedAt": "2026-04-26T05:01:00Z"
+          },
           {
             "title": "Rok vězení za zabití psa nebo kočky z rozmaru. Poslanci navrhli nový trestný čin",
             "publishedAt": "2026-04-25T04:30:00Z"
@@ -354,10 +354,6 @@
           {
             "title": "Miliardy pro Agrofert v bezpečí? Státní fond vysvětluje, proč holding nemusí vracet dotace",
             "publishedAt": "2026-04-23T16:25:38Z"
-          },
-          {
-            "title": "Kolik lidí podvedl soudce Kafka? Žalobci počítají škodu",
-            "publishedAt": "2026-04-23T08:59:11Z"
           }
         ]
       }

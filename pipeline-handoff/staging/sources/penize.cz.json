@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-26T04:50:12.043849Z",
+  "ingestedAt": "2026-04-26T05:14:36.567419Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejlepší loňská bankovka patří měně, která loni neexistovala",
+      "url": "https://www.penize.cz/nakupy/488861-nejlepsi-lonska-bankovka-patri-mene-ktera-loni-neexistovala",
+      "dt": "2026-04-26T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bankovka",
+        "loni",
+        "loňská",
+        "měně",
+        "neexistovala",
+        "nejlepší",
+        "patří"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -481,33 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zlato, které zdražuje rychleji než byty. Do Prahy míří aukce s mincemi za miliony",
-      "url": "https://www.penize.cz/nakupy/488624-zlato-ktere-zdrazuje-rychleji-nez-byty-do-prahy-miri-aukce-s-mincemi-za-miliony",
-      "dt": "2026-04-21T13:23:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aukce",
-        "byty",
-        "miliony",
-        "mincemi",
-        "míří",
-        "než",
-        "prahy",
-        "rychleji",
-        "zdražuje",
-        "zlato"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -518,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18294,
+      "bytes": 18298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -555,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 16,
@@ -571,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejlepší loňská bankovka patří měně, která loni neexistovala",
+            "publishedAt": "2026-04-26T07:00:00Z"
+          },
           {
             "title": "Těžaři bitcoinů se zbavují i zásob. Letos prodali víc než loni za rok",
             "publishedAt": "2026-04-25T07:00:00Z"
@@ -598,10 +599,6 @@
           {
             "title": "Hlavně rychle a pohodlně. Takhle přicházíte o peníze v e-shopu, varuje banka",
             "publishedAt": "2026-04-23T12:00:00Z"
-          },
-          {
-            "title": "Kde se bere sebevědomí. A proč rozhoduje víc, než si myslíte",
-            "publishedAt": "2026-04-23T05:05:00Z"
           }
         ]
       }

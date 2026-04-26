@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-26T04:50:12.043849Z",
+  "ingestedAt": "2026-04-26T05:14:36.567419Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lukáš z Ulice provokuje: „Nesnáším vozíčkáře a nebinární pohlaví je práce pro psychiatra,“ prohlásil",
+      "url": "https://www.vlasta.cz/celebrity/lukas-chod-jiri-marysko-ulice-nekorektnost-soud-socialni-site-prohlaseni/",
+      "dt": "2026-04-26T05:04:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "lukáš",
+        "nebinární",
+        "nesnáším",
+        "pohlaví",
+        "prohlásil",
+        "provokuje",
+        "práce",
+        "psychiatra",
+        "ulice",
+        "vozíčkáře"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1110,36 +1137,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Tohle jsou nejhorší mléčné výrobky ze supermarketu. Vypadají zdravě, ale mají víc cukru než limonáda",
-      "url": "https://www.vlasta.cz/inspirace/nejhorsi-mlecne-vyrobky-cukr-pribirani/",
-      "dt": "2026-04-21T04:32:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "ale",
-        "cukru",
-        "limonáda",
-        "mají",
-        "mléčné",
-        "nejhorší",
-        "než",
-        "supermarketu",
-        "tohle",
-        "vypadají",
-        "víc",
-        "výrobky",
-        "zdravě"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1150,7 +1147,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62758,
+      "bytes": 62884,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1187,11 +1184,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:04:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "zpravy": 2,
+          "other": 38
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1203,6 +1200,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lukáš z Ulice provokuje: „Nesnáším vozíčkáře a nebinární pohlaví je práce pro psychiatra,“ prohlásil",
+            "publishedAt": "2026-04-26T05:04:00Z"
+          },
           {
             "title": "Sukničkář Jiří Adamíra: Marie, Ljuba i Hana jej obdivovaly. O jednu z nich bojoval s Josefem Langmilerem",
             "publishedAt": "2026-04-26T04:32:00Z"
@@ -1230,10 +1231,6 @@
           {
             "title": "Jiří Bartoška měl luxusní chalupu u Karlových Varů. Musela stát balík, v koupelně měl televizi",
             "publishedAt": "2026-04-25T04:31:00Z"
-          },
-          {
-            "title": "To v televizi nebylo! Martin z Výměny manželek skončil ve vězení, Diana je sama se třemi dětmi",
-            "publishedAt": "2026-04-24T07:29:00Z"
           }
         ]
       }
