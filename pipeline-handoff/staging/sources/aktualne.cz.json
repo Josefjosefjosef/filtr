@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T16:44:26.466590Z",
+  "ingestedAt": "2026-04-26T17:09:35.954785Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice - Třinec 1:1. Je srovnáno, trefuje se Nestrašil",
+      "url": "https://sport.aktualne.cz/hokej/pardubice-trinec-strhujici-finale-pokracuje-v-pardubicich-pujde-o-titulovy-mecbol/r~aaa294329ded087938879b8bf7f892a1/",
+      "dt": "2026-04-26T14:46:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "nestrašil",
+        "pardubice",
+        "srovnáno",
+        "trefuje",
+        "třinec"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -103,32 +125,6 @@
         "zadrženého",
         "útoku",
         "žhářského"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice - Třinec 1:0. Dynamo drží těsné vedení, jde se do třetí třetiny",
-      "url": "https://sport.aktualne.cz/hokej/pardubice-trinec-strhujici-finale-pokracuje-v-pardubicich-pujde-o-titulovy-mecbol/r~aaa294329ded087938879b8bf7f892a1/",
-      "dt": "2026-04-26T14:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "drží",
-        "dynamo",
-        "jde",
-        "pardubice",
-        "těsné",
-        "třetiny",
-        "třetí",
-        "třinec",
-        "vedení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -552,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22433,
+      "bytes": 22411,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -592,8 +588,8 @@
         "raw_feed_latest_publishedAt": "2026-04-26T14:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
           "sport": 4,
+          "zpravy": 13,
           "finance": 3
         },
         "drop_counts": {
@@ -606,6 +602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pardubice - Třinec 1:1. Je srovnáno, trefuje se Nestrašil",
+            "publishedAt": "2026-04-26T14:46:00Z"
+          },
           {
             "title": "„Porušili jste příměří.“ Netanjahu nařídil razantní útoky proti Hizballáhu",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -621,10 +621,6 @@
           {
             "title": "Soud v Pardubicích poslal do vazby dalšího zadrženého v kauze žhářského útoku",
             "publishedAt": "2026-04-26T14:50:00Z"
-          },
-          {
-            "title": "Pardubice - Třinec 1:0. Dynamo drží těsné vedení, jde se do třetí třetiny",
-            "publishedAt": "2026-04-26T14:46:00Z"
           },
           {
             "title": "Česko je letos největším dovozcem dronů z Tchaj-wanu, ten navyšuje export",

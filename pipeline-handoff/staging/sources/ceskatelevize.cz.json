@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T16:44:26.466590Z",
+  "ingestedAt": "2026-04-26T17:09:35.954785Z",
   "items": [
     {
       "section": "aktualne",
@@ -757,6 +757,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Fotbalistky Arsenalu vstoupily do semifinále Ligy mistryň výhrou nad Lyonem",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalistky-arsenalu-vstoupily-do-semifinale-ligy-mistryn-vyhrou-nad-lyonem-156473",
+      "dt": "2026-04-26T16:53:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "arsenalu",
+        "fotbalistky",
+        "ligy",
+        "lyonem",
+        "mistryň",
+        "semifinále",
+        "vstoupily",
+        "výhrou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Chelsea je ve finále Anglického poháru, porazila Leeds 1:0",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-je-ve-finale-anglickeho-poharu-porazila-leeds-10-156472",
       "dt": "2026-04-26T16:34:46Z",
@@ -1470,31 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Menšík začal turnaj v Madridu hladkou výhrou. Končí Samson",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/mensik-zacal-turnaj-v-madridu-hladkou-vyhrou-konci-samson-156442",
-      "dt": "2026-04-25T12:45:59Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "hladkou",
-        "končí",
-        "madridu",
-        "menšík",
-        "samson",
-        "turnaj",
-        "výhrou",
-        "začal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1624,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38031,
+      "bytes": 37688,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1661,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T16:34:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T16:53:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1676,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fotbalistky Arsenalu vstoupily do semifinále Ligy mistryň výhrou nad Lyonem",
+            "publishedAt": "2026-04-26T16:53:41Z"
+          },
           {
             "title": "Chelsea je ve finále Anglického poháru, porazila Leeds 1:0",
             "publishedAt": "2026-04-26T16:34:46Z"
@@ -1703,10 +1707,6 @@
           {
             "title": "Česká osmnáctka deklasovala na MS Dánsko 9:1",
             "publishedAt": "2026-04-26T14:00:00Z"
-          },
-          {
-            "title": "Seixas Pogačara prověřil, ale neporazil. Slovinec vyhrál Lutych",
-            "publishedAt": "2026-04-26T13:53:20Z"
           }
         ]
       }
@@ -1718,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77103,
+      "bytes": 77080,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
