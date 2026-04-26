@@ -6811,7 +6811,9 @@ html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
   max-width: none;
   margin-left: 0;
   margin-right: 0;
+  margin-bottom: 2px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .iuHomeText{
@@ -10180,7 +10182,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 }
 
 #newsList #iuRadioView .iuRadioChip,
-#newsList #iuJrEmptyView .iuRadioChip,
 #newsList #iuTvOnlineView .iuRadioChip,
 #newsList #iuWeatherView .iuRadioChip,
 #newsList #iuMapyView .iuRadioChip,
@@ -10194,14 +10195,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 }
 
 #newsList #iuRadioView .iuRadioChip:hover,
-#newsList #iuJrEmptyView .iuRadioChip:hover,
 #newsList #iuTvOnlineView .iuRadioChip:hover,
 #newsList #iuWeatherView .iuRadioChip:hover,
 #newsList #iuTravelView .iuRadioChip:hover,
 #newsList #iuTvProgramView .iuRadioChip:hover,
 #newsList #iuKulturaView .iuRadioChip:hover,
 #newsList #iuRadioView .iuRadioChip:focus-visible,
-#newsList #iuJrEmptyView .iuRadioChip:focus-visible,
 #newsList #iuTvOnlineView .iuRadioChip:focus-visible,
 #newsList #iuWeatherView .iuRadioChip:focus-visible,
 #newsList #iuTravelView .iuRadioChip:focus-visible,
@@ -10372,6 +10371,59 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   display: none !important;
 }
 
+/* JR: premium chips; fine-pointer hover only; coarse = no sticky :hover + tap scale (selectors split for CSS debt guard). */
+#iuJrEmptyView.iuJrEmptyView{padding:14px 12px 16px}
+#iuJrEmptyView .iuSectionHeader--jr{margin:0 0 8px;align-items:center}
+#iuJrEmptyView .iuSectionHeader--jr h2{font-size:clamp(19px,1.05rem + .6vw,22px);font-weight:820;letter-spacing:.045em;line-height:1.2}
+#iuJrEmptyView .iuSectionHeader--jr .iuSectionHeaderLine{height:3px;border-radius:999px;opacity:1;background:linear-gradient(90deg,color-mix(in srgb,var(--iuSectionAccent) 72%,transparent) 0%,color-mix(in srgb,var(--iuSectionAccent) 28%,transparent) 38%,transparent 100%)}
+#iuJrEmptyView>.iuSectionSubtitle{margin:2px 0 12px;line-height:1.38}
+#newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  color:rgba(11,27,43,.92)!important;
+  background:linear-gradient(165deg,#fbfcfd,#eef2f6)!important;
+  border:1px solid color-mix(in srgb,var(--iuSectionAccent) 24%,rgba(11,27,43,.1))!important;
+  border-radius:12px;
+  box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)!important;
+  transition:transform .12s ease,box-shadow .12s ease,border-color .14s ease,background .14s ease,color .14s ease,filter .14s ease;
+}
+#newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip .iuRadioChipTitle{color:rgba(11,27,43,.92)!important}
+@media (hover:hover) and (pointer:fine){
+  #newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip:hover{
+    color:rgba(11,27,43,.93)!important;
+    background:linear-gradient(155deg,color-mix(in srgb,var(--iuSectionAccent) 12%,#fff),color-mix(in srgb,var(--iuSectionAccent) 18%,#fff7ed),color-mix(in srgb,var(--iuSectionAccent) 8%,#f8fafc))!important;
+    border-color:color-mix(in srgb,var(--iuSectionAccent) 34%,rgba(11,27,43,.09))!important;
+    box-shadow:0 1px 0 #fffc inset,0 0 0 1px color-mix(in srgb,var(--iuSectionAccent) 14%,transparent),0 12px 30px color-mix(in srgb,var(--iuSectionAccent) 13%,transparent),0 0 26px color-mix(in srgb,var(--iuSectionAccent) 8%,transparent)!important;
+    filter:saturate(1.02);
+  }
+  #newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip:hover .iuRadioChipTitle{color:rgba(11,27,43,.93)!important}
+}
+@media (hover:none),(pointer:coarse){
+  #newsList #iuJrEmptyView.iuJrEmptyView .iuRadioGrid a.iuRadioChip:hover{
+    color:rgba(11,27,43,.92)!important;
+    background:linear-gradient(165deg,#fbfcfd,#eef2f6)!important;
+    border-color:color-mix(in srgb,var(--iuSectionAccent) 24%,rgba(11,27,43,.1))!important;
+    box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)!important;
+    outline:none!important;
+    outline-offset:0!important;
+    filter:none;
+  }
+  #newsList #iuJrEmptyView.iuJrEmptyView .iuRadioGrid a.iuRadioChip:hover .iuRadioChipTitle{color:rgba(11,27,43,.92)!important}
+  #newsList #iuJrEmptyView.iuJrEmptyView .iuRadioGrid a.iuRadioChip:active{transform:scale(.98)}
+}
+#newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip:focus-visible{
+  outline:2px solid color-mix(in srgb,var(--iuSectionAccent) 42%,#fff)!important;
+  outline-offset:2px!important;
+  color:rgba(11,27,43,.93)!important;
+  background:linear-gradient(155deg,color-mix(in srgb,var(--iuSectionAccent) 10%,#fff),color-mix(in srgb,var(--iuSectionAccent) 14%,#fff8f0))!important;
+  border-color:color-mix(in srgb,var(--iuSectionAccent) 30%,rgba(11,27,43,.1))!important;
+  box-shadow:0 1px 0 #fffc inset,0 0 0 1px color-mix(in srgb,var(--iuSectionAccent) 12%,transparent),0 10px 24px color-mix(in srgb,var(--iuSectionAccent) 12%,transparent)!important;
+}
+#newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip:focus-visible .iuRadioChipTitle{color:rgba(11,27,43,.93)!important}
+@media (prefers-reduced-motion:reduce){
+  #newsList #iuJrEmptyView.iuJrEmptyView .iuJRGrid a.iuRadioChip{transition:none}
+  #newsList #iuJrEmptyView .iuJRGrid.iuRadioGrid a.iuRadioChip:active{transform:none}
+}
 
 #iuNotesOverlay.iuNotesRoot{
   --iu-notes-cal-accent: #15803d;
