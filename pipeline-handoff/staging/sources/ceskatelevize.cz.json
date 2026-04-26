@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T17:30:11.944544Z",
+  "ingestedAt": "2026-04-26T17:54:44.063082Z",
   "items": [
     {
       "section": "aktualne",
@@ -757,6 +757,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Pardubice jsou titulu blíže, Třinec porazily 2:1",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubice-jsou-titulu-blize-trinec-porazily-21-156474",
+      "dt": "2026-04-26T17:43:46Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "blíže",
+        "pardubice",
+        "porazily",
+        "titulu",
+        "třinec"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Fotbalistky Arsenalu vstoupily do semifinále Ligy mistryň výhrou nad Lyonem",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalistky-arsenalu-vstoupily-do-semifinale-ligy-mistryn-vyhrou-nad-lyonem-156473",
       "dt": "2026-04-26T16:53:41Z",
@@ -1469,32 +1491,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Souček pomohl gólem k výhře West Hamu, uspěl i Kinský s Tottenhamem",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fulham-zivi-nadeji-na-poharovou-evropu-poradil-si-s-aston-villou-156443",
-      "dt": "2026-04-25T14:06:23Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "gólem",
-        "hamu",
-        "kinský",
-        "pomohl",
-        "souček",
-        "tottenhamem",
-        "uspěl",
-        "výhře",
-        "west"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1624,7 +1620,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37688,
+      "bytes": 37422,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1657,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T16:53:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T17:43:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1672,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pardubice jsou titulu blíže, Třinec porazily 2:1",
+            "publishedAt": "2026-04-26T17:43:46Z"
+          },
           {
             "title": "Fotbalistky Arsenalu vstoupily do semifinále Ligy mistryň výhrou nad Lyonem",
             "publishedAt": "2026-04-26T16:53:41Z"
@@ -1703,10 +1703,6 @@
           {
             "title": "Ogier kraloval na Kanárských ostrovech a prodloužil nadvládu Toyoty",
             "publishedAt": "2026-04-26T14:04:09Z"
-          },
-          {
-            "title": "Česká osmnáctka deklasovala na MS Dánsko 9:1",
-            "publishedAt": "2026-04-26T14:00:00Z"
           }
         ]
       }

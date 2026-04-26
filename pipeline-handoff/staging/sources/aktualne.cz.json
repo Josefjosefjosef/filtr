@@ -1,49 +1,23 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T17:30:11.944544Z",
+  "ingestedAt": "2026-04-26T17:54:44.063082Z",
   "items": [
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
-      "url": "https://zpravy.aktualne.cz/zahranici/misto-kulek-pouziju-broky-nez-zacal-strilet-na-trumpa-ucitel-se-ozval-z-hotelu/r~aaa2944dddad8351fa31c097861fcc74/",
-      "dt": "2026-04-26T17:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "broky",
-        "hotelu",
-        "kulek",
-        "místo",
-        "než",
-        "ozval",
-        "použiju",
-        "střílet",
-        "trumpa",
-        "učitel",
-        "začal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pardubice - Třinec 1:1. Je srovnáno, trefuje se Nestrašil",
+      "title": "Pardubice - Třinec 2:1. Dynamo rozhodlo v 59. minutě a má titulový mečbol",
       "url": "https://sport.aktualne.cz/hokej/pardubice-trinec-strhujici-finale-pokracuje-v-pardubicich-pujde-o-titulovy-mecbol/r~aaa294329ded087938879b8bf7f892a1/",
       "dt": "2026-04-26T14:46:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "nestrašil",
+        "dynamo",
+        "mečbol",
+        "minutě",
         "pardubice",
-        "srovnáno",
-        "trefuje",
+        "rozhodlo",
+        "titulový",
         "třinec"
       ],
       "feedCategory": "zpravy",
@@ -71,6 +45,34 @@
         "příměří",
         "razantní",
         "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
+      "url": "https://zpravy.aktualne.cz/zahranici/misto-kulek-pouziju-broky-nez-zacal-strilet-na-trumpa-ucitel-se-ozval-z-hotelu/r~aaa2944dddad8351fa31c097861fcc74/",
+      "dt": "2026-04-26T17:21:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "broky",
+        "hotelu",
+        "kulek",
+        "místo",
+        "než",
+        "ozval",
+        "použiju",
+        "střílet",
+        "trumpa",
+        "učitel",
+        "začal"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -547,7 +549,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22441,
+      "bytes": 22460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,8 +589,8 @@
         "raw_feed_latest_publishedAt": "2026-04-26T17:21:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
           "sport": 4,
+          "zpravy": 13,
           "finance": 3
         },
         "drop_counts": {
@@ -602,16 +604,16 @@
         },
         "sample_titles": [
           {
-            "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
-            "publishedAt": "2026-04-26T17:21:00Z"
-          },
-          {
-            "title": "Pardubice - Třinec 1:1. Je srovnáno, trefuje se Nestrašil",
+            "title": "Pardubice - Třinec 2:1. Dynamo rozhodlo v 59. minutě a má titulový mečbol",
             "publishedAt": "2026-04-26T14:46:00Z"
           },
           {
             "title": "„Porušili jste příměří.“ Netanjahu nařídil razantní útoky proti Hizballáhu",
             "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
+            "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
+            "publishedAt": "2026-04-26T17:21:00Z"
           },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",

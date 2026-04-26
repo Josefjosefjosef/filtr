@@ -1,26 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T17:30:11.944544Z",
+  "ingestedAt": "2026-04-26T17:54:44.063082Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Třetí třetina vrcholí, Pardubice mají přesilovku",
+      "title": "Videomomenty. Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-nervy-drasajici-finale-serviruje-zapas-cislo-pet-priblizi-se-titulu-pardubice-nebo-trinec-5442316",
       "dt": "2026-04-26T10:21:29Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "hokej",
-        "mají",
-        "online",
-        "pardubice",
-        "přesilovku",
-        "třetina",
+        "dynamo",
+        "hrdinou",
+        "koncem",
+        "pardubic",
+        "přiblížil",
+        "sedlák",
+        "titulu",
+        "třetiny",
         "třetí",
         "videomomenty",
-        "vrcholí"
+        "vteřin"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Stuttgart jen remizoval v Brémách. Dortmund se pojedenácté dostal do Ligy mistrů",
+      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-stuttgart-jen-remizoval-v-bremach-5443982",
+      "dt": "2026-04-26T15:37:20Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brémách",
+        "dortmund",
+        "dostal",
+        "jen",
+        "ligy",
+        "mistrů",
+        "pojedenácté",
+        "remizoval",
+        "stuttgart"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -187,27 +215,6 @@
         "přiveze",
         "české",
         "švédsko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stuttgart jen remizoval v Brémách",
-      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-stuttgart-jen-remizoval-v-bremach-5443982",
-      "dt": "2026-04-26T15:37:20Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "brémách",
-        "jen",
-        "remizoval",
-        "stuttgart"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -746,7 +753,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45270,
+      "bytes": 45389,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -799,8 +806,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Třetí třetina vrcholí, Pardubice mají přesilovku",
+            "title": "Videomomenty. Sedlák hrdinou Pardubic. 76 vteřin před koncem třetí třetiny přiblížil Dynamo titulu",
             "publishedAt": "2026-04-26T10:21:29Z"
+          },
+          {
+            "title": "Stuttgart jen remizoval v Brémách. Dortmund se pojedenácté dostal do Ligy mistrů",
+            "publishedAt": "2026-04-26T15:37:20Z"
           },
           {
             "title": "Verstappenův otec měl těžkou nehodu",
@@ -825,10 +836,6 @@
           {
             "title": "Basketbalistky USK Praha mají 16. titul v řadě",
             "publishedAt": "2026-04-26T14:52:37Z"
-          },
-          {
-            "title": "Deset nováčků přiveze Švédsko na České hokejové hry",
-            "publishedAt": "2026-04-26T16:05:54Z"
           }
         ]
       }
