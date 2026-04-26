@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-26T12:29:52.755645Z",
+  "ingestedAt": "2026-04-26T12:55:59.184959Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "VIDEA TÝDNE: Lukašenko s mladou miss, dirigent zničil housle a maratonec přišel o zlato",
+      "url": "https://www.idnes.cz/zpravy/domaci/lukasenko-ma-mladou-pritelkyni-dirigent-znicil-housle-za-miliony-a-maratonec-prisel-o-zlato-v-cili.A260426_135546_domaci_pech",
+      "dt": "2026-04-26T12:29:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dirigent",
+        "housle",
+        "lukašenko",
+        "maratonec",
+        "miss",
+        "mladou",
+        "přišel",
+        "týdne",
+        "videa",
+        "zlato",
+        "zničil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vodopád, zahrady či trampolíny. Proč je singapurské letiště nejlepší na světě",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/singapur-letiste-changi-nejlepsi-atrakce-vodopad-zahrada.A260425_100919_eko-zahranicni_herp",
+      "dt": "2026-04-26T12:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "letiště",
+        "nejlepší",
+        "proč",
+        "singapurské",
+        "světě",
+        "trampolíny",
+        "vodopád",
+        "zahrady"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,58 +785,6 @@
         "tvrdému",
         "velká",
         "žalmanova"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rusům pomáhá v těžkých časech čarodějnice, kvůli válce se zvedl zájem o mystiku",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/carodejnice-rusko-valka-ukrajina-mystika-amulety.A260426_082415_zahranicni_dyn",
-      "dt": "2026-04-26T06:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "kvůli",
-        "mystiku",
-        "pomáhá",
-        "rusům",
-        "těžkých",
-        "válce",
-        "zvedl",
-        "zájem",
-        "čarodějnice",
-        "časech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bombový útok v Kolumbii zabil 14 lidí, na místě jsou desítky zraněných",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/bombovy-utok-na-silnici-v-kolumbii-zabil-14-lidi-38-zranenych.A260426_015737_zahranicni_air",
-      "dt": "2026-04-26T00:02:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bombový",
-        "desítky",
-        "kolumbii",
-        "lidí",
-        "místě",
-        "zabil",
-        "zraněných",
-        "útok"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50455,
+      "bytes": 50727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,12 +1619,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T12:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 2,
-          "finance": 3
+          "zpravy": 24,
+          "finance": 4,
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1635,6 +1636,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VIDEA TÝDNE: Lukašenko s mladou miss, dirigent zničil housle a maratonec přišel o zlato",
+            "publishedAt": "2026-04-26T12:29:00Z"
+          },
+          {
+            "title": "Vodopád, zahrady či trampolíny. Proč je singapurské letiště nejlepší na světě",
+            "publishedAt": "2026-04-26T12:06:00Z"
+          },
           {
             "title": "Když na Izrael létají rakety, musí špitály pod zem. Válka s Íránem je prověřila",
             "publishedAt": "2026-04-26T12:00:00Z"
@@ -1658,14 +1667,6 @@
           {
             "title": "Rybář zahlédl špičku v břehu, vzácný objev pak málem naštípali na podpal",
             "publishedAt": "2026-04-26T11:00:00Z"
-          },
-          {
-            "title": "Pizza za padesát korun, víno za třináct. Tyto japonské restaurace od 70. let nezdražily",
-            "publishedAt": "2026-04-26T11:00:00Z"
-          },
-          {
-            "title": "Neřekl jsem, že ČT a ČRo nefungují, chceme ale lidem zrušit daň, prohlásil Klempíř",
-            "publishedAt": "2026-04-26T10:41:00Z"
           }
         ]
       }

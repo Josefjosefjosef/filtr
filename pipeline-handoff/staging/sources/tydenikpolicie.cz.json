@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-26T12:29:52.755645Z",
+  "ingestedAt": "2026-04-26T12:55:59.184959Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "S likvidací lesního požáru u Vrbětic pomáhal policejní vrtulník s bambivakem",
+      "url": "https://tydenikpolicie.cz/s-likvidaci-lesniho-pozaru-u-vrbetic-pomahal-policejni-vrtulnik-s-bambivakem/",
+      "dt": "2026-04-26T12:43:49Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bambivakem",
+        "lesního",
+        "likvidací",
+        "policejní",
+        "pomáhal",
+        "požáru",
+        "vrbětic",
+        "vrtulník"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,29 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při nehodě na Žďársku zemřel řidič motocyklu",
-      "url": "https://tydenikpolicie.cz/pri-nehode-na-zdarsku-zemrel-ridic-motocyklu/",
-      "dt": "2026-04-25T16:03:40Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "motocyklu",
-        "nehodě",
-        "při",
-        "zemřel",
-        "řidič",
-        "žďársku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16608,
+      "bytes": 16735,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:43:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T12:43:49Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "S likvidací lesního požáru u Vrbětic pomáhal policejní vrtulník s bambivakem",
+            "publishedAt": "2026-04-26T12:43:49Z"
+          },
           {
             "title": "Jeden mrtvý, tři zranění. Sobota se nesla na Vysočině ve znamení nehod motorkářů",
             "publishedAt": "2026-04-26T09:43:14Z"
@@ -353,10 +359,6 @@
           {
             "title": "Opilý řidič fordu naboural na D1 zezadu do kamionu poté, co ho jeho šofér ohrozil svou jízdou",
             "publishedAt": "2026-04-26T08:49:50Z"
-          },
-          {
-            "title": "Kvůli požáru porostu na Mostecku byl vyhlášen II. stupeň požárního poplachu",
-            "publishedAt": "2026-04-25T22:41:40Z"
           }
         ]
       }

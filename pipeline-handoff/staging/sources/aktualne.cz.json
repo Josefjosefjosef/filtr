@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T12:29:52.755645Z",
+  "ingestedAt": "2026-04-26T12:55:59.184959Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun víc než loni",
+      "url": "https://zpravy.aktualne.cz/ekonomika/jarni-potravinove-sbirky-se-zucastnil-rekordni-pocet-obchodu-vybralo-se-o-sto-tun-vic-nez-loni/r~aaa295e124d0f7e5673074d9bae58881/",
+      "dt": "2026-04-26T12:48:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jarní",
+        "loni",
+        "než",
+        "obchodů",
+        "potravinové",
+        "počet",
+        "rekordní",
+        "sbírky",
+        "sto",
+        "tun",
+        "vybralo",
+        "víc",
+        "zúčastnil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -516,33 +546,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Znovuzrozený Kinský. Jsem na něj hrdý, pravil kouč po brankářově famózní chvíli",
-      "url": "https://sport.aktualne.cz/znovuzrozeny-kinsky-jsem-na-nej-hrdy-pravil-kouc-po-brankarove-famozni-chvili/r~aaa29dc17dfe4bdc5ba71d40c721aca2/",
-      "dt": "2026-04-26T06:19:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brankářově",
-        "chvíli",
-        "famózní",
-        "hrdý",
-        "jsem",
-        "kinský",
-        "kouč",
-        "něj",
-        "pravil",
-        "znovuzrozený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +556,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22882,
+      "bytes": 23047,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,12 +593,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T12:48:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "zpravy": 14,
-          "sport": 5,
-          "finance": 1
+          "sport": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -607,6 +610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun víc než loni",
+            "publishedAt": "2026-04-26T12:48:00Z"
+          },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -634,10 +641,6 @@
           {
             "title": "Výstřely a chaos. Cílem útoku učitele s brokovnicí byla Trumpova vláda",
             "publishedAt": "2026-04-26T09:56:00Z"
-          },
-          {
-            "title": "Lukašenko je sice lstivý lišák, ale Putin ho do války zatáhne, varuje exministr",
-            "publishedAt": "2026-04-26T09:16:00Z"
           }
         ]
       }
