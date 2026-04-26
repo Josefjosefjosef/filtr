@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T18:19:37.132054Z",
+  "ingestedAt": "2026-04-26T18:44:42.303588Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tenistky se potýkají se zákeřným protivníkem. Nosková možná přijde i o další soupeřku",
+      "url": "https://sport.aktualne.cz/tenis/tenistky-se-potykaji-se-zakernym-protivnikem-noskova-mozna-prijde-i-o-dalsi-souperku/r~aaa2933a964fb6038ecff72b86d1682d/",
+      "dt": "2026-04-26T18:13:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "další",
+        "možná",
+        "nosková",
+        "potýkají",
+        "protivníkem",
+        "přijde",
+        "soupeřku",
+        "tenistky",
+        "zákeřným"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -510,33 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Souček fascinuje. Tohle je přece šílené, nevěří v Anglii tomu, co Čech předvedl",
-      "url": "https://sport.aktualne.cz/fotbal/soucek-fascinuje-tohle-je-prece-silene-neveri-v-anglii-tomu-co-cech-predvedl/r~aaa29679a9dbd68f8aeb85c70e6a81ab/",
-      "dt": "2026-04-26T09:15:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anglii",
-        "fascinuje",
-        "nevěří",
-        "přece",
-        "předvedl",
-        "souček",
-        "tohle",
-        "tomu",
-        "čech",
-        "šílené"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22333,
+      "bytes": 22308,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,11 +583,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T18:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T18:13:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
           "sport": 5,
+          "zpravy": 12,
           "finance": 3
         },
         "drop_counts": {
@@ -601,6 +600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tenistky se potýkají se zákeřným protivníkem. Nosková možná přijde i o další soupeřku",
+            "publishedAt": "2026-04-26T18:13:00Z"
+          },
           {
             "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
             "publishedAt": "2026-04-26T17:21:00Z"
@@ -628,10 +631,6 @@
           {
             "title": "Soud v Pardubicích poslal do vazby dalšího zadrženého v kauze žhářského útoku",
             "publishedAt": "2026-04-26T14:50:00Z"
-          },
-          {
-            "title": "Česko je letos největším dovozcem dronů z Tchaj-wanu, ten navyšuje export",
-            "publishedAt": "2026-04-26T14:26:00Z"
           }
         ]
       }
