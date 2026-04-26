@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T10:14:54.401370Z",
+  "ingestedAt": "2026-04-26T10:35:05.568199Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Videomomenty. Nervy drásající finále servíruje zápas číslo pět. Přiblíží se titulu Pardubice, nebo Třinec?",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-nervy-drasajici-finale-serviruje-zapas-cislo-pet-priblizi-se-titulu-pardubice-nebo-trinec-5442316",
+      "dt": "2026-04-26T10:21:29Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "drásající",
+        "finále",
+        "nebo",
+        "nervy",
+        "pardubice",
+        "pět",
+        "přiblíží",
+        "servíruje",
+        "titulu",
+        "třinec",
+        "videomomenty",
+        "zápas",
+        "číslo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,30 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Němeček s Langerem a Christianová získali švédské florbalové tituly",
-      "url": "https://www.sport.cz/clanek/florbal-nemecek-s-langerem-a-christianova-ziskali-svedske-florbalove-tituly-5443820",
-      "dt": "2026-04-25T20:54:26Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "christianová",
-        "florbalové",
-        "langerem",
-        "němeček",
-        "tituly",
-        "získali",
-        "švédské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45304,
+      "bytes": 46010,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:51:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T10:21:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -834,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Videomomenty. Nervy drásající finále servíruje zápas číslo pět. Přiblíží se titulu Pardubice, nebo Třinec?",
+            "publishedAt": "2026-04-26T10:21:29Z"
+          },
           {
             "title": "Dal bombu a mohl slavit. Bijce bouřlivě podpořila i půvabná partnerka",
             "publishedAt": "2026-04-26T09:51:29Z"
@@ -861,10 +871,6 @@
           {
             "title": "Souček byl za hrdinu. Smekl před ním i trenér soupeře",
             "publishedAt": "2026-04-26T08:56:38Z"
-          },
-          {
-            "title": "NHL šokoval zbabělý zákrok, nevídaná podlost ale Ottawě nepomohla",
-            "publishedAt": "2026-04-26T08:52:33Z"
           }
         ]
       }

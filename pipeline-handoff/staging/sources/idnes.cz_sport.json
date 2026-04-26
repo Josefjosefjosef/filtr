@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-26T10:14:54.401370Z",
+  "ingestedAt": "2026-04-26T10:35:05.568199Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Majitelka Dynama: Chci jednat, ale nenechám se vydírat. Kdyžtak půjdu jinam",
+      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/fotbal-budejovice-dynamo-rozhovor-majitelka-nneka-ede-prodej.A260426_102634_budejovice-zpravy_pkr",
+      "dt": "2026-04-26T10:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "chci",
+        "dynama",
+        "jednat",
+        "jinam",
+        "kdyžtak",
+        "majitelka",
+        "nenechám",
+        "půjdu",
+        "vydírat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,32 +783,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Litvínov - Jihlava 5:0. Suverénní výhra na závěr baráže, favorit udržel extraligu",
-      "url": "https://www.idnes.cz/hokej/extraliga/5-zapas-baraz-litvinov-jihlava-online-zpravodajstvi.A260425_122630_hokej_hrj",
-      "dt": "2026-04-25T18:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baráže",
-        "extraligu",
-        "favorit",
-        "jihlava",
-        "litvínov",
-        "suverénní",
-        "udržel",
-        "výhra",
-        "závěr"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46156,
+      "bytes": 46004,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T10:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Majitelka Dynama: Chci jednat, ale nenechám se vydírat. Kdyžtak půjdu jinam",
+            "publishedAt": "2026-04-26T10:16:00Z"
+          },
           {
             "title": "Tady bude olympiáda. U dálnic a raftařů. Dva tisíce kilometrů od Los Angeles",
             "publishedAt": "2026-04-26T10:00:00Z"
@@ -871,10 +876,6 @@
           {
             "title": "Skuhravý o krizi Slovácka: Nespím z toho... Zatím jsem nenašel klíč, jak tým na**at",
             "publishedAt": "2026-04-26T08:34:00Z"
-          },
-          {
-            "title": "Mimozemšťan Dosunmu a Jokičova frustrace. Denver je na hraně vyřazení",
-            "publishedAt": "2026-04-26T08:02:23Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T10:14:54.401370Z",
+  "ingestedAt": "2026-04-26T10:35:05.568199Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zelenskyj 40 let od havárie v Černobylu obvinil Rusko z jaderného terorismu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zelenskyj-40-let-od-havarie-v-cernobylu-obvinil-rusko-z-jaderneho-terorismu-372808",
+      "dt": "2026-04-26T10:24:22Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "havárie",
+        "jaderného",
+        "let",
+        "obvinil",
+        "rusko",
+        "terorismu",
+        "zelenskyj",
+        "černobylu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -721,32 +746,6 @@
         "volili",
         "zastupitele",
         "západním"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbalové mistrovství vyprodukuje obří emise. Samo se potýká s nepřízní klimatu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/fotbalove-mistrovstvi-vyprodukuje-obri-emise-samo-se-potyka-s-neprizni-klimatu-372740",
-      "dt": "2026-04-25T07:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "emise",
-        "fotbalové",
-        "klimatu",
-        "mistrovství",
-        "nepřízní",
-        "obří",
-        "potýká",
-        "samo",
-        "vyprodukuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1523,7 +1522,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43782,
+      "bytes": 43488,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,13 +1582,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:18:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T10:24:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 1,
-          "other": 3,
-          "sport": 1
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1601,6 +1599,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelenskyj 40 let od havárie v Černobylu obvinil Rusko z jaderného terorismu",
+            "publishedAt": "2026-04-26T10:24:22Z"
+          },
           {
             "title": "Česko letos podle NATO nesplní závazek dvou procent HDP na obranu, řekl Babiš",
             "publishedAt": "2026-04-26T09:18:04Z"
@@ -1628,10 +1630,6 @@
           {
             "title": "Tisíce obcí jsou bez čistíren odpadních vod. O dotace mohou žádat do ledna",
             "publishedAt": "2026-04-26T05:30:00Z"
-          },
-          {
-            "title": "V USA jsou dostupná lidská embrya na zakázku. Vědci varují před eugenikou",
-            "publishedAt": "2026-04-26T05:01:00Z"
           }
         ]
       }
@@ -1737,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77183,
+      "bytes": 77187,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
