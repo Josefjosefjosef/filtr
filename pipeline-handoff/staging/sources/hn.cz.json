@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-26T14:49:35.817285Z",
+  "ingestedAt": "2026-04-26T15:54:37.628579Z",
   "items": [
     {
       "section": "finance",
@@ -51,6 +51,41 @@
         "pokulhává",
         "sebastian",
         "český"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Reaktor jsme schopni postavit za pět let, říká šéf Rolls-Royce SMR. Šanci na zakázky mají i české firmy. S jednou výjimkou",
+      "url": "https://byznys.hn.cz/c1-67871080-reaktor-jsme-schopni-postavit-za-pet-let-rika-sef-rolls-royce-smr-sanci-na-zakazky-maji-i-ceske-firmy-s-jednou-vyjimkou",
+      "dt": "2026-04-26T09:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "firmy",
+        "jednou",
+        "jsme",
+        "let",
+        "mají",
+        "postavit",
+        "pět",
+        "reaktor",
+        "rolls",
+        "royce",
+        "schopni",
+        "smr",
+        "výjimkou",
+        "zakázky",
+        "české",
+        "říká",
+        "šanci",
+        "šéf"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1126,38 +1161,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když kolo spojuje i vydělává. Jak v Česku sílí fenomén social rides a čím jsou společné vyjížďky zajímavé nejen pro firmy",
-      "url": "https://vikend.hn.cz/c1-67869340-kdyz-kolo-spojuje-i-vydelava-jak-v-cesku-sili-fenomen-social-rides-a-cim-jsou-spolecne-vyjizdky-zajimave-nejen-pro-firmy",
-      "dt": "2026-04-23T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "fenomén",
-        "firmy",
-        "když",
-        "kolo",
-        "nejen",
-        "rides",
-        "social",
-        "spojuje",
-        "společné",
-        "sílí",
-        "vydělává",
-        "vyjížďky",
-        "zajímavé",
-        "česku",
-        "čím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1171,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184124,
+      "bytes": 184126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1231,6 +1234,10 @@
             "publishedAt": "2026-04-26T09:12:00Z"
           },
           {
+            "title": "Reaktor jsme schopni postavit za pět let, říká šéf Rolls-Royce SMR. Šanci na zakázky mají i české firmy. S jednou výjimkou",
+            "publishedAt": "2026-04-26T09:01:00Z"
+          },
+          {
             "title": "Lidovci si podle vzoru starých Římanů zvolili diktátora. Jeho šance ale vyjadřuje jedno tradiční lidovecké slovo",
             "publishedAt": "2026-04-26T08:38:00Z"
           },
@@ -1249,10 +1256,6 @@
           {
             "title": "Přibyl se stal pražským arcibiskupem, převzal úřad od Graubnera. Katedrála sv. Víta byla plná",
             "publishedAt": "2026-04-25T10:19:00Z"
-          },
-          {
-            "title": "Ratingová agentura S&P snížila rating Slovenska. Zemi trápí slabý růst a veřejné finance",
-            "publishedAt": "2026-04-25T09:28:00Z"
           }
         ]
       }

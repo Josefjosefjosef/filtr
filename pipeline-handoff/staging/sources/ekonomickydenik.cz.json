@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-26T14:49:35.817285Z",
+  "ingestedAt": "2026-04-26T15:54:37.628579Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Evropa zaspala. Čína už firmy nekupuje, ale staví si vlastní",
+      "url": "https://ekonomickydenik.cz/evropa-zaspala-cina-uz-firmy-nekupuje-ale-stavi-si-vlastni/",
+      "dt": "2026-04-26T15:20:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "evropa",
+        "firmy",
+        "nekupuje",
+        "staví",
+        "vlastní",
+        "zaspala",
+        "čína"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -748,33 +773,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Po miliardách z Evropy touží Zelenskyj po rychlém přijetí do Unie. Nejlépe už příští rok",
-      "url": "https://ekonomickydenik.cz/po-miliardach-z-evropy-touzi-zelenskyj-po-rychlem-prijeti-do-unie/",
-      "dt": "2026-04-24T10:15:37Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropy",
-        "miliardách",
-        "nejlépe",
-        "přijetí",
-        "příští",
-        "rok",
-        "rychlém",
-        "touží",
-        "unie",
-        "zelenskyj"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69801,
+      "bytes": 69506,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T13:57:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T15:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -839,6 +837,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa zaspala. Čína už firmy nekupuje, ale staví si vlastní",
+            "publishedAt": "2026-04-26T15:20:00Z"
+          },
           {
             "title": "Útočil učitel a herní vývojář. Pravděpodobnými cíli měli být Trump a členové kabinetu",
             "publishedAt": "2026-04-26T13:57:34Z"
@@ -866,10 +868,6 @@
           {
             "title": "Nabito za 15 minut. Pražské letiště chystá centrální nabíjecí místo",
             "publishedAt": "2026-04-26T06:50:00Z"
-          },
-          {
-            "title": "„Padly výstřely!“. Tajná služba evakuovala Trumpa z galavečeře",
-            "publishedAt": "2026-04-26T05:23:25Z"
           }
         ]
       }

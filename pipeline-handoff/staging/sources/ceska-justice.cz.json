@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-26T14:49:35.817285Z",
+  "ingestedAt": "2026-04-26T15:54:37.628579Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zadržený v Bulharsku. Soud poslal do vazby dalšího obviněného v kauze žhářského útoku",
+      "url": "https://www.ceska-justice.cz/2026/04/zadrzeny-zharsky-utok-pardubice/",
+      "dt": "2026-04-26T15:01:55Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "bulharsku",
+        "dalšího",
+        "kauze",
+        "obviněného",
+        "poslal",
+        "soud",
+        "vazby",
+        "zadržený",
+        "útoku",
+        "žhářského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,31 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kolik lidí podvedl soudce Kafka? Žalobci počítají škodu",
-      "url": "https://www.ceska-justice.cz/2026/04/podvedl-soudce-kafka-skoda/",
-      "dt": "2026-04-23T08:59:11Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "kafka",
-        "kolik",
-        "lidí",
-        "podvedl",
-        "počítají",
-        "soudce",
-        "škodu",
-        "žalobci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -269,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 95348,
+      "bytes": 92905,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:27:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T15:01:55Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zadržený v Bulharsku. Soud poslal do vazby dalšího obviněného v kauze žhářského útoku",
+            "publishedAt": "2026-04-26T15:01:55Z"
+          },
           {
             "title": "Kdo má na křižovatce přednost? Soudy vyškolily přestupkové úředníky",
             "publishedAt": "2026-04-26T10:27:01Z"
@@ -348,10 +354,6 @@
           {
             "title": "Soud řešil vulgarity i pouštění sirény na zastupitelstvu: Leze starostovi do řiti, zaznělo",
             "publishedAt": "2026-04-24T04:30:00Z"
-          },
-          {
-            "title": "Konec zákonů „od stolu“? Zákoník práce ukazuje, že dialog s byznysem se státu vyplácí",
-            "publishedAt": "2026-04-23T18:31:45Z"
           }
         ]
       }
