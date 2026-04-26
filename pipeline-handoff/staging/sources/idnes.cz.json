@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-26T00:54:43.603940Z",
+  "ingestedAt": "2026-04-26T01:20:06.468399Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tajná služba evakuovala Trumpa z galavečeře, na místě zadržela střelce",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/tajna-sluzba-evakuovala-trumpa-z-galavecere-kvuli-incidentu.A260426_025437_zahranicni_air",
+      "dt": "2026-04-26T00:59:57Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "evakuovala",
+        "galavečeře",
+        "místě",
+        "služba",
+        "střelce",
+        "tajná",
+        "trumpa",
+        "zadržela"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -760,32 +785,6 @@
         "plná",
         "přišel",
         "vypadal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Turek se omluvil za výrok o parazitech. Myslel jsem aktivisty, ne úředníky, tvrdí",
-      "url": "https://www.idnes.cz/zpravy/domaci/za-pet-minut-dvanact-nova-filip-turek-lukas-vlcek.A260425_115003_domaci_herp",
-      "dt": "2026-04-25T12:46:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aktivisty",
-        "jsem",
-        "myslel",
-        "omluvil",
-        "parazitech",
-        "turek",
-        "tvrdí",
-        "výrok",
-        "úředníky"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1582,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49873,
+      "bytes": 49620,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1619,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T00:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T00:59:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1637,6 +1636,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tajná služba evakuovala Trumpa z galavečeře, na místě zadržela střelce",
+            "publishedAt": "2026-04-26T00:59:57Z"
+          },
           {
             "title": "Bombový útok v Kolumbii zabil 14 lidí, na místě jsou desítky zraněných",
             "publishedAt": "2026-04-26T00:02:00Z"
@@ -1664,10 +1667,6 @@
           {
             "title": "Nechceme skončit jako Barcelona. V Athénách bojují proti novým hotelům",
             "publishedAt": "2026-04-25T22:00:00Z"
-          },
-          {
-            "title": "„Máme trumfy v ruce, 18 hodin tam nepoletíte.“ Trump zrušil cestu vyjednavačů",
-            "publishedAt": "2026-04-25T20:16:00Z"
           }
         ]
       }
