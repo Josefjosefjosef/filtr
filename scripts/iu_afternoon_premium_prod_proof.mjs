@@ -63,7 +63,7 @@ function ghMainSha() {
   }
 }
 
-function ghPagesLastSuccess() {
+function ghPagesLastSuccess(expectedSha) {
   try {
     const out = execFileSync(
       "gh",
@@ -73,15 +73,25 @@ function ghPagesLastSuccess() {
         "--workflow=pages.yml",
         "--branch=main",
         "--limit",
-        "3",
+        "5",
         "--json",
-        "conclusion,status,displayTitle,createdAt",
+        "conclusion,headSha",
       ],
       { encoding: "utf8" }
     );
     const rows = JSON.parse(out || "[]");
-    const ok = rows.some((r) => r && r.conclusion === "SUCCESS");
-    return ok ? "PASS" : "PENDING_OR_FAIL";
+    const want = String(expectedSha || "").trim();
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r) continue;
+      const c = String(r.conclusion || "").toLowerCase();
+      if (c !== "success") continue;
+      if (want && String(r.headSha || "") !== want) continue;
+      return "PASS";
+    }
+    const top = rows[0];
+    const c0 = top && String(top.conclusion || "").toLowerCase() === "success";
+    return c0 ? "PASS" : "PENDING_OR_FAIL";
   } catch (e) {
     return "UNKNOWN";
   }
@@ -160,7 +170,7 @@ async function main() {
   await browser.close();
 
   const commit = ghMainSha();
-  const pagesDeploy = ghPagesLastSuccess();
+  const pagesDeploy = ghPagesLastSuccess(commit);
 
   const lines = [
     "=== PROD_AFTERNOON_PREMIUM ===",
