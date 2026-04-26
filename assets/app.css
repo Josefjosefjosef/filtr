@@ -6684,7 +6684,7 @@ html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible{
 }
 
 .iuMapyView{
-  padding: 18px 12px;
+  padding: 16px 12px;
 }
 
 .iuSectionSubtitle{
@@ -6694,13 +6694,38 @@ html[data-section="travel"] #iuTravelView .iuTravelCrisisLinks a:focus-visible{
   opacity: .82;
 }
 
+body[data-section="mapy"] #iuMapyView > .iuSectionSubtitle,
+html[data-section="mapy"] #iuMapyView > .iuSectionSubtitle{
+  margin: 4px 0 10px;
+}
+
+body[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy h2,
+html[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy h2{
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+body[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy .iuSectionHeaderLine,
+html[data-section="mapy"] #iuMapyView .iuSectionHeader--mapy .iuSectionHeaderLine{
+  height: 2px;
+  flex: 1 1 auto;
+  border-radius: 999px;
+  opacity: 1;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--iuSectionAccent, #22C55E) 52%, transparent) 0%,
+    color-mix(in srgb, var(--iuSectionAccent, #22C55E) 12%, transparent) 55%,
+    transparent 100%
+  );
+}
+
 body[data-section="mapy"] #iuMapyView .iuSectionSubTitle,
 html[data-section="mapy"] #iuMapyView .iuSectionSubTitle{
   margin: 0;
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  opacity: 0.9;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  opacity: 0.95;
   color: var(--iuSectionAccent, currentColor);
 }
 
@@ -6709,12 +6734,21 @@ html[data-section="mapy"] #iuMapyView .iuSubSectionHeader{
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 16px 0 10px 0;
+  margin: 12px 0 7px 0;
   color: var(--iuSectionAccent, currentColor);
 }
 body[data-section="mapy"] #iuMapyView .iuSubSectionHeader .iuSectionHeaderLine,
 html[data-section="mapy"] #iuMapyView .iuSubSectionHeader .iuSectionHeaderLine{
-  opacity: 0.35;
+  height: 2px;
+  flex: 1 1 auto;
+  border-radius: 999px;
+  opacity: 1;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--iuSectionAccent, #22C55E) 48%, transparent) 0%,
+    color-mix(in srgb, var(--iuSectionAccent, #22C55E) 10%, transparent) 50%,
+    transparent 100%
+  );
 }
 
 body[data-section="mapy"] #iuMapyView .iuMapyGrid,
@@ -6723,9 +6757,53 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   max-width: none;
   margin-left: 0;
   margin-right: 0;
-  margin-bottom: 14px;
+  margin-bottom: 11px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
 }
+
+/* Mapy chips: premium surface; hover jen @media (hover:hover) and (pointer:fine); !important vs #newsList .iuRadioChip box-shadow:none */
+:is(#iuMapyView,#iuMapsView) .iuRadioChip{
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 12px;
+  border: 1px solid rgba(11,27,43,0.10);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f4f7 100%);
+  box-shadow: 0 1px 2px rgba(11,27,43,0.06), 0 6px 18px rgba(11,27,43,0.04) !important;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
+  outline: none;
+}
+:is(#iuMapyView,#iuMapsView) .iuRadioChip:active{ transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce){
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip{ transition: none; }
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip:active{ transform: none; }
+}
+@media not all and (hover: hover) and (pointer: fine){
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip:hover{
+    background: linear-gradient(180deg, #ffffff 0%, #f1f4f7 100%);
+    border-color: rgba(11,27,43,0.10);
+    color: rgba(11,27,43,0.92);
+    box-shadow: 0 1px 2px rgba(11,27,43,0.06), 0 6px 18px rgba(11,27,43,0.04) !important;
+  }
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip:hover :is(.iuRadioChipTitle,.iuRadioChipDesc){ color: rgba(11,27,43,0.92); }
+}
+@media (hover: hover) and (pointer: fine){
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip:hover{
+    background: linear-gradient(155deg, color-mix(in srgb, var(--iuSectionAccent, #22C55E) 15%, #ffffff) 0%, color-mix(in srgb, var(--iuSectionAccent, #22C55E) 24%, #eef6f0) 100%);
+    border-color: color-mix(in srgb, var(--iuSectionAccent, #22C55E) 30%, rgba(11,27,43,0.10));
+    color: rgba(11,27,43,0.93);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--iuSectionAccent, #22C55E) 20%, transparent), 0 10px 28px color-mix(in srgb, var(--iuSectionAccent, #22C55E) 18%, transparent) !important;
+  }
+  :is(#iuMapyView,#iuMapsView) .iuRadioChip:hover :is(.iuRadioChipTitle,.iuRadioChipDesc){ color: rgba(11,27,43,0.93); }
+}
+:is(#iuMapyView,#iuMapsView) .iuRadioChip:focus-visible{
+  outline: 2px solid color-mix(in srgb, var(--iuSectionAccent, #22C55E) 42%, #ffffff);
+  outline-offset: 3px;
+  background: linear-gradient(155deg, color-mix(in srgb, var(--iuSectionAccent, #22C55E) 12%, #ffffff) 0%, color-mix(in srgb, var(--iuSectionAccent, #22C55E) 18%, #f4faf6) 100%);
+  border-color: color-mix(in srgb, var(--iuSectionAccent, #22C55E) 35%, rgba(11,27,43,0.10));
+  color: rgba(11,27,43,0.93);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--iuSectionAccent, #22C55E) 14%, transparent), 0 8px 22px color-mix(in srgb, var(--iuSectionAccent, #22C55E) 14%, transparent) !important;
+}
+:is(#iuMapyView,#iuMapsView) .iuRadioChip:focus-visible :is(.iuRadioChipTitle,.iuRadioChipDesc){ color: rgba(11,27,43,0.93); }
 
 body[data-section="jr"] #iuJrEmptyView .iuJRGrid,
 html[data-section="jr"] #iuJrEmptyView .iuJRGrid{
@@ -10119,8 +10197,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuJrEmptyView .iuRadioChip:hover,
 #newsList #iuTvOnlineView .iuRadioChip:hover,
 #newsList #iuWeatherView .iuRadioChip:hover,
-#newsList #iuMapyView .iuRadioChip:hover,
-#newsList #iuMapsView .iuRadioChip:hover,
 #newsList #iuTravelView .iuRadioChip:hover,
 #newsList #iuTvProgramView .iuRadioChip:hover,
 #newsList #iuKulturaView .iuRadioChip:hover,
@@ -10128,8 +10204,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #newsList #iuJrEmptyView .iuRadioChip:focus-visible,
 #newsList #iuTvOnlineView .iuRadioChip:focus-visible,
 #newsList #iuWeatherView .iuRadioChip:focus-visible,
-#newsList #iuMapyView .iuRadioChip:focus-visible,
-#newsList #iuMapsView .iuRadioChip:focus-visible,
 #newsList #iuTravelView .iuRadioChip:focus-visible,
 #newsList #iuTvProgramView .iuRadioChip:focus-visible,
 #newsList #iuKulturaView .iuRadioChip:focus-visible{

@@ -1,21 +1,21 @@
 {
   "schema": "css_debt_guard_v1",
-  "duplicate_selector_groups": 277,
-  "duplicate_rule_occurrences_in_groups": 743,
+  "duplicate_selector_groups": 281,
+  "duplicate_rule_occurrences_in_groups": 751,
   "classification_counts": {
-    "breakpoint_specific": 154,
+    "breakpoint_specific": 158,
     "risky_layout_coupled": 98,
     "intentional_cascade_candidate": 25
   },
   "debt_verdict_counts": {
-    "intentional_non_debt": 106,
-    "risk_now": 171
+    "intentional_non_debt": 107,
+    "risk_now": 174
   },
   "debt_occurrence_counts": {
-    "intentional_non_debt": 298,
-    "risk_now": 445
+    "intentional_non_debt": 300,
+    "risk_now": 451
   },
-  "app_css_bytes": 603837,
+  "app_css_bytes": 610765,
   "css_size_guard_budget_bytes": 4096,
   "risk_zone_duplicate_groups": [
     {
@@ -311,7 +311,7 @@
       "classification": "risky_layout_coupled"
     },
     {
-      "selector_normalized": ".layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychlé odkazy\"] .iu-mmQuickItemLink",
+      "selector_normalized": ".layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label=\"Rychl\u00e9 odkazy\"] .iu-mmQuickItemLink",
       "classification": "risky_layout_coupled"
     },
     {
@@ -352,6 +352,18 @@
     },
     {
       "selector_normalized": ".topbar-search",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:active",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:hover",
+      "classification": "breakpoint_specific"
+    },
+    {
+      "selector_normalized": ":is(#iuMapyView,#iuMapsView) .iuRadioChip:hover :is(.iuRadioChipTitle,.iuRadioChipDesc)",
       "classification": "breakpoint_specific"
     },
     {
