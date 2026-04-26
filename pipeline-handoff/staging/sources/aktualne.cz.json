@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T09:49:25.038361Z",
+  "ingestedAt": "2026-04-26T10:14:54.401370Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Výstřely a chaos. Cílem útoku učitele s brokovnicí byla Trumpova vláda",
+      "url": "https://zpravy.aktualne.cz/zahranici/vystrely-a-chaos-cilem-utoku-ucitele-s-brokovnici-byla-trumpova-vlada/r~aaa29fd85f88c5d9fc0a531c3c8012f1/",
+      "dt": "2026-04-26T09:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brokovnicí",
+        "chaos",
+        "cílem",
+        "trumpova",
+        "učitele",
+        "vláda",
+        "výstřely",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -509,31 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Sedm mrtvých. Kolumbií otřásl před prezidentskými volbami bombový útok",
-      "url": "https://zpravy.aktualne.cz/zahranici/sedm-mrtvych-kolumbii-otrasl-pred-prezidentskymi-volbami-bombovy-utok/r~aaa2989f4cfd3d9e9229361be2025334/",
-      "dt": "2026-04-25T21:47:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bombový",
-        "kolumbií",
-        "mrtvých",
-        "otřásl",
-        "prezidentskými",
-        "sedm",
-        "volbami",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22638,
+      "bytes": 22817,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,7 +581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T09:56:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 13,
@@ -598,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výstřely a chaos. Cílem útoku učitele s brokovnicí byla Trumpova vláda",
+            "publishedAt": "2026-04-26T09:56:00Z"
+          },
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -625,10 +629,6 @@
           {
             "title": "Střelba na Trumpově galavečeru. Prezidenta evakuovali, útočníka s brokovnicí zadrželi",
             "publishedAt": "2026-04-26T04:46:00Z"
-          },
-          {
-            "title": "Elixír mládí, energie z ničeho a satanisté. Co ještě najdete na Ficových webech?",
-            "publishedAt": "2026-04-26T07:55:00Z"
           }
         ]
       }
