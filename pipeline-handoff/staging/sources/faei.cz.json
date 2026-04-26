@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-25T23:04:48.119002Z",
+  "ingestedAt": "2026-04-26T00:09:23.187638Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách (1.)",
+      "url": "https://profitonline.cz/okamziky-dejin-40-vyroci-nejvetsi-jaderne-katastrofy-v-dejinach-1/",
+      "dt": "2026-04-25T10:00:24Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dějin",
+        "dějinách",
+        "jaderné",
+        "katastrofy",
+        "největší",
+        "okamžiky",
+        "výročí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,31 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přibývá plicních nemocí, ale pacienty už skoro nemá kdo léčit",
-      "url": "https://profitonline.cz/pribyva-plicnich-nemoci-ale-pacienty-uz-skoro-nema-kdo-lecit/",
-      "dt": "2026-04-23T10:00:03Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "ale",
-        "léčit",
-        "nemocí",
-        "nemá",
-        "pacienty",
-        "plicních",
-        "přibývá",
-        "skoro"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18407,
+      "bytes": 18321,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,11 +340,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-25T08:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-25T10:00:24Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
-          "zdravi": 2
+          "finance": 11,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -357,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách (1.)",
+            "publishedAt": "2026-04-25T10:00:24Z"
+          },
           {
             "title": "U Bumbrlíčka vznikla před 100 lety současná největší ochranářská organizace",
             "publishedAt": "2026-04-25T08:00:21Z"
@@ -384,10 +387,6 @@
           {
             "title": "Miriam Fellingerová novou ředitelkou OMV v Česku",
             "publishedAt": "2026-04-24T06:00:48Z"
-          },
-          {
-            "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
-            "publishedAt": "2026-04-24T04:00:05Z"
           }
         ]
       }
