@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T04:04:40.818550Z",
+  "ingestedAt": "2026-04-26T04:25:00.824973Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pohovory zabraly, Slavia zastavila negativní emoce a vyhrála. S Tvrdíkem jsme souhlasili, přiznal kouč",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-pohovory-zabraly-slavia-zastavila-negativni-emoce-a-vyhrala-s-tvrdikem-jsme-souhlasili-priznal-kouc-5443811",
+      "dt": "2026-04-26T04:19:17Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "emoce",
+        "jsme",
+        "kouč",
+        "negativní",
+        "pohovory",
+        "přiznal",
+        "slavia",
+        "souhlasili",
+        "tvrdíkem",
+        "vyhrála",
+        "zabraly",
+        "zastavila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař s Philadelphií tentokrát neuspěl, Carolina už slaví postup",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-s-philadelphii-tentokrat-neuspel-carolina-slavi-postup-5443825",
+      "dt": "2026-04-26T04:02:13Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "carolina",
+        "neuspěl",
+        "philadelphií",
+        "postup",
+        "slaví",
+        "tentokrát",
+        "vladař"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -722,60 +775,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Selhání v malém derby. Oslabená Sparta prohrála s Bohemians, titul se jí vzdaluje",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-klokani-euforie-bohemians-smazli-oslabenou-spartu-a-mozna-rozhodli-boj-o-titul-5443616",
-      "dt": "2026-04-25T16:00:18Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bohemians",
-        "derby",
-        "malém",
-        "oslabená",
-        "prohrála",
-        "selhání",
-        "sestřih",
-        "sparta",
-        "titul",
-        "vzdaluje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Slavia otočila zápas s Olomoucí a navýšila svůj náskok na druhou Spartu",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-slavia-otocila-duel-s-oslabenou-olomouci-5443421",
-      "dt": "2026-04-25T16:00:53Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "druhou",
-        "navýšila",
-        "náskok",
-        "olomoucí",
-        "otočila",
-        "sestřih",
-        "slavia",
-        "spartu",
-        "svůj",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 51842,
+      "bytes": 51471,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T21:04:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T04:19:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +837,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pohovory zabraly, Slavia zastavila negativní emoce a vyhrála. S Tvrdíkem jsme souhlasili, přiznal kouč",
+            "publishedAt": "2026-04-26T04:19:17Z"
+          },
+          {
+            "title": "Vladař s Philadelphií tentokrát neuspěl, Carolina už slaví postup",
+            "publishedAt": "2026-04-26T04:02:13Z"
+          },
           {
             "title": "Menšík začal v Madridu vítězně, Samson končí",
             "publishedAt": "2026-04-25T11:28:02Z"
@@ -861,14 +868,6 @@
           {
             "title": "Fotbalisté AS Řím porazili Boloňu",
             "publishedAt": "2026-04-25T18:02:27Z"
-          },
-          {
-            "title": "Němeček s Langerem a Christianová získali švédské florbalové tituly",
-            "publishedAt": "2026-04-25T20:54:26Z"
-          },
-          {
-            "title": "Sparta naprosto vyhořela na Bohemce! Slavia se dočkala výhry, Baník spadl na dno",
-            "publishedAt": "2026-04-25T05:58:42Z"
           }
         ]
       }

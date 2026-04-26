@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-26T04:04:40.818550Z",
+  "ingestedAt": "2026-04-26T04:25:00.824973Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zelené bláznovství? Nikoliv, je to dobrý byznys. Větrné elektrárny staví celý svět",
+      "url": "https://ekonomickydenik.cz/vetrne-elektrarny-stavi-cely-svet/",
+      "dt": "2026-04-26T04:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bláznovství",
+        "byznys",
+        "celý",
+        "dobrý",
+        "elektrárny",
+        "nikoliv",
+        "staví",
+        "svět",
+        "větrné",
+        "zelené"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -756,32 +783,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trest pro energetické firmy za „nemravné zisky“? Daně z neočekávaných příjmů jsou zpět",
-      "url": "https://ekonomickydenik.cz/dane-z-neocekavanych-prijmu-jsou-zpet/",
-      "dt": "2026-04-23T15:12:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "daně",
-        "energetické",
-        "firmy",
-        "nemravné",
-        "neočekávaných",
-        "příjmů",
-        "trest",
-        "zisky",
-        "zpět"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71623,
+      "bytes": 71548,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,11 +830,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T17:02:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T04:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 29,
-          "zdravi": 1
+          "zdravi": 2,
+          "finance": 28
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zelené bláznovství? Nikoliv, je to dobrý byznys. Větrné elektrárny staví celý svět",
+            "publishedAt": "2026-04-26T04:15:00Z"
+          },
           {
             "title": "„Máme všechny trumfy“. Trump zrušil mírovou cestu vyjednavačů do Pákistánu",
             "publishedAt": "2026-04-25T17:02:09Z"
@@ -872,10 +877,6 @@
           {
             "title": "Spor o miliardy z Bruselu. Pokorná Jermanová varuje před škrty, Nerudová ji „setřela“",
             "publishedAt": "2026-04-25T10:23:03Z"
-          },
-          {
-            "title": "Přetlak u letních brigád v maskáčích: Armáda láká na bonusy i moderní zázemí",
-            "publishedAt": "2026-04-25T08:36:00Z"
           }
         ]
       }
