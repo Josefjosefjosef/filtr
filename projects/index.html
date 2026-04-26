@@ -291,21 +291,11 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=mobile-tall-scroll-chroma-flat-1024" />
+    <link rel="stylesheet" href="/assets/app.css?v=mobile-silver-afternoon-bg-1024" />
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <style>
-      /* P0 mobile/tablet: „Jsem Silver“ box — jedno večerní prémiové pozadí ve všech časových režimech; načteno až po app.css kvůli vyšší specificitě než #iuSilverHeroPremium { background-image: … !important }. */
-      @media (max-width: 1024px) {
-        #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
-        #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium {
-          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%) !important;
-          background-image: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #6d28d9 100%) !important;
-        }
-      }
-    </style>
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
