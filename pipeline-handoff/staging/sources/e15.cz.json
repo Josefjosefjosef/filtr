@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-26T08:59:47.416806Z",
+  "ingestedAt": "2026-04-26T09:24:15.033125Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec éry bez kontrol. Tachografy v dodávkách budou povinné, pokuty jsou drakonické",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/konec-ery-bez-kontrol-tachografy-v-dodavkach-budou-povinne-pokuty-jsou-drakonicke-1432393",
+      "dt": "2026-04-26T09:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dodávkách",
+        "drakonické",
+        "konec",
+        "kontrol",
+        "pokuty",
+        "povinné",
+        "tachografy",
+        "éry"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1067,33 +1092,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Praha kupuje Národní dům na Vinohradech, státu zaplatí téměř 400 milionů",
-      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/praha-kupuje-narodni-dum-na-vinohradech-statu-zaplati-temer-400-milionu-1432357",
-      "dt": "2026-04-23T18:06:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "400",
-        "dům",
-        "kupuje",
-        "milionů",
-        "národní",
-        "praha",
-        "státu",
-        "téměř",
-        "vinohradech",
-        "zaplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1104,7 +1102,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54369,
+      "bytes": 54268,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1141,7 +1139,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T09:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1158,6 +1156,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec éry bez kontrol. Tachografy v dodávkách budou povinné, pokuty jsou drakonické",
+            "publishedAt": "2026-04-26T09:00:00Z"
+          },
           {
             "title": "Nájmy v Česku dál rostou. Brno a Ostrava hlásí meziroční skok o desítky procent",
             "publishedAt": "2026-04-26T07:40:00Z"
@@ -1185,10 +1187,6 @@
           {
             "title": "Turek se omluvil úředníkům za „parazity“. Prý neměl na mysli je, ale aktivisty",
             "publishedAt": "2026-04-25T11:27:00Z"
-          },
-          {
-            "title": "V Gileadu jsme ukázali cestu dalším vědcům, věří Čech, který pomáhal vyvíjet injekci proti HIV",
-            "publishedAt": "2026-04-25T10:00:00Z"
           }
         ]
       }

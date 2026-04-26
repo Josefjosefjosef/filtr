@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-26T08:59:47.416806Z",
+  "ingestedAt": "2026-04-26T09:24:15.033125Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová nemocnice v Praze bude vojenská, oznámil Babiš",
+      "url": "https://ekonomickydenik.cz/babis-nemocnice-praha/",
+      "dt": "2026-04-26T09:06:08Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "nemocnice",
+        "nová",
+        "oznámil",
+        "praze",
+        "vojenská"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,35 +775,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Solární byznys v Chile padl. Češi, kteří koupili dluhopisy Soleku, nedostanou skoro nic",
-      "url": "https://ekonomickydenik.cz/cesi-kteri-koupili-dluhopisy-soleku-nedostanou-nic/",
-      "dt": "2026-04-24T06:54:50Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "byznys",
-        "chile",
-        "dluhopisy",
-        "koupili",
-        "kteří",
-        "nedostanou",
-        "nic",
-        "padl",
-        "skoro",
-        "soleku",
-        "solární",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70647,
+      "bytes": 70059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,12 +822,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T08:32:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T09:06:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "finance": 27,
-          "zpravy": 1,
-          "zdravi": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -845,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová nemocnice v Praze bude vojenská, oznámil Babiš",
+            "publishedAt": "2026-04-26T09:06:08Z"
+          },
           {
             "title": "O ropě jednám s giganty, říká Babiš. Kvůli plynu jede do Ázerbájdžánu",
             "publishedAt": "2026-04-26T08:32:14Z"
@@ -872,10 +870,6 @@
           {
             "title": "Mírová jednání s Ruskem v Ázerbájdžánu? Zelenskyj a Alijev se dohodli na spolupráci",
             "publishedAt": "2026-04-25T13:45:51Z"
-          },
-          {
-            "title": "Prezident Pavel, euro a veřejnoprávní média. Lidovci vytyčili priority",
-            "publishedAt": "2026-04-25T12:57:16Z"
           }
         ]
       }
