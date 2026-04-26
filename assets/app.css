@@ -21599,17 +21599,90 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   }
 }
 
-/* P0: mobile/tablet ≤1024 #iuSilverHeroPremium gradient; afternoon +20% mix toward white (was projects/index inline). */
+/* P0: mobile/tablet ≤1024 #iuSilverHeroPremium base gradient (odpolední premium viz html.iu-time-afternoon níže). */
 @media (max-width: 1024px){
   #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
     background: linear-gradient(135deg,#0f172a 0%,#1e1b4b 40%,#312e81 70%,#6d28d9 100%) !important;
     background-image: linear-gradient(135deg,#0f172a 0%,#1e1b4b 40%,#312e81 70%,#6d28d9 100%) !important;
   }
-  #silver-slot[data-iu-silver-welcome-variant="afternoon"] #iuSilverWelcomeStack #iuSilverHeroPremium,
-  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="afternoon"] #iuSilverWelcomeStack #iuSilverHeroPremium{
-    background: linear-gradient(135deg,#3f4555 0%,#4b496f 40%,#5a589a 70%,#8a53e1 100%) !important;
-    background-image: linear-gradient(135deg,#3f4555 0%,#4b496f 40%,#5a589a 70%,#8a53e1 100%) !important;
+}
+
+/* P0: mobile/tablet — Silver hero premium cinematic (jen Příjemné odpoledne: html.iu-time-afternoon). */
+@media (max-width: 1024px){
+  html.iu-time-afternoon #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
+  html.iu-time-afternoon #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium{
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(110% 80% at 15% 30%, rgba(59, 130, 246, 0.35), transparent 55%),
+      radial-gradient(90% 70% at 30% 20%, rgba(168, 85, 247, 0.28), transparent 60%),
+      radial-gradient(100% 80% at 85% 10%, rgba(79, 70, 229, 0.30), transparent 60%),
+      linear-gradient(135deg, #0B1220 0%, #172554 35%, #312E81 70%, #4C1D95 100%) !important;
+    background-image:
+      radial-gradient(110% 80% at 15% 30%, rgba(59, 130, 246, 0.35), transparent 55%),
+      radial-gradient(90% 70% at 30% 20%, rgba(168, 85, 247, 0.28), transparent 60%),
+      radial-gradient(100% 80% at 85% 10%, rgba(79, 70, 229, 0.30), transparent 60%),
+      linear-gradient(135deg, #0B1220 0%, #172554 35%, #312E81 70%, #4C1D95 100%) !important;
+    border-color: rgba(167, 139, 250, 0.45) !important;
+    box-shadow:
+      0 18px 42px rgba(2, 6, 23, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(139, 92, 246, 0.15) !important;
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium::before{
+    content: "" !important;
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      linear-gradient(110deg, transparent 0 20%, rgba(96, 165, 250, 0.20) 35%, rgba(168, 85, 247, 0.22) 50%, transparent 65%),
+      linear-gradient(120deg, transparent 0 30%, rgba(168, 85, 247, 0.18) 45%, rgba(59, 130, 246, 0.15) 60%, transparent 75%);
+    opacity: 0.75;
+    transform: skewY(-6deg);
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium::after{
+    content: "" !important;
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(60% 50% at 18% 40%, rgba(56, 189, 248, 0.35), transparent 60%),
+      radial-gradient(50% 40% at 28% 30%, rgba(168, 85, 247, 0.28), transparent 60%),
+      radial-gradient(40% 35% at 90% 90%, rgba(168, 85, 247, 0.25), transparent 70%);
+    opacity: 0.8;
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium > *{
+    position: relative;
+    z-index: 1;
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium .iu-silver-quick-actions,
+  html.iu-time-afternoon #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
+    position: relative;
+    z-index: 2;
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium img{
+    filter:
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.25))
+      drop-shadow(0 0 20px rgba(59, 130, 246, 0.35))
+      drop-shadow(0 0 30px rgba(168, 85, 247, 0.30));
+  }
+
+  html.iu-time-afternoon #iuSilverHeroPremium input{
+    background: rgba(255, 255, 255, 0.06);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
   }
 }
 
