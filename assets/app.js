@@ -6331,38 +6331,13 @@ function buildVideoAsArticleCard(it) {
     /* Capture input se vkládá jen z iuSilverWelcomeRefresh — až po doplnění pozdravu; předčasný build v init způsoboval prázdný greet + layout skok. */
   }
 
-  /** P0 poprej: ≤1024px CSS injekt (kvůli css_debt_guard app.css bytes) — jen projects route. */
+  /** P0 poprej: ≤1024px layout/CSS žije v projects/index.html @media (max-width:1024px) — first paint = post-JS (žádný pozdní <style> injekt → CLS). */
   function iuPoprejEnsureMobileCssInjected(){
     try{
       if (typeof iuIsProjectsRoute === "function" && !iuIsProjectsRoute()) return;
-      if (typeof document === "undefined" || !document || !document.head) return;
-      if (document.getElementById("iuPoprejMobileCss")) return;
-      const css =
-        "@media (max-width:1024px){" +
-        "#iuHolidayMonetizeCard.iu-holiday-monetize-card{overflow:hidden}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle,#iuHolidayMonetizeCard .poprej-icon,#iuNamedayCtaMobile .poprej-icon{width:26px!important;height:26px!important;min-width:26px!important;max-width:26px!important;box-sizing:border-box!important;flex-shrink:0!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg,#iuHolidayMonetizeCard .poprej-icon svg,#iuNamedayCtaMobile .poprej-icon svg{display:block!important;transform:scale(0.8);transform-origin:center}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftCircle{color:var(--iuNamedayMaleAccent)}" +
-        "#iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{color:var(--iuNamedayFemaleAccent)}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftSvg path{fill:currentColor!important;stroke:currentColor!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__text{display:block!important;flex:1 1 0!important;min-width:0!important;max-width:100%!important;align-self:center!important;overflow-x:hidden!important;white-space:normal!important;overflow-wrap:anywhere!important;font:inherit!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .poprej-title,#iuHolidayMonetizeCard .poprej-subtitle{display:inline!important;font:inherit!important;margin:0!important;padding:0!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__line2::before,#iuHolidayMonetizeCard #iuHolidayLine2::before,#iuHolidayMonetizeCard .poprej-subtitle::before{content:\" – \"!important;font-weight:400!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__row{display:flex!important;flex-flow:row wrap!important;align-items:center!important;gap:8px!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}" +
-        "#iuHolidayMonetizeCard .iu-holiday-card__giftWrap{flex:0 0 auto!important;align-self:center!important}" +
-        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:8px!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}" +
-        "#iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;min-height:44px!important;padding-top:10px!important;padding-bottom:10px!important;padding-left:8px!important;padding-right:8px!important}" +
-        "#iuHolidayMonetizeCard #iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}" +
-        "#iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard .iu-holiday-card__line1{font-weight:400!important}" +
-        "#iuHolidayMonetizeCard .poprej-bold{font-weight:600!important}" +
-        "#iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard .poprej-subtitle{font-weight:400!important}" +
-        "}";
-      const node = document.createElement("style");
-      node.id = "iuPoprejMobileCss";
-      node.setAttribute("data-iu-poprej-css", "1");
-      node.textContent = css;
-      document.head.appendChild(node);
+      if (typeof window === "undefined" || !window) return;
+      if (window.__iuPoprejMobileCssInlined) return;
+      window.__iuPoprejMobileCssInlined = 1;
     }catch(_){}
   }
 
@@ -6479,12 +6454,6 @@ function buildVideoAsArticleCard(it) {
       if (!textHost) return;
       try{ title.style.removeProperty("font-size"); }catch(_){}
       try{ textHost.style.removeProperty("font-size"); }catch(_){}
-      try{ void textHost.offsetWidth; }catch(_){}
-      let scale = 1;
-      while (textHost.scrollWidth > textHost.clientWidth && scale > 0.75){
-        scale -= 0.02;
-        textHost.style.fontSize = String(scale * 100) + "%";
-      }
     }catch(_){}
   }
   try{
@@ -6802,7 +6771,19 @@ function buildVideoAsArticleCard(it) {
                 line = "Popřej " + raw;
               }
             }
-            holLine1.textContent = line;
+            try{
+              const doc = holLine1.ownerDocument;
+              let bold = holLine1.querySelector(":scope > .poprej-bold");
+              if (!bold){
+                holLine1.textContent = "";
+                bold = doc.createElement("span");
+                bold.className = "poprej-bold";
+                holLine1.appendChild(bold);
+              }
+              bold.textContent = line;
+            }catch(_){
+              holLine1.textContent = line;
+            }
           }
         }catch{}
         try{
