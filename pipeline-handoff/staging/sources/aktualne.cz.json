@@ -1,12 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T12:55:59.184959Z",
+  "ingestedAt": "2026-04-26T13:20:14.510530Z",
   "items": [
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun víc než loni",
+      "title": "AI je horší než ekonomická recese. Jak si v překotné éře zachovat zdravou hlavu?",
+      "url": "https://zpravy.aktualne.cz/ekonomika/ai-je-horsi-nez-ekonomicka-recese-jak-si-v-prekotne-ere-zachovat-zdravou-hlavu/r~aaa2915bea2a353f94fc8e80fe09adb0/",
+      "dt": "2026-04-26T12:56:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ekonomická",
+        "hlavu",
+        "horší",
+        "než",
+        "překotné",
+        "recese",
+        "zachovat",
+        "zdravou",
+        "éře"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun více než loni",
       "url": "https://zpravy.aktualne.cz/ekonomika/jarni-potravinove-sbirky-se-zucastnil-rekordni-pocet-obchodu-vybralo-se-o-sto-tun-vic-nez-loni/r~aaa295e124d0f7e5673074d9bae58881/",
       "dt": "2026-04-26T12:48:00Z",
       "media_raw": "Aktuálně",
@@ -23,7 +49,6 @@
         "sto",
         "tun",
         "vybralo",
-        "víc",
         "zúčastnil"
       ],
       "feedCategory": "zpravy",
@@ -520,32 +545,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pumový útok v Kolumbii si vyžádal 14 mrtvých, úřady viní levicové povstalce",
-      "url": "https://zpravy.aktualne.cz/zahranici/pumovy-utok-v-kolumbii-si-vyzadal-14-mrtvych-urady-vini-levicove-povstalce/r~aaa293ffbe1e834a5491157f1aa567e0/",
-      "dt": "2026-04-26T06:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kolumbii",
-        "levicové",
-        "mrtvých",
-        "povstalce",
-        "pumový",
-        "viní",
-        "vyžádal",
-        "útok",
-        "úřady"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -556,7 +555,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23047,
+      "bytes": 23060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -593,11 +592,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T12:56:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 2,
-          "zpravy": 14,
+          "finance": 3,
+          "zpravy": 13,
           "sport": 4
         },
         "drop_counts": {
@@ -611,7 +610,11 @@
         },
         "sample_titles": [
           {
-            "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun víc než loni",
+            "title": "AI je horší než ekonomická recese. Jak si v překotné éře zachovat zdravou hlavu?",
+            "publishedAt": "2026-04-26T12:56:00Z"
+          },
+          {
+            "title": "Jarní potravinové sbírky se zúčastnil rekordní počet obchodů, vybralo se o sto tun více než loni",
             "publishedAt": "2026-04-26T12:48:00Z"
           },
           {
@@ -637,10 +640,6 @@
           {
             "title": "Vlivný pražský lidovec má na nového šéfa strany velkou prosbu. Nejspíš ho nepotěší",
             "publishedAt": "2026-04-26T11:03:00Z"
-          },
-          {
-            "title": "Výstřely a chaos. Cílem útoku učitele s brokovnicí byla Trumpova vláda",
-            "publishedAt": "2026-04-26T09:56:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-26T12:55:59.184959Z",
+  "ingestedAt": "2026-04-26T13:20:14.510530Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Žhavý fashion week: Schneiderová za divu, Hrachovcová s nohama do nebe a luxusní Vignerová nahoře bez",
+      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-zaujalo-nas-zhavy-fashion-week-schneiderova-za-divu-hrachovcova-s-nohama-do-nebe-a-luxusni-vignerova-nahore-bez-103252",
+      "dt": "2026-04-26T13:09:44Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "divu",
+        "fashion",
+        "hrachovcová",
+        "luxusní",
+        "nahoře",
+        "nebe",
+        "nohama",
+        "schneiderová",
+        "vignerová",
+        "week",
+        "žhavý"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -793,33 +821,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Jak udělat nejlepší kuřecí řízky? Recepty na netradiční, křupavé, v těstíčku a v troubě bez smažení",
-      "url": "https://www.prozeny.cz/clanek/recepty-masa-jak-udelat-nejlepsi-kureci-rizky-recepty-na-netradicni-krupave-v-testicku-a-v-troube-bez-smazeni-103183",
-      "dt": "2026-04-24T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "kuřecí",
-        "křupavé",
-        "nejlepší",
-        "netradiční",
-        "recepty",
-        "smažení",
-        "troubě",
-        "těstíčku",
-        "udělat",
-        "řízky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -830,7 +831,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 38985,
+      "bytes": 38967,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -867,7 +868,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:08:39Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T13:09:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -883,6 +884,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žhavý fashion week: Schneiderová za divu, Hrachovcová s nohama do nebe a luxusní Vignerová nahoře bez",
+            "publishedAt": "2026-04-26T13:09:44Z"
+          },
           {
             "title": "Slavné ženy, které ukázaly své „vady“ na kráse: Nenalíčené obličeje i zadky s celulitidou",
             "publishedAt": "2026-04-26T10:08:39Z"
@@ -909,10 +914,6 @@
           },
           {
             "title": "Časté střídání průjmu a zácpy není normální. Tělo volá o pomoc!",
-            "publishedAt": "2026-04-26T03:00:00Z"
-          },
-          {
-            "title": "Kvíz: Držíte krok s vnoučaty? Víte, kdo je Chase, Bing a jestli je Peppa holka, nebo kluk?",
             "publishedAt": "2026-04-26T03:00:00Z"
           }
         ]
