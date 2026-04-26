@@ -25185,6 +25185,9 @@ function buildVideoAsArticleCard(it) {
     try{
       const el = hostEl;
       if (!el) return;
+      try{
+        if (el.closest && el.closest("#iuTvOnlineView")) return;
+      }catch{}
       const scope = String((opts && opts.scope) || el.dataset?.iuNotesScope || "").trim();
       const title = String((opts && opts.title) || el.dataset?.iuNotesTitle || "").trim();
       const name = String(el.dataset?.iuNotesName || title || "").trim();
@@ -25367,6 +25370,8 @@ function buildVideoAsArticleCard(it) {
         try{
           /* Jízdní řády (#iuJrEmptyView): žádný notes blok (P0 — nesmí se renderovat textarea / akce). */
           if (el && el.closest && el.closest("#iuJrEmptyView")) return;
+          /* TV online (#iuTvOnlineView): žádný notes blok (P0). */
+          if (el && el.closest && el.closest("#iuTvOnlineView")) return;
           iuRenderNotesHost(el, {});
         }catch{}
       });
@@ -25391,11 +25396,18 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         return;
       }
+      /* P0 TV online: žádný section-level .iuNotesHost (textarea / Zkopírovat / Sdílet / WhatsApp). */
+      if (section === "tvonline") {
+        try{
+          const tvView = document.getElementById("iuTvOnlineView");
+          if (tvView) Array.from(tvView.querySelectorAll(".iuNotesHost")).forEach((h) => { try{ h.remove(); }catch{} });
+        }catch{}
+        return;
+      }
 
       // map URL section -> storage key + view element
       const map = {
         radio:   { key: "radio",    view: () => document.getElementById("iuRadioView"),    accentVar: "--iuNavAccent-radio",    label: "Rádia" },
-        tvonline:{ key: "tvonline", view: () => document.getElementById("iuTvOnlineView"),accentVar: "--iuNavAccent-tvonline", label: "TV online" },
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
         pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
         tvprogram:{ key:"tvprogram",view: () => document.getElementById("iuTvProgramView"),accentVar:"--iuNavAccent-tvprogram", label:"TV program" },
