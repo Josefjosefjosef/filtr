@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T13:20:14.510530Z",
+  "ingestedAt": "2026-04-26T13:44:30.944626Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nová pražská nemocnice bude podle Babiše vojenská",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nova-prazska-nemocnice-bude-podle-babise-vojenska-372814",
+      "dt": "2026-04-26T13:34:06Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "babiše",
+        "nemocnice",
+        "nová",
+        "podle",
+        "pražská",
+        "vojenská"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -738,28 +761,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přibyl se ujal úřadu pražského arcibiskupa",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/hlavni-mesto-praha/pribyl-se-ujme-funkce-prazskeho-arcibiskupa-372783",
-      "dt": "2026-04-25T08:30:14Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "arcibiskupa",
-        "pražského",
-        "přibyl",
-        "ujal",
-        "úřadu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Lehečka si poradil i s Američanem Michelsenem. Noskové pomohlo odstoupení soupeřky",
@@ -810,16 +811,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Fotbalistky FC Praha podlehly Plzni 1:2",
+      "title": "Slavia zdolala v ženské lize Liberec, Plzni stačí k záchraně bod",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalistky-fc-praha-podlehly-plzni-12-156461",
       "dt": "2026-04-26T11:01:01Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "fotbalistky",
+        "bod",
+        "liberec",
+        "lize",
         "plzni",
-        "podlehly",
-        "praha"
+        "slavia",
+        "stačí",
+        "zdolala",
+        "záchraně",
+        "ženské"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1515,7 +1521,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44111,
+      "bytes": 43913,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,7 +1581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:47:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T13:34:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1592,6 +1598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová pražská nemocnice bude podle Babiše vojenská",
+            "publishedAt": "2026-04-26T13:34:06Z"
+          },
           {
             "title": "Nový zákon podle Fialy zrychlí reakci na krize. Vláda se bojí žalob, míní Skopeček",
             "publishedAt": "2026-04-26T12:47:42Z"
@@ -1619,10 +1629,6 @@
           {
             "title": "Malá restituce napravila mnohé majetkové křivdy, vše se ale majitelům nevrátilo",
             "publishedAt": "2026-04-26T06:30:00Z"
-          },
-          {
-            "title": "Ukrajinský útok poškodil chemickou továrnu v ruské Vologodské oblasti",
-            "publishedAt": "2026-04-26T06:19:08Z"
           }
         ]
       }
@@ -1634,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38159,
+      "bytes": 38583,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1695,7 +1701,7 @@
             "publishedAt": "2026-04-26T11:40:18Z"
           },
           {
-            "title": "Fotbalistky FC Praha podlehly Plzni 1:2",
+            "title": "Slavia zdolala v ženské lize Liberec, Plzni stačí k záchraně bod",
             "publishedAt": "2026-04-26T11:01:01Z"
           },
           {
@@ -1728,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77254,
+      "bytes": 77153,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
