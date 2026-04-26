@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T00:29:44.984031Z",
+  "ingestedAt": "2026-04-26T00:54:43.603940Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Po bombovém útoku na silnici v Kolumbii je 14 mrtvých, více než 38 zraněných",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/po-bombovem-utoku-na-silnici-v-kolumbii-je-14-mrtvych-vice-nez-38-zranenych-372801",
+      "dt": "2026-04-26T00:29:10Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bombovém",
+        "kolumbii",
+        "mrtvých",
+        "než",
+        "silnici",
+        "zraněných",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -709,31 +733,6 @@
         "tratě",
         "začíná",
         "železniční"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nejsušší duben za téměř čtyři dekády, sucho v Česku zesiluje",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nejsussi-duben-za-temer-ctyri-dekady-sucho-v-cesku-zesiluje-372774",
-      "dt": "2026-04-24T18:05:57Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dekády",
-        "duben",
-        "nejsušší",
-        "sucho",
-        "téměř",
-        "zesiluje",
-        "česku",
-        "čtyři"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1520,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44987,
+      "bytes": 45009,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1580,7 +1579,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-25T23:49:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T00:29:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 27,
@@ -1598,6 +1597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Po bombovém útoku na silnici v Kolumbii je 14 mrtvých, více než 38 zraněných",
+            "publishedAt": "2026-04-26T00:29:10Z"
+          },
           {
             "title": "Při střelbě v nemocnici v Chicagu zemřel policista, další je v kritickém stavu",
             "publishedAt": "2026-04-25T23:49:18Z"
@@ -1625,10 +1628,6 @@
           {
             "title": "SOUHRN: Zásadní události soboty 25. dubna",
             "publishedAt": "2026-04-25T16:29:02Z"
-          },
-          {
-            "title": "Nadšenci z mnoha zemí přijeli na Vyškovsko fotit parní vlak",
-            "publishedAt": "2026-04-25T16:21:48Z"
           }
         ]
       }
@@ -1734,7 +1733,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77209,
+      "bytes": 77203,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
