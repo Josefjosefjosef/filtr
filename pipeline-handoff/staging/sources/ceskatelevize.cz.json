@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T08:10:05.540962Z",
+  "ingestedAt": "2026-04-26T08:34:55.687994Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ozvaly se záhadné rány a nastal chaos, popsali reportéři útok na galavečer",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ozvaly-se-zahadne-rany-a-nastal-chaos-popsali-reporteri-utok-na-galavecer-372806",
+      "dt": "2026-04-26T08:21:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chaos",
+        "galavečer",
+        "nastal",
+        "ozvaly",
+        "popsali",
+        "reportéři",
+        "rány",
+        "záhadné",
+        "útok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -717,31 +743,6 @@
         "předvolebních",
         "slibů",
         "zaznělo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Státy EU se neshodnou na přístupu k emisním povolenkám, Komise chystá revizi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/staty-eu-se-neshodnou-na-pristupu-k-emisnim-povolenkam-komise-chysta-revizi-372206",
-      "dt": "2026-04-25T06:02:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chystá",
-        "emisním",
-        "komise",
-        "neshodnou",
-        "povolenkám",
-        "přístupu",
-        "revizi",
-        "státy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1518,7 +1519,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44117,
+      "bytes": 44055,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1578,11 +1579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:21:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 1,
           "zpravy": 25,
+          "finance": 1,
           "other": 3,
           "sport": 1
         },
@@ -1596,6 +1597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ozvaly se záhadné rány a nastal chaos, popsali reportéři útok na galavečer",
+            "publishedAt": "2026-04-26T08:21:00Z"
+          },
           {
             "title": "Hosté Událostí, komentářů z ekonomiky probrali cestování během blízkovýchodní krize",
             "publishedAt": "2026-04-26T07:10:00Z"
@@ -1623,10 +1628,6 @@
           {
             "title": "Až milion korun na novou ordinaci. VZP láká lékaře do regionů s nedostatkem péče",
             "publishedAt": "2026-04-26T04:30:00Z"
-          },
-          {
-            "title": "Před čtyřiceti lety došlo ke katastrofě v Černobylu",
-            "publishedAt": "2026-04-26T04:02:00Z"
           }
         ]
       }

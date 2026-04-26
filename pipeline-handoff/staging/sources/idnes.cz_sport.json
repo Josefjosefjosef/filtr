@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-26T08:10:05.540962Z",
+  "ingestedAt": "2026-04-26T08:34:55.687994Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Mimozemšťan Dosunmu a Jokičova frustrace. Denver je na hraně vyřazení",
+      "url": "https://www.idnes.cz/sport/basket/play-off-basketbalove-nba.A260426_081550_sport-basket_ald",
+      "dt": "2026-04-26T08:02:23Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "denver",
+        "dosunmu",
+        "frustrace",
+        "hraně",
+        "jokičova",
+        "mimozemšťan",
+        "vyřazení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -761,31 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slovácko - Dukla 1:2, klíčový zápas o záchranu, Pražané už nejsou poslední",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-27-kolo-slovacko-dukla-online-vysledek.A260425_153646_fotbal_duff",
-      "dt": "2026-04-25T16:54:03Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dukla",
-        "klíčový",
-        "nejsou",
-        "poslední",
-        "pražané",
-        "slovácko",
-        "záchranu",
-        "zápas"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47264,
+      "bytes": 47157,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:02:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mimozemšťan Dosunmu a Jokičova frustrace. Denver je na hraně vyřazení",
+            "publishedAt": "2026-04-26T08:02:23Z"
+          },
           {
             "title": "Náskok na Spartu? Mě to nezajímá. Kouč Trpišovský o vývoji ligy i trestu pro Bořila",
             "publishedAt": "2026-04-26T07:49:00Z"
@@ -875,10 +878,6 @@
           {
             "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
             "publishedAt": "2026-04-26T05:31:26Z"
-          },
-          {
-            "title": "Na titul nemyslím. Hotovo ještě není, ale bude to složité, ví Priske po Bohemians",
-            "publishedAt": "2026-04-26T05:07:00Z"
           }
         ]
       }

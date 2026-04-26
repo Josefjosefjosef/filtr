@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-26T08:10:05.540962Z",
+  "ingestedAt": "2026-04-26T08:34:55.687994Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Slovensku kvůli vysokým deficitům zhoršili rating",
+      "url": "https://profitonline.cz/slovensku-kvuli-vysokym-deficitum-zhorsili-rating/",
+      "dt": "2026-04-26T08:10:16Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "deficitům",
+        "kvůli",
+        "rating",
+        "slovensku",
+        "vysokým",
+        "zhoršili"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,28 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropské indexy zamířily strmě dolů",
-      "url": "https://profitonline.cz/evropske-indexy-zamirily-strme-dolu/",
-      "dt": "2026-04-23T17:40:00Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dolů",
-        "evropské",
-        "indexy",
-        "strmě",
-        "zamířily"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18463,
+      "bytes": 18645,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:10:16Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -359,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slovensku kvůli vysokým deficitům zhoršili rating",
+            "publishedAt": "2026-04-26T08:10:16Z"
+          },
           {
             "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách lidstva (2.)",
             "publishedAt": "2026-04-26T04:00:29Z"
@@ -386,10 +391,6 @@
           {
             "title": "Babiš je mistr taktiky. Tlačí prezidenta tam, kam potřebuje",
             "publishedAt": "2026-04-24T10:00:46Z"
-          },
-          {
-            "title": "ČEZ upřesnil první kroky k postátnění výroby elektřiny",
-            "publishedAt": "2026-04-24T08:00:14Z"
           }
         ]
       }

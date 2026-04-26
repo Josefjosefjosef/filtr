@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-26T08:10:05.540962Z",
+  "ingestedAt": "2026-04-26T08:34:55.687994Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Svědci útoku ve Washingtonu: Ozvaly se rány, hudba ustala a nastal chaos",
+      "url": "https://www.denik.cz/ze_sveta/washington-utok-donald-trump-svedectvi.html",
+      "dt": "2026-04-26T08:17:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "chaos",
+        "hudba",
+        "nastal",
+        "ozvaly",
+        "rány",
+        "svědci",
+        "ustala",
+        "washingtonu",
+        "útoku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Panika na letišti  v Dillí. Těsně před startem začal hořet motor letadla",
+      "url": "https://www.denik.cz/ze_sveta/dilli-indie-letiste-panika-evakuace-zavada-motoru.html",
+      "dt": "2026-04-26T07:51:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dillí",
+        "hořet",
+        "letadla",
+        "letišti",
+        "motor",
+        "panika",
+        "startem",
+        "těsně",
+        "začal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -597,59 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Novým pražským arcibiskupem se stal Přibyl. Při mši převzal úřad od Graubnera",
-      "url": "https://www.denik.cz/regiony/pribyl-se-stal-prazskym-arcibiskupem-pri-msi-prevzal-urad-od-graubnera-20260425.html",
-      "dt": "2026-04-25T09:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "arcibiskupem",
-        "graubnera",
-        "mši",
-        "novým",
-        "pražským",
-        "převzal",
-        "při",
-        "přibyl",
-        "stal",
-        "úřad"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA zaútočily v Tichém oceánu na další loď, dva lidé zemřeli",
-      "url": "https://www.denik.cz/ze_sveta/usa-armada-tichy-ocean-lod-drogy-narkotika.html",
-      "dt": "2026-04-25T09:35:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "další",
-        "dva",
-        "lidé",
-        "loď",
-        "oceánu",
-        "tichém",
-        "usa",
-        "zaútočily",
-        "zemřeli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29812,
+      "bytes": 29957,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:41:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:17:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -713,6 +712,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svědci útoku ve Washingtonu: Ozvaly se rány, hudba ustala a nastal chaos",
+            "publishedAt": "2026-04-26T08:17:00Z"
+          },
+          {
+            "title": "Panika na letišti  v Dillí. Těsně před startem začal hořet motor letadla",
+            "publishedAt": "2026-04-26T07:51:00Z"
+          },
           {
             "title": "Cílem střelce na galavečeři ve Washingtonu byli členové Trumpovy vlády",
             "publishedAt": "2026-04-26T07:41:00Z"
@@ -736,14 +743,6 @@
           {
             "title": "Magyar jede za Tuskem do Polska jako za učitelem. Naučit se návrat k demokracii",
             "publishedAt": "2026-04-26T05:00:00Z"
-          },
-          {
-            "title": "Střelba ve Washingtonu. Donalda Trumpa museli evakuovat z večeře s novináři",
-            "publishedAt": "2026-04-26T04:48:00Z"
-          },
-          {
-            "title": "I snídaně mohou zvyšovat cholesterol. Mnoho Čechů chybuje, ani o tom neví",
-            "publishedAt": "2026-04-26T03:30:00Z"
           }
         ]
       }

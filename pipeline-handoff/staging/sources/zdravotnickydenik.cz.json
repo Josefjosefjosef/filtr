@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-26T08:10:05.540962Z",
+  "ingestedAt": "2026-04-26T08:34:55.687994Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Šíří se nemoci, proti nimž se povinně očkuje. Experti vysvětlují proč",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemoci-ockovani-experti/",
+      "dt": "2026-04-26T08:10:53Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "experti",
+        "nemoci",
+        "nimž",
+        "očkuje",
+        "povinně",
+        "proti",
+        "proč",
+        "vysvětlují",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,34 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zákaz kojenecké výživy je zbytečný, tvrdí výrobce. Toxické šarže jsme stáhli už dávno, tvrdí",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zakaz-kojenecke-vyzivy-toxicke-sarze-jsme-stahli/",
-      "dt": "2026-04-24T09:02:56Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dávno",
-        "jsme",
-        "kojenecké",
-        "stáhli",
-        "toxické",
-        "tvrdí",
-        "výrobce",
-        "výživy",
-        "zbytečný",
-        "zákaz",
-        "šarže"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 112662,
+      "bytes": 112886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-26T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:10:53Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -329,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šíří se nemoci, proti nimž se povinně očkuje. Experti vysvětlují proč",
+            "publishedAt": "2026-04-26T08:10:53Z"
+          },
           {
             "title": "Alarmující zjištění: Přibývá Němců, které zdravotní stav omezuje v běžném životě",
             "publishedAt": "2026-04-26T05:00:00Z"
@@ -356,10 +358,6 @@
           {
             "title": "5 chyb, kvůli kterým spíte hůř. Dělá je skoro každý",
             "publishedAt": "2026-04-24T12:03:00Z"
-          },
-          {
-            "title": "Mohla být dávka jedu na krysy v dětské výživě smrtelná? Policie už zná její množství",
-            "publishedAt": "2026-04-24T10:41:29Z"
           }
         ]
       }
