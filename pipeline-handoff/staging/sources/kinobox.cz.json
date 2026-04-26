@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-26T13:44:30.944626Z",
+  "ingestedAt": "2026-04-26T14:49:35.817285Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kriminální hit Buldok z Poděbrad končí. Nahradí ho nečekaná seriálová volba",
+      "url": "https://www.kinobox.cz/clanky/serialy/52968-kriminalni-hit-buldok-z-podebrad-konci-nahradi-ho-necekana-serialova-volba",
+      "dt": "2026-04-26T14:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "buldok",
+        "hit",
+        "končí",
+        "kriminální",
+        "nahradí",
+        "nečekaná",
+        "poděbrad",
+        "seriálová",
+        "volba"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -531,32 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Supermanovo komiksové univerzum se rozroste o horor. Clayface děsí v prvním traileru",
-      "url": "https://www.kinobox.cz/clanky/filmy/52962-clayface-desi-v-prvnim-traileru-komiksove-univezum-se-rozrostlo-o-horor",
-      "dt": "2026-04-24T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "clayface",
-        "děsí",
-        "horor",
-        "komiksové",
-        "prvním",
-        "rozroste",
-        "supermanovo",
-        "traileru",
-        "univerzum"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29048,
+      "bytes": 29271,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T14:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kriminální hit Buldok z Poděbrad končí. Nahradí ho nečekaná seriálová volba",
+            "publishedAt": "2026-04-26T14:00:00Z"
+          },
           {
             "title": "Vegetariáni, kteří vraždí pro zábavu. Hroší horor Hungry láká na nejzuřivější zabijáky živočišné říše",
             "publishedAt": "2026-04-26T12:00:00Z"
@@ -646,10 +650,6 @@
           {
             "title": "Amélie z Montmartru slaví 25 let. Režisérova šílená poetika zafungovala až v romantické komedii",
             "publishedAt": "2026-04-25T13:00:00Z"
-          },
-          {
-            "title": "Kvíz: Účastníci zájezdu slaví 20 let. Jak dobře slavnou letní komedii znáte?",
-            "publishedAt": "2026-04-25T12:00:00Z"
           }
         ]
       }

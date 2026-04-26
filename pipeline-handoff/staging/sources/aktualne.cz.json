@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T13:44:30.944626Z",
+  "ingestedAt": "2026-04-26T14:49:35.817285Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Česko je letos největším dovozcem dronů z Tchaj-wanu, ten navyšuje export",
+      "url": "https://zpravy.aktualne.cz/ekonomika/cesko-je-letos-nejvetsim-dovozcem-dronu-z-tchaj-wanu-ten-navysuje-export/r~aaa29eb696dec7c9fda9e85c6ec43c3a/",
+      "dt": "2026-04-26T14:26:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dovozcem",
+        "dronů",
+        "export",
+        "letos",
+        "navyšuje",
+        "největším",
+        "tchaj",
+        "ten",
+        "wanu",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Plíšková skvělým finišem rozhodla parádní bitvu. Dál jde i Lehečka a bez boje Nosková",
+      "url": "https://sport.aktualne.cz/tenis/noskova-je-v-osmifinale-pres-rusku-postoupila-bez-boje/r~aaa2979e9d61a21b1839b1745baca905/",
+      "dt": "2026-04-26T08:46:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bitvu",
+        "boje",
+        "finišem",
+        "jde",
+        "lehečka",
+        "nosková",
+        "parádní",
+        "plíšková",
+        "rozhodla",
+        "skvělým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -410,32 +464,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nosková postoupila, aniž by si pinkla. Dál jde i Lehečka, Siniaková nevyužila mečboly",
-      "url": "https://sport.aktualne.cz/tenis/noskova-je-v-osmifinale-pres-rusku-postoupila-bez-boje/r~aaa2979e9d61a21b1839b1745baca905/",
-      "dt": "2026-04-26T08:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "aniž",
-        "jde",
-        "lehečka",
-        "mečboly",
-        "nevyužila",
-        "nosková",
-        "pinkla",
-        "postoupila",
-        "siniaková"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Střelba na Trumpově galavečeru. Prezidenta evakuovali, útočníka s brokovnicí zadrželi",
@@ -513,33 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Introvert Nosková? Je to dobře, líčí kouč. Útok na desítku může přijít nečekaně brzy",
-      "url": "https://sport.aktualne.cz/tenis/introvert-noskova-je-to-dobre-lici-kouc-utok-na-desitku-muze-prijit-necekane-brzy/r~aaa2945f230edfacbe779e88f0d031c3/",
-      "dt": "2026-04-26T07:09:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "brzy",
-        "desítku",
-        "dobře",
-        "introvert",
-        "kouč",
-        "líčí",
-        "nečekaně",
-        "nosková",
-        "přijít",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -550,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22923,
+      "bytes": 22988,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,12 +588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T13:22:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T14:26:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
-          "sport": 4,
-          "finance": 3
+          "finance": 4,
+          "sport": 3,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,6 +605,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko je letos největším dovozcem dronů z Tchaj-wanu, ten navyšuje export",
+            "publishedAt": "2026-04-26T14:26:00Z"
+          },
+          {
+            "title": "Plíšková skvělým finišem rozhodla parádní bitvu. Dál jde i Lehečka a bez boje Nosková",
+            "publishedAt": "2026-04-26T08:46:00Z"
+          },
           {
             "title": "„Porušili jste příměří.“ Netanjahu nařídil razantní útoky proti Hizballáhu",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -627,14 +636,6 @@
           {
             "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
             "publishedAt": "2026-01-21T06:45:00Z"
-          },
-          {
-            "title": "Pili dešťovou vodu a marně prosili o jídlo. Ukrajinský velitel kvůli skandálu končí",
-            "publishedAt": "2026-04-26T12:08:00Z"
-          },
-          {
-            "title": "Česko podle NATO nedá dvě procenta HDP na obranu ani letos, hlásí Babiš. My jsme slib splnili, ozval se Fiala",
-            "publishedAt": "2026-04-26T10:38:00Z"
           }
         ]
       }

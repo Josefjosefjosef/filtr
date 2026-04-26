@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-26T13:44:30.944626Z",
+  "ingestedAt": "2026-04-26T14:49:35.817285Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Je tady první upoutávka na Alien: Isolation 2 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/je-tady-prvni-upoutavka-na-alien-isolation-2-4atpdf",
+      "dt": "2026-04-26T14:41:19Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "alien",
+        "indian",
+        "isolation",
+        "první",
+        "tady",
+        "upoutávka"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1044,35 +1067,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vrátí se do Xboxu jedna z jeho největších ikon? Larry Hryb naznačil možný návrat - INDIAN",
-      "url": "https://indian-tv.cz/clanek/vrati-se-do-xboxu-jedna-z-jeho-nejvetsich-ikon-larry-hryb-31wdqx",
-      "dt": "2026-04-22T11:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "hryb",
-        "ikon",
-        "indian",
-        "jedna",
-        "jeho",
-        "larry",
-        "možný",
-        "naznačil",
-        "největších",
-        "návrat",
-        "vrátí",
-        "xboxu"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1083,7 +1077,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211755,
+      "bytes": 211728,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1120,7 +1114,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T14:41:19Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1135,6 +1129,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je tady první upoutávka na Alien: Isolation 2 - INDIAN",
+            "publishedAt": "2026-04-26T14:41:19Z"
+          },
           {
             "title": "Unikla cena Steam Controlleru. Nový ovladač od Valve nebude levný - INDIAN",
             "publishedAt": "2026-04-26T12:00:00Z"
@@ -1162,10 +1160,6 @@
           {
             "title": "Díky úniku informací o Deluxe edici už nejspíš víme, kdy si zahrajeme Star Wars: Galactic Racer - INDIAN",
             "publishedAt": "2026-04-25T18:48:30Z"
-          },
-          {
-            "title": "Microsoft chystá předplatné Xbox Game Pass Starter Edition - INDIAN",
-            "publishedAt": "2026-04-25T12:52:20Z"
           }
         ]
       }
