@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-26T22:39:21.336880Z",
+  "ingestedAt": "2026-04-26T23:04:54.182653Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Střelba jako jednoduchý marketing na pozlacený Trumpův sál",
+      "url": "https://www.epenize.eu/strelba-jako-jednoduchy-marketing-na-pozlaceny-trumpuv-sal/",
+      "dt": "2026-04-26T23:00:59Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "jako",
+        "jednoduchý",
+        "marketing",
+        "pozlacený",
+        "střelba",
+        "sál",
+        "trumpův"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,29 +500,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Stanjura nevrátil mobily ani tablet. Asi ví proč",
-      "url": "https://www.epenize.eu/stanjura-nevratil-mobily-ani-tablet-asi-vi-proc/",
-      "dt": "2026-04-18T07:44:53Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "asi",
-        "mobily",
-        "nevrátil",
-        "proč",
-        "stanjura",
-        "tablet"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 112214,
+      "bytes": 111251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,12 +547,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:00:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T23:00:59Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 18,
-          "zdravi": 1,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 17,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -563,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Střelba jako jednoduchý marketing na pozlacený Trumpův sál",
+            "publishedAt": "2026-04-26T23:00:59Z"
+          },
           {
             "title": "Fotografování škol: Nekonečný byznys na dětech i rodičích",
             "publishedAt": "2026-04-26T07:00:31Z"
@@ -590,10 +595,6 @@
           {
             "title": "Best in nafta. Fialovo zbytečné plivání na sociální síti",
             "publishedAt": "2026-04-23T10:56:35Z"
-          },
-          {
-            "title": "Virginie řekla Trumpovi NE: Ten opět mluví o ukradených volbách",
-            "publishedAt": "2026-04-23T05:41:08Z"
           }
         ]
       }
