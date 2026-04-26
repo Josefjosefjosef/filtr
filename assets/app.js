@@ -11965,6 +11965,69 @@ function buildVideoAsArticleCard(it) {
     window.iuReadSafeAreaInsetTopPx = iuReadSafeAreaInsetTopPx;
   } catch (_) {}
 
+  /**
+   * P0: tvrdý návrat na čistý /projects/ hub — stejný stav jako po browser Back z ?section=…
+   * (replaceState + applySectionFromURL, bez čekání na popstate). Voláno z Domů a z gate Zpět (nav větev).
+   */
+  function iuProjectsHubNavigateHardResetFromHomeOrBack() {
+    try {
+      if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return;
+    } catch (_) {
+      return;
+    }
+    try {
+      var wrapR = document.getElementById("iuMobileGateWrap");
+      if (wrapR && typeof wrapR.__iuMobileGateSetTab === "function") wrapR.__iuMobileGateSetTab("");
+    } catch (_) {}
+    try {
+      document.body.classList.remove("iu-mobileMainVisible", "iu-webnavDetailFromGate");
+    } catch (_) {}
+    try {
+      if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
+    } catch (_) {}
+    try {
+      window.__iuWebNavSectionPush = false;
+    } catch (_) {}
+    try {
+      window.__iuWebNavReturnStateForNextPush = null;
+    } catch (_) {}
+    try {
+      sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+      sessionStorage.removeItem("iuMobileWebNavLastTarget");
+    } catch (_) {}
+    try {
+      window.__iuMobileWebNavReturnArmed = false;
+      delete window.__iuMobileWebNavLastTile;
+    } catch (_) {}
+    try {
+      var uSync = new URL(window.location.href);
+      if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
+      uSync.searchParams.delete("section");
+      uSync.searchParams.delete("topic");
+      uSync.searchParams.delete("mode");
+      uSync.searchParams.delete("panel");
+      uSync.searchParams.delete("radarOpen");
+      history.replaceState(null, "", uSync.toString());
+    } catch (_) {}
+    try {
+      if (typeof window.iuHideAllOverlaysNow === "function") window.iuHideAllOverlaysNow();
+    } catch (_) {}
+    try {
+      if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
+    } catch (_) {}
+    try {
+      if (typeof window.iuApplyPanelFromUrl === "function") window.iuApplyPanelFromUrl();
+    } catch (_) {}
+    try {
+      if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") {
+        window.iuDesktopHomeSectionGridGuardApply();
+      }
+    } catch (_) {}
+  }
+  try {
+    window.iuProjectsHubNavigateHardResetFromHomeOrBack = iuProjectsHubNavigateHardResetFromHomeOrBack;
+  } catch (_) {}
+
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
@@ -12086,36 +12149,10 @@ function buildVideoAsArticleCard(it) {
                   return;
                 }
                 try {
-                  setTab("");
-                } catch (_st) {}
-                try {
-                  var uSync = new URL(window.location.href);
-                  if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
-                  uSync.searchParams.delete("section");
-                  uSync.searchParams.delete("topic");
-                  uSync.searchParams.delete("mode");
-                  history.replaceState(null, "", uSync.toString());
-                } catch (_url) {}
-                try {
-                  if (typeof window.iuHideAllOverlaysNow === "function") {
-                    window.iuHideAllOverlaysNow();
+                  if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+                    window.iuProjectsHubNavigateHardResetFromHomeOrBack();
                   }
-                } catch (_h) {}
-                try {
-                  if (typeof window.iuApplySectionFromURL === "function") {
-                    window.iuApplySectionFromURL();
-                  }
-                } catch (_a) {}
-                try {
-                  if (typeof window.iuApplyPanelFromUrl === "function") {
-                    window.iuApplyPanelFromUrl();
-                  }
-                } catch (_p) {}
-                try {
-                  if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") {
-                    window.iuDesktopHomeSectionGridGuardApply();
-                  }
-                } catch (_g) {}
+                } catch (_hub) {}
                 return;
               }
             }
@@ -12429,10 +12466,9 @@ function buildVideoAsArticleCard(it) {
             var k = String(btn.getAttribute("data-iu-bottom-nav") || "");
             if (k === "home") {
               try {
-                if (wrap && typeof wrap.__iuMobileGateSetTab === "function") wrap.__iuMobileGateSetTab("");
-              } catch (_) {}
-              try {
-                document.body.classList.remove("iu-mobileMainVisible");
+                if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+                  window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+                }
               } catch (_) {}
               try {
                 window.scrollTo(0, 0);
