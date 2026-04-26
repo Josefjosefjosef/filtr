@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-04-26T21:34:32.197609Z",
+  "ingestedAt": "2026-04-26T22:39:21.336880Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Podnikání s bombou: komu vlastně slouží VTÚ, s.p.",
+      "url": "https://www.kverulant.org/article/podnikani-s-bombou-komu-vlastne-slouzi-vtu-s-p/",
+      "dt": "2026-04-26T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "bombou",
+        "komu",
+        "podnikání",
+        "slouží",
+        "vlastně",
+        "vtú"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -221,30 +244,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dva nelegální LED billboardy na Jižní spojce zhasly",
-      "url": "https://www.kverulant.org/article/praha-nechava-nelegalni-led-billboardy-na-jizni-spojce-dal-svitit-kverulant-proto-podal-stiznost-pro-necinnost/",
-      "dt": "2026-04-09T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "billboardy",
-        "dva",
-        "jižní",
-        "led",
-        "nelegální",
-        "spojce",
-        "zhasly"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -255,7 +254,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 128648,
+      "bytes": 127550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -292,7 +291,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-23T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -307,6 +306,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podnikání s bombou: komu vlastně slouží VTÚ, s.p.",
+            "publishedAt": "2026-04-26T22:07:00Z"
+          },
           {
             "title": "Rozhovor s právníkem: Chat Control: dobré úmysly, špatné nástroje",
             "publishedAt": "2026-04-23T22:07:00Z"
@@ -334,10 +337,6 @@
           {
             "title": "Velký bratr útočí na soukromí: Ceny odhalily slídily roku 2025",
             "publishedAt": "2026-04-14T22:07:00Z"
-          },
-          {
-            "title": "I ples se počítá do českého závazku vůči NATO",
-            "publishedAt": "2026-04-13T22:07:00Z"
           }
         ]
       }
