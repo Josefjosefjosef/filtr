@@ -10293,6 +10293,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   margin-top: 14px;
 }
 
+/* P0 Jízdní řády: pojistka — žádný viditelný notes host (primární je vypnutý mount v app.js). */
+#iuJrEmptyView .iuNotesHost{
+  display: none !important;
+}
+
 
 #iuNotesOverlay.iuNotesRoot{
   --iu-notes-cal-accent: #15803d;
