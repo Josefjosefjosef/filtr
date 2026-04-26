@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-26T05:14:36.567419Z",
+  "ingestedAt": "2026-04-26T05:39:36.150351Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Dirigent Jakub Hrůša: Do své profese jsem byl uveden „polibkem“ ve čtrnácti letech",
+      "url": "https://www.vlasta.cz/osobnosti/jakub-hrusa-dirigent-rozhovor-zacatky-profese-trema-rodina/",
+      "dt": "2026-04-26T05:35:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "dirigent",
+        "hrůša",
+        "jakub",
+        "jsem",
+        "letech",
+        "polibkem",
+        "profese",
+        "své",
+        "uveden",
+        "čtrnácti"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1108,35 +1135,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dietní dezert z červené řepy podle Marcely z Extrémních proměn: Neobvyklá kombinace surovin i bílkoviny",
-      "url": "https://www.vlasta.cz/recepty/dezert-z-repy-recept-marcela-krejci-extremni-promeny/",
-      "dt": "2026-04-21T05:02:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "bílkoviny",
-        "dezert",
-        "dietní",
-        "extrémních",
-        "kombinace",
-        "marcely",
-        "neobvyklá",
-        "podle",
-        "proměn",
-        "surovin",
-        "červené",
-        "řepy"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1147,7 +1145,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62884,
+      "bytes": 62854,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1184,11 +1182,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T05:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:35:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "other": 38
+          "other": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1200,6 +1198,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dirigent Jakub Hrůša: Do své profese jsem byl uveden „polibkem“ ve čtrnácti letech",
+            "publishedAt": "2026-04-26T05:35:00Z"
+          },
           {
             "title": "Lukáš z Ulice provokuje: „Nesnáším vozíčkáře a nebinární pohlaví je práce pro psychiatra,“ prohlásil",
             "publishedAt": "2026-04-26T05:04:00Z"
@@ -1227,10 +1229,6 @@
           {
             "title": "Dcera Gondíkové a Brouska mění plány: Veterinu škrtla, míří k umění. „Je velmi nadaná,“ chválí ji maminka",
             "publishedAt": "2026-04-25T05:04:00Z"
-          },
-          {
-            "title": "Jiří Bartoška měl luxusní chalupu u Karlových Varů. Musela stát balík, v koupelně měl televizi",
-            "publishedAt": "2026-04-25T04:31:00Z"
           }
         ]
       }

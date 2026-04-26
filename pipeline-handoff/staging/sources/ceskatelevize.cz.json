@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-26T05:14:36.567419Z",
+  "ingestedAt": "2026-04-26T05:39:36.150351Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tisíce obcí jsou bez čistíren odpadních vod. O dotace mohou žádat do ledna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/tisice-obci-jsou-bez-cistiren-odpadnich-vod-o-dotace-mohou-zadat-do-ledna-372796",
+      "dt": "2026-04-26T05:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dotace",
+        "ledna",
+        "obcí",
+        "odpadních",
+        "tisíce",
+        "vod",
+        "čistíren",
+        "žádat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -712,29 +737,6 @@
         "autobusy",
         "kurzu",
         "zavolání"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny leteckého paliva mohou zkomplikovat dovolené v zahraničí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ceny-leteckeho-paliva-mohou-zkomplikovat-dovolene-v-zahranici-372777",
-      "dt": "2026-04-25T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ceny",
-        "dovolené",
-        "leteckého",
-        "paliva",
-        "zahraničí",
-        "zkomplikovat"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1521,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44396,
+      "bytes": 44147,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1581,13 +1583,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T05:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 26,
           "other": 3,
-          "zpravy": 25,
-          "sport": 1,
-          "finance": 1
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1599,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tisíce obcí jsou bez čistíren odpadních vod. O dotace mohou žádat do ledna",
+            "publishedAt": "2026-04-26T05:30:00Z"
+          },
           {
             "title": "V USA jsou dostupná lidská embrya na zakázku. Vědci varují před eugenikou",
             "publishedAt": "2026-04-26T05:01:00Z"
@@ -1626,10 +1631,6 @@
           {
             "title": "Předvolební diskusi v Maďarsku dominovali na síti X zahraniční aktéři",
             "publishedAt": "2026-04-25T19:44:44Z"
-          },
-          {
-            "title": "Netanjahu nařídil provést razantní útoky proti hnutí Hizballáh",
-            "publishedAt": "2026-04-25T19:32:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-26T05:14:36.567419Z",
+  "ingestedAt": "2026-04-26T05:39:36.150351Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "„Padly výstřely!“. Tajná služba evakuovala Trumpa z galavečeře",
+      "url": "https://ekonomickydenik.cz/vystrely-trump-galavecere/",
+      "dt": "2026-04-26T05:23:25Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evakuovala",
+        "galavečeře",
+        "padly",
+        "služba",
+        "tajná",
+        "trumpa",
+        "výstřely"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -758,31 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Problém pro německé tanky a stíhačky? Berlín přijde o ropu z Kazachstánu",
-      "url": "https://ekonomickydenik.cz/problem-pro-nemecke-tanky-a-stihacky-berlin-prijde-o-ropu/",
-      "dt": "2026-04-23T16:44:14Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "berlín",
-        "kazachstánu",
-        "německé",
-        "problém",
-        "přijde",
-        "ropu",
-        "stíhačky",
-        "tanky"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71548,
+      "bytes": 71233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T05:23:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
-          "finance": 28
+          "finance": 28,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -846,6 +845,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Padly výstřely!“. Tajná služba evakuovala Trumpa z galavečeře",
+            "publishedAt": "2026-04-26T05:23:25Z"
+          },
           {
             "title": "Zelené bláznovství? Nikoliv, je to dobrý byznys. Větrné elektrárny staví celý svět",
             "publishedAt": "2026-04-26T04:15:00Z"
@@ -873,10 +876,6 @@
           {
             "title": "Odstupte, vzkazuje opozice ministrovi financí. Slovensku spadl rating",
             "publishedAt": "2026-04-25T11:16:13Z"
-          },
-          {
-            "title": "Spor o miliardy z Bruselu. Pokorná Jermanová varuje před škrty, Nerudová ji „setřela“",
-            "publishedAt": "2026-04-25T10:23:03Z"
           }
         ]
       }
