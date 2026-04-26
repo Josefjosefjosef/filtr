@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-26T19:59:30.290420Z",
+  "ingestedAt": "2026-04-26T21:09:32.311705Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Izraelské údery na jihu Libanonu zabily 14 lidí navzdory příměří",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/izraelske-udery-na-jihu-libanonu-zabily-14-lidi-navzdory-primeri.A260426_222734_zahranicni_air",
+      "dt": "2026-04-26T20:50:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "izraelské",
+        "jihu",
+        "libanonu",
+        "lidí",
+        "navzdory",
+        "příměří",
+        "zabily",
+        "údery"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -748,34 +773,6 @@
         "vzácný",
         "zahlédl",
         "špičku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Neřekl jsem, že ČT a ČRo nefungují, chceme ale lidem zrušit daň, prohlásil Klempíř",
-      "url": "https://www.idnes.cz/zpravy/domaci/debata-ceska-televize-motoriste-oto-klempir-ministr-kultury.A260426_120223_domaci_dyn",
-      "dt": "2026-04-26T10:41:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "ale",
-        "chceme",
-        "daň",
-        "jsem",
-        "klempíř",
-        "lidem",
-        "nefungují",
-        "neřekl",
-        "prohlásil",
-        "zrušit",
-        "čro"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1576,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51070,
+      "bytes": 50499,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1613,7 +1610,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T18:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T20:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1630,6 +1627,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Izraelské údery na jihu Libanonu zabily 14 lidí navzdory příměří",
+            "publishedAt": "2026-04-26T20:50:00Z"
+          },
           {
             "title": "Vrátil se do Sýrie i se svým „tajemstvím“. A uvědomil si, že už je Evropan",
             "publishedAt": "2026-04-26T18:29:00Z"
@@ -1657,10 +1658,6 @@
           {
             "title": "V Gruzii mobilizuje protivládní koalice. Do ulic se mohou vrátit desetitisíce",
             "publishedAt": "2026-04-26T16:27:00Z"
-          },
-          {
-            "title": "Je to stálice, řekl o Bohdalové na oslavě Polívka. Cení její smysl pro humor",
-            "publishedAt": "2026-04-26T16:18:00Z"
           }
         ]
       }
