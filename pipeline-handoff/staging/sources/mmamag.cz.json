@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-26T09:24:15.033125Z",
+  "ingestedAt": "2026-04-26T09:49:25.038361Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Útok střelce v Bílém domě. Šéf UFC White a prezident Trump v ohrožení",
+      "url": "https://www.mmamag.cz/utok-bily-dum-trump-white-ufc/",
+      "dt": "2026-04-26T09:46:17Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bílém",
+        "domě",
+        "ohrožení",
+        "prezident",
+        "střelce",
+        "trump",
+        "ufc",
+        "white",
+        "útok",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1119,36 +1146,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "První úder a vše bylo jinak. Zápasy MMA a boxu, které ukázaly, že plán vydrží jen do prvního kontaktu",
-      "url": "https://www.mmamag.cz/prvni-uder-a-vse-bylo-jinak-zapasy-mma-a-boxu-ktere-ukazaly-ze-plan-vydrzi-jen-do-prvniho-kontaktu/",
-      "dt": "2026-04-23T05:24:00Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "boxu",
-        "jen",
-        "jinak",
-        "kontaktu",
-        "mma",
-        "plán",
-        "první",
-        "prvního",
-        "ukázaly",
-        "vydrží",
-        "vše",
-        "zápasy",
-        "úder"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1156,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 76270,
+      "bytes": 76133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,7 +1193,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T04:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T09:46:17Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1211,6 +1208,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Útok střelce v Bílém domě. Šéf UFC White a prezident Trump v ohrožení",
+            "publishedAt": "2026-04-26T09:46:17Z"
+          },
           {
             "title": "Plán, příprava, trénink. A pak jedna vteřina a vše bylo jinak. Momenty bojových sportů, které nachytají i ty nejzasvěcenější fanoušky",
             "publishedAt": "2026-04-26T04:55:00Z"
@@ -1238,10 +1239,6 @@
           {
             "title": "OKTAGON 87: Pitts neztrácel čas. Matyszewského ukončil už v 1. kole",
             "publishedAt": "2026-04-25T18:26:54Z"
-          },
-          {
-            "title": "Přední český trenér řekl na rovinu, proč by někteří borci do UFC chodit neměli. OKTAGON je prý lepší volbou",
-            "publishedAt": "2026-04-25T10:44:17Z"
           }
         ]
       }

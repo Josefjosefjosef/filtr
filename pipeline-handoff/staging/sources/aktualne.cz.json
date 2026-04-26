@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T09:24:15.033125Z",
+  "ingestedAt": "2026-04-26T09:49:25.038361Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dalších",
+        "desítky",
+        "lidí",
+        "nejméně",
+        "noční",
+        "sedm",
+        "ukrajinu",
+        "utrpěly",
+        "zabily",
+        "zranění",
+        "útoky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -351,34 +379,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dalších",
-        "desítky",
-        "lidí",
-        "nejméně",
-        "noční",
-        "sedm",
-        "ukrajinu",
-        "utrpěly",
-        "zabily",
-        "zranění",
-        "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "„Porušili jste příměří.“ Netanjahu nařídil razantní útoky proti Hizballáhu",
       "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
       "dt": "2026-02-28T14:04:00Z",
@@ -544,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22650,
+      "bytes": 22638,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -599,6 +599,10 @@
         },
         "sample_titles": [
           {
+            "title": "Noční útoky na Ukrajinu zabily nejméně sedm lidí, desítky dalších utrpěly zranění",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
             "title": "Lukašenko je sice lstivý lišák, ale Putin ho do války zatáhne, varuje exministr",
             "publishedAt": "2026-04-26T09:16:00Z"
           },
@@ -625,10 +629,6 @@
           {
             "title": "Elixír mládí, energie z ničeho a satanisté. Co ještě najdete na Ficových webech?",
             "publishedAt": "2026-04-26T07:55:00Z"
-          },
-          {
-            "title": "Tržby módního průmyslu prudce rostou, loni byly o třetinu vyšší než před krizí",
-            "publishedAt": "2026-04-26T07:41:00Z"
           }
         ]
       }
