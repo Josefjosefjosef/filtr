@@ -21665,24 +21665,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     z-index: 1;
   }
 
-  html:is(.iu-time-morning,.iu-time-late-morning,.iu-time-afternoon,.iu-time-evening) #iuSilverHeroPremium :is(.iu-silver-quick-actions,.iu-hero-quickActions.iu-hero-actions){
-    position: relative;
-    z-index: 2;
-  }
-
-  html.iu-time-afternoon #iuSilverHeroPremium img{
-    filter:
-      drop-shadow(0 0 10px rgba(255, 255, 255, 0.25))
-      drop-shadow(0 0 20px rgba(59, 130, 246, 0.35))
-      drop-shadow(0 0 30px rgba(168, 85, 247, 0.30));
-  }
-
-  html.iu-time-afternoon #iuSilverHeroPremium input{
-    background: rgba(255, 255, 255, 0.06);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
 }
 
 /* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
