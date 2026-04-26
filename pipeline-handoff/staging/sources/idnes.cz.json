@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-26T08:34:55.687994Z",
+  "ingestedAt": "2026-04-26T08:59:47.416806Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud rozhodne o vazbě pro zadrženého v Bulharsku v kauze žhářského útoku",
+      "url": "https://www.idnes.cz/zpravy/domaci/soud-zadrzeny-pozar-pardubice-terorismus-vazba.A260426_101028_domaci_dyn",
+      "dt": "2026-04-26T08:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bulharsku",
+        "kauze",
+        "rozhodne",
+        "soud",
+        "vazbě",
+        "zadrženého",
+        "útoku",
+        "žhářského"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Mladý řidič přejel na Jablonecku v zatáčce do protisměru, čelní střet nepřežil",
+      "url": "https://www.idnes.cz/liberec/zpravy/nehoda-mlady-ridic-zemrel-celni-stret-aut-mala-skala.A260426_094834_liberec-zpravy_makl",
+      "dt": "2026-04-26T08:14:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "jablonecku",
+        "mladý",
+        "nepřežil",
+        "protisměru",
+        "přejel",
+        "střet",
+        "zatáčce",
+        "čelní",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -725,59 +776,6 @@
         "usa",
         "zmodernizuje",
         "základny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Soukromí zdravotníci se starají o dva miliony lidí ročně. Jejich role poroste",
-      "url": "https://www.idnes.cz/ekonomika/podniky/asociace-soukromych-poskytovatelu-zdravotnich-sluzeb-akeso-euc-penta.A260422_151321_ekoakcie_rts",
-      "dt": "2026-04-25T17:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dva",
-        "jejich",
-        "lidí",
-        "miliony",
-        "poroste",
-        "role",
-        "ročně",
-        "soukromí",
-        "starají",
-        "zdravotníci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Orbán se vzdá svého křesla v parlamentu. Jsem potřeba jinde, vysvětlil",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/madarsky-premier-viktor-orban-poslanec-madarsko-volby.A260425_181334_zahranicni_mikp",
-      "dt": "2026-04-25T16:32:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "jinde",
-        "jsem",
-        "křesla",
-        "orbán",
-        "parlamentu",
-        "potřeba",
-        "svého",
-        "vysvětlil",
-        "vzdá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1575,7 +1573,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 51015,
+      "bytes": 50646,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1612,12 +1610,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T08:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 23,
           "other": 3,
-          "finance": 5
+          "finance": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1629,6 +1627,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud rozhodne o vazbě pro zadrženého v Bulharsku v kauze žhářského útoku",
+            "publishedAt": "2026-04-26T08:23:00Z"
+          },
+          {
+            "title": "Mladý řidič přejel na Jablonecku v zatáčce do protisměru, čelní střet nepřežil",
+            "publishedAt": "2026-04-26T08:14:00Z"
+          },
           {
             "title": "Policie odložila případ chlapce, který zemřel při brigádě na Klatovsku",
             "publishedAt": "2026-04-26T08:02:00Z"
@@ -1652,14 +1658,6 @@
           {
             "title": "Roboti už nakukují i do domácností. Učí se uklízet i vázat kytice",
             "publishedAt": "2026-04-26T07:00:00Z"
-          },
-          {
-            "title": "Jiřina Bohdalová oslaví 95 let. Herečce v Hybernii popřeje Donutil, Šíp i Polívka",
-            "publishedAt": "2026-04-26T07:00:00Z"
-          },
-          {
-            "title": "Tajná služba evakuovala Trumpa z galavečeře, na místě zadržela střelce",
-            "publishedAt": "2026-04-26T06:56:17Z"
           }
         ]
       }

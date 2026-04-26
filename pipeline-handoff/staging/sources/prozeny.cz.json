@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-26T08:34:55.687994Z",
+  "ingestedAt": "2026-04-26T08:59:47.416806Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Co na vás prozradí tvar prstů i dlaň? Budete se divit!",
+      "url": "https://www.prozeny.cz/clanek/co-na-vas-prozradi-tvar-prstu-i-dlan-budete-se-divit-17207",
+      "dt": "2026-04-26T08:44:49Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "budete",
+        "divit",
+        "dlaň",
+        "prozradí",
+        "prstů",
+        "tvar",
+        "vás"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -797,30 +821,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hodný pejsek! Jak ho správně odměnit, aby výcvik opravdu fungoval?",
-      "url": "https://www.prozeny.cz/clanek/rodina-domaci-mazlicci-hodny-pejsek-jak-ho-spravne-odmenit-aby-vycvik-opravdu-fungoval-103174",
-      "dt": "2026-04-24T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "fungoval",
-        "hodný",
-        "odměnit",
-        "opravdu",
-        "pejsek",
-        "správně",
-        "výcvik"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -831,7 +831,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39161,
+      "bytes": 39050,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -868,7 +868,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:26:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:44:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 29,
@@ -884,6 +884,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Co na vás prozradí tvar prstů i dlaň? Budete se divit!",
+            "publishedAt": "2026-04-26T08:44:49Z"
+          },
           {
             "title": "Jágr jede bomby: Fanoušci ho chtějí do StarDance, teď je z něho „Brazilec v hořčicové“",
             "publishedAt": "2026-04-26T07:26:43Z"
@@ -911,10 +915,6 @@
           {
             "title": "Myslíte to dobře, ale… Tyto chyby mohou vašemu psovi zkracovat život",
             "publishedAt": "2026-04-26T03:00:00Z"
-          },
-          {
-            "title": "Očima padesátky: Kafe jako generační propast",
-            "publishedAt": "2026-04-25T12:03:00Z"
           }
         ]
       }

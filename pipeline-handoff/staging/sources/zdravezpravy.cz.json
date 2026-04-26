@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-26T08:34:55.687994Z",
+  "ingestedAt": "2026-04-26T08:59:47.416806Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V ČR je jen 500 alergologů. Na vyšetření se čeká i půl roku",
+      "url": "https://www.zdravezpravy.cz/2026/04/26/v-cr-je-jen-500-alergologu-na-vysetreni-se-ceka-i-pul-roku/",
+      "dt": "2026-04-26T08:30:10Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "500",
+        "alergologů",
+        "jen",
+        "půl",
+        "roku",
+        "vyšetření",
+        "čeká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -473,29 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rychnovská nemocnice otevírá nový urgent za 1,25 miliardy Kč",
-      "url": "https://www.zdravezpravy.cz/2026/04/16/rychnovska-nemocnice-otevira-novy-urgent-za-125-mld-kc/",
-      "dt": "2026-04-16T07:09:53Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "miliardy",
-        "nemocnice",
-        "nový",
-        "otevírá",
-        "rychnovská",
-        "urgent"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -506,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 211134,
+      "bytes": 209254,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -543,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-25T09:00:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:30:10Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -558,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V ČR je jen 500 alergologů. Na vyšetření se čeká i půl roku",
+            "publishedAt": "2026-04-26T08:30:10Z"
+          },
           {
             "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
             "publishedAt": "2026-04-25T09:00:22Z"
@@ -585,10 +590,6 @@
           {
             "title": "Soukromí poskytovatelé zdravotní péče znají klíč k zachování služeb",
             "publishedAt": "2026-04-22T12:48:07Z"
-          },
-          {
-            "title": "Ne papírové obálky, ale telefonní hovory zvýší účast na prevenci",
-            "publishedAt": "2026-04-22T07:23:01Z"
           }
         ]
       }
