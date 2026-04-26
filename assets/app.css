@@ -15851,6 +15851,44 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
+/* P0 mobile/tablet: web-nav detail opened from "Rychlý servis" tiles must stay light in evening mode.
+   Scope guard:
+   - only <=1024px
+   - only when detail came from gate nav (iu-webnavDetailFromGate + iu-mobileMainVisible)
+   - only six quick-service sections (pocasi/mapy/jr/tvprogram/tvonline/radio)
+*/
+@media (max-width: 1024px){
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #leftContent,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #newsList,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #feed,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #feedWrap{
+    background: linear-gradient(180deg, #f8fbff 0%, #f1f5fb 100%) !important;
+    background-color: #f4f7fc !important;
+    background-image: none !important;
+    color: #0f172a !important;
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1024px){
   #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
     margin-top: 11px !important;
