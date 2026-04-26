@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-26T17:09:35.954785Z",
+  "ingestedAt": "2026-04-26T17:30:11.944544Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
+      "url": "https://zpravy.aktualne.cz/zahranici/misto-kulek-pouziju-broky-nez-zacal-strilet-na-trumpa-ucitel-se-ozval-z-hotelu/r~aaa2944dddad8351fa31c097861fcc74/",
+      "dt": "2026-04-26T17:21:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "broky",
+        "hotelu",
+        "kulek",
+        "místo",
+        "než",
+        "ozval",
+        "použiju",
+        "střílet",
+        "trumpa",
+        "učitel",
+        "začal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -509,35 +537,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Škoda tyhle fotky minout: papež z plastu, selfie z Marsu nebo rukavice krále popu",
-      "url": "https://zpravy.aktualne.cz/galerie-a-videa/skoda-tyhle-fotky-minout-papez-z-plastu-selfie-z-marsu-nebo-rukavice-krale-popu/r~aaa29d52994712427ed4c6fdcd2c2c81/",
-      "dt": "2026-04-26T08:54:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "fotky",
-        "krále",
-        "marsu",
-        "minout",
-        "nebo",
-        "papež",
-        "plastu",
-        "popu",
-        "rukavice",
-        "selfie",
-        "tyhle",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -548,7 +547,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22411,
+      "bytes": 22441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -585,11 +584,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T14:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T17:21:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 13,
+          "sport": 4,
           "finance": 3
         },
         "drop_counts": {
@@ -602,6 +601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Místo kulek použiju broky.“ Než začal střílet na Trumpa, učitel se ozval z hotelu",
+            "publishedAt": "2026-04-26T17:21:00Z"
+          },
           {
             "title": "Pardubice - Třinec 1:1. Je srovnáno, trefuje se Nestrašil",
             "publishedAt": "2026-04-26T14:46:00Z"
@@ -629,10 +632,6 @@
           {
             "title": "Plíšková skvělým finišem rozhodla parádní bitvu. Dál jde i Lehečka a bez boje Nosková",
             "publishedAt": "2026-04-26T08:46:00Z"
-          },
-          {
-            "title": "Schick se podílel na pozoruhodném biliáru. Pak nemilosrdně trestal",
-            "publishedAt": "2026-04-26T13:22:00Z"
           }
         ]
       }

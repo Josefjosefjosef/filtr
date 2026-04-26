@@ -1,26 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T17:09:35.954785Z",
+  "ingestedAt": "2026-04-26T17:30:11.944544Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Videomomenty. Kombinační nádhera a Třinec vyrovnává páté finále!",
+      "title": "HOKEJ ONLINE: Videomomenty. Třetí třetina vrcholí, Pardubice mají přesilovku",
       "url": "https://www.sport.cz/clanek/hokej-extraliga-videomomenty-nervy-drasajici-finale-serviruje-zapas-cislo-pet-priblizi-se-titulu-pardubice-nebo-trinec-5442316",
       "dt": "2026-04-26T10:21:29Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "finále",
         "hokej",
-        "kombinační",
-        "nádhera",
+        "mají",
         "online",
-        "páté",
-        "třinec",
+        "pardubice",
+        "přesilovku",
+        "třetina",
+        "třetí",
         "videomomenty",
-        "vyrovnává"
+        "vrcholí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Verstappenův otec měl těžkou nehodu",
+      "url": "https://www.sport.cz/clanek/moto-verstappenuv-otec-mel-tezkou-nehodu-5444083",
+      "dt": "2026-04-26T17:13:46Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "měl",
+        "nehodu",
+        "otec",
+        "těžkou",
+        "verstappenův"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -714,34 +736,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Liberec si rýpnul do Jablonce. Pomohl nám vyhecovat fanoušky i hráče, děkoval rivalovi s ironií",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-liberec-si-rypnul-do-jablonce-pomohl-nam-vyhecovat-fanousky-i-hrace-dekoval-rivalovi-s-ironii-5443839",
-      "dt": "2026-04-26T09:25:15Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "děkoval",
-        "fanoušky",
-        "hráče",
-        "ironií",
-        "jablonce",
-        "liberec",
-        "nám",
-        "pomohl",
-        "rivalovi",
-        "rýpnul",
-        "vyhecovat"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -752,7 +746,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 46112,
+      "bytes": 45270,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -789,7 +783,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T16:58:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T17:13:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -805,8 +799,12 @@
         },
         "sample_titles": [
           {
-            "title": "HOKEJ ONLINE: Videomomenty. Kombinační nádhera a Třinec vyrovnává páté finále!",
+            "title": "HOKEJ ONLINE: Videomomenty. Třetí třetina vrcholí, Pardubice mají přesilovku",
             "publishedAt": "2026-04-26T10:21:29Z"
+          },
+          {
+            "title": "Verstappenův otec měl těžkou nehodu",
+            "publishedAt": "2026-04-26T17:13:46Z"
           },
           {
             "title": "Vzpěrač Kučera byl na mistrovství Evropy osmý",
@@ -831,10 +829,6 @@
           {
             "title": "Deset nováčků přiveze Švédsko na České hokejové hry",
             "publishedAt": "2026-04-26T16:05:54Z"
-          },
-          {
-            "title": "Stuttgart jen remizoval v Brémách",
-            "publishedAt": "2026-04-26T15:37:20Z"
           }
         ]
       }
