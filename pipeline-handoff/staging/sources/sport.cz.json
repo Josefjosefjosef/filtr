@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-26T07:19:52.717966Z",
+  "ingestedAt": "2026-04-26T07:45:44.902071Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Děsivé chvíle na Slovensku. Brankář zůstal bezvládně ležet na trávníku",
+      "url": "https://www.sport.cz/clanek/fotbal-desive-chvile-na-slovensku-brankar-zustal-bezvladne-lezet-na-travniku-5443828",
+      "dt": "2026-04-26T07:27:30Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bezvládně",
+        "brankář",
+        "chvíle",
+        "děsivé",
+        "ležet",
+        "slovensku",
+        "trávníku",
+        "zůstal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -760,29 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "SESTŘIH: Pardubice válí, vyhrály počtvrté v řadě",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-pardubice-vali-vyhraly-poctvrte-v-rade-5443432",
-      "dt": "2026-04-25T16:02:11Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "pardubice",
-        "počtvrté",
-        "sestřih",
-        "vyhrály",
-        "válí",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 51019,
+      "bytes": 50460,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T06:55:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T07:27:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -846,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děsivé chvíle na Slovensku. Brankář zůstal bezvládně ležet na trávníku",
+            "publishedAt": "2026-04-26T07:27:30Z"
+          },
           {
             "title": "Snová noc českého šampiona. Moc si toho nepamatuju, směje se",
             "publishedAt": "2026-04-26T06:55:10Z"
@@ -873,10 +879,6 @@
           {
             "title": "Česká nálož adrenalinu. Bouřlivák předvedl K. O., druhá koruna pro královnu",
             "publishedAt": "2026-04-26T04:32:36Z"
-          },
-          {
-            "title": "Pohovory zabraly, Slavia zastavila negativní emoce a vyhrála. S Tvrdíkem jsme souhlasili, přiznal kouč",
-            "publishedAt": "2026-04-26T04:19:17Z"
           }
         ]
       }

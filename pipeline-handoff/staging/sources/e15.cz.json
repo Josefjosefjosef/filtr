@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-26T07:19:52.717966Z",
+  "ingestedAt": "2026-04-26T07:45:44.902071Z",
   "items": [
     {
       "section": "krimi",
@@ -461,32 +461,6 @@
         "wanem",
         "české",
         "čína"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rozdělení ČEZ levnější elektřinu nezajistí, energetika se stane hračkou politiků",
-      "url": "https://www.e15.cz/nazory-a-analyzy/rozdeleni-cez-levnejsi-elektrinu-nezajisti-energetika-se-stane-hrackou-politiku-1432378",
-      "dt": "2026-04-24T13:14:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "elektřinu",
-        "energetika",
-        "hračkou",
-        "levnější",
-        "nezajistí",
-        "politiků",
-        "rozdělení",
-        "stane",
-        "čez"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1093,6 +1067,34 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "První pokles od pandemie. Růst cen nemovitostí v Dubaji utnul konflikt USA s Íránem",
+      "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/prvni-pokles-od-pandemie-rust-cen-nemovitosti-v-dubaji-utnul-konflikt-usa-s-iranem-1432331",
+      "dt": "2026-04-23T16:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cen",
+        "dubaji",
+        "konflikt",
+        "nemovitostí",
+        "pandemie",
+        "pokles",
+        "první",
+        "růst",
+        "usa",
+        "utnul",
+        "íránem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1103,11 +1105,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55534,
+      "bytes": 54412,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 48,
+      "itemsParsed": 47,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1144,8 +1146,8 @@
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zpravy": 4,
-          "finance": 33,
-          "zdravi": 3
+          "finance": 34,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
