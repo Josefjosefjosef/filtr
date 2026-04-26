@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-26T07:45:44.902071Z",
+  "ingestedAt": "2026-04-26T08:10:05.540962Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Kola na nosiči. Co když spadnou nebo poškodí jiné auto",
+      "url": "https://www.penize.cz/doprava/488878-kola-na-nosici-co-kdyz-spadnou-nebo-poskodi-jine-auto",
+      "dt": "2026-04-26T09:49:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "auto",
+        "jiné",
+        "když",
+        "kola",
+        "nebo",
+        "nosiči",
+        "poškodí",
+        "spadnou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -480,31 +505,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Jako na houpačce. Maximální ceny benzinu a nafty na středu 22. dubna",
-      "url": "https://www.penize.cz/doprava/488601-jako-na-houpacce-maximalni-ceny-benzinu-a-nafty-na-stredu-22-dubna",
-      "dt": "2026-04-21T13:59:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "dubna",
-        "houpačce",
-        "jako",
-        "maximální",
-        "nafty",
-        "středu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18298,
+      "bytes": 18259,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +552,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T09:49:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
-          "zpravy": 4
+          "zpravy": 4,
+          "finance": 16
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kola na nosiči. Co když spadnou nebo poškodí jiné auto",
+            "publishedAt": "2026-04-26T09:49:00Z"
+          },
           {
             "title": "Nejlepší loňská bankovka patří měně, která loni neexistovala",
             "publishedAt": "2026-04-26T07:00:00Z"
@@ -595,10 +599,6 @@
           {
             "title": "Nafta skoro korunu nahoru. Maximální ceny benzinu a nafty na pátek 24. dubna",
             "publishedAt": "2026-04-23T13:59:00Z"
-          },
-          {
-            "title": "Hlavně rychle a pohodlně. Takhle přicházíte o peníze v e-shopu, varuje banka",
-            "publishedAt": "2026-04-23T12:00:00Z"
           }
         ]
       }

@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-26T07:45:44.902071Z",
+  "ingestedAt": "2026-04-26T08:10:05.540962Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "World of Tanks: HEAT – svižný spin-off, který zatím neví, čím chce být - INDIAN",
+      "url": "https://indian-tv.cz/clanek/world-of-tanks-heat-svizny-spin-off-ktery-zatim-nevi-f0p0jo",
+      "dt": "2026-04-26T08:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "být",
+        "chce",
+        "heat",
+        "indian",
+        "neví",
+        "off",
+        "spin",
+        "svižný",
+        "tanks",
+        "world",
+        "zatím",
+        "čím"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1044,29 +1073,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Splatoon Raiders se zaměří na jednoho hráče - INDIAN",
-      "url": "https://indian-tv.cz/clanek/splatoon-raiders-se-zameri-na-jednoho-hrace-izbwl3",
-      "dt": "2026-04-22T06:25:35Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "hráče",
-        "indian",
-        "jednoho",
-        "raiders",
-        "splatoon",
-        "zaměří"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1077,7 +1083,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 210559,
+      "bytes": 211805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1114,7 +1120,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-25T18:48:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-26T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1129,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "World of Tanks: HEAT – svižný spin-off, který zatím neví, čím chce být - INDIAN",
+            "publishedAt": "2026-04-26T08:00:00Z"
+          },
           {
             "title": "Díky úniku informací o Deluxe edici už nejspíš víme, kdy si zahrajeme Star Wars: Galactic Racer - INDIAN",
             "publishedAt": "2026-04-25T18:48:30Z"
@@ -1156,10 +1166,6 @@
           {
             "title": "Gears of War: E-Day možná dorazí už v září - INDIAN",
             "publishedAt": "2026-04-24T17:28:50Z"
-          },
-          {
-            "title": "Temné akční RPG Mistfall Hunter se připomíná novou ukázkou - INDIAN",
-            "publishedAt": "2026-04-24T14:30:00Z"
           }
         ]
       }
