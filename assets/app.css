@@ -21364,6 +21364,11 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
   }
+  #iuSilverHeroPremium{position:relative;isolation:isolate;overflow:hidden;background-image:radial-gradient(56% 50% at 18% 16%,rgba(70,174,255,.24) 0,rgba(70,174,255,0) 72%),linear-gradient(156deg,rgba(7,15,34,.96) 0,rgba(10,22,44,.94) 58%,rgba(14,29,54,.92) 100%)!important;box-shadow:inset 0 1px 0 rgba(194,232,255,.2),inset 0 -1px 0 rgba(86,112,154,.22)}
+  #iuSilverHeroPremium::before{content:"";position:absolute;inset:0;background-image:radial-gradient(48% 56% at 21% 24%,rgba(84,222,255,.34) 0,rgba(84,222,255,0) 78%);filter:blur(24px);opacity:.72;pointer-events:none;z-index:0}
+  #iuSilverHeroPremium::after{content:"";position:absolute;inset:-14%;background-image:linear-gradient(122deg,rgba(121,228,255,.16) 14%,rgba(121,228,255,0) 56%),repeating-linear-gradient(128deg,rgba(119,195,255,.08) 0 2px,rgba(119,195,255,0) 2px 14px);filter:blur(12px);opacity:.38;pointer-events:none;z-index:0}
+  #iuSilverHeroPremium>*{position:relative;z-index:1}
+  #iuSilverHeroPremium .iu-silver-quick-actions,#iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{position:relative;z-index:2}
   
   #silver-slot.silver-slot,
   #iuMobileSilverSlot .silver-slot{
