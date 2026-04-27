@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-27T13:06:02.801964Z",
+  "ingestedAt": "2026-04-27T13:34:42.975967Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Web od AI, hotový za 5 minut? Vyzkoušeli jsme Webglobe AI WebEditor",
+      "url": "https://www.idnes.cz/technet/software/web-od-ai-hotovy-za-5-minut-vyzkouseli-jsme-webglobe-ai-webeditor.A260421_173427_koktejl_zust",
+      "dt": "2026-04-27T13:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "hotový",
+        "jsme",
+        "minut",
+        "vyzkoušeli",
+        "web",
+        "webeditor",
+        "webglobe"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -744,31 +768,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Probíráte s chatbotem své zdraví? Dejte si pozor na to, co vám odpovídá",
-      "url": "https://www.idnes.cz/technet/software/umela-inteligence-ai-doktor-lekar-zdravi-dotaz-prompt.A260408_134313_software_vse",
-      "dt": "2026-04-17T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "chatbotem",
-        "dejte",
-        "odpovídá",
-        "pozor",
-        "probíráte",
-        "své",
-        "vám",
-        "zdraví"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46157,
+      "bytes": 46015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +815,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 26,
-          "zpravy": 4
+          "other": 27,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -832,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Web od AI, hotový za 5 minut? Vyzkoušeli jsme Webglobe AI WebEditor",
+            "publishedAt": "2026-04-27T13:00:00Z"
+          },
           {
             "title": "Krize už není tabu, ale realita. Připravit se dá i s rozumem, míní experti",
             "publishedAt": "2026-04-27T08:00:00Z"
@@ -859,10 +862,6 @@
           {
             "title": "Roste zájem o mrtvý produkt od Applu. Proč ho lidé oprašují?",
             "publishedAt": "2026-04-24T22:00:00Z"
-          },
-          {
-            "title": "V Polsku našli téměř tříkilogramový železný meteorit. Díky českým výpočtům",
-            "publishedAt": "2026-04-24T18:24:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-27T13:06:02.801964Z",
+  "ingestedAt": "2026-04-27T13:34:42.975967Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "VZP ČR otevře 1.7. dočasné úhrady pro technologické inovace",
+      "url": "https://www.zdravezpravy.cz/2026/04/27/vzp-cr-otevre-1-7-docasne-uhrady-pro-technologicke-inovace/",
+      "dt": "2026-04-27T13:00:58Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dočasné",
+        "inovace",
+        "otevře",
+        "technologické",
+        "vzp",
+        "úhrady"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -467,31 +490,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hemofilici už žijí jako ostatní lidé. A to díky preventivní léčbě",
-      "url": "https://www.zdravezpravy.cz/2026/04/17/hemofilici-ziji-jako-ostatni-lide-to-diky-preventivni-lecbe/",
-      "dt": "2026-04-17T15:42:13Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "díky",
-        "hemofilici",
-        "jako",
-        "lidé",
-        "léčbě",
-        "ostatní",
-        "preventivní",
-        "žijí"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -502,7 +500,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 208394,
+      "bytes": 207554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -539,7 +537,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:57:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:00:58Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -554,6 +552,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VZP ČR otevře 1.7. dočasné úhrady pro technologické inovace",
+            "publishedAt": "2026-04-27T13:00:58Z"
+          },
           {
             "title": "Z farmaceutického průmyslu těží veřejné rozpočty 25 miliard korun",
             "publishedAt": "2026-04-27T11:57:31Z"
@@ -581,10 +583,6 @@
           {
             "title": "Veterinární správa zakázala prodej 44 výživ pro kojence",
             "publishedAt": "2026-04-23T16:20:41Z"
-          },
-          {
-            "title": "Na Florenci je nová poliklinika. Jsou v ní praktici, zubaři i další ambulance",
-            "publishedAt": "2026-04-23T12:30:46Z"
           }
         ]
       }
