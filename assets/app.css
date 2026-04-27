@@ -8693,7 +8693,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     flex-direction: column !important;
     align-items: stretch !important;
     overflow: hidden !important;
-    background: var(--iu-bg, #f8fafc) !important;
+    /* P0: nesmí používat večerní --iu-bg (dokument); overlay host musí být vždy světlý podklad pro nav/tools. */
+    background: #f8fafc !important;
     box-sizing: border-box !important;
   }
   /* P0 mobile/tablet: Menu (gate „navigace“) — vždy světlý shell; večerní --iu-bg dokumentu nesmí přetínat overlay. */
@@ -8702,6 +8703,28 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
     background: transparent !important;
+  }
+  /* P0 Menu grid: rail přesunutý do panelu nesmí dědit tmavý chrome (#iuLeftRail / body #iuLeftRail) — světlé pozadí za mřížkou. */
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav aside#iuLeftRail.iu-leftRail,
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav #iuLeftRail,
+  #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]) aside#iuLeftRail.iu-leftRail,
+  #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]) #iuLeftRail{
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 52%, #e8edf3 100%) !important;
+    background-color: #f1f5f9 !important;
+    background-image: linear-gradient(180deg, #f8fafc 0%, #eef2f7 52%, #e8edf3 100%) !important;
+    border-right: 0 !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav #iuLeftRail .iu-leftNav,
+  #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]) #iuLeftRail .iu-leftNav{
+    background: transparent !important;
+    background-image: none !important;
+    border-right: 0 !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav #iuLeftRail .iuLeftRailSectionTitle,
+  #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav:not([hidden]) #iuLeftRail .iuLeftRailSectionTitle{
+    color: #475569 !important;
+    text-shadow: none !important;
+    --iuRailSectionAccent: rgba(71, 85, 105, 0.35) !important;
   }
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]){
     flex: 0 0 auto !important;
@@ -15258,7 +15281,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .container,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuFrame,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuLayout,
-  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #iuLeftRail,
+  /* P0: rail je při ≤900px v #iuMobileGatePanelNav — evening shell jen pro sloupec v #leftContent, ne pro Menu grid. */
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent #iuLeftRail,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iu-rightContent,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feed,
   html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feedWrap,
