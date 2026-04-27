@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T12:14:43.169388Z",
+  "ingestedAt": "2026-04-27T12:39:50.845036Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "„Papír, který nemá žádnou váhu.“ Expert drsně odsoudil obchodní dohodu s USA",
+      "url": "https://ekonomickydenik.cz/expert-odsoudil-obchodni-dohodu-usa/",
+      "dt": "2026-04-27T12:26:33Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dohodu",
+        "drsně",
+        "expert",
+        "nemá",
+        "obchodní",
+        "odsoudil",
+        "papír",
+        "usa",
+        "váhu",
+        "žádnou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -743,32 +770,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Aerolinky mění strategii, omezení pocítí i Češi. Na co ukazuje dění v Lufthanse?",
-      "url": "https://ekonomickydenik.cz/lufthansa-expert-regionalni-linky/",
-      "dt": "2026-04-25T04:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "aerolinky",
-        "dění",
-        "lufthanse",
-        "mění",
-        "omezení",
-        "pocítí",
-        "strategii",
-        "ukazuje",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69617,
+      "bytes": 69651,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +817,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:26:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:26:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 2,
+          "zpravy": 3,
+          "finance": 25,
           "zdravi": 2
         },
         "drop_counts": {
@@ -833,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Papír, který nemá žádnou váhu.“ Expert drsně odsoudil obchodní dohodu s USA",
+            "publishedAt": "2026-04-27T12:26:33Z"
+          },
           {
             "title": "Pohonné hmoty: Vláda prodloužila úlevy i na květen. Maximální marže ale stoupne",
             "publishedAt": "2026-04-27T11:26:29Z"
@@ -860,10 +865,6 @@
           {
             "title": "Nové závody v jaderném zbrojení? Výdaje děsí nevládní organizace",
             "publishedAt": "2026-04-27T05:52:13Z"
-          },
-          {
-            "title": "Otázka, která trápí Evropu: Kolik plynu nasyslíme před příchodem zimy?",
-            "publishedAt": "2026-04-27T05:15:40Z"
           }
         ]
       }

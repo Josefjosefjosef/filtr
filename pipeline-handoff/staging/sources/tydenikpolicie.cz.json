@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-27T12:14:43.169388Z",
+  "ingestedAt": "2026-04-27T12:39:50.845036Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Muž měl na ubytovně v Ostravě zavraždit svou přítelkyni. Poté k ní přivolal záchranáře",
+      "url": "https://tydenikpolicie.cz/muz-mel-na-ubytovne-v-ostrave-zavrazdit-svou-pritelkyni-pote-k-ni-privolal-zachranare/",
+      "dt": "2026-04-27T12:29:12Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "muž",
+        "měl",
+        "ostravě",
+        "poté",
+        "přivolal",
+        "přítelkyni",
+        "svou",
+        "ubytovně",
+        "zavraždit",
+        "záchranáře"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -246,37 +273,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Žena měla v bytě v pražských Stodůlkách ohrožovat dítě. Když vyjednávání nikam nevedlo, zpacifikovala ji zásahová jednotka",
-      "url": "https://tydenikpolicie.cz/zena-mela-v-byte-v-prazskych-stodulkach-ohrozovat-dite-kdyz-vyjednavani-nikam-nevedlo-zpacifikovala-ji-zasahova-jednotka/",
-      "dt": "2026-04-26T22:05:27Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bytě",
-        "dítě",
-        "jednotka",
-        "když",
-        "měla",
-        "nevedlo",
-        "nikam",
-        "ohrožovat",
-        "pražských",
-        "stodůlkách",
-        "vyjednávání",
-        "zpacifikovala",
-        "zásahová",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17320,
+      "bytes": 17028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -324,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:02:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:29:12Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -339,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Muž měl na ubytovně v Ostravě zavraždit svou přítelkyni. Poté k ní přivolal záchranáře",
+            "publishedAt": "2026-04-27T12:29:12Z"
+          },
           {
             "title": "Strážníkům v Praze ujížděl řidič se zákazem řízení, nezastavila ho ani hrozba namířenou služební zbraní",
             "publishedAt": "2026-04-27T11:02:42Z"
@@ -366,10 +366,6 @@
           {
             "title": "Na Pražském okruhu u Jesenice se srazily dva kamiony",
             "publishedAt": "2026-04-27T09:08:48Z"
-          },
-          {
-            "title": "Mladá řidička fordu nabourala u Uherského Ostrohu do stromu. Její 18letá spolujezdkyně na místě zemřela",
-            "publishedAt": "2026-04-27T08:34:41Z"
           }
         ]
       }

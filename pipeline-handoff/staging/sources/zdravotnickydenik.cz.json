@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T12:14:43.169388Z",
+  "ingestedAt": "2026-04-27T12:39:50.845036Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Posedlost pletí místo hraček: Trend u dětí, který děsí odborníky",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/posedlost-pleti-misto-hracek-trend-u-deti/",
+      "dt": "2026-04-27T12:20:15Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "děsí",
+        "dětí",
+        "hraček",
+        "místo",
+        "odborníky",
+        "pletí",
+        "posedlost",
+        "trend"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,33 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Muž měl škrtit spolupacienta do bezvědomí. Policie řeší napadení v nemocnici na Plzeňsku",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/napadeni-nemocnice-plzensko-policie/",
-      "dt": "2026-04-26T12:48:13Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bezvědomí",
-        "muž",
-        "měl",
-        "napadení",
-        "nemocnici",
-        "plzeňsku",
-        "policie",
-        "spolupacienta",
-        "řeší",
-        "škrtit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 78277,
+      "bytes": 81890,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:35:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:20:15Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -336,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posedlost pletí místo hraček: Trend u dětí, který děsí odborníky",
+            "publishedAt": "2026-04-27T12:20:15Z"
+          },
           {
             "title": "Zákaz kratomu, nebo přísnější regulace? Vláda vytváří speciální pracovní skupinu",
             "publishedAt": "2026-04-27T11:35:59Z"
@@ -363,10 +365,6 @@
           {
             "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
             "publishedAt": "2026-04-27T06:00:00Z"
-          },
-          {
-            "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
-            "publishedAt": "2026-04-27T05:00:00Z"
           }
         ]
       }
