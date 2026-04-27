@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-27T11:20:57.527884Z",
+  "ingestedAt": "2026-04-27T11:49:29.716041Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Z úroků měl 32 milionů. Decroix chce trest pro pražského exekutora",
+      "url": "https://www.ceska-justice.cz/2026/04/uroky-32-milionu-decroix-exekutor/",
+      "dt": "2026-04-27T11:43:24Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "chce",
+        "decroix",
+        "exekutora",
+        "milionů",
+        "měl",
+        "pražského",
+        "trest",
+        "úroků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,33 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Konec zákonů „od stolu“? Zákoník práce ukazuje, že dialog s byznysem se státu vyplácí",
-      "url": "https://www.ceska-justice.cz/2026/04/konec-zakonu-od-stolu-dialog-se-vyplaci/",
-      "dt": "2026-04-23T18:31:45Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "byznysem",
-        "dialog",
-        "konec",
-        "práce",
-        "stolu",
-        "státu",
-        "ukazuje",
-        "vyplácí",
-        "zákoník",
-        "zákonů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -269,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 98909,
+      "bytes": 89238,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -306,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T11:43:24Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -321,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z úroků měl 32 milionů. Decroix chce trest pro pražského exekutora",
+            "publishedAt": "2026-04-27T11:43:24Z"
+          },
           {
             "title": "Jak ombudsman Dohnal rozkryl dění na soudu: sahání na ženy i schovávání v kancelářích",
             "publishedAt": "2026-04-27T04:30:00Z"
@@ -348,10 +350,6 @@
           {
             "title": "Hrnky s nacisty jako přestupek? Bradáčová trvá na dalším posouzení",
             "publishedAt": "2026-04-24T13:34:53Z"
-          },
-          {
-            "title": "Odbory nejsou lobbisté. Tejc navrhne jejich vypuštění ze zákona o lobbování",
-            "publishedAt": "2026-04-24T11:11:55Z"
           }
         ]
       }
