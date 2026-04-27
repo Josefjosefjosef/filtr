@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T20:14:54.019904Z",
+  "ingestedAt": "2026-04-27T20:39:55.219923Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
+      "url": "https://www.denik.cz/pocasi/donald-trump-melanie-jimmy-kimmel-abc-pozadavek-propusteni.html",
+      "dt": "2026-04-27T19:40:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "abc",
+        "kimmela",
+        "moderátora",
+        "opět",
+        "požaduje",
+        "propustila",
+        "trump",
+        "znovu",
+        "útočí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,33 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Drama na pouti ve Španělsku: Lano vystřelovací koule se utrhlo, uvnitř byli lidé",
-      "url": "https://www.denik.cz/staty-eu/spanelsko-sevilla-nehoda-poutova-atrakce-video.html",
-      "dt": "2026-04-27T11:06:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "byli",
-        "drama",
-        "koule",
-        "lano",
-        "lidé",
-        "pouti",
-        "utrhlo",
-        "uvnitř",
-        "vystřelovací",
-        "španělsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28060,
+      "bytes": 28314,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T19:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T19:40:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -718,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
+            "publishedAt": "2026-04-27T19:40:00Z"
+          },
           {
             "title": "U Jakarty se srazily vlaky. Indonéské úřady hlásí čtyři mrtvé",
             "publishedAt": "2026-04-27T19:04:00Z"
@@ -745,10 +748,6 @@
           {
             "title": "Zemřeli na útěku. Archeologové našli dvě oběti u Pompejí",
             "publishedAt": "2026-04-27T16:43:00Z"
-          },
-          {
-            "title": "Při práci v lomu přišel o ruku. Lékaři v Brně dokázali zázrak, přišili ji zpět",
-            "publishedAt": "2026-04-27T16:22:00Z"
           }
         ]
       }
