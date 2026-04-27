@@ -333,6 +333,66 @@ style-src 'self' 'unsafe-inline' https:;
       #iuTvProgramView .iuTvPgCard__hint{font-size:12px;opacity:0.75;padding-left:2px;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuTvPgCard__newtab{font-size:11px;opacity:0.62;margin-top:4px;padding-left:2px;line-height:1.35;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuChip--accent{--iuChipAccent:var(--iuSectionAccent)}
+      #iuTvProgramView .iuTvPgChoiceGrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px}
+      @media(min-width:520px){#iuTvProgramView .iuTvPgChoiceGrid2{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+      #iuTvProgramView .iuTvPgChoiceBtn{box-sizing:border-box;width:100%;min-height:72px;padding:12px 14px;margin:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:inherit;font:inherit;font-size:15px;font-weight:800;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;align-items:center;justify-content:flex-start}
+      #iuTvProgramView .iuTvPgChoiceBtn:hover,#iuTvProgramView .iuTvPgChoiceBtn:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 45%,rgba(255,255,255,0.12));background:rgba(255,255,255,0.09);box-shadow:0 4px 14px rgba(0,0,0,0.14);transform:translateY(-1px)}
+      #iuTvProgramView .iuTvPgChoiceBtn:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 70%,#fff);outline-offset:2px}
+      #iuTvProgramView .iuTvPgChoiceBtn:active{transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,0.12)}
+      #iuTvProgramView .iuTvPgRecGrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:4px}
+      @media(min-width:560px){#iuTvProgramView .iuTvPgRecGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
+      #iuTvProgramView .iuTvPgRecCard{box-sizing:border-box;width:100%;min-height:120px;padding:14px 14px 16px;margin:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:inherit;font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+      #iuTvProgramView .iuTvPgRecCard:hover,#iuTvProgramView .iuTvPgRecCard:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 45%,rgba(255,255,255,0.12));background:rgba(255,255,255,0.09);box-shadow:0 4px 14px rgba(0,0,0,0.14);transform:translateY(-1px)}
+      #iuTvProgramView .iuTvPgRecCard:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 70%,#fff);outline-offset:2px}
+      #iuTvProgramView .iuTvPgRecCard:active{transform:translateY(0)}
+      #iuTvProgramView .iuTvPgRecCard__emoji{font-size:22px;line-height:1}
+      #iuTvProgramView .iuTvPgRecCard__title{font-size:15px;font-weight:900;line-height:1.2}
+      #iuTvProgramView .iuTvPgRecCard__desc{font-size:12px;opacity:0.78;line-height:1.35}
+      #iuTvProgramView .iuTvPgRecCard__cta{margin-top:auto;font-size:12px;font-weight:800;color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 88%,#fff)}
+      #iuTvProgramView[data-iu-tv-time-hl="zpravy"] .iuTvPgChoiceBtn[data-iu-tv-choice="zpravy"]{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(255,255,255,0.14));box-shadow:0 0 0 1px color-mix(in srgb,var(--iuSectionAccent,#10B981) 35%,transparent),0 4px 18px rgba(0,0,0,0.18)}
+      #iuTvProgramView[data-iu-tv-time-hl="zabava"] .iuTvPgChoiceBtn[data-iu-tv-choice="zabava"]{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(255,255,255,0.14));box-shadow:0 0 0 1px color-mix(in srgb,var(--iuSectionAccent,#10B981) 35%,transparent),0 4px 18px rgba(0,0,0,0.18)}
+      #iuTvProgramView[data-iu-tv-time-hl="film-evening"] .iuTvPgRecCard[data-iu-tv-rec="film"]{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(255,255,255,0.14));box-shadow:0 0 0 1px color-mix(in srgb,var(--iuSectionAccent,#10B981) 35%,transparent),0 4px 18px rgba(0,0,0,0.18)}
+      #iuTvProgramView[data-iu-tv-time-hl="serial-evening"] .iuTvPgRecCard[data-iu-tv-rec="serial"]{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(255,255,255,0.14));box-shadow:0 0 0 1px color-mix(in srgb,var(--iuSectionAccent,#10B981) 35%,transparent),0 4px 18px rgba(0,0,0,0.18)}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{position:fixed;inset:0;z-index:10050;display:flex;align-items:flex-end;justify-content:center;padding:0;box-sizing:border-box;pointer-events:none}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay[hidden]{display:none!important}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__backdrop{position:absolute;inset:0;background:rgba(7,12,19,0.55);pointer-events:auto;opacity:0;transition:opacity 140ms ease}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{position:relative;pointer-events:auto;width:100%;max-width:520px;max-height:min(78dvh,86vh);margin:0 auto 12px;border-radius:18px 18px 0 0;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(180deg,rgba(15,23,42,0.98) 0%,rgba(8,14,22,0.98) 100%);box-shadow:0 -12px 40px rgba(0,0,0,0.35);display:flex;flex-direction:column;min-height:0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));opacity:0;transform:translateY(14px);transition:opacity 140ms ease,transform 140ms ease;will-change:opacity,transform}
+      @media(min-width:600px){#iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{align-items:center;padding:18px}#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{border-radius:16px;margin:0;max-height:min(82vh,640px)}}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__title{margin:0;flex:1;font-size:17px;font-weight:900;line-height:1.2;color:rgba(255,255,255,0.96)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close{flex:0 0 auto;width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.92);font-size:22px;line-height:1;cursor:pointer;transition:background .12s,transform .1s}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:hover{background:rgba(255,255,255,0.1)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:active{transform:scale(0.96)}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay--shown .iuTvProgramChoiceOverlay__panel{opacity:1;transform:translateY(0)}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay--shown .iuTvProgramChoiceOverlay__backdrop{opacity:1}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__lead{margin:0 0 10px;font-size:12px;opacity:0.78;line-height:1.35;color:rgba(255,255,255,0.88)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__stack{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__links{display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;flex:1 1 auto;padding-bottom:4px}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__emptyMsg{margin:0 0 10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(251,191,36,0.35);background:rgba(251,191,36,0.08);font-size:13px;font-weight:700;line-height:1.35;color:rgba(255,255,255,0.92)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row{display:block;text-decoration:none;color:inherit;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);padding:12px 12px;transition:border-color .15s,background .15s;cursor:pointer}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:active{transform:scale(0.99)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:hover,#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 50%,rgba(255,255,255,0.1));background:rgba(255,255,255,0.08)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowName{font-size:15px;font-weight:800}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{margin-top:4px;font-size:12px;opacity:0.75;line-height:1.35}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowMeta{margin-top:6px;font-size:11px;opacity:0.62}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaWarn{margin-top:6px;font-size:11px;font-weight:700;color:rgba(251,191,36,0.95)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;background:rgba(7,12,19,0.72);border-radius:0 0 12px 12px;z-index:2}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm[hidden]{display:none!important}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirmBox{width:100%;max-width:340px;border-radius:14px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,23,42,0.98);padding:14px 14px 12px;box-shadow:0 12px 40px rgba(0,0,0,0.45)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirmText{margin:0 0 12px;font-size:14px;font-weight:800;line-height:1.35;color:rgba(255,255,255,0.94)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirmBtns{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaBtn{min-height:40px;padding:0 16px;margin:0;border-radius:12px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.92);font:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:background .12s,transform .1s}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaBtn:active{transform:scale(0.97)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaBtn--go{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(255,255,255,0.12));background:color-mix(in srgb,var(--iuSectionAccent,#10B981) 22%,rgba(255,255,255,0.06))}
+      #iuTvPgPrimaPageConfirm.iuTvPgPrimaPageConfirm{position:fixed;inset:0;z-index:10049;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+      #iuTvPgPrimaPageConfirm.iuTvPgPrimaPageConfirm[hidden]{display:none!important}
+      #iuTvPgPrimaPageConfirm .iuTvPgPrimaPageConfirm__backdrop{position:absolute;inset:0;background:rgba(7,12,19,0.55)}
+      #iuTvPgPrimaPageConfirm .iuTvPgPrimaPageConfirm__box{position:relative;z-index:1;width:100%;max-width:380px;border-radius:16px;border:1px solid rgba(255,255,255,0.14);background:linear-gradient(180deg,rgba(15,23,42,0.98) 0%,rgba(8,14,22,0.98) 100%);padding:16px 16px 14px;box-shadow:0 16px 48px rgba(0,0,0,0.4)}
+      #iuTvPgPrimaPageConfirm .iuTvProgramChoiceOverlay__primaConfirmText{margin:0 0 14px}
+      #iuTvPgPrimaPageConfirm .iuTvProgramChoiceOverlay__primaConfirmBtns{justify-content:stretch}
+      #iuTvPgPrimaPageConfirm .iuTvProgramChoiceOverlay__primaBtn{flex:1 1 auto}
+      html.iuTvOverlayScrollLock{overflow:hidden!important}
+      html.iuTvOverlayScrollLock body{overflow:hidden!important}
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
@@ -1491,6 +1551,50 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                       </div>
 
+                      <div class="iuSubSection" id="iuTvPg-evening" data-iu-tv-evening>
+                        <div class="iuSubSectionHeader">
+                          <h3>Doporučení dnes večer</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+                        <p class="iuTvPgLead">Statické tipy bez dat z internetu — otevře stejný výběr jako níže.</p>
+                        <div class="iuTvPgRecGrid" role="list" aria-label="Doporučení dnes večer">
+                          <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="film" data-iu-tv-choice="film" role="listitem">
+                            <span class="iuTvPgRecCard__emoji" aria-hidden="true">🎬</span>
+                            <span class="iuTvPgRecCard__title">Film večer</span>
+                            <span class="iuTvPgRecCard__desc">Výběr filmů napříč hlavními stanicemi</span>
+                            <span class="iuTvPgRecCard__cta">Zobrazit filmy</span>
+                          </button>
+                          <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="serial" data-iu-tv-choice="serial" role="listitem">
+                            <span class="iuTvPgRecCard__emoji" aria-hidden="true">📺</span>
+                            <span class="iuTvPgRecCard__title">Seriál večer</span>
+                            <span class="iuTvPgRecCard__desc">Seriály a epizody dnes večer</span>
+                            <span class="iuTvPgRecCard__cta">Zobrazit seriály</span>
+                          </button>
+                          <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="sport" data-iu-tv-choice="sport" role="listitem">
+                            <span class="iuTvPgRecCard__emoji" aria-hidden="true">⚽</span>
+                            <span class="iuTvPgRecCard__title">Sport dnes</span>
+                            <span class="iuTvPgRecCard__desc">Přehled sportovního vysílání</span>
+                            <span class="iuTvPgRecCard__cta">Zobrazit sport</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="iuSubSection" id="iuTvPg-choice" data-iu-tv-pick>
+                        <div class="iuSubSectionHeader">
+                          <h3>Co chceš sledovat?</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+                        <p class="iuTvPgLead">Vyber typ obsahu — zobrazíme jen ověřené odkazy. Otevřou se vždy v nové kartě až po tvém výběru.</p>
+                        <div class="iuTvPgChoiceGrid2" role="list" aria-label="Typ programu">
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="film" role="listitem">Film</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="serial" role="listitem">Seriál</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="sport" role="listitem">Sport</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="zpravy" role="listitem">Zprávy</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="deti" role="listitem">Děti</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="zabava" role="listitem">Zábava</button>
+                        </div>
+                      </div>
+
                       <div class="iuSubSection" id="iuTvPg-verified" data-iu-tv-verified>
                         <div class="iuSubSectionHeader">
                           <h3>Ověřené TV programy</h3>
@@ -1498,6 +1602,40 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                         <p class="iuTvPgLead">Jen odkazy, které vedou na oficiální nebo veřejný TV přehled uvedené služby. Žádné sliby konkrétní stanice bez vlastního programu.</p>
                         <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="Ověřené TV programy"></div>
+                      </div>
+
+                      <div id="iuTvProgramChoiceOverlay" class="iuTvProgramChoiceOverlay" hidden aria-hidden="true">
+                        <div class="iuTvProgramChoiceOverlay__backdrop" data-iu-tv-choice-close tabindex="-1" aria-hidden="true"></div>
+                        <div class="iuTvProgramChoiceOverlay__panel" role="dialog" aria-modal="true" aria-labelledby="iuTvProgramChoiceTitle" tabindex="-1">
+                          <div class="iuTvProgramChoiceOverlay__head">
+                            <h3 id="iuTvProgramChoiceTitle" class="iuTvProgramChoiceOverlay__title"></h3>
+                            <button type="button" class="iuTvProgramChoiceOverlay__close" data-iu-tv-choice-close aria-label="Zavřít výběr">×</button>
+                          </div>
+                          <p class="iuTvProgramChoiceOverlay__lead">Vyber službu níže — odkaz se otevře v nové kartě.</p>
+                          <div class="iuTvProgramChoiceOverlay__stack">
+                            <div id="iuTvProgramChoiceOverlayLinks" class="iuTvProgramChoiceOverlay__links"></div>
+                            <div id="iuTvProgramPrimaConfirm" class="iuTvProgramChoiceOverlay__primaConfirm" hidden aria-hidden="true">
+                              <div class="iuTvProgramChoiceOverlay__primaConfirmBox" role="document">
+                                <p class="iuTvProgramChoiceOverlay__primaConfirmText">Tato stránka nemusí fungovat na všech mobilech</p>
+                                <div class="iuTvProgramChoiceOverlay__primaConfirmBtns">
+                                  <button type="button" class="iuTvProgramChoiceOverlay__primaBtn iuTvProgramChoiceOverlay__primaBtn--go" data-iu-tv-prima-proceed>Pokračovat</button>
+                                  <button type="button" class="iuTvProgramChoiceOverlay__primaBtn" data-iu-tv-prima-back>Zpět</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div id="iuTvPgPrimaPageConfirm" class="iuTvPgPrimaPageConfirm" hidden aria-hidden="true">
+                        <div class="iuTvPgPrimaPageConfirm__backdrop" data-iu-tv-page-prima-close tabindex="-1" aria-hidden="true"></div>
+                        <div class="iuTvPgPrimaPageConfirm__box" role="dialog" aria-modal="true" aria-labelledby="iuTvPgPrimaPageTitle">
+                          <p id="iuTvPgPrimaPageTitle" class="iuTvProgramChoiceOverlay__primaConfirmText">Tato stránka nemusí fungovat na všech mobilech</p>
+                          <div class="iuTvProgramChoiceOverlay__primaConfirmBtns">
+                            <button type="button" class="iuTvProgramChoiceOverlay__primaBtn iuTvProgramChoiceOverlay__primaBtn--go" data-iu-tv-page-prima-proceed>Pokračovat</button>
+                            <button type="button" class="iuTvProgramChoiceOverlay__primaBtn" data-iu-tv-page-prima-back>Zpět</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </section>

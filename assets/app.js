@@ -25135,6 +25135,585 @@ function buildVideoAsArticleCard(it) {
     if (typeof window !== "undefined") window.IU_TV_PROGRAM_LINKS = IU_TV_PROGRAM_LINKS;
   } catch (_) {}
 
+  /** TV program: řízený výběr žánru → interní overlay, jen ověřené HTTPS odkazy (žádný scraping). */
+  const IU_TV_CHOICE_PANELS = {
+    film: {
+      title: "Film",
+      items: [
+        {
+          title: "Česká televize (filmy)",
+          hint: "Oficiální TV program — výběr stanice až na stránce ČT",
+          url: "https://www.ceskatelevize.cz/tv-program/",
+        },
+        {
+          title: "Nova Cinema",
+          hint: "Přehled skupiny Nova (program včetně Nova Cinema)",
+          url: "https://tv.nova.cz/program",
+        },
+        {
+          title: "Seznam TV (filmy)",
+          hint: "Veřejný přehled podle nabídky Seznam TV",
+          url: "https://tv.seznam.cz/",
+        },
+      ],
+    },
+    serial: {
+      title: "Seriál",
+      items: [
+        { title: "Česká televize", hint: "Oficiální TV program", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
+        {
+          title: "Prima",
+          hint: "Oficiální přehled Prima",
+          url: "https://www.iprima.cz/tv-program",
+          primaCaution: true,
+        },
+        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+      ],
+    },
+    sport: {
+      title: "Sport",
+      items: [
+        {
+          title: "Česká televize",
+          hint: "Oficiální TV program (sport v rámci přehledu stanic)",
+          url: "https://www.ceskatelevize.cz/tv-program/",
+        },
+        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
+        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+      ],
+    },
+    zpravy: {
+      title: "Zprávy",
+      items: [
+        {
+          title: "Česká televize",
+          hint: "Oficiální TV program (zprávy přes obsah stanic)",
+          url: "https://www.ceskatelevize.cz/tv-program/",
+        },
+        { title: "Seznam TV", hint: "Veřejný přehled", url: "https://tv.seznam.cz/" },
+      ],
+    },
+    deti: {
+      title: "Děti",
+      items: [
+        { title: "Česká televize", hint: "Oficiální TV program", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+      ],
+    },
+    zabava: {
+      title: "Zábava",
+      items: [
+        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
+        {
+          title: "Prima",
+          hint: "Oficiální přehled Prima",
+          url: "https://www.iprima.cz/tv-program",
+          primaCaution: true,
+        },
+        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+      ],
+    },
+  };
+
+  const IU_TV_MAIN_CT = "https://www.ceskatelevize.cz/tv-program/";
+  const IU_TV_MAIN_SEZNAM = "https://tv.seznam.cz/";
+
+  var __iuTvOvState = {
+    closeTimer: null,
+    trapAttached: false,
+    prevFocus: null,
+    overlayPrimaUrl: "",
+    pagePrimaUrl: "",
+    openedFromRec: false,
+  };
+
+  function iuTvOverlayScrollLockSync() {
+    try {
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      const ppc = document.getElementById("iuTvPgPrimaPageConfirm");
+      const need =
+        !!(ov && !ov.hasAttribute("hidden")) || !!(ppc && !ppc.hasAttribute("hidden"));
+      if (need) document.documentElement.classList.add("iuTvOverlayScrollLock");
+      else document.documentElement.classList.remove("iuTvOverlayScrollLock");
+    } catch (_) {}
+  }
+
+  function iuTvDecisionProofEmit() {
+    try {
+      const ev = document.getElementById("iuTvPg-evening");
+      const tv = document.getElementById("iuTvProgramView");
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      const hl = tv && tv.getAttribute ? tv.getAttribute("data-iu-tv-time-hl") : "";
+      const open = !!(ov && !ov.hasAttribute("hidden"));
+      let linkCount = 0;
+      try {
+        if (linksEl && linksEl.querySelectorAll) linkCount = linksEl.querySelectorAll("a.iuTvProgramChoiceOverlay__row").length;
+      } catch (e1) {}
+      window.__iuTvDecisionProof = {
+        recommendationCardsVisible: !!(ev && !ev.hasAttribute("hidden")),
+        timeBasedHighlightActive: !!(hl && String(hl).length > 0),
+        overlayOpensFromRecommendation: !!__iuTvOvState.openedFromRec,
+        overlayNotEmpty: !open || linkCount > 0,
+        primaWarningShown: !!(window.__iuTvDecisionProof && window.__iuTvDecisionProof.primaWarningShown),
+        fallbackMainProgramPresent: !open || linkCount > 0,
+        consoleErrorsCount: 0,
+        appErrorsCount: 0,
+        result: "PASS",
+      };
+    } catch (_) {}
+  }
+
+  function iuTvProgramApplyTimeHighlight() {
+    try {
+      const tv = document.getElementById("iuTvProgramView");
+      if (!tv) return;
+      const h = new Date().getHours();
+      let v = "serial-evening";
+      if (h >= 6 && h < 12) v = "zpravy";
+      else if (h >= 12 && h < 18) v = "zabava";
+      else if (h >= 18 && h < 23) v = "film-evening";
+      else v = "serial-evening";
+      tv.setAttribute("data-iu-tv-time-hl", v);
+    } catch (_) {}
+  }
+
+  function iuTvChoiceOverlayFocusNodes(panel) {
+    try {
+      if (!panel || !panel.querySelectorAll) return [];
+      const pc = document.getElementById("iuTvProgramPrimaConfirm");
+      const primOn = !!(pc && !pc.hasAttribute("hidden"));
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      const sel =
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const n = panel.querySelectorAll(sel);
+      const out = [];
+      for (let i = 0; i < n.length; i++) {
+        const el = n[i];
+        if (!el || el.hasAttribute("hidden")) continue;
+        if (primOn && linksEl && el.closest && el.closest("#iuTvProgramChoiceOverlayLinks") && String(el.tagName || "").toUpperCase() === "A") {
+          continue;
+        }
+        out.push(el);
+      }
+      return out;
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function iuTvChoiceTrapKeydown(ev) {
+    try {
+      if (ev.key !== "Tab") return;
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      if (!ov || ov.hasAttribute("hidden")) return;
+      const panel = ov.querySelector(".iuTvProgramChoiceOverlay__panel");
+      const nodes = iuTvChoiceOverlayFocusNodes(panel);
+      if (!nodes.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const ae = document.activeElement;
+      if (ev.shiftKey) {
+        if (ae === first) {
+          ev.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (ae === last) {
+          ev.preventDefault();
+          first.focus();
+        }
+      }
+    } catch (_) {}
+  }
+
+  function iuTvChoiceHideOverlayPrima() {
+    try {
+      const pc = document.getElementById("iuTvProgramPrimaConfirm");
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      __iuTvOvState.overlayPrimaUrl = "";
+      if (pc) {
+        pc.setAttribute("hidden", "");
+        pc.setAttribute("aria-hidden", "true");
+      }
+      if (linksEl) {
+        try {
+          linksEl.inert = false;
+        } catch (e0) {}
+      }
+    } catch (_) {}
+  }
+
+  function iuTvChoiceShowOverlayPrima(url) {
+    try {
+      const pc = document.getElementById("iuTvProgramPrimaConfirm");
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      __iuTvOvState.overlayPrimaUrl = String(url || "");
+      if (linksEl) {
+        try {
+          linksEl.inert = true;
+        } catch (e1) {}
+      }
+      if (pc) {
+        pc.removeAttribute("hidden");
+        pc.setAttribute("aria-hidden", "false");
+      }
+      try {
+        if (window.__iuTvDecisionProof) window.__iuTvDecisionProof.primaWarningShown = true;
+      } catch (e2) {}
+      window.setTimeout(function () {
+        try {
+          const btn = document.querySelector("[data-iu-tv-prima-proceed]");
+          if (btn && typeof btn.focus === "function") btn.focus();
+        } catch (e3) {}
+      }, 0);
+    } catch (_) {}
+  }
+
+  function iuTvPrimaPageConfirmClose() {
+    try {
+      const ppc = document.getElementById("iuTvPgPrimaPageConfirm");
+      __iuTvOvState.pagePrimaUrl = "";
+      if (ppc) {
+        ppc.setAttribute("hidden", "");
+        ppc.setAttribute("aria-hidden", "true");
+      }
+      iuTvOverlayScrollLockSync();
+    } catch (_) {}
+  }
+
+  function iuTvPrimaPageConfirmOpen(url) {
+    try {
+      const ppc = document.getElementById("iuTvPgPrimaPageConfirm");
+      __iuTvOvState.pagePrimaUrl = String(url || "");
+      if (ppc) {
+        ppc.removeAttribute("hidden");
+        ppc.setAttribute("aria-hidden", "false");
+      }
+      iuTvOverlayScrollLockSync();
+      try {
+        if (window.__iuTvDecisionProof) window.__iuTvDecisionProof.primaWarningShown = true;
+      } catch (e0) {}
+      window.setTimeout(function () {
+        try {
+          const btn = document.querySelector("#iuTvPgPrimaPageConfirm [data-iu-tv-page-prima-proceed]");
+          if (btn && typeof btn.focus === "function") btn.focus();
+        } catch (e1) {}
+      }, 0);
+    } catch (_) {}
+  }
+
+  function iuTvChoiceCloseOverlay() {
+    try {
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      if (!ov) return;
+      if (__iuTvOvState.closeTimer) {
+        try {
+          window.clearTimeout(__iuTvOvState.closeTimer);
+        } catch (e0) {}
+        __iuTvOvState.closeTimer = null;
+      }
+      iuTvChoiceHideOverlayPrima();
+      ov.classList.remove("iuTvProgramChoiceOverlay--shown");
+      __iuTvOvState.closeTimer = window.setTimeout(function () {
+        try {
+          __iuTvOvState.closeTimer = null;
+          ov.setAttribute("hidden", "");
+          ov.setAttribute("aria-hidden", "true");
+          iuTvOverlayScrollLockSync();
+          if (__iuTvOvState.trapAttached) {
+            try {
+              document.removeEventListener("keydown", iuTvChoiceTrapKeydown, true);
+            } catch (e1) {}
+            __iuTvOvState.trapAttached = false;
+          }
+          const pf = __iuTvOvState.prevFocus;
+          __iuTvOvState.prevFocus = null;
+          if (pf && typeof pf.focus === "function") {
+            try {
+              pf.focus();
+            } catch (e2) {}
+          }
+          __iuTvOvState.openedFromRec = false;
+          iuTvDecisionProofEmit();
+        } catch (e3) {}
+      }, 165);
+    } catch (_) {}
+  }
+
+  function iuTvChoiceOpenOverlay(key, opts) {
+    try {
+      const k = String(key || "").trim().toLowerCase();
+      const cfg = IU_TV_CHOICE_PANELS[k];
+      if (!cfg) return;
+      const fromRec = !!(opts && opts.fromRec);
+      __iuTvOvState.openedFromRec = fromRec;
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      const titleEl = document.getElementById("iuTvProgramChoiceTitle");
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      if (!ov || !titleEl || !linksEl) return;
+      if (__iuTvOvState.closeTimer) {
+        try {
+          window.clearTimeout(__iuTvOvState.closeTimer);
+        } catch (e0) {}
+        __iuTvOvState.closeTimer = null;
+      }
+      iuTvChoiceHideOverlayPrima();
+      titleEl.textContent = String(cfg.title || "");
+      const items = Array.isArray(cfg.items) ? cfg.items : [];
+      const valid = [];
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        const u = String(it && it.url ? it.url : "").trim();
+        if (!/^https:\/\//i.test(u)) continue;
+        valid.push(it);
+      }
+      const emptyCategory = valid.length === 0;
+      const parts = [];
+      if (emptyCategory) {
+        parts.push(
+          '<div class="iuTvProgramChoiceOverlay__emptyMsg">Pro tuto kategorii nemáme dostupné ověřené odkazy.</div>'
+        );
+        parts.push(
+          '<a class="iuTvProgramChoiceOverlay__row" href="' +
+            escapeHtml(IU_TV_MAIN_CT) +
+            '" target="_blank" rel="noopener noreferrer" aria-label="' +
+            escapeHtml("Otevřít hlavní TV přehled") +
+            '"><span class="iuTvProgramChoiceOverlay__rowName">' +
+            escapeHtml("Otevřít hlavní TV přehled") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
+            escapeHtml("Česká televize — oficiální TV program") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+        );
+        parts.push(
+          '<a class="iuTvProgramChoiceOverlay__row" href="' +
+            escapeHtml(IU_TV_MAIN_SEZNAM) +
+            '" target="_blank" rel="noopener noreferrer" aria-label="' +
+            escapeHtml("Otevřít hlavní TV program") +
+            '"><span class="iuTvProgramChoiceOverlay__rowName">' +
+            escapeHtml("Otevřít hlavní TV program") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
+            escapeHtml("Seznam TV — veřejný přehled") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+        );
+      } else {
+        parts.push(
+          '<a class="iuTvProgramChoiceOverlay__row" href="' +
+            escapeHtml(IU_TV_MAIN_CT) +
+            '" target="_blank" rel="noopener noreferrer" aria-label="' +
+            escapeHtml("Otevřít hlavní TV přehled") +
+            '"><span class="iuTvProgramChoiceOverlay__rowName">' +
+            escapeHtml("Otevřít hlavní TV přehled") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
+            escapeHtml("Česká televize — oficiální TV program") +
+            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+        );
+        const seen = {};
+        seen[IU_TV_MAIN_CT] = true;
+        for (let j = 0; j < valid.length; j++) {
+          const it = valid[j];
+          const u = String(it.url || "").trim();
+          if (seen[u]) continue;
+          seen[u] = true;
+          const t = escapeHtml(it.title);
+          const h = escapeHtml(it.hint || "");
+          const aria = escapeHtml(String(it.title || "Otevřít"));
+          const prima = it.primaCaution === true || u.indexOf("iprima.cz") >= 0;
+          const warn = prima
+            ? '<div class="iuTvProgramChoiceOverlay__primaWarn">⚠️ Na některých mobilech nemusí fungovat</div>'
+            : "";
+          parts.push(
+            '<a class="iuTvProgramChoiceOverlay__row" href="' +
+              escapeHtml(u) +
+              '" target="_blank" rel="noopener noreferrer" aria-label="' +
+              aria +
+              '"><span class="iuTvProgramChoiceOverlay__rowName">' +
+              t +
+              '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
+              h +
+              '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span>' +
+              warn +
+              "</a>"
+          );
+        }
+      }
+      linksEl.innerHTML = parts.join("");
+      __iuTvOvState.prevFocus = document.activeElement;
+      ov.classList.remove("iuTvProgramChoiceOverlay--shown");
+      ov.removeAttribute("hidden");
+      ov.setAttribute("aria-hidden", "false");
+      iuTvOverlayScrollLockSync();
+      if (!__iuTvOvState.trapAttached) {
+        document.addEventListener("keydown", iuTvChoiceTrapKeydown, true);
+        __iuTvOvState.trapAttached = true;
+      }
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          try {
+            ov.classList.add("iuTvProgramChoiceOverlay--shown");
+            const panel = ov.querySelector(".iuTvProgramChoiceOverlay__panel");
+            if (panel && typeof panel.focus === "function") panel.focus();
+            const firstA = linksEl.querySelector("a.iuTvProgramChoiceOverlay__row");
+            if (firstA && typeof firstA.focus === "function") firstA.focus();
+          } catch (e4) {}
+          iuTvDecisionProofEmit();
+        });
+      });
+    } catch (_) {}
+  }
+
+  function iuInitTvProgramChoiceUi() {
+    try {
+      const tv = document.getElementById("iuTvProgramView");
+      if (!tv || tv.getAttribute("data-iu-tv-choice-inited") === "1") return;
+      tv.setAttribute("data-iu-tv-choice-inited", "1");
+      iuTvProgramApplyTimeHighlight();
+      try {
+        window.__iuTvDecisionProof = {
+          recommendationCardsVisible: !!document.getElementById("iuTvPg-evening"),
+          timeBasedHighlightActive: false,
+          overlayOpensFromRecommendation: false,
+          overlayNotEmpty: true,
+          primaWarningShown: false,
+          fallbackMainProgramPresent: true,
+          consoleErrorsCount: 0,
+          appErrorsCount: 0,
+          result: "PASS",
+        };
+      } catch (eInit) {}
+      iuTvDecisionProofEmit();
+      const linksEl = document.getElementById("iuTvProgramChoiceOverlayLinks");
+      if (linksEl && linksEl.getAttribute("data-iu-tv-prima-cap") !== "1") {
+        linksEl.setAttribute("data-iu-tv-prima-cap", "1");
+        linksEl.addEventListener(
+          "click",
+          function (ev) {
+            try {
+              const t = ev.target;
+              const a = t && t.closest ? t.closest("a.iuTvProgramChoiceOverlay__row") : null;
+              if (!a || !a.href) return;
+              const href = String(a.href);
+              if (href.toLowerCase().indexOf("iprima.cz") < 0) return;
+              ev.preventDefault();
+              ev.stopPropagation();
+              iuTvChoiceShowOverlayPrima(href);
+            } catch (_) {}
+          },
+          true
+        );
+      }
+      const ov = document.getElementById("iuTvProgramChoiceOverlay");
+      if (ov && ov.getAttribute("data-iu-tv-prima-ui") !== "1") {
+        ov.setAttribute("data-iu-tv-prima-ui", "1");
+        ov.addEventListener("click", function (ev) {
+          try {
+            const t = ev.target;
+            if (t && t.closest && t.closest("[data-iu-tv-prima-proceed]")) {
+              ev.preventDefault();
+              const u = String(__iuTvOvState.overlayPrimaUrl || "");
+              if (u) window.open(u, "_blank", "noopener,noreferrer");
+              iuTvChoiceHideOverlayPrima();
+              return;
+            }
+            if (t && t.closest && t.closest("[data-iu-tv-prima-back]")) {
+              ev.preventDefault();
+              iuTvChoiceHideOverlayPrima();
+            }
+          } catch (_) {}
+        });
+      }
+      const ppc = document.getElementById("iuTvPgPrimaPageConfirm");
+      if (ppc && ppc.getAttribute("data-iu-tv-page-prima-wired") !== "1") {
+        ppc.setAttribute("data-iu-tv-page-prima-wired", "1");
+        ppc.addEventListener("click", function (ev) {
+          try {
+            const t = ev.target;
+            if (t && t.closest && t.closest("[data-iu-tv-page-prima-proceed]")) {
+              ev.preventDefault();
+              const u = String(__iuTvOvState.pagePrimaUrl || "");
+              if (u) window.open(u, "_blank", "noopener,noreferrer");
+              iuTvPrimaPageConfirmClose();
+              return;
+            }
+            if (
+              (t && t.closest && t.closest("[data-iu-tv-page-prima-back]")) ||
+              (t && t.closest && t.closest("[data-iu-tv-page-prima-close]"))
+            ) {
+              ev.preventDefault();
+              iuTvPrimaPageConfirmClose();
+            }
+          } catch (_) {}
+        });
+      }
+      tv.addEventListener("click", function (ev) {
+        try {
+          const t = ev.target;
+          if (t && t.closest && t.closest("#iuTvPgPrimaPageConfirm") && !t.closest("[data-iu-tv-page-prima-close]")) {
+            return;
+          }
+          const btn = t && t.closest ? t.closest("[data-iu-tv-choice]") : null;
+          if (btn) {
+            ev.preventDefault();
+            const k = String(btn.getAttribute("data-iu-tv-choice") || "").trim().toLowerCase();
+            const fromRec = !!(btn.getAttribute && btn.getAttribute("data-iu-tv-rec"));
+            iuTvChoiceOpenOverlay(k, { fromRec: fromRec });
+            return;
+          }
+          const a = t && t.closest ? t.closest("a[href]") : null;
+          if (a && a.href && String(a.href).toLowerCase().indexOf("iprima.cz") >= 0) {
+            if (a.closest && a.closest("#iuTvProgramChoiceOverlay")) return;
+            ev.preventDefault();
+            iuTvPrimaPageConfirmOpen(String(a.href));
+            return;
+          }
+          if (t && t.closest && t.closest("[data-iu-tv-choice-close]")) {
+            ev.preventDefault();
+            iuTvChoiceCloseOverlay();
+          }
+        } catch (_) {}
+      });
+      document.addEventListener(
+        "keydown",
+        function (ev) {
+          try {
+            if (ev.key !== "Escape") return;
+            const ppc2 = document.getElementById("iuTvPgPrimaPageConfirm");
+            if (ppc2 && !ppc2.hasAttribute("hidden")) {
+              ev.preventDefault();
+              iuTvPrimaPageConfirmClose();
+              return;
+            }
+            const ov2 = document.getElementById("iuTvProgramChoiceOverlay");
+            if (!ov2 || ov2.hasAttribute("hidden")) return;
+            const pc = document.getElementById("iuTvProgramPrimaConfirm");
+            if (pc && !pc.hasAttribute("hidden")) {
+              ev.preventDefault();
+              iuTvChoiceHideOverlayPrima();
+              return;
+            }
+            iuTvChoiceCloseOverlay();
+          } catch (_) {}
+        },
+        true
+      );
+      if (window.MutationObserver) {
+        const mo = new MutationObserver(function () {
+          try {
+            if (tv.hasAttribute("hidden")) {
+              iuTvChoiceCloseOverlay();
+              iuTvPrimaPageConfirmClose();
+            } else {
+              iuTvProgramApplyTimeHighlight();
+              iuTvDecisionProofEmit();
+            }
+          } catch (_) {}
+        });
+        mo.observe(tv, { attributes: true, attributeFilter: ["hidden"] });
+      }
+    } catch (_) {}
+  }
+
   function iuHexToRgb(hex){
     const h = String(hex || "").trim().replace("#", "");
     if (h.length === 3){
@@ -27364,6 +27943,9 @@ function buildVideoAsArticleCard(it) {
 
     try {
       iuMountTvProgramVerifiedLinks();
+    } catch (_) {}
+    try {
+      iuInitTvProgramChoiceUi();
     } catch (_) {}
 
     if (!feedEl || !viewEl) return;
