@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T06:00:01.085256Z",
+  "ingestedAt": "2026-04-27T06:24:54.833530Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/dohodovaci-rizeni-nefunguje/",
+      "dt": "2026-04-27T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "budeme",
+        "chodit",
+        "dohodovací",
+        "domluvit",
+        "dva",
+        "kafe",
+        "měsíce",
+        "nefunguje",
+        "nemůžeme",
+        "proč",
+        "řízení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Škoda přes 150 milionů: Vyšetřování implantací defibrilátorů ve FN Olomouc nabírá obrátky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/fn-olomouc-defibrilatory-statni-zastupitelstvi/",
-      "dt": "2026-04-24T15:17:02Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "150",
-        "defibrilátorů",
-        "implantací",
-        "milionů",
-        "nabírá",
-        "obrátky",
-        "olomouc",
-        "vyšetřování",
-        "škoda"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88701,
+      "bytes": 91877,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
+            "publishedAt": "2026-04-27T06:00:00Z"
+          },
           {
             "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
             "publishedAt": "2026-04-27T05:00:00Z"
@@ -357,10 +364,6 @@
           {
             "title": "Alarmující zjištění: Přibývá Němců, které zdravotní stav omezuje v běžném životě",
             "publishedAt": "2026-04-26T05:00:00Z"
-          },
-          {
-            "title": "Žádné opatření z alkoholika abstinenta neudělá, řekl Válek. Prozradil, s čím v Evropě pohořel",
-            "publishedAt": "2026-04-25T14:51:17Z"
           }
         ]
       }

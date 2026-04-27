@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-27T06:00:01.085256Z",
+  "ingestedAt": "2026-04-27T06:24:54.833530Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Léky na obezitu mění ekonomiku a mohou posílit udržitelnost veřejného zdravotnictví",
+      "url": "https://www.e15.cz/nazory-a-analyzy/leky-na-obezitu-meni-ekonomiku-a-mohou-posilit-udrzitelnost-verejneho-zdravotnictvi-1432354",
+      "dt": "2026-04-27T06:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ekonomiku",
+        "léky",
+        "mění",
+        "obezitu",
+        "posílit",
+        "udržitelnost",
+        "veřejného",
+        "zdravotnictví"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
+      "url": "https://www.e15.cz/nazory-a-analyzy/francouzsky-jaderny-triumf-a-nemecka-cesta-do-plynove-pasti-1432398",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cesta",
+        "francouzský",
+        "jaderný",
+        "německá",
+        "pasti",
+        "plynové",
+        "triumf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -49,30 +98,6 @@
         "snižuje",
         "stali",
         "státní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
-      "url": "https://www.e15.cz/nazory-a-analyzy/francouzsky-jaderny-triumf-a-nemecka-cesta-do-plynove-pasti-1432398",
-      "dt": "2026-04-27T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "cesta",
-        "francouzský",
-        "jaderný",
-        "německá",
-        "pasti",
-        "plynové",
-        "triumf"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1056,31 +1081,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Draží se unikáty za 85 milionů, táhne rekordní zlato i sběratelské mince",
-      "url": "https://www.e15.cz/finexpert/servis/drazi-se-unikaty-za-85-milionu-tahne-rekordni-zlato-i-sberatelske-mince-1432363",
-      "dt": "2026-04-24T09:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "draží",
-        "milionů",
-        "mince",
-        "rekordní",
-        "sběratelské",
-        "táhne",
-        "unikáty",
-        "zlato"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,11 +1091,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54724,
+      "bytes": 55869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 47,
+      "itemsParsed": 48,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1128,12 +1128,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 4,
-          "zdravi": 2
+          "zdravi": 3,
+          "finance": 33,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1146,15 +1146,19 @@
         },
         "sample_titles": [
           {
+            "title": "Léky na obezitu mění ekonomiku a mohou posílit udržitelnost veřejného zdravotnictví",
+            "publishedAt": "2026-04-27T06:00:00Z"
+          },
+          {
+            "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
+          {
             "title": "Zapomeňte na Dubaj. Češi se zbláznili do domů v Itálii, na Sicílii jsou jako investoři vyhlášení",
             "publishedAt": "2026-04-27T04:00:00Z"
           },
           {
             "title": "Kdo nejrychleji snižuje státní dluh v roce 2026? Z jižních hříšníků se stali premianti",
-            "publishedAt": "2026-04-27T04:00:00Z"
-          },
-          {
-            "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
             "publishedAt": "2026-04-27T04:00:00Z"
           },
           {
@@ -1172,10 +1176,6 @@
           {
             "title": "Valorizace důchodů poprvé výrazněji posílí. Mladých lidí bez práce přibývá",
             "publishedAt": "2026-04-26T15:00:00Z"
-          },
-          {
-            "title": "Čemu věří fond mládí v J&T? Zisk v rané fázi firmy nehraje klíčovou roli, říká Gabriel Herbrik",
-            "publishedAt": "2026-04-26T11:40:00Z"
           }
         ]
       }
