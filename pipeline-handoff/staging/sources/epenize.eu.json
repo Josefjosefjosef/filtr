@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-27T22:59:25.761795Z",
+  "ingestedAt": "2026-04-27T23:24:55.723542Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trumpova válka s Kimmelem pokračuje: Další volání po vyhazovu",
+      "url": "https://www.epenize.eu/trumpova-valka-s-kimmelem-pokracuje-dalsi-volani-po-vyhazovu/",
+      "dt": "2026-04-27T23:00:47Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "další",
+        "kimmelem",
+        "pokračuje",
+        "trumpova",
+        "volání",
+        "vyhazovu",
+        "válka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,30 +500,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Babišovo zakázané letadlo pro Vystrčila jako ekonomický blud",
-      "url": "https://www.epenize.eu/babisovo-zakazane-letadlo-pro-vystrcila-jako-ekonomicky-blud/",
-      "dt": "2026-04-19T08:07:53Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "babišovo",
-        "blud",
-        "ekonomický",
-        "jako",
-        "letadlo",
-        "vystrčila",
-        "zakázané"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -510,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 111526,
+      "bytes": 111297,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -547,11 +547,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:47:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T23:00:47Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 17,
-          "zpravy": 2,
+          "finance": 18,
+          "zpravy": 1,
           "zdravi": 1
         },
         "drop_counts": {
@@ -564,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trumpova válka s Kimmelem pokračuje: Další volání po vyhazovu",
+            "publishedAt": "2026-04-27T23:00:47Z"
+          },
           {
             "title": "Dle Babiše nesplňujeme závazek vůči NATO. Omluví se Vondráček Řezníčkovi?",
             "publishedAt": "2026-04-27T06:47:41Z"
@@ -591,10 +595,6 @@
           {
             "title": "Deratizace parazitů aneb úřaduje hranatý nevzdělanec",
             "publishedAt": "2026-04-24T06:15:55Z"
-          },
-          {
-            "title": "Střílejte a zabíjejte: Trumpova námořní kovbojka v Hormuzském průlivu",
-            "publishedAt": "2026-04-23T23:00:44Z"
           }
         ]
       }

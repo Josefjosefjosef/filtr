@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-27T22:59:25.761795Z",
+  "ingestedAt": "2026-04-27T23:24:55.723542Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Citronová voda po ránu: rituál, který může ohrozit zdraví",
+      "url": "https://www.plnezdravi.cz/citronova-voda-po-ranu-ritual-ktery-muze-ohrozit-zdravi/",
+      "dt": "2026-04-27T23:00:31Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "citronová",
+        "ohrozit",
+        "rituál",
+        "ránu",
+        "voda",
+        "zdraví"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -497,29 +520,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Máte problém s ledvinami? Dávejte si pozor na to, co jíte",
-      "url": "https://www.plnezdravi.cz/mate-problem-s-ledvinami-davejte-si-pozor-na-to-co-jite/",
-      "dt": "2026-04-11T23:00:38Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "dávejte",
-        "jíte",
-        "ledvinami",
-        "máte",
-        "pozor",
-        "problém"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -530,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 136363,
+      "bytes": 136463,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -567,7 +567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T23:00:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T23:00:31Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -582,6 +582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Citronová voda po ránu: rituál, který může ohrozit zdraví",
+            "publishedAt": "2026-04-27T23:00:31Z"
+          },
           {
             "title": "Hrozí vám dehydratace aneb je nutné vypít za den 2 litry tekutin?",
             "publishedAt": "2026-04-26T23:00:09Z"
@@ -609,10 +613,6 @@
           {
             "title": "Petr Patočka: Japonský zelený čaj matcha vás nabije energií",
             "publishedAt": "2026-04-22T07:00:51Z"
-          },
-          {
-            "title": "Ztráta stálého zubu: na vině je parodontóza, věk i skřípání zuby. Vyražený zub jde vrátit",
-            "publishedAt": "2026-04-21T07:40:25Z"
           }
         ]
       }
