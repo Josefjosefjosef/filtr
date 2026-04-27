@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kverulant.org",
-  "ingestedAt": "2026-04-27T22:04:36.682271Z",
+  "ingestedAt": "2026-04-27T22:29:53.688018Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Stát začne opět vyplácet dotace Babišovi. Kverulant protestuje",
+      "url": "https://www.kverulant.org/article/stat-zacne-opet-vyplacet-dotace-babisovi-kverulant-protestuje/",
+      "dt": "2026-04-27T22:07:00Z",
+      "media_raw": "Kverulant",
+      "media_norm": "Kverulant",
+      "tokens": [
+        "babišovi",
+        "dotace",
+        "kverulant",
+        "opět",
+        "protestuje",
+        "stát",
+        "vyplácet",
+        "začne"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_kverulant",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "kverulant.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -223,27 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "kverulant.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rozhovor s historikem: Korupce za socialismu",
-      "url": "https://www.kverulant.org/article/rozhovor-s-historikem-korupce-za-socialismu/",
-      "dt": "2026-04-12T22:07:00Z",
-      "media_raw": "Kverulant",
-      "media_norm": "Kverulant",
-      "tokens": [
-        "historikem",
-        "korupce",
-        "rozhovor",
-        "socialismu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_kverulant",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "kverulant.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -254,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.kverulant.org/feed/",
-      "bytes": 127550,
+      "bytes": 133166,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -291,7 +295,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-26T22:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T22:07:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -306,6 +310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stát začne opět vyplácet dotace Babišovi. Kverulant protestuje",
+            "publishedAt": "2026-04-27T22:07:00Z"
+          },
           {
             "title": "Podnikání s bombou: komu vlastně slouží VTÚ, s.p.",
             "publishedAt": "2026-04-26T22:07:00Z"
@@ -333,10 +341,6 @@
           {
             "title": "Mapa 25 míst, kde raději netankovat",
             "publishedAt": "2026-04-15T22:07:00Z"
-          },
-          {
-            "title": "Velký bratr útočí na soukromí: Ceny odhalily slídily roku 2025",
-            "publishedAt": "2026-04-14T22:07:00Z"
           }
         ]
       }

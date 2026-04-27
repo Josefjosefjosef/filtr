@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-27T22:04:36.682271Z",
+  "ingestedAt": "2026-04-27T22:29:53.688018Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Poznáte fotbalové trenéry podle fotky? Otestujte své znalosti",
+      "url": "https://www.idnes.cz/fotbal/poznate-fotbalove-trenery-podle-fotky-otestujte-sve-znalosti.Q260420_154958_fotbalh_tals",
+      "dt": "2026-04-27T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fotbalové",
+        "fotky",
+        "otestujte",
+        "podle",
+        "poznáte",
+        "své",
+        "trenéry",
+        "znalosti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ťuk ťuk: Nařiďte penaltu! Itálie řeší další skandál, točí se kolem šéfa rozhodčích",
+      "url": "https://www.idnes.cz/fotbal/zahranici/italie-komise-rozhodcich-afera-korupce-skandal.A260427_170443_fot_zahranici_mama",
+      "dt": "2026-04-27T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "další",
+        "itálie",
+        "kolem",
+        "nařiďte",
+        "penaltu",
+        "rozhodčích",
+        "skandál",
+        "točí",
+        "řeší",
+        "šéfa",
+        "ťuk"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -724,58 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ligové zápasy v zahraničí? Nejvíc jednou v sezoně, tvrdí nový návrh FIFA",
-      "url": "https://www.idnes.cz/fotbal/zahranici/fifa-ligove-zapasy-v-zahranici-navrh.A260427_094103_fot_zahranici_duff",
-      "dt": "2026-04-27T11:20:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fifa",
-        "jednou",
-        "ligové",
-        "nejvíc",
-        "nový",
-        "návrh",
-        "sezoně",
-        "tvrdí",
-        "zahraničí",
-        "zápasy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dukla, nebo Šelmy? O volejbalovém titulu rozhodne poslední bitva",
-      "url": "https://www.idnes.cz/sport/ostatni/volejbal-pate-finale-pozvanka-dukla-liberec-selmy-brno.A260427_928966_sporty_ten",
-      "dt": "2026-04-27T11:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bitva",
-        "dukla",
-        "nebo",
-        "poslední",
-        "rozhodne",
-        "titulu",
-        "volejbalovém",
-        "šelmy"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47067,
+      "bytes": 46939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T21:14:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +839,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poznáte fotbalové trenéry podle fotky? Otestujte své znalosti",
+            "publishedAt": "2026-04-27T22:00:00Z"
+          },
+          {
+            "title": "Ťuk ťuk: Nařiďte penaltu! Itálie řeší další skandál, točí se kolem šéfa rozhodčích",
+            "publishedAt": "2026-04-27T22:00:00Z"
+          },
           {
             "title": "Manchester United zvládl dohrávku s Brentfordem. Rozhodl Šeško s Casemirem",
             "publishedAt": "2026-04-27T21:14:20Z"
@@ -861,14 +870,6 @@
           {
             "title": "Augusta a Fuksa se stali trenéry roku. Ocenění získal i otec olympionika Jílka",
             "publishedAt": "2026-04-27T18:21:00Z"
-          },
-          {
-            "title": "Slováci jsou bez trenéra. Calzona se nedohodl se svazem na nové smlouvě",
-            "publishedAt": "2026-04-27T17:34:00Z"
-          },
-          {
-            "title": "Choreo i speciální dresy. Kustodka se po 27 letech v klubu dočkala velkého rozloučení",
-            "publishedAt": "2026-04-27T17:01:00Z"
           }
         ]
       }
