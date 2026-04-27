@@ -217,7 +217,7 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverWelcomeStack.silver-welcome-stack--evening .iu-mini-overview-card--weather{background:rgba(8,15,32,.72)!important;border:1px solid rgba(110,168,220,.16)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--evening .iu-mini-overview-card--calendar{background:rgba(8,15,32,.72)!important;border:1px solid rgba(100,200,190,.14)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--evening .iu-mini-overview-card--tasks{background:rgba(8,15,32,.72)!important;border:1px solid rgba(150,140,210,.16)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
-        html[data-iu-silver-welcome-paint="evening"] body,html[data-iu-silver-welcome-paint="evening"] #content,html[data-iu-silver-welcome-paint="evening"] #page,html[data-iu-silver-welcome-paint="evening"] .mainCol{background:radial-gradient(ellipse 88% 60% at 5% 0%,rgba(56,189,248,.09) 0%,transparent 46%),radial-gradient(ellipse 85% 55% at 98% 100%,rgba(124,58,246,.08) 0%,transparent 50%),linear-gradient(180deg,#07101f 0%,#0b1430 42%,#111827 100%)!important;background-color:#07101f!important}
+        html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) body,html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #content,html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) #page,html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"],[data-section="media"],[data-section="hry"]) .mainCol{background:radial-gradient(ellipse 88% 60% at 5% 0%,rgba(56,189,248,.09) 0%,transparent 46%),radial-gradient(ellipse 85% 55% at 98% 100%,rgba(124,58,246,.08) 0%,transparent 50%),linear-gradient(180deg,#07101f 0%,#0b1430 42%,#111827 100%)!important;background-color:#07101f!important}
         #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;box-shadow:0 4px 14px rgba(34,197,94,.35),inset 0 1px 0 rgba(255,255,255,.15);font-weight:600}
         #iuNamedayWishOverlay #iuNamedayWishCopy.silver-weather-btn:active{transform:translateY(1px);box-shadow:0 2px 8px rgba(34,197,94,.3),inset 0 1px 0 rgba(255,255,255,.1)}
         #iuNamedayWishCard.iuModalCard{position:relative}
@@ -533,7 +533,7 @@ style-src 'self' 'unsafe-inline' https:;
         if (k === "tv") return "tvonline";
         if (k === "radio") return "radio";
         if (k === "jr") return "jr";
-        var allowed = {media:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,hry:1,kultura:1,veda:1,vzdelavani:1,ads:1,jr:1,radio:1};
+        var allowed = {media:1,feed:1,tv:1,tvonline:1,mapy:1,travel:1,pocasi:1,tvprogram:1,hry:1,kultura:1,veda:1,vzdelavani:1,ads:1,jr:1,radio:1};
         if (k === "home") return "media";
         return allowed[k] ? k : "media";
       }
@@ -542,7 +542,7 @@ style-src 'self' 'unsafe-inline' https:;
         var sec = normSection(u.searchParams.get("section") || "media");
         document.documentElement.setAttribute("data-section", sec);
         document.body.setAttribute("data-section", sec);
-        var iuFc = (sec === "media" || sec === "hry" || sec === "kultura" || sec === "veda" || sec === "vzdelavani") ? "1" : "0";
+        var iuFc = (sec === "media" || sec === "feed" || sec === "hry" || sec === "kultura" || sec === "veda" || sec === "vzdelavani") ? "1" : "0";
         document.documentElement.setAttribute("data-iu-fc", iuFc);
         document.body.setAttribute("data-iu-fc", iuFc);
       }catch(e){}
