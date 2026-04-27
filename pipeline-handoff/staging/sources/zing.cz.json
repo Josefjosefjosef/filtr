@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Alien: Isolation 2 obdrželo tajemný teaser trailer",
+      "url": "https://zing.cz/article/alien-isolation-2-obdrzelo-tajemny-teaser-trailer",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "alien",
+        "isolation",
+        "obdrželo",
+        "tajemný",
+        "teaser",
+        "trailer"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,34 +981,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Far Cry 7 mělo projít vývojovým peklem, k vydání dojde nejdříve v roce 2027",
-      "url": "https://zing.cz/article/far-cry-7-melo-projit-vyvojovym-peklem-k-vydani-dojde-nejdrive-v-roce-2027",
-      "dt": "2026-04-21T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "2027",
-        "cry",
-        "dojde",
-        "far",
-        "mělo",
-        "nejdříve",
-        "peklem",
-        "projít",
-        "roce",
-        "vydání",
-        "vývojovým"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +991,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125251,
+      "bytes": 125190,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1028,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1048,6 +1043,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alien: Isolation 2 obdrželo tajemný teaser trailer",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
           {
             "title": "Nejlepší cozy hry vycházející v květnu 2026",
             "publishedAt": "2026-04-26T10:00:00Z"
@@ -1075,10 +1074,6 @@
           {
             "title": "Heroes of the Storm: rework Arthase a návrat Haunted Mines",
             "publishedAt": "2026-04-25T12:00:00Z"
-          },
-          {
-            "title": "Cozy novinky s Terry #51",
-            "publishedAt": "2026-04-25T10:00:00Z"
           }
         ]
       }

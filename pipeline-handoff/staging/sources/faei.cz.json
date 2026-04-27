@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "The Economist: Jak se Evropa uregulovala do naprosté závislosti na Americe",
+      "url": "https://profitonline.cz/the-economist-jak-se-evropa-uregulovala-do-naproste-zavislosti-na-americe/",
+      "dt": "2026-04-27T04:00:25Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "americe",
+        "economist",
+        "evropa",
+        "naprosté",
+        "the",
+        "uregulovala",
+        "závislosti"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,29 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Na finančních trzích opět roste averze k riziku",
-      "url": "https://profitonline.cz/na-financnich-trzich-opet-roste-averze-k-riziku/",
-      "dt": "2026-04-23T18:00:25Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "averze",
-        "finančních",
-        "opět",
-        "riziku",
-        "roste",
-        "trzích"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -307,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18645,
+      "bytes": 18690,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -344,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-26T08:10:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:00:25Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -360,6 +361,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Economist: Jak se Evropa uregulovala do naprosté závislosti na Americe",
+            "publishedAt": "2026-04-27T04:00:25Z"
+          },
           {
             "title": "Slovensku kvůli vysokým deficitům zhoršili rating",
             "publishedAt": "2026-04-26T08:10:16Z"
@@ -387,10 +392,6 @@
           {
             "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
             "publishedAt": "2026-04-24T17:00:37Z"
-          },
-          {
-            "title": "Babiš je mistr taktiky. Tlačí prezidenta tam, kam potřebuje",
-            "publishedAt": "2026-04-24T10:00:46Z"
           }
         ]
       }

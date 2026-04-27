@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Některé dodávky budou muset být od července vybaveny tachografy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nektere-dodavky-budou-muset-byt-od-cervence-vybaveny-tachografy-372812",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "být",
+        "dodávky",
+        "muset",
+        "některé",
+        "tachografy",
+        "vybaveny",
+        "července"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -739,27 +763,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Bůh má rád každého člověka takového, jaký je, říká arcibiskup Přibyl",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/buh-ma-rad-kazdeho-cloveka-takoveho-jaky-je-rika-arcibiskup-pribyl-372799",
-      "dt": "2026-04-25T18:53:03Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Sedlák se nenechal vyprovokovat a pak rozhodl. Vyhráli jsme jako tým, podtrhl",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/extraliga/sedlak-se-nenechal-vyprovokovat-a-pak-rozhodl-vyhrali-jsme-jako-tym-podtrhl-156477",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "arcibiskup",
-        "bůh",
-        "jaký",
-        "každého",
-        "přibyl",
-        "rád",
-        "takového",
-        "člověka",
-        "říká"
+        "jako",
+        "jsme",
+        "nenechal",
+        "pak",
+        "podtrhl",
+        "rozhodl",
+        "sedlák",
+        "tým",
+        "vyhráli",
+        "vyprovokovat"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1470,31 +1495,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Toyota dominuje Rallye Kanárských ostrovů, v čele je Ogier před Solbergem",
-      "url": "https://sport.ceskatelevize.cz/clanek/motorsport/toyota-dominuje-rallye-kanarskych-ostrovu-v-cele-je-ogier-pred-solbergem-156448",
-      "dt": "2026-04-25T17:39:39Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dominuje",
-        "kanárských",
-        "ogier",
-        "ostrovů",
-        "rallye",
-        "solbergem",
-        "toyota",
-        "čele"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1505,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 44370,
+      "bytes": 43664,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,7 +1565,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T03:09:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1582,6 +1582,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Některé dodávky budou muset být od července vybaveny tachografy",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
           {
             "title": "Vláda projedná změny v knihovním zákoně nebo povinnosti pro dovozce amalgámu",
             "publishedAt": "2026-04-27T03:09:25Z"
@@ -1609,10 +1613,6 @@
           {
             "title": "ETS je obchod s uměle vytvořenou komoditou, míní Gavor. Emise jsou realita, říká Svárovská",
             "publishedAt": "2026-04-26T17:51:39Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události neděle 26. dubna",
-            "publishedAt": "2026-04-26T16:28:18Z"
           }
         ]
       }
@@ -1624,7 +1624,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37808,
+      "bytes": 37837,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1661,7 +1661,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T21:28:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1676,6 +1676,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sedlák se nenechal vyprovokovat a pak rozhodl. Vyhráli jsme jako tým, podtrhl",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
           {
             "title": "Villarreal se po výhře nad Celtou výrazně přiblížil Lize mistrů",
             "publishedAt": "2026-04-26T21:28:29Z"
@@ -1703,10 +1707,6 @@
           {
             "title": "Chelsea je ve finále Anglického poháru, porazila Leeds 1:0",
             "publishedAt": "2026-04-26T16:34:46Z"
-          },
-          {
-            "title": "Dortmund se opět kvalifikoval do Ligy mistrů, Stuttgart s Brémami jen remizoval",
-            "publishedAt": "2026-04-26T15:59:07Z"
           }
         ]
       }
@@ -1718,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77425,
+      "bytes": 77453,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

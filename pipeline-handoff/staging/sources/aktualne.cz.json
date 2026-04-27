@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prodali byt, aby koupili dům, který možná nikdy nedokončí. Cimra Bude jako neotřelá chata v horách",
+      "url": "https://magazin.aktualne.cz/bydleni/prodali-byt-aby-koupili-dum-ktery-mozna-nikdy-nedokonci-cimra-bude-jako-neotrela-chata-v-horach/r~aaa290315850bd9b704f440ae8b8c0ec/",
+      "dt": "2026-04-27T03:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "byt",
+        "chata",
+        "cimra",
+        "dům",
+        "horách",
+        "jako",
+        "koupili",
+        "možná",
+        "nedokončí",
+        "neotřelá",
+        "nikdy",
+        "prodali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -501,30 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nová obří nemocnice v Praze bude vojenská, oznámil Babiš",
-      "url": "https://zpravy.aktualne.cz/domaci/nova-obri-nemocnice-v-praze-bude-vojenska-oznamil-babis/r~aaa296f459c0a3676039ec7848cf02dd/",
-      "dt": "2026-04-26T13:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiš",
-        "nemocnice",
-        "nová",
-        "obří",
-        "oznámil",
-        "praze",
-        "vojenská"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -535,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21290,
+      "bytes": 21442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,11 +577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T03:46:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T03:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 10,
+          "finance": 2,
           "sport": 6,
           "other": 2
         },
@@ -590,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prodali byt, aby koupili dům, který možná nikdy nedokončí. Cimra Bude jako neotřelá chata v horách",
+            "publishedAt": "2026-04-27T03:59:00Z"
+          },
           {
             "title": "Nejcennější veterány na trávníku. Milionové Mercedesy se přetahují o pozornost s Ferrari z plakátů",
             "publishedAt": "2026-04-27T03:46:00Z"
@@ -617,10 +626,6 @@
           {
             "title": "Tenistky se potýkají se zákeřným protivníkem. Nosková možná přijde i o další soupeřku",
             "publishedAt": "2026-04-26T18:13:00Z"
-          },
-          {
-            "title": "„Porušili jste příměří.“ Netanjahu nařídil razantní útoky proti Hizballáhu",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }

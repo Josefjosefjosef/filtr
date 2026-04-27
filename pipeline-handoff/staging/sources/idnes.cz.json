@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vládu může opět řešit otázku cen pohonných hmot, regulace platí do čtvrtka",
+      "url": "https://www.idnes.cz/zpravy/domaci/jednani-vlady-maximalni-ceny-pohonnych-hmot-opatreni.A260427_054720_domaci_kop",
+      "dt": "2026-04-27T04:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "cen",
+        "hmot",
+        "opět",
+        "otázku",
+        "platí",
+        "pohonných",
+        "regulace",
+        "vládu",
+        "čtvrtka",
+        "řešit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -736,33 +763,6 @@
         "trampolíny",
         "vodopád",
         "zahrady"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Když na Izrael létají rakety, musí špitály pod zem. Válka s Íránem je prověřila",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/izraelske-podzemni-nemocnice-v-ostrem-provozu-valka-ji-poprve-proverila.A260424_195058_zahranicni_ichuc",
-      "dt": "2026-04-26T12:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "izrael",
-        "když",
-        "létají",
-        "musí",
-        "prověřila",
-        "rakety",
-        "válka",
-        "zem",
-        "íránem",
-        "špitály"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1556,7 +1556,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49159,
+      "bytes": 49051,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1593,11 +1593,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 6,
           "zpravy": 21,
+          "finance": 6,
           "other": 3
         },
         "drop_counts": {
@@ -1610,6 +1610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vládu může opět řešit otázku cen pohonných hmot, regulace platí do čtvrtka",
+            "publishedAt": "2026-04-27T04:06:00Z"
+          },
           {
             "title": "Z kuchyně až do továrny. Recept ladila roky, teď má „továrnu“ na modelínu",
             "publishedAt": "2026-04-26T22:00:00Z"
@@ -1637,10 +1641,6 @@
           {
             "title": "Vrátil se do Sýrie i se svým „tajemstvím“. A uvědomil si, že už je Evropan",
             "publishedAt": "2026-04-26T18:29:00Z"
-          },
-          {
-            "title": "RECENZE: Ničím nepřekvapí. Strachův Lajf je modelová hra pro pět sebevrahů",
-            "publishedAt": "2026-04-26T18:00:00Z"
           }
         ]
       }

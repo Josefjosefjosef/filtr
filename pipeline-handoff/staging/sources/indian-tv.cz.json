@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Návrat do klece se blíží. EA má brzy oznámit UFC 6 - INDIAN",
+      "url": "https://indian-tv.cz/clanek/navrat-do-klece-se-blizi-ea-ma-brzy-oznamit-ufc-6-ai2h2a",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "blíží",
+        "brzy",
+        "indian",
+        "klece",
+        "návrat",
+        "oznámit",
+        "ufc"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1046,32 +1070,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "PlayStation Plus přijde o další hry. V květnu zmizí i Control - INDIAN",
-      "url": "https://indian-tv.cz/clanek/playstation-plus-prijde-o-dalsi-hry-v-kvetnu-zmizi-control-e3n5p6",
-      "dt": "2026-04-22T14:45:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "control",
-        "další",
-        "hry",
-        "indian",
-        "květnu",
-        "playstation",
-        "plus",
-        "přijde",
-        "zmizí"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1082,7 +1080,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211244,
+      "bytes": 211303,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1119,10 +1117,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-26T17:11:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1134,6 +1133,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Návrat do klece se blíží. EA má brzy oznámit UFC 6 - INDIAN",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
           {
             "title": "Zpřísní PlayStation protipirátskou ochranu? Strach hráčů je mírněn - INDIAN",
             "publishedAt": "2026-04-26T17:11:19Z"
@@ -1161,10 +1164,6 @@
           {
             "title": "Vařte jídlo pro záchranu světa. Beastro kombinuje farmaření s tahovými souboji - INDIAN",
             "publishedAt": "2026-04-26T09:13:33Z"
-          },
-          {
-            "title": "World of Tanks: HEAT – svižný spin-off, který zatím neví, čím chce být - INDIAN",
-            "publishedAt": "2026-04-26T08:00:00Z"
           }
         ]
       }

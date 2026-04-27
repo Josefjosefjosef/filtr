@@ -1,25 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-27T03:55:06.963736Z",
+  "ingestedAt": "2026-04-27T04:19:53.303076Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Pastrňák a spol. schytali drsný debakl. Boston je na hraně vyřazení",
+      "title": "ANALÝZA: Sparta má mít blíž ke Slavii, Baník zase ke spáse. Hradec totálně ošálil data",
+      "url": "https://www.sport.cz/clanek/nazory-komentare-analyza-sparta-ma-mit-bliz-ke-slavii-banik-zase-ke-spase-hradec-totalne-osalil-data-5444090",
+      "dt": "2026-04-27T04:14:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "baník",
+        "blíž",
+        "data",
+        "hradec",
+        "mít",
+        "ošálil",
+        "slavii",
+        "sparta",
+        "spáse",
+        "totálně",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák a spol. schytali drsný výprask, Boston je na hraně vyřazení. Nečas s Coloradem slaví postup",
       "url": "https://www.sport.cz/clanek/hokej-nhl-boston-doma-opet-prohral-a-je-blizko-vyrazeni-5444132",
       "dt": "2026-04-26T20:54:14Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "boston",
-        "debakl",
+        "coloradem",
         "drsný",
         "hraně",
+        "nečas",
         "pastrňák",
+        "postup",
         "schytali",
+        "slaví",
         "spol",
-        "vyřazení"
+        "vyřazení",
+        "výprask"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -736,31 +768,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Klokani si pořádně vychutnali triumf nad Spartou. Dorazil i speciální gratulant",
-      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-klokani-si-vychutnali-triumf-nad-spartou-do-kabiny-dorazil-i-herec-trojan-5443862",
-      "dt": "2026-04-26T13:21:41Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "dorazil",
-        "gratulant",
-        "klokani",
-        "pořádně",
-        "spartou",
-        "speciální",
-        "triumf",
-        "vychutnali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -771,7 +778,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45135,
+      "bytes": 44956,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -808,7 +815,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T21:13:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:14:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -824,7 +831,11 @@
         },
         "sample_titles": [
           {
-            "title": "Pastrňák a spol. schytali drsný debakl. Boston je na hraně vyřazení",
+            "title": "ANALÝZA: Sparta má mít blíž ke Slavii, Baník zase ke spáse. Hradec totálně ošálil data",
+            "publishedAt": "2026-04-27T04:14:43Z"
+          },
+          {
+            "title": "Pastrňák a spol. schytali drsný výprask, Boston je na hraně vyřazení. Nečas s Coloradem slaví postup",
             "publishedAt": "2026-04-26T20:54:14Z"
           },
           {
@@ -850,10 +861,6 @@
           {
             "title": "Program finále play off Tipsport extraligy. Třinec hraje o titul s pardubickým Dynamem",
             "publishedAt": "2026-04-26T06:14:00Z"
-          },
-          {
-            "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
-            "publishedAt": "2026-04-24T20:03:00Z"
           }
         ]
       }
