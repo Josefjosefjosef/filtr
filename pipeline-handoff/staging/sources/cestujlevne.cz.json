@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-27T08:24:34.545668Z",
+  "ingestedAt": "2026-04-27T08:49:22.558300Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Lyon z Prahy na prodloužené víkendy v září. Letenky od 1 440 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/lyon-z-prahy-na-prodlouzene-vikendy-v-zari",
+      "dt": "2026-04-27T08:28:58Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "440",
+        "letenky",
+        "lyon",
+        "prahy",
+        "prodloužené",
+        "víkendy",
+        "září"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -473,31 +497,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Turecko all-inclusive zájezdy se slevou 2 000 Kč. Zájezd od 7 390 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/turecko-s-all-inclusive-se-slevou-2-000-kc",
-      "dt": "2026-04-21T11:13:57Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "000",
-        "390",
-        "all",
-        "inclusive",
-        "slevou",
-        "turecko",
-        "zájezd",
-        "zájezdy"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -508,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 45841,
+      "bytes": 43493,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -545,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:13:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:28:58Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -560,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lyon z Prahy na prodloužené víkendy v září. Letenky od 1 440 Kč",
+            "publishedAt": "2026-04-27T08:28:58Z"
+          },
           {
             "title": "Rumunský Temešvár po celý červen z Prahy. Letenky od 898 Kč",
             "publishedAt": "2026-04-27T07:13:02Z"
@@ -587,10 +590,6 @@
           {
             "title": "Palermo z Bratislavy v květnu. Letenky od 733 Kč",
             "publishedAt": "2026-04-24T09:31:49Z"
-          },
-          {
-            "title": "Červnový týden na řeckém Samosu v hotelu přímo u pláže s polopenzí. Zájezd od 11 990 Kč",
-            "publishedAt": "2026-04-23T14:38:15Z"
           }
         ]
       }

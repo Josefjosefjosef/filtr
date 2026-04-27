@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-27T08:24:34.545668Z",
+  "ingestedAt": "2026-04-27T08:49:22.558300Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Železniční koridor na Přerovsku stojí, člověk spadl z mostu na koleje",
+      "title": "Železniční koridor na Přerovsku stál, dělník spadl ze stožáru do kolejiště",
       "url": "https://www.idnes.cz/olomouc/zpravy/prerovsko-hranice-koridor-nehoda-pad-z-mostu-na-koleje.A260427_095451_olomouc-zpravy_stk",
-      "dt": "2026-04-27T08:16:41Z",
+      "dt": "2026-04-27T08:43:11Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "koleje",
+        "dělník",
+        "kolejiště",
         "koridor",
-        "mostu",
         "přerovsku",
         "spadl",
-        "stojí",
-        "člověk",
+        "stožáru",
+        "stál",
         "železniční"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Pražském okruhu u Jesenice se srazily dva kamiony, jeden řidič je zraněn",
+      "url": "https://www.idnes.cz/praha/zpravy/prazsky-okruh-jesenice-nehoda-srazka-kamiony-zraneni.A260427_101640_praha-zpravy_meli",
+      "dt": "2026-04-27T08:34:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dva",
+        "jeden",
+        "jesenice",
+        "kamiony",
+        "okruhu",
+        "pražském",
+        "srazily",
+        "zraněn",
+        "řidič"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -730,32 +756,6 @@
         "vývojář",
         "washingtonu",
         "útočníka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud poslal do vazby Američana zadrženého v Bulharsku v kauze žhářského útoku",
-      "url": "https://www.idnes.cz/zpravy/domaci/soud-zadrzeny-pozar-pardubice-terorismus-vazba.A260426_101028_domaci_dyn",
-      "dt": "2026-04-26T15:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "američana",
-        "bulharsku",
-        "kauze",
-        "poslal",
-        "soud",
-        "vazby",
-        "zadrženého",
-        "útoku",
-        "žhářského"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1549,7 +1549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 46869,
+      "bytes": 46441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1586,7 +1586,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:16:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:43:11Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -1604,8 +1604,12 @@
         },
         "sample_titles": [
           {
-            "title": "Železniční koridor na Přerovsku stojí, člověk spadl z mostu na koleje",
-            "publishedAt": "2026-04-27T08:16:41Z"
+            "title": "Železniční koridor na Přerovsku stál, dělník spadl ze stožáru do kolejiště",
+            "publishedAt": "2026-04-27T08:43:11Z"
+          },
+          {
+            "title": "Na Pražském okruhu u Jesenice se srazily dva kamiony, jeden řidič je zraněn",
+            "publishedAt": "2026-04-27T08:34:00Z"
           },
           {
             "title": "Mladá spolujezdkyně nepřežila náraz do stromu, řidička je těžce zraněná",
@@ -1630,10 +1634,6 @@
           {
             "title": "Leoš Mareš padesátiletý. Připomeňte si kožich a další momenty jeho zářné kariéry",
             "publishedAt": "2026-04-27T06:15:00Z"
-          },
-          {
-            "title": "AI zpěvačka Lolita se stala virální senzací. Protestují hudebníci i Romové",
-            "publishedAt": "2026-04-27T05:55:00Z"
           }
         ]
       }

@@ -1,27 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-27T08:24:34.545668Z",
+  "ingestedAt": "2026-04-27T08:49:22.558300Z",
   "items": [
     {
       "section": "veda",
       "contentType": "article",
-      "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
-      "url": "https://www.idnes.cz/technet/software/immich-platforma-cloudova-galerie-google-fotky-icloud-microsoft-onedrive-fotky-galerie-nas-docker.A260219_090120_software_dvr",
-      "dt": "2026-04-26T22:00:00Z",
+      "title": "Krize už není tabu, ale realita. Připravit se dá i s rozumem, míní experti",
+      "url": "https://www.idnes.cz/technet/vojenstvi/idnes-lounge-radek-slaby-adventure-menu-michal-scepko-rigad.A260423_175308_vojenstvi_evc",
+      "dt": "2026-04-27T08:00:00Z",
       "media_raw": "iDNES / Technet",
       "media_norm": "iDNES / Technet",
       "tokens": [
-        "chce",
-        "firem",
-        "fotografií",
-        "funguje",
-        "jeho",
-        "nás",
-        "osvobodit",
-        "správa",
-        "takto",
-        "velkých"
+        "ale",
+        "experti",
+        "krize",
+        "míní",
+        "připravit",
+        "realita",
+        "rozumem",
+        "tabu"
       ],
       "feedCategory": "veda",
       "feedType": "rubric",
@@ -48,6 +46,33 @@
         "použil",
         "torpédoborec",
         "válčení"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
+      "url": "https://www.idnes.cz/technet/software/immich-platforma-cloudova-galerie-google-fotky-icloud-microsoft-onedrive-fotky-galerie-nas-docker.A260219_090120_software_dvr",
+      "dt": "2026-04-26T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "chce",
+        "firem",
+        "fotografií",
+        "funguje",
+        "jeho",
+        "nás",
+        "osvobodit",
+        "správa",
+        "takto",
+        "velkých"
       ],
       "feedCategory": "veda",
       "feedType": "rubric",
@@ -744,31 +769,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jaké skvosty nabídlo letošní setkání parních lokomotiv v Drážďanech",
-      "url": "https://www.idnes.cz/technet/technika/drazdany-setkani-parnich-lokomotiv.A260415_162716_tec_technika_alv",
-      "dt": "2026-04-17T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "drážďanech",
-        "jaké",
-        "letošní",
-        "lokomotiv",
-        "nabídlo",
-        "parních",
-        "setkání",
-        "skvosty"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +779,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45912,
+      "bytes": 46157,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +816,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-26T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 25,
-          "zpravy": 5
+          "other": 26,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -833,11 +833,15 @@
         },
         "sample_titles": [
           {
-            "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
-            "publishedAt": "2026-04-26T22:00:00Z"
+            "title": "Krize už není tabu, ale realita. Připravit se dá i s rozumem, míní experti",
+            "publishedAt": "2026-04-27T08:00:00Z"
           },
           {
             "title": "Milník válčení. Americký torpédoborec po desítkách let použil námořní dělo",
+            "publishedAt": "2026-04-26T22:00:00Z"
+          },
+          {
+            "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
             "publishedAt": "2026-04-26T22:00:00Z"
           },
           {
@@ -859,10 +863,6 @@
           {
             "title": "V Polsku našli téměř tříkilogramový železný meteorit. Díky českým výpočtům",
             "publishedAt": "2026-04-24T18:24:00Z"
-          },
-          {
-            "title": "Černobyl i Fukušima nás poučily. Dnes by naše jaderky odolaly i tornádu, říká expert",
-            "publishedAt": "2026-04-24T08:00:00Z"
           }
         ]
       }

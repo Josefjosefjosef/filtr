@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-27T08:24:34.545668Z",
+  "ingestedAt": "2026-04-27T08:49:22.558300Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hororové jaro Teplic, jediná výhra a boj o záchranu. Frťala: Chybu hledám u sebe",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/teplice-trener-zdenko-frtala-rozhovor-po-zakladni-casti.A260427_084150_fotbal_pbi",
+      "dt": "2026-04-27T08:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boj",
+        "chybu",
+        "frťala",
+        "hledám",
+        "hororové",
+        "jaro",
+        "jediná",
+        "sebe",
+        "teplic",
+        "výhra",
+        "záchranu"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,32 +796,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Historický maraton v Londýně. Dva běžci pod dvě hodiny, rekordmanem Sawe",
-      "url": "https://www.idnes.cz/sport/atletika/kenan-sawe-pri-londynskem-maratonu-jako-prvni-pokoril-hranici-dvou-hodin.A260426_125936_atletika_ald",
-      "dt": "2026-04-26T12:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "běžci",
-        "dva",
-        "dvě",
-        "historický",
-        "hodiny",
-        "londýně",
-        "maraton",
-        "rekordmanem",
-        "sawe"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48559,
+      "bytes": 48479,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:58:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hororové jaro Teplic, jediná výhra a boj o záchranu. Frťala: Chybu hledám u sebe",
+            "publishedAt": "2026-04-27T08:01:00Z"
+          },
           {
             "title": "Krejčího tým pustil obří náskok a je na pokraji vyřazení. Debakl utrpěli i Lakers",
             "publishedAt": "2026-04-27T07:58:31Z"
@@ -883,10 +889,6 @@
           {
             "title": "Sedlák odmítl výzvu k bitce, pak gólem rozhodl: Nejsem blázen, není mi dvacet",
             "publishedAt": "2026-04-27T05:05:00Z"
-          },
-          {
-            "title": "Hrdý majitel Dukly po baráži: Chtěl bych, aby nás vzali do extraligy",
-            "publishedAt": "2026-04-27T04:02:00Z"
           }
         ]
       }
