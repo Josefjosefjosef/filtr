@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T02:39:58.620319Z",
+  "ingestedAt": "2026-04-27T03:04:31.402307Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Od tlaku na Hrad k otevřenému umlčování. Co udělá ODS? Kupka hostem na Deník.cz",
+      "url": "https://www.denik.cz/z_domova/martin-kupka-debata-deniku.html",
+      "dt": "2026-04-27T02:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "deník",
+        "hostem",
+        "hrad",
+        "kupka",
+        "ods",
+        "otevřenému",
+        "tlaku",
+        "udělá",
+        "umlčování"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Magyar jede za Tuskem do Polska jako za učitelem. Naučit se návrat k demokracii",
-      "url": "https://www.denik.cz/staty-eu/peter-magyar-donald-tusk-polsko-demokracie.html",
-      "dt": "2026-04-26T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "demokracii",
-        "jako",
-        "jede",
-        "magyar",
-        "naučit",
-        "návrat",
-        "polska",
-        "tuskem",
-        "učitelem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29529,
+      "bytes": 29589,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T02:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Od tlaku na Hrad k otevřenému umlčování. Co udělá ODS? Kupka hostem na Deník.cz",
+            "publishedAt": "2026-04-27T02:30:00Z"
+          },
           {
             "title": "Pomáhali až do konce, říká žena. O umírající babičku se starala s předškoláky",
             "publishedAt": "2026-04-27T02:00:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Střelec nejspíš cílil na Trumpa a členy kabinetu, řekl ministr spravedlnosti",
             "publishedAt": "2026-04-26T13:39:00Z"
-          },
-          {
-            "title": "Největší hrad ve Walesu a impozantní vodní opevnění. Historie je krvavá",
-            "publishedAt": "2026-04-26T13:00:00Z"
           }
         ]
       }
