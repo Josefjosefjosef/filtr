@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T03:04:31.402307Z",
+  "ingestedAt": "2026-04-27T03:30:22.691163Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "OBRAZEM: Břeclav a Lichtenštejnské stezky: stovky cyklistů a jarní atmosféra",
+      "url": "https://www.denik.cz/ctenar-reporter/foto-breclav-a-lichtenstejnske-stezky-stovky-cyklistu-malebna-jarni-atmosfera-20.html",
+      "dt": "2026-04-27T02:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "atmosféra",
+        "břeclav",
+        "cyklistů",
+        "jarní",
+        "lichtenštejnské",
+        "obrazem",
+        "stezky",
+        "stovky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Při bombovém útoku na silnici v Kolumbii umírali lidé. Výbušnina byla v autobusu",
-      "url": "https://www.denik.cz/ze_sveta/vybuch-autobus-kolumbie.html",
-      "dt": "2026-04-26T05:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "autobusu",
-        "bombovém",
-        "kolumbii",
-        "lidé",
-        "při",
-        "silnici",
-        "umírali",
-        "výbušnina",
-        "útoku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29589,
+      "bytes": 29795,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T02:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "OBRAZEM: Břeclav a Lichtenštejnské stezky: stovky cyklistů a jarní atmosféra",
+            "publishedAt": "2026-04-27T02:57:00Z"
+          },
           {
             "title": "Od tlaku na Hrad k otevřenému umlčování. Co udělá ODS? Kupka hostem na Deník.cz",
             "publishedAt": "2026-04-27T02:30:00Z"
@@ -739,10 +742,6 @@
           {
             "title": "Superdávka přepisuje pravidla sociální pomoci: Kdo ztratí a kdo získá nejvíc",
             "publishedAt": "2026-04-26T14:30:00Z"
-          },
-          {
-            "title": "Střelec nejspíš cílil na Trumpa a členy kabinetu, řekl ministr spravedlnosti",
-            "publishedAt": "2026-04-26T13:39:00Z"
           }
         ]
       }

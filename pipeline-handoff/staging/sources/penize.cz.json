@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-27T03:04:31.402307Z",
+  "ingestedAt": "2026-04-27T03:30:22.691163Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Poslední týden na daňové přiznání. Návody, změny a časté chyby",
+      "url": "https://www.penize.cz/dan-z-prijmu-fyzickych-osob/488873-posledni-tyden-na-danove-priznani-navody-zmeny-a-caste-chyby",
+      "dt": "2026-04-27T05:05:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "chyby",
+        "daňové",
+        "návody",
+        "poslední",
+        "přiznání",
+        "týden",
+        "změny",
+        "časté"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jakou fixaci hypotéky si teď vybrat? Pozor i na sázení, radí expert",
+      "url": "https://www.penize.cz/hypoteky/488883-jakou-fixaci-hypoteky-si-ted-vybrat-pozor-i-na-sazeni-radi-expert",
+      "dt": "2026-04-27T05:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "expert",
+        "fixaci",
+        "hypotéky",
+        "jakou",
+        "pozor",
+        "radí",
+        "sázení",
+        "vybrat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -454,57 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Co čeká Čechy v dalších měsících? Dopad blízkovýchodního konfliktu očima expertů",
-      "url": "https://www.penize.cz/spotrebitel/488600-co-ceka-cechy-v-dalsich-mesicich-dopad-blizkovychodniho-konfliktu-ocima-expertu",
-      "dt": "2026-04-22T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "blízkovýchodního",
-        "dalších",
-        "dopad",
-        "expertů",
-        "konfliktu",
-        "měsících",
-        "očima",
-        "čechy",
-        "čeká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Penzijní společnost dostala pokutu. Nepřipsala klientům výnos z úroků",
-      "url": "https://www.penize.cz/doplnkove-penzijni-sporeni/488602-penzijni-spolecnost-dostala-pokutu-nepripsala-klientum-vynos-z-uroku",
-      "dt": "2026-04-21T16:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dostala",
-        "klientům",
-        "nepřipsala",
-        "penzijní",
-        "pokutu",
-        "společnost",
-        "výnos",
-        "úroků"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18259,
+      "bytes": 17874,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +551,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-26T09:49:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 16
+          "finance": 16,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +567,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslední týden na daňové přiznání. Návody, změny a časté chyby",
+            "publishedAt": "2026-04-27T05:05:00Z"
+          },
+          {
+            "title": "Jakou fixaci hypotéky si teď vybrat? Pozor i na sázení, radí expert",
+            "publishedAt": "2026-04-27T05:00:00Z"
+          },
           {
             "title": "Kola na nosiči. Co když spadnou nebo poškodí jiné auto",
             "publishedAt": "2026-04-26T09:49:00Z"
@@ -591,14 +598,6 @@
           {
             "title": "Kdy bude v roce 2026 Den matek a proč ho vlastně slavíme",
             "publishedAt": "2026-04-24T04:55:00Z"
-          },
-          {
-            "title": "Komerční banka vyplatí rekordní dividendu, schválila valná hromada",
-            "publishedAt": "2026-04-23T16:15:00Z"
-          },
-          {
-            "title": "Nafta skoro korunu nahoru. Maximální ceny benzinu a nafty na pátek 24. dubna",
-            "publishedAt": "2026-04-23T13:59:00Z"
           }
         ]
       }
