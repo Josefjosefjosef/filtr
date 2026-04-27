@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-27T14:00:02.541122Z",
+  "ingestedAt": "2026-04-27T14:24:46.684002Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Tohle není vůbec dobrý. Paměťová krize ovlivní cenu a dostupnost nového Xboxu - INDIAN",
+      "url": "https://indian-tv.cz/clanek/pametova-krize-ovlivni-cenu-a-dostupnost-noveho-xboxu-k2qzm8",
+      "dt": "2026-04-27T14:01:53Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "cenu",
+        "dobrý",
+        "dostupnost",
+        "indian",
+        "krize",
+        "nového",
+        "ovlivní",
+        "paměťová",
+        "tohle",
+        "vůbec",
+        "xboxu"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1041,37 +1069,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "007: First Light ukazuje špionáž v praxi: nový trailer láká na gadgety, stealth i systém TacSim - INDIAN",
-      "url": "https://indian-tv.cz/clanek/007-first-light-ukazuje-spionaz-v-praxi-novy-trailer-qlb2dr",
-      "dt": "2026-04-23T08:20:25Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "007",
-        "first",
-        "gadgety",
-        "indian",
-        "light",
-        "láká",
-        "nový",
-        "praxi",
-        "stealth",
-        "systém",
-        "tacsim",
-        "trailer",
-        "ukazuje",
-        "špionáž"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1082,7 +1079,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211435,
+      "bytes": 211767,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1119,7 +1116,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:01:53Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1135,6 +1132,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tohle není vůbec dobrý. Paměťová krize ovlivní cenu a dostupnost nového Xboxu - INDIAN",
+            "publishedAt": "2026-04-27T14:01:53Z"
+          },
           {
             "title": "Pracují v Insomniacu na Marvel’s Venom? Nové informace si protiřečí - INDIAN",
             "publishedAt": "2026-04-27T10:00:00Z"
@@ -1162,10 +1163,6 @@
           {
             "title": "Návrat do klece se blíží. EA má brzy oznámit UFC 6 - INDIAN",
             "publishedAt": "2026-04-27T04:00:00Z"
-          },
-          {
-            "title": "Zpřísní PlayStation protipirátskou ochranu? Strach hráčů je mírněn - INDIAN",
-            "publishedAt": "2026-04-26T17:11:19Z"
           }
         ]
       }

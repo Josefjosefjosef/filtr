@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T14:00:02.541122Z",
+  "ingestedAt": "2026-04-27T14:24:46.684002Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Data: Proti chřipce nejsou očkované tři čtvrtiny lékařů a drtivá většina sester",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/data-proti-chripce-nejsou-ockovane-tri-ctvrtiny-lekaru-a-drtiva-vetsina-sester-372843",
+      "dt": "2026-04-27T14:05:50Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chřipce",
+        "data",
+        "drtivá",
+        "lékařů",
+        "nejsou",
+        "očkované",
+        "proti",
+        "sester",
+        "tři",
+        "většina",
+        "čtvrtiny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,28 +745,6 @@
         "uměle",
         "vytvořenou",
         "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "SOUHRN: Zásadní události neděle 26. dubna",
-      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-nedele-26-dubna-372820",
-      "dt": "2026-04-26T16:28:18Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dubna",
-        "neděle",
-        "souhrn",
-        "události",
-        "zásadní"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1501,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41509,
+      "bytes": 41799,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1561,11 +1567,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:31:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:05:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "other": 4,
+          "other": 5,
+          "zpravy": 22,
           "finance": 3
         },
         "drop_counts": {
@@ -1578,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Data: Proti chřipce nejsou očkované tři čtvrtiny lékařů a drtivá většina sester",
+            "publishedAt": "2026-04-27T14:05:50Z"
+          },
           {
             "title": "Litva obvinila třináct lidí z pokusu o dvě vraždy, do případu je zapletena ruská GRU",
             "publishedAt": "2026-04-27T13:31:32Z"
@@ -1605,10 +1615,6 @@
           {
             "title": "Svět padá do AI pasti, tvrdí ekonomové",
             "publishedAt": "2026-04-27T10:34:55Z"
-          },
-          {
-            "title": "Čína zablokovala Metě plán převzít firmu Manus, která vyvíjí agentní AI",
-            "publishedAt": "2026-04-27T10:00:03Z"
           }
         ]
       }
@@ -1714,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77200,
+      "bytes": 77189,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

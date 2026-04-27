@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T14:00:02.541122Z",
+  "ingestedAt": "2026-04-27T14:24:46.684002Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pozor na první den v práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/prvni-den-v-praci-zdravotni-pojisteni/",
+      "dt": "2026-04-27T14:12:12Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "den",
+        "myslíte",
+        "než",
+        "pojištění",
+        "pozor",
+        "první",
+        "práci",
+        "rozhoduje",
+        "víc",
+        "zdravotního"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -243,34 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/farmaceuticke-firmy-eli-lilly-onkologie-sun-pharma-akvizice/",
-      "dt": "2026-04-27T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "americkou",
-        "eli",
-        "farmaceutický",
-        "firmu",
-        "indové",
-        "lilly",
-        "loví",
-        "míří",
-        "onkologie",
-        "svět",
-        "varu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82855,
+      "bytes": 81420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:40:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:12:12Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pozor na první den v práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
+            "publishedAt": "2026-04-27T14:12:12Z"
+          },
           {
             "title": "Některá oddělení na Vysočině zřejmě skončí. Hejtman okomentoval i počet nemocnic",
             "publishedAt": "2026-04-27T13:40:13Z"
@@ -360,10 +363,6 @@
           {
             "title": "Levnější léky jen na papíře? Chudým snížení daně nepomůže, varuje exnáměstek ministra",
             "publishedAt": "2026-04-27T08:00:00Z"
-          },
-          {
-            "title": "Poptávka roste, systém nestíhá. Jak zachránit domácí péči ve 4 krocích",
-            "publishedAt": "2026-04-27T07:00:00Z"
           }
         ]
       }

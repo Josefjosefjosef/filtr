@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-27T14:00:02.541122Z",
+  "ingestedAt": "2026-04-27T14:24:46.684002Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Fanoušci hardcore stříleček se dočkali nové hry zasazené do studené války",
+      "url": "https://zing.cz/article/fanousci-hardcore-strilecek-se-dockali-nove-hry-zasazene-do-studene-valky",
+      "dt": "2026-04-27T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "dočkali",
+        "fanoušci",
+        "hardcore",
+        "hry",
+        "nové",
+        "studené",
+        "stříleček",
+        "války",
+        "zasazené"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -966,31 +992,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Služba PlayStation Plus přijde zanedlouho o několik větších her",
-      "url": "https://zing.cz/article/sluzba-playstation-plus-prijde-zanedlouho-o-nekolik-vetsich-her-2",
-      "dt": "2026-04-22T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "her",
-        "několik",
-        "playstation",
-        "plus",
-        "přijde",
-        "služba",
-        "větších",
-        "zanedlouho"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1001,7 +1002,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125164,
+      "bytes": 125249,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1038,7 +1039,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1053,6 +1054,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fanoušci hardcore stříleček se dočkali nové hry zasazené do studené války",
+            "publishedAt": "2026-04-27T14:00:00Z"
+          },
           {
             "title": "Ubisoft má chystat další remake ze série Assassin's Creed",
             "publishedAt": "2026-04-27T12:00:00Z"
@@ -1080,10 +1085,6 @@
           {
             "title": "Wordless Forest: Survival z reálné divočiny, kde je únava skutečná",
             "publishedAt": "2026-04-26T06:00:00Z"
-          },
-          {
-            "title": "Lord of Hatred mění strom dovedností",
-            "publishedAt": "2026-04-26T04:00:00Z"
           }
         ]
       }
