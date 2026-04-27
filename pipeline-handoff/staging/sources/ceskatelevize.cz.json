@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T09:14:34.468845Z",
+  "ingestedAt": "2026-04-27T09:39:21.518332Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Touha po dokonalosti nás dohání, upozorňuje Šindelka Systémem něhy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/touha-po-dokonalosti-nas-dohani-upozornuje-sindelka-systemem-nehy-372832",
+      "dt": "2026-04-27T09:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dohání",
+        "dokonalosti",
+        "nás",
+        "něhy",
+        "systémem",
+        "touha",
+        "upozorňuje",
+        "šindelka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -31,7 +56,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Rusy unavují množící se omezení. Přibývá těch, kteří chtějí emigrovat",
+      "title": "„Jak odjet ze země“. V Rusku roste počet lidí, kteří chtějí emigrovat",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/rusy-unavuji-mnozici-se-omezeni-pribyva-tech-kteri-chteji-emigrovat-372709",
       "dt": "2026-04-27T08:32:08Z",
       "media_raw": "ČT24 / Domácí",
@@ -40,12 +65,12 @@
         "chtějí",
         "emigrovat",
         "kteří",
-        "množící",
-        "omezení",
-        "přibývá",
-        "rusy",
-        "těch",
-        "unavují"
+        "lidí",
+        "odjet",
+        "počet",
+        "roste",
+        "rusku",
+        "země"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -723,33 +748,6 @@
         "krize",
         "probrali",
         "událostí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Malá restituce napravila mnohé majetkové křivdy, vše se ale majitelům nevrátilo",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/mala-restituce-napravila-mnohe-majetkove-krivdy-vse-se-ale-majitelum-nevratilo-372790",
-      "dt": "2026-04-26T06:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ale",
-        "křivdy",
-        "majetkové",
-        "majitelům",
-        "malá",
-        "mnohé",
-        "napravila",
-        "nevrátilo",
-        "restituce",
-        "vše"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1509,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43422,
+      "bytes": 43163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,11 +1567,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T09:06:20Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T09:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "other": 1,
+          "other": 2,
+          "zpravy": 25,
           "finance": 3
         },
         "drop_counts": {
@@ -1587,11 +1585,15 @@
         },
         "sample_titles": [
           {
+            "title": "Touha po dokonalosti nás dohání, upozorňuje Šindelka Systémem něhy",
+            "publishedAt": "2026-04-27T09:30:00Z"
+          },
+          {
             "title": "Topná sezona byla intenzivnější než v předchozích letech, uvedli energetici",
             "publishedAt": "2026-04-27T09:06:20Z"
           },
           {
-            "title": "Rusy unavují množící se omezení. Přibývá těch, kteří chtějí emigrovat",
+            "title": "„Jak odjet ze země“. V Rusku roste počet lidí, kteří chtějí emigrovat",
             "publishedAt": "2026-04-27T08:32:08Z"
           },
           {
@@ -1613,10 +1615,6 @@
           {
             "title": "Ruské údery v Oděse zranily několik lidí",
             "publishedAt": "2026-04-27T07:01:10Z"
-          },
-          {
-            "title": "Přichází slunečný týden bez srážek",
-            "publishedAt": "2026-04-27T06:26:13Z"
           }
         ]
       }
@@ -1722,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77084,
+      "bytes": 77057,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

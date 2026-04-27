@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-27T09:14:34.468845Z",
+  "ingestedAt": "2026-04-27T09:39:21.518332Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vyhrát derby. Tečka, kterou jsme si všichni hrozně přáli, ulevilo se trenéru Kováčovi",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/liberec-jablonec-radoslav-kovac-ohlas.A260427_928964_fotbal_ten",
+      "dt": "2026-04-27T09:07:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "derby",
+        "hrozně",
+        "jsme",
+        "kováčovi",
+        "přáli",
+        "tečka",
+        "trenéru",
+        "ulevilo",
+        "vyhrát",
+        "všichni"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -765,32 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rallye Šumava Klatovy 2026: program, výsledky, startovní listina, trasa",
-      "url": "https://www.idnes.cz/sport/motorsport/rallye-sumava-klatovy-2026.A260414_114342_motorsport_ald",
-      "dt": "2026-04-26T14:14:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "klatovy",
-        "listina",
-        "program",
-        "rallye",
-        "startovní",
-        "trasa",
-        "výsledky",
-        "šumava"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48689,
+      "bytes": 49131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T09:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T09:07:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyhrát derby. Tečka, kterou jsme si všichni hrozně přáli, ulevilo se trenéru Kováčovi",
+            "publishedAt": "2026-04-27T09:07:00Z"
+          },
           {
             "title": "Speciální gratulant v kabině Bohemians. Z tribuny fandila i Vondráčková",
             "publishedAt": "2026-04-27T09:05:00Z"
@@ -880,10 +885,6 @@
           {
             "title": "Plíšková ve 34 letech zažívá obrození. Nečekala jsem, že budu hrát takhle, žasne",
             "publishedAt": "2026-04-27T07:20:00Z"
-          },
-          {
-            "title": "Pogačar 2.0? Na Seixase se dál pějí ódy. Zní ale i varování: Snad to ustojí psychicky",
-            "publishedAt": "2026-04-27T06:15:00Z"
           }
         ]
       }

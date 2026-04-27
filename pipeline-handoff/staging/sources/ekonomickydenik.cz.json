@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T09:14:34.468845Z",
+  "ingestedAt": "2026-04-27T09:39:21.518332Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Armáda je v demografické pasti. Její výstavba se musí úplně změnit, říká Zůna",
+      "url": "https://ekonomickydenik.cz/armada-demograficka-past-koncepce-zuna/",
+      "dt": "2026-04-27T09:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armáda",
+        "demografické",
+        "její",
+        "musí",
+        "pasti",
+        "výstavba",
+        "změnit",
+        "zůna",
+        "úplně",
+        "říká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -740,33 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zapomenutý rekordman ožívá: Otevřené letecké muzeum odhalí tajemství Modrého ptáka",
-      "url": "https://ekonomickydenik.cz/zapomenuty-rekordman-otevrene-letecke-muzeum-kbely/",
-      "dt": "2026-04-24T15:22:12Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "letecké",
-        "modrého",
-        "muzeum",
-        "odhalí",
-        "otevřené",
-        "ožívá",
-        "ptáka",
-        "rekordman",
-        "tajemství",
-        "zapomenutý"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70126,
+      "bytes": 70331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:45:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T09:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -831,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Armáda je v demografické pasti. Její výstavba se musí úplně změnit, říká Zůna",
+            "publishedAt": "2026-04-27T09:30:00Z"
+          },
           {
             "title": "Facka pro Kyjev. Unie zavrhla plán na částečné členství země, která válčí s Ruskem",
             "publishedAt": "2026-04-27T07:45:35Z"
@@ -858,10 +862,6 @@
           {
             "title": "Evropa zaspala. Čína už firmy nekupuje, ale staví si vlastní",
             "publishedAt": "2026-04-26T15:20:00Z"
-          },
-          {
-            "title": "Útočil učitel a herní vývojář. Pravděpodobnými cíli měli být Trump a členové kabinetu",
-            "publishedAt": "2026-04-26T13:57:34Z"
           }
         ]
       }

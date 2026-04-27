@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T09:14:34.468845Z",
+  "ingestedAt": "2026-04-27T09:39:21.518332Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Fiktivní hospitalizace vytvořily milionové zisky. Policie chce obžalovat čtyři lidi v kauze nemocnice",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/fiktivni-hospitalizace-milionove-zisky-policie-chce-obzalovat-ctyri-lidi/",
+      "dt": "2026-04-27T09:35:16Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chce",
+        "fiktivní",
+        "hospitalizace",
+        "kauze",
+        "lidi",
+        "milionové",
+        "nemocnice",
+        "obžalovat",
+        "policie",
+        "vytvořily",
+        "zisky",
+        "čtyři"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Šíří se nemoci, proti nimž se povinně očkuje. Experti vysvětlují proč",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemoci-ockovani-experti/",
-      "dt": "2026-04-26T08:10:53Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "experti",
-        "nemoci",
-        "nimž",
-        "očkuje",
-        "povinně",
-        "proti",
-        "proč",
-        "vysvětlují",
-        "šíří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82989,
+      "bytes": 80771,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:36:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T09:35:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fiktivní hospitalizace vytvořily milionové zisky. Policie chce obžalovat čtyři lidi v kauze nemocnice",
+            "publishedAt": "2026-04-27T09:35:16Z"
+          },
           {
             "title": "Další odklad kontroverzní stravovací vyhlášky. Kdy začnou platit nová pravidla?",
             "publishedAt": "2026-04-27T08:36:42Z"
@@ -359,10 +366,6 @@
           {
             "title": "Muž měl škrtit spolupacienta do bezvědomí. Policie řeší napadení v nemocnici na Plzeňsku",
             "publishedAt": "2026-04-26T12:48:13Z"
-          },
-          {
-            "title": "Pozor na nákup léků on-line: SÚKL zveřejnil seznam podvodných webů",
-            "publishedAt": "2026-04-26T12:31:35Z"
           }
         ]
       }
