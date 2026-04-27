@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T11:49:29.716041Z",
+  "ingestedAt": "2026-04-27T12:14:43.169388Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,34 @@
         "těžké",
         "vyšel",
         "windows"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Zvykejte si na volání z letadla. Brzy bude tak otravné, že Boeing už vyvíjí palubní telefonní budky",
+      "url": "https://mobilmania.zive.cz/clanky/volani-zletadla-na-vzestupu-abrzy-bude-tak-otravne-ze-boeing-uz-vyviji-palubni-telefonni-budky/sc-3-a-1364631/default.aspx",
+      "dt": "2026-04-27T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "boeing",
+        "brzy",
+        "budky",
+        "letadla",
+        "otravné",
+        "palubní",
+        "tak",
+        "telefonní",
+        "volání",
+        "vyvíjí",
+        "zvykejte"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -954,34 +982,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vyzkoušeli jsme nové úpravy ve Fotkách Google. Zvýrazní obličej a poradí si s kruhy pod očima",
-      "url": "https://mobilmania.zive.cz/clanky/vyzkouseli-jsme-nove-upravy-ve-fotkach-google-zvyrazni-oblicej-a-poradi-si-s-kruhy-pod-ocima/sc-3-a-1364610/default.aspx",
-      "dt": "2026-04-22T18:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "fotkách",
-        "google",
-        "jsme",
-        "kruhy",
-        "nové",
-        "obličej",
-        "očima",
-        "poradí",
-        "vyzkoušeli",
-        "zvýrazní",
-        "úpravy"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23272,
+      "bytes": 23281,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1047,6 +1047,10 @@
           {
             "title": "Populární textový editor z Windows vyšel i na macOS. Notepad++ to ale bude mít těžké",
             "publishedAt": "2026-04-27T08:45:00Z"
+          },
+          {
+            "title": "Zvykejte si na volání z letadla. Brzy bude tak otravné, že Boeing už vyvíjí palubní telefonní budky",
+            "publishedAt": "2026-04-27T11:45:00Z"
           },
           {
             "title": "Firefox 150 opravuje enormních 271 zranitelných míst. Našla je zakázaná AI Claude Mythos",
@@ -1071,10 +1075,6 @@
           {
             "title": "Normálně za peníze, dnes zadarmo nebo se slevou: Správce baterie, procvičování sluchu a rytíři",
             "publishedAt": "2026-04-26T15:45:00Z"
-          },
-          {
-            "title": "Toto je 11 položek v nastavení iPhonu, které byste měli nechat vypnuté",
-            "publishedAt": "2026-04-24T10:45:00Z"
           }
         ]
       }

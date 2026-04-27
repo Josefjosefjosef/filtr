@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-27T11:49:29.716041Z",
+  "ingestedAt": "2026-04-27T12:14:43.169388Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na úterý 28. dubna",
+      "url": "https://www.penize.cz/doprava/488918-maximalni-ceny-benzinu-a-nafty-na-utery-28-dubna",
+      "dt": "2026-04-27T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "maximální",
+        "nafty",
+        "úterý"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -481,30 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Platba daně z nemovitosti se blíží. Její výši zjistíte už teď",
-      "url": "https://www.penize.cz/dan-z-nemovitosti/488672-dan-z-nemovitosti-se-opet-blizi-jeji-vysi-zjistite-uz-ted",
-      "dt": "2026-04-22T11:58:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "blíží",
-        "daně",
-        "její",
-        "nemovitosti",
-        "platba",
-        "výši",
-        "zjistíte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 17978,
+      "bytes": 18182,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,11 +551,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T12:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 15
+          "zpravy": 6,
+          "finance": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na úterý 28. dubna",
+            "publishedAt": "2026-04-27T13:59:00Z"
+          },
           {
             "title": "Stropy na ceny benzinu a nafty budou i v květnu, oznámila Schillerová",
             "publishedAt": "2026-04-27T12:33:00Z"
@@ -595,10 +598,6 @@
           {
             "title": "Těžaři bitcoinů se zbavují i zásob. Letos prodali víc než loni za rok",
             "publishedAt": "2026-04-25T07:00:00Z"
-          },
-          {
-            "title": "Zdražení na víkend. Tady jsou nové maximální ceny benzinu a nafty",
-            "publishedAt": "2026-04-24T13:58:00Z"
           }
         ]
       }
