@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-27T10:05:09.343360Z",
+  "ingestedAt": "2026-04-27T10:29:19.057165Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Švýcaři zaplatili statisíce za srovnání elektroauta a spalováku. Když zjistili výsledky, raději je ututlali",
+      "url": "https://www.betterlife.cz/svycari-zaplatili-statisice-za-srovnani-elektroauta-a-spalovaku-kdyz-zjistili-vysledky-radeji-je-ututlali/",
+      "dt": "2026-04-27T10:11:58Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "elektroauta",
+        "když",
+        "raději",
+        "spalováku",
+        "srovnání",
+        "statisíce",
+        "ututlali",
+        "výsledky",
+        "zaplatili",
+        "zjistili",
+        "švýcaři"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -249,34 +277,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Odstartovaly kontroly příspěvků na bydlení. Kvůli chybám či podvodům hrozí vracení peněz a pokuty",
-      "url": "https://www.betterlife.cz/odstartovaly-kontroly-prispevku-na-bydleni-kvuli-chybam-ci-podvodum-hrozi-vraceni-penez-a-pokuty/",
-      "dt": "2026-04-22T10:11:56Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "bydlení",
-        "chybám",
-        "hrozí",
-        "kontroly",
-        "kvůli",
-        "odstartovaly",
-        "peněz",
-        "podvodům",
-        "pokuty",
-        "příspěvků",
-        "vracení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +287,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 68753,
+      "bytes": 66805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,11 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:29:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T10:11:58Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 7,
-          "zpravy": 2,
+          "zdravi": 8,
+          "zpravy": 1,
           "finance": 1
         },
         "drop_counts": {
@@ -364,6 +364,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Švýcaři zaplatili statisíce za srovnání elektroauta a spalováku. Když zjistili výsledky, raději je ututlali",
+            "publishedAt": "2026-04-27T10:11:58Z"
+          },
           {
             "title": "Propadlá STK přináší komplikace. Hrozí pokuta, odstavení vozu a pojišťovna při nehodě nezaplatí škodu",
             "publishedAt": "2026-04-27T07:29:16Z"
@@ -391,10 +395,6 @@
           {
             "title": "Firmy čekají velké změny v odměňování. Začnou platit nová pravidla pro zveřejňování mezd",
             "publishedAt": "2026-04-24T11:32:51Z"
-          },
-          {
-            "title": "Fialový motýl nad postýlkou novorozence jako symbol velké ztráty",
-            "publishedAt": "2026-04-23T15:57:21Z"
           }
         ]
       }
