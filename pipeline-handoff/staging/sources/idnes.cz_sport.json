@@ -1,24 +1,75 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-27T19:49:17.729303Z",
+  "ingestedAt": "2026-04-27T20:14:54.019904Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Manchester United v dohrávce anglické ligy vedou nad Brentfordem",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-34-kolo-zpravodajstvi-online-vysledek.A260427_163543_fot_zahranici_duff",
-      "dt": "2026-04-27T19:15:00Z",
+      "title": "Brněnští basketbalisté zdolali na úvod play off Děčín. Hradec se přiblížil záchraně",
+      "url": "https://www.idnes.cz/sport/basket/brno-decin-hradec-kralove-zlin-basketbal-baraz-play-off.A260427_205951_sport-basket_hava",
+      "dt": "2026-04-27T19:58:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "anglické",
+        "basketbalisté",
+        "brněnští",
+        "děčín",
+        "hradec",
+        "off",
+        "play",
+        "přiblížil",
+        "zdolali",
+        "záchraně",
+        "úvod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Manchester United navýšil v dohrávce vedení nad Brentfordem",
+      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-34-kolo-zpravodajstvi-online-vysledek.A260427_163543_fot_zahranici_duff",
+      "dt": "2026-04-27T19:46:54Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
         "brentfordem",
         "dohrávce",
-        "ligy",
         "manchester",
+        "navýšil",
         "united",
-        "vedou"
+        "vedení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
+      "url": "https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-do-18-let-2026-na-slovensku.A260420_225719_reprezentace_ald",
+      "dt": "2026-04-27T19:19:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "hokeji",
+        "hrají",
+        "kým",
+        "let",
+        "program",
+        "skupiny",
+        "češi"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -46,33 +97,6 @@
         "vždy",
         "čílili",
         "špatná"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Brněnští basketbalisté zdolali na úvod play off Děčín. Hradec se přiblížil záchraně",
-      "url": "https://www.idnes.cz/sport/basket/brno-decin-hradec-kralove-zlin-basketbal-baraz-play-off.A260427_205951_sport-basket_hava",
-      "dt": "2026-04-27T18:59:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "basketbalisté",
-        "brněnští",
-        "děčín",
-        "hradec",
-        "off",
-        "play",
-        "přiblížil",
-        "zdolali",
-        "záchraně",
-        "úvod"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -750,33 +774,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zakázali Jihlavě komentovat baráž? Není to pravda, namítl Loukota. Klub mluví o útoku",
-      "url": "https://www.idnes.cz/hokej/extraliga/jihlava-scerban-loukota-baraz-vyjadreni-apk-cachotsky-zakaz.A260427_001110_hokej_huda",
-      "dt": "2026-04-27T11:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baráž",
-        "jihlavě",
-        "klub",
-        "komentovat",
-        "loukota",
-        "mluví",
-        "namítl",
-        "pravda",
-        "zakázali",
-        "útoku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47298,
+      "bytes": 46866,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T19:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T19:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,16 +837,20 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Manchester United v dohrávce anglické ligy vedou nad Brentfordem",
-            "publishedAt": "2026-04-27T19:15:00Z"
+            "title": "Brněnští basketbalisté zdolali na úvod play off Děčín. Hradec se přiblížil záchraně",
+            "publishedAt": "2026-04-27T19:58:00Z"
+          },
+          {
+            "title": "ONLINE: Manchester United navýšil v dohrávce vedení nad Brentfordem",
+            "publishedAt": "2026-04-27T19:46:54Z"
+          },
+          {
+            "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
+            "publishedAt": "2026-04-27T19:19:00Z"
           },
           {
             "title": "Vždy špatná varianta, čílili se volejbalisté Karlovarska. Padli u Lvů, finále je srovnané",
             "publishedAt": "2026-04-27T19:07:00Z"
-          },
-          {
-            "title": "Brněnští basketbalisté zdolali na úvod play off Děčín. Hradec se přiblížil záchraně",
-            "publishedAt": "2026-04-27T18:59:00Z"
           },
           {
             "title": "Augusta a Fuksa se stali trenéry roku. Ocenění získal i otec olympionika Jílka",
@@ -866,10 +867,6 @@
           {
             "title": "Choreo i speciální dresy. Kustodka se po 27 letech v klubu dočkala velkého rozloučení",
             "publishedAt": "2026-04-27T17:01:00Z"
-          },
-          {
-            "title": "Otazníky před nadstavbou: co stačí Slavii k titulu? Co potřebuje Baník k záchraně?",
-            "publishedAt": "2026-04-27T16:39:00Z"
           }
         ]
       }

@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-27T19:49:17.729303Z",
+  "ingestedAt": "2026-04-27T20:14:54.019904Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Předzvěst Grand Prix. V Praze odhalí českou divokou kartu, jede i Rus, který jako poslední sesadil polského krále",
+      "url": "https://www.sport.cz/clanek/moto-motocykly-predzvest-grand-prix-odhali-ceskou-divokou-kartu-pojede-i-rus-ktery-jako-posledni-sesadil-polskeho-krale-5444615",
+      "dt": "2026-04-27T19:59:43Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "divokou",
+        "grand",
+        "jako",
+        "jede",
+        "kartu",
+        "krále",
+        "odhalí",
+        "polského",
+        "poslední",
+        "praze",
+        "prix",
+        "předzvěst",
+        "rus",
+        "sesadil",
+        "českou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -747,32 +779,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Maminky na hřišti uklidňuju, že monokly mám z práce, říká MMA zápasnice",
-      "url": "https://www.sport.cz/clanek/podcasty-zenske-podani-sokovalo-me-jak-narocne-je-vychovavat-dite-lici-mma-zapasnice-5312390",
-      "dt": "2025-10-11T06:20:56Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hřišti",
-        "maminky",
-        "mma",
-        "monokly",
-        "mám",
-        "práce",
-        "uklidňuju",
-        "zápasnice",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -783,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42728,
+      "bytes": 42153,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -820,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T19:04:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T19:59:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -835,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Předzvěst Grand Prix. V Praze odhalí českou divokou kartu, jede i Rus, který jako poslední sesadil polského krále",
+            "publishedAt": "2026-04-27T19:59:43Z"
+          },
           {
             "title": "Brněnští basketbalisté na úvod play off porazili Děčín",
             "publishedAt": "2026-04-27T19:04:42Z"
@@ -862,10 +872,6 @@
           {
             "title": "Slabší tým nečekejte. Kanadu mají za zlatem dotáhnout i hvězdy budoucnosti",
             "publishedAt": "2026-04-27T17:54:34Z"
-          },
-          {
-            "title": "Hvězdy pláčou, mučí je zranění. Fotbalové MS ještě před výkopem ztrácí lesk",
-            "publishedAt": "2026-04-27T17:39:13Z"
           }
         ]
       }
