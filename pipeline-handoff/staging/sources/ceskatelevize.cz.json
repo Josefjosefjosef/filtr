@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T20:39:55.219923Z",
+  "ingestedAt": "2026-04-27T21:09:40.145819Z",
   "items": [
     {
       "section": "aktualne",
@@ -771,6 +771,29 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Trenéry roku jsou Petr Fuksa a Patrik Augusta",
+      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/trenery-roku-jsou-petr-fuksa-a-patrik-augusta-156489",
+      "dt": "2026-04-27T20:39:58Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "augusta",
+        "fuksa",
+        "patrik",
+        "petr",
+        "roku",
+        "trenéry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Volejbalové finále je po druhém zápase srovnané 1:1",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/volejbalove-finale-je-po-druhem-zapase-srovnane-11-156488",
       "dt": "2026-04-27T18:48:30Z",
@@ -1486,29 +1509,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jokičův Denver znovu v play-off klopýtl",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/jokicuv-denver-znovu-v-play-off-klopytl-156458",
-      "dt": "2026-04-26T07:38:38Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "denver",
-        "jokičův",
-        "klopýtl",
-        "off",
-        "play",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1638,7 +1638,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38215,
+      "bytes": 38058,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1675,7 +1675,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T18:48:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T20:39:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1690,6 +1690,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trenéry roku jsou Petr Fuksa a Patrik Augusta",
+            "publishedAt": "2026-04-27T20:39:58Z"
+          },
           {
             "title": "Volejbalové finále je po druhém zápase srovnané 1:1",
             "publishedAt": "2026-04-27T18:48:30Z"
@@ -1717,10 +1721,6 @@
           {
             "title": "Fotbal fokus podcast: Zoufalý Baník, pokuta kvůli Jedličkovi? Co Dvorník a pozice Hyského?",
             "publishedAt": "2026-04-27T10:28:00Z"
-          },
-          {
-            "title": "Portland v play-off potřetí prohrál se Spurs. Wembanyama přiblížil Krejčího tým vyřazení",
-            "publishedAt": "2026-04-27T06:41:11Z"
           }
         ]
       }
@@ -1732,7 +1732,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77442,
+      "bytes": 77522,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
