@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-27T17:39:16.546540Z",
+  "ingestedAt": "2026-04-27T18:09:07.101652Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Steam Controller odhalil datum uvedení i cenu",
+      "url": "https://zing.cz/article/steam-controller-odhalil-datum-uvedeni-i-cenu",
+      "dt": "2026-04-27T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "cenu",
+        "controller",
+        "datum",
+        "odhalil",
+        "steam",
+        "uvedení"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -965,32 +988,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Pirátská hra Windrose se stala nejvýdělečnější hrou na Steamu za poslední týden",
-      "url": "https://zing.cz/article/piratska-hra-windrose-se-stala-nejvydelecnejsi-hrou-na-steamu-za-posledni-tyden",
-      "dt": "2026-04-22T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hra",
-        "hrou",
-        "nejvýdělečnější",
-        "pirátská",
-        "poslední",
-        "stala",
-        "steamu",
-        "týden",
-        "windrose"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1001,7 +998,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125238,
+      "bytes": 125234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1038,7 +1035,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1053,6 +1050,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Steam Controller odhalil datum uvedení i cenu",
+            "publishedAt": "2026-04-27T18:00:00Z"
+          },
           {
             "title": "Série Battlefield by se mohla dočkat filmového zpracování od známého režiséra",
             "publishedAt": "2026-04-27T16:00:00Z"
@@ -1080,10 +1081,6 @@
           {
             "title": "Alien: Isolation 2 obdrželo tajemný teaser trailer",
             "publishedAt": "2026-04-27T04:00:00Z"
-          },
-          {
-            "title": "Nejlepší cozy hry vycházející v květnu 2026",
-            "publishedAt": "2026-04-26T10:00:00Z"
           }
         ]
       }

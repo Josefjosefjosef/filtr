@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-27T17:39:16.546540Z",
+  "ingestedAt": "2026-04-27T18:09:07.101652Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Paradox bezpečného přístavu: Proč cena zlata strádá?",
+      "url": "https://profitonline.cz/paradox-bezpecneho-pristavu-proc-cena-zlata-strada/",
+      "dt": "2026-04-27T18:00:19Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bezpečného",
+        "cena",
+        "paradox",
+        "proč",
+        "přístavu",
+        "strádá",
+        "zlata"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,29 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Miriam Fellingerová novou ředitelkou OMV v Česku",
-      "url": "https://profitonline.cz/miriam-fellingerova-novou-reditelkou-omv-v-cesku/",
-      "dt": "2026-04-24T06:00:48Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "fellingerová",
-        "miriam",
-        "novou",
-        "omv",
-        "česku",
-        "ředitelkou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -302,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18541,
+      "bytes": 18614,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -339,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:00:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T18:00:19Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -355,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paradox bezpečného přístavu: Proč cena zlata strádá?",
+            "publishedAt": "2026-04-27T18:00:19Z"
+          },
           {
             "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
             "publishedAt": "2026-04-27T08:00:12Z"
@@ -382,10 +387,6 @@
           {
             "title": "Arm bude nově konkurovat svým dosavadním klíčovým zákazníkům",
             "publishedAt": "2026-04-25T06:00:17Z"
-          },
-          {
-            "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
-            "publishedAt": "2026-04-25T04:00:32Z"
           }
         ]
       }

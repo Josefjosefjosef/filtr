@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T17:39:16.546540Z",
+  "ingestedAt": "2026-04-27T18:09:07.101652Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "tisíc",
         "tom",
         "vyhrál"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
+      "url": "https://mobilmania.zive.cz/clanky/nepotrebujete-raspberry-pi-stary-telefon-zvladne-roli-domaciho-serveru-lepe-a-bez-dalsich-investic/sc-3-a-1364611/default.aspx",
+      "dt": "2026-04-27T17:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "dalších",
+        "domácího",
+        "investic",
+        "lépe",
+        "nepotřebujete",
+        "raspberry",
+        "roli",
+        "serveru",
+        "starý",
+        "telefon",
+        "zvládne"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -956,37 +984,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vibe coding za 60 miliard dolarů. Musk chce Cursor, SpaceX díky němu smaže dluh v robotickém programování",
-      "url": "https://www.zive.cz/clanky/vibe-coding-za-60-miliard-dolaru-musk-chce-cursor-spacex-diky-nemu-smaze-dluh-v-robotickem-programovani/sc-3-a-240829/default.aspx",
-      "dt": "2026-04-23T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chce",
-        "coding",
-        "cursor",
-        "dluh",
-        "dolarů",
-        "díky",
-        "miliard",
-        "musk",
-        "němu",
-        "programování",
-        "robotickém",
-        "smaže",
-        "spacex",
-        "vibe"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -997,7 +994,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23173,
+      "bytes": 23180,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1034,7 +1031,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T17:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1052,6 +1049,10 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
+          },
+          {
+            "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
+            "publishedAt": "2026-04-27T17:45:00Z"
           },
           {
             "title": "Recenze filmu Ovce žerou první: Nepříjemně přesná výpověď o tom, proč věříme jednoduchým řešením",
@@ -1076,10 +1077,6 @@
           {
             "title": "JBL vylepšuje své vlajkové lodě. Sluchátka Tour dostávají nový zvukový profil a chytřejší ovládání",
             "publishedAt": "2026-04-27T13:15:00Z"
-          },
-          {
-            "title": "Zvykejte si na volání z letadla. Brzy bude tak otravné, že Boeing už vyvíjí palubní telefonní budky",
-            "publishedAt": "2026-04-27T11:45:00Z"
           }
         ]
       }
