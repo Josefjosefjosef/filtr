@@ -1,6 +1,6 @@
 {
   "date": "2026-04-27",
-  "generatedAt": "2026-04-27T04:47:43.368203Z",
+  "generatedAt": "2026-04-27T05:11:49.467068Z",
   "items": [
     {
       "topic": "finance",
@@ -23,13 +23,44 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/dan-z-prijmu-fyzickych-osob/488873-posledni-tyden-na-danove-priznani-navody-zmeny-a-caste-chyby",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.85,
+      "displayScore": 0.8140531902037016,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "finance",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Před 35 lety se do Československa vrátili volyňští Češi",
+      "publishedAt": "2026-04-27T05:00:00Z",
+      "sources": [
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pred-35-lety-se-do-ceskoslovenska-vratili-volynsti-cesi-372818"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "054b6ac704930f12",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "ČT24 / Domácí",
+      "feedId": "zpr_ct24_domaci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pred-35-lety-se-do-ceskoslovenska-vratili-volynsti-cesi-372818",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.1341654346937935,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -54,7 +85,7 @@
       "feedId": "fin_penize",
       "url": "https://www.penize.cz/hypoteky/488883-jakou-fixaci-hypoteky-si-ted-vybrat-pozor-i-na-sazeni-radi-expert",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.85,
+      "displayScore": 0.8033671830135609,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -65,12 +96,82 @@
       }
     },
     {
+      "topic": "zdravi",
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
+      "publishedAt": "2026-04-27T05:00:00Z",
+      "sources": [
+        {
+          "name": "Zdravotnický deník",
+          "url": "https://www.zdravotnickydenik.cz/2026/04/farmaceuticke-firmy-eli-lilly-onkologie-sun-pharma-akvizice/"
+        }
+      ],
+      "primaryCategory": "zdravi",
+      "topicHash": "70e0a3e637159212",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "zdravi",
+      "sourceLabel": "Zdravotnický deník",
+      "feedId": "zdr_zdravotnickydenik",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/farmaceuticke-firmy-eli-lilly-onkologie-sun-pharma-akvizice/",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9923947552702223,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zdravi",
+        "reason": "topic_field",
+        "confidence": 0.95,
+        "railSectionKey": "zdravi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán navrhl USA otevření Hormuzského průlivu, jaderná jednání se odkládají",
+      "publishedAt": "2026-04-27T04:48:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/zpravy/zahranicni/iran-usa-valka-hormuzsky-pruliv.A260427_063028_zahranicni_pluh"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "e3b26d62a210c7e3",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/iran-usa-valka-hormuzsky-pruliv.A260427_063028_zahranicni_pluh",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.0078982224497142,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
       "topic": "aktualne",
       "section": "aktualne",
       "contentType": "article",
       "title": "Írán předložil nový návrh na ukončení války a otevření průlivu",
       "publishedAt": "2026-04-27T04:43:53Z",
       "sources": [
+        {
+          "name": "Seznam Zprávy / Domácí",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-iran-pry-predlozil-usa-novy-navrh-na-ukonceni-valky-a-otevreni-prulivu-304887"
+        },
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-iran-pry-predlozil-usa-novy-navrh-na-ukonceni-valky-a-otevreni-prulivu-304887"
+        },
         {
           "name": "Seznam Zprávy / Vzdělávání",
           "url": "https://www.seznamzpravy.cz/clanek/zahranicni-iran-pry-predlozil-usa-novy-navrh-na-ukonceni-valky-a-otevreni-prulivu-304887"
@@ -88,16 +189,16 @@
           "url": "https://www.novinky.cz/clanek/zahranicni-blizky-a-stredni-vychod-iran-predlozil-novy-navrh-na-ukonceni-valky-a-otevreni-prulivu-40575392"
         }
       ],
-      "primaryCategory": "vzdelavani",
+      "primaryCategory": "zpravy",
       "topicHash": "9fb53a4f01a3331a",
       "feedType": "rubric",
-      "sourceDisplayWeight": 1.05,
-      "sectionPrimary": "vzdelavani",
-      "sourceLabel": "Seznam Zprávy / Vzdělávání",
-      "feedId": "vzd_seznam",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Seznam Zprávy / Domácí",
+      "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-iran-pry-predlozil-usa-novy-navrh-na-ukonceni-valky-a-otevreni-prulivu-304887",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.015281322980979,
+      "displayScore": 1.042785750510396,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -115,20 +216,28 @@
       "publishedAt": "2026-04-27T04:43:48Z",
       "sources": [
         {
+          "name": "Seznam Zprávy / Domácí",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-nemecky-kancler-hleda-dno-uz-je-z-nej-nejmene-oblibeny-sef-vlady-na-svete-304617"
+        },
+        {
+          "name": "Seznam Zprávy / Byznys",
+          "url": "https://www.seznamzpravy.cz/clanek/zahranicni-nemecky-kancler-hleda-dno-uz-je-z-nej-nejmene-oblibeny-sef-vlady-na-svete-304617"
+        },
+        {
           "name": "Seznam Zprávy / Vzdělávání",
           "url": "https://www.seznamzpravy.cz/clanek/zahranicni-nemecky-kancler-hleda-dno-uz-je-z-nej-nejmene-oblibeny-sef-vlady-na-svete-304617"
         }
       ],
-      "primaryCategory": "vzdelavani",
+      "primaryCategory": "zpravy",
       "topicHash": "b291338eec9333e0",
       "feedType": "rubric",
-      "sourceDisplayWeight": 1.05,
-      "sectionPrimary": "vzdelavani",
-      "sourceLabel": "Seznam Zprávy / Vzdělávání",
-      "feedId": "vzd_seznam",
+      "sourceDisplayWeight": 1.15,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Seznam Zprávy / Domácí",
+      "feedId": "zpr_seznam_domaci",
       "url": "https://www.seznamzpravy.cz/clanek/zahranicni-nemecky-kancler-hleda-dno-uz-je-z-nej-nejmene-oblibeny-sef-vlady-na-svete-304617",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.0150541258204382,
+      "displayScore": 1.0425669150921426,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -159,7 +268,7 @@
       "feedId": "spt_sportcz",
       "url": "https://www.sport.cz/clanek/atletika-muz-ktery-pokoril-hranici-snu-zaril-i-v-praze-takoveho-bezce-jsem-nezazila-rika-manazerka-5444129",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.1022542207147097,
+      "displayScore": 1.0342325640150356,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -190,13 +299,75 @@
       "feedId": "spt_sportcz",
       "url": "https://www.sport.cz/clanek/bojove-sporty-mma-ten-magor-furt-zije-nechapal-cesky-bojovnik-v-hlave-mel-prochazkovo-zavahani-5444078",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.087678247239902,
+      "displayScore": 1.0213896079432436,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
         "reason": "topic_field",
         "confidence": 0.95,
         "railSectionKey": "sport",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "pocasi",
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Studená fronta bez deště. Česko čeká slunečný a postupně teplejší týden",
+      "publishedAt": "2026-04-27T04:34:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/zpravy/domaci/pocasi-cesko-predpoved-mraz.A260427_060029_domaci_pluh"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "67cc462cbee3a02e",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/zpravy/domaci/pocasi-cesko-predpoved-mraz.A260427_060029_domaci_pluh",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9732197121869437,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "pocasi",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zemřel zakladatel PR v Česku Michal Donath, mluvil za vlastníky Novy i Mattoni",
+      "publishedAt": "2026-04-27T04:33:00Z",
+      "sources": [
+        {
+          "name": "iDNES / Zprávy",
+          "url": "https://www.idnes.cz/zpravy/mediahub/ve-veku-77-let-zemrel-jeden-ze-zakladatelu-pr-v-cesku-michal-donath.A260427_062729_mediahub_tbr"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "03706a1fe274846d",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.1,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "iDNES / Zprávy",
+      "feedId": "zpr_idnes_zpravy",
+      "url": "https://www.idnes.cz/zpravy/mediahub/ve-veku-77-let-zemrel-jeden-ze-zakladatelu-pr-v-cesku-michal-donath.A260427_062729_mediahub_tbr",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9708337662524283,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
         "guardFlags": []
       }
     },
@@ -221,7 +392,7 @@
       "feedId": "zpr_hlidacipes",
       "url": "https://hlidacipes.org/obchodnik-s-chudobou-dalsi-sikanozni-zaloba-petra-strunce-byla-zamitnuta/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7466092759499732,
+      "displayScore": 0.7016743467609341,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -252,7 +423,7 @@
       "feedId": "zpr_ceskajustice",
       "url": "https://www.ceska-justice.cz/2026/04/ombudsman-dohnal-setreni-melnik/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.699130606431444,
+      "displayScore": 0.6570992786176968,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -283,13 +454,44 @@
       "feedId": "zpr_ct24_domaci",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-cesku-pribyva-pripadu-horecky-dengue-372813",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.1186089701454855,
+      "displayScore": 1.0513588457030252,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
         "reason": "general_news_bucket",
         "confidence": 0.85,
         "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "sport",
+      "section": "sport",
+      "contentType": "article",
+      "title": "Colorado s Nečasem smetlo LA a je v dalším kole. Montreal s Dobešem padl, debakl Bostonu",
+      "publishedAt": "2026-04-27T04:30:00Z",
+      "sources": [
+        {
+          "name": "iSport",
+          "url": "https://isport.blesk.cz/clanek/hokej-nhl/474862/colorado-s-necasem-smetlo-la-a-je-v-dalsim-kole-montreal-s-dobesem-padl-debakl-bostonu.html"
+        }
+      ],
+      "primaryCategory": "sport",
+      "topicHash": "7455dd17a419ee7d",
+      "feedType": "rss",
+      "sourceDisplayWeight": 1.05,
+      "sectionPrimary": "sport",
+      "sourceLabel": "iSport",
+      "feedId": "spt_isport",
+      "url": "https://isport.blesk.cz/clanek/hokej-nhl/474862/colorado-s-necasem-smetlo-la-a-je-v-dalsim-kole-montreal-s-dobesem-padl-debakl-bostonu.html",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.9199389898035756,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "sport",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "sport",
         "guardFlags": []
       }
     },
@@ -415,7 +617,7 @@
       "feedId": "fin_hn",
       "url": "https://podcasty.hn.cz/c1-67871120-jak-stavet-dum-bez-zedniku-a-inspirovat-se-pri-tom-v-automotive-inovator-roku-2026-zacina-prodavat-reseni",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8906615573756469,
+      "displayScore": 0.8393627278429271,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -477,7 +679,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/staty-mimo-eu/jaderna-katastrofa-elektrarna-cernobyl-prvni-dny-po-vybuchu-ceskoslovensko-vojak.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8317243285050915,
+      "displayScore": 0.7845893538023927,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -508,7 +710,7 @@
       "feedId": "fin_ekonomickydenik",
       "url": "https://ekonomickydenik.cz/stavet-drahe-banky-nestaci/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7441743992792555,
+      "displayScore": 0.7020010008510857,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -539,7 +741,7 @@
       "feedId": "spt_idnes",
       "url": "https://www.idnes.cz/hokej/hokejova-1-liga/majitel-dukly-slavomir-pavlicek-po-prohrane-barazi-o-extraligu.A260426_204451_hok_1liga_pbi",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.869158065613987,
+      "displayScore": 0.8202383522151906,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -570,7 +772,7 @@
       "feedId": "fin_faei",
       "url": "https://profitonline.cz/the-economist-jak-se-evropa-uregulovala-do-naproste-zavislosti-na-americe/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6926785596794495,
+      "displayScore": 0.6538319632884142,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -632,7 +834,7 @@
       "feedId": "hry_indian",
       "url": "https://indian-tv.cz/clanek/navrat-do-klece-se-blizi-ea-ma-brzy-oznamit-ufc-6-ai2h2a",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7784832307651682,
+      "displayScore": 0.7348658212392469,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -663,7 +865,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/byznys/reality-a-stavebnictvi/zapomente-na-dubaj-cesi-se-zblaznili-do-domu-v-italii-na-sicilii-jsou-jako-investori-vyhlaseni-1432350",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8649813678632392,
+      "displayScore": 0.8165175794633766,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -694,7 +896,7 @@
       "feedId": "fin_e15",
       "url": "https://www.e15.cz/ekonomika/kdo-nejrychleji-snizuje-statni-dluh-v-roce-2026-z-jiznich-hrisniku-se-stali-premianti-1432313",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8649813677593235,
+      "displayScore": 0.8165175794016449,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -725,7 +927,7 @@
       "feedId": "spt_ctsport",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/extraliga/sedlak-se-nenechal-vyprovokovat-a-pak-rozhodl-vyhrali-jsme-jako-tym-podtrhl-156477",
       "duplicatePenalty": 1.0,
-      "displayScore": 1.0379776409370918,
+      "displayScore": 0.9798210948375066,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -756,7 +958,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://magazin.aktualne.cz/bydleni/prodali-byt-aby-koupili-dum-ktery-mozna-nikdy-nedokonci-cimra-bude-jako-neotrela-chata-v-horach/r~aaa290315850bd9b704f440ae8b8c0ec/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.8197626338998004,
+      "displayScore": 0.7739363314868167,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "bydleni",
@@ -787,7 +989,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://zpravy.aktualne.cz/ekonomika/auto/technika-a-design/nejcennejsi-veterany-na-travniku-milionove-mercedesy-se-pretahuji-o-pozornost-s-ferrari-z-plakatu/r~aaa297ca57f206f4c88a9f40095d24e7/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7949902847892625,
+      "displayScore": 0.7518188489341388,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "finance",
@@ -818,7 +1020,7 @@
       "feedId": "zpr_aktualne",
       "url": "https://video.aktualne.cz/spotlight-video/zea-uspech-jsem-si-neumela-uzit-v-hlave-jsem-mela-ze-to-byla-nahoda/r~aaa29e92d507d5f094b5f9855b2a229e/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7664828498303661,
+      "displayScore": 0.7262737586063395,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
@@ -973,7 +1175,7 @@
       "feedId": "spt_isport",
       "url": "https://isport.blesk.cz/clanek/blesk-sport/474858/jagrova-dominika-si-vyhledla-pohadkovy-dum-na-vode-jardo-tady-by-se-zilo.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7937942312472763,
+      "displayScore": 0.7546464416916372,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "sport",
@@ -1035,7 +1237,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/krasa-a-moda-krasna-tvar-spfko-do-kabelky-proc-ho-mit-porad-u-sebe-a-proc-jedna-vrstva-rano-nestaci-103240",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.5291961538870249,
+      "displayScore": 0.5030976282798817,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -1066,7 +1268,7 @@
       "feedId": "zdr_prozeny_zdravi",
       "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-jarni-unava-neni-slabost-sest-duvodu-proc-vas-jaro-vycerpava-a-co-se-s-tim-da-delat-ted-hned-103230",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.5291961538314598,
+      "displayScore": 0.5030976282464018,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zdravi",
@@ -1097,7 +1299,7 @@
       "feedId": "zpr_denik",
       "url": "https://www.denik.cz/ctenar-reporter/foto-breclav-a-lichtenstejnske-stezky-stovky-cyklistu-malebna-jarni-atmosfera-20.html",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.7136985116058883,
+      "displayScore": 0.6787103805167045,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
