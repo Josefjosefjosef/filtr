@@ -11971,6 +11971,12 @@ function buildVideoAsArticleCard(it) {
       return;
     }
     try {
+      var qsPm = new URLSearchParams(String(window.location.search || ""));
+      if (String(qsPm.get("iuPerfMarks") || "") === "1" && typeof performance !== "undefined" && performance.mark) {
+        performance.mark("iu-hub-home-start");
+      }
+    } catch (_) {}
+    try {
       var wrapR = document.getElementById("iuMobileGateWrap");
       if (wrapR && typeof wrapR.__iuMobileGateSetTab === "function") wrapR.__iuMobileGateSetTab("");
     } catch (_) {}
@@ -11996,6 +12002,12 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     function iuFinishProjectsHubUrlAndApply() {
       try {
+        var qsFin = new URLSearchParams(String(window.location.search || ""));
+        if (String(qsFin.get("iuPerfMarks") || "") === "1" && typeof performance !== "undefined" && performance.mark) {
+          performance.mark("iu-hub-home-finish-start");
+        }
+      } catch (_) {}
+      try {
         var uSync = new URL(window.location.href);
         if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
         uSync.searchParams.delete("section");
@@ -12019,13 +12031,28 @@ function buildVideoAsArticleCard(it) {
           window.iuDesktopHomeSectionGridGuardApply();
         }
       } catch (_) {}
+      try {
+        var qsEnd = new URLSearchParams(String(window.location.search || ""));
+        if (String(qsEnd.get("iuPerfMarks") || "") === "1" && typeof performance !== "undefined" && performance.mark) {
+          performance.mark("iu-hub-home-finish-end");
+        }
+      } catch (_) {}
     }
     try {
-      if (typeof window.requestAnimationFrame === "function") {
+      var qsRaf = new URLSearchParams(String(window.location.search || ""));
+      if (String(qsRaf.get("iuPerfMarks") || "") === "1" && typeof performance !== "undefined" && performance.mark) {
+        performance.mark("iu-hub-home-before-defer");
+      }
+    } catch (_) {}
+    /* P0 mobile/tablet Domů: po sync zavření gate naplánuj apply na microtask — dřív než další rAF, stále po dokončení současného handleru. */
+    try {
+      if (typeof queueMicrotask === "function") {
+        queueMicrotask(function () {
+          iuFinishProjectsHubUrlAndApply();
+        });
+      } else if (typeof window.requestAnimationFrame === "function") {
         window.requestAnimationFrame(function () {
-          window.requestAnimationFrame(function () {
-            iuFinishProjectsHubUrlAndApply();
-          });
+          iuFinishProjectsHubUrlAndApply();
         });
       } else {
         iuFinishProjectsHubUrlAndApply();
@@ -12051,6 +12078,14 @@ function buildVideoAsArticleCard(it) {
       var backBtn = document.getElementById("iuMobileGateBack");
       var mainBackBtn = document.getElementById("iuMobileMainBackBar");
       if (!wrap || !tabNav || !tabTools || !panelNav || !panelTools || !content) return;
+      function iuMobileGatePerfMark(name) {
+        try {
+          if (typeof performance === "undefined" || typeof performance.mark !== "function") return;
+          var qs = new URLSearchParams(String(window.location.search || ""));
+          if (String(qs.get("iuPerfMarks") || "") !== "1") return;
+          performance.mark(String(name || "iu"));
+        } catch (_) {}
+      }
       function iuCloseNarrowAiOverlayWhenLeavingTools() {
         try {
           if (typeof window.matchMedia !== "function" || !window.matchMedia("(max-width: 1023px)").matches) return;
@@ -12114,6 +12149,7 @@ function buildVideoAsArticleCard(it) {
             if (panelNav) panelNav.scrollTop = 0;
             if (panelTools) panelTools.scrollTop = 0;
           } catch (_) {}
+          iuMobileGatePerfMark("iu-gate-nav-visible-sync");
         } else if (value === "tools") {
           tabNav.setAttribute("aria-selected", "false");
           tabTools.setAttribute("aria-selected", "true");
@@ -12235,7 +12271,8 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         });
       }
-      tabNav.addEventListener("click", function () {
+      function iuMobileGateNavTabToggleFromUserAction() {
+        iuMobileGatePerfMark("iu-gate-nav-toggle-start");
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         var next = cur === "nav" ? "" : "nav";
         var scheduleNavHashPush = false;
@@ -12260,10 +12297,12 @@ function buildVideoAsArticleCard(it) {
           }
         }
         setTab(next);
+        iuMobileGatePerfMark("iu-gate-nav-toggle-after-setTab");
         if (scheduleNavHashPush) {
           try {
             queueMicrotask(function () {
               try {
+                iuMobileGatePerfMark("iu-gate-nav-hash-microtask");
                 var uNav = new URL(window.location.href);
                 uNav.hash = "iu-nav";
                 history.pushState(
@@ -12271,6 +12310,7 @@ function buildVideoAsArticleCard(it) {
                   "",
                   uNav.toString()
                 );
+                iuMobileGatePerfMark("iu-gate-nav-after-pushState");
                 try {
                   sessionStorage.removeItem("iuMobileWebNavReturnArmed");
                   sessionStorage.removeItem("iuMobileWebNavLastTarget");
@@ -12295,7 +12335,13 @@ function buildVideoAsArticleCard(it) {
             } catch (_){}
           }
         }
+      }
+      tabNav.addEventListener("click", function () {
+        iuMobileGateNavTabToggleFromUserAction();
       });
+      try {
+        wrap.__iuMobileGateNavTabToggleFromUserAction = iuMobileGateNavTabToggleFromUserAction;
+      } catch (_) {}
       var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
         try {
@@ -12640,6 +12686,13 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "menu") {
+              try {
+                var wMenu = document.getElementById("iuMobileGateWrap");
+                if (wMenu && typeof wMenu.__iuMobileGateNavTabToggleFromUserAction === "function") {
+                  wMenu.__iuMobileGateNavTabToggleFromUserAction();
+                  return;
+                }
+              } catch (_) {}
               if (tabNav && typeof tabNav.click === "function") tabNav.click();
               return;
             }
