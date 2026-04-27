@@ -25092,6 +25092,49 @@ function buildVideoAsArticleCard(it) {
       .replace(/'/g, "&#039;");
   }
 
+  /** P0 TV program: explicit allowlist — žádné falešné stanice / sdílené URL bez přesného významu. */
+  const IU_TV_PROGRAM_LINKS = [
+    { title: "Česká televize", label: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/", type: "OVĚŘENO" },
+    { title: "Nova", label: "TV program Nova Group", url: "https://tv.nova.cz/program", type: "OVĚŘENO" },
+    { title: "Prima", label: "Oficiální přehled Prima", url: "https://www.iprima.cz/tv-program", type: "OFICIÁLNÍ" },
+    { title: "Seznam TV", label: "Veřejný TV program", url: "https://tv.seznam.cz/", type: "OVĚŘENO" },
+  ];
+
+  function iuMountTvProgramVerifiedLinks() {
+    try {
+      const host = document.getElementById("iuTvProgramVerifiedHost");
+      if (!host || host.getAttribute("data-iu-tv-verified-mounted") === "1") return;
+      const parts = [];
+      for (let i = 0; i < IU_TV_PROGRAM_LINKS.length; i++) {
+        const it = IU_TV_PROGRAM_LINKS[i];
+        const u = String(it && it.url ? it.url : "").trim();
+        if (!/^https:\/\//i.test(u)) continue;
+        const title = escapeHtml(it.title);
+        const label = escapeHtml(it.label);
+        const badge = escapeHtml(it.type || "ODKAZ");
+        const aria = escapeHtml(String(it.title || "Externí odkaz"));
+        parts.push(
+          '<a class="iuTvPgHit iuTvPgHit--c" href="' +
+            escapeHtml(u) +
+            '" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="' +
+            aria +
+            '"><span class="iuTvPgBadge">' +
+            badge +
+            '</span><span class="iuTvPgCard__name">' +
+            title +
+            '</span><span class="iuTvPgCard__hint">' +
+            label +
+            '</span><span class="iuTvPgCard__newtab">Otevře se v nové kartě</span></a>'
+        );
+      }
+      host.innerHTML = parts.join("");
+      host.setAttribute("data-iu-tv-verified-mounted", "1");
+    } catch (_) {}
+  }
+  try {
+    if (typeof window !== "undefined") window.IU_TV_PROGRAM_LINKS = IU_TV_PROGRAM_LINKS;
+  } catch (_) {}
+
   function iuHexToRgb(hex){
     const h = String(hex || "").trim().replace("#", "");
     if (h.length === 3){
@@ -27318,6 +27361,10 @@ function buildVideoAsArticleCard(it) {
         }catch(_){}
       });
     }catch(_){}
+
+    try {
+      iuMountTvProgramVerifiedLinks();
+    } catch (_) {}
 
     if (!feedEl || !viewEl) return;
 

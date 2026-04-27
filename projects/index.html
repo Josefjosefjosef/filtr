@@ -299,7 +299,13 @@ style-src 'self' 'unsafe-inline' https:;
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
-      #iuTvProgramView .iuTvProgramView__body{padding-bottom:max(32px,calc(24px + env(safe-area-inset-bottom, 0px)));box-sizing:border-box}
+      #iuTvProgramView .iuTvProgramView__body{box-sizing:border-box}
+      @media(max-width:900px){
+        #iuTvProgramView .iuTvProgramView__body{padding-bottom:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 24px)}
+      }
+      @media(min-width:901px){
+        #iuTvProgramView .iuTvProgramView__body{padding-bottom:max(32px,calc(24px + env(safe-area-inset-bottom, 0px)))}
+      }
       body[data-section="tvprogram"] #iuCenterStage #iuTvProgramView,html[data-section="tvprogram"] #iuCenterStage #iuTvProgramView{flex:1 1 0;min-width:0}
       #iuTvProgramView .iuSubSection{margin-top:22px}
       #iuTvProgramView .iuSubSectionHeader{display:flex;align-items:center;gap:10px;margin:0 0 6px;color:var(--iuSectionAccent,#10B981)}
@@ -317,33 +323,15 @@ style-src 'self' 'unsafe-inline' https:;
       @media (min-width:380px){#iuTvProgramView .iuTvPgGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media (min-width:700px){#iuTvProgramView .iuTvPgGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
       @media (min-width:1100px){#iuTvProgramView .iuTvPgGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-      #iuTvProgramView .iuTvPgPillGrid{display:grid;grid-template-columns:1fr;gap:8px}
-      @media (min-width:500px){#iuTvProgramView .iuTvPgPillGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media (min-width:900px){#iuTvProgramView .iuTvPgPillGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-      @media (min-width:1200px){#iuTvProgramView .iuTvPgPillGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-      #iuTvProgramView .iuTvPgChoiceGrid{display:grid;grid-template-columns:1fr;gap:10px}
-      @media (min-width:400px){#iuTvProgramView .iuTvPgChoiceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media (min-width:800px){#iuTvProgramView .iuTvPgChoiceGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
       #iuTvProgramView a.iuTvPgHit{box-sizing:border-box;text-decoration:none;color:inherit;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
-      #iuTvProgramView a.iuTvPgHit--c{position:relative;gap:6px;min-height:100px;padding:12px;justify-content:flex-start;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.12)}
+      #iuTvProgramView a.iuTvPgHit--c{position:relative;gap:6px;min-height:112px;padding:12px;justify-content:flex-start;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.12)}
       #iuTvProgramView a.iuTvPgHit--c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--iuSectionAccent,#10B981);opacity:0.88}
-      #iuTvProgramView a.iuTvPgHit--p{min-height:64px;padding:10px 12px;box-shadow:0 1px 8px rgba(0,0,0,0.1)}
-      #iuTvProgramView a.iuTvPgHit--g{min-height:88px;padding:12px 14px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
       #iuTvProgramView a.iuTvPgHit:hover,#iuTvProgramView a.iuTvPgHit:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 50%,rgba(255,255,255,0.1));background:rgba(255,255,255,0.07);box-shadow:0 4px 16px rgba(0,0,0,0.16);transform:translateY(-1px)}
       #iuTvProgramView a.iuTvPgHit:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 70%,#fff);outline-offset:2px}
       #iuTvProgramView .iuTvPgBadge{font-size:10px;font-weight:800;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.12)}
       #iuTvProgramView .iuTvPgCard__name{font-size:16px;font-weight:900;line-height:1.2;padding-left:2px;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuTvPgCard__hint{font-size:12px;opacity:0.75;padding-left:2px;overflow-wrap:anywhere;max-width:100%}
-      #iuTvProgramView .iuTvPgPill__head{font-size:15px;font-weight:900}
-      #iuTvProgramView .iuTvPgPill__hint{margin-top:2px;font-size:12px;opacity:0.78}
-      #iuTvProgramView .iuTvPgChoice__ico{font-size:22px;line-height:1}
-      #iuTvProgramView .iuTvPgChoice__label{margin-top:4px;font-size:16px;font-weight:900}
-      #iuTvProgramView .iuTvPgChoice__hint{margin-top:2px;font-size:12px;opacity:0.8;overflow-wrap:anywhere;max-width:100%}
-      #iuTvProgramView .iuTvPgComplete{margin-top:6px}
-      #iuTvProgramView .iuTvPgComplete__group{margin-top:14px}
-      #iuTvProgramView .iuTvPgComplete__group:first-of-type{margin-top:0}
-      #iuTvProgramView .iuTvPgComplete__head{margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;opacity:0.72}
-      #iuTvProgramView .iuTvLinksGrid{margin-top:6px}
+      #iuTvProgramView .iuTvPgCard__newtab{font-size:11px;opacity:0.62;margin-top:4px;padding-left:2px;line-height:1.35;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuChip--accent{--iuChipAccent:var(--iuSectionAccent)}
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
@@ -1498,245 +1486,18 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                           <div class="iuTvPgHero__text">
                             <h2 class="iuTvPgHero__title">TV program</h2>
-                            <p class="iuTvPgHero__sub">Rychlý přehled stanic, večerní volby a odkazy na oficiální programy bez zbytečného hledání.</p>
+                            <p class="iuTvPgHero__sub">Rychlý přehled ověřených TV programů a bezpečných odkazů na hlavní vysílatele.</p>
                           </div>
                         </div>
                       </div>
 
-                      <div class="iuSubSection" id="iuTvPg-now" data-iu-tv-now>
+                      <div class="iuSubSection" id="iuTvPg-verified" data-iu-tv-verified>
                         <div class="iuSubSectionHeader">
-                          <h3>Teď v TV</h3>
+                          <h3>Ověřené TV programy</h3>
                           <div class="iuSubLine" aria-hidden="true"></div>
                         </div>
-                        <p class="iuTvPgLead">Rychlé odkazy na aktuální program hlavních stanic.</p>
-                        <div class="iuTvPgGrid" role="list" aria-label="Hlavní stanice – oficiální a veřejné programové stránky">
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.ceskatelevize.cz/d/tv-program/ct-1/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Stanice">Stanice</span>
-                            <span class="iuTvPgCard__name">ČT1</span>
-                            <span class="iuTvPgCard__hint">Otevřít program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.ceskatelevize.cz/d/tv-program/ct-2/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Stanice">Stanice</span>
-                            <span class="iuTvPgCard__name">ČT2</span>
-                            <span class="iuTvPgCard__hint">Program stanice</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.ceskatelevize.cz/d/tv-program/ct-24/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Zprávy">Zprávy</span>
-                            <span class="iuTvPgCard__name">ČT24</span>
-                            <span class="iuTvPgCard__hint">Přehled vysílání</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.ceskatelevize.cz/d/tv-program/ct-4-sport/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Sport">Sport</span>
-                            <span class="iuTvPgCard__name">ČT sport</span>
-                            <span class="iuTvPgCard__hint">Oficiální program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Nova</span>
-                            <span class="iuTvPgCard__hint">Otevřít program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Film">Film</span>
-                            <span class="iuTvPgCard__name">Nova Cinema</span>
-                            <span class="iuTvPgCard__hint">Program stanice</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Sport">Sport</span>
-                            <span class="iuTvPgCard__name">Nova Action</span>
-                            <span class="iuTvPgCard__hint">Přehled vysílání</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Nova Fun</span>
-                            <span class="iuTvPgCard__hint">Otevřít program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.iprima.cz/tv-program/prima/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Stanice">Stanice</span>
-                            <span class="iuTvPgCard__name">Prima</span>
-                            <span class="iuTvPgCard__hint">Oficiální program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.iprima.cz/tv-program/prima-cool/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Prima Cool</span>
-                            <span class="iuTvPgCard__hint">Program stanice</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.iprima.cz/tv-program/prima-love/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Prima Love</span>
-                            <span class="iuTvPgCard__hint">Otevřít program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.iprima.cz/tv-program/prima-zoom/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Prima Zoom</span>
-                            <span class="iuTvPgCard__hint">Přehled vysílání</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://www.iprima.cz/tv-program/cnn-prima-news/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Zprávy">Zprávy</span>
-                            <span class="iuTvPgCard__name">CNN Prima News</span>
-                            <span class="iuTvPgCard__hint">Zpravodajský program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://barrandov.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Stanice">Stanice</span>
-                            <span class="iuTvPgCard__name">Barrandov</span>
-                            <span class="iuTvPgCard__hint">Otevřít program</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--c" href="https://tv.seznam.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgBadge" data-iu-tv-b="Program">Program</span>
-                            <span class="iuTvPgCard__name">Seznam TV</span>
-                            <span class="iuTvPgCard__hint">Přehled vysílání</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      <div class="iuSubSection" id="iuTvPg-tonight" data-iu-tv-tonight>
-                        <div class="iuSubSectionHeader">
-                          <h3>Dnes večer</h3>
-                          <div class="iuSubLine" aria-hidden="true"></div>
-                        </div>
-                        <p class="iuTvPgLead">Vyber si podle nálady a otevři bezpečný přehled.</p>
-                        <div class="iuTvPgPillGrid" role="list" aria-label="Rychlé volby podle nálady (bez konkrétních pořadů)">
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://www.iprima.cz/tv-program/prime/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Film</span>
-                            <span class="iuTvPgPill__hint">Filmy v TV</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://www.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Seriál</span>
-                            <span class="iuTvPgPill__hint">Seriály v TV</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://tv.seznam.cz/sekce/stanice-sportovni-100005" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Sport</span>
-                            <span class="iuTvPgPill__hint">Sport v TV</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://ct24.ceskatelevize.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Zprávy</span>
-                            <span class="iuTvPgPill__hint">Zpravodajství</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://www.ceskatelevize.cz/d/tv-program/ct-2/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Dokumenty</span>
-                            <span class="iuTvPgPill__hint">Dokumenty</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://decko.ceskatelevize.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Děti</span>
-                            <span class="iuTvPgPill__hint">Dětské pořady</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://www.iprima.cz/tv-program/prima-show/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Reality show</span>
-                            <span class="iuTvPgPill__hint">Zábava a show</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--p" href="https://tv.seznam.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgPill__head">Zábava</span>
-                            <span class="iuTvPgPill__hint">Přehled v TV</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      <div class="iuSubSection" id="iuTvPg-choice" data-iu-tv-choice>
-                        <div class="iuSubSectionHeader">
-                          <h3>Co chceš sledovat?</h3>
-                          <div class="iuSubLine" aria-hidden="true"></div>
-                        </div>
-                        <div class="iuTvPgChoiceGrid" role="list" aria-label="Rozcestník dle žánru">
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://www.iprima.cz/tv-program/prime/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">🎬</span>
-                            <span class="iuTvPgChoice__label">Filmy</span>
-                            <span class="iuTvPgChoice__hint">Filmy v TV</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://tv.seznam.cz/sekce/stanice-sportovni-100005" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">⚽</span>
-                            <span class="iuTvPgChoice__label">Sport</span>
-                            <span class="iuTvPgChoice__hint">Sport v TV</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://ct24.ceskatelevize.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">📰</span>
-                            <span class="iuTvPgChoice__label">Zprávy</span>
-                            <span class="iuTvPgChoice__hint">Zpravodajství</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://decko.ceskatelevize.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">👶</span>
-                            <span class="iuTvPgChoice__label">Děti</span>
-                            <span class="iuTvPgChoice__hint">Dětské pořady</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://www.ceskatelevize.cz/d/tv-program/ct-2/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">🌍</span>
-                            <span class="iuTvPgChoice__label">Dokumenty</span>
-                            <span class="iuTvPgChoice__hint">Dokumenty</span>
-                          </a>
-                          <a class="iuTvPgHit iuTvPgHit--g" href="https://tv.seznam.cz/" target="_blank" rel="noopener noreferrer" role="listitem">
-                            <span class="iuTvPgChoice__ico" aria-hidden="true">📺</span>
-                            <span class="iuTvPgChoice__label">Celý program</span>
-                            <span class="iuTvPgChoice__hint">Veřejný TV přehled</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      <div class="iuSubSection" id="iuTvPg-complete" data-iu-tv-complete>
-                        <div class="iuSubSectionHeader">
-                          <h3>Kompletní program</h3>
-                          <div class="iuSubLine" aria-hidden="true"></div>
-                        </div>
-                        <div class="iuTvPgComplete">
-                          <div class="iuTvPgComplete__group" aria-label="Česká televize">
-                            <h4 class="iuTvPgComplete__head">Česká televize</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-1/" target="_blank" rel="noopener noreferrer" role="listitem">ČT1</a>
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-2/" target="_blank" rel="noopener noreferrer" role="listitem">ČT2</a>
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-24/" target="_blank" rel="noopener noreferrer" role="listitem">ČT24</a>
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-4-sport/" target="_blank" rel="noopener noreferrer" role="listitem">ČT sport</a>
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-decko/" target="_blank" rel="noopener noreferrer" role="listitem">ČT :D</a>
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-art/" target="_blank" rel="noopener noreferrer" role="listitem">ČT art</a>
-                            </div>
-                          </div>
-                          <div class="iuTvPgComplete__group" aria-label="Skupina Nova">
-                            <h4 class="iuTvPgComplete__head">Nova Group</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova</a>
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova Cinema</a>
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova Action</a>
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova Fun</a>
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova Gold</a>
-                              <a class="iuChip iuChip--accent" href="https://tv.nova.cz/program" target="_blank" rel="noopener noreferrer" role="listitem">Nova Lady</a>
-                            </div>
-                          </div>
-                          <div class="iuTvPgComplete__group" aria-label="Skupina Prima">
-                            <h4 class="iuTvPgComplete__head">Prima Group</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima/" target="_blank" rel="noopener noreferrer" role="listitem">Prima</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-cool/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Cool</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-love/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Love</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-zoom/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Zoom</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-max/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Max</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-krimi/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Krimi</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/cnn-prima-news/" target="_blank" rel="noopener noreferrer" role="listitem">CNN Prima News</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-show/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Show</a>
-                              <a class="iuChip iuChip--accent" href="https://www.iprima.cz/tv-program/prima-star/" target="_blank" rel="noopener noreferrer" role="listitem">Prima Star</a>
-                            </div>
-                          </div>
-                          <div class="iuTvPgComplete__group" aria-label="Další televize">
-                            <h4 class="iuTvPgComplete__head">Další</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://tv.seznam.cz/" target="_blank" rel="noopener noreferrer" role="listitem">Seznam TV</a>
-                              <a class="iuChip iuChip--accent" href="https://barrandov.cz/" target="_blank" rel="noopener noreferrer" role="listitem">Barrandov</a>
-                              <a class="iuChip iuChip--accent" href="https://ocko.tv/" target="_blank" rel="noopener noreferrer" role="listitem">Óčko</a>
-                              <a class="iuChip iuChip--accent" href="https://jojfamily.cz/" target="_blank" rel="noopener noreferrer" role="listitem">JOJ Family</a>
-                            </div>
-                          </div>
-                          <div class="iuTvPgComplete__group" aria-label="Sport v TV">
-                            <h4 class="iuTvPgComplete__head">Sport</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-4-sport/" target="_blank" rel="noopener noreferrer" role="listitem">ČT sport</a>
-                              <a class="iuChip iuChip--accent" href="https://www.livesport.cz/tv/" target="_blank" rel="noopener noreferrer" role="listitem">Sport v TV (Livesport)</a>
-                            </div>
-                          </div>
-                          <div class="iuTvPgComplete__group" aria-label="Dětské programy">
-                            <h4 class="iuTvPgComplete__head">Děti</h4>
-                            <div class="iuTvLinksGrid iuTvPgLinks" role="list">
-                              <a class="iuChip iuChip--accent" href="https://www.ceskatelevize.cz/d/tv-program/ct-decko/" target="_blank" rel="noopener noreferrer" role="listitem">ČT :D (program)</a>
-                              <a class="iuChip iuChip--accent" href="https://decko.ceskatelevize.cz/" target="_blank" rel="noopener noreferrer" role="listitem">Déčko (web)</a>
-                              <a class="iuChip iuChip--accent" href="https://www.nickelodeon.cz/" target="_blank" rel="noopener noreferrer" role="listitem">Nickelodeon</a>
-                              <a class="iuChip iuChip--accent" href="https://minimax.cz/tv" target="_blank" rel="noopener noreferrer" role="listitem">Minimax</a>
-                            </div>
-                          </div>
-                        </div>
+                        <p class="iuTvPgLead">Jen odkazy, které vedou na oficiální nebo veřejný TV přehled uvedené služby. Žádné sliby konkrétní stanice bez vlastního programu.</p>
+                        <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="Ověřené TV programy"></div>
                       </div>
                     </div>
                   </section>
