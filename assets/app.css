@@ -4447,10 +4447,6 @@ body[data-section="home"] .iuHomeCanvas{
   --iuSectionAccent: var(--iuNavAccent-namedays, #F59E0B);
 }
 
-.iuSectionHeader--myuzel{
-  --iuSectionAccent: var(--iuMyUzelAccent, #94A3B8);
-}
-
 .iuSectionHeader--jr h2,
 .iuSectionHeader--mapy h2,
 .iuSectionHeader--radio h2,
@@ -4458,8 +4454,7 @@ body[data-section="home"] .iuHomeCanvas{
 .iuSectionHeader--tvprogram h2,
 .iuSectionHeader--travel h2,
 .iuSectionHeader--weather h2,
-.iuSectionHeader--namedays h2,
-.iuSectionHeader--myuzel h2{
+.iuSectionHeader--namedays h2{
   color: var(--iuSectionAccent, currentColor);
 }
 
@@ -4496,178 +4491,6 @@ body[data-section="home"] .iuHomeCanvas{
 }
 #newsList .iuNotesHost .iuNotesActions .iuBtn{
   background: var(--iuContentAccent, var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2)));
-}
-
-.iuMyUzelView{
-  padding: 18px 12px;
-}
-
-.iuMyUzelSectionGear{
-  margin-left: auto;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.18);
-  color: rgba(255,255,255,0.9);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.iuMyUzelSectionGear svg{
-  width: 18px;
-  height: 18px;
-  display: block;
-  stroke: currentColor;
-  fill: none;
-}
-
-.iuMyUzelButtons{
-  margin-top: 14px;
-  
-}
-
-.iuMyUzelBtnWrap{
-  position: relative;
-}
-
-.iuMyUzelBtnGear{
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.22);
-  color: rgba(255,255,255,0.92);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
-}
-.iuMyUzelBtnGear svg{
-  width: 16px;
-  height: 16px;
-  display: block;
-  stroke: currentColor;
-  fill: none;
-}
-
-.iuMyUzelView{
-  --iuMyUzelAccent: var(--iuSectionAccent, #b9bcc2);
-}
-.iuMyUzelView .iuRadioChip{
-  background: color-mix(in srgb, rgba(255,255,255,0.94) 92%, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 8%);
-  border-color: color-mix(in srgb, var(--iuSectionAccent, var(--iuMyUzelAccent, #94A3B8)) 28%, rgba(11,27,43,0.12));
-  border-left: 4px solid var(--iuMyUzelAccent, #b9bcc2);
-}
-
-.iuMyUzelView .iuRadioChip:hover,
-.iuMyUzelView .iuRadioChip:focus-visible{
-  outline: 2px solid var(--iuMyUzelAccent, #b9bcc2);
-  outline-offset: 2px;
-}
-
-.iuMyUzelInlineMsg{
-  margin-top: 10px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.74);
-}
-
-.iuMyUzelModalOverlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  z-index: 10050;
-}
-.iuMyUzelModal{
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px 12px;
-  z-index: 10060;
-}
-
-.iuMyUzelModalOverlay[hidden],
-.iuMyUzelModal[hidden]{
-  display: none !important;
-}
-.iuMyUzelModalCard{
-  width: min(520px, 100%);
-  background: rgba(18, 18, 22, 0.98);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.45);
-  color: rgba(255,255,255,0.92);
-  overflow: hidden;
-}
-.iuMyUzelModalHeader{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-}
-.iuMyUzelModalTitle{
-  font-weight: 900;
-  letter-spacing: -0.01em;
-}
-.iuMyUzelModalClose{
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.18);
-  color: rgba(255,255,255,0.92);
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-}
-.iuMyUzelModalBody{
-  padding: 14px;
-}
-.iuMyUzelField{
-  display: grid;
-  gap: 6px;
-  margin: 0 0 12px 0;
-}
-.iuMyUzelField label{
-  font-size: 12px;
-  color: rgba(255,255,255,0.78);
-}
-.iuMyUzelInput{
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.92);
-}
-.iuMyUzelActions{
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-.iuMyUzelPrimaryBtn{
-  border: 0;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: 900;
-  color: #fff;
-  background: var(--iuMyUzelAccent, #64748B);
-  cursor: pointer;
-}
-.iuMyUzelErr{
-  margin-top: 8px;
-  font-size: 12px;
-  color: #FCA5A5;
 }
 
 .iuWeatherView{
@@ -7821,36 +7644,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
   width: auto !important;
 }
 
-#iuCenterStage #iuMyUzelView1,
-#iuCenterStage #iuMyUzelView2,
-#iuCenterStage #iuMyUzelView3,
-#iuCenterStage #iuMyUzelView4,
-#iuCenterStage #iuMyUzelView5{
-  flex: 1 1 0;
-  min-width: 0;
-  width: auto !important;
-  max-width: none;
-}
-
-#iuCenterStage #iuMyUzelView1 .iuRadioGrid,
-#iuCenterStage #iuMyUzelView2 .iuRadioGrid,
-#iuCenterStage #iuMyUzelView3 .iuRadioGrid,
-#iuCenterStage #iuMyUzelView4 .iuRadioGrid,
-#iuCenterStage #iuMyUzelView5 .iuRadioGrid{
-  width: 100%;
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-#iuCenterStage #iuMyUzelView1 .iuRadioChip,
-#iuCenterStage #iuMyUzelView2 .iuRadioChip,
-#iuCenterStage #iuMyUzelView3 .iuRadioChip,
-#iuCenterStage #iuMyUzelView4 .iuRadioChip,
-#iuCenterStage #iuMyUzelView5 .iuRadioChip{
-  width: 100%;
-}
-
 #iuCenterStage #iuHomeView{
   flex: 1 1 0;
   min-width: 0;
@@ -7958,60 +7751,6 @@ html[data-section="namedays"] #iuCenterStage #iuHolidaysView{
 
 @media (max-width: 520px){
   .iuRailThemeRow{ padding-left:8px; padding-right:8px; }
-}
-
-.iuMyUzelBlock{
-  width: 100%;
-  padding: 10px 6px 6px 6px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px; 
-}
-
-.iuMyUzelDivider{
-  width: 60%;
-  height: 2px;
-  margin: 0 auto;
-  background: rgba(11,27,43,0.14);
-  border-radius: 999px;
-  display: block;
-  pointer-events: none;
-}
-
-.iuMyUzelLabel{
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--iuRailBtnFg, rgba(11,27,43,0.72));
-  margin: 0;
-  display: block;
-  pointer-events: none;
-}
-
-.iuMyUzelTitle{
-  font-size: 14px;     
-  font-weight: 600;    
-}
-
-.iuMyUzelItem{
-  --iuMyUzelIcon: #b9bcc2;
-  color: var(--iuMyUzelAccent, var(--iuMyUzelIcon));
-  background: transparent;
-}
-
-.iuMyUzelItem.is-active{
-  color: var(--iuMyUzelAccent, var(--iuMyUzelIcon));
-  background: rgba(255,255,255,0.10);
-}
-
-.iuMyUzelItem:hover,
-.iuMyUzelItem:focus-visible{
-  
-  color: var(--iuNavAccent, var(--iuMyUzelAccent, var(--iuMyUzelIcon)));
 }
 
 .iuIconTile{
@@ -9711,14 +9450,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   color:#ff7a00;
 }
 
-.iuMyUzelItem{
-  color: var(--iuNavAccent, var(--iuMyUzelAccent, var(--iuMyUzelIcon))) !important;
-}
-
-.iuMyUzelView .iuRadioChip{
-  border-left: 4px solid var(--iuSectionAccent, #b9bcc2);
-}
-
 #newsList .iuRadioChip{
   filter: none !important;
   opacity: 1 !important;
@@ -9756,40 +9487,14 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
   outline-offset: 2px !important;
 }
 
-#newsList .iuMyUzelView .iuRadioChip{
-  background: transparent !important;
-  border: 1px solid rgba(11,27,43,0.18) !important; 
-  border-left: 1px solid rgba(11,27,43,0.18) !important;
-}
-
-#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip{
-  background: var(--iuMyUzelAccent, #b9bcc2) !important;
-  border: 0 !important;
-  border-left: 0 !important;
-  box-shadow: none !important;
-  filter: none !important;
-  opacity: 1 !important;
-}
-
-#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipTitle,
-#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChipDesc{
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip[data-iu-text="dark"] .iuRadioChipTitle,
-#newsList .iuMyUzelView[data-myuzel-colored="1"] .iuRadioChip[data-iu-text="dark"] .iuRadioChipDesc{
-  color: #0b1b2b !important;
-}
-
 .iuNotesHost .iuNotes,
 .iuNotesHost [data-iu-notes],
 [data-iu-notes].iuNotes{
   margin-top: 12px;
   padding: 10px 10px;
-  border: 2px solid var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
+  border: 2px solid var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2));
   border-radius: 12px;
-  background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
+  background: var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2));
 }
 
 .iuNotesHost .iuNotesTop,
@@ -9821,7 +9526,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 [data-iu-notes] .iuNotesActions .iuNotesBtn{
   appearance: none;
   border: none;
-  background: var(--iuNotesAccent, var(--iuSectionAccent, var(--iuMyUzelAccent, #b9bcc2)));
+  background: var(--iuNotesAccent, var(--iuSectionAccent, #b9bcc2));
   color: #ffffff;
   border-radius: 10px;
   padding: 6px 10px;
@@ -10027,15 +9732,6 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 #iuNotesOverlay.iuNotesRoot .iu-notesOverlay__pin:hover{
   filter: brightness(0.97);
 }
-
-
-
-.iuMyUzelTitleLine1,
-.iuMyUzelTitleLine2{
-  display: block;
-  line-height: 1.05;
-}
-.iuMyUzelTitleLine2{ font-size: 0.92em; }
 
 .iu-rightContent{
   height: auto !important;
@@ -10687,8 +10383,7 @@ main#content .layout:has(#leftStickyHeader){
   opacity:0.9;
 }
 
-.iuLeftRailSectionTitle,
-.iuMyUzelLabel{
+.iuLeftRailSectionTitle{
   color:#D1D5DB !important;
   text-align:center;
   background:transparent;
@@ -17502,10 +17197,6 @@ html, body,
   outline-offset: 2px;
 }
 
-.iu-leftNav .iu-leftNavItem[data-rail^="myuzel-"]{
-  --iuNavAccent: var(--iuMyUzelAccent, var(--iuMyUzelIcon, #b9bcc2));
-}
-
 .iu-leftNavIcon{
   width: 22px;
   height: 22px;
@@ -18195,8 +17886,7 @@ body #iuLeftRail{
 
 #iuLeftRail .iu-leftNavItem:last-of-type{ margin-bottom: 12px !important; }
 
-#iuLeftRail .iuLeftRailSectionTitle,
-#iuLeftRail .iuMyUzelLabel{
+#iuLeftRail .iuLeftRailSectionTitle{
   color:#D1D5DB !important;
   text-align:center !important;
 
@@ -18321,14 +18011,6 @@ body #iuLeftRail{
   color: var(--iuRailAccent-fun) !important;
 }
 
-#iuLeftRail .iuMyUzelLabel{
-  color:#D1D5DB !important; 
-}
-
-#iuLeftRail .iuMyUzelLabel{
-  --iuRailSectionAccent: color-mix(in srgb, var(--iuRailAccent-me) 55%, transparent) !important;
-}
-
 #iuLeftRail .iu-leftNavItem{
   color:#D1D5DB !important; 
 }
@@ -18391,15 +18073,6 @@ body #iuLeftRail{
   color: var(--iuRailAccent-fun) !important;
 }
 
-#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"]{
-  --iuPillAccent: var(--iuRailAccent-me);
-}
-
-#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] i,
-#iuLeftRail .iu-leftNavItem[data-rail^="myuzel-"] svg{
-  color: var(--iuRailAccent-me) !important;
-}
-
 #iuLeftRail .iu-leftNavItem :is(svg, i, .iuNavIcon){
   filter: none !important;
 }
@@ -18441,8 +18114,7 @@ body #iuLeftRail{
   font-size: 14px !important; 
 }
 
-#iuLeftRail .iuLeftRailSectionTitle,
-#iuLeftRail .iuMyUzelLabel{
+#iuLeftRail .iuLeftRailSectionTitle{
   text-align: center !important;
   width: 100%;
 }
@@ -18521,8 +18193,7 @@ header#topbarWrap.topbar-new.iuTopbar::after{
   text-transform: none;
   --iuRailSectionAccent: #2563EB !important;
 }
-#iuLeftRail .iuLeftRailSectionTitle,
-#iuLeftRail .iuMyUzelLabel{
+#iuLeftRail .iuLeftRailSectionTitle{
   color: var(--iuTopbarBrandColor) !important;
 }
 #iuLeftRail .iu-leftNav .iu-leftNavLabel{

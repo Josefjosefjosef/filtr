@@ -4619,11 +4619,6 @@ try {
       "vzdelavani",
       "radio",
       "jr",
-      "myuzel-1",
-      "myuzel-2",
-      "myuzel-3",
-      "myuzel-4",
-      "myuzel-5",
     ]);
     return allowed.has(k) ? k : IU_ARTICLE_HUB_SECTION;
   }
@@ -24981,11 +24976,6 @@ function buildVideoAsArticleCard(it) {
     kultura: 'media',
     veda: 'media',
     vzdelavani: 'media',
-    'myuzel-1': 'myuzel-1',
-    'myuzel-2': 'myuzel-2',
-    'myuzel-3': 'myuzel-3',
-    'myuzel-4': 'myuzel-4',
-    'myuzel-5': 'myuzel-5',
   };
   function escapeHtml(s){
     return String(s ?? "")
@@ -25078,10 +25068,6 @@ function buildVideoAsArticleCard(it) {
         if (mode === "media") return document.getElementById("feed");
         return document.getElementById("iuTravelView");
       }
-      if (/^myuzel-[1-5]$/.test(s)) {
-        const slot = s.split("-")[1];
-        return document.getElementById("iuMyUzelView" + slot);
-      }
     }catch(_){}
     return null;
   }
@@ -25158,6 +25144,15 @@ function buildVideoAsArticleCard(it) {
     const nm = iuKeyPart(name);
     if (!sc || !nm) return "";
     return IU_NOTES_PREFIX + sc + "_" + nm;
+  }
+
+  function iuAutosizeTextarea(ta){
+    try{
+      if (!ta) return;
+      ta.style.height = "auto";
+      ta.style.overflow = "hidden";
+      ta.style.height = (ta.scrollHeight + 2) + "px";
+    }catch{}
   }
 
   function iuRenderNotesHost(hostEl, opts){
@@ -25455,600 +25450,6 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
-  // ============================================================
-  // MŮJ INFO UZEL — 5 custom sections (UI-only, localStorage)
-  // ============================================================
-
-  const MYUZEL_STORAGE_KEY = "iu_myuzel_v1";
-  const MYUZEL_BUTTONS_MAX = 4;
-
-  function iuAutosizeTextarea(ta){
-    try{
-      if (!ta) return;
-      ta.style.height = "auto";
-      ta.style.overflow = "hidden";
-      ta.style.height = (ta.scrollHeight + 2) + "px";
-    }catch{}
-  }
-
-  function iuMyUzelDefaultState(){
-    const mkBtns = () => Array.from({ length: MYUZEL_BUTTONS_MAX }).map((_, i) => ({
-      title: `Tlačítko ${i + 1}`,
-      url: "",
-    }));
-    return {
-      sections: Array.from({ length: 5 }).map((_, i) => ({
-        name: `Sekce ${i + 1}`,
-        color: "#b9bcc2",
-        buttons: mkBtns(),
-        notes: "",
-      })),
-      activeSection: 1,
-    };
-  }
-
-  function iuMyUzelClampName(s){
-    const t = String(s || "").trim().slice(0, 14);
-    return t || "";
-  }
-
-  function iuMyUzelValidateState(raw){
-    const def = iuMyUzelDefaultState();
-    const out = (raw && typeof raw === "object") ? raw : {};
-    const sections = Array.isArray(out.sections) ? out.sections : [];
-    const fixedSections = [];
-
-    for (let i = 0; i < 5; i++) {
-      const src = sections[i] && typeof sections[i] === "object" ? sections[i] : {};
-      const name = iuMyUzelClampName(src.name) || def.sections[i].name;
-      const color = String(src.color || def.sections[i].color || "#b9bcc2").trim() || "#b9bcc2";
-      const btns = Array.isArray(src.buttons) ? src.buttons : [];
-      const fixedBtns = [];
-      for (let j = 0; j < MYUZEL_BUTTONS_MAX; j++) {
-        const b = btns[j] && typeof btns[j] === "object" ? btns[j] : {};
-        fixedBtns.push({
-          title: iuMyUzelClampName(b.title) || `Tlačítko ${j + 1}`,
-          url: String(b.url || "").trim(),
-        });
-      }
-      const notes = (typeof src.notes === "string") ? src.notes : "";
-      fixedSections.push({ name, color, buttons: fixedBtns, notes });
-    }
-
-    let activeSection = 1;
-    try{
-      const n = parseInt(out.activeSection, 10);
-      if (Number.isFinite(n) && n >= 1 && n <= 5) activeSection = n;
-    }catch{}
-
-    return { sections: fixedSections, activeSection };
-  }
-
-  function iuMyUzelLoad(){
-    try{
-      const txt = localStorage.getItem(MYUZEL_STORAGE_KEY);
-      if (!txt) {
-        const st = iuMyUzelDefaultState();
-        try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
-        return st;
-      }
-      const parsed = JSON.parse(txt);
-      const st = iuMyUzelValidateState(parsed);
-      // repair storage silently if needed
-      try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
-      return st;
-    }catch{
-      const st = iuMyUzelDefaultState();
-      try { localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st)); } catch {}
-      return st;
-    }
-  }
-
-  function iuMyUzelSave(state){
-    try{
-      const st = iuMyUzelValidateState(state);
-
-      // sanitize legacy storage (drop buttons 5/6 permanently)
-      try{
-        for (const sec of st.sections || []) {
-          if (Array.isArray(sec.buttons) && sec.buttons.length > MYUZEL_BUTTONS_MAX) {
-            sec.buttons = sec.buttons.slice(0, MYUZEL_BUTTONS_MAX);
-          }
-          if (typeof sec.notes !== "string") sec.notes = "";
-        }
-      }catch{}
-
-      localStorage.setItem(MYUZEL_STORAGE_KEY, JSON.stringify(st));
-
-      // FINAL: always apply saved colors to rail + views (stable even after reload)
-      try{
-        const items = Array.from(document.querySelectorAll('.iuMyUzelItem'));
-        for (let i = 0; i < 5; i++) {
-          const sec = st.sections && st.sections[i] ? st.sections[i] : null;
-          if (!sec) continue;
-          const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-          const isColored = (rawC.toLowerCase() !== "#b9bcc2");
-
-          // --- APPLY COLOR TO RAIL ITEM ---
-          const railItem =
-            document.querySelector(`.iuMyUzelItem[data-slot="${i+1}"]`) ||
-            document.querySelector(`.iuMyUzelItem[data-myuzel-slot="${i+1}"]`) ||
-            items[i];
-
-          if (railItem) {
-            if (isColored) {
-              try { railItem.style.setProperty("--iuNavAccent", rawC); } catch {}
-              try { railItem.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
-              try { railItem.setAttribute("data-myuzel-colored", "1"); } catch {}
-            } else {
-              try { railItem.style.removeProperty("--iuNavAccent"); } catch {}
-              try { railItem.style.removeProperty("--iuMyUzelAccent"); } catch {}
-              try { railItem.setAttribute("data-myuzel-colored", "0"); } catch {}
-            }
-          }
-
-          // Apply to any matching rail nodes (future-proof; avoids regressions on duplicates)
-          try{
-            const railItems = document.querySelectorAll(`.iuMyUzelItem[data-slot="${i+1}"], .iuMyUzelItem[data-myuzel-slot="${i+1}"]`);
-            railItems.forEach((el) => {
-              if (isColored) {
-                try { el.style.setProperty("--iuNavAccent", rawC); } catch {}
-                try { el.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
-                try { el.setAttribute("data-myuzel-colored", "1"); } catch {}
-              } else {
-                try { el.style.removeProperty("--iuNavAccent"); } catch {}
-                try { el.style.removeProperty("--iuMyUzelAccent"); } catch {}
-                try { el.setAttribute("data-myuzel-colored", "0"); } catch {}
-              }
-            });
-          }catch{}
-
-          // --- APPLY COLOR TO VIEW WRAPPER ---
-          const viewEl = document.getElementById(`iuMyUzelView${i+1}`);
-          if (viewEl) {
-            if (isColored) {
-              try { viewEl.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
-              try { viewEl.setAttribute("data-myuzel-colored", "1"); } catch {}
-            } else {
-              try { viewEl.style.removeProperty("--iuMyUzelAccent"); } catch {}
-              try { viewEl.setAttribute("data-myuzel-colored", "0"); } catch {}
-            }
-          }
-        }
-      }catch{}
-
-      return st;
-    }catch{
-      return iuMyUzelValidateState(state);
-    }
-  }
-
-  function iuMyUzelGetRailItem(slot){
-    try{
-      return document.querySelector(`.iu-leftNav .iuMyUzelItem[data-myuzel-slot="${slot}"]`);
-    }catch{
-      return null;
-    }
-  }
-
-  function iuMyUzelApplyRailState(){
-    try{
-      const st = iuMyUzelLoad();
-      for (let i = 1; i <= 5; i++) {
-        const it = iuMyUzelGetRailItem(i);
-        if (!it) continue;
-        const sec = st.sections[i - 1];
-        const label = it.querySelector(".iu-leftNavLabel");
-        if (label) label.textContent = String(sec.name || `Sekce ${i}`).trim();
-        const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-        const isColored = (rawC.toLowerCase() !== "#b9bcc2");
-        // Rail: keep neutral until user sets a custom color.
-        try { it.style.setProperty("--iuMyUzelIcon", rawC); } catch {}
-        if (isColored) {
-          try { it.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
-          try { it.style.setProperty("--iuNavAccent", rawC); } catch {}
-          try { it.setAttribute("data-myuzel-colored", "1"); } catch {}
-        } else {
-          try { it.style.removeProperty("--iuMyUzelAccent"); } catch {}
-          try { it.style.removeProperty("--iuNavAccent"); } catch {}
-          try { it.setAttribute("data-myuzel-colored", "0"); } catch {}
-        }
-      }
-    }catch{}
-  }
-
-  function iuMyUzelRenderSection(slot){
-    const s = parseInt(slot, 10);
-    if (!Number.isFinite(s) || s < 1 || s > 5) return;
-    const st = iuMyUzelLoad();
-    const sec = st.sections[s - 1];
-    const rawC = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-    const isColored = (rawC.toLowerCase() !== "#b9bcc2");
-
-    const view = document.getElementById(`iuMyUzelView${s}`);
-    const title = document.getElementById(`iuMyUzelTitle${s}`);
-    const btnWrap = view ? view.querySelector(`.iuMyUzelButtons[data-myuzel-slot="${s}"]`) : null;
-    if (title) title.textContent = String(sec.name || `Sekce ${s}`).trim();
-    if (view) {
-      if (isColored) {
-        try { view.style.setProperty("--iuMyUzelAccent", rawC); } catch {}
-        try { view.setAttribute("data-myuzel-colored", "1"); } catch {}
-      } else {
-        try { view.style.removeProperty("--iuMyUzelAccent"); } catch {}
-        try { view.setAttribute("data-myuzel-colored", "0"); } catch {}
-      }
-    }
-    if (!btnWrap) return;
-
-    try { btnWrap.classList.add("iuRadioGrid"); } catch {}
-
-    const rows = [];
-    const btns = Array.isArray(sec.buttons) ? sec.buttons.slice(0, MYUZEL_BUTTONS_MAX) : [];
-    for (let i = 0; i < btns.length; i++) {
-      const b = btns[i] || {};
-      rows.push(
-        `<div class="iuMyUzelBtnWrap">` +
-          `<button type="button" class="iuMyUzelBtnGear" data-myuzel-slot="${s}" data-myuzel-btn="${i}" aria-label="Nastavení tlačítka">` +
-            `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">` +
-              `<path d="M12 15.5a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" stroke-width="2"/>` +
-              `<path d="M19.4 15a7.9 7.9 0 0 0 .1-2l2-1.6l-2-3.5l-2.4.8a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1L6.5 5.9l-2 3.5L6.5 11a7.9 7.9 0 0 0 0 2l-2 1.6l2 3.5l2.4-.8a7.6 7.6 0 0 0 1.7 1L11 21h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.4.8l2-3.5L19.4 15z" fill="none" stroke="currentColor" stroke-width="2"/>` +
-            `</svg>` +
-          `</button>` +
-          `<button type="button" class="iuRadioChip iuMyUzelChip" data-myuzel-slot="${s}" data-myuzel-open="${i}">` +
-            `<div class="iuRadioChipTitle">${escapeHtml(b.title || `Tlačítko ${i + 1}`)}</div>` +
-          `</button>` +
-        `</div>`
-      );
-    }
-    btnWrap.innerHTML = rows.join("") + `<div class="iuMyUzelInlineMsg" id="iuMyUzelMsg${s}" hidden></div>`;
-
-    // Chip text contrast (only when colored -> solid bg)
-    try{
-      const chips = btnWrap.querySelectorAll(".iuMyUzelChip");
-      chips.forEach((chip) => {
-        if (isColored) iuSetChipTextContrast(chip, rawC);
-        else chip.removeAttribute("data-iu-text");
-      });
-    }catch{}
-
-    // Notes block (per-section) — unified Notes component
-    try{
-      if (!view) return;
-      const existingHost = view.querySelector(`.iuNotesHost[data-iu-notes-scope="myuzel"]`);
-      if (existingHost) existingHost.remove();
-
-      const host = document.createElement("div");
-      host.className = "iuNotesHost";
-      host.dataset.iuNotesScope = "myuzel";
-      host.dataset.iuNotesKey = `myuzel_slot_${s}`;
-      host.dataset.iuNotesName = `slot-${s}`;
-      host.dataset.iuNotesTitle = String(sec.name || `Sekce ${s}`).trim();
-
-      // Migration: keep existing notes saved inside iu_myuzel_v1
-      try{
-        const key = iuNotesKey("myuzel", `slot_${s}`);
-        const cur = String(localStorage.getItem(key) || "");
-        const legacy = String(sec.notes || "");
-        if (!cur && legacy) localStorage.setItem(key, legacy);
-        // Also copy from the older derived key format if it exists.
-        if (!cur) {
-          const oldKey = IU_NOTES_PREFIX + "myuzel_" + ("slot-" + String(s));
-          const v2 = String(localStorage.getItem(oldKey) || "");
-          if (v2) { try { localStorage.setItem(key, v2); } catch {} }
-        }
-      }catch{}
-
-      // stable share URL for this MyUzel section
-      let shareUrl = "";
-      try{
-        const u = new URL(window.location.href);
-        u.searchParams.set("section", `myuzel-${s}`);
-        shareUrl = u.toString();
-      }catch{
-        shareUrl = String(window.location.href || "");
-      }
-
-      btnWrap.insertAdjacentElement("afterend", host);
-      iuRenderNotesHost(host, { scope: "myuzel", title: host.dataset.iuNotesTitle, shareUrl, accent: "var(--iuMyUzelAccent, #b9bcc2)" });
-    }catch{}
-  }
-
-  function iuMyUzelApplyViewVisibility(sectionKey){
-    try{
-      const k = String(sectionKey || "").toLowerCase();
-      if (!k.startsWith("myuzel-")) return;
-      const slot = parseInt(k.split("-")[1], 10);
-      if (!Number.isFinite(slot) || slot < 1 || slot > 5) return;
-      iuMyUzelApplyRailState();
-      iuMyUzelRenderSection(slot);
-    }catch{}
-  }
-
-  function iuMyUzelNormalizeUrl(raw){
-    const s0 = String(raw || "").trim();
-    if (!s0) return { ok: true, url: "" };
-    let s = s0;
-    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) {
-      s = "https://" + s.replace(/^\/+/, "");
-    }
-    try{
-      const u = new URL(s);
-      const p = String(u.protocol || "").toLowerCase();
-      if (p !== "http:" && p !== "https:") {
-        return { ok: false, url: "", err: "Povoleno je jen http/https URL." };
-      }
-      return { ok: true, url: u.toString() };
-    }catch{
-      return { ok: false, url: "", err: "Neplatná URL." };
-    }
-  }
-
-  function iuMyUzelModalEls(){
-    return {
-      overlay: document.getElementById("iuMyUzelModalOverlay"),
-      modal: document.getElementById("iuMyUzelModal"),
-      close: document.getElementById("iuMyUzelModalClose"),
-      title: document.getElementById("iuMyUzelModalTitle"),
-      body: document.getElementById("iuMyUzelModalBody"),
-      card: document.querySelector("#iuMyUzelModal .iuMyUzelModalCard"),
-    };
-  }
-
-  function iuMyUzelCloseModal(){
-    try{
-      const { overlay, modal, body } = iuMyUzelModalEls();
-      if (overlay) overlay.hidden = true;
-      if (modal) modal.hidden = true;
-      if (body) body.innerHTML = "";
-      try { iuSetViewportLock(false); } catch {}
-    }catch{}
-  }
-
-  function iuMyUzelOpenModal(opts){
-    try{
-      const { overlay, modal, title, body } = iuMyUzelModalEls();
-      if (!overlay || !modal || !title || !body) return;
-      title.textContent = String((opts && opts.title) || "Nastavení");
-      body.innerHTML = String((opts && opts.html) || "");
-      overlay.hidden = false;
-      modal.hidden = false;
-      try { iuSetViewportLock(true); } catch {}
-
-      // focus first input
-      try{
-        const first = modal.querySelector("input, button, select, textarea, [tabindex]:not([tabindex='-1'])");
-        if (first && first.focus) first.focus();
-      }catch{}
-    }catch{}
-  }
-
-  function iuMyUzelOpenSectionSettings(slot){
-    const s = parseInt(slot, 10);
-    if (!Number.isFinite(s) || s < 1 || s > 5) return;
-    const st = iuMyUzelLoad();
-    const sec = st.sections[s - 1];
-    const name = iuMyUzelClampName(sec.name) || `Sekce ${s}`;
-    const color = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-
-    iuMyUzelOpenModal({
-      title: "Nastavení sekce",
-      html:
-        `<div class="iuMyUzelField">` +
-          `<label for="iuMyUzelSectionName">uveďte název sekce</label>` +
-          `<input class="iuMyUzelInput" id="iuMyUzelSectionName" maxlength="14" value="${escapeHtml(name)}" />` +
-        `</div>` +
-        `<div class="iuMyUzelField">` +
-          `<label for="iuMyUzelSectionColor">barva</label>` +
-          `<input class="iuMyUzelInput" id="iuMyUzelSectionColor" type="color" value="${escapeHtml(color)}" />` +
-        `</div>` +
-        `<div class="iuMyUzelActions">` +
-          `<button type="button" class="iuMyUzelPrimaryBtn" id="iuMyUzelConfirmSection" style="--iuMyUzelAccent:${escapeHtml(color)}">Potvrdit</button>` +
-        `</div>` +
-        `<div class="iuMyUzelErr" id="iuMyUzelErr" hidden></div>`
-    });
-
-    // bind confirm (single-shot via delegation below)
-    try{
-      const el = document.getElementById("iuMyUzelConfirmSection");
-      if (el) el.setAttribute("data-myuzel-confirm-section", String(s));
-    }catch{}
-  }
-
-  function iuMyUzelOpenButtonSettings(slot, btnIndex){
-    const s = parseInt(slot, 10);
-    const i = parseInt(btnIndex, 10);
-    if (!Number.isFinite(s) || s < 1 || s > 5) return;
-    if (!Number.isFinite(i) || i < 0 || i >= MYUZEL_BUTTONS_MAX) return;
-    const st = iuMyUzelLoad();
-    const sec = st.sections[s - 1];
-    const b = sec.buttons[i] || {};
-    const title = iuMyUzelClampName(b.title) || `Tlačítko ${i + 1}`;
-    const url = String(b.url || "").trim();
-    const color = String(sec.color || "#b9bcc2").trim() || "#b9bcc2";
-
-    iuMyUzelOpenModal({
-      title: "Nastavení tlačítka",
-      html:
-        `<div class="iuMyUzelField">` +
-          `<label for="iuMyUzelBtnUrl">vložte www</label>` +
-          `<input class="iuMyUzelInput" id="iuMyUzelBtnUrl" placeholder="např. www.infouzel.cz" value="${escapeHtml(url)}" />` +
-        `</div>` +
-        `<div class="iuMyUzelField">` +
-          `<label for="iuMyUzelBtnTitle">název tlačítka</label>` +
-          `<input class="iuMyUzelInput" id="iuMyUzelBtnTitle" maxlength="14" value="${escapeHtml(title)}" />` +
-        `</div>` +
-        `<div class="iuMyUzelActions">` +
-          `<button type="button" class="iuMyUzelPrimaryBtn" id="iuMyUzelConfirmBtn" style="--iuMyUzelAccent:${escapeHtml(color)}">Potvrdit</button>` +
-        `</div>` +
-        `<div class="iuMyUzelErr" id="iuMyUzelErr" hidden></div>`
-    });
-
-    try{
-      const el = document.getElementById("iuMyUzelConfirmBtn");
-      if (el) {
-        el.setAttribute("data-myuzel-confirm-btn-slot", String(s));
-        el.setAttribute("data-myuzel-confirm-btn-idx", String(i));
-      }
-    }catch{}
-  }
-
-  function iuMyUzelActivate(slot){
-    const s = parseInt(slot, 10);
-    if (!Number.isFinite(s) || s < 1 || s > 5) return;
-    try{
-      const st = iuMyUzelLoad();
-      st.activeSection = s;
-      iuMyUzelSave(st);
-    }catch{}
-    try{
-      persistSection(`myuzel-${s}`);
-      applySectionFromURL();
-    }catch{}
-    // UX: always bring user to the top of the section buttons.
-    try{
-      requestAnimationFrame(() => {
-        try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch { try { window.scrollTo(0, 0); } catch {} }
-        try {
-          const sc = document.getElementById("newsList");
-          if (sc && typeof sc.scrollTop === "number") sc.scrollTop = 0;
-        } catch {}
-      });
-    }catch{}
-  }
-
-  function iuMyUzelShowErr(msg){
-    try{
-      const el = document.getElementById("iuMyUzelErr");
-      if (!el) return;
-      el.textContent = String(msg || "");
-      el.hidden = !el.textContent;
-    }catch{}
-  }
-
-  // Global delegation (small, safe; avoids many listeners)
-  document.addEventListener("click", (e) => {
-    try{
-      const t = e && e.target;
-      if (!t) return;
-
-      // Modal close
-      if (t.id === "iuMyUzelModalOverlay" || t.id === "iuMyUzelModalClose" || t.closest?.("#iuMyUzelModalClose")) {
-        e.preventDefault();
-        e.stopPropagation();
-        iuMyUzelCloseModal();
-        return;
-      }
-
-      // Section settings confirm
-      const confirmSection = t.closest?.("[data-myuzel-confirm-section]");
-      if (confirmSection) {
-        e.preventDefault();
-        e.stopPropagation();
-        iuMyUzelShowErr("");
-        const slot = parseInt(confirmSection.getAttribute("data-myuzel-confirm-section") || "0", 10);
-        const nameEl = document.getElementById("iuMyUzelSectionName");
-        const colorEl = document.getElementById("iuMyUzelSectionColor");
-        const name = iuMyUzelClampName(nameEl ? nameEl.value : "") || `Sekce ${slot || ""}`.trim();
-        const color = String(colorEl ? colorEl.value : "").trim() || "#b9bcc2";
-
-        const st = iuMyUzelLoad();
-        if (st.sections && st.sections[slot - 1]) {
-          st.sections[slot - 1].name = name;
-          st.sections[slot - 1].color = color;
-          iuMyUzelSave(st);
-        }
-        iuMyUzelApplyRailState();
-        iuMyUzelRenderSection(slot);
-        iuMyUzelCloseModal();
-        return;
-      }
-
-      // Button settings confirm
-      const confirmBtn = t.closest?.("[data-myuzel-confirm-btn-slot]");
-      if (confirmBtn) {
-        e.preventDefault();
-        e.stopPropagation();
-        iuMyUzelShowErr("");
-        const slot = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-slot") || "0", 10);
-        const idx = parseInt(confirmBtn.getAttribute("data-myuzel-confirm-btn-idx") || "0", 10);
-        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
-        const urlEl = document.getElementById("iuMyUzelBtnUrl");
-        const titleEl = document.getElementById("iuMyUzelBtnTitle");
-        const title = iuMyUzelClampName(titleEl ? titleEl.value : "") || `Tlačítko ${idx + 1}`;
-        const norm = iuMyUzelNormalizeUrl(urlEl ? urlEl.value : "");
-        if (!norm.ok) { iuMyUzelShowErr(norm.err || "Neplatná URL."); return; }
-
-        const st = iuMyUzelLoad();
-        try{
-          if (!st.sections || !st.sections[slot - 1] || !Array.isArray(st.sections[slot - 1].buttons)) throw new Error("Bad section");
-          if (!st.sections[slot - 1].buttons[idx]) st.sections[slot - 1].buttons[idx] = { title: "", url: "" };
-          st.sections[slot - 1].buttons[idx].title = title;
-          st.sections[slot - 1].buttons[idx].url = norm.url;
-          iuMyUzelSave(st);
-        }catch{}
-        iuMyUzelApplyRailState();
-        iuMyUzelRenderSection(slot);
-        iuMyUzelCloseModal();
-        return;
-      }
-
-      // Open section settings (gear)
-      const gear = t.closest?.(".iuMyUzelSectionGear");
-      if (gear) {
-        e.preventDefault();
-        e.stopPropagation();
-        const slot = parseInt(gear.getAttribute("data-myuzel-slot") || "0", 10);
-        iuMyUzelOpenSectionSettings(slot);
-        return;
-      }
-
-      // Open button settings (gear)
-      const btnGear = t.closest?.(".iuMyUzelBtnGear");
-      if (btnGear) {
-        e.preventDefault();
-        e.stopPropagation();
-        const slot = parseInt(btnGear.getAttribute("data-myuzel-slot") || "0", 10);
-        const idx = parseInt(btnGear.getAttribute("data-myuzel-btn") || "0", 10);
-        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
-        iuMyUzelOpenButtonSettings(slot, idx);
-        return;
-      }
-
-      // Open button URL (or settings if empty)
-      const btn = t.closest?.(".iuMyUzelChip");
-      if (btn) {
-        e.preventDefault();
-        e.stopPropagation();
-        const slot = parseInt(btn.getAttribute("data-myuzel-slot") || "0", 10);
-        const idx = parseInt(btn.getAttribute("data-myuzel-open") || "0", 10);
-        if (!Number.isFinite(idx) || idx < 0 || idx >= MYUZEL_BUTTONS_MAX) return;
-        const st = iuMyUzelLoad();
-        const url = String(st?.sections?.[slot - 1]?.buttons?.[idx]?.url || "").trim();
-        if (!url) {
-          iuMyUzelOpenButtonSettings(slot, idx);
-          return;
-        }
-        const norm = iuMyUzelNormalizeUrl(url);
-        if (!norm.ok || !norm.url) {
-          iuMyUzelOpenButtonSettings(slot, idx);
-          return;
-        }
-        window.open(norm.url, "_blank", "noopener,noreferrer");
-        return;
-      }
-    }catch{}
-  }, true);
-
-  document.addEventListener("keydown", (e) => {
-    try{
-      const { modal } = iuMyUzelModalEls();
-      if (!modal || modal.hidden) return;
-      if (e && e.key === "Escape") {
-        e.preventDefault();
-        iuMyUzelCloseModal();
-      }
-    }catch{}
-  });
 
   function toPlainStringList(list){
     if (!Array.isArray(list)) return [];
@@ -26515,7 +25916,7 @@ function buildVideoAsArticleCard(it) {
     if (k === 'jr') return 'jr';
     if (k === 'media') return IU_ARTICLE_HUB_SECTION;
     // allow other left-rail sections to roundtrip via URL without changing feed pipeline
-    const allowed = new Set([IU_ARTICLE_HUB_SECTION,'tv','tvonline','mapy','travel','pocasi','tvprogram','hry','kultura','veda','vzdelavani','jr','myuzel-1','myuzel-2','myuzel-3','myuzel-4','myuzel-5']);
+    const allowed = new Set([IU_ARTICLE_HUB_SECTION,'tv','tvonline','mapy','travel','pocasi','tvprogram','hry','kultura','veda','vzdelavani','jr']);
     if (k === 'home') return IU_ARTICLE_HUB_SECTION;
     if (k === 'culture') return 'kultura';
     // P0 SAFE DISABLE: historické sekce (tech/bydleni) nesmí být routovatelné jako veřejné sekce
@@ -27337,10 +26738,6 @@ function buildVideoAsArticleCard(it) {
           else if (section === "mapy") root = document.getElementById("iuMapyView") || document.getElementById("iuMapsView");
           else if (section === "travel" && nav.mode === "guide") root = document.getElementById("iuTravelView");
           else if (section === "travel" && nav.mode === "media") root = document.getElementById("feed");
-          else if (String(section || "").toLowerCase().startsWith("myuzel-")) {
-            const slot = parseInt(String(section).split("-")[1], 10);
-            if (Number.isFinite(slot)) root = document.getElementById(`iuMyUzelView${slot}`);
-          }
           iuInitNotesInView(root || document);
         }catch{}
       }));
@@ -27349,30 +26746,6 @@ function buildVideoAsArticleCard(it) {
       try{ iuInitNotesInView(document); }catch{}
     }
 
-    // Custom views (UI-only)
-    try{
-      if (String(section || "").toLowerCase().startsWith("myuzel-")) {
-        const slot = parseInt(String(section).split("-")[1], 10);
-        if (Number.isFinite(slot) && slot >= 1 && slot <= 5) {
-          try{
-            const st = iuMyUzelLoad();
-            st.activeSection = slot;
-            iuMyUzelSave(st);
-          }catch{}
-          iuMyUzelApplyViewVisibility(section);
-          // UX: after switching into myuzel, bring header + chips into view.
-          try{
-            requestAnimationFrame(() => {
-              try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch { try { window.scrollTo(0, 0); } catch {} }
-              try {
-                const sc = document.getElementById("newsList");
-                if (sc && typeof sc.scrollTop === "number") sc.scrollTop = 0;
-              } catch {}
-            });
-          }catch{}
-        }
-      }
-    }catch{}
       });
     } catch (_) {}
   }
@@ -27847,8 +27220,6 @@ function buildVideoAsArticleCard(it) {
     }catch(e){
       try{ if (typeof window.persistLastError === "function") window.persistLastError(String(e?.message || e)); }catch{}
     }
-
-    try{ iuMyUzelApplyRailState(); }catch{}
 
     // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
     try { iuMobileWebNavSyncFromHistory(); } catch (_){}
