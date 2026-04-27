@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-27T05:10:00.759173Z",
+  "ingestedAt": "2026-04-27T05:34:55.155423Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zrada, která otřásla povýlukovou NHL. Legenda teď šla s pravdou ven",
+      "url": "https://sport.aktualne.cz/hokej/zrada-ktera-otrasla-povylukovou-nhl-legenda-ted-sla-s-pravdou-ven/r~aaa29de389f7bdb3bf6d6ad71221ff1b/",
+      "dt": "2026-04-27T05:01:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "legenda",
+        "nhl",
+        "otřásla",
+        "povýlukovou",
+        "pravdou",
+        "ven",
+        "zrada",
+        "šla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -506,33 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čechům Madrid svědčí. Uspěla Plíšková i Lehečka, Noskové a Kopřivovi soupeři vzdali",
-      "url": "https://sport.aktualne.cz/tenis/noskova-je-v-osmifinale-pres-rusku-postoupila-bez-boje/r~aaa2979e9d61a21b1839b1745baca905/",
-      "dt": "2026-04-26T08:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "kopřivovi",
-        "lehečka",
-        "madrid",
-        "noskové",
-        "plíšková",
-        "soupeři",
-        "svědčí",
-        "uspěla",
-        "vzdali",
-        "čechům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21555,
+      "bytes": 21410,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,7 +578,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:01:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "sport": 6,
@@ -598,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zrada, která otřásla povýlukovou NHL. Legenda teď šla s pravdou ven",
+            "publishedAt": "2026-04-27T05:01:00Z"
+          },
           {
             "title": "Colorado je i díky Nečasovi ve druhém kole play off, Montreal s Dobešem prohrál",
             "publishedAt": "2026-04-27T04:29:00Z"
@@ -624,10 +626,6 @@
           },
           {
             "title": "„Divím se, že tam lezete.“ Babišův ministr popsal, jak si do něj premiér rýpnul",
-            "publishedAt": "2026-04-27T03:30:00Z"
-          },
-          {
-            "title": "Omega-3 pod lupou: Virální test vyvolal strach, může doplněk naleptat i váš žaludek?",
             "publishedAt": "2026-04-27T03:30:00Z"
           }
         ]

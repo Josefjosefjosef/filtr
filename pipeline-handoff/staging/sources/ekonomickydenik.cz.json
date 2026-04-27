@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T05:10:00.759173Z",
+  "ingestedAt": "2026-04-27T05:34:55.155423Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Otázka, která trápí Evropu: Kolik plynu nasyslíme před příchodem zimy?",
+      "url": "https://ekonomickydenik.cz/kolik-plynu-nasyslime-zima/",
+      "dt": "2026-04-27T05:15:40Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "evropu",
+        "kolik",
+        "nasyslíme",
+        "otázka",
+        "plynu",
+        "příchodem",
+        "trápí",
+        "zimy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -747,34 +772,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Civilista s puškou v ruce: Proč tisíce Čechů dobrovolně mění pohodlí za armádní dril?",
-      "url": "https://ekonomickydenik.cz/aktivni-zalohy-podminky-acr-plat-vycvik-testy/",
-      "dt": "2026-04-24T10:48:24Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armádní",
-        "civilista",
-        "dobrovolně",
-        "dril",
-        "mění",
-        "pohodlí",
-        "proč",
-        "puškou",
-        "ruce",
-        "tisíce",
-        "čechů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69312,
+      "bytes": 69133,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:15:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -839,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otázka, která trápí Evropu: Kolik plynu nasyslíme před příchodem zimy?",
+            "publishedAt": "2026-04-27T05:15:40Z"
+          },
           {
             "title": "Stavět je drahé a banky nestačí. Developeři si chodí pro peníze i k drobným investorům",
             "publishedAt": "2026-04-27T04:05:00Z"
@@ -866,10 +867,6 @@
           {
             "title": "Nová nemocnice v Praze bude vojenská, oznámil Babiš",
             "publishedAt": "2026-04-26T09:06:08Z"
-          },
-          {
-            "title": "O ropě jednám s giganty, říká Babiš. Kvůli plynu jede do Ázerbájdžánu",
-            "publishedAt": "2026-04-26T08:32:14Z"
           }
         ]
       }
