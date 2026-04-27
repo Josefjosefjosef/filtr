@@ -25351,6 +25351,8 @@ function buildVideoAsArticleCard(it) {
           if (el && el.closest && el.closest("#iuJrEmptyView")) return;
           /* TV online (#iuTvOnlineView): žádný notes blok (P0). */
           if (el && el.closest && el.closest("#iuTvOnlineView")) return;
+          /* TV program (#iuTvProgramView): žádný notes modul (P0). */
+          if (el && el.closest && el.closest("#iuTvProgramView")) return;
           /* Rádio (#iuRadioView): žádný notes blok (P0). */
           if (el && el.closest && el.closest("#iuRadioView")) return;
           iuRenderNotesHost(el, {});
@@ -25385,6 +25387,14 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         return;
       }
+      /* P0 TV program: žádný .iuNotesHost / textarea (vizuální link hub, bez poznámek). */
+      if (section === "tvprogram") {
+        try{
+          const v = document.getElementById("iuTvProgramView");
+          if (v) Array.from(v.querySelectorAll(".iuNotesHost")).forEach((h) => { try{ h.remove(); }catch{} });
+        }catch{}
+        return;
+      }
       /* P0 Rádio: žádný section-level .iuNotesHost v #iuRadioView. */
       if (section === "radio") {
         try{
@@ -25398,7 +25408,6 @@ function buildVideoAsArticleCard(it) {
       const map = {
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
         pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
-        tvprogram:{ key:"tvprogram",view: () => document.getElementById("iuTvProgramView"),accentVar:"--iuNavAccent-tvprogram", label:"TV program" },
         kultura: { key: "kultura",  view: () => document.getElementById("iuKulturaView") || document.getElementById("feed"), accentVar: "--iuNavAccent-kultura", label: "Kultura / Akce" },
       };
 
