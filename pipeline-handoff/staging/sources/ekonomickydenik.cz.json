@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T06:24:54.833530Z",
+  "ingestedAt": "2026-04-27T06:49:45.768134Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Vysokorychlostní železnice nemusí být přínosem.  Varuje kontrola",
+      "url": "https://ekonomickydenik.cz/vysokorychlostni-zeleznice-nemusi-byt-prinosem/",
+      "dt": "2026-04-27T06:35:01Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "být",
+        "kontrola",
+        "nemusí",
+        "přínosem",
+        "varuje",
+        "vysokorychlostní",
+        "železnice"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -746,32 +770,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Macinka znovu brání Turka. Slovy o parazitech a deratizaci vytočil i Babiše",
-      "url": "https://ekonomickydenik.cz/macinka-brani-turka-paraziti-deratizace-babis/",
-      "dt": "2026-04-24T12:44:49Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiše",
-        "brání",
-        "deratizaci",
-        "macinka",
-        "parazitech",
-        "slovy",
-        "turka",
-        "vytočil",
-        "znovu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69459,
+      "bytes": 69653,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,12 +817,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T05:52:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T06:35:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 27,
-          "zdravi": 2,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 26,
+          "zdravi": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -836,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vysokorychlostní železnice nemusí být přínosem.  Varuje kontrola",
+            "publishedAt": "2026-04-27T06:35:01Z"
+          },
           {
             "title": "Nové závody v jaderném zbrojení? Výdaje děsí nevládní organizace",
             "publishedAt": "2026-04-27T05:52:13Z"
@@ -863,10 +865,6 @@
           {
             "title": "Algoritmus ruského zmaru: Co je největší zbraní Moskvy? A kam ještě zamíří?",
             "publishedAt": "2026-04-26T11:05:00Z"
-          },
-          {
-            "title": "Černý pasažér NATO? Česko nesplní výdaje 2 procenta HDP na obranu",
-            "publishedAt": "2026-04-26T10:03:04Z"
           }
         ]
       }

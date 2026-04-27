@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-27T06:24:54.833530Z",
+  "ingestedAt": "2026-04-27T06:49:45.768134Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Primoco druhým rokem klesly tržby i zisk. Firma ale poprvé nasbírala zakázky za miliardu",
+      "url": "https://www.e15.cz/byznys/obrana-a-zbrojni-prumysl/primoco-druhym-rokem-klesly-trzby-i-zisk-firma-ale-poprve-nasbirala-zakazky-za-miliardu-1432400",
+      "dt": "2026-04-27T06:13:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "ale",
+        "druhým",
+        "firma",
+        "klesly",
+        "miliardu",
+        "nasbírala",
+        "poprvé",
+        "primoco",
+        "rokem",
+        "tržby",
+        "zakázky",
+        "zisk"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -20,30 +49,6 @@
         "udržitelnost",
         "veřejného",
         "zdravotnictví"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
-      "url": "https://www.e15.cz/nazory-a-analyzy/francouzsky-jaderny-triumf-a-nemecka-cesta-do-plynove-pasti-1432398",
-      "dt": "2026-04-27T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "cesta",
-        "francouzský",
-        "jaderný",
-        "německá",
-        "pasti",
-        "plynové",
-        "triumf"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -98,6 +103,30 @@
         "snižuje",
         "stali",
         "státní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
+      "url": "https://www.e15.cz/nazory-a-analyzy/francouzsky-jaderny-triumf-a-nemecka-cesta-do-plynove-pasti-1432398",
+      "dt": "2026-04-27T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cesta",
+        "francouzský",
+        "jaderný",
+        "německá",
+        "pasti",
+        "plynové",
+        "triumf"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1055,32 +1084,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Extrémní bič na řidiče v Rakousku. Za vysokou rychlost přijdete o vůz i řidičák",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/extremni-bic-na-ridice-v-rakousku-za-vysokou-rychlost-prijdete-o-vuz-i-ridicak-1432370",
-      "dt": "2026-04-24T09:42:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bič",
-        "extrémní",
-        "přijdete",
-        "rakousku",
-        "rychlost",
-        "vysokou",
-        "vůz",
-        "řidiče",
-        "řidičák"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1094,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55869,
+      "bytes": 55924,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,12 +1131,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T06:13:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "finance": 34,
           "zdravi": 3,
-          "finance": 33,
-          "zpravy": 4
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1146,12 +1149,12 @@
         },
         "sample_titles": [
           {
-            "title": "Léky na obezitu mění ekonomiku a mohou posílit udržitelnost veřejného zdravotnictví",
-            "publishedAt": "2026-04-27T06:00:00Z"
+            "title": "Primoco druhým rokem klesly tržby i zisk. Firma ale poprvé nasbírala zakázky za miliardu",
+            "publishedAt": "2026-04-27T06:13:00Z"
           },
           {
-            "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
-            "publishedAt": "2026-04-27T04:00:00Z"
+            "title": "Léky na obezitu mění ekonomiku a mohou posílit udržitelnost veřejného zdravotnictví",
+            "publishedAt": "2026-04-27T06:00:00Z"
           },
           {
             "title": "Zapomeňte na Dubaj. Češi se zbláznili do domů v Itálii, na Sicílii jsou jako investoři vyhlášení",
@@ -1159,6 +1162,10 @@
           },
           {
             "title": "Kdo nejrychleji snižuje státní dluh v roce 2026? Z jižních hříšníků se stali premianti",
+            "publishedAt": "2026-04-27T04:00:00Z"
+          },
+          {
+            "title": "Francouzský jaderný triumf a německá cesta do plynové pasti",
             "publishedAt": "2026-04-27T04:00:00Z"
           },
           {
@@ -1172,10 +1179,6 @@
           {
             "title": "Atentátník cestoval z Kalifornie s brokovnicí. Cílem střelby ve Washingtonu byla americká vláda",
             "publishedAt": "2026-04-26T17:57:00Z"
-          },
-          {
-            "title": "Valorizace důchodů poprvé výrazněji posílí. Mladých lidí bez práce přibývá",
-            "publishedAt": "2026-04-26T15:00:00Z"
           }
         ]
       }
