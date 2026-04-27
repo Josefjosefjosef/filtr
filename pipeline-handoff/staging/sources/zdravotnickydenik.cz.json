@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T04:46:05.464309Z",
+  "ingestedAt": "2026-04-27T05:10:00.759173Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/farmaceuticke-firmy-eli-lilly-onkologie-sun-pharma-akvizice/",
+      "dt": "2026-04-27T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "americkou",
+        "eli",
+        "farmaceutický",
+        "firmu",
+        "indové",
+        "lilly",
+        "loví",
+        "míří",
+        "onkologie",
+        "svět",
+        "varu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,32 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V nemocnicích dělají nemožné: Unikátní zákroky mění životy pacientů v Česku",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/unikatni-zakroky-meni-zivoty-pacientu-v-cesku/",
-      "dt": "2026-04-24T14:45:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dělají",
-        "mění",
-        "nemocnicích",
-        "nemožné",
-        "pacientů",
-        "unikátní",
-        "zákroky",
-        "česku",
-        "životy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 105243,
+      "bytes": 88701,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-26T13:22:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Farmaceutický svět ve varu: Eli Lilly míří do onkologie, Indové loví americkou firmu",
+            "publishedAt": "2026-04-27T05:00:00Z"
+          },
           {
             "title": "Proč bude nová nemocnice v Praze vojenská? Babiš ji spojuje se závazky vůči NATO",
             "publishedAt": "2026-04-26T13:22:46Z"
@@ -355,10 +361,6 @@
           {
             "title": "Žádné opatření z alkoholika abstinenta neudělá, řekl Válek. Prozradil, s čím v Evropě pohořel",
             "publishedAt": "2026-04-25T14:51:17Z"
-          },
-          {
-            "title": "Exkluzivně: Zdravotnictví bude vítězem příštího rozpočtu EU, říká eurokomisař. Popisuje priority",
-            "publishedAt": "2026-04-25T05:00:00Z"
           }
         ]
       }

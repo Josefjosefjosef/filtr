@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T04:46:05.464309Z",
+  "ingestedAt": "2026-04-27T05:10:00.759173Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Japonsko zasáhlo silné zemětřesení",
+      "url": "https://www.denik.cz/ze_sveta/japonsko-zasahlo-silne-zemetreseni.html",
+      "dt": "2026-04-27T04:26:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "japonsko",
+        "silné",
+        "zasáhlo",
+        "zemětřesení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,33 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lajf: Natočili jsme životaschopný film o smrti, říká scenárista Marek Epstein",
-      "url": "https://www.denik.cz/film-a-televize/lajf-film-jiri-strach-marek-epstein.html",
-      "dt": "2026-04-26T06:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "epstein",
-        "film",
-        "jsme",
-        "lajf",
-        "marek",
-        "natočili",
-        "scenárista",
-        "smrti",
-        "říká",
-        "životaschopný"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29609,
+      "bytes": 29257,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:26:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -714,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Japonsko zasáhlo silné zemětřesení",
+            "publishedAt": "2026-04-27T04:26:00Z"
+          },
           {
             "title": "Dny po Černobylu. Český voják naměřil radiaci a měl na výběr: mlčet, nebo basa",
             "publishedAt": "2026-04-27T04:05:00Z"
@@ -741,10 +739,6 @@
           {
             "title": "Odposlechy politiků a ovlivňování voleb? Koudelka: BIS vždy postupuje dle zákona",
             "publishedAt": "2026-04-26T17:30:00Z"
-          },
-          {
-            "title": "Choval se divně už před útokem, tvrdí rodina střelce z hotelu ve Washingtonu",
-            "publishedAt": "2026-04-26T16:12:00Z"
           }
         ]
       }
