@@ -12454,6 +12454,107 @@ function buildVideoAsArticleCard(it) {
     window.iuMobileGateCloseForMainNav = iuMobileGateCloseForMainNav;
   } catch (_) {}
 
+  /**
+   * P0 Mobile/tablet: spodní „Zpět“ — nejdřív zavře otevřený overlay (stejně jako horní křížek / zavírací tlačítka),
+   * pak teprve běžná navigace (gate / mainBack / history).
+   */
+  function closeTopMostOpenOverlayForBottomBack() {
+    try {
+      if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return false;
+    } catch (_) {}
+    function iuElIsVisiblyOpen(el) {
+      if (!el) return false;
+      try {
+        if (el.hidden) return false;
+      } catch (_) {
+        return false;
+      }
+      try {
+        var st = getComputedStyle(el);
+        if (st.display === "none" || st.visibility === "hidden") return false;
+      } catch (_) {
+        return false;
+      }
+      return true;
+    }
+    function tryClick(sel, root) {
+      try {
+        var r = root || document;
+        var n = r.querySelector(sel);
+        if (n && typeof n.click === "function") {
+          n.click();
+          return true;
+        }
+      } catch (_) {}
+      return false;
+    }
+    try {
+      var vm = document.getElementById("iuVideoModal");
+      if (iuElIsVisiblyOpen(vm) && tryClick(".iuVideoModalClose", vm)) return true;
+    } catch (_) {}
+    try {
+      var searchC = document.getElementById("iuTopSearch");
+      var searchO = document.getElementById("iuTopbarSearchOverlay");
+      var searchOpen =
+        (searchC && searchC.classList.contains("is-open")) ||
+        (typeof document !== "undefined" && document.body && document.body.classList.contains("iuSearchOpen"));
+      if (searchOpen && searchO && iuElIsVisiblyOpen(searchO)) {
+        var sbtn = document.getElementById("iuTopbarSearchBtn");
+        if (sbtn && typeof sbtn.click === "function") {
+          sbtn.click();
+          return true;
+        }
+      }
+    } catch (_) {}
+    try {
+      var infoO = document.getElementById("iuTopbarInfoOverlay");
+      if (iuElIsVisiblyOpen(infoO)) {
+        var ic = document.getElementById("iuTopbarInfoOverlayClose");
+        if (ic && typeof ic.click === "function") {
+          ic.click();
+          return true;
+        }
+      }
+    } catch (_) {}
+    try {
+      var sc = document.getElementById("iuSilverChatOverlay");
+      if (iuElIsVisiblyOpen(sc) && tryClick("#iuSilverChatClose", sc)) return true;
+    } catch (_) {}
+    try {
+      var pwa = document.getElementById("iuPwaIosOverlay");
+      if (iuElIsVisiblyOpen(pwa) && tryClick(".iuPwaIosOverlay__close[data-iu-pwa-overlay-close]", pwa)) return true;
+      var pwad = document.getElementById("iuPwaDesktopFallbackOverlay");
+      if (iuElIsVisiblyOpen(pwad) && tryClick(".iuPwaIosOverlay__close[data-iu-pwa-desktop-fallback-close]", pwad)) return true;
+    } catch (_) {}
+    try {
+      var cal = document.getElementById("iuCalendarOverlay");
+      if (iuElIsVisiblyOpen(cal) && tryClick(".iu-calendarOverlay__close[data-iu-calendar-close=\"button\"]", cal)) return true;
+    } catch (_) {}
+    try {
+      var notes = document.getElementById("iuNotesOverlay");
+      if (iuElIsVisiblyOpen(notes) && tryClick(".iu-notesOverlay__close[data-iu-notes-close=\"1\"]", notes)) return true;
+    } catch (_) {}
+    try {
+      var tasks = document.getElementById("iuTasksOverlay");
+      if (iuElIsVisiblyOpen(tasks) && tryClick(".iu-tasksOverlay__close[data-iu-tasks-close=\"1\"]", tasks)) return true;
+    } catch (_) {}
+    try {
+      var nw = document.getElementById("iuNamedayWishOverlay");
+      if (iuElIsVisiblyOpen(nw)) {
+        if (tryClick("#iuNamedayWishCard .iu-overlay-close", nw)) return true;
+        if (tryClick(".iu-overlay-close", nw)) return true;
+      }
+    } catch (_) {}
+    try {
+      var before = typeof iuDetectOpenOverlays === "function" ? iuDetectOpenOverlays() : [];
+      if (before.length > 0) {
+        if (typeof iuForceCloseAllOverlays === "function") iuForceCloseAllOverlays();
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   /** P0 Mobile/tablet: fixed bottom nav — Domů / Menu / Silver / MindMenu / Zpět (stejné hooky jako gate tabs + gate back). */
   function iuMobileBottomNavInit() {
     try {
@@ -12513,6 +12614,11 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "back") {
+              try {
+                if (typeof closeTopMostOpenOverlayForBottomBack === "function" && closeTopMostOpenOverlayForBottomBack()) {
+                  return;
+                }
+              } catch (_) {}
               var gateVal = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "").trim() : "";
               if (gateVal && gateBack && typeof gateBack.click === "function") {
                 gateBack.click();
