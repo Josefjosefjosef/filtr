@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T06:49:45.768134Z",
+  "ingestedAt": "2026-04-27T07:09:14.641709Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Poptávka roste, systém nestíhá. Jak zachránit domácí péči ve 4 krocích",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/jak-zachranit-domaci-peci-v-4-krocich/",
+      "dt": "2026-04-27T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "domácí",
+        "krocích",
+        "nestíhá",
+        "poptávka",
+        "péči",
+        "roste",
+        "systém",
+        "zachránit"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Exkluzivně: Zdravotnictví bude vítězem příštího rozpočtu EU, říká eurokomisař. Popisuje priority",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotnictvi-rozpocet-eu-eurokomisar/",
-      "dt": "2026-04-25T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "eurokomisař",
-        "exkluzivně",
-        "popisuje",
-        "priority",
-        "příštího",
-        "rozpočtu",
-        "vítězem",
-        "zdravotnictví",
-        "říká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91877,
+      "bytes": 84032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poptávka roste, systém nestíhá. Jak zachránit domácí péči ve 4 krocích",
+            "publishedAt": "2026-04-27T07:00:00Z"
+          },
           {
             "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
             "publishedAt": "2026-04-27T06:00:00Z"
@@ -360,10 +363,6 @@
           {
             "title": "Šíří se nemoci, proti nimž se povinně očkuje. Experti vysvětlují proč",
             "publishedAt": "2026-04-26T08:10:53Z"
-          },
-          {
-            "title": "Alarmující zjištění: Přibývá Němců, které zdravotní stav omezuje v běžném životě",
-            "publishedAt": "2026-04-26T05:00:00Z"
           }
         ]
       }

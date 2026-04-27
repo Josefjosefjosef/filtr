@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-27T06:49:45.768134Z",
+  "ingestedAt": "2026-04-27T07:09:14.641709Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Leoš Mareš padesátiletý. Připomeňte si kožich a další momenty jeho zářné kariéry",
+      "url": "https://www.idnes.cz/kultura/hudba/leos-mares-padesat-narozeniny-oslava-zivotni-momenty.A260421_111531_hudba_lysa/foto",
+      "dt": "2026-04-27T06:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "další",
+        "jeho",
+        "kariéry",
+        "kožich",
+        "leoš",
+        "mareš",
+        "momenty",
+        "padesátiletý",
+        "připomeňte",
+        "zářné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -735,31 +762,6 @@
         "vedení",
         "ypsilonky",
         "známé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zapomenutá koruna i vzácný sarkofág. Národní muzeum ovládli Přemyslovci",
-      "url": "https://www.idnes.cz/zpravy/domaci/narodni-muzeum-premyslovci-vystava-expozice-vzacne-predmety.A260424_095415_domaci_row",
-      "dt": "2026-04-26T13:31:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "koruna",
-        "muzeum",
-        "národní",
-        "ovládli",
-        "přemyslovci",
-        "sarkofág",
-        "vzácný",
-        "zapomenutá"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1553,7 +1555,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47753,
+      "bytes": 47687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,12 +1592,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T05:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T06:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 4,
+          "other": 5,
           "finance": 6,
-          "zpravy": 20
+          "zpravy": 19
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1607,6 +1609,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Leoš Mareš padesátiletý. Připomeňte si kožich a další momenty jeho zářné kariéry",
+            "publishedAt": "2026-04-27T06:15:00Z"
+          },
           {
             "title": "AI zpěvačka Lolita se stala virální senzací. Protestují hudebníci i Romové",
             "publishedAt": "2026-04-27T05:55:00Z"
@@ -1634,10 +1640,6 @@
           {
             "title": "Vláda může opět řešit otázku cen pohonných hmot, regulace platí do čtvrtka",
             "publishedAt": "2026-04-27T04:06:00Z"
-          },
-          {
-            "title": "Češi si kupují čím dál starší ojetiny. Bojí se poruchovosti a dílů drahých na opravu",
-            "publishedAt": "2026-04-26T22:00:00Z"
           }
         ]
       }
