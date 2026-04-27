@@ -333,6 +333,28 @@ style-src 'self' 'unsafe-inline' https:;
       #iuTvProgramView .iuTvPgCard__hint{font-size:12px;opacity:0.75;padding-left:2px;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuTvPgCard__newtab{font-size:11px;opacity:0.62;margin-top:4px;padding-left:2px;line-height:1.35;overflow-wrap:anywhere;max-width:100%}
       #iuTvProgramView .iuChip--accent{--iuChipAccent:var(--iuSectionAccent)}
+      #iuTvProgramView .iuTvPgChoiceGrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px}
+      @media(min-width:520px){#iuTvProgramView .iuTvPgChoiceGrid2{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+      #iuTvProgramView .iuTvPgChoiceBtn{box-sizing:border-box;width:100%;min-height:72px;padding:12px 14px;margin:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:inherit;font:inherit;font-size:15px;font-weight:800;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;align-items:center;justify-content:flex-start}
+      #iuTvProgramView .iuTvPgChoiceBtn:hover,#iuTvProgramView .iuTvPgChoiceBtn:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 45%,rgba(255,255,255,0.12));background:rgba(255,255,255,0.09);box-shadow:0 4px 14px rgba(0,0,0,0.14);transform:translateY(-1px)}
+      #iuTvProgramView .iuTvPgChoiceBtn:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 70%,#fff);outline-offset:2px}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{position:fixed;inset:0;z-index:10050;display:flex;align-items:flex-end;justify-content:center;padding:0;box-sizing:border-box;pointer-events:none}
+      #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay[hidden]{display:none!important}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__backdrop{position:absolute;inset:0;background:rgba(7,12,19,0.55);pointer-events:auto}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{position:relative;pointer-events:auto;width:100%;max-width:520px;max-height:min(78dvh,86vh);margin:0 auto 12px;border-radius:18px 18px 0 0;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(180deg,rgba(15,23,42,0.98) 0%,rgba(8,14,22,0.98) 100%);box-shadow:0 -12px 40px rgba(0,0,0,0.35);display:flex;flex-direction:column;min-height:0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+      @media(min-width:600px){#iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{align-items:center;padding:18px}#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{border-radius:16px;margin:0;max-height:min(82vh,640px)}}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__title{margin:0;flex:1;font-size:17px;font-weight:900;line-height:1.2;color:rgba(255,255,255,0.96)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close{flex:0 0 auto;width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.92);font-size:22px;line-height:1;cursor:pointer}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:hover{background:rgba(255,255,255,0.1)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__lead{margin:0 0 10px;font-size:12px;opacity:0.78;line-height:1.35;color:rgba(255,255,255,0.88)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__links{display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;flex:1 1 auto;padding-bottom:4px}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row{display:block;text-decoration:none;color:inherit;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);padding:12px 12px;transition:border-color .15s,background .15s}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:hover,#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 50%,rgba(255,255,255,0.1));background:rgba(255,255,255,0.08)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowName{font-size:15px;font-weight:800}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{margin-top:4px;font-size:12px;opacity:0.75;line-height:1.35}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowMeta{margin-top:6px;font-size:11px;opacity:0.62}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaWarn{margin-top:6px;font-size:11px;font-weight:700;color:rgba(251,191,36,0.95)}
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
@@ -1491,6 +1513,22 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                       </div>
 
+                      <div class="iuSubSection" id="iuTvPg-choice" data-iu-tv-pick>
+                        <div class="iuSubSectionHeader">
+                          <h3>Co chceš sledovat?</h3>
+                          <div class="iuSubLine" aria-hidden="true"></div>
+                        </div>
+                        <p class="iuTvPgLead">Vyber typ obsahu — zobrazíme jen ověřené odkazy. Otevřou se vždy v nové kartě až po tvém výběru.</p>
+                        <div class="iuTvPgChoiceGrid2" role="list" aria-label="Typ programu">
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="film" role="listitem">Film</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="serial" role="listitem">Seriál</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="sport" role="listitem">Sport</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="zpravy" role="listitem">Zprávy</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="deti" role="listitem">Děti</button>
+                          <button type="button" class="iuTvPgChoiceBtn" data-iu-tv-choice="zabava" role="listitem">Zábava</button>
+                        </div>
+                      </div>
+
                       <div class="iuSubSection" id="iuTvPg-verified" data-iu-tv-verified>
                         <div class="iuSubSectionHeader">
                           <h3>Ověřené TV programy</h3>
@@ -1498,6 +1536,18 @@ style-src 'self' 'unsafe-inline' https:;
                         </div>
                         <p class="iuTvPgLead">Jen odkazy, které vedou na oficiální nebo veřejný TV přehled uvedené služby. Žádné sliby konkrétní stanice bez vlastního programu.</p>
                         <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="Ověřené TV programy"></div>
+                      </div>
+
+                      <div id="iuTvProgramChoiceOverlay" class="iuTvProgramChoiceOverlay" hidden aria-hidden="true">
+                        <div class="iuTvProgramChoiceOverlay__backdrop" data-iu-tv-choice-close tabindex="-1" aria-hidden="true"></div>
+                        <div class="iuTvProgramChoiceOverlay__panel" role="dialog" aria-modal="true" aria-labelledby="iuTvProgramChoiceTitle" tabindex="-1">
+                          <div class="iuTvProgramChoiceOverlay__head">
+                            <h3 id="iuTvProgramChoiceTitle" class="iuTvProgramChoiceOverlay__title"></h3>
+                            <button type="button" class="iuTvProgramChoiceOverlay__close" data-iu-tv-choice-close aria-label="Zavřít výběr">×</button>
+                          </div>
+                          <p class="iuTvProgramChoiceOverlay__lead">Vyber službu níže — odkaz se otevře v nové kartě.</p>
+                          <div id="iuTvProgramChoiceOverlayLinks" class="iuTvProgramChoiceOverlay__links"></div>
+                        </div>
                       </div>
                     </div>
                   </section>
