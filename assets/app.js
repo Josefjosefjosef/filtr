@@ -27015,6 +27015,88 @@ function buildVideoAsArticleCard(it) {
     return false;
   }
 
+  /**
+   * P0 CLS (/projects/ tablet cold URL): keep mobile main shell in sync with showView in the same turn.
+   * Previously this lived only inside applySection's post-apply rAF — first paint laid out gate + #leftContent
+   * without iu-mobileMainVisible, then the class add (≈300–1200ms) produced a dominant ~0.85 layout-shift
+   * on #leftContent / .iuSeoText (e.g. ?section=radio @ 768×1024).
+   */
+  function iuApplyMobileMainShellFromSectionNav(section, nav) {
+    try {
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const sec = String(section || "").toLowerCase();
+        if (sec && !iuArticleHubSectionP(sec)) {
+          try {
+            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
+              /* P0: hard-lock — popstate reopened web-nav overlay; skip main-nav chrome until lock clears */
+            } else {
+              try {
+                if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+              } catch (_) {}
+              document.body.classList.add("iu-mobileMainVisible");
+              var mbVisSync = document.getElementById("iuMobileMainBackBar");
+              if (mbVisSync) mbVisSync.hidden = true;
+              try {
+                if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+                  document.body.classList.remove("iu-webnavDetailFromGate");
+                }
+              } catch (_) {}
+              try {
+                if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+              } catch (_) {}
+            }
+          } catch (_) {}
+        } else if (iuArticleHubSectionP(sec)) {
+          /* P0: Do not remove iu-mobileMainVisible on the post-applySection rAF for feed/Média hub.
+             Left-rail / Silver preview handlers add this class before applySectionFromURL(); stripping it
+             here re-showed #iuMobileGateWrap (body:not(.iu-mobileMainVisible) loses the gate-hide rule)
+             and on ≤767px hid #leftContent again — taps looked dead or needed a second try. */
+          try {
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
+          } catch (_) {}
+          /* P0 mobile/tablet cold URL / reload: ?section=feed&topic=zpravy (konkrétní vertikála) — stejný chrome
+             jako po tapu na HOME/Silver preview (iu-mobileMainVisible + #iuMobileMainBackBar + host sync). */
+          try {
+            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
+              /* stejné jako non–hub větev: při hard-lock overlaye nesahat na main chrome */
+            } else {
+              const topicCold = String(nav && nav.topic ? nav.topic : "").trim().toLowerCase();
+              if (topicCold && topicCold !== "all") {
+                try {
+                  if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+                } catch (_) {}
+                try {
+                  document.body.classList.add("iu-mobileMainVisible");
+                } catch (_) {}
+                var mbFeedTopicColdSync = document.getElementById("iuMobileMainBackBar");
+                if (mbFeedTopicColdSync) mbFeedTopicColdSync.hidden = true;
+              }
+            }
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+        } else {
+          try {
+            document.body.classList.remove("iu-mobileMainVisible");
+          } catch (_) {}
+          var mbHidSync = document.getElementById("iuMobileMainBackBar");
+          if (mbHidSync) mbHidSync.hidden = true;
+          try {
+            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+              document.body.classList.remove("iu-webnavDetailFromGate");
+            }
+          } catch (_) {}
+          try {
+            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+  }
+
   function applySectionFromURL(accentOverride){
     void accentOverride;
     /* P0 web-nav return controller: jeden tick bez obecného section apply při řízeném návratu do overlaye. */
@@ -27120,6 +27202,9 @@ function buildVideoAsArticleCard(it) {
     try {
       iuSyncBodyIuHomeFromProjectsNav(nav);
     } catch (_) {}
+    try {
+      iuApplyMobileMainShellFromSectionNav(section, nav);
+    } catch (_) {}
 
     try {
       requestAnimationFrame(function iuApplySectionPostPaint() {
@@ -27149,79 +27234,8 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
 
-    // P0 mobile: #leftContent is display:none below 900px until iu-mobileMainVisible (rail click).
-    // Direct URL (?section=pocasi etc.) must reveal main or center views measure 0×0 (CLS/Playwright).
-    try{
-      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-        const sec = String(section || "").toLowerCase();
-        if (sec && !iuArticleHubSectionP(sec)) {
-          try {
-            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
-              /* P0: hard-lock — popstate reopened web-nav overlay; skip main-nav chrome until lock clears */
-            } else {
-              try {
-                if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
-              } catch (_) {}
-              document.body.classList.add("iu-mobileMainVisible");
-              var mbVis = document.getElementById("iuMobileMainBackBar");
-              if (mbVis) mbVis.hidden = true;
-              try {
-                if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
-                  document.body.classList.remove("iu-webnavDetailFromGate");
-                }
-              } catch (_) {}
-              try {
-                if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
-              } catch (_) {}
-            }
-          } catch (_) {}
-        } else if (iuArticleHubSectionP(sec)) {
-          /* P0: Do not remove iu-mobileMainVisible on the post-applySection rAF for feed/Média hub.
-             Left-rail / Silver preview handlers add this class before applySectionFromURL(); stripping it
-             here re-showed #iuMobileGateWrap (body:not(.iu-mobileMainVisible) loses the gate-hide rule)
-             and on ≤767px hid #leftContent again — taps looked dead or needed a second try. */
-          try {
-            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
-              document.body.classList.remove("iu-webnavDetailFromGate");
-            }
-          } catch (_) {}
-          /* P0 mobile/tablet cold URL / reload: ?section=feed&topic=zpravy (konkrétní vertikála) — stejný chrome
-             jako po tapu na HOME/Silver preview (iu-mobileMainVisible + #iuMobileMainBackBar + host sync). */
-          try {
-            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
-              /* stejné jako non–hub větev: při hard-lock overlaye nesahat na main chrome */
-            } else {
-              const topicCold = String(nav.topic || "").trim().toLowerCase();
-              if (topicCold && topicCold !== "all") {
-                try {
-                  if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
-                } catch (_) {}
-                try {
-                  document.body.classList.add("iu-mobileMainVisible");
-                } catch (_) {}
-                var mbFeedTopicCold = document.getElementById("iuMobileMainBackBar");
-                if (mbFeedTopicCold) mbFeedTopicCold.hidden = true;
-              }
-            }
-          } catch (_) {}
-          try {
-            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
-          } catch (_) {}
-        } else {
-          try { document.body.classList.remove("iu-mobileMainVisible"); } catch (_) {}
-          var mbHid = document.getElementById("iuMobileMainBackBar");
-          if (mbHid) mbHid.hidden = true;
-          try {
-            if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
-              document.body.classList.remove("iu-webnavDetailFromGate");
-            }
-          } catch (_) {}
-          try {
-            if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
-          } catch (_) {}
-        }
-      }
-    }catch{}
+    // P0 mobile shell: iuApplyMobileMainShellFromSectionNav(section, nav) runs synchronously after showView
+    // (see iuApplyMobileMainShellFromSectionNav) — do not duplicate here.
 
     // Weather (UI-only): defer fetch/render so first paint is not blocked on non-feed Počasí.
     try{
