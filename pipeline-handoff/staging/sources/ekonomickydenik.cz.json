@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T07:09:14.641709Z",
+  "ingestedAt": "2026-04-27T07:35:09.416754Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Svět zrychluje zbrojení. Česko s Babišem šlape na brzdu",
+      "url": "https://ekonomickydenik.cz/svet-zrychluje-zbrojeni-cesko-babis/",
+      "dt": "2026-04-27T07:19:25Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babišem",
+        "brzdu",
+        "svět",
+        "zbrojení",
+        "zrychluje",
+        "česko",
+        "šlape"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -743,33 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Írán proměnil Hormuzský průliv v ničivou zbraň. Evropa tomu nedokáže zabránit",
-      "url": "https://ekonomickydenik.cz/iran-promenil-hormuzsky-pruliv-v-nicivou-zbran/",
-      "dt": "2026-04-24T12:54:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropa",
-        "hormuzský",
-        "nedokáže",
-        "ničivou",
-        "proměnil",
-        "průliv",
-        "tomu",
-        "zabránit",
-        "zbraň",
-        "írán"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -780,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69653,
+      "bytes": 69599,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -817,11 +814,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:35:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:19:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 2,
           "finance": 26,
+          "zpravy": 2,
           "zdravi": 2
         },
         "drop_counts": {
@@ -834,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svět zrychluje zbrojení. Česko s Babišem šlape na brzdu",
+            "publishedAt": "2026-04-27T07:19:25Z"
+          },
           {
             "title": "Vysokorychlostní železnice nemusí být přínosem.  Varuje kontrola",
             "publishedAt": "2026-04-27T06:35:01Z"
@@ -861,10 +862,6 @@
           {
             "title": "Češi opět zabodovali. Sbírka potravin vynesla 623 tun pomoci",
             "publishedAt": "2026-04-26T13:09:20Z"
-          },
-          {
-            "title": "Algoritmus ruského zmaru: Co je největší zbraní Moskvy? A kam ještě zamíří?",
-            "publishedAt": "2026-04-26T11:05:00Z"
           }
         ]
       }

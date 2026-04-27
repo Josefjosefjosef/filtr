@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-27T07:09:14.641709Z",
+  "ingestedAt": "2026-04-27T07:35:09.416754Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na D5 u Králova Dvora se srazilo nákladní s osobním autem, jeden člověk zraněný",
+      "url": "https://www.idnes.cz/praha/zpravy/dalnice-d5-kraluv-dvur-berounsko-nehoda-nakladni-osobni-automobil-zraneni.A260427_083935_praha-zpravy_meli",
+      "dt": "2026-04-27T07:06:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "autem",
+        "dvora",
+        "jeden",
+        "králova",
+        "nákladní",
+        "osobním",
+        "srazilo",
+        "zraněný",
+        "člověk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -734,34 +760,6 @@
         "obchůdcích",
         "trávu",
         "všechno"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Vacek nejen o bývalém vedení Ypsilonky: Letošek odehrajeme, chce to mladé a známé tváře",
-      "url": "https://www.idnes.cz/kultura/divadlo/petr-vacek-rozhovor-ypsilonka-divadlo-na-jezerce.A260416_151849_divadlo_lysa",
-      "dt": "2026-04-26T14:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bývalém",
-        "chce",
-        "letošek",
-        "mladé",
-        "nejen",
-        "odehrajeme",
-        "tváře",
-        "vacek",
-        "vedení",
-        "ypsilonky",
-        "známé"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1555,7 +1553,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47687,
+      "bytes": 47497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1592,12 +1590,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:06:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 5,
-          "finance": 6,
-          "zpravy": 19
+          "zpravy": 20,
+          "other": 4,
+          "finance": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1609,6 +1607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na D5 u Králova Dvora se srazilo nákladní s osobním autem, jeden člověk zraněný",
+            "publishedAt": "2026-04-27T07:06:00Z"
+          },
           {
             "title": "Leoš Mareš padesátiletý. Připomeňte si kožich a další momenty jeho zářné kariéry",
             "publishedAt": "2026-04-27T06:15:00Z"
@@ -1636,10 +1638,6 @@
           {
             "title": "Zemřel zakladatel PR v Česku Michal Donath, mluvil za vlastníky Novy i Mattoni",
             "publishedAt": "2026-04-27T04:33:00Z"
-          },
-          {
-            "title": "Vláda může opět řešit otázku cen pohonných hmot, regulace platí do čtvrtka",
-            "publishedAt": "2026-04-27T04:06:00Z"
           }
         ]
       }

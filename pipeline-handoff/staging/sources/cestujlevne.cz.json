@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-27T07:09:14.641709Z",
+  "ingestedAt": "2026-04-27T07:35:09.416754Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Rumunský Temešvár po celý červen z Prahy. Letenky od 898 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/rumunsky-temesvar-po-cely-cerven-z-prahy",
+      "dt": "2026-04-27T07:13:02Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "898",
+        "celý",
+        "letenky",
+        "prahy",
+        "rumunský",
+        "temešvár",
+        "červen"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -474,31 +498,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Z Prahy do Sofie na jednu noc ze soboty na neděli. Letenky od 1 423 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/z-prahy-do-sofie-na-jednu-noc-ze-soboty-na-nedeli",
-      "dt": "2026-04-21T08:18:16Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "423",
-        "jednu",
-        "letenky",
-        "neděli",
-        "noc",
-        "prahy",
-        "soboty",
-        "sofie"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 46097,
+      "bytes": 45841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-24T19:12:28Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:13:02Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -561,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rumunský Temešvár po celý červen z Prahy. Letenky od 898 Kč",
+            "publishedAt": "2026-04-27T07:13:02Z"
+          },
           {
             "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
             "publishedAt": "2026-04-24T19:12:28Z"
@@ -588,10 +591,6 @@
           {
             "title": "Červnový týden na řeckém Samosu v hotelu přímo u pláže s polopenzí. Zájezd od 11 990 Kč",
             "publishedAt": "2026-04-23T14:38:15Z"
-          },
-          {
-            "title": "Kréta z Prahy na týden s polopenzí. Zájezd od 7 990 Kč",
-            "publishedAt": "2026-04-23T11:18:38Z"
           }
         ]
       }
