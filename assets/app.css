@@ -3684,8 +3684,10 @@ html[data-section="radio"] #iuRadioView .iuRadioGrid{
   background: linear-gradient(90deg, color-mix(in srgb, var(--iuSectionAccent, var(--iuNavAccent-radio, #8b5cf6)) 58%, transparent) 0%, color-mix(in srgb, var(--iuSectionAccent, var(--iuNavAccent-radio, #8b5cf6)) 22%, transparent) 45%, transparent 100%);
 }
 #iuRadioView > .iuSectionSubtitle{ margin: 0 0 14px; line-height: 1.45; }
-#iuRadioView .iuRadioMount{ margin-top: 0; }
-#iuRadioView .iuSeoText{ margin-top: 16px; }
+/* P0 CLS (radio): .iuSeoText is before .iuRadioMount in DOM — grid hydrates below SEO so the long SEO
+   block is not shoved down by chip mount height. Spacing: subtitle → SEO → gap → mount. */
+#iuRadioView .iuSeoText{ margin-top: 0; }
+#iuRadioView .iuRadioMount{ margin-top: 16px; }
 
 .iuRadioHead{
   display: flex;

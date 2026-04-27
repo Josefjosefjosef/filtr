@@ -23470,15 +23470,31 @@ function buildVideoAsArticleCard(it) {
       try {
         const html = quick.innerHTML;
         if (html && String(html).length > 0) {
-          const flush = function () {
+          /* P0 CLS (Rádio): idle flush with timeout ~400ms ran after section=radio painted and caused a second
+             layout pass (~0.85 CLS on #leftContent in Playwright). QuickFeed is already hidden — sync clear. */
+          var secQf = "";
+          try {
+            secQf = String(
+              (document.body && document.body.dataset && document.body.dataset.section) ||
+                (document.documentElement && document.documentElement.dataset && document.documentElement.dataset.section) ||
+                ""
+            ).toLowerCase();
+          } catch (_sq) {}
+          if (secQf === "radio") {
             try {
               quick.innerHTML = "";
             } catch (_) {}
-          };
-          if (typeof requestIdleCallback === "function") {
-            requestIdleCallback(flush, { timeout: 400 });
           } else {
-            setTimeout(flush, 0);
+            const flush = function () {
+              try {
+                quick.innerHTML = "";
+              } catch (_) {}
+            };
+            if (typeof requestIdleCallback === "function") {
+              requestIdleCallback(flush, { timeout: 400 });
+            } else {
+              setTimeout(flush, 0);
+            }
           }
         }
       } catch (_) {}
@@ -25087,12 +25103,34 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuScrollMainToTopSmooth(){
+    /* P0 CLS (Rádio): post-nav rAF scrollTo(smooth) on #newsList still drove huge CLS on tablet when switching
+       from Média hub; Rádio is short — only reset scrollTop, no window scroll. ≤900px: never smooth (layout). */
+    try {
+      var secNow = String(
+        (document.body && document.body.dataset && document.body.dataset.section) ||
+          (document.documentElement && document.documentElement.dataset && document.documentElement.dataset.section) ||
+          ""
+      ).toLowerCase();
+      if (secNow === "radio") {
+        try {
+          const el = document.getElementById("newsList");
+          if (el && typeof el.scrollTop === "number") el.scrollTop = 0;
+        } catch (_r0) {}
+        return;
+      }
+    } catch (_radioScrollSkip) {}
+    var scrollBehavior = "smooth";
+    try {
+      if (typeof window.matchMedia === "function" && window.matchMedia("(max-width: 900px)").matches) {
+        scrollBehavior = "auto";
+      }
+    } catch (_sb) {}
     try{
       // Prefer: scroll within the main feed container if it exists and scrolls.
       const feed = document.getElementById("newsList") || document.getElementById("feed");
       if (feed && feed.scrollHeight > feed.clientHeight){
         try{
-          if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: "smooth" });
+          if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: scrollBehavior });
           else feed.scrollTop = 0;
         }catch{
           try{ feed.scrollTop = 0; }catch{}
@@ -25103,7 +25141,7 @@ function buildVideoAsArticleCard(it) {
 
     try{
       // Fallback: window scroll
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scrollBehavior });
     }catch{
       try{ window.scrollTo(0, 0); }catch{}
     }
@@ -26064,6 +26102,10 @@ function buildVideoAsArticleCard(it) {
       : null;
     const target = mount || viewEl;
     if (!target) return;
+    /* P0 CLS: index.html may ship a static .iuRadioGrid before type=module — skip replace to avoid reflow. */
+    try {
+      if (mount && mount.querySelector(".iuRadioGrid") && mount.querySelector("a.iuRadioChip")) return;
+    } catch (_skip) {}
 
     const chips = RADIO_ITEMS.map((it) => {
       const title = escapeHtml(it.title);
@@ -27116,7 +27158,55 @@ function buildVideoAsArticleCard(it) {
     } else {
       viewKey = VIEW_MAP[section] ?? "media";
     }
+    /* P0 CLS (radio): index.html sets data-section=radio before type=module runs — first paint can show
+       #iuRadioView with an empty .iuRadioMount while .iuSeoText already lays out, then tiles hydrate and
+       shove SEO (~0.85 CLS on tablet). Re-render chips before showView so the first displayed frame matches. */
+    try {
+      if (String(section || "").toLowerCase() === "radio") {
+        const rvEarly = document.getElementById("iuRadioView");
+        if (rvEarly) renderRadioView(rvEarly);
+      }
+    } catch (_radioEarly) {}
+    /* P0 CLS (≤900px): iu-mobileMainVisible lived only inside post-applySection rAF — showView ran first while
+       #iuMobileGateWrap was still flex, then next frame hid gate (~0.85 CLS on #leftContent). Mirror non-feed
+       chrome synchronously before showView (idempotent with rAF duplicate). */
+    try {
+      if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        const secPre = String(section || "").toLowerCase();
+        if (secPre && !iuArticleHubSectionP(section)) {
+          try {
+            if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) {
+            } else {
+              try {
+                if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
+              } catch (_) {}
+              try {
+                document.body.classList.add("iu-mobileMainVisible");
+              } catch (_) {}
+              var mbPre = document.getElementById("iuMobileMainBackBar");
+              if (mbPre) mbPre.hidden = true;
+              try {
+                if (!(typeof window !== "undefined" && window.__iuWebNavGateDetailLatch === true)) {
+                  document.body.classList.remove("iu-webnavDetailFromGate");
+                }
+              } catch (_) {}
+              try {
+                if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
+              } catch (_) {}
+            }
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
     showView(viewKey);
+    /* P0 CLS: chip contrast lived in requestIdleCallback({timeout:500}) — for non-feed views (Rádio) it ran
+       after first paint and getComputedStyle-driven attrs reflowed the grid (~0.85 CLS). Feed keeps idle path. */
+    try {
+      if (!usesFeed) {
+        var contrastRootSync = iuSolidChipContrastRootForSection(section, nav);
+        if (contrastRootSync) iuApplySolidChipTextContrastInView(contrastRootSync);
+      }
+    } catch (_conSync) {}
     try {
       iuSyncBodyIuHomeFromProjectsNav(nav);
     } catch (_) {}
@@ -27255,52 +27345,53 @@ function buildVideoAsArticleCard(it) {
       }
     }catch{}
 
-    // P0 perf: chip contrast + feed pipeline in idle — skip feed filter/bootstrap/refresh when section is not feed pipeline.
+    // P0 perf: chip contrast + feed pipeline in idle (feed only). Non-feed contrast runs synchronously after showView.
     try {
-      var ricFeed =
-        typeof requestIdleCallback !== "undefined"
-          ? requestIdleCallback
-          : function (cb, opt) {
-              return setTimeout(function () {
-                try {
-                  cb({ didTimeout: true, timeRemaining: function () { return 5; } });
-                } catch (_) {}
-              }, opt && opt.timeout ? Math.min(opt.timeout, 48) : 1);
-            };
-      ricFeed(
-        function () {
-          try {
-            var contrastRoot = iuSolidChipContrastRootForSection(section, nav);
-            if (contrastRoot) iuApplySolidChipTextContrastInView(contrastRoot);
-          } catch (_) {}
-          if (!usesFeed) return;
-          try {
-            if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
-              window.__iuApplyFeedFilter();
-            }
-          } catch (_) {}
-          try {
-            var pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
-            if (pl) {
-              var loadedOk =
-                pl.hasLoadedData === true &&
-                Array.isArray(pl.cachedItems) &&
-                pl.cachedItems.length > 0;
-              var needFeedBootstrap =
-                typeof window.__iuLoadData === "function" &&
-                !pl.isLoadingData &&
-                !loadedOk;
-              if (needFeedBootstrap) {
-                window.__iuLoadData();
+      if (usesFeed) {
+        var ricFeed =
+          typeof requestIdleCallback !== "undefined"
+            ? requestIdleCallback
+            : function (cb, opt) {
+                return setTimeout(function () {
+                  try {
+                    cb({ didTimeout: true, timeRemaining: function () { return 5; } });
+                  } catch (_) {}
+                }, opt && opt.timeout ? Math.min(opt.timeout, 48) : 1);
+              };
+        ricFeed(
+          function () {
+            try {
+              var contrastRoot = iuSolidChipContrastRootForSection(section, nav);
+              if (contrastRoot) iuApplySolidChipTextContrastInView(contrastRoot);
+            } catch (_) {}
+            try {
+              if (typeof window !== "undefined" && typeof window.__iuApplyFeedFilter === "function") {
+                window.__iuApplyFeedFilter();
               }
-            }
-          } catch (_) {}
-          try {
-            window.__iuStartAutoRefresh && window.__iuStartAutoRefresh();
-          } catch (_) {}
-        },
-        { timeout: 500 }
-      );
+            } catch (_) {}
+            try {
+              var pl = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;
+              if (pl) {
+                var loadedOk =
+                  pl.hasLoadedData === true &&
+                  Array.isArray(pl.cachedItems) &&
+                  pl.cachedItems.length > 0;
+                var needFeedBootstrap =
+                  typeof window.__iuLoadData === "function" &&
+                  !pl.isLoadingData &&
+                  !loadedOk;
+                if (needFeedBootstrap) {
+                  window.__iuLoadData();
+                }
+              }
+            } catch (_) {}
+            try {
+              window.__iuStartAutoRefresh && window.__iuStartAutoRefresh();
+            } catch (_) {}
+          },
+          { timeout: 500 }
+        );
+      }
     } catch (_) {}
 
     // Notes: mount for current section + render all declared notes hosts (no MindMenu impact)
