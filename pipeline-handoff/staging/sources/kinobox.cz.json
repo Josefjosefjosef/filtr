@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-27T10:29:19.057165Z",
+  "ingestedAt": "2026-04-27T10:54:11.284235Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Když musíte poslat důchodce do vesmíru, protože NASA je v koncích",
+      "url": "https://www.kinobox.cz/clanky/daily/53129-kinobox-daily-kdyz-musite-poslat-duchodce-do-vesmiru-protoze-nasa-je-v-koncich",
+      "dt": "2026-04-27T10:30:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "důchodce",
+        "když",
+        "kinobox",
+        "koncích",
+        "musíte",
+        "nasa",
+        "poslat",
+        "protože",
+        "vesmíru"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,34 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kojot a největší filmová katastrofa. Zachráněný film o „procesu století“ baví v prvním traileru",
-      "url": "https://www.kinobox.cz/clanky/filmy/52932-kojot-a-nejvetsi-filmova-katastrofa-nechteny-a-zachraneny-film-o-procesu-stoleti-v-prvnim-traileru",
-      "dt": "2026-04-24T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "baví",
-        "film",
-        "filmová",
-        "katastrofa",
-        "kojot",
-        "největší",
-        "procesu",
-        "prvním",
-        "století",
-        "traileru",
-        "zachráněný"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -568,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28923,
+      "bytes": 28691,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -605,7 +604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T10:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -620,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Když musíte poslat důchodce do vesmíru, protože NASA je v koncích",
+            "publishedAt": "2026-04-27T10:30:00Z"
+          },
           {
             "title": "Pokračování hitu Já, legenda konečně našlo režiséra. Tvůrci hodlají ignorovat původní konec",
             "publishedAt": "2026-04-27T09:00:00Z"
@@ -647,10 +650,6 @@
           {
             "title": "Kdo by se odvážil zabít dítě? Jeden z nejkontroverznějších hororů 70. let předběhl Stephena Kinga",
             "publishedAt": "2026-04-26T09:00:00Z"
-          },
-          {
-            "title": "„Komedie se má hrát vážně,\" říká Jan Musil Přejmenovaný, režisér novinky Ovce žerou první",
-            "publishedAt": "2026-04-26T07:00:00Z"
           }
         ]
       }

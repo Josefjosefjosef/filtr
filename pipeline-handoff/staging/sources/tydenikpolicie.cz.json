@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-27T10:29:19.057165Z",
+  "ingestedAt": "2026-04-27T10:54:11.284235Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trojice zlodějů šla v Duchcově na jistotu. Z bytu odnesla věci za  téměř milion korun",
+      "url": "https://tydenikpolicie.cz/trojice-zlodeju-sla-v-duchcove-na-jistotu-z-bytu-odnesla-veci-za-temer-milion-korun/",
+      "dt": "2026-04-27T10:27:28Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bytu",
+        "duchcově",
+        "jistotu",
+        "korun",
+        "milion",
+        "odnesla",
+        "trojice",
+        "téměř",
+        "věci",
+        "zlodějů",
+        "šla"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,33 +270,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jeden mrtvý, tři zranění. Sobota se nesla na Vysočině ve znamení nehod motorkářů",
-      "url": "https://tydenikpolicie.cz/jeden-mrtvy-tri-zraneni-sobota-se-nesla-na-vysocine-ve-znameni-nehod-motorkaru/",
-      "dt": "2026-04-26T09:43:14Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jeden",
-        "motorkářů",
-        "mrtvý",
-        "nehod",
-        "nesla",
-        "sobota",
-        "tři",
-        "vysočině",
-        "znamení",
-        "zranění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 17291,
+      "bytes": 17259,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T10:20:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T10:27:28Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trojice zlodějů šla v Duchcově na jistotu. Z bytu odnesla věci za  téměř milion korun",
+            "publishedAt": "2026-04-27T10:27:28Z"
+          },
           {
             "title": "Po nehodě v Pardubicích hledají policisté neznámou cyklistku",
             "publishedAt": "2026-04-27T10:20:52Z"
@@ -358,10 +363,6 @@
           {
             "title": "Žena měla v bytě v pražských Stodůlkách ohrožovat dítě. Když vyjednávání nikam nevedlo, zpacifikovala ji zásahová jednotka",
             "publishedAt": "2026-04-26T22:05:27Z"
-          },
-          {
-            "title": "Složky IZS zasahovaly na Litoměřicku u nehody dvou motorek",
-            "publishedAt": "2026-04-26T21:32:41Z"
           }
         ]
       }
