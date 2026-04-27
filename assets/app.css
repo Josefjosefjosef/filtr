@@ -3608,6 +3608,23 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
+/* P0 mobile/tablet ≤900: rezerva nad fixní spodní lištou — poslední karty nesmí zmizet pod #iuMobileBottomNav. */
+@media (max-width: 900px) {
+  body:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 28px) !important;
+    box-sizing: border-box !important;
+  }
+  body:not(.iu-mobileGateOverlayOpen) #iuMapyView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuMapsView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuRadioView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuWeatherView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView:not([hidden]){
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 28px) !important;
+    box-sizing: border-box !important;
+  }
+}
+
 #silver-slot[hidden]{
   display: none !important;
 }
@@ -8679,6 +8696,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     background: var(--iu-bg, #f8fafc) !important;
     box-sizing: border-box !important;
   }
+  /* P0 mobile/tablet: Menu (gate „navigace“) — vždy světlý shell; večerní --iu-bg dokumentu nesmí přetínat overlay. */
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 52%, #e8edf3 100%) !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="nav"] #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
+    background: transparent !important;
+  }
   body.iu-mobileGateOverlayOpen #iuMobileGateBackBar:not([hidden]){
     flex: 0 0 auto !important;
     width: 100% !important;
@@ -8719,6 +8743,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     touch-action: pan-y !important;
     display: flex !important;
     flex-direction: column !important;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px) !important;
+    box-sizing: border-box !important;
   }
   
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){

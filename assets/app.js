@@ -11994,30 +11994,45 @@ function buildVideoAsArticleCard(it) {
       window.__iuMobileWebNavReturnArmed = false;
       delete window.__iuMobileWebNavLastTile;
     } catch (_) {}
+    function iuFinishProjectsHubUrlAndApply() {
+      try {
+        var uSync = new URL(window.location.href);
+        if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
+        uSync.searchParams.delete("section");
+        uSync.searchParams.delete("topic");
+        uSync.searchParams.delete("mode");
+        uSync.searchParams.delete("panel");
+        uSync.searchParams.delete("radarOpen");
+        history.replaceState(null, "", uSync.toString());
+      } catch (_) {}
+      try {
+        if (typeof window.iuHideAllOverlaysNow === "function") window.iuHideAllOverlaysNow();
+      } catch (_) {}
+      try {
+        if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
+      } catch (_) {}
+      try {
+        if (typeof window.iuApplyPanelFromUrl === "function") window.iuApplyPanelFromUrl();
+      } catch (_) {}
+      try {
+        if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") {
+          window.iuDesktopHomeSectionGridGuardApply();
+        }
+      } catch (_) {}
+    }
     try {
-      var uSync = new URL(window.location.href);
-      if (uSync.hash === "#iu-nav" || uSync.hash === "#nav") uSync.hash = "";
-      uSync.searchParams.delete("section");
-      uSync.searchParams.delete("topic");
-      uSync.searchParams.delete("mode");
-      uSync.searchParams.delete("panel");
-      uSync.searchParams.delete("radarOpen");
-      history.replaceState(null, "", uSync.toString());
-    } catch (_) {}
-    try {
-      if (typeof window.iuHideAllOverlaysNow === "function") window.iuHideAllOverlaysNow();
-    } catch (_) {}
-    try {
-      if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
-    } catch (_) {}
-    try {
-      if (typeof window.iuApplyPanelFromUrl === "function") window.iuApplyPanelFromUrl();
-    } catch (_) {}
-    try {
-      if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") {
-        window.iuDesktopHomeSectionGridGuardApply();
+      if (typeof window.requestAnimationFrame === "function") {
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            iuFinishProjectsHubUrlAndApply();
+          });
+        });
+      } else {
+        iuFinishProjectsHubUrlAndApply();
       }
-    } catch (_) {}
+    } catch (_) {
+      iuFinishProjectsHubUrlAndApply();
+    }
   }
   try {
     window.iuProjectsHubNavigateHardResetFromHomeOrBack = iuProjectsHubNavigateHardResetFromHomeOrBack;
@@ -12094,12 +12109,22 @@ function buildVideoAsArticleCard(it) {
           content.setAttribute("aria-hidden", "false");
           panelNav.hidden = false;
           panelTools.hidden = true;
+          try {
+            content.scrollTop = 0;
+            if (panelNav) panelNav.scrollTop = 0;
+            if (panelTools) panelTools.scrollTop = 0;
+          } catch (_) {}
         } else if (value === "tools") {
           tabNav.setAttribute("aria-selected", "false");
           tabTools.setAttribute("aria-selected", "true");
           content.setAttribute("aria-hidden", "false");
           panelNav.hidden = true;
           panelTools.hidden = false;
+          try {
+            content.scrollTop = 0;
+            if (panelNav) panelNav.scrollTop = 0;
+            if (panelTools) panelTools.scrollTop = 0;
+          } catch (_) {}
         } else {
           tabNav.setAttribute("aria-selected", "false");
           tabTools.setAttribute("aria-selected", "false");
@@ -12213,6 +12238,7 @@ function buildVideoAsArticleCard(it) {
       tabNav.addEventListener("click", function () {
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         var next = cur === "nav" ? "" : "nav";
+        var scheduleNavHashPush = false;
         if (!next) {
           try {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
@@ -12228,26 +12254,47 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         } else {
           try {
-            if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-              var uNav = new URL(window.location.href);
-              uNav.hash = "iu-nav";
-              history.pushState(
-                { iu_nav_overlay: true, iu_nav_origin: "homepage" },
-                "",
-                uNav.toString()
-              );
-              try {
-                sessionStorage.removeItem("iuMobileWebNavReturnArmed");
-                sessionStorage.removeItem("iuMobileWebNavLastTarget");
-              } catch (_){}
-              try {
-                window.__iuMobileWebNavReturnArmed = false;
-                delete window.__iuMobileWebNavLastTile;
-              } catch (_){}
-            }
-          } catch (_) {}
+            scheduleNavHashPush = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+          } catch (_) {
+            scheduleNavHashPush = false;
+          }
         }
         setTab(next);
+        if (scheduleNavHashPush) {
+          try {
+            queueMicrotask(function () {
+              try {
+                var uNav = new URL(window.location.href);
+                uNav.hash = "iu-nav";
+                history.pushState(
+                  { iu_nav_overlay: true, iu_nav_origin: "homepage" },
+                  "",
+                  uNav.toString()
+                );
+                try {
+                  sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+                  sessionStorage.removeItem("iuMobileWebNavLastTarget");
+                } catch (_){}
+                try {
+                  window.__iuMobileWebNavReturnArmed = false;
+                  delete window.__iuMobileWebNavLastTile;
+                } catch (_){}
+              } catch (_) {}
+            });
+          } catch (_) {
+            try {
+              if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+                var uNav2 = new URL(window.location.href);
+                uNav2.hash = "iu-nav";
+                history.pushState(
+                  { iu_nav_overlay: true, iu_nav_origin: "homepage" },
+                  "",
+                  uNav2.toString()
+                );
+              }
+            } catch (_){}
+          }
+        }
       });
       var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
