@@ -4389,6 +4389,15 @@ body[data-section="home"] .iuHomeCanvas{
 .iuHomeHex434 .iuHex--travel{    background: var(--iuNavAccent-travel, #0284C7); }
 .iuHomeHex434 .iuHex--jr{        background: var(--iuNavAccent-jr); }
 .iuHomeHex434 .iuHex--tvprogram{ background: var(--iuNavAccent-tvprogram, #334155); }
+/* P0 Menu hex / home grid: TV program — pouze žlutá ikonka (dlaždice beze změny textu/layoutu). */
+.iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
+.iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg{
+  color: #FACC15 !important;
+}
+#iuHomeHexGrid .iuHomeHex[data-section="tvprogram"] .iuHomeHexIcon,
+#iuHomeHexGrid .iuHomeHex[data-section="tvprogram"] .iuHomeHexIcon svg{
+  color: #FACC15 !important;
+}
 
 .iuJrEmptyView{
   padding: 18px 12px;
@@ -8424,6 +8433,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #feed{
       height: 100%;
       overflow-y: auto;
+      scroll-padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px);
+      padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px);
+      box-sizing: border-box;
       
       min-height: min(320px, 48vh);
     }
@@ -15210,19 +15222,24 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   .silver-welcome-stack--evening #iuSilverTallScrollViewport .iuNewsPreviewHeader{
     border-bottom-color: rgba(255, 255, 255, 0.1) !important;
   }
-  html[data-iu-silver-welcome-paint="evening"] body,
-  html[data-iu-silver-welcome-paint="evening"] #content,
-  html[data-iu-silver-welcome-paint="evening"] .container,
-  html[data-iu-silver-welcome-paint="evening"] .iuFrame,
-  html[data-iu-silver-welcome-paint="evening"] .iuLayout,
-  html[data-iu-silver-welcome-paint="evening"] #iuLeftRail,
-  html[data-iu-silver-welcome-paint="evening"] .iu-rightContent,
-  html[data-iu-silver-welcome-paint="evening"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] #page,
-  html[data-iu-silver-welcome-paint="evening"] .mainCol,
-  html[data-iu-silver-welcome-paint="evening"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] #leftContent {
+  /*
+    P0: Silver „evening“ shell (dark) applies ONLY to Přehled dne (feed/media) + Hry.
+    Light-only menu sections (mapy, tvprogram, …) must never inherit this block — reload
+    must not flash dark behind non–article-hub hosts (root: html[data-section] matches body).
+  */
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) body,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #content,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .container,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuFrame,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iuLayout,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #iuLeftRail,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .iu-rightContent,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feed,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #feedWrap,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #page,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) .mainCol,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #newsList,
+  html[data-iu-silver-welcome-paint="evening"]:is([data-section="feed"], [data-section="media"], [data-section="hry"]) #leftContent {
     background:
       radial-gradient(ellipse 88% 60% at 5% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 46%),
       radial-gradient(ellipse 85% 55% at 98% 100%, rgba(124, 58, 246, 0.08) 0%, transparent 50%),
@@ -15235,38 +15252,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
 }
 
-
-@media (max-width: 1024px){
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #leftContent,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #newsList,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #feed,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="pocasi"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="mapy"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="jr"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvprogram"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="tvonline"] #feedWrap,
-  html[data-iu-silver-welcome-paint="evening"] body.iu-mobileMainVisible.iu-webnavDetailFromGate[data-section="radio"] #feedWrap{
-    background: linear-gradient(180deg, #f8fbff 0%, #f1f5fb 100%) !important;
-    background-color: #f4f7fc !important;
-    background-image: none !important;
-    color: #0f172a !important;
-  }
-}
 
 @media (min-width: 768px) and (max-width: 1024px){
   #iuSilverTallScrollViewport [class$="PreviewCardMount"] + [class$="PreviewCardMount"]{
@@ -17358,6 +17343,8 @@ html, body,
 }
 
 .iu-leftNav .iu-leftNavItem[data-accent="media"]{ --iuNavAccent: var(--iuNavAccent-media); }
+/* P0 Přehled dne: Zprávy — stejná zelená akcentace jako mapy (bez plošné změny ostatních topic railů). */
+.iu-leftNav .iu-leftNavItem[data-accent="zpravy"]{ --iuNavAccent: var(--iuNavAccent-mapy); }
 
 .iu-leftNav .iu-leftNavItem[data-accent="radio"]{ --iuNavAccent: var(--iuNavAccent-radio); }
 

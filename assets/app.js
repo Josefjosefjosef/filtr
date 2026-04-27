@@ -20081,10 +20081,15 @@ function buildVideoAsArticleCard(it) {
   window.addEventListener("blur", () => debugLog("[FOCUS] out"));
 
   window.addEventListener("hashchange", () => {
-    freezeScroll();
     setSectionsFromHash();
-    applyFilter();
-    restoreScroll();
+    void (async function iuHashchangeSections(){
+      try {
+        await applyFilter();
+      } catch (_) {}
+      try {
+        if (typeof window.iuScrollMainToTopInstant === "function") window.iuScrollMainToTopInstant();
+      } catch (_) {}
+    })();
   });
 
   init();
@@ -25800,13 +25805,27 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
 
+  function iuScrollMainToTopInstant(){
+    try{
+      const feed = document.getElementById("newsList") || document.getElementById("feed");
+      if (feed) {
+        try {
+          feed.scrollTop = 0;
+        } catch (_) {}
+      }
+    } catch (_) {}
+    try {
+      window.scrollTo(0, 0);
+    } catch (_) {}
+  }
+
   function iuScrollMainToTopSmooth(){
     try{
       // Prefer: scroll within the main feed container if it exists and scrolls.
       const feed = document.getElementById("newsList") || document.getElementById("feed");
       if (feed && feed.scrollHeight > feed.clientHeight){
         try{
-          if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: "smooth" });
+          if (typeof feed.scrollTo === "function") feed.scrollTo({ top: 0, behavior: "auto" });
           else feed.scrollTop = 0;
         }catch{
           try{ feed.scrollTop = 0; }catch{}
@@ -25816,8 +25835,8 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     try{
-      // Fallback: window scroll
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Fallback: window scroll (auto: menu sekce + filtry bez „dvojitého“ smooth skoku)
+      window.scrollTo({ top: 0, behavior: "auto" });
     }catch{
       try{ window.scrollTo(0, 0); }catch{}
     }
@@ -27483,6 +27502,7 @@ function buildVideoAsArticleCard(it) {
   try { window.iuHideAllOverlaysNow = iuHideAllOverlaysNow; } catch (e) {}
   try { window.iuNavRailHideOverlaysFast = iuNavRailHideOverlaysFast; } catch (e) {}
   try { window.iuScrollMainToTopSmooth = iuScrollMainToTopSmooth; } catch (e) {}
+  try { window.iuScrollMainToTopInstant = iuScrollMainToTopInstant; } catch (e) {}
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -27948,15 +27968,7 @@ function buildVideoAsArticleCard(it) {
       iuInitTvProgramChoiceUi();
     } catch (_) {}
 
-    if (!feedEl || !viewEl) return;
-
-    try {
-      renderRadioView(viewEl);
-    }catch(e){
-      try{ if (typeof window.persistLastError === "function") window.persistLastError(String(e?.message || e)); }catch{}
-    }
-
-    // Do not persist section to URL on init – keep URL clean (/projects/). Apply view from URL or default.
+    // P0 cold reload / partial DOM: URL→section must run even if radio feed host is missing (never skip applySectionFromURL).
     try { iuMobileWebNavSyncFromHistory(); } catch (_){}
     try {
       var hInit = String(location.hash || "");
@@ -27971,7 +27983,6 @@ function buildVideoAsArticleCard(it) {
       applyPanelFromUrl();
     }
     try { window.addEventListener('iu-panel-url-changed', applyPanelFromUrl); } catch {}
-    // PRELOAD overlay styles on page load (keep active URL panel open)
     try {
       const panelFromUrl = parsePanelFromUrl();
       if (panelFromUrl === null) {
@@ -27981,6 +27992,14 @@ function buildVideoAsArticleCard(it) {
         });
       }
     } catch {}
+
+    if (!feedEl || !viewEl) return;
+
+    try {
+      renderRadioView(viewEl);
+    }catch(e){
+      try{ if (typeof window.persistLastError === "function") window.persistLastError(String(e?.message || e)); }catch{}
+    }
   }
 
   if (typeof window !== "undefined" && typeof window.iuIsProjectsRoute === "function" && window.iuIsProjectsRoute()) {
