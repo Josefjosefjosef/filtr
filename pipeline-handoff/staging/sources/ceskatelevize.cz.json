@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T10:54:11.284235Z",
+  "ingestedAt": "2026-04-27T11:20:57.527884Z",
   "items": [
     {
       "section": "aktualne",
@@ -424,22 +424,16 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Regulace marží i nižší spotřební daň z nafty budou pokračovat i v květnu, uvedla Schillerová",
+      "title": "Tisková konference po jednání vlády",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-projedna-zmeny-v-knihovnim-zakone-nebo-povinnosti-pro-dovozce-amalgamu-372824",
       "dt": "2026-04-27T03:09:25Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "daň",
-        "květnu",
-        "marží",
-        "nafty",
-        "nižší",
-        "pokračovat",
-        "regulace",
-        "schillerová",
-        "spotřební",
-        "uvedla"
+        "jednání",
+        "konference",
+        "tisková",
+        "vlády"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -750,6 +744,32 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Petrovický se stal oficiálně trenérem Motoru. Pomůže mu Jiruš, který skončil ve Spartě",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/petrovicky-se-stal-oficialne-trenerem-motoru-pomuze-mu-jirus-ktery-skoncil-ve-sparte-156482",
+      "dt": "2026-04-27T11:04:20Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "jiruš",
+        "motoru",
+        "oficiálně",
+        "petrovický",
+        "pomůže",
+        "skončil",
+        "spartě",
+        "stal",
+        "trenérem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1474,29 +1494,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trpišovský: Bodové propočty mě nezajímají, Bořil to přehnal",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/trpisovsky-bodove-propocty-me-nezajimaji-boril-to-prehnal-156452",
-      "dt": "2026-04-25T19:11:15Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bodové",
-        "bořil",
-        "nezajímají",
-        "propočty",
-        "přehnal",
-        "trpišovský"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41554,
+      "bytes": 41442,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1626,7 +1623,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38548,
+      "bytes": 38535,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1663,7 +1660,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T10:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T11:04:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1678,6 +1675,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Petrovický se stal oficiálně trenérem Motoru. Pomůže mu Jiruš, který skončil ve Spartě",
+            "publishedAt": "2026-04-27T11:04:20Z"
+          },
           {
             "title": "Fotbal fokus podcast: Zoufalý Baník, pokuta kvůli Jedličkovi? Co Dvorník a pozice Hyského?",
             "publishedAt": "2026-04-27T10:28:00Z"
@@ -1705,10 +1706,6 @@
           {
             "title": "Rallye Šumava Klatovy ovládl Mareš a vítězně vstoupil do nové sezony",
             "publishedAt": "2026-04-26T19:04:01Z"
-          },
-          {
-            "title": "Házenkáře Karviné dělí jediná výhra od obhajoby titulu",
-            "publishedAt": "2026-04-26T18:04:09Z"
           }
         ]
       }
@@ -1720,7 +1717,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77115,
+      "bytes": 77301,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

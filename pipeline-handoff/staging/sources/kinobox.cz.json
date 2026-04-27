@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-27T10:54:11.284235Z",
+  "ingestedAt": "2026-04-27T11:20:57.527884Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ulice odhalí pachatele drogového útoku. Po velké rvačce musí zasáhnout policie",
+      "url": "https://www.kinobox.cz/clanky/serialy/53127-ulice-odhali-pachatele-drogoveho-utoku-po-velke-bitce-musi-zasahnout-policie",
+      "dt": "2026-04-27T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "drogového",
+        "musí",
+        "odhalí",
+        "pachatele",
+        "policie",
+        "rvačce",
+        "ulice",
+        "velké",
+        "zasáhnout",
+        "útoku"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,33 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "V zajetí motivačních koučů. Ovce žerou první jsou cynickou hříčkou o manipulaci a šílenství",
-      "url": "https://www.kinobox.cz/clanky/recenze/52970-v-zajeti-motivacnich-koucu-ovce-zerou-prvni-jsou-cynickou-hrickou-o-manipulaci-a-silenstvi",
-      "dt": "2026-04-24T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "cynickou",
-        "hříčkou",
-        "koučů",
-        "manipulaci",
-        "motivačních",
-        "ovce",
-        "první",
-        "zajetí",
-        "šílenství",
-        "žerou"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28691,
+      "bytes": 28592,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice odhalí pachatele drogového útoku. Po velké rvačce musí zasáhnout policie",
+            "publishedAt": "2026-04-27T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Když musíte poslat důchodce do vesmíru, protože NASA je v koncích",
             "publishedAt": "2026-04-27T10:30:00Z"
@@ -646,10 +650,6 @@
           {
             "title": "Kinobox Daily: Viděli jste filmového předchůdce legendárního seriálu M*A*S*H?",
             "publishedAt": "2026-04-26T10:00:00Z"
-          },
-          {
-            "title": "Kdo by se odvážil zabít dítě? Jeden z nejkontroverznějších hororů 70. let předběhl Stephena Kinga",
-            "publishedAt": "2026-04-26T09:00:00Z"
           }
         ]
       }

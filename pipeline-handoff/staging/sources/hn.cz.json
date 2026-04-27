@@ -1,8 +1,42 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-27T10:54:11.284235Z",
+  "ingestedAt": "2026-04-27T11:20:57.527884Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Protivníka neodradí nemocnice, ale dobře vycvičené jednotky, řekl Pavel. Síla je podle něj nejlepší způsob, jak zabránit cizí agresi",
+      "url": "https://domaci.hn.cz/c1-67871280-protivnika-neodradi-nemocnice-ale-dobre-vycvicene-jednotky-rekl-pavel-sila-je-podle-nej-nejlepsi-zpusob-jak-zabranit-cizi-agresi",
+      "dt": "2026-04-27T10:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agresi",
+        "ale",
+        "cizí",
+        "dobře",
+        "jednotky",
+        "nejlepší",
+        "nemocnice",
+        "neodradí",
+        "něj",
+        "pavel",
+        "podle",
+        "protivníka",
+        "síla",
+        "vycvičené",
+        "zabránit",
+        "způsob",
+        "řekl"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -1085,6 +1119,37 @@
       "_dt_serialized": true
     },
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Že se Trump chová bláznivě? Ano, ale má k tomu i důvod. Jmenuje se Čína, vysvětluje ředitel Ústavu mezinárodních vztahů",
+      "url": "https://zahranicni.hn.cz/c1-67870860-ze-se-trump-chova-blaznive-ano-ale-ma-k-tomu-i-duvod-jmenuje-se-cina-vysvetluje-reditel-ustavu-mezinarodnich-vztahu",
+      "dt": "2026-04-24T11:47:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "ano",
+        "bláznivě",
+        "chová",
+        "důvod",
+        "jmenuje",
+        "mezinárodních",
+        "tomu",
+        "trump",
+        "vysvětluje",
+        "vztahů",
+        "ústavu",
+        "čína",
+        "ředitel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "pocasi",
       "contentType": "article",
       "title": "Zpátky na vrchol. Intel zažívá zmrtvýchvstání, akcie konečně překonaly maxima z dob internetové bubliny",
@@ -1112,60 +1177,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Oto Klempíř mezi Bohem a volem. A panda za vystrčení Miloše Vystrčila z vládního speciálu bude?",
-      "url": "https://podcasty.hn.cz/c1-67870790-oto-klempir-mezi-bohem-a-volem-a-panda-za-vystrceni-milose-vystrcila-z-vladniho-specialu-bude",
-      "dt": "2026-04-24T11:03:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bohem",
-        "klempíř",
-        "miloše",
-        "oto",
-        "panda",
-        "speciálu",
-        "vládního",
-        "volem",
-        "vystrčení",
-        "vystrčila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Má vychovávat rodič, nebo stát? Počet zákonných zákazů určených mladistvým roste",
-      "url": "https://byznys.hn.cz/c1-67870210-ma-vychovavat-rodic-nebo-stat-pocet-zakonnych-zakazu-urcenych-mladistvym-roste",
-      "dt": "2026-04-24T11:02:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "mladistvým",
-        "nebo",
-        "počet",
-        "rodič",
-        "roste",
-        "stát",
-        "určených",
-        "vychovávat",
-        "zákazů",
-        "zákonných"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1176,7 +1187,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184542,
+      "bytes": 184576,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1213,11 +1224,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T10:43:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "zdravi": 1,
           "zpravy": 4,
-          "finance": 36
+          "finance": 35
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1229,6 +1241,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Protivníka neodradí nemocnice, ale dobře vycvičené jednotky, řekl Pavel. Síla je podle něj nejlepší způsob, jak zabránit cizí agresi",
+            "publishedAt": "2026-04-27T10:43:00Z"
+          },
           {
             "title": "K další těžké nehodě chybělo pár centimetrů. V Pardubicích uvízl na přejezdu kamion, situace ukázala i systémový problém",
             "publishedAt": "2026-04-27T08:33:00Z"
@@ -1255,10 +1271,6 @@
           },
           {
             "title": "Chaos kolem výběru šéfa inspekce životního prostředí. Mluví se o porušení zákona i zásahu politiků",
-            "publishedAt": "2026-04-26T22:00:00Z"
-          },
-          {
-            "title": "Jak se daří studentům &bdquo;flipovacího krále&ldquo;? Výsledky jsou horší než před dvěma lety, většina neprodala ani jednu nemovitost",
             "publishedAt": "2026-04-26T22:00:00Z"
           }
         ]
