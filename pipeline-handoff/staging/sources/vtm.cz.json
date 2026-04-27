@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T15:14:28.907982Z",
+  "ingestedAt": "2026-04-27T16:24:49.833288Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,35 @@
         "tisíc",
         "tom",
         "vyhrál"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nové mobily jsou vždy „nejlepší v historii“. Jenže často jen díky chytrému srovnání a hvězdičkám",
+      "url": "https://mobilmania.zive.cz/clanky/nove-mobily-jsou-vzdy-nejlepsi-v-historii-jenze-casto-jen-diky-chytremu-srovnani-a-hvezdickam/sc-3-a-1364632/default.aspx",
+      "dt": "2026-04-27T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chytrému",
+        "díky",
+        "historii",
+        "hvězdičkám",
+        "jen",
+        "jenže",
+        "mobily",
+        "nejlepší",
+        "nové",
+        "srovnání",
+        "vždy",
+        "často"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -959,33 +988,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Chytrá stolní lampa Xiaomi zlevnila pod 800 Kč. Hezky svítí a dá se ovládat i mobilem",
-      "url": "https://www.zive.cz/clanky/nejlevnejsi-chytra-lampa-xiaomi-mi-led-desk-lamp-1s/sc-3-a-240831/default.aspx",
-      "dt": "2026-04-23T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "800",
-        "chytrá",
-        "hezky",
-        "lampa",
-        "mobilem",
-        "ovládat",
-        "stolní",
-        "svítí",
-        "xiaomi",
-        "zlevnila"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +998,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23376,
+      "bytes": 23259,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1035,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1051,6 +1053,10 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
+          },
+          {
+            "title": "Nové mobily jsou vždy „nejlepší v historii“. Jenže často jen díky chytrému srovnání a hvězdičkám",
+            "publishedAt": "2026-04-27T15:45:00Z"
           },
           {
             "title": "V Česku už vzniklo pět milionů datových schránek. Letos po 17 letech změní webovou adresu",
@@ -1075,10 +1081,6 @@
           {
             "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
             "publishedAt": "2026-04-24T11:45:00Z"
-          },
-          {
-            "title": "GoPro se utrhlo ze řetězu. Nové kamery Mission mají výměnné objektivy a nakukují do filmové branže",
-            "publishedAt": "2026-04-25T07:45:00Z"
           }
         ]
       }

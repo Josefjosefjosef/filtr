@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-27T15:14:28.907982Z",
+  "ingestedAt": "2026-04-27T16:24:49.833288Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Dáda Patrasová slaví 70 let. Vyrostlo s ní několik generací, každá si ji pamatuje jinak",
+      "url": "https://www.kinobox.cz/clanky/tema/53132-dada-patrasova-slavi-70-let-vyrostlo-s-ni-nekolik-generaci-kazda-si-ji-pamatuje-jinak",
+      "dt": "2026-04-27T16:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "dáda",
+        "generací",
+        "jinak",
+        "každá",
+        "let",
+        "několik",
+        "pamatuje",
+        "patrasová",
+        "slaví",
+        "vyrostlo"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -530,33 +557,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "VOD tipy: Mrazivý boj o přežití, návrat Stranger Things i Leoš Mareš",
-      "url": "https://www.kinobox.cz/clanky/vod/52994-vod-tipy-mrazivy-boj-o-preziti-navrat-stranger-things-leos-mares",
-      "dt": "2026-04-24T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "boj",
-        "leoš",
-        "mareš",
-        "mrazivý",
-        "návrat",
-        "přežití",
-        "stranger",
-        "things",
-        "tipy",
-        "vod"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +567,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28205,
+      "bytes": 28127,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +604,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +619,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dáda Patrasová slaví 70 let. Vyrostlo s ní několik generací, každá si ji pamatuje jinak",
+            "publishedAt": "2026-04-27T16:00:00Z"
+          },
           {
             "title": "Dějiny i mýtus se píšou krví. Hugh Jackman v traileru prožívá smrt vražedného Robina Hooda",
             "publishedAt": "2026-04-27T13:00:00Z"
@@ -646,10 +650,6 @@
           {
             "title": "Srdcovka: Stopaři jsou perfektním anti-westernem. Hlavní hvězdě nikdy nedošlo, o čem příběh doopravdy je",
             "publishedAt": "2026-04-26T17:00:00Z"
-          },
-          {
-            "title": "Kriminální hit Buldok z Poděbrad končí. Nahradí ho nečekaná seriálová volba",
-            "publishedAt": "2026-04-26T14:00:00Z"
           }
         ]
       }

@@ -1,12 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T15:14:28.907982Z",
+  "ingestedAt": "2026-04-27T16:24:49.833288Z",
   "items": [
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Pozor na první den v práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
+      "title": "Duškov: Takto změníme placení zdravotní péče. Nemáme licenci na druhé Lourdy",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/duskov-takto-zmenime-placeni-zdravotni-pece/",
+      "dt": "2026-04-27T15:13:06Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "druhé",
+        "duškov",
+        "licenci",
+        "lourdy",
+        "nemáme",
+        "placení",
+        "péče",
+        "takto",
+        "zdravotní",
+        "změníme"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pozor na první den v nové práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
       "url": "https://www.zdravotnickydenik.cz/2026/04/prvni-den-v-praci-zdravotni-pojisteni/",
       "dt": "2026-04-27T14:12:12Z",
       "media_raw": "Zdravotnický deník",
@@ -15,6 +42,7 @@
         "den",
         "myslíte",
         "než",
+        "nové",
         "pojištění",
         "pozor",
         "první",
@@ -241,35 +269,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/dohodovaci-rizeni-nefunguje/",
-      "dt": "2026-04-27T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "budeme",
-        "chodit",
-        "dohodovací",
-        "domluvit",
-        "dva",
-        "kafe",
-        "měsíce",
-        "nefunguje",
-        "nemůžeme",
-        "proč",
-        "řízení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 81420,
+      "bytes": 78929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T14:12:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T15:13:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,7 +332,11 @@
         },
         "sample_titles": [
           {
-            "title": "Pozor na první den v práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
+            "title": "Duškov: Takto změníme placení zdravotní péče. Nemáme licenci na druhé Lourdy",
+            "publishedAt": "2026-04-27T15:13:06Z"
+          },
+          {
+            "title": "Pozor na první den v nové práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
             "publishedAt": "2026-04-27T14:12:12Z"
           },
           {
@@ -359,10 +362,6 @@
           {
             "title": "Další odklad kontroverzní stravovací vyhlášky. Kdy začnou platit nová pravidla?",
             "publishedAt": "2026-04-27T08:36:42Z"
-          },
-          {
-            "title": "Levnější léky jen na papíře? Chudým snížení daně nepomůže, varuje exnáměstek ministra",
-            "publishedAt": "2026-04-27T08:00:00Z"
           }
         ]
       }
