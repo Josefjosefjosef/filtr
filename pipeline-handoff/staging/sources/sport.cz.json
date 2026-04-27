@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-27T17:14:43.196219Z",
+  "ingestedAt": "2026-04-27T17:39:16.546540Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Slováci bez trenéra. Ital neladil s jejich představami",
+      "url": "https://www.sport.cz/clanek/fotbal-konec-jednani-calzona-uz-nepovede-slovenskou-reprezentaci-5444595",
+      "dt": "2026-04-27T17:19:50Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ital",
+        "jejich",
+        "neladil",
+        "představami",
+        "slováci",
+        "trenéra"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -759,33 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vettel zazářil při maratonu v Londýně, jiný šampion běžel v motocyklové kombinéze",
-      "url": "https://www.sport.cz/clanek/moto-vettel-zazaril-pri-maratonu-v-londyne-jiny-sampion-bezel-v-motocyklove-kombineze-5444148",
-      "dt": "2026-04-27T10:22:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "běžel",
-        "jiný",
-        "kombinéze",
-        "londýně",
-        "maratonu",
-        "motocyklové",
-        "při",
-        "vettel",
-        "zazářil",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 45342,
+      "bytes": 45048,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:59:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T17:19:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slováci bez trenéra. Ital neladil s jejich představami",
+            "publishedAt": "2026-04-27T17:19:50Z"
+          },
           {
             "title": "Česká hvězda šokovala svět. Výjimečný výkon vznikl i díky nečekanému rozhodnutí",
             "publishedAt": "2026-04-27T16:59:32Z"
@@ -875,10 +875,6 @@
           {
             "title": "Záložník AC Milán Modrič utrpěl zlomeninu lícní kosti, čeká ho operace",
             "publishedAt": "2026-04-27T15:43:57Z"
-          },
-          {
-            "title": "Upečeno. Box čeká jedna z největších bitev",
-            "publishedAt": "2026-04-27T15:42:00Z"
           }
         ]
       }

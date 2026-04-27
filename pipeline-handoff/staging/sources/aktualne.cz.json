@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-27T17:14:43.196219Z",
+  "ingestedAt": "2026-04-27T17:39:16.546540Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kde bylo v Česku nejhůř po havárii Černobylu? Meteorologové zveřejnili mapu",
+      "url": "https://zpravy.aktualne.cz/domaci/kde-bylo-v-cesku-nejhur-po-havarii-cernobylu-meteorologove-zverejnili-mapu/r~aaa29994bba08969a0f9237be7770930/",
+      "dt": "2026-04-27T17:19:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "havárii",
+        "mapu",
+        "meteorologové",
+        "nejhůř",
+        "zveřejnili",
+        "černobylu",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -505,32 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Překvapení po drsné evakuaci Trumpa. Hosté se fotili a odnášeli láhve s alkoholem",
-      "url": "https://zpravy.aktualne.cz/zahranici/kdyz-agenti-ukonci-gala-s-trumpem-nekdo-bezi-o-zivot-jiny-evakuuje-sampanske/r~aaa299b1e43f1c349a007b7b47bd9676/",
-      "dt": "2026-04-27T10:29:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "alkoholem",
-        "drsné",
-        "evakuaci",
-        "fotili",
-        "hosté",
-        "láhve",
-        "odnášeli",
-        "překvapení",
-        "trumpa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21827,
+      "bytes": 21832,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,11 +576,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T17:19:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 13,
+          "sport": 4,
           "other": 1,
           "finance": 2
         },
@@ -596,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde bylo v Česku nejhůř po havárii Černobylu? Meteorologové zveřejnili mapu",
+            "publishedAt": "2026-04-27T17:19:00Z"
+          },
           {
             "title": "Nosková nadchla famózními obraty a vyřadila Gauffovou. Dál jde i obrozená Plíšková",
             "publishedAt": "2026-04-27T13:05:00Z"
@@ -623,10 +625,6 @@
           {
             "title": "Politická šikana: Lidovci vsadili všechno na jednoho spasitele. Nebo šlo jen o dobře zrežírovaný sjezd?",
             "publishedAt": "2026-04-27T16:00:00Z"
-          },
-          {
-            "title": "Babišův fígl s podzemní vojenskou supernemocnicí v NATO jen tak neprojde",
-            "publishedAt": "2026-04-27T15:34:00Z"
           }
         ]
       }
