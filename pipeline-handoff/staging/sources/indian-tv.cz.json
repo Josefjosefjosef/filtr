@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-27T04:19:53.303076Z",
+  "ingestedAt": "2026-04-27T04:46:05.464309Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Intenzivní záchranná mise v nebezpečném prostředí hry Into the Fire - INDIAN",
+      "url": "https://indian-tv.cz/clanek/intenzivni-zachranna-mise-v-nebezpecnem-prostredi-qp5k4z",
+      "dt": "2026-04-27T04:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "fire",
+        "hry",
+        "indian",
+        "intenzivní",
+        "into",
+        "mise",
+        "nebezpečném",
+        "prostředí",
+        "the",
+        "záchranná"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -1045,31 +1072,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Microsoft prý chystá masivní propouštění v herní divizi - INDIAN",
-      "url": "https://indian-tv.cz/clanek/microsoft-pry-chysta-masivni-propousteni-v-herni-divizi-1b6fnm",
-      "dt": "2026-04-22T15:17:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "chystá",
-        "divizi",
-        "herní",
-        "indian",
-        "masivní",
-        "microsoft",
-        "propouštění",
-        "prý"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1080,7 +1082,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211303,
+      "bytes": 210425,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1117,11 +1119,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 39
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1133,6 +1135,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Intenzivní záchranná mise v nebezpečném prostředí hry Into the Fire - INDIAN",
+            "publishedAt": "2026-04-27T04:30:00Z"
+          },
           {
             "title": "Návrat do klece se blíží. EA má brzy oznámit UFC 6 - INDIAN",
             "publishedAt": "2026-04-27T04:00:00Z"
@@ -1160,10 +1166,6 @@
           {
             "title": "Fartmagedon je česká hra o životě seniora v moderním světě. Slibuje pořádnou dávku absurdního humoru - INDIAN",
             "publishedAt": "2026-04-26T09:24:12Z"
-          },
-          {
-            "title": "Vařte jídlo pro záchranu světa. Beastro kombinuje farmaření s tahovými souboji - INDIAN",
-            "publishedAt": "2026-04-26T09:13:33Z"
           }
         ]
       }

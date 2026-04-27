@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T04:19:53.303076Z",
+  "ingestedAt": "2026-04-27T04:46:05.464309Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Česku přibývá případů horečky dengue",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-cesku-pribyva-pripadu-horecky-dengue-372813",
+      "dt": "2026-04-27T04:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dengue",
+        "horečky",
+        "přibývá",
+        "případů",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -731,29 +753,6 @@
         "provést",
         "razantní",
         "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Restaurátoři opravují největší sousoší na Karlově mostě",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/restauratori-opravuji-nejvetsi-sousosi-na-karlove-moste-372787",
-      "dt": "2026-04-25T19:21:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "karlově",
-        "mostě",
-        "největší",
-        "opravují",
-        "restaurátoři",
-        "sousoší"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1505,7 +1504,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43664,
+      "bytes": 43236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1565,12 +1564,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T04:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 2,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1582,6 +1581,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Česku přibývá případů horečky dengue",
+            "publishedAt": "2026-04-27T04:30:00Z"
+          },
           {
             "title": "Některé dodávky budou muset být od července vybaveny tachografy",
             "publishedAt": "2026-04-27T04:00:00Z"
@@ -1609,10 +1612,6 @@
           {
             "title": "Dohoda Londýna s Paříží má migrantům zkomplikovat riskantní cesty po moři",
             "publishedAt": "2026-04-26T18:04:03Z"
-          },
-          {
-            "title": "ETS je obchod s uměle vytvořenou komoditou, míní Gavor. Emise jsou realita, říká Svárovská",
-            "publishedAt": "2026-04-26T17:51:39Z"
           }
         ]
       }
@@ -1718,7 +1717,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77453,
+      "bytes": 77447,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
