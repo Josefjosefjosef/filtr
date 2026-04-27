@@ -18634,6 +18634,14 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   fill: #2563EB !important;
   stroke: #2563EB !important;
 }
+
+/* Hotfix PR #3479: Zprávy — zelená (#10B981, stejná jako Média/Sport v Přehled dne) nad #iuLeftRail modrým !important na .iu-leftNavIcon. */
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"] .iu-leftNavIcon{
+  color: #10B981 !important;
+  fill: #10B981 !important;
+  stroke: #10B981 !important;
+}
+
 body #iuLeftRail .iu-leftNav .iu-leftNavItem,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
 #iuLeftRail .iu-leftNav .iu-leftNavItem{
@@ -18648,6 +18656,16 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem,
   fill: #2563EB !important;
   stroke: #2563EB !important;
 }
+
+/* Hotfix PR #3479: TV program — hex ikona žlutá (#FACC15) nad obecným #iuHomeView modrým !important. */
+#iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon,
+#iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg,
+#iuHomeView .iuHomeHex434 .iuHex--tvprogram .iuHex__icon svg path{
+  color: #FACC15 !important;
+  fill: #FACC15 !important;
+  stroke: #FACC15 !important;
+}
+
 #iuHomeView .iuHomeHex434 .iuHex{
   border: 2px solid #2563EB !important;
   box-sizing: border-box !important;
@@ -18668,7 +18686,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tech"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"],
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"],
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"]{
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"],
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"]{
   border-color: #10B981 !important;
   color: #10B981 !important;
 }
@@ -18679,7 +18698,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tech"] 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavLabel,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavLabel,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavLabel,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavLabel{
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavLabel,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"] .iu-leftNavLabel{
   color: #10B981 !important;
 }
 
@@ -18689,7 +18709,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tech"] 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg{
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"] .iu-leftNavIcon svg{
   color: #10B981 !important;
   fill: #10B981 !important;
   stroke: #10B981 !important;
@@ -18701,7 +18722,8 @@ aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="tech"] 
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="finance"] .iu-leftNavIcon svg *,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="home"] .iu-leftNavIcon svg *,
 aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zdravi"] .iu-leftNavIcon svg *,
-aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg *{
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="travel"] .iu-leftNavIcon svg *,
+aside#iuLeftRail.iu-leftRail .iu-leftNav > a.iu-leftNavItem[data-accent="zpravy"] .iu-leftNavIcon svg *{
   fill: #10B981 !important;
   stroke: #10B981 !important;
 }
