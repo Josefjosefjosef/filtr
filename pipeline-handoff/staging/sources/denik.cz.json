@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T01:50:35.742957Z",
+  "ingestedAt": "2026-04-27T02:14:11.125486Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pomáhali až do konce, říká žena. O umírající babičku se starala s předškoláky",
+      "url": "https://www.denik.cz/z_domova/paliativni-pece-domaci-hospic-mobilni-hospic-rodina-domov.html",
+      "dt": "2026-04-27T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babičku",
+        "konce",
+        "pomáhali",
+        "předškoláky",
+        "starala",
+        "umírající",
+        "říká",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,6 +260,31 @@
       "_dt_serialized": true
     },
     {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
+      "url": "https://www.denik.cz/pocasi/pocasi-tyden-predpoved-carodejnice.html",
+      "dt": "2026-04-26T10:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jaké",
+        "meteorologové",
+        "noc",
+        "oblečte",
+        "počasí",
+        "teple",
+        "čarodějnice",
+        "řekli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "Super táta z Číny za 30 let adoptoval na 300 dětí. Třetina z nich má dnes titul",
@@ -253,31 +303,6 @@
         "táta",
         "třetina",
         "číny"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Meteorologové už řekli, jaké bude počasí na Čarodějnice: Teple se na noc oblečte",
-      "url": "https://www.denik.cz/pocasi/pocasi-tyden-predpoved-carodejnice.html",
-      "dt": "2026-04-26T10:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jaké",
-        "meteorologové",
-        "noc",
-        "oblečte",
-        "počasí",
-        "teple",
-        "čarodějnice",
-        "řekli"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -624,31 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Střelba ve Washingtonu. Donalda Trumpa museli evakuovat z večeře s novináři",
-      "url": "https://www.denik.cz/ze_sveta/strelba-bily-dum-donald-trump.html",
-      "dt": "2026-04-26T04:48:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "donalda",
-        "evakuovat",
-        "museli",
-        "novináři",
-        "střelba",
-        "trumpa",
-        "večeře",
-        "washingtonu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29672,
+      "bytes": 29529,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-26T19:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pomáhali až do konce, říká žena. O umírající babičku se starala s předškoláky",
+            "publishedAt": "2026-04-27T02:00:00Z"
+          },
           {
             "title": "Japonsko zachvátily lesní požáry. S ohněm bojuje 1400 hasičů",
             "publishedAt": "2026-04-26T19:13:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Největší hrad ve Walesu a impozantní vodní opevnění. Historie je krvavá",
             "publishedAt": "2026-04-26T13:00:00Z"
-          },
-          {
-            "title": "Nový rekord: V Poděbradech se sešlo nejvíc lidí narozených ve znamení Býka",
-            "publishedAt": "2026-04-26T11:50:00Z"
           }
         ]
       }
