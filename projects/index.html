@@ -359,23 +359,24 @@ style-src 'self' 'unsafe-inline' https:;
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{position:relative;pointer-events:auto;width:100%;max-width:520px;max-height:min(78dvh,86vh);margin:0 auto 12px;border-radius:18px 18px 0 0;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(180deg,rgba(15,23,42,0.98) 0%,rgba(8,14,22,0.98) 100%);box-shadow:0 -12px 40px rgba(0,0,0,0.35);display:flex;flex-direction:column;min-height:0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));opacity:0;transform:translateY(14px);transition:opacity 140ms ease,transform 140ms ease;will-change:opacity,transform}
       @media(min-width:600px){#iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{align-items:center;padding:18px}#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{border-radius:16px;margin:0;max-height:min(82vh,640px)}}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__title{margin:0;flex:1;font-size:17px;font-weight:900;line-height:1.2;color:rgba(255,255,255,0.96)}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close{flex:0 0 auto;width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.92);font-size:22px;line-height:1;cursor:pointer;transition:background .12s,transform .1s}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:hover{background:rgba(255,255,255,0.1)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__panel{color:#f1f5f9}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__title{margin:0;flex:1;font-size:17px;font-weight:900;line-height:1.2;color:#ffffff}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close{flex:0 0 auto;width:40px;height:40px;border-radius:12px;border:1px solid rgba(226,232,240,0.28);background:rgba(255,255,255,0.12);color:#f8fafc;font-size:22px;line-height:1;cursor:pointer;transition:background .12s,transform .1s,border-color .12s}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:hover{background:rgba(255,255,255,0.18);border-color:rgba(248,250,252,0.38)}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__close:active{transform:scale(0.96)}
       #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay--shown .iuTvProgramChoiceOverlay__panel{opacity:1;transform:translateY(0)}
       #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay--shown .iuTvProgramChoiceOverlay__backdrop{opacity:1}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__lead{margin:0 0 10px;font-size:12px;opacity:0.78;line-height:1.35;color:rgba(255,255,255,0.88)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__lead{margin:0 0 10px;font-size:12px;line-height:1.35;color:#cbd5e1}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__stack{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__links{display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;flex:1 1 auto;padding-bottom:4px}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__emptyMsg{margin:0 0 10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(251,191,36,0.35);background:rgba(251,191,36,0.08);font-size:13px;font-weight:700;line-height:1.35;color:rgba(255,255,255,0.92)}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row{display:block;text-decoration:none;color:inherit;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);padding:12px 12px;transition:border-color .15s,background .15s;cursor:pointer}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__emptyMsg{margin:0 0 10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(251,191,36,0.45);background:rgba(251,191,36,0.14);font-size:13px;font-weight:700;line-height:1.35;color:#fffbeb}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row{display:block;text-decoration:none;color:#f8fafc;border-radius:14px;border:1px solid rgba(226,232,240,0.22);background:rgba(255,255,255,0.11);padding:12px 12px;transition:border-color .15s,background .15s;cursor:pointer;opacity:1;-webkit-tap-highlight-color:transparent}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:active{transform:scale(0.99)}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:hover,#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 50%,rgba(255,255,255,0.1));background:rgba(255,255,255,0.08)}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowName{font-size:15px;font-weight:800}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{margin-top:4px;font-size:12px;opacity:0.75;line-height:1.35}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowMeta{margin-top:6px;font-size:11px;opacity:0.62}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaWarn{margin-top:6px;font-size:11px;font-weight:700;color:rgba(251,191,36,0.95)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:hover,#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,rgba(226,232,240,0.28));background:rgba(255,255,255,0.16)}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowName{font-size:15px;font-weight:800;color:#ffffff;line-height:1.25}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{margin-top:4px;font-size:12px;line-height:1.4;color:#cbd5e1}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowMeta{margin-top:6px;font-size:11px;color:#94a3b8;line-height:1.35}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaWarn{margin-top:6px;font-size:11px;font-weight:800;color:#fde68a;text-shadow:0 0 1px rgba(0,0,0,0.35)}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;background:rgba(7,12,19,0.72);border-radius:0 0 12px 12px;z-index:2}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm[hidden]{display:none!important}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirmBox{width:100%;max-width:340px;border-radius:14px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,23,42,0.98);padding:14px 14px 12px;box-shadow:0 12px 40px rgba(0,0,0,0.45)}
