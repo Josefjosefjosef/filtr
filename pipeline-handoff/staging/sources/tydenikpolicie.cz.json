@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-27T08:49:22.558300Z",
+  "ingestedAt": "2026-04-27T09:14:34.468845Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Pražském okruhu u Jesenice se srazily dva kamiony",
+      "url": "https://tydenikpolicie.cz/na-prazskem-okruhu-u-jesenice-se-srazily-dva-kamiony/",
+      "dt": "2026-04-27T09:08:48Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dva",
+        "jesenice",
+        "kamiony",
+        "okruhu",
+        "pražském",
+        "srazily"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,29 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policisté pátrají po pohřešovaném 13letém chlapci ze Sokolova",
-      "url": "https://tydenikpolicie.cz/policiste-patraji-po-pohresovanem-13letem-chlapci-ze-sokolova/",
-      "dt": "2026-04-26T09:23:08Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "13letém",
-        "chlapci",
-        "pohřešovaném",
-        "policisté",
-        "pátrají",
-        "sokolova"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16982,
+      "bytes": 17211,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T08:34:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T09:08:48Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Pražském okruhu u Jesenice se srazily dva kamiony",
+            "publishedAt": "2026-04-27T09:08:48Z"
+          },
           {
             "title": "Mladá řidička fordu nabourala u Uherského Ostrohu do stromu. Její 18letá spolujezdkyně na místě zemřela",
             "publishedAt": "2026-04-27T08:34:41Z"
@@ -353,10 +357,6 @@
           {
             "title": "Policistům na Havlíčkobrodsku ujížděl řidič volkswagenu. Došlo na varovnou střelbu",
             "publishedAt": "2026-04-26T09:31:36Z"
-          },
-          {
-            "title": "Řidič fiatu přejel v Malé Skále do protisměru. Srážku s protijedoucí škodovkou nepřežil",
-            "publishedAt": "2026-04-26T09:29:13Z"
           }
         ]
       }

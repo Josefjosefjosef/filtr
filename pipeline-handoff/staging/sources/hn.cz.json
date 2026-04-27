@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-27T08:49:22.558300Z",
+  "ingestedAt": "2026-04-27T09:14:34.468845Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "K další těžké nehodě chybělo pár centimetrů. V Pardubicích uvízl na koridoru kamion, ukázal i systémový problém",
+      "url": "https://domaci.hn.cz/c1-67871230-k-dalsi-tezke-nehode-chybelo-par-centimetru-v-pardubicich-uvizl-na-koridoru-kamion-ukazal-i-systemovy-problem",
+      "dt": "2026-04-27T08:33:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "centimetrů",
+        "chybělo",
+        "další",
+        "kamion",
+        "koridoru",
+        "nehodě",
+        "pardubicích",
+        "problém",
+        "pár",
+        "systémový",
+        "těžké",
+        "ukázal",
+        "uvízl"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1135,35 +1165,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čína dala na sankční seznam čtyři české firmy. Rozesmálo mě to, říká zakladatel jedné z nich",
-      "url": "https://byznys.hn.cz/c1-67870830-cina-dala-na-sankcni-seznam-ctyri-ceske-firmy-rozesmalo-me-to-rika-zakladatel-jedne-z-nich",
-      "dt": "2026-04-24T10:42:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dala",
-        "firmy",
-        "jedné",
-        "nich",
-        "rozesmálo",
-        "sankční",
-        "seznam",
-        "zakladatel",
-        "české",
-        "čtyři",
-        "čína",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1174,7 +1175,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184419,
+      "bytes": 184532,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1211,11 +1212,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:33:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 3
+          "zpravy": 4,
+          "finance": 36
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1227,6 +1228,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K další těžké nehodě chybělo pár centimetrů. V Pardubicích uvízl na koridoru kamion, ukázal i systémový problém",
+            "publishedAt": "2026-04-27T08:33:00Z"
+          },
           {
             "title": "Skupina Bezvavlasy opět mění šéfa. Horák ze stahuje do pozadí, evropskou expanzi bude mít na starosti jiný zkušený manažer",
             "publishedAt": "2026-04-27T06:50:00Z"
@@ -1253,10 +1258,6 @@
           },
           {
             "title": "Jak se daří studentům &bdquo;flipovacího krále&ldquo;? Výsledky jsou horší než před dvěma lety, většina neprodala ani jednu nemovitost",
-            "publishedAt": "2026-04-26T22:00:00Z"
-          },
-          {
-            "title": "Otočka za necelý rok. Čupr a spol. rychle probrali německého výrobce kojenecké výživy Töpfer",
             "publishedAt": "2026-04-26T22:00:00Z"
           }
         ]
