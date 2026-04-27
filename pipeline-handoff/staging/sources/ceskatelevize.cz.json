@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T07:35:09.416754Z",
+  "ingestedAt": "2026-04-27T07:59:11.914895Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Globální vojenské výdaje vloni vzrostly o tři procenta",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/globalni-vojenske-vydaje-vloni-vzrostly-o-tri-procenta-372829",
+      "dt": "2026-04-27T07:31:17Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "globální",
+        "procenta",
+        "tři",
+        "vloni",
+        "vojenské",
+        "vzrostly",
+        "výdaje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -728,28 +752,6 @@
         "péče",
         "regionů",
         "vzp"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Před čtyřiceti lety došlo ke katastrofě v Černobylu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/pred-ctyriceti-lety-doslo-ke-katastrofe-v-cernobylu-372743",
-      "dt": "2026-04-26T04:02:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "došlo",
-        "katastrofě",
-        "lety",
-        "černobylu",
-        "čtyřiceti"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1509,7 +1511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42591,
+      "bytes": 42819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1569,12 +1571,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:01:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:31:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 3,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1586,6 +1588,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Globální vojenské výdaje vloni vzrostly o tři procenta",
+            "publishedAt": "2026-04-27T07:31:17Z"
+          },
           {
             "title": "Ruské údery v Oděse zranily několik lidí",
             "publishedAt": "2026-04-27T07:01:10Z"
@@ -1613,10 +1619,6 @@
           {
             "title": "Některé dodávky budou muset být od července vybaveny tachografy",
             "publishedAt": "2026-04-27T04:00:00Z"
-          },
-          {
-            "title": "Vláda projedná změny v knihovním zákoně nebo povinnosti pro dovozce amalgámu",
-            "publishedAt": "2026-04-27T03:09:25Z"
           }
         ]
       }
@@ -1722,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77395,
+      "bytes": 77401,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

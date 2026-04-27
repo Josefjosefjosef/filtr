@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-27T07:35:09.416754Z",
+  "ingestedAt": "2026-04-27T07:59:11.914895Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šok z chladu. Ve skladu zvířat na Floridě zahynulo na třicet lenochodů",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/sok-z-chladu-ve-skladu-zvirat-na-floride-zahynulo-na-tricet-lenochodu.A260427_093414_zahranicni_bro",
+      "dt": "2026-04-27T07:38:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "chladu",
+        "floridě",
+        "lenochodů",
+        "skladu",
+        "třicet",
+        "zahynulo",
+        "zvířat",
+        "šok"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -733,33 +758,6 @@
         "rytíře",
         "vypracoval",
         "žába"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Mám trávu, koks, všechno.“ V Británii lze koupit drogy i v běžných obchůdcích",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/drogy-v-britskych-mestech-odhalili-reporteri-bbc.A260423_155651_zahranicni_jira",
-      "dt": "2026-04-26T14:28:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "británii",
-        "běžných",
-        "drogy",
-        "koks",
-        "koupit",
-        "lze",
-        "mám",
-        "obchůdcích",
-        "trávu",
-        "všechno"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1553,7 +1551,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47497,
+      "bytes": 47407,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,7 +1588,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:38:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 20,
@@ -1607,6 +1605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šok z chladu. Ve skladu zvířat na Floridě zahynulo na třicet lenochodů",
+            "publishedAt": "2026-04-27T07:38:00Z"
+          },
           {
             "title": "Na D5 u Králova Dvora se srazilo nákladní s osobním autem, jeden člověk zraněný",
             "publishedAt": "2026-04-27T07:06:00Z"
@@ -1634,10 +1636,6 @@
           {
             "title": "Studená fronta bez deště. Česko čeká slunečný a postupně teplejší týden",
             "publishedAt": "2026-04-27T04:34:00Z"
-          },
-          {
-            "title": "Zemřel zakladatel PR v Česku Michal Donath, mluvil za vlastníky Novy i Mattoni",
-            "publishedAt": "2026-04-27T04:33:00Z"
           }
         ]
       }

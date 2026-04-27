@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T07:35:09.416754Z",
+  "ingestedAt": "2026-04-27T07:59:11.914895Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Facka pro Kyjev. Unie zavrhla plán na částečné členství země, která válčí s Ruskem",
+      "url": "https://ekonomickydenik.cz/facka-kyjev-unie-zavrhla-castecne-clenstvi/",
+      "dt": "2026-04-27T07:45:35Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "facka",
+        "kyjev",
+        "plán",
+        "ruskem",
+        "unie",
+        "válčí",
+        "zavrhla",
+        "země",
+        "členství",
+        "částečné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -740,33 +767,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Příští premiér? Lidovci mají nového šéfa, čím zaujal a jaké má vize",
-      "url": "https://ekonomickydenik.cz/pristi-premier-lidovci-grolich/",
-      "dt": "2026-04-24T14:16:49Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "jaké",
-        "lidovci",
-        "mají",
-        "nového",
-        "premiér",
-        "příští",
-        "vize",
-        "zaujal",
-        "čím",
-        "šéfa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -777,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69599,
+      "bytes": 70126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -814,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T07:19:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T07:45:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -831,6 +831,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Facka pro Kyjev. Unie zavrhla plán na částečné členství země, která válčí s Ruskem",
+            "publishedAt": "2026-04-27T07:45:35Z"
+          },
           {
             "title": "Svět zrychluje zbrojení. Česko s Babišem šlape na brzdu",
             "publishedAt": "2026-04-27T07:19:25Z"
@@ -858,10 +862,6 @@
           {
             "title": "Útočil učitel a herní vývojář. Pravděpodobnými cíli měli být Trump a členové kabinetu",
             "publishedAt": "2026-04-26T13:57:34Z"
-          },
-          {
-            "title": "Češi opět zabodovali. Sbírka potravin vynesla 623 tun pomoci",
-            "publishedAt": "2026-04-26T13:09:20Z"
           }
         ]
       }
