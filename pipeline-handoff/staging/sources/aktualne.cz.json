@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-27T19:24:20.593559Z",
+  "ingestedAt": "2026-04-27T19:49:17.729303Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Německý turista zemřel po uštknutí hadem zaříkávače v egyptském hotelu",
+      "url": "https://zpravy.aktualne.cz/zahranici/nemecky-turista-zemrel-po-ustknuti-hadem-zarikavace-v-egyptskem-hotelu/r~aaa29334bd7f74b832a21e5feba8b89c/",
+      "dt": "2026-04-27T19:33:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "egyptském",
+        "hadem",
+        "hotelu",
+        "německý",
+        "turista",
+        "uštknutí",
+        "zaříkávače",
+        "zemřel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -507,30 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Atentátník se vysmál bezpečnostním opatřením. Jak blízko byl Trump zastřelení?",
-      "url": "https://zpravy.aktualne.cz/zahranici/co-sakra-dela-tajna-sluzba-jak-blizko-se-utocnikovi-podarilo-dostat-k-trumpovi/r~aaa29b3d568884abb4bd6c493c5b31d8/",
-      "dt": "2026-04-27T11:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "atentátník",
-        "bezpečnostním",
-        "blízko",
-        "opatřením",
-        "trump",
-        "vysmál",
-        "zastřelení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21968,
+      "bytes": 21939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,11 +579,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T18:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T19:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 4,
           "zpravy": 14,
+          "sport": 4,
           "other": 1,
           "finance": 1
         },
@@ -596,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Německý turista zemřel po uštknutí hadem zaříkávače v egyptském hotelu",
+            "publishedAt": "2026-04-27T19:33:00Z"
+          },
           {
             "title": "„Stará dobrá“ Plíšková, zírají ve světě. Senzační zápis do dějin Madridu budí rozruch",
             "publishedAt": "2026-04-27T18:17:00Z"
@@ -623,10 +628,6 @@
           {
             "title": "Znepokojivá mapa. Data říkají, kde bylo na českém území nejhůř po havárii Černobylu",
             "publishedAt": "2026-04-27T17:19:00Z"
-          },
-          {
-            "title": "Nosková nadchla famózními obraty a vyřadila Gauffovou. Dál jde i obrozená Plíšková",
-            "publishedAt": "2026-04-27T13:05:00Z"
           }
         ]
       }
