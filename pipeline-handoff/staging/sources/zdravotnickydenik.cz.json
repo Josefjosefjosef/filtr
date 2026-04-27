@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-27T13:34:42.975967Z",
+  "ingestedAt": "2026-04-27T14:00:02.541122Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Některá oddělení na Vysočině zřejmě skončí. Hejtman okomentoval i počet nemocnic",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/oddeleni-vysocina-konec-hejtman-pocet-nemocnic/",
+      "dt": "2026-04-27T13:40:13Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "hejtman",
+        "nemocnic",
+        "některá",
+        "oddělení",
+        "okomentoval",
+        "počet",
+        "skončí",
+        "vysočině",
+        "zřejmě"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,33 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Proč bude nová nemocnice v Praze vojenská? Babiš ji spojuje se závazky vůči NATO",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemocnice-praha-vojenska-babis-nato/",
-      "dt": "2026-04-26T13:22:46Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "babiš",
-        "nato",
-        "nemocnice",
-        "nová",
-        "praze",
-        "proč",
-        "spojuje",
-        "vojenská",
-        "vůči",
-        "závazky"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 82273,
+      "bytes": 82855,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-27T12:20:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:40:13Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Některá oddělení na Vysočině zřejmě skončí. Hejtman okomentoval i počet nemocnic",
+            "publishedAt": "2026-04-27T13:40:13Z"
+          },
           {
             "title": "Posedlost pletí místo hraček: Trend u dětí, který děsí odborníky",
             "publishedAt": "2026-04-27T12:20:15Z"
@@ -361,10 +364,6 @@
           {
             "title": "Poptávka roste, systém nestíhá. Jak zachránit domácí péči ve 4 krocích",
             "publishedAt": "2026-04-27T07:00:00Z"
-          },
-          {
-            "title": "Dva měsíce budeme chodit na kafe, ale domluvit se nemůžeme. Proč dohodovací řízení nefunguje?",
-            "publishedAt": "2026-04-27T06:00:00Z"
           }
         ]
       }

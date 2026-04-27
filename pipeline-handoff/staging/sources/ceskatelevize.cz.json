@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T13:34:42.975967Z",
+  "ingestedAt": "2026-04-27T14:00:02.541122Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Litva obvinila třináct lidí z pokusu o dvě vraždy, do případu je zapletena ruská GRU",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/litva-obvinila-trinact-lidi-z-pokusu-o-dve-vrazdy-do-pripadu-je-zapletena-ruska-gru-372847",
+      "dt": "2026-04-27T13:31:32Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dvě",
+        "gru",
+        "lidí",
+        "litva",
+        "obvinila",
+        "pokusu",
+        "případu",
+        "ruská",
+        "třináct",
+        "vraždy",
+        "zapletena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -54,21 +82,21 @@
     {
       "section": "veda",
       "contentType": "article",
-      "title": "Vědci sestavili obří mapu vesmíru. Může změnit pohled na temnou energii",
+      "title": "Vědci sestavili obří mapu vesmíru, naznačili zpochybnění Einsteinovy konstanty",
       "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-sestavili-obri-mapu-vesmiru-muze-zmenit-pohled-na-temnou-energii-372839",
       "dt": "2026-04-27T12:54:17Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "energii",
+        "einsteinovy",
+        "konstanty",
         "mapu",
+        "naznačili",
         "obří",
-        "pohled",
         "sestavili",
-        "temnou",
         "vesmíru",
         "vědci",
-        "změnit"
+        "zpochybnění"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -711,30 +739,6 @@
         "souhrn",
         "události",
         "zásadní"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Soud uvalil další vazbu za žhářský útok v Pardubicích",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/soud-uvalil-dalsi-vazbu-za-zharsky-utok-v-pardubicich-372816",
-      "dt": "2026-04-26T14:21:31Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "další",
-        "pardubicích",
-        "soud",
-        "uvalil",
-        "vazbu",
-        "útok",
-        "žhářský"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1497,7 +1501,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41561,
+      "bytes": 41509,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1557,7 +1561,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:10:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:31:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1575,6 +1579,10 @@
         },
         "sample_titles": [
           {
+            "title": "Litva obvinila třináct lidí z pokusu o dvě vraždy, do případu je zapletena ruská GRU",
+            "publishedAt": "2026-04-27T13:31:32Z"
+          },
+          {
             "title": "Šéfem České pošty se stal Richard Hodul",
             "publishedAt": "2026-04-27T13:10:43Z"
           },
@@ -1583,7 +1591,7 @@
             "publishedAt": "2026-04-27T13:02:20Z"
           },
           {
-            "title": "Vědci sestavili obří mapu vesmíru. Může změnit pohled na temnou energii",
+            "title": "Vědci sestavili obří mapu vesmíru, naznačili zpochybnění Einsteinovy konstanty",
             "publishedAt": "2026-04-27T12:54:17Z"
           },
           {
@@ -1601,10 +1609,6 @@
           {
             "title": "Čína zablokovala Metě plán převzít firmu Manus, která vyvíjí agentní AI",
             "publishedAt": "2026-04-27T10:00:03Z"
-          },
-          {
-            "title": "Touha po dokonalosti nás dohání, upozorňuje Šindelka Systémem něhy",
-            "publishedAt": "2026-04-27T09:30:00Z"
           }
         ]
       }
@@ -1710,7 +1714,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77204,
+      "bytes": 77200,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

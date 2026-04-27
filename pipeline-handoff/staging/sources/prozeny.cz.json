@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-04-27T13:34:42.975967Z",
+  "ingestedAt": "2026-04-27T14:00:02.541122Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Test: Zjistěte, jaký jste somatotyp! Podle toho nastavte jídelníček a trénink, abyste získali postavu snů",
+      "url": "https://www.prozeny.cz/clanek/test-zjistete-jaky-jste-somatotyp-podle-toho-nastavte-jidelnicek-a-trenink-11844",
+      "dt": "2026-04-27T13:45:46Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "abyste",
+        "jaký",
+        "jste",
+        "jídelníček",
+        "nastavte",
+        "podle",
+        "postavu",
+        "snů",
+        "somatotyp",
+        "test",
+        "toho",
+        "trénink",
+        "zjistěte",
+        "získali"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -798,35 +829,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Máte špatnou paměť? Možná ji jen nepoužíváte správně. Zjistěte svůj typ a učte se efektivněji",
-      "url": "https://www.prozeny.cz/clanek/zdravi-a-zivotni-styl-mate-spatnou-pamet-mozna-ji-jen-nepouzivate-spravne-zjistete-svuj-typ-a-ucte-se-efektivneji-103233",
-      "dt": "2026-04-25T03:00:00Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "efektivněji",
-        "jen",
-        "možná",
-        "máte",
-        "nepoužíváte",
-        "paměť",
-        "správně",
-        "svůj",
-        "typ",
-        "učte",
-        "zjistěte",
-        "špatnou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -837,7 +839,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 38940,
+      "bytes": 38761,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -874,11 +876,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:38:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T13:45:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 1,
-          "zdravi": 29
+          "zdravi": 29,
+          "sport": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -890,6 +892,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Test: Zjistěte, jaký jste somatotyp! Podle toho nastavte jídelníček a trénink, abyste získali postavu snů",
+            "publishedAt": "2026-04-27T13:45:46Z"
+          },
           {
             "title": "Šetřivá Brigitte Macron: roky chodí v jedné bundičce. Tenhle kousek z módy jen tak nevyjde!",
             "publishedAt": "2026-04-27T11:38:26Z"
@@ -916,10 +922,6 @@
           },
           {
             "title": "Jak vylepšit okna: praktické tipy a co vás to bude stát. Chystáte se měnit, renovovat či jen vyladit?",
-            "publishedAt": "2026-04-27T03:00:00Z"
-          },
-          {
-            "title": "„Celé roky jsem žila s vědomím, že má i jiné ženy a je tam vždy možnost, že se druhý den nevrátí,“ říká Pavlína Saudková",
             "publishedAt": "2026-04-27T03:00:00Z"
           }
         ]
