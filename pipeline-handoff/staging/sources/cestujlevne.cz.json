@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-27T12:39:50.845036Z",
+  "ingestedAt": "2026-04-27T13:06:02.801964Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Last minute letenky z Prahy na Sicílii i s odbaveným zavazadlem. Letenky od 3 490 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/last-minute-letenky-z-prahy-na-sicilii-i-s-odbavenym-zavazadlem",
+      "dt": "2026-04-27T12:51:17Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "490",
+        "last",
+        "letenky",
+        "minute",
+        "odbaveným",
+        "prahy",
+        "sicílii",
+        "zavazadlem"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -479,28 +504,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Červnová Valencie z Vídně. Letenky od 1 460 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/cervnova-valencie-z-vidne",
-      "dt": "2026-04-21T17:57:02Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "460",
-        "letenky",
-        "valencie",
-        "vídně",
-        "červnová"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 43545,
+      "bytes": 43906,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:02:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:51:17Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -563,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Last minute letenky z Prahy na Sicílii i s odbaveným zavazadlem. Letenky od 3 490 Kč",
+            "publishedAt": "2026-04-27T12:51:17Z"
+          },
           {
             "title": "Kapverdy z Prahy na týden: ostrov Sal a 4* hotel s all-inclusive v květnu. Zájezd od 16 990 Kč",
             "publishedAt": "2026-04-27T11:02:43Z"
@@ -590,10 +597,6 @@
           {
             "title": "Madeira z Brna na týden se snídaní na přelomu dubna a května. Zájezd od 9 990 Kč",
             "publishedAt": "2026-04-24T13:07:45Z"
-          },
-          {
-            "title": "Další nová linka easyJet z Prahy do Hamburgu. Letenky od 1 796 Kč",
-            "publishedAt": "2026-04-24T11:55:24Z"
           }
         ]
       }

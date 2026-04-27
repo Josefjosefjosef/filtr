@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-27T12:39:50.845036Z",
+  "ingestedAt": "2026-04-27T13:06:02.801964Z",
   "items": [
     {
       "section": "finance",
@@ -113,6 +113,36 @@
         "vlastní",
         "vyvinout",
         "čipy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Emoční pusto v rodinách. Už deset procent malých dětí řeší své problémy hlavně s umělou inteligencí",
+      "url": "https://podcasty.hn.cz/c1-67871300-emocni-pusto-v-rodinach-uz-deset-procent-malych-deti-resi-sve-problemy-hlavne-s-umelou-inteligenci",
+      "dt": "2026-04-27T11:11:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "deset",
+        "dětí",
+        "emoční",
+        "hlavně",
+        "inteligencí",
+        "malých",
+        "problémy",
+        "procent",
+        "pusto",
+        "rodinách",
+        "své",
+        "umělou",
+        "řeší"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1141,34 +1171,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Už žádné mobily v lavicích. Česko plošně omezí chytré telefony ve školách, zavelel Babiš",
-      "url": "https://archiv.hn.cz/c1-67870810-uz-zadne-mobily-v-lavicich-cesko-plosne-omezi-chytre-telefony-ve-skolach-zavelel-babis",
-      "dt": "2026-04-24T14:51:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "babiš",
-        "chytré",
-        "lavicích",
-        "mobily",
-        "omezí",
-        "plošně",
-        "telefony",
-        "zavelel",
-        "česko",
-        "školách",
-        "žádné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1179,7 +1181,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184770,
+      "bytes": 184812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1250,6 +1252,10 @@
             "publishedAt": "2026-04-27T11:20:00Z"
           },
           {
+            "title": "Emoční pusto v rodinách. Už deset procent malých dětí řeší své problémy hlavně s umělou inteligencí",
+            "publishedAt": "2026-04-27T11:11:00Z"
+          },
+          {
             "title": "Protivníka neodradí nemocnice, ale dobře vycvičené jednotky, řekl Pavel. Síla je podle něj nejlepší způsob, jak zabránit cizí agresi",
             "publishedAt": "2026-04-27T10:43:00Z"
           },
@@ -1260,10 +1266,6 @@
           {
             "title": "Máme umělou inteligenci, potřebujeme tedy ještě vůbec odbory?",
             "publishedAt": "2026-04-27T08:44:00Z"
-          },
-          {
-            "title": "K další těžké nehodě chybělo pár centimetrů. V Pardubicích uvízl na přejezdu kamion, situace ukázala i systémový problém",
-            "publishedAt": "2026-04-27T08:33:00Z"
           }
         ]
       }

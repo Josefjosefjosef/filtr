@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-27T12:39:50.845036Z",
+  "ingestedAt": "2026-04-27T13:06:02.801964Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejistota kolem Hormuzského průlivu sužuje tisíce uvízlých námořníků",
+      "url": "https://zpravy.aktualne.cz/ekonomika/nejistota-kolem-hormuzskeho-prulivu-suzuje-tisice-uvizlych-namorniku/r~aaa29f65ba26805c51ed825972631d0d/",
+      "dt": "2026-04-27T12:47:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hormuzského",
+        "kolem",
+        "nejistota",
+        "námořníků",
+        "průlivu",
+        "sužuje",
+        "tisíce",
+        "uvízlých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Írán přišel s novým návrhem pro ukončení války se Spojenými státy",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "novým",
+        "návrhem",
+        "přišel",
+        "spojenými",
+        "státy",
+        "ukončení",
+        "války",
+        "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -47,31 +97,6 @@
         "tajná",
         "trump",
         "zastřelení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Írán přišel s novým návrhem pro ukončení války se Spojenými státy",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "novým",
-        "návrhem",
-        "přišel",
-        "spojenými",
-        "státy",
-        "ukončení",
-        "války",
-        "írán"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -500,33 +525,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "MAPA: Další „nůž do zad“ od Babiše. Vládní let nedostal ani prezidentský kandidát",
-      "url": "https://zpravy.aktualne.cz/domaci/mapa-babis-do-hanoje-okamura-za-mocnymi-araby-podivejte-se-kam-vyrazi-i-petr-pavel/r~aaa2982e895c92585d4329f497315ace/",
-      "dt": "2026-04-27T08:28:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "babiše",
-        "další",
-        "kandidát",
-        "let",
-        "mapa",
-        "nedostal",
-        "nůž",
-        "prezidentský",
-        "vládní",
-        "zad"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -537,7 +535,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22568,
+      "bytes": 22398,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -574,13 +572,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:47:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 4,
+          "zpravy": 11,
           "sport": 2,
-          "zpravy": 12,
           "zdravi": 1,
-          "finance": 3,
           "cestovani": 1,
           "other": 1
         },
@@ -595,16 +593,20 @@
         },
         "sample_titles": [
           {
+            "title": "Nejistota kolem Hormuzského průlivu sužuje tisíce uvízlých námořníků",
+            "publishedAt": "2026-04-27T12:47:00Z"
+          },
+          {
+            "title": "Írán přišel s novým návrhem pro ukončení války se Spojenými státy",
+            "publishedAt": "2026-02-28T14:04:00Z"
+          },
+          {
             "title": "Ledecká překvapivě mění tým. Senzační, prohlásila o první práci s novým koučem",
             "publishedAt": "2026-04-27T11:23:00Z"
           },
           {
             "title": "„Co sakra dělá tajná služba?“ Jak blízko byl prezident Trump zastřelení",
             "publishedAt": "2026-04-27T11:59:00Z"
-          },
-          {
-            "title": "Írán přišel s novým návrhem pro ukončení války se Spojenými státy",
-            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Překvapení po drsné evakuaci Trumpa. Hosté se fotili a odnášeli láhve s alkoholem",
@@ -621,10 +623,6 @@
           {
             "title": "Regulace marží i snížení spotřební daně z nafty budou pokračovat, uvedla Schillerová",
             "publishedAt": "2026-04-27T10:51:00Z"
-          },
-          {
-            "title": "Babiš: ČEZ v Ázerbájdžánu usiluje o dlouhodobé dodávky zemního plynu",
-            "publishedAt": "2026-04-27T11:19:00Z"
           }
         ]
       }

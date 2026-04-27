@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T12:39:50.845036Z",
+  "ingestedAt": "2026-04-27T13:06:02.801964Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,32 @@
         "těžké",
         "vyšel",
         "windows"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
+      "url": "https://www.zive.cz/clanky/pribeh-o-tom-jak-chlapek-fenem-ofouknul-meteostanici-a-vyhral-34-tisic-dolaru/sc-3-a-240888/default.aspx",
+      "dt": "2026-04-27T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "chlápek",
+        "dolarů",
+        "fénem",
+        "meteostanici",
+        "ofouknul",
+        "příběh",
+        "tisíc",
+        "tom",
+        "vyhrál"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -953,35 +979,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Assassin's Creed Black Flag Resynced vyjde v červenci. Známe podrobnosti o změnách i hardwarové nároky",
-      "url": "https://doupe.zive.cz/black-flag-resynced-datum-vydani-trailer-hardwarove-pozadavky-sberatelska-edice",
-      "dt": "2026-04-24T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "assassin",
-        "black",
-        "creed",
-        "flag",
-        "hardwarové",
-        "nároky",
-        "podrobnosti",
-        "resynced",
-        "vyjde",
-        "změnách",
-        "známe",
-        "červenci"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23281,
+      "bytes": 23501,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1047,6 +1044,10 @@
           {
             "title": "Populární textový editor z Windows vyšel i na macOS. Notepad++ to ale bude mít těžké",
             "publishedAt": "2026-04-27T08:45:00Z"
+          },
+          {
+            "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
+            "publishedAt": "2026-04-27T12:45:00Z"
           },
           {
             "title": "Zvykejte si na volání z letadla. Brzy bude tak otravné, že Boeing už vyvíjí palubní telefonní budky",
@@ -1071,10 +1072,6 @@
           {
             "title": "GoPro se utrhlo ze řetězu. Nové kamery Mission mají výměnné objektivy a nakukují do filmové branže",
             "publishedAt": "2026-04-25T07:45:00Z"
-          },
-          {
-            "title": "Normálně za peníze, dnes zadarmo nebo se slevou: Správce baterie, procvičování sluchu a rytíři",
-            "publishedAt": "2026-04-26T15:45:00Z"
           }
         ]
       }
