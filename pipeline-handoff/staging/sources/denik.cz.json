@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T14:49:57.198245Z",
+  "ingestedAt": "2026-04-27T15:14:28.907982Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kdyby přišla nabídka do StarDance, asi bych neodolal, řekl předseda ODS Kupka",
+      "url": "https://www.denik.cz/z_domova/martin-kupka-ods-stardance-andrej-babis-filip-turek.html",
+      "dt": "2026-04-27T14:44:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "asi",
+        "bych",
+        "kdyby",
+        "kupka",
+        "nabídka",
+        "neodolal",
+        "ods",
+        "předseda",
+        "přišla",
+        "stardance",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -639,27 +667,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Japonsko zasáhlo silné zemětřesení",
-      "url": "https://www.denik.cz/ze_sveta/japonsko-zasahlo-silne-zemetreseni.html",
-      "dt": "2026-04-27T04:26:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "japonsko",
-        "silné",
-        "zasáhlo",
-        "zemětřesení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -670,7 +677,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28817,
+      "bytes": 28928,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -707,7 +714,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T14:08:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:44:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -723,6 +730,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdyby přišla nabídka do StarDance, asi bych neodolal, řekl předseda ODS Kupka",
+            "publishedAt": "2026-04-27T14:44:00Z"
+          },
           {
             "title": "Pes byl dny uvězněný na římse ve 13. patře budovy. Záchranná mise dojala svět",
             "publishedAt": "2026-04-27T14:08:00Z"
@@ -750,10 +761,6 @@
           {
             "title": "Návštěvník pražského gay klubu zemřel po požití drogy, případ řeší policie",
             "publishedAt": "2026-04-27T12:15:00Z"
-          },
-          {
-            "title": "StarDance? Babiš se vždy rozhoduje podle toho, jaké maily dostane, říká Kupka",
-            "publishedAt": "2026-04-27T11:18:00Z"
           }
         ]
       }

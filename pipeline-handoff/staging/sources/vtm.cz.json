@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T14:49:57.198245Z",
+  "ingestedAt": "2026-04-27T15:14:28.907982Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,34 @@
         "tisíc",
         "tom",
         "vyhrál"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "V Česku už vzniklo pět milionů datových schránek. Letos po 17 letech změní webovou adresu",
+      "url": "https://www.zive.cz/clanky/v-cesku-uz-vzniklo-pet-milionu-datovych-schranek-letos-po-17-letech-zmeni-webovou-adresu/sc-3-a-240894/default.aspx",
+      "dt": "2026-04-27T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "adresu",
+        "datových",
+        "letech",
+        "letos",
+        "milionů",
+        "pět",
+        "schránek",
+        "vzniklo",
+        "webovou",
+        "změní",
+        "česku"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -958,30 +986,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "15 let kapesní konzole Nintendo 3DS a 15 her, které ji proslavily",
-      "url": "https://doupe.zive.cz/nintendo-3ds-nejlepsi-hry-vyroci-15-let",
-      "dt": "2026-04-23T15:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "3ds",
-        "her",
-        "kapesní",
-        "konzole",
-        "let",
-        "nintendo",
-        "proslavily"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +996,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23288,
+      "bytes": 23376,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1033,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1047,6 +1051,10 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
+          },
+          {
+            "title": "V Česku už vzniklo pět milionů datových schránek. Letos po 17 letech změní webovou adresu",
+            "publishedAt": "2026-04-27T14:45:00Z"
           },
           {
             "title": "Firefox 150 opravuje enormních 271 zranitelných míst. Našla je zakázaná AI Claude Mythos",
@@ -1071,10 +1079,6 @@
           {
             "title": "GoPro se utrhlo ze řetězu. Nové kamery Mission mají výměnné objektivy a nakukují do filmové branže",
             "publishedAt": "2026-04-25T07:45:00Z"
-          },
-          {
-            "title": "Super myš na cesty. Trust Seron je tenká, má kolečko se setrvačníkem a zlevnila na minimum",
-            "publishedAt": "2026-04-27T06:45:00Z"
           }
         ]
       }

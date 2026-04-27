@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-27T14:49:57.198245Z",
+  "ingestedAt": "2026-04-27T15:14:28.907982Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: Nosková s přehledem ovládla první set. Plíšková je ve čtvrtfinále",
+      "title": "TENIS ONLINE: Nosková má problém, světová trojka jí vzala podání. Plíšková je ve čtvrtfinále",
       "url": "https://www.sport.cz/clanek/tenis-pliskova-chce-v-boji-o-ctvrtfinale-vyuzit-formu-noskovou-ceka-svetova-trojka-5444156",
       "dt": "2026-04-27T08:25:46Z",
       "media_raw": "Sport.cz",
@@ -14,13 +14,42 @@
       "tokens": [
         "nosková",
         "online",
-        "ovládla",
         "plíšková",
-        "první",
-        "přehledem",
-        "set",
+        "podání",
+        "problém",
+        "světová",
         "tenis",
+        "trojka",
+        "vzala",
         "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Upustil raketu a zahrál míček rukou. Bizarní moment ozdobil zápas Sinnera v Madridu",
+      "url": "https://www.sport.cz/clanek/tenis-upustil-raketu-a-zahral-micek-rukou-bizarni-moment-ozdobil-zapas-sinnera-v-madridu-5444198",
+      "dt": "2026-04-27T14:47:03Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bizarní",
+        "madridu",
+        "moment",
+        "míček",
+        "ozdobil",
+        "raketu",
+        "rukou",
+        "sinnera",
+        "upustil",
+        "zahrál",
+        "zápas"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -763,33 +792,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Aktuální kádr české hokejové reprezentace před MS 2026. Česko v přípravě na světový šampionát",
-      "url": "https://www.sport.cz/clanek/hokej-ms-2026-nominace-soupiska-cesko-5436620",
-      "dt": "2026-04-27T05:03:00Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "2026",
-        "aktuální",
-        "hokejové",
-        "kádr",
-        "přípravě",
-        "reprezentace",
-        "světový",
-        "česko",
-        "české",
-        "šampionát"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44501,
+      "bytes": 45081,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T14:31:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:47:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -853,8 +855,12 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: Nosková s přehledem ovládla první set. Plíšková je ve čtvrtfinále",
+            "title": "TENIS ONLINE: Nosková má problém, světová trojka jí vzala podání. Plíšková je ve čtvrtfinále",
             "publishedAt": "2026-04-27T08:25:46Z"
+          },
+          {
+            "title": "Upustil raketu a zahrál míček rukou. Bizarní moment ozdobil zápas Sinnera v Madridu",
+            "publishedAt": "2026-04-27T14:47:03Z"
           },
           {
             "title": "Hloupá prohra může hodně mrzet. Českým mladíkům hrozí ve čtvrtfinále i derby nebo Finsko",
@@ -879,10 +885,6 @@
           {
             "title": "Landa s Almeidou přijdou o Giro d'Italia",
             "publishedAt": "2026-04-27T13:07:25Z"
-          },
-          {
-            "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
-            "publishedAt": "2026-04-24T20:03:00Z"
           }
         ]
       }
