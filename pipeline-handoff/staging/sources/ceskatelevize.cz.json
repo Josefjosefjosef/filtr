@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T05:34:55.155423Z",
+  "ingestedAt": "2026-04-27T06:00:01.085256Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi schraňují mince doma, v oběhu jsou jich dvě a půl miliardy",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/cesi-schranuji-mince-doma-v-obehu-jsou-jich-dve-a-pul-miliardy-372819",
+      "dt": "2026-04-27T05:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "doma",
+        "dvě",
+        "jich",
+        "miliardy",
+        "mince",
+        "oběhu",
+        "půl",
+        "schraňují",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,30 +752,6 @@
         "stavu",
         "střelbě",
         "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Předvolební diskusi v Maďarsku dominovali na síti X zahraniční aktéři",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/predvolebni-diskusi-v-madarsku-dominovali-na-siti-x-zahranicni-akteri-372795",
-      "dt": "2026-04-25T19:44:44Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "aktéři",
-        "diskusi",
-        "dominovali",
-        "maďarsku",
-        "předvolební",
-        "síti",
-        "zahraniční"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1501,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43623,
+      "bytes": 43098,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1561,11 +1563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
-          "finance": 2,
+          "finance": 3,
+          "zpravy": 25,
           "other": 2
         },
         "drop_counts": {
@@ -1578,6 +1580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi schraňují mince doma, v oběhu jsou jich dvě a půl miliardy",
+            "publishedAt": "2026-04-27T05:30:00Z"
+          },
           {
             "title": "Před 35 lety se do Československa vrátili volyňští Češi",
             "publishedAt": "2026-04-27T05:00:00Z"
@@ -1605,10 +1611,6 @@
           {
             "title": "Čína nás vydírá, říká Farský. My nepodlézáme, brání se Červený",
             "publishedAt": "2026-04-26T19:29:40Z"
-          },
-          {
-            "title": "Výběr policistů do elitního týmu URNA. Pekelný týden natáčel štáb ČT",
-            "publishedAt": "2026-04-26T18:18:11Z"
           }
         ]
       }
@@ -1714,7 +1716,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77437,
+      "bytes": 77419,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

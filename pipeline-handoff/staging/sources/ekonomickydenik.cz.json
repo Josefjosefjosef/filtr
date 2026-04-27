@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-27T05:34:55.155423Z",
+  "ingestedAt": "2026-04-27T06:00:01.085256Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nové závody v jaderném zbrojení? Výdaje děsí nevládní organizace",
+      "url": "https://ekonomickydenik.cz/nove-zavody-jaderne-zbrojeni/",
+      "dt": "2026-04-27T05:52:13Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "děsí",
+        "jaderném",
+        "nevládní",
+        "nové",
+        "organizace",
+        "výdaje",
+        "zbrojení",
+        "závody"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -747,31 +772,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bývalý ministr odchází z Přísahy. Je to neférové a účelové, zní z hnutí",
-      "url": "https://ekonomickydenik.cz/byvaly-ministr-odchazi-prisaha/",
-      "dt": "2026-04-24T11:53:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bývalý",
-        "hnutí",
-        "ministr",
-        "neférové",
-        "odchází",
-        "přísahy",
-        "zní",
-        "účelové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69133,
+      "bytes": 69459,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T05:15:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T05:52:13Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -836,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nové závody v jaderném zbrojení? Výdaje děsí nevládní organizace",
+            "publishedAt": "2026-04-27T05:52:13Z"
+          },
           {
             "title": "Otázka, která trápí Evropu: Kolik plynu nasyslíme před příchodem zimy?",
             "publishedAt": "2026-04-27T05:15:40Z"
@@ -863,10 +867,6 @@
           {
             "title": "Černý pasažér NATO? Česko nesplní výdaje 2 procenta HDP na obranu",
             "publishedAt": "2026-04-26T10:03:04Z"
-          },
-          {
-            "title": "Nová nemocnice v Praze bude vojenská, oznámil Babiš",
-            "publishedAt": "2026-04-26T09:06:08Z"
           }
         ]
       }
