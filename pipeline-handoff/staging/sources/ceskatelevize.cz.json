@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T14:24:46.684002Z",
+  "ingestedAt": "2026-04-27T14:49:57.198245Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Havlíček: Česko chce brát z Ázerbájdžánu dvě miliardy metrů krychlových plynu ročně",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/havlicek-cesko-chce-brat-z-azerbajdzanu-dve-miliardy-metru-krychlovych-plynu-rocne-372848",
+      "dt": "2026-04-27T14:19:54Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brát",
+        "chce",
+        "dvě",
+        "havlíček",
+        "krychlových",
+        "metrů",
+        "miliardy",
+        "plynu",
+        "ročně",
+        "ázerbájdžánu",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -717,34 +745,6 @@
         "paříží",
         "riskantní",
         "zkomplikovat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ETS je obchod s uměle vytvořenou komoditou, míní Gavor. Emise jsou realita, říká Svárovská",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ets-je-obchod-s-umele-vytvorenou-komoditou-mini-gavor-emise-jsou-realita-rika-svarovska-372811",
-      "dt": "2026-04-26T17:51:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "emise",
-        "ets",
-        "gavor",
-        "komoditou",
-        "míní",
-        "obchod",
-        "realita",
-        "svárovská",
-        "uměle",
-        "vytvořenou",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1507,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41799,
+      "bytes": 41644,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,12 +1567,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T14:05:50Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T14:19:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 23,
           "other": 5,
-          "zpravy": 22,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1584,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Havlíček: Česko chce brát z Ázerbájdžánu dvě miliardy metrů krychlových plynu ročně",
+            "publishedAt": "2026-04-27T14:19:54Z"
+          },
           {
             "title": "Data: Proti chřipce nejsou očkované tři čtvrtiny lékařů a drtivá většina sester",
             "publishedAt": "2026-04-27T14:05:50Z"
@@ -1611,10 +1615,6 @@
           {
             "title": "Česko neplní závazky ke kolektivní obraně NATO, řekl Pavel",
             "publishedAt": "2026-04-27T10:35:08Z"
-          },
-          {
-            "title": "Svět padá do AI pasti, tvrdí ekonomové",
-            "publishedAt": "2026-04-27T10:34:55Z"
           }
         ]
       }
@@ -1720,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77189,
+      "bytes": 77193,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
