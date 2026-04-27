@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T18:34:34.253677Z",
+  "ingestedAt": "2026-04-27T18:59:46.912859Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Marketér Jakub Horák se zotavuje. Dělá pokroky, napsala partnerka",
+      "url": "https://www.denik.cz/z_domova/jakub-horak-nemoc-rehabilitace-dela-pokroky.html",
+      "dt": "2026-04-27T18:33:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dělá",
+        "horák",
+        "jakub",
+        "marketér",
+        "napsala",
+        "partnerka",
+        "pokroky",
+        "zotavuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -636,34 +661,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kožich? Jako bych si oblékl kouzelný plášť, vypráví Leoš Mareš v novém dokumentu",
-      "url": "https://www.denik.cz/film-a-televize/leos-mares-nekdy-jsem-namysleny-jindy-si-uvedomuju-realitu-20280427.html",
-      "dt": "2026-04-27T09:22:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bych",
-        "dokumentu",
-        "jako",
-        "kouzelný",
-        "kožich",
-        "leoš",
-        "mareš",
-        "novém",
-        "oblékl",
-        "plášť",
-        "vypráví"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -674,7 +671,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29114,
+      "bytes": 29021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -711,7 +708,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T17:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T18:33:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -727,6 +724,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Marketér Jakub Horák se zotavuje. Dělá pokroky, napsala partnerka",
+            "publishedAt": "2026-04-27T18:33:00Z"
+          },
           {
             "title": "Oligarchové balí kufry. Po volbách v Maďarsku mizí do zahraničí miliardy forintů",
             "publishedAt": "2026-04-27T17:32:00Z"
@@ -754,10 +755,6 @@
           {
             "title": "Tusk si pochvaloval summit bez Rusů, pak šel kolem Fico. Video je hitem",
             "publishedAt": "2026-04-27T15:45:00Z"
-          },
-          {
-            "title": "Zkontrolujte mrazák, v mase z obchodu byly bakterie. Neprošly ani med a víno",
-            "publishedAt": "2026-04-27T15:20:00Z"
           }
         ]
       }

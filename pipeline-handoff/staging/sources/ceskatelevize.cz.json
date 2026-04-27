@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-27T18:34:34.253677Z",
+  "ingestedAt": "2026-04-27T18:59:46.912859Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na přestavěnou křižovatku si v Hradci teprve zvykají, auto tam vjelo do protisměru",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/na-prestavenou-krizovatku-si-v-hradci-teprve-zvykaji-auto-tam-vjelo-do-protismeru-372850",
+      "dt": "2026-04-27T18:44:01Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "auto",
+        "hradci",
+        "křižovatku",
+        "protisměru",
+        "přestavěnou",
+        "tam",
+        "teprve",
+        "vjelo",
+        "zvykají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,25 +756,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Některé dodávky budou muset být od července vybaveny tachografy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nektere-dodavky-budou-muset-byt-od-cervence-vybaveny-tachografy-372812",
-      "dt": "2026-04-27T04:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Volejbalové finále je po druhém zápase srovnané 1:1",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/volejbalove-finale-je-po-druhem-zapase-srovnane-11-156488",
+      "dt": "2026-04-27T18:48:30Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "být",
-        "dodávky",
-        "muset",
-        "některé",
-        "tachografy",
-        "vybaveny",
-        "července"
+        "druhém",
+        "finále",
+        "srovnané",
+        "volejbalové",
+        "zápase"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1472,30 +1496,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladařovi Flyers ještě nepostupují, dostali čtyři góly",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladarovi-flyers-jeste-nepostupuji-dostali-ctyri-goly-156457",
-      "dt": "2026-04-26T06:12:54Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dostali",
-        "flyers",
-        "góly",
-        "ještě",
-        "nepostupují",
-        "vladařovi",
-        "čtyři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1506,7 +1506,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 40633,
+      "bytes": 41150,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1566,7 +1566,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T18:24:11Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T18:44:01Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1583,6 +1583,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na přestavěnou křižovatku si v Hradci teprve zvykají, auto tam vjelo do protisměru",
+            "publishedAt": "2026-04-27T18:44:01Z"
+          },
           {
             "title": "Střelce z galavečeře s Trumpem obvinili z pokusu o atentát na prezidenta",
             "publishedAt": "2026-04-27T18:24:11Z"
@@ -1610,10 +1614,6 @@
           {
             "title": "Havlíček: Česko chce brát z Ázerbájdžánu dvě miliardy metrů krychlových plynu ročně",
             "publishedAt": "2026-04-27T14:19:54Z"
-          },
-          {
-            "title": "Data: Proti chřipce nejsou očkované tři čtvrtiny lékařů a drtivá většina sester",
-            "publishedAt": "2026-04-27T14:05:50Z"
           }
         ]
       }
@@ -1625,7 +1625,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38448,
+      "bytes": 38215,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1662,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:09:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T18:48:30Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1677,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Volejbalové finále je po druhém zápase srovnané 1:1",
+            "publishedAt": "2026-04-27T18:48:30Z"
+          },
           {
             "title": "Rytířský souboj ovládlo Znojmo, zápas poprvé řídila žena. Sígrs slaví premiérovou výhru",
             "publishedAt": "2026-04-27T13:09:31Z"
@@ -1704,10 +1708,6 @@
           {
             "title": "Portland v play-off potřetí prohrál se Spurs. Wembanyama přiblížil Krejčího tým vyřazení",
             "publishedAt": "2026-04-27T06:41:11Z"
-          },
-          {
-            "title": "Colorado je i díky Nečasovi ve druhém kole play-off, Dostál pomohl k mečbolu",
-            "publishedAt": "2026-04-27T06:26:36Z"
           }
         ]
       }
@@ -1719,7 +1719,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77497,
+      "bytes": 77491,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
