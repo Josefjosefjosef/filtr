@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-27T16:49:16.925512Z",
+  "ingestedAt": "2026-04-27T17:14:43.196219Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TV tipy: Český válečný film, seriálový Pán prstenů i Schindlerův seznam",
+      "url": "https://www.kinobox.cz/clanky/tema/53126-tv-tipy-cesky-valecny-film-serialovy-pan-prstenu-i-schindleruv-seznam",
+      "dt": "2026-04-27T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "film",
+        "prstenů",
+        "pán",
+        "schindlerův",
+        "seriálový",
+        "seznam",
+        "tipy",
+        "válečný",
+        "český"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -529,34 +555,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Nejlepší sci-fi seriál posledních let se vrací. Třetí Silo zodpoví řadu záhad",
-      "url": "https://www.kinobox.cz/clanky/serialy/52967-nejlepsi-serialove-sci-fi-poslednich-let-se-vraci-treti-silo-zodpovi-radu-zahad",
-      "dt": "2026-04-25T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "let",
-        "nejlepší",
-        "posledních",
-        "sci",
-        "seriál",
-        "silo",
-        "třetí",
-        "vrací",
-        "zodpoví",
-        "záhad",
-        "řadu"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28127,
+      "bytes": 28045,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TV tipy: Český válečný film, seriálový Pán prstenů i Schindlerův seznam",
+            "publishedAt": "2026-04-27T17:00:00Z"
+          },
           {
             "title": "Dáda Patrasová slaví 70 let. Vyrostlo s ní několik generací, každá si ji pamatuje jinak",
             "publishedAt": "2026-04-27T16:00:00Z"
@@ -646,10 +648,6 @@
           {
             "title": "Texaský masakr motorovou pilou se vrátí rovnou dvakrát. O jeden se postará slibný hororový tvůrce",
             "publishedAt": "2026-04-27T07:00:00Z"
-          },
-          {
-            "title": "Srdcovka: Stopaři jsou perfektním anti-westernem. Hlavní hvězdě nikdy nedošlo, o čem příběh doopravdy je",
-            "publishedAt": "2026-04-26T17:00:00Z"
           }
         ]
       }

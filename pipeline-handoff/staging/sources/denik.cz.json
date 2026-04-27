@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-27T16:49:16.925512Z",
+  "ingestedAt": "2026-04-27T17:14:43.196219Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Při práci v lomu přišel o ruku. Lékaři v Brně dokázali zázrak, přišili ji zpět",
+      "url": "https://www.denik.cz/regiony/v-lomu-v-budislavi-prisel-o-ruku-lekari-v-brne-dokazali-zazrak-prisili-ji-zpet-2.html",
+      "dt": "2026-04-27T16:22:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brně",
+        "dokázali",
+        "lomu",
+        "lékaři",
+        "práci",
+        "při",
+        "přišel",
+        "přišili",
+        "ruku",
+        "zpět",
+        "zázrak"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -296,7 +324,7 @@
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Návštěvník pražského gay klubu zemřel po požití drogy, případ řeší policie",
+      "title": "Návštěvník pražského gay klubu zemřel po požití drogy. Případ řeší policie",
       "url": "https://www.denik.cz/krimi/kriminaliste-obvinili-muze-ktery-pred-sexualnim-aktem-podal-extazi-muz-zemrel-20.html",
       "dt": "2026-04-27T12:15:00Z",
       "media_raw": "Deník",
@@ -637,33 +665,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Lesy na severu Čech zaplavily smržovité houby. Zaujmou barvou i zvláštními tvary",
-      "url": "https://www.denik.cz/regiony/smrzovite-houby-jizerske-hory-kalisky-pohadka.html",
-      "dt": "2026-04-27T07:05:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "barvou",
-        "houby",
-        "lesy",
-        "severu",
-        "smržovité",
-        "tvary",
-        "zaplavily",
-        "zaujmou",
-        "zvláštními",
-        "čech"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -674,7 +675,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29013,
+      "bytes": 29311,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -711,7 +712,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T16:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T16:22:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -727,6 +728,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Při práci v lomu přišel o ruku. Lékaři v Brně dokázali zázrak, přišili ji zpět",
+            "publishedAt": "2026-04-27T16:22:00Z"
+          },
           {
             "title": "Česko jedná o plynu z Azerbajdžánu. Kontrakt je na dobré cestě, řekl Havlíček",
             "publishedAt": "2026-04-27T16:09:00Z"
@@ -754,10 +759,6 @@
           {
             "title": "Nová zelená úsporám: Úvěry se mají zkrátit až o deset let, výtky má i ombudsman",
             "publishedAt": "2026-04-27T13:58:00Z"
-          },
-          {
-            "title": "Olomoucká Flora přitáhla desetitisícové davy. Lidé si odnášeli květiny i zážitky",
-            "publishedAt": "2026-04-27T13:10:00Z"
           }
         ]
       }

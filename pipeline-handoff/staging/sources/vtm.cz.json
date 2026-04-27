@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-27T16:49:16.925512Z",
+  "ingestedAt": "2026-04-27T17:14:43.196219Z",
   "items": [
     {
       "section": "veda",
@@ -21,6 +21,36 @@
         "tisíc",
         "tom",
         "vyhrál"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Recenze filmu Ovce žerou první: Nepříjemně přesná výpověď o tom, proč věříme jednoduchým řešením",
+      "url": "https://avmania.zive.cz/recenze-filmu-ovce-zerou-prvni-neprijemne-presna-vypoved-o-tom-proc-verime-jednoduchym-resenim",
+      "dt": "2026-04-27T16:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "filmu",
+        "jednoduchým",
+        "nepříjemně",
+        "ovce",
+        "proč",
+        "první",
+        "přesná",
+        "recenze",
+        "tom",
+        "výpověď",
+        "věříme",
+        "řešením",
+        "žerou"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -957,37 +987,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Framework je modulární a snadno opravitelný notebook pro geeky. Nová varianta Laptop Pro přidává prémiové tělo i unikátní výbavu",
-      "url": "https://www.zive.cz/clanky/framework-je-modularni-a-snadno-opravitelny-notebook-pro-geeky-nova-varianta-laptop-pro-pridava-premiove-telo-i-unikatni-vybavu/sc-3-a-240821/default.aspx",
-      "dt": "2026-04-22T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "framework",
-        "geeky",
-        "laptop",
-        "modulární",
-        "notebook",
-        "nová",
-        "opravitelný",
-        "prémiové",
-        "přidává",
-        "snadno",
-        "tělo",
-        "unikátní",
-        "varianta",
-        "výbavu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -998,7 +997,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23259,
+      "bytes": 23173,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1035,7 +1034,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T16:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1053,6 +1052,10 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
+          },
+          {
+            "title": "Recenze filmu Ovce žerou první: Nepříjemně přesná výpověď o tom, proč věříme jednoduchým řešením",
+            "publishedAt": "2026-04-27T16:45:00Z"
           },
           {
             "title": "Nové mobily jsou vždy „nejlepší v historii“. Jenže často jen díky chytrému srovnání a hvězdičkám",
@@ -1077,10 +1080,6 @@
           {
             "title": "Zvykejte si na volání z letadla. Brzy bude tak otravné, že Boeing už vyvíjí palubní telefonní budky",
             "publishedAt": "2026-04-27T11:45:00Z"
-          },
-          {
-            "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
-            "publishedAt": "2026-04-24T11:45:00Z"
           }
         ]
       }
