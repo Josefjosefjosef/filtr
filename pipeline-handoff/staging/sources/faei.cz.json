@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-27T07:59:11.914895Z",
+  "ingestedAt": "2026-04-27T08:24:34.545668Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
+      "url": "https://profitonline.cz/pruzkum-umela-inteligence-rozevira-nuzky-mezi-pracovniky/",
+      "dt": "2026-04-27T08:00:12Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "inteligence",
+        "nůžky",
+        "pracovníky",
+        "průzkum",
+        "rozevírá",
+        "umělá"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,35 +292,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Voda teče, škody rostou, soused zapírá. Jaká máte práva, když jde do tuhého",
-      "url": "https://profitonline.cz/voda-tece-skody-rostou-soused-zapira-jaka-mate-prava-kdyz-jde-do-tuheho/",
-      "dt": "2026-04-24T04:00:05Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "jaká",
-        "jde",
-        "když",
-        "máte",
-        "práva",
-        "rostou",
-        "soused",
-        "teče",
-        "tuhého",
-        "voda",
-        "zapírá",
-        "škody"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +302,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18691,
+      "bytes": 18541,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,7 +339,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-27T04:00:25Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:00:12Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -361,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
+            "publishedAt": "2026-04-27T08:00:12Z"
+          },
           {
             "title": "The Economist: Jak se Evropa uregulovala do naprosté závislosti na Americe",
             "publishedAt": "2026-04-27T04:00:25Z"
@@ -388,10 +386,6 @@
           {
             "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
             "publishedAt": "2026-04-25T04:00:32Z"
-          },
-          {
-            "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
-            "publishedAt": "2026-04-24T17:00:37Z"
           }
         ]
       }

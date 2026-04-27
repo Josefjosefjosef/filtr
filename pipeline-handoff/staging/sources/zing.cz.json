@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-27T07:59:11.914895Z",
+  "ingestedAt": "2026-04-27T08:24:34.545668Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Troy Baker, hlas mnoha známých postav, chce vytvořit vlastní hru",
+      "url": "https://zing.cz/article/troy-baker-hlas-mnoha-znamych-postav-chce-vytvorit-vlastni-hru",
+      "dt": "2026-04-27T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "baker",
+        "chce",
+        "hlas",
+        "hru",
+        "mnoha",
+        "postav",
+        "troy",
+        "vlastní",
+        "vytvořit",
+        "známých"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -962,32 +989,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Game Pass zlevňuje, Call of Duty se v předplatném objeví s ročním zpožděním",
-      "url": "https://zing.cz/article/game-pass-zlevnuje-call-of-duty-se-v-predplatnem-objevi-s-rocnim-zpozdenim",
-      "dt": "2026-04-21T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "call",
-        "duty",
-        "game",
-        "objeví",
-        "pass",
-        "předplatném",
-        "ročním",
-        "zlevňuje",
-        "zpožděním"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -998,7 +999,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125223,
+      "bytes": 125233,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1035,7 +1036,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-27T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1050,6 +1051,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Troy Baker, hlas mnoha známých postav, chce vytvořit vlastní hru",
+            "publishedAt": "2026-04-27T08:00:00Z"
+          },
           {
             "title": "Nová Star Wars hra na obzoru. Závody Galactic Racer omylem odhalily datum vydání",
             "publishedAt": "2026-04-27T06:00:00Z"
@@ -1077,10 +1082,6 @@
           {
             "title": "Diablo 4 by mohlo mířit i na Nintendo Switch 2",
             "publishedAt": "2026-04-25T16:00:00Z"
-          },
-          {
-            "title": "Skyrim: Mod Mantella zapojuje AI do konverzace s NPC",
-            "publishedAt": "2026-04-25T14:00:00Z"
           }
         ]
       }
