@@ -3616,20 +3616,6 @@ body[data-iu-fc="1"] #feed{
   html{
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
   }
-  body:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
-    box-sizing: border-box !important;
-  }
-  body:not(.iu-mobileGateOverlayOpen) #iuMapyView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuMapsView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuRadioView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuWeatherView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuTvProgramView:not([hidden]){
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
-    box-sizing: border-box !important;
-  }
 }
 
 #silver-slot[hidden]{
@@ -4531,6 +4517,24 @@ body[data-section="home"] .iuHomeCanvas{
 .iuWeatherView{
   padding: 18px 12px;
   --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
+}
+
+/* P0: bottom safe padding na tool hostech musí přebít .iuWeatherView / .iuRadioView shorthand — až po .iuWeatherView + vázat na iu-mobileMainVisible (reálný flow po Menu). */
+@media (max-width: 900px) {
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
+    box-sizing: border-box !important;
+  }
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuRadioView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuWeatherView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvProgramView{
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed{
