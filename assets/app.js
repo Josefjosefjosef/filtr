@@ -15505,6 +15505,27 @@ function buildVideoAsArticleCard(it) {
     return typeof id === "string" && /^[A-Za-z0-9_-]{11}$/.test(id);
   }
 
+  function iuNormAsciiLowerBlob(s){
+    try{
+      let t = String(s || "").normalize("NFD");
+      try{
+        t = t.replace(/\p{M}/gu, "");
+      }catch{
+        t = t.replace(/[\u0300-\u036f]/g, "");
+      }
+      return t.toLowerCase().replace(/\s+/g, " ").trim();
+    }catch{
+      return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+    }
+  }
+
+  function iuIsBlockedPocasickoSource(){
+    const parts = [];
+    for (let i = 0; i < arguments.length; i++) parts.push(String(arguments[i] || ""));
+    const blob = iuNormAsciiLowerBlob(parts.join(" "));
+    return blob.indexOf("pocasicko") >= 0;
+  }
+
   function iuMsToNextMidnightLocal(){
     const now = new Date();
     const next = new Date(now);
@@ -15534,7 +15555,11 @@ function buildVideoAsArticleCard(it) {
 
       const items = Array.isArray(lastOk.items) ? lastOk.items : [];
       if (!items.length) return { title: String(lastOk.title || ""), items: [] };
-      const usable = items.filter((x) => x && iuValidYtId(String(x.id || "").trim()));
+      const usable = items.filter((x) => {
+        if (!x || !iuValidYtId(String(x.id || "").trim())) return false;
+        if (iuIsBlockedPocasickoSource(x.source, x.title, x.note)) return false;
+        return true;
+      });
       return { title: String(lastOk.title || ""), items: usable };
     }catch{
       return null;
@@ -15595,6 +15620,8 @@ function buildVideoAsArticleCard(it) {
     line.textContent = [year ? `Rok ${year}` : "", source].filter(Boolean).join(" • ");
     note.textContent = noteTxt;
 
+    try{ if (img) img.style.display = ""; }catch{}
+
     // Reset player host on every render (prevents stale embeds).
     try{ host.replaceChildren(); }catch{}
     try{ host.hidden = true; }catch{}
@@ -15626,6 +15653,11 @@ function buildVideoAsArticleCard(it) {
       if (!node || !(node instanceof HTMLElement)) throw new Error("bad preview node");
       host.appendChild(node);
       host.hidden = false;
+
+      try{
+        const im2 = document.getElementById("iuWeatherHistoryThumb");
+        if (im2) im2.style.display = "none";
+      }catch{}
 
       // Trigger existing Media-like inline embed handler.
       const poster = node.querySelector(".iuVideoPoster");
@@ -26231,6 +26263,8 @@ function buildVideoAsArticleCard(it) {
       const root = rootEl || document;
       root.querySelectorAll(".iuNotesHost").forEach((el) => {
         try{
+          /* Počasí (#iuWeatherView): žádný notes blok (P0). */
+          if (el && el.closest && el.closest("#iuWeatherView")) return;
           /* Jízdní řády (#iuJrEmptyView): žádný notes blok (P0 — nesmí se renderovat textarea / akce). */
           if (el && el.closest && el.closest("#iuJrEmptyView")) return;
           /* TV online (#iuTvOnlineView): žádný notes blok (P0). */
@@ -26287,11 +26321,18 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         return;
       }
+      /* P0 Počasí: žádný section-level notes host (textarea / sdílení). */
+      if (section === "pocasi") {
+        try{
+          const wv = document.getElementById("iuWeatherView");
+          if (wv) Array.from(wv.querySelectorAll(".iuNotesHost")).forEach((h) => { try{ h.remove(); }catch{} });
+        }catch{}
+        return;
+      }
 
       // map URL section -> storage key + view element
       const map = {
         mapy:    { key: "mapy",     view: () => document.getElementById("iuMapyView") || document.getElementById("iuMapsView"), accentVar: "--iuNavAccent-mapy", label: "Mapy & Navigace" },
-        pocasi:  { key: "weather",  view: () => document.getElementById("iuWeatherView"), accentVar: "--iuNavAccent-pocasi",   label: "Počasí" },
         kultura: { key: "kultura",  view: () => document.getElementById("iuKulturaView") || document.getElementById("feed"), accentVar: "--iuNavAccent-kultura", label: "Kultura / Akce" },
       };
 
