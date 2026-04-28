@@ -3611,7 +3611,7 @@ body[data-iu-fc="1"] #feed{
 /* P0 mobile ≤900 (spolu s #iuMobileBottomNav v index.html): rezerva nad fixní spodní lištou + safe-area + buffer. */
 @media (max-width: 900px) {
   :root{
-    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px);
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 168px);
   }
   html{
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
@@ -8457,8 +8457,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #feed{
       height: 100%;
       overflow-y: auto;
-      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 32px));
-      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 32px));
+      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
       box-sizing: border-box;
       
       min-height: min(320px, 48vh);
@@ -8475,8 +8475,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 32px));
-      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 32px));
+      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
       box-sizing: border-box;
     }
     body.iu-mobileMainVisible:is(
@@ -8804,7 +8804,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     touch-action: pan-y !important;
     display: flex !important;
     flex-direction: column !important;
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 32px)) !important;
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px)) !important;
     box-sizing: border-box !important;
   }
   
