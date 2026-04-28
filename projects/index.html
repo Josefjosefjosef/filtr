@@ -260,11 +260,18 @@ style-src 'self' 'unsafe-inline' https:;
         :root{
           --iu-mobile-bottom-nav-h:56px;
           --iu-mobile-bottom-safe:env(safe-area-inset-bottom,0px);
-          --iu-mobile-bottom-nav-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 168px);
-          --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 168px);
+        }
+        @media(max-width:767px){
+          :root{
+            --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 40px);
+          }
+        }
+        @media(min-width:768px) and (max-width:900px){
+          :root{
+            --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px + 8px);
+          }
         }
         html,body{height:auto!important;min-height:100%!important}
-        html{padding-bottom:var(--iu-mobile-bottom-nav-space);box-sizing:border-box}
         .iuSilverTopCardsStack #silver-slot.silver-slot,#iuMobileSilverSlot .silver-slot,.silver-slot{--iu-silver-slot-max-h:640px;min-height:0!important;max-height:none!important;height:auto!important}
         #silver-slot .iuSilverWelcomeSticky,#iuMobileSilverSlot #silver-slot .iuSilverWelcomeSticky{flex:0 0 auto!important;min-height:0!important;overflow:visible!important;height:auto!important}
         #silver-slot #iuSilverWelcomeStack,#iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack{flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important;contain:none!important}
@@ -296,7 +303,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=silver-background-only-cleanup-1024" />
+    <link rel="stylesheet" href="/assets/app.css?v=fix-mobile-tool-scroll-padding-guard-20260428d" />
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
@@ -3357,7 +3364,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=tv-program-premium-ui-v1"></script>
+    <script type="module" src="/assets/app.js?v=fix-mobile-tool-host-bottom-pad-mainvisible-20260428"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
