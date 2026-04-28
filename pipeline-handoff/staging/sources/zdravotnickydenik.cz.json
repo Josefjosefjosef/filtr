@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T11:59:20.597821Z",
+  "ingestedAt": "2026-04-28T13:09:07.438029Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová vojenská nemocnice v Praze je nesmysl. Černochová popsala důvod",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nova-vojenska-nemocnice-cernochova-babis/",
+      "dt": "2026-04-28T12:47:14Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "důvod",
+        "nemocnice",
+        "nesmysl",
+        "nová",
+        "popsala",
+        "praze",
+        "vojenská",
+        "černochová"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,32 +267,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Některá oddělení na Vysočině zřejmě skončí. Hejtman okomentoval i počet nemocnic",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/oddeleni-vysocina-konec-hejtman-pocet-nemocnic/",
-      "dt": "2026-04-27T13:40:13Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hejtman",
-        "nemocnic",
-        "některá",
-        "oddělení",
-        "okomentoval",
-        "počet",
-        "skončí",
-        "vysočině",
-        "zřejmě"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90229,
+      "bytes": 90012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:24:41Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T12:47:14Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová vojenská nemocnice v Praze je nesmysl. Černochová popsala důvod",
+            "publishedAt": "2026-04-28T12:47:14Z"
+          },
           {
             "title": "Evropě hrozí nedostatek léků, varují farmaceutičtí obři. Ženou Brusel k soudu kvůli směrnici",
             "publishedAt": "2026-04-28T11:24:41Z"
@@ -357,10 +360,6 @@
           {
             "title": "Nepředvídatelné úhrady brzdí inovace, říká Toman. Dohodovací řízení čeká zásadní změna",
             "publishedAt": "2026-04-28T05:00:00Z"
-          },
-          {
-            "title": "Duškov: Takto změníme placení zdravotní péče. Nemáme licenci na druhé Lourdy",
-            "publishedAt": "2026-04-27T15:13:06Z"
           }
         ]
       }

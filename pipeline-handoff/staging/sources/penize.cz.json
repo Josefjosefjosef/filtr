@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-28T11:59:20.597821Z",
+  "ingestedAt": "2026-04-28T13:09:07.438029Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Další zdražení. Maximální ceny benzinu a nafty na středu 29. dubna",
+      "url": "https://www.penize.cz/doprava/489018-dalsi-zdrazeni-maximalni-ceny-benzinu-a-nafty-na-stredu-29-dubna",
+      "dt": "2026-04-28T13:59:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "další",
+        "dubna",
+        "maximální",
+        "nafty",
+        "středu",
+        "zdražení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -479,31 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Změna pro pracující důchodce. Dostanou další odměnu, chystá Juchelka",
-      "url": "https://www.penize.cz/starobni-duchod/483186-zmena-pro-pracujici-duchodce-dostanou-dalsi-odmenu-chysta-juchelka",
-      "dt": "2026-04-23T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "chystá",
-        "další",
-        "dostanou",
-        "důchodce",
-        "juchelka",
-        "odměnu",
-        "pracující",
-        "změna"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18241,
+      "bytes": 18399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,12 +551,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T13:59:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 14,
-          "zdravi": 1,
-          "zpravy": 5
+          "zpravy": 6,
+          "finance": 13,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -568,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další zdražení. Maximální ceny benzinu a nafty na středu 29. dubna",
+            "publishedAt": "2026-04-28T13:59:00Z"
+          },
           {
             "title": "IKEA zavádí věrnostní body. Za nákupy i aktivitu nabídne lidem odměny",
             "publishedAt": "2026-04-28T10:06:00Z"
@@ -595,10 +599,6 @@
           {
             "title": "Globus rozveze nákup do dalšího města. V květnu přidá i novinku v aplikaci",
             "publishedAt": "2026-04-27T08:00:00Z"
-          },
-          {
-            "title": "Poslední týden na daňové přiznání. Návody, změny a časté chyby",
-            "publishedAt": "2026-04-27T05:05:00Z"
           }
         ]
       }

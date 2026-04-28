@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T11:59:20.597821Z",
+  "ingestedAt": "2026-04-28T13:09:07.438029Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,32 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Samsung vyrobil první herní 6K monitor. Potrápí i GeForce RTX 5090",
+      "url": "https://www.zive.cz/clanky/samsung-vyrobil-prvni-herni-6k-monitor-potrapi-i-geforce-rtx-5090/sc-3-a-240910/default.aspx",
+      "dt": "2026-04-28T12:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "5090",
+        "geforce",
+        "herní",
+        "monitor",
+        "potrápí",
+        "první",
+        "rtx",
+        "samsung",
+        "vyrobil"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -949,36 +975,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hodnotnější a levnější než Netflix. Méně známé streamovací služby nabízí festivalové filmy, dokumenty i záznamy z divadel",
-      "url": "https://www.zive.cz/clanky/hodnotnejsi-a-levnejsi-nez-netflix-mene-zname-streamovaci-sluzby-nabizi-festivalove-filmy-dokumenty-i-zaznamy-z-divadel/sc-3-a-240685/default.aspx",
-      "dt": "2026-04-24T06:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "divadel",
-        "dokumenty",
-        "festivalové",
-        "filmy",
-        "hodnotnější",
-        "levnější",
-        "nabízí",
-        "netflix",
-        "než",
-        "služby",
-        "streamovací",
-        "známé",
-        "záznamy"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -989,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22631,
+      "bytes": 22515,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1026,7 +1022,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T12:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1044,6 +1040,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Samsung vyrobil první herní 6K monitor. Potrápí i GeForce RTX 5090",
+            "publishedAt": "2026-04-28T12:45:00Z"
           },
           {
             "title": "Smažete aplikaci a druhý den se sama nainstaluje. Problém, se kterým si neví rady ani Apple",
@@ -1068,10 +1068,6 @@
           {
             "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
             "publishedAt": "2026-04-28T06:45:00Z"
-          },
-          {
-            "title": "EnSHITifikace. Proč se kdysi skvělé služby úmyslně zhoršují a proč je to dobré pro byznys",
-            "publishedAt": "2026-04-27T18:45:00Z"
           }
         ]
       }
