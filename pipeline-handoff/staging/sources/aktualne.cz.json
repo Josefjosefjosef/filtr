@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-28T18:59:53.717198Z",
+  "ingestedAt": "2026-04-28T19:29:18.712295Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Operace \"Zachraňte Timmyho\" je u konce. Uvázlá velryba je na cestě do moře",
+      "url": "https://zpravy.aktualne.cz/zahranici/dnes-se-rozhodne-posledni-pokus-o-zachranu-velryby-timmyho/r~aaa29e5ae4bd5f420c02522f7b20c0ed/",
+      "dt": "2026-04-28T07:20:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cestě",
+        "konce",
+        "moře",
+        "operace",
+        "timmyho",
+        "uvázlá",
+        "velryba",
+        "zachraňte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Tisíce příběhů o Češích stíhaných sovětskou KGB se dočkaly digitalizace",
+      "url": "https://zpravy.aktualne.cz/domaci/tisice-pribehu-o-cesich-stihanych-sovetskou-kgb-se-dockaly-digitalizace/r~aaa2974715cdf878569149c043356a0f/",
+      "dt": "2026-04-28T18:50:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "digitalizace",
+        "dočkaly",
+        "kgb",
+        "příběhů",
+        "sovětskou",
+        "stíhaných",
+        "tisíce",
+        "češích"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -463,56 +513,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třinec - Pardubice 4:5. Rychlý konec prodloužení, Dynamo je mistrem extraligy",
-      "url": "https://sport.aktualne.cz/hokej/trinec-pardubice-vrati-se-ocelari-pohar-pro-dynamo-uz-je-nachystany-na-stadionu/r~aaa29239f10abcacf7db8573144d0d38/",
-      "dt": "2026-04-28T14:51:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dynamo",
-        "extraligy",
-        "konec",
-        "mistrem",
-        "pardubice",
-        "prodloužení",
-        "rychlý",
-        "třinec"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "\"Zachraňte Timmyho\". Uvázlá velryba je už jen \"krůček\" od cesty do moře",
-      "url": "https://zpravy.aktualne.cz/zahranici/dnes-se-rozhodne-posledni-pokus-o-zachranu-velryby-timmyho/r~aaa29e5ae4bd5f420c02522f7b20c0ed/",
-      "dt": "2026-04-28T07:20:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cesty",
-        "jen",
-        "krůček",
-        "moře",
-        "timmyho",
-        "uvázlá",
-        "velryba",
-        "zachraňte"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -523,7 +523,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21794,
+      "bytes": 22028,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -560,11 +560,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T18:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:50:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "sport": 4,
+          "zpravy": 15,
+          "sport": 3,
           "finance": 2
         },
         "drop_counts": {
@@ -577,6 +577,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Operace \"Zachraňte Timmyho\" je u konce. Uvázlá velryba je na cestě do moře",
+            "publishedAt": "2026-04-28T07:20:00Z"
+          },
+          {
+            "title": "Tisíce příběhů o Češích stíhaných sovětskou KGB se dočkaly digitalizace",
+            "publishedAt": "2026-04-28T18:50:00Z"
+          },
           {
             "title": "USA už nejsou v pozici, aby diktovaly politiku nezávislým státům, vzkazuje Írán",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -600,14 +608,6 @@
           {
             "title": "To byl Federer? Ne, hurikán zvaný Lehečka. Čech děsí, jeho „šlupka“ oslnila Madrid",
             "publishedAt": "2026-04-28T17:52:00Z"
-          },
-          {
-            "title": "Pavel bude ve středu jednat se Zůnou o výběru nového náčelníka generálního štábu",
-            "publishedAt": "2026-04-28T11:56:00Z"
-          },
-          {
-            "title": "Na obraně se šetřit nedá, může se to vymstít, varuje prezident Pavel",
-            "publishedAt": "2026-04-28T17:16:00Z"
           }
         ]
       }

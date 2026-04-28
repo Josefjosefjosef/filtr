@@ -1,24 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T18:59:53.717198Z",
+  "ingestedAt": "2026-04-28T19:29:18.712295Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: PSG - Bayern, úvodní semifinále LM, který z týmů získá výhodu?",
+      "title": "ONLINE: PSG - Bayern 0:1, úvodní semifinále LM, Kane proměňuje penaltu",
       "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-semifinale-psg-bayern-mnichov-online-vysledem.A260428_120751_fot_pohary_tals",
-      "dt": "2026-04-28T18:45:00Z",
+      "dt": "2026-04-28T19:21:52Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "bayern",
+        "kane",
+        "penaltu",
+        "proměňuje",
         "psg",
         "semifinále",
-        "týmů",
-        "výhodu",
-        "získá",
         "úvodní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice slaví titul, centrum zaplnily tisíce lidí. V noci přivítají mistry",
+      "url": "https://www.idnes.cz/pardubice/zpravy/hokej-extraliga-utkani-pernstynske-namesti-pardubice-fanousci.A260428_165436_pardubice-zpravy_lank",
+      "dt": "2026-04-28T18:56:19Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "centrum",
+        "lidí",
+        "mistry",
+        "noci",
+        "pardubice",
+        "přivítají",
+        "slaví",
+        "tisíce",
+        "titul",
+        "zaplnily"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -226,34 +253,6 @@
         "světovou",
         "zahraje",
         "čtvrtfinále"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci hokejových Pardubic slaví titul, zaplnili náměstí. V noci přivítají vítězný tým",
-      "url": "https://www.idnes.cz/pardubice/zpravy/hokej-extraliga-utkani-pernstynske-namesti-pardubice-fanousci.A260428_165436_pardubice-zpravy_lank",
-      "dt": "2026-04-28T16:07:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fanoušci",
-        "hokejových",
-        "noci",
-        "náměstí",
-        "pardubic",
-        "přivítají",
-        "slaví",
-        "titul",
-        "tým",
-        "vítězný",
-        "zaplnili"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -801,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47194,
+      "bytes": 47131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T18:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T19:21:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,8 +853,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: PSG - Bayern, úvodní semifinále LM, který z týmů získá výhodu?",
-            "publishedAt": "2026-04-28T18:45:00Z"
+            "title": "ONLINE: PSG - Bayern 0:1, úvodní semifinále LM, Kane proměňuje penaltu",
+            "publishedAt": "2026-04-28T19:21:52Z"
+          },
+          {
+            "title": "Pardubice slaví titul, centrum zaplnily tisíce lidí. V noci přivítají mistry",
+            "publishedAt": "2026-04-28T18:56:19Z"
           },
           {
             "title": "Třinec - Pardubice 4:5. Dynamo slaví po 14 letech titul, prodloužení rozhodl Červenka",
@@ -880,10 +883,6 @@
           {
             "title": "Nevídaný polský počin. Čtvrt miliardy na charitu pomáhali vybrat i sportovci",
             "publishedAt": "2026-04-28T17:00:00Z"
-          },
-          {
-            "title": "Pogačar podruhé v sezoně poražen. Prolog na Romandii jasně ovládl Godon",
-            "publishedAt": "2026-04-28T16:56:00Z"
           }
         ]
       }

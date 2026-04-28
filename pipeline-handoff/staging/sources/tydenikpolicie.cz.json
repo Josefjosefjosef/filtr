@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-28T18:59:53.717198Z",
+  "ingestedAt": "2026-04-28T19:29:18.712295Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Strážníci v Kladně převedli početnou kachní rodinku přes silnici",
+      "url": "https://tydenikpolicie.cz/straznici-v-kladne-prevedli-pocetnou-kachni-rodinku-pres-silnici/",
+      "dt": "2026-04-28T19:02:40Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kachní",
+        "kladně",
+        "početnou",
+        "převedli",
+        "rodinku",
+        "silnici",
+        "strážníci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,30 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Srážku dvou vozů u Rumburku nepřežil jeden z řidičů",
-      "url": "https://tydenikpolicie.cz/srazku-dvou-vozu-u-rumburku-neprezil-jeden-z-ridicu/",
-      "dt": "2026-04-28T13:26:32Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dvou",
-        "jeden",
-        "nepřežil",
-        "rumburku",
-        "srážku",
-        "vozů",
-        "řidičů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -266,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15312,
+      "bytes": 15531,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -303,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:49:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T19:02:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -318,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strážníci v Kladně převedli početnou kachní rodinku přes silnici",
+            "publishedAt": "2026-04-28T19:02:40Z"
+          },
           {
             "title": "Rozčílený muž rozbil v Praze pěstí skleněnou výplň dveří odjíždějícího autobusu",
             "publishedAt": "2026-04-28T16:49:36Z"
@@ -345,10 +349,6 @@
           {
             "title": "Schvácený pes v autě v Brně přetrhl vodítko",
             "publishedAt": "2026-04-28T15:10:17Z"
-          },
-          {
-            "title": "Berounští policisté poskytovali první pomoc muži po pádu ze střechy",
-            "publishedAt": "2026-04-28T15:06:33Z"
           }
         ]
       }
