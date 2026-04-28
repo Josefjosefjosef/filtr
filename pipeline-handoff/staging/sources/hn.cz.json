@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T14:35:06.407571Z",
+  "ingestedAt": "2026-04-28T15:05:52.255849Z",
   "items": [
     {
       "section": "pocasi",
@@ -26,6 +26,37 @@
         "vstupu",
         "zákaz",
         "česka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rolnický fond bude kvůli Babišově střetu zájmů vymáhat miliony po firmách z Agrofertu. Zveřejní i analýzy, které ho k tomu vedly",
+      "url": "https://byznys.hn.cz/c1-67871750-rolnicky-fond-bude-vymahat-miliony-korun-po-firmach-z-agrofertu-analyzy-o-stretu-zajmu-andreje-babise-zverejni",
+      "dt": "2026-04-28T14:28:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "agrofertu",
+        "analýzy",
+        "babišově",
+        "firmách",
+        "fond",
+        "kvůli",
+        "miliony",
+        "rolnický",
+        "střetu",
+        "tomu",
+        "vedly",
+        "vymáhat",
+        "zveřejní",
+        "zájmů"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1136,40 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Protivníka neodradí nemocnice, ale dobře vycvičené jednotky, řekl Pavel. Síla je podle něj nejlepší způsob, jak zabránit cizí agresi",
-      "url": "https://domaci.hn.cz/c1-67871280-protivnika-neodradi-nemocnice-ale-dobre-vycvicene-jednotky-rekl-pavel-sila-je-podle-nej-nejlepsi-zpusob-jak-zabranit-cizi-agresi",
-      "dt": "2026-04-27T10:43:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "agresi",
-        "ale",
-        "cizí",
-        "dobře",
-        "jednotky",
-        "nejlepší",
-        "nemocnice",
-        "neodradí",
-        "něj",
-        "pavel",
-        "podle",
-        "protivníka",
-        "síla",
-        "vycvičené",
-        "zabránit",
-        "způsob",
-        "řekl"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1180,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184763,
+      "bytes": 184768,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1221,9 +1218,9 @@
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "zpravy": 4,
-          "finance": 32,
+          "finance": 33,
           "sport": 2,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1238,6 +1235,10 @@
           {
             "title": "Rusové nesmějí nejen do lázní, ale ani k soudu. Zákaz vstupu do Česka komplikuje rozplétání pádu ERB bank",
             "publishedAt": "2026-04-28T14:29:00Z"
+          },
+          {
+            "title": "Rolnický fond bude kvůli Babišově střetu zájmů vymáhat miliony po firmách z Agrofertu. Zveřejní i analýzy, které ho k tomu vedly",
+            "publishedAt": "2026-04-28T14:28:00Z"
           },
           {
             "title": "Proč kněz studuje ekonomii? Církev je velkým investorem směřujícím k samofinancování",
@@ -1262,10 +1263,6 @@
           {
             "title": "Policie provedla razii v Unicornu, zátah může souviset se zmizelými iPhony z kauzy Mamut",
             "publishedAt": "2026-04-28T12:31:00Z"
-          },
-          {
-            "title": "Valašská kapka pozitivní deviace. Podnikatel u Vsetína z hokeje a wellness vybudoval jedinečný resort",
-            "publishedAt": "2026-04-28T12:30:00Z"
           }
         ]
       }

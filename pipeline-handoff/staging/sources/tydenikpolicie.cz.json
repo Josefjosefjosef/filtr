@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-28T14:35:06.407571Z",
+  "ingestedAt": "2026-04-28T15:05:52.255849Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pod smyšlenými legendami měl připravit několik mužů o miliony korun",
+      "url": "https://tydenikpolicie.cz/pod-smyslenymi-legendami-mel-pripravit-nekolik-muzu-o-miliony-korun/",
+      "dt": "2026-04-28T14:39:16Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "korun",
+        "legendami",
+        "miliony",
+        "mužů",
+        "měl",
+        "několik",
+        "připravit",
+        "smyšlenými"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -244,34 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kriminalisté pátrají po totožnosti mrtvé ženy, jejíž tělo vytáhli ve Vrchlabí z řeky Labe",
-      "url": "https://tydenikpolicie.cz/kriminaliste-patraji-po-totoznosti-mrtve-zeny-jejiz-telo-vytahli-ve-vrchlabi-z-reky-labe/",
-      "dt": "2026-04-28T07:24:23Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "jejíž",
-        "kriminalisté",
-        "labe",
-        "mrtvé",
-        "pátrají",
-        "totožnosti",
-        "tělo",
-        "vrchlabí",
-        "vytáhli",
-        "řeky",
-        "ženy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16901,
+      "bytes": 16911,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T13:26:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T14:39:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pod smyšlenými legendami měl připravit několik mužů o miliony korun",
+            "publishedAt": "2026-04-28T14:39:16Z"
+          },
           {
             "title": "Srážku dvou vozů u Rumburku nepřežil jeden z řidičů",
             "publishedAt": "2026-04-28T13:26:32Z"
@@ -361,10 +362,6 @@
           {
             "title": "V Černé v Pošumaví byl nalezen u silnice opilý zraněný cyklista. Policisté hledají svědky i řidiče modrého vozidla",
             "publishedAt": "2026-04-28T08:08:53Z"
-          },
-          {
-            "title": "Překonali osm dveří a našli nelegální automaty. Celníci v Ostravě zadrželi v hernách 18 zařízení",
-            "publishedAt": "2026-04-28T07:46:53Z"
           }
         ]
       }

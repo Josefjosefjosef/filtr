@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T14:35:06.407571Z",
+  "ingestedAt": "2026-04-28T15:05:52.255849Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nový člen týmu? Zlepšovač nálady, ale i budíček. Dostál o roli otce a kajakáře",
+      "url": "https://www.idnes.cz/sport/ostatni/rychlostni-kanoistika-josef-dostal-anezka-paloudova-pred-sezonou.A260428_114904_sporty_mkou",
+      "dt": "2026-04-28T14:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "budíček",
+        "dostál",
+        "kajakáře",
+        "nový",
+        "nálady",
+        "otce",
+        "roli",
+        "týmu",
+        "zlepšovač",
+        "člen"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,33 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Emma je na vše připravená, tvrdí kanadská hvězda o Čechové. Čím vyčnívá Minnesota?",
-      "url": "https://www.idnes.cz/sport/basket/bridget-carletonova-usk-praha-wnba-minnesota-lynx-rozhovor.A260426_212051_sport-basket_czo",
-      "dt": "2026-04-27T16:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "emma",
-        "hvězda",
-        "kanadská",
-        "minnesota",
-        "připravená",
-        "tvrdí",
-        "vyčnívá",
-        "vše",
-        "čechové",
-        "čím"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45676,
+      "bytes": 45695,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T13:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T14:16:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +848,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový člen týmu? Zlepšovač nálady, ale i budíček. Dostál o roli otce a kajakáře",
+            "publishedAt": "2026-04-28T14:16:00Z"
+          },
           {
             "title": "United blízko Lize mistrů a Carrick sklízí chválu. Bude trenérem i v příští sezoně?",
             "publishedAt": "2026-04-28T13:18:00Z"
@@ -874,10 +879,6 @@
           {
             "title": "Charles Leclerc se stal novou tváří L’Oréal. Fanoušci žádají společný spot se Sainzem",
             "publishedAt": "2026-04-28T11:10:00Z"
-          },
-          {
-            "title": "Žlutá amnestie. Na šampionátu se karty budou mazat po skupinách i po čtvrtfinále",
-            "publishedAt": "2026-04-28T10:30:00Z"
           }
         ]
       }

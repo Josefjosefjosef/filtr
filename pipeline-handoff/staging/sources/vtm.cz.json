@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T14:35:06.407571Z",
+  "ingestedAt": "2026-04-28T15:05:52.255849Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,34 @@
         "serveru",
         "starý",
         "telefon",
+        "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "OneDrive pro Windows zvládne synchronizovat až milion souborů, ale jen na dostatečně výkonných počítačích",
+      "url": "https://www.zive.cz/clanky/onedrive-pro-windows-zvladne-synchronizovat-az-milion-souboru-ale-jen-na-dostatecne-vykonnych-pocitacich/sc-3-a-240878/default.aspx",
+      "dt": "2026-04-28T14:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "dostatečně",
+        "jen",
+        "milion",
+        "onedrive",
+        "počítačích",
+        "souborů",
+        "synchronizovat",
+        "výkonných",
+        "windows",
         "zvládne"
       ],
       "feedCategory": "veda",
@@ -950,31 +978,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Hry zadarmo, nebo se slevou: Festival středověku a tři hry pro PC zdarma",
-      "url": "https://doupe.zive.cz/hry-zadarmo-nebo-se-slevou-festival-stredoveku-a-tri-hry-pro-pc-zdarma",
-      "dt": "2026-04-24T05:10:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "festival",
-        "hry",
-        "nebo",
-        "slevou",
-        "středověku",
-        "tři",
-        "zadarmo",
-        "zdarma"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -985,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22515,
+      "bytes": 22606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1022,7 +1025,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T12:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T14:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1040,6 +1043,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "OneDrive pro Windows zvládne synchronizovat až milion souborů, ale jen na dostatečně výkonných počítačích",
+            "publishedAt": "2026-04-28T14:45:00Z"
           },
           {
             "title": "Samsung vyrobil první herní 6K monitor. Potrápí i GeForce RTX 5090",
@@ -1064,10 +1071,6 @@
           {
             "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
             "publishedAt": "2026-04-28T07:45:00Z"
-          },
-          {
-            "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
-            "publishedAt": "2026-04-28T06:45:00Z"
           }
         ]
       }
