@@ -3675,13 +3675,67 @@ html[data-section="tvonline"] #iuTvOnlineView{
 
 #iuTvOnlineView.iuRadioView{padding-bottom:12px}
 #iuTvOnlineView .iuSectionHeader--tvonline{margin:0 0 10px;gap:12px}
-#iuTvOnlineView .iuSectionHeader--tvonline h2{font-size:20px;font-weight:920;letter-spacing:-.022em;line-height:1.2}
 #iuTvOnlineView .iuSectionHeaderLine{height:3px;opacity:.45;border-radius:999px;background:linear-gradient(to right,color-mix(in srgb,var(--iuAccentTVOnline,#3b82f6) 65%,transparent),rgba(11,27,43,0))}
 #iuTvOnlineView>.iuSectionSubtitle{margin:0 0 16px;line-height:1.48}
 #iuTvOnlineView .iuTvOnlineGrid .iuRadioHead{margin-top:12px}
 #iuTvOnlineView .iuTvOnlineGrid .iuRadioHead:first-child{margin-top:4px}
 #iuTvOnlineView .iuRadioTitle{font-weight:800;letter-spacing:-.012em}
 #iuTvOnlineView .iuRadioLine{height:2px;opacity:.3;border-radius:999px;background:linear-gradient(to right,color-mix(in srgb,var(--iuAccentTVOnline,#3b82f6) 48%,transparent),rgba(11,27,43,0))}
+
+/* TV online — P0: 2 cols na úzkém viewportu + kompaktní karty (sdílené chip styly :is Mapy/Rádio/TV zůstávají) */
+#iuTvOnlineView .iu-tv-online-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 6px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+@media (max-width: 520px){
+  #iuTvOnlineView .iu-tv-online-grid.iuRadioGrid,
+  #iuTvOnlineView .iuRadioGrid.iuTvOnlineGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+#iuTvOnlineView .iuSectionHeader--tvonline h2.iu-tv-online-section-title{
+  font-size: 20px;
+  font-weight: 920;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+#iuTvOnlineView a.iuRadioChip.iu-tv-online-card{
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  gap: 3px;
+  min-height: 118px;
+  height: auto;
+  padding: 11px 10px;
+  transition: none;
+}
+#iuTvOnlineView a.iuRadioChip.iu-tv-online-card:active{
+  transform: scale(0.985);
+}
+#iuTvOnlineView .iu-tv-online-card-title{
+  font-size: 15px;
+  font-weight: 680;
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+}
+#iuTvOnlineView .iu-tv-online-card-subtitle{
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.78;
+  line-height: 1.2;
+}
+@media (max-width: 767px) {
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView.iuRadioView{
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space) + 8px) !important;
+  }
+}
 
 .iuRadioGrid{
   display: grid;
