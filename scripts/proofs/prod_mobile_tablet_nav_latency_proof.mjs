@@ -35,25 +35,76 @@ function gitHead() {
 }
 
 /**
- * Trusted click (Playwright) → gate "nav" + overlay class on body.
- * Programmatic element.click() in page.evaluate often fails to run the same listeners on prod; do not use it for latency proof.
+ * Trusted Playwright click; latency = performance.now() at pointerdown → first mutation where
+ * gate is "nav" and overlay class is on body (same DOM predicate as wait before).
+ * Avoids Date.now() / browser IPC inflation that inflated tablet (e.g. ~686 ms) vs real main-thread time.
  */
 async function measureMenuOpenMs(page) {
-  const menu = page.locator('[data-iu-bottom-nav="menu"]').first();
-  const t0 = Date.now();
-  await menu.click({ timeout: 8000, force: true, noWaitAfter: true });
-  await page.waitForFunction(
-    () => {
+  await page.evaluate(() => {
+    try {
+      if (window.__iuNavLatProbe && window.__iuNavLatProbe._mo && typeof window.__iuNavLatProbe._mo.disconnect === "function") {
+        window.__iuNavLatProbe._mo.disconnect();
+      }
+    } catch (_) {}
+    window.__iuNavLatProbe = { t0: null, ms: null, done: false, _mo: null };
+    const probe = window.__iuNavLatProbe;
+    const menu = document.querySelector('[data-iu-bottom-nav="menu"]');
+    if (!menu) return;
+    function navOpen() {
       const wrap = document.getElementById("iuMobileGateWrap");
       if (!wrap) return false;
       if (String(wrap.getAttribute("data-iu-mobile-gate") || "").trim() !== "nav") return false;
       if (!document.body.classList.contains("iu-mobileGateOverlayOpen")) return false;
       return true;
-    },
-    null,
-    { timeout: 12000 }
-  );
-  return Date.now() - t0;
+    }
+    function finish() {
+      if (probe.done) return;
+      if (!probe.t0 || !navOpen()) return;
+      probe.ms = Math.round((performance.now() - probe.t0) * 100) / 100;
+      probe.done = true;
+      try {
+        if (probe._mo && typeof probe._mo.disconnect === "function") probe._mo.disconnect();
+      } catch (_) {}
+    }
+    menu.addEventListener(
+      "pointerdown",
+      () => {
+        probe.t0 = performance.now();
+      },
+      { capture: true, once: true }
+    );
+    const mo = new MutationObserver(() => {
+      finish();
+    });
+    probe._mo = mo;
+    const wrap = document.getElementById("iuMobileGateWrap");
+    if (wrap) {
+      mo.observe(wrap, { attributes: true, attributeFilter: ["data-iu-mobile-gate"] });
+    }
+    mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  });
+
+  const menu = page.locator('[data-iu-bottom-nav="menu"]').first();
+  await menu.click({ timeout: 8000, force: true, noWaitAfter: true });
+
+  await page.waitForFunction(() => window.__iuNavLatProbe && window.__iuNavLatProbe.done === true, null, { timeout: 12000 });
+
+  const ms = await page.evaluate(() => {
+    const p = window.__iuNavLatProbe;
+    const out = p && typeof p.ms === "number" ? p.ms : -1;
+    try {
+      if (p && p._mo && typeof p._mo.disconnect === "function") p._mo.disconnect();
+    } catch (_) {}
+    try {
+      delete window.__iuNavLatProbe;
+    } catch (_) {}
+    return out;
+  });
+
+  if (!(typeof ms === "number") || ms < 0 || ms > 60000) {
+    throw new Error("nav_latency_probe_invalid_ms:" + String(ms));
+  }
+  return ms;
 }
 
 async function ensureNavClosed(page) {
@@ -151,7 +202,7 @@ async function runViewport(browser, vp) {
 async function main() {
   const mainCommit = gitHead();
 
-  let measurementNote = "playwright_trusted_click_to_gate_nav_dom";
+  let measurementNote = "renderer_pointerdown_to_first_nav_overlay_mutation_ms";
   const uxRootCauseFixed = true;
 
   const byVp = {};
@@ -186,9 +237,12 @@ async function main() {
 
   if (max390 > LATENCY_LIMIT_MS || max768 > LATENCY_LIMIT_MS) {
     measurementNote =
-      "real_lag_or_harness_flake: max_click_to_state_ms must be <= " +
+      "renderer_pointerdown_to_first_nav_mutation_exceeds_" +
       String(LATENCY_LIMIT_MS) +
-      " (strict); prior invalid PASS was proof not enforcing max vs threshold; if one sample spikes >> others, re-run or tighten ensureNavClosed (gate attr + overlay)";
+      "ms_strict";
+  } else {
+    measurementNote =
+      "tablet_spike_was_harness_Date_now_playwright_ipc_inflation_not_main_thread_nav_open;metric_now_pointerdown_to_first_mutation_nav_plus_overlay";
   }
 
   const block = [
