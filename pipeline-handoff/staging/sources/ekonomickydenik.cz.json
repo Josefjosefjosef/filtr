@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T13:34:36.878897Z",
+  "ingestedAt": "2026-04-28T14:04:44.231125Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rozdělit ČEZ je chyba. Ratingová agentura varuje před poklesem zisku i vyšším zadlužením",
+      "url": "https://ekonomickydenik.cz/rozdelit-cez-chyba-ratingova-agentura-varuje/",
+      "dt": "2026-04-28T13:48:17Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "agentura",
+        "chyba",
+        "poklesem",
+        "ratingová",
+        "rozdělit",
+        "varuje",
+        "vyšším",
+        "zadlužením",
+        "zisku",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -751,31 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otázka, která trápí Evropu: Kolik plynu nasyslíme před příchodem zimy?",
-      "url": "https://ekonomickydenik.cz/kolik-plynu-nasyslime-zima/",
-      "dt": "2026-04-27T05:15:40Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evropu",
-        "kolik",
-        "nasyslíme",
-        "otázka",
-        "plynu",
-        "příchodem",
-        "trápí",
-        "zimy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72356,
+      "bytes": 72374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T13:02:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T13:48:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -840,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozdělit ČEZ je chyba. Ratingová agentura varuje před poklesem zisku i vyšším zadlužením",
+            "publishedAt": "2026-04-28T13:48:17Z"
+          },
           {
             "title": "Kdo má dostat dotace? Český ministr bojoval za velké hráče, kteří zajistí potraviny všem",
             "publishedAt": "2026-04-28T13:02:03Z"
@@ -867,10 +873,6 @@
           {
             "title": "Konec drahé elektřiny? Unie chystá daňovou revoluci, která znevýhodní plyn i benzin",
             "publishedAt": "2026-04-28T10:40:51Z"
-          },
-          {
-            "title": "Nadskočil a vykolejil. Strojvedoucího ráno oslnilo slunce",
-            "publishedAt": "2026-04-28T10:35:31Z"
           }
         ]
       }

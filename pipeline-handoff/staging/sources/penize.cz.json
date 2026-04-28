@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-28T13:34:36.878897Z",
+  "ingestedAt": "2026-04-28T14:04:44.231125Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "J&T spouští nový fond pro kvalifikované investory J&T Arch II",
+      "url": "https://www.penize.cz/fondy-kvalifikovanych-investoru-fki/489030-jt-novy-fond",
+      "dt": "2026-04-28T15:45:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "arch",
+        "fond",
+        "investory",
+        "kvalifikované",
+        "nový",
+        "spouští"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -480,30 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kde se bere sebevědomí. A proč rozhoduje víc, než si myslíte",
-      "url": "https://www.penize.cz/spotrebitel/488223-kde-se-bere-sebevedomi-a-proc-rozhoduje-vic-nez-si-myslite",
-      "dt": "2026-04-23T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "bere",
-        "myslíte",
-        "než",
-        "proč",
-        "rozhoduje",
-        "sebevědomí",
-        "víc"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18399,
+      "bytes": 18236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,11 +550,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T13:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:45:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 1,
           "zpravy": 6,
-          "finance": 13,
+          "finance": 12,
           "zdravi": 1
         },
         "drop_counts": {
@@ -568,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "J&T spouští nový fond pro kvalifikované investory J&T Arch II",
+            "publishedAt": "2026-04-28T15:45:00Z"
+          },
           {
             "title": "Další zdražení. Maximální ceny benzinu a nafty na středu 29. dubna",
             "publishedAt": "2026-04-28T13:59:00Z"
@@ -595,10 +599,6 @@
           {
             "title": "Stropy na ceny benzinu a nafty budou i v květnu, oznámila Schillerová",
             "publishedAt": "2026-04-27T12:33:00Z"
-          },
-          {
-            "title": "Globus rozveze nákup do dalšího města. V květnu přidá i novinku v aplikaci",
-            "publishedAt": "2026-04-27T08:00:00Z"
           }
         ]
       }

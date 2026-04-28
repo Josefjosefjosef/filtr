@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T13:34:36.878897Z",
+  "ingestedAt": "2026-04-28T14:04:44.231125Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Německo plánuje zdanit sladké nápoje. Podraží i odvody z alkoholu a cigaret",
+      "url": "https://www.denik.cz/staty-eu/nemecko-rozpocet-dane-alkohol-tabak-sladke-napoje.html",
+      "dt": "2026-04-28T13:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alkoholu",
+        "cigaret",
+        "nápoje",
+        "německo",
+        "odvody",
+        "plánuje",
+        "podraží",
+        "sladké",
+        "zdanit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,30 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otevírací doba obchodů 1. a 8. května: Který svátek je zavřeno, co rozvážky",
-      "url": "https://www.denik.cz/ekonomika/oteviraci-doba-obchodu-patek-svatek-prace-1-kvetna-den-osvobozeni-8-kvetna.html",
-      "dt": "2026-04-28T03:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "doba",
-        "května",
-        "obchodů",
-        "otevírací",
-        "rozvážky",
-        "svátek",
-        "zavřeno"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28917,
+      "bytes": 28501,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T13:19:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 21,
-          "finance": 3,
+          "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -710,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Německo plánuje zdanit sladké nápoje. Podraží i odvody z alkoholu a cigaret",
+            "publishedAt": "2026-04-28T13:19:00Z"
+          },
           {
             "title": "Na Opálené v Beskydech vzniká nový bike park. Takto vypadá z výšky",
             "publishedAt": "2026-04-28T13:00:00Z"
@@ -737,10 +743,6 @@
           {
             "title": "Zdraví, nebo obrana? Babiš u supernemocnice zkouší italskou cestu",
             "publishedAt": "2026-04-28T11:12:00Z"
-          },
-          {
-            "title": "Čápa na Semilsku zabil proud z elektrického vedení. Město chce nápravu",
-            "publishedAt": "2026-04-28T11:05:00Z"
           }
         ]
       }
