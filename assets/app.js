@@ -25298,20 +25298,17 @@ function buildVideoAsArticleCard(it) {
         if (!/^https:\/\//i.test(u)) continue;
         const title = escapeHtml(it.title);
         const label = escapeHtml(it.label);
-        const badge = escapeHtml(it.type || "ODKAZ");
         const aria = escapeHtml(String(it.title || "Externí odkaz"));
         parts.push(
           '<a class="iuTvPgHit iuTvPgHit--c" href="' +
             escapeHtml(u) +
             '" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="' +
             aria +
-            '"><span class="iuTvPgBadge">' +
-            badge +
-            '</span><span class="iuTvPgCard__name">' +
+            '"><span class="iuTvPgCard__name">' +
             title +
             '</span><span class="iuTvPgCard__hint">' +
             label +
-            '</span><span class="iuTvPgCard__newtab">Otevře se v nové kartě</span></a>'
+            "</span></a>"
         );
       }
       host.innerHTML = parts.join("");
@@ -25328,18 +25325,18 @@ function buildVideoAsArticleCard(it) {
       title: "Film",
       items: [
         {
-          title: "Česká televize (filmy)",
-          hint: "Oficiální TV program — výběr stanice až na stránce ČT",
+          title: "Česká televize",
+          hint: "Oficiální TV program ČT",
           url: "https://www.ceskatelevize.cz/tv-program/",
         },
         {
-          title: "Nova Cinema",
-          hint: "Přehled skupiny Nova (program včetně Nova Cinema)",
+          title: "Nova",
+          hint: "TV program Nova Group",
           url: "https://tv.nova.cz/program",
         },
         {
-          title: "Seznam TV (filmy)",
-          hint: "Veřejný přehled podle nabídky Seznam TV",
+          title: "Seznam TV",
+          hint: "Veřejný TV program",
           url: "https://tv.seznam.cz/",
         },
       ],
@@ -25347,7 +25344,7 @@ function buildVideoAsArticleCard(it) {
     serial: {
       title: "Seriál",
       items: [
-        { title: "Česká televize", hint: "Oficiální TV program", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Česká televize", hint: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/" },
         { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
         {
           title: "Prima",
@@ -25363,7 +25360,7 @@ function buildVideoAsArticleCard(it) {
       items: [
         {
           title: "Česká televize",
-          hint: "Oficiální TV program (sport v rámci přehledu stanic)",
+          hint: "Oficiální TV program ČT",
           url: "https://www.ceskatelevize.cz/tv-program/",
         },
         { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
@@ -25375,16 +25372,16 @@ function buildVideoAsArticleCard(it) {
       items: [
         {
           title: "Česká televize",
-          hint: "Oficiální TV program (zprávy přes obsah stanic)",
+          hint: "Oficiální TV program ČT",
           url: "https://www.ceskatelevize.cz/tv-program/",
         },
-        { title: "Seznam TV", hint: "Veřejný přehled", url: "https://tv.seznam.cz/" },
+        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
       ],
     },
     deti: {
       title: "Děti",
       items: [
-        { title: "Česká televize", hint: "Oficiální TV program", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Česká televize", hint: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/" },
         { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
       ],
     },
@@ -25455,14 +25452,7 @@ function buildVideoAsArticleCard(it) {
   function iuTvProgramApplyTimeHighlight() {
     try {
       const tv = document.getElementById("iuTvProgramView");
-      if (!tv) return;
-      const h = new Date().getHours();
-      let v = "serial-evening";
-      if (h >= 6 && h < 12) v = "zpravy";
-      else if (h >= 12 && h < 18) v = "zabava";
-      else if (h >= 18 && h < 23) v = "film-evening";
-      else v = "serial-evening";
-      tv.setAttribute("data-iu-tv-time-hl", v);
+      if (tv) tv.removeAttribute("data-iu-tv-time-hl");
     } catch (_) {}
   }
 
@@ -25666,35 +25656,35 @@ function buildVideoAsArticleCard(it) {
           '<a class="iuTvProgramChoiceOverlay__row" href="' +
             escapeHtml(IU_TV_MAIN_CT) +
             '" target="_blank" rel="noopener noreferrer" aria-label="' +
-            escapeHtml("Otevřít hlavní TV přehled") +
+            escapeHtml("Česká televize") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
-            escapeHtml("Otevřít hlavní TV přehled") +
+            escapeHtml("Česká televize") +
             '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Česká televize — oficiální TV program") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+            escapeHtml("Oficiální TV program ČT") +
+            "</span></a>"
         );
         parts.push(
           '<a class="iuTvProgramChoiceOverlay__row" href="' +
             escapeHtml(IU_TV_MAIN_SEZNAM) +
             '" target="_blank" rel="noopener noreferrer" aria-label="' +
-            escapeHtml("Otevřít hlavní TV program") +
+            escapeHtml("Seznam TV") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
-            escapeHtml("Otevřít hlavní TV program") +
+            escapeHtml("Seznam TV") +
             '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Seznam TV — veřejný přehled") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+            escapeHtml("Veřejný TV program") +
+            "</span></a>"
         );
       } else {
         parts.push(
           '<a class="iuTvProgramChoiceOverlay__row" href="' +
             escapeHtml(IU_TV_MAIN_CT) +
             '" target="_blank" rel="noopener noreferrer" aria-label="' +
-            escapeHtml("Otevřít hlavní TV přehled") +
+            escapeHtml("Česká televize") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
-            escapeHtml("Otevřít hlavní TV přehled") +
+            escapeHtml("Česká televize") +
             '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Česká televize — oficiální TV program") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span></a>'
+            escapeHtml("Oficiální TV program ČT") +
+            "</span></a>"
         );
         const seen = {};
         seen[IU_TV_MAIN_CT] = true;
@@ -25719,7 +25709,7 @@ function buildVideoAsArticleCard(it) {
               t +
               '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
               h +
-              '</span><span class="iuTvProgramChoiceOverlay__rowMeta">Otevře se v nové kartě</span>' +
+              "</span>" +
               warn +
               "</a>"
           );
