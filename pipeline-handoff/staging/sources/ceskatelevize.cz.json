@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T07:24:35.575924Z",
+  "ingestedAt": "2026-04-28T07:50:33.433400Z",
   "items": [
     {
       "section": "aktualne",
@@ -780,6 +780,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Obhájci z Oklahomy jsou v druhém kole, Denver odvrátil konec sezony",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/obhajci-z-oklahomy-jsou-v-druhem-kole-denver-odvratil-konec-sezony-156491",
+      "dt": "2026-04-28T07:36:17Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "denver",
+        "druhém",
+        "kole",
+        "konec",
+        "obhájci",
+        "odvrátil",
+        "oklahomy",
+        "sezony"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-nezastavil-pittsburgh-penguins-si-vynutili-sesty-zapas-vegas-srovnalo-serii-s-utahem-156490",
       "dt": "2026-04-28T06:15:46Z",
@@ -1500,31 +1525,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Muži poprvé běželi maraton pod dvě hodiny. Zvítězil Sawe",
-      "url": "https://sport.ceskatelevize.cz/clanek/atletika/muzi-poprve-bezeli-maraton-pod-dve-hodiny-zivetil-sawe-156460",
-      "dt": "2026-04-26T10:45:37Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "běželi",
-        "dvě",
-        "hodiny",
-        "maraton",
-        "muži",
-        "poprvé",
-        "sawe",
-        "zvítězil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1653,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38395,
+      "bytes": 38374,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1690,7 +1690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:15:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:36:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1705,6 +1705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obhájci z Oklahomy jsou v druhém kole, Denver odvrátil konec sezony",
+            "publishedAt": "2026-04-28T07:36:17Z"
+          },
           {
             "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
             "publishedAt": "2026-04-28T06:15:46Z"
@@ -1732,10 +1736,6 @@
           {
             "title": "U Ledecké nebudou pokračovat lyžařští trenéři Gamper a Bank",
             "publishedAt": "2026-04-27T11:20:40Z"
-          },
-          {
-            "title": "Petrovický se stal oficiálně trenérem Motoru. Pomůže mu Jiruš, který skončil ve Spartě",
-            "publishedAt": "2026-04-27T11:04:20Z"
           }
         ]
       }
@@ -1747,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77215,
+      "bytes": 77209,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
