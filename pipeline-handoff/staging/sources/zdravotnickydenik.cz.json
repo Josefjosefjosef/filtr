@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Evropě hrozí nedostatek léků, varují farmaceutičtí obři. Ženou Brusel k soudu kvůli směrnici",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/evropa-nedostatek-leku-farmaceuticke-firmy-eu-smernice/",
+      "dt": "2026-04-28T11:24:41Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "brusel",
+        "evropě",
+        "farmaceutičtí",
+        "hrozí",
+        "kvůli",
+        "léků",
+        "nedostatek",
+        "obři",
+        "směrnici",
+        "soudu",
+        "varují",
+        "ženou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,31 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Posedlost pletí místo hraček: Trend u dětí, který děsí odborníky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/posedlost-pleti-misto-hracek-trend-u-deti/",
-      "dt": "2026-04-27T12:20:15Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "děsí",
-        "dětí",
-        "hraček",
-        "místo",
-        "odborníky",
-        "pletí",
-        "posedlost",
-        "trend"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88228,
+      "bytes": 88707,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:01:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:24:41Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -326,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropě hrozí nedostatek léků, varují farmaceutičtí obři. Ženou Brusel k soudu kvůli směrnici",
+            "publishedAt": "2026-04-28T11:24:41Z"
+          },
           {
             "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
             "publishedAt": "2026-04-28T10:01:52Z"
@@ -353,10 +361,6 @@
           {
             "title": "Duškov: Takto změníme placení zdravotní péče. Nemáme licenci na druhé Lourdy",
             "publishedAt": "2026-04-27T15:13:06Z"
-          },
-          {
-            "title": "Pozor na první den v nové práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
-            "publishedAt": "2026-04-27T14:12:12Z"
           }
         ]
       }

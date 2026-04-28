@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Svaz průmyslu a dopravy podporuje Národní očkovací strategii",
+      "url": "https://www.zdravezpravy.cz/2026/04/28/svaz-prumyslu-a-dopravy-cr-podporuje-narodni-ockovaci-strategii/",
+      "dt": "2026-04-28T11:15:31Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "dopravy",
+        "národní",
+        "očkovací",
+        "podporuje",
+        "průmyslu",
+        "strategii",
+        "svaz"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,30 +488,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Komentář: Majetkový test pro domácí pečující? Asi se zbláznili",
-      "url": "https://www.zdravezpravy.cz/2026/04/20/komentar-at-zije-ustavni-pece-na-vecne-casy/",
-      "dt": "2026-04-20T10:00:51Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "asi",
-        "domácí",
-        "komentář",
-        "majetkový",
-        "pečující",
-        "test",
-        "zbláznili"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +498,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 201441,
+      "bytes": 195616,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +535,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:37:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:15:31Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -550,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svaz průmyslu a dopravy podporuje Národní očkovací strategii",
+            "publishedAt": "2026-04-28T11:15:31Z"
+          },
           {
             "title": "Nová pravidla pro školní jídelny se odkládají o další rok",
             "publishedAt": "2026-04-28T07:37:21Z"
@@ -577,10 +581,6 @@
           {
             "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
             "publishedAt": "2026-04-25T09:00:22Z"
-          },
-          {
-            "title": "Nákaz dengue rychle přibývá. Lidé si je vozí z dovolených",
-            "publishedAt": "2026-04-24T04:16:21Z"
           }
         ]
       }

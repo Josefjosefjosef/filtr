@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mění se pravidla švarcsystému. Rozhodnout o něm může jediný detail",
+      "url": "https://ekonomickydenik.cz/meni-se-pravidla-svarcsystemu/",
+      "dt": "2026-04-28T11:20:34Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "detail",
+        "jediný",
+        "mění",
+        "něm",
+        "pravidla",
+        "rozhodnout",
+        "švarcsystému"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,32 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Algoritmus ruského zmaru: Co je největší zbraní Moskvy? A kam ještě zamíří?",
-      "url": "https://ekonomickydenik.cz/rusky-algoritmus-zmaru-mozne-cile/",
-      "dt": "2026-04-26T11:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "algoritmus",
-        "ještě",
-        "kam",
-        "moskvy",
-        "největší",
-        "ruského",
-        "zamíří",
-        "zbraní",
-        "zmaru"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70825,
+      "bytes": 70744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:20:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -843,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mění se pravidla švarcsystému. Rozhodnout o něm může jediný detail",
+            "publishedAt": "2026-04-28T11:20:34Z"
+          },
           {
             "title": "Kotví u vás ruské lodě s kradeným obilím. Zelenskyj kritizuje Izrael",
             "publishedAt": "2026-04-28T11:00:34Z"
@@ -870,10 +872,6 @@
           {
             "title": "Dojde k omezení letů? Smartwings jednají s piloty o snížení úvazků",
             "publishedAt": "2026-04-28T08:30:03Z"
-          },
-          {
-            "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
-            "publishedAt": "2026-04-28T06:19:00Z"
           }
         ]
       }

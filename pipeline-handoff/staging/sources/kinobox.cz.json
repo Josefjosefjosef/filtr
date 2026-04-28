@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Z Polabí odchází oblíbená postava. Anonymní udání zásadně zatřese dějem",
+      "url": "https://www.kinobox.cz/clanky/serialy/53161-z-polabi-odchazi-oblibena-postava-anonymni-udani-zasadne-zatrese-dejem",
+      "dt": "2026-04-28T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "anonymní",
+        "dějem",
+        "oblíbená",
+        "odchází",
+        "polabí",
+        "postava",
+        "udání",
+        "zatřese",
+        "zásadně"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -529,33 +555,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Amélie z Montmartru slaví 25 let. Režisérova šílená poetika zafungovala až v romantické komedii",
-      "url": "https://www.kinobox.cz/clanky/tema/53000-amelie-z-montmartru-slavi-25-let-reziserova-silena-poetika-zafungovala-az-v-romanticke-komedii",
-      "dt": "2026-04-25T13:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "amélie",
-        "komedii",
-        "let",
-        "montmartru",
-        "poetika",
-        "režisérova",
-        "romantické",
-        "slaví",
-        "zafungovala",
-        "šílená"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -566,7 +565,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27845,
+      "bytes": 27803,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -603,7 +602,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -618,6 +617,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z Polabí odchází oblíbená postava. Anonymní udání zásadně zatřese dějem",
+            "publishedAt": "2026-04-28T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Šéfová na zabití a život v troskách? Wanted je ultimátní terapie pro každého úředníka",
             "publishedAt": "2026-04-28T10:00:00Z"
@@ -645,10 +648,6 @@
           {
             "title": "TV sledovanost: Buldok z Poděbrad se rozloučil na vrcholu. Novinka Jiřího Stracha totálně propadla",
             "publishedAt": "2026-04-27T12:00:00Z"
-          },
-          {
-            "title": "Ulice odhalí pachatele drogového útoku. Po velké rvačce musí zasáhnout policie",
-            "publishedAt": "2026-04-27T11:00:00Z"
           }
         ]
       }

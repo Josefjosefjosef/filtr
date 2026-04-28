@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Řím z Prahy v červenci. Letenky od 1 199 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/rim-z-prahy-v-cervenci",
+      "dt": "2026-04-28T11:09:19Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "199",
+        "letenky",
+        "prahy",
+        "červenci",
+        "řím"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -476,32 +498,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Chorvatsko z Vídně: Dubrovník, Pula i Zadar před letní sezónou. Letenky od 733 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/chorvatsko-z-vidne-dubrovnik-pula-i-zadar-pred-sezonou",
-      "dt": "2026-04-22T10:32:35Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "733",
-        "chorvatsko",
-        "dubrovník",
-        "letenky",
-        "letní",
-        "pula",
-        "sezónou",
-        "vídně",
-        "zadar"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +508,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 43241,
+      "bytes": 43380,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +545,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T09:16:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:09:19Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -564,6 +560,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řím z Prahy v červenci. Letenky od 1 199 Kč",
+            "publishedAt": "2026-04-28T11:09:19Z"
+          },
           {
             "title": "Tropický Hainan z Prahy přímým letem. Letenky od 14 160 Kč",
             "publishedAt": "2026-04-28T09:16:48Z"
@@ -591,10 +591,6 @@
           {
             "title": "Rumunský Temešvár po celý červen z Prahy. Letenky od 898 Kč",
             "publishedAt": "2026-04-27T07:13:02Z"
-          },
-          {
-            "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
-            "publishedAt": "2026-04-24T19:12:28Z"
           }
         ]
       }

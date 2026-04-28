@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Valve vysvětluje, proč Steam Controller vyjde dříve než Steam Machine - INDIAN",
+      "url": "https://indian-tv.cz/clanek/valve-vysvetluje-proc-steam-controller-vyjde-drive-nez-ze625a",
+      "dt": "2026-04-28T11:26:08Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "controller",
+        "dříve",
+        "indian",
+        "machine",
+        "než",
+        "proč",
+        "steam",
+        "valve",
+        "vyjde",
+        "vysvětluje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1042,32 +1069,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Xbox přiznává problémy, mění směr a přehodnotí přístup k exkluzivitě - INDIAN",
-      "url": "https://indian-tv.cz/clanek/xbox-priznava-problemy-a-meni-smer-14swug",
-      "dt": "2026-04-24T05:50:18Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "exkluzivitě",
-        "indian",
-        "mění",
-        "problémy",
-        "přehodnotí",
-        "přiznává",
-        "přístup",
-        "směr",
-        "xbox"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1078,7 +1079,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211105,
+      "bytes": 209801,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1115,7 +1116,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:50:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:26:08Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1131,6 +1132,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Valve vysvětluje, proč Steam Controller vyjde dříve než Steam Machine - INDIAN",
+            "publishedAt": "2026-04-28T11:26:08Z"
+          },
           {
             "title": "Alien: Isolation 2 nebude pohánět interní technologie, ale Unreal Engine 5 - INDIAN",
             "publishedAt": "2026-04-28T08:50:30Z"
@@ -1158,10 +1163,6 @@
           {
             "title": "Zažijte Little Nightmares ve VR! - recenze Altered Echoes - INDIAN",
             "publishedAt": "2026-04-27T17:17:00Z"
-          },
-          {
-            "title": "Xbox přiveze na Summer Game Fest několik her od tvůrců z celého světa - INDIAN",
-            "publishedAt": "2026-04-27T16:00:00Z"
           }
         ]
       }

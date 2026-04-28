@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Podívejte se na srovnání mezi Assassin's Creed Black Flag Resynced a originálem",
+      "url": "https://zing.cz/article/podivejte-se-na-srovnani-mezi-assassin-s-creed-black-flag-resynced-a-originalem",
+      "dt": "2026-04-28T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "assassin",
+        "black",
+        "creed",
+        "flag",
+        "originálem",
+        "podívejte",
+        "resynced",
+        "srovnání"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -956,33 +981,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Akce Gallipoli z období první světové války obdržela přesné datum vydání",
-      "url": "https://zing.cz/article/akce-gallipoli-z-obdobi-prvni-svetove-valky-obdrzela-presne-datum-vydani",
-      "dt": "2026-04-23T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "akce",
-        "datum",
-        "gallipoli",
-        "období",
-        "obdržela",
-        "první",
-        "přesné",
-        "světové",
-        "vydání",
-        "války"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -993,7 +991,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125116,
+      "bytes": 125139,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1030,11 +1028,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 39
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1046,6 +1044,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podívejte se na srovnání mezi Assassin's Creed Black Flag Resynced a originálem",
+            "publishedAt": "2026-04-28T10:00:00Z"
+          },
           {
             "title": "Sportovní série EA Sports UFC se vrací, známe datum vydání",
             "publishedAt": "2026-04-28T08:00:00Z"
@@ -1073,10 +1075,6 @@
           {
             "title": "Fanoušci hardcore stříleček se dočkali nové hry zasazené do studené války",
             "publishedAt": "2026-04-27T14:00:00Z"
-          },
-          {
-            "title": "Ubisoft má chystat další remake ze série Assassin's Creed",
-            "publishedAt": "2026-04-27T12:00:00Z"
           }
         ]
       }

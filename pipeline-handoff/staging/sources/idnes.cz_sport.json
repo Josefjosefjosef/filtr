@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Charles Leclerc se stal novou tváří L’Oréal. Fanoušci žádají společný spot se Sainzem",
+      "url": "https://www.idnes.cz/sport/trendy/charles-leclerc-se-stal-novou-tvari-l-oreal-fanousci-zadaji-spolecny-spot-se-sainzem.A260428_111111_trendy_blah",
+      "dt": "2026-04-28T11:10:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "charles",
+        "fanoušci",
+        "leclerc",
+        "novou",
+        "oréal",
+        "sainzem",
+        "společný",
+        "spot",
+        "stal",
+        "tváří",
+        "žádají"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -753,32 +781,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Posily z NHL na MS: přehlídka hvězd v útoku Kanady, dorazit má také Celebrini",
-      "url": "https://www.idnes.cz/hokej/ms-2026/posily-z-nhl-finsko-kanada-usa-barkov.A260417_090517_nhl_ivt",
-      "dt": "2026-04-27T14:48:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "celebrini",
-        "dorazit",
-        "hvězd",
-        "kanady",
-        "nhl",
-        "posily",
-        "přehlídka",
-        "také",
-        "útoku"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45823,
+      "bytes": 45857,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:10:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Charles Leclerc se stal novou tváří L’Oréal. Fanoušci žádají společný spot se Sainzem",
+            "publishedAt": "2026-04-28T11:10:00Z"
+          },
           {
             "title": "Žlutá amnestie. Na šampionátu se karty budou mazat po skupinách i po čtvrtfinále",
             "publishedAt": "2026-04-28T10:30:00Z"
@@ -868,10 +874,6 @@
           {
             "title": "Obhájci titulu z Oklahoma City slaví rychlý postup, Denver odvrátil vyřazení",
             "publishedAt": "2026-04-28T07:18:00Z"
-          },
-          {
-            "title": "Ty vole, Alby, já brečím! Šlégr o baráži, přebírání klubu i novém stadionu",
-            "publishedAt": "2026-04-28T07:10:00Z"
           }
         ]
       }

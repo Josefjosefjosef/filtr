@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-04-28T11:04:32.335334Z",
+  "ingestedAt": "2026-04-28T11:34:53.070680Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ulice: Tohle se Vladimírovi líbit nebude. Naty a Erik se poprvé políbí a budou přistiženi",
+      "url": "https://www.vtelce.cz/ulice-tohle-se-vladimirovi-libit-nebude-naty-a-erik-se-poprve-polibi-a-budou-pristizeni/",
+      "dt": "2026-04-28T11:06:47Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "erik",
+        "líbit",
+        "naty",
+        "nebude",
+        "políbí",
+        "poprvé",
+        "přistiženi",
+        "tohle",
+        "ulice",
+        "vladimírovi"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -258,33 +285,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Homolka a tobolka: Zničený scénář cenzurou, sázka o šampaňské a skryté těhotenství na place",
-      "url": "https://www.vtelce.cz/homolka-a-tobolka-zniceny-scenar-cenzurou-sazka-o-sampanske-a-skryte-tehotenstvi-na-place/",
-      "dt": "2026-04-26T11:55:07Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "cenzurou",
-        "homolka",
-        "place",
-        "scénář",
-        "skryté",
-        "sázka",
-        "tobolka",
-        "těhotenství",
-        "zničený",
-        "šampaňské"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -295,8 +295,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 89473,
-      "reason": "",
+      "bytes": 84283,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -332,7 +332,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:24:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:06:47Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -347,6 +347,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ulice: Tohle se Vladimírovi líbit nebude. Naty a Erik se poprvé políbí a budou přistiženi",
+            "publishedAt": "2026-04-28T11:06:47Z"
+          },
           {
             "title": "7 pádů Honzy Dědka: Láska úspěšných sportovců, náročná práce ve vězení a řešit se bude i nečekané předvolání na venerologii",
             "publishedAt": "2026-04-28T08:24:19Z"
@@ -374,10 +378,6 @@
           {
             "title": "Rivalové: Manželka prodaná za milion, Hunt s pěti tisíci ženami v posteli a drastické hubnutí Chrise Hemswortha",
             "publishedAt": "2026-04-26T17:11:38Z"
-          },
-          {
-            "title": "Ulice: Napětí vrcholí. Konečně bude odhalen pachatel kvůli chybě",
-            "publishedAt": "2026-04-26T16:44:06Z"
           }
         ]
       }
