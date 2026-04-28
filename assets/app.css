@@ -21435,3 +21435,38 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     fill: none !important;
   }
 }
+
+/* P0 MindMenu (≤1024px): gear + social — žádný „karty“ wrapper (shadow/bg); desktop min-width 1025px beze změny. */
+@media (max-width: 1024px){
+  #iuMindMenuView .iu-mailbox-row .iu-mailbox-gear,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-row .iu-mailbox-gear,
+  body .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-gear,
+  body .rightCol .mindMenu .iu-mailbox-row .iu-mailbox-gear,
+  #iuMindMenuView .iu-mailbox-row .iu-pill-social-slot,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-row .iu-pill-social-slot,
+  body .layout > aside.accordionCol .mindMenu .iu-mailbox-row .iu-pill-social-slot,
+  body .rightCol .mindMenu .iu-mailbox-row .iu-pill-social-slot,
+  #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger,
+  #iuMobileGatePanelTools #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger,
+  body .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger,
+  body .rightCol .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger{
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    pointer-events: auto;
+  }
+  #iuMindMenuView .iu-pill-social-icon.iu-social-ios40,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-icon.iu-social-ios40,
+  body .layout > aside.accordionCol .mindMenu .iu-pill-social-icon.iu-social-ios40,
+  body .rightCol .mindMenu .iu-pill-social-icon.iu-social-ios40{
+    box-shadow: none !important;
+  }
+  #iuMindMenuView .iu-mailbox-gear,
+  #iuMindMenuView .iu-pill-social-icon,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-gear,
+  #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-icon{
+    box-shadow: none !important;
+  }
+}
