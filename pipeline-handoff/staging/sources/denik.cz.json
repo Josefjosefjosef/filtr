@@ -1,12 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Takový propad Česko ještě nezažilo. Češi vypili nejméně piva v dějinách",
+      "url": "https://www.denik.cz/ekonomika/ekonomika-cesko-pivo-historicky-propad-cesi-vypili-nejmene-piva-v-dejinach.html",
+      "dt": "2026-04-28T09:11:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dějinách",
+        "ještě",
+        "nejméně",
+        "nezažilo",
+        "piva",
+        "propad",
+        "takový",
+        "vypili",
+        "česko",
+        "češi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "Partneři měli v Teplicích utýrat štěně, oba u soudu vinu odmítli",
+      "title": "Partneři měli v Teplicích utýrat štěně. Oba u soudu vinu odmítli",
       "url": "https://www.denik.cz/krimi/teplice-soud-tyrani-zvirat-jezevcik-pes-20260428.html",
       "dt": "2026-04-28T08:45:00Z",
       "media_raw": "Deník",
@@ -87,7 +114,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Je tu rozhodující den pro velrybu Timmyho: Klíčové je mu nasadit popruh",
+      "title": "Je tu rozhodující den pro Timmyho: Klíčové je velrybě nasadit popruh",
       "url": "https://www.denik.cz/staty-eu/velryby-keporkak-timmy-zachrana-klicovy-den-popruhy-lod.html",
       "dt": "2026-04-28T08:11:00Z",
       "media_raw": "Deník",
@@ -99,7 +126,7 @@
         "popruh",
         "rozhodující",
         "timmyho",
-        "velrybu"
+        "velrybě"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -137,7 +164,7 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Na Benešovsku vykolejil vlak, hasiči evakuovali cestující. Provoz po jedné trati",
+      "title": "Na Benešovsku vykolejil vlak, hasiči museli evakuovat cestující",
       "url": "https://www.denik.cz/nehody/nehoda-vykolejeny-vlak-cerveny-ujezd-votice-benesovsko.html",
       "dt": "2026-04-28T06:33:00Z",
       "media_raw": "Deník",
@@ -145,11 +172,9 @@
       "tokens": [
         "benešovsku",
         "cestující",
-        "evakuovali",
+        "evakuovat",
         "hasiči",
-        "jedné",
-        "provoz",
-        "trati",
+        "museli",
         "vlak",
         "vykolejil"
       ],
@@ -625,32 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Nebezpečný hazard: Od srážky kamionu s rychlíkem chybělo v Pardubicích pár metrů",
-      "url": "https://www.denik.cz/krimi/nebezpecny-hazard-od-srazky-kamionu-s-rychlikem-chybelo-par-metru-20260427.html",
-      "dt": "2026-04-27T16:13:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chybělo",
-        "hazard",
-        "kamionu",
-        "metrů",
-        "nebezpečný",
-        "pardubicích",
-        "pár",
-        "rychlíkem",
-        "srážky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29987,
+      "bytes": 30127,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:11:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
+          "finance": 3,
+          "zpravy": 21,
           "zdravi": 1
         },
         "drop_counts": {
@@ -716,7 +715,11 @@
         },
         "sample_titles": [
           {
-            "title": "Partneři měli v Teplicích utýrat štěně, oba u soudu vinu odmítli",
+            "title": "Takový propad Česko ještě nezažilo. Češi vypili nejméně piva v dějinách",
+            "publishedAt": "2026-04-28T09:11:00Z"
+          },
+          {
+            "title": "Partneři měli v Teplicích utýrat štěně. Oba u soudu vinu odmítli",
             "publishedAt": "2026-04-28T08:45:00Z"
           },
           {
@@ -728,7 +731,7 @@
             "publishedAt": "2026-04-28T08:23:00Z"
           },
           {
-            "title": "Je tu rozhodující den pro velrybu Timmyho: Klíčové je mu nasadit popruh",
+            "title": "Je tu rozhodující den pro Timmyho: Klíčové je velrybě nasadit popruh",
             "publishedAt": "2026-04-28T08:11:00Z"
           },
           {
@@ -736,16 +739,12 @@
             "publishedAt": "2026-04-28T07:11:00Z"
           },
           {
-            "title": "Na Benešovsku vykolejil vlak, hasiči evakuovali cestující. Provoz po jedné trati",
+            "title": "Na Benešovsku vykolejil vlak, hasiči museli evakuovat cestující",
             "publishedAt": "2026-04-28T06:33:00Z"
           },
           {
             "title": "Pes na Karlovarsku zaútočil na pětiletého chlapce. Těžce ho zranil",
             "publishedAt": "2026-04-28T06:24:00Z"
-          },
-          {
-            "title": "Měla jsem mindráky, říká hvězda filmu Ďábel nosí Pradu 2. Dnes už je nad věcí",
-            "publishedAt": "2026-04-28T06:00:00Z"
           }
         ]
       }

@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Itálii hrozí vážný postih od UEFA",
+      "url": "https://www.sport.cz/clanek/fotbal-serie-a-mizerne-stadiony-vysetrovani-sefa-sudich-uefa-hrozi-italii-ze-prijde-o-euro-5444645",
+      "dt": "2026-04-28T09:26:46Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "hrozí",
+        "itálii",
+        "postih",
+        "uefa",
+        "vážný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,29 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Slováci bez trenéra. Ital neladil s jejich představami",
-      "url": "https://www.sport.cz/clanek/fotbal-konec-jednani-calzona-uz-nepovede-slovenskou-reprezentaci-5444595",
-      "dt": "2026-04-27T17:19:50Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ital",
-        "jejich",
-        "neladil",
-        "představami",
-        "slováci",
-        "trenéra"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43315,
+      "bytes": 43426,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:46:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:26:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Itálii hrozí vážný postih od UEFA",
+            "publishedAt": "2026-04-28T09:26:46Z"
+          },
           {
             "title": "Hrůzostrašný nález. Na fotbalovém stadionu našla uklízečka mrtvé tělo",
             "publishedAt": "2026-04-28T08:35:06Z"
@@ -870,10 +873,6 @@
           {
             "title": "Veteránova noční můra. Mazák připravil Vejmelku o hokejku a pomohl Vegas k výhře",
             "publishedAt": "2026-04-28T07:54:09Z"
-          },
-          {
-            "title": "Zápas i celá sezona mohly vypadat jinak! Podle Rosického sudí na Bohemce zásadně poškodil Spartu",
-            "publishedAt": "2026-04-28T07:35:18Z"
           }
         ]
       }

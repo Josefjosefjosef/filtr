@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Martina Eretová promluvila o natáčení ve věznici. Připustila i to, že tam poznala svého partnera",
+      "url": "https://www.betterlife.cz/martina-eretova-promluvila-o-nataceni-ve-veznici-pripustila-i-to-ze-tam-poznala-sveho-partnera/",
+      "dt": "2026-04-28T09:28:01Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "eretová",
+        "martina",
+        "natáčení",
+        "partnera",
+        "poznala",
+        "promluvila",
+        "připustila",
+        "svého",
+        "tam",
+        "věznici"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -252,31 +279,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Fialový motýl nad postýlkou novorozence jako symbol velké ztráty",
-      "url": "https://www.betterlife.cz/fialovy-motyl-nad-postylkou-novorozence-jako-symbol-velke-ztraty/",
-      "dt": "2026-04-23T15:57:21Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "fialový",
-        "jako",
-        "motýl",
-        "novorozence",
-        "postýlkou",
-        "symbol",
-        "velké",
-        "ztráty"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -287,7 +289,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 65116,
+      "bytes": 64093,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,12 +349,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:13:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:28:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
-          "zpravy": 1,
-          "finance": 1
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -364,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Martina Eretová promluvila o natáčení ve věznici. Připustila i to, že tam poznala svého partnera",
+            "publishedAt": "2026-04-28T09:28:01Z"
+          },
           {
             "title": "Ulice: Kokeš Adrianě prozradí důvod rozvodu, ta mu slepě uvěří",
             "publishedAt": "2026-04-28T08:13:42Z"
@@ -391,10 +396,6 @@
           {
             "title": "Seriál Ulice čeká dramatické rozuzlení. Pachatel se prozradil sám",
             "publishedAt": "2026-04-25T16:27:21Z"
-          },
-          {
-            "title": "A zase ta Lucie: Falešný západ, pašované odpadky v obchodním domě a zmařené prázdniny dětské hvězdy",
-            "publishedAt": "2026-04-25T10:42:55Z"
           }
         ]
       }

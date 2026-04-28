@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Obrat ve státních plynovodech. NET4GAS opět vydělává, dluh srazil o 10 miliard",
+      "url": "https://ekonomickydenik.cz/net4gas-vydelava-dluh-srazil-o-10-miliard/",
+      "dt": "2026-04-28T09:34:06Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dluh",
+        "miliard",
+        "net4gas",
+        "obrat",
+        "opět",
+        "plynovodech",
+        "srazil",
+        "státních",
+        "vydělává"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Rychlejší dálnice i byty? Nový superúřad zrychlí cestu ke stavebnímu povolení",
+      "url": "https://ekonomickydenik.cz/rychlejsi-stavebni-povoleni-novy-superurad-zrychli-administrativu/",
+      "dt": "2026-04-28T09:20:02Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "byty",
+        "cestu",
+        "dálnice",
+        "nový",
+        "povolení",
+        "rychlejší",
+        "stavebnímu",
+        "superúřad",
+        "zrychlí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -726,57 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Padly výstřely!“. Tajná služba evakuovala Trumpa z galavečeře",
-      "url": "https://ekonomickydenik.cz/vystrely-trump-galavecere/",
-      "dt": "2026-04-26T05:23:25Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "evakuovala",
-        "galavečeře",
-        "padly",
-        "služba",
-        "tajná",
-        "trumpa",
-        "výstřely"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zelené bláznovství? Nikoliv, je to dobrý byznys. Větrné elektrárny staví celý svět",
-      "url": "https://ekonomickydenik.cz/vetrne-elektrarny-stavi-cely-svet/",
-      "dt": "2026-04-26T04:15:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bláznovství",
-        "byznys",
-        "celý",
-        "dobrý",
-        "elektrárny",
-        "nikoliv",
-        "staví",
-        "svět",
-        "větrné",
-        "zelené"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70775,
+      "bytes": 70647,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,12 +825,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:30:03Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:34:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
-          "zpravy": 4,
-          "zdravi": 2
+          "zpravy": 5,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -841,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obrat ve státních plynovodech. NET4GAS opět vydělává, dluh srazil o 10 miliard",
+            "publishedAt": "2026-04-28T09:34:06Z"
+          },
+          {
+            "title": "Rychlejší dálnice i byty? Nový superúřad zrychlí cestu ke stavebnímu povolení",
+            "publishedAt": "2026-04-28T09:20:02Z"
+          },
           {
             "title": "Dojde k omezení letů? Smartwings jednají s piloty o snížení úvazků",
             "publishedAt": "2026-04-28T08:30:03Z"
@@ -864,14 +873,6 @@
           {
             "title": "Miliardový kontrakt pro Strnada: CSG v Ázerbájdžánu zmodernizuje stovky vozidel",
             "publishedAt": "2026-04-27T16:55:24Z"
-          },
-          {
-            "title": "Konec nadvlády americké Visy a Mastercard: Čína alternativu má, Evropa teprve debatuje",
-            "publishedAt": "2026-04-27T15:18:29Z"
-          },
-          {
-            "title": "Kdo je nový šéf České pošty? Metnar jmenoval manažera Richarda Hodula",
-            "publishedAt": "2026-04-27T15:12:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Tropický Hainan z Prahy přímým letem. Letenky od 14 160 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/tropicky-hainan-z-prahy-primym-letem",
+      "dt": "2026-04-28T09:16:48Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "160",
+        "hainan",
+        "letem",
+        "letenky",
+        "prahy",
+        "přímým",
+        "tropický"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -478,32 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Kréta z Brna do 4* hotelu s all-inclusive na začátku května. Zájezd od 9 990 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/kreta-z-brna-do-4-hotelu-s-all-inclusive-na-zacatku-kvetna",
-      "dt": "2026-04-22T09:10:50Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "990",
-        "all",
-        "brna",
-        "hotelu",
-        "inclusive",
-        "kréta",
-        "května",
-        "začátku",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 44412,
+      "bytes": 43241,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:20:04Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:16:48Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -566,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tropický Hainan z Prahy přímým letem. Letenky od 14 160 Kč",
+            "publishedAt": "2026-04-28T09:16:48Z"
+          },
           {
             "title": "Týden na Sardinii s all-inclusive a přímým letem z Prahy v červnu. Zájezd od 16 780 Kč",
             "publishedAt": "2026-04-28T07:20:04Z"
@@ -593,10 +595,6 @@
           {
             "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
             "publishedAt": "2026-04-24T19:12:28Z"
-          },
-          {
-            "title": "Open-jaw letenky s United do Jižní Ameriky i Karibiku. Letenky od 12 490 Kč",
-            "publishedAt": "2026-04-24T14:56:34Z"
           }
         ]
       }

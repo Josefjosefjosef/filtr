@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-28T09:14:57.531039Z",
+  "ingestedAt": "2026-04-28T09:45:32.424282Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Zaplaťte hned pokutu, hrozí vám exekuce.“ Kyberzločinci nově cílí na motoristy",
+      "url": "https://zpravy.aktualne.cz/domaci/zaplatte-hned-pokutu-hrozi-vam-exekuce-kyberzlocinci-nove-cili-na-motoristy/r~aaa296696193b8631b6d3825afb59794/",
+      "dt": "2026-04-28T09:30:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cílí",
+        "exekuce",
+        "hned",
+        "hrozí",
+        "kyberzločinci",
+        "motoristy",
+        "nově",
+        "pokutu",
+        "vám",
+        "zaplaťte"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -514,32 +541,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Trpišovský ztratil moderní glanc. Přehlíží nedostatky, Bořil mu přerostl přes hlavu",
-      "url": "https://sport.aktualne.cz/fotbal/trpisovsky-ztratil-moderni-glanc-prehlizi-nedostatky-boril-mu-prerostl-pres-hlavu/r~aaa2986f410424ecde04bcec0f44b7f9/",
-      "dt": "2026-04-28T04:07:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bořil",
-        "glanc",
-        "hlavu",
-        "moderní",
-        "nedostatky",
-        "přehlíží",
-        "přerostl",
-        "trpišovský",
-        "ztratil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -550,7 +551,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21391,
+      "bytes": 21398,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -587,12 +588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T09:09:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T09:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 13,
+          "zpravy": 14,
           "other": 3,
-          "sport": 4
+          "sport": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -604,6 +605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Zaplaťte hned pokutu, hrozí vám exekuce.“ Kyberzločinci nově cílí na motoristy",
+            "publishedAt": "2026-04-28T09:30:00Z"
+          },
           {
             "title": "Ze „starých lidovců“ zůstane u moci patrně jen Jurečka. Promluvil o své nové práci",
             "publishedAt": "2026-04-28T09:09:00Z"
@@ -631,10 +636,6 @@
           {
             "title": "V létě skončí České centrum v Sofii, stejně jako v Miláně, Stockholmu a Tbilisi",
             "publishedAt": "2026-04-28T07:59:00Z"
-          },
-          {
-            "title": "Komik vtipkoval o vdově Melanii, pak přišel atentát na Trumpa",
-            "publishedAt": "2026-04-28T07:38:00Z"
           }
         ]
       }
