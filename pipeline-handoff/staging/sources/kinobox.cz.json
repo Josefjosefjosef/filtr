@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-28T09:45:32.424282Z",
+  "ingestedAt": "2026-04-28T10:14:15.411348Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Šéfová na zabití a život v troskách? Wanted je ultimátní terapie pro každého úředníka",
+      "url": "https://www.kinobox.cz/clanky/daily/53158-kinobox-daily-sefova-na-zabiti-a-zivot-v-troskach-wanted-je-ultimatni-terapie-pro-kazdeho-urednika",
+      "dt": "2026-04-28T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "každého",
+        "kinobox",
+        "terapie",
+        "troskách",
+        "ultimátní",
+        "wanted",
+        "zabití",
+        "úředníka",
+        "šéfová",
+        "život"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -528,33 +556,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kvíz: Účastníci zájezdu slaví 20 let. Jak dobře slavnou letní komedii znáte?",
-      "url": "https://www.kinobox.cz/clanky/filmy/52996-kviz-ucastnici-zajezdu-slavi-20-let-jak-dobre-slavnou-letni-komedii-znate",
-      "dt": "2026-04-25T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dobře",
-        "komedii",
-        "kvíz",
-        "let",
-        "letní",
-        "slavnou",
-        "slaví",
-        "znáte",
-        "zájezdu",
-        "účastníci"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -565,7 +566,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27822,
+      "bytes": 27845,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -602,7 +603,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -617,6 +618,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Šéfová na zabití a život v troskách? Wanted je ultimátní terapie pro každého úředníka",
+            "publishedAt": "2026-04-28T10:00:00Z"
+          },
           {
             "title": "Válka plná ohně a krve. Třetí Rod draka láká v traileru na obří bitvy a brutální úmrtí",
             "publishedAt": "2026-04-28T09:00:00Z"
@@ -644,10 +649,6 @@
           {
             "title": "Ulice odhalí pachatele drogového útoku. Po velké rvačce musí zasáhnout policie",
             "publishedAt": "2026-04-27T11:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Když musíte poslat důchodce do vesmíru, protože NASA je v koncích",
-            "publishedAt": "2026-04-27T10:30:00Z"
           }
         ]
       }

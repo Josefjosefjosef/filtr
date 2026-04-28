@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T09:45:32.424282Z",
+  "ingestedAt": "2026-04-28T10:14:15.411348Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "POHLED: Zlatá doba brankářská? Do hokejové špičky se valí mocná česká vlna",
+      "url": "https://www.idnes.cz/hokej/nhl/invaze-ceskych-golmanu.A260427_190702_nhl_mama",
+      "dt": "2026-04-28T10:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brankářská",
+        "doba",
+        "hokejové",
+        "mocná",
+        "pohled",
+        "valí",
+        "vlna",
+        "zlatá",
+        "česká",
+        "špičky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
+      "url": "https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-do-18-let-2026-na-slovensku.A260420_225719_reprezentace_ald",
+      "dt": "2026-04-28T09:56:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "hokeji",
+        "hrají",
+        "kým",
+        "let",
+        "program",
+        "skupiny",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -359,31 +411,6 @@
         "zdolali",
         "záchraně",
         "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-      "url": "https://www.idnes.cz/hokej/reprezentace/ms-v-hokeji-do-18-let-2026-na-slovensku.A260420_225719_reprezentace_ald",
-      "dt": "2026-04-27T19:19:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "hokeji",
-        "hrají",
-        "kým",
-        "let",
-        "program",
-        "skupiny",
-        "češi"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -754,30 +781,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fotbal pro dobrou věc. Leerdamová se v LA zapojila do charitativního turnaje",
-      "url": "https://www.idnes.cz/sport/trendy/jutta-leerdamova-fotbal-los-angeles.A260427_112101_trendy_blah",
-      "dt": "2026-04-27T14:06:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "charitativního",
-        "dobrou",
-        "fotbal",
-        "leerdamová",
-        "turnaje",
-        "věc",
-        "zapojila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45524,
+      "bytes": 45917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T09:17:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -840,6 +843,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POHLED: Zlatá doba brankářská? Do hokejové špičky se valí mocná česká vlna",
+            "publishedAt": "2026-04-28T10:00:00Z"
+          },
+          {
+            "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
+            "publishedAt": "2026-04-28T09:56:00Z"
+          },
           {
             "title": "První ženský titul mezi elitními šipkaři. Greavesové nestačili ani bývalí šampioni",
             "publishedAt": "2026-04-28T09:17:16Z"
@@ -863,14 +874,6 @@
           {
             "title": "Hrát jako v NHL, nebo se změnit? V Česku na to nejsou zvyklí, říká Laukův otec",
             "publishedAt": "2026-04-28T06:53:00Z"
-          },
-          {
-            "title": "Marcolino, kasovní trhák Ústí? I v lize je takových málo, tvrdí Habanec",
-            "publishedAt": "2026-04-28T06:04:00Z"
-          },
-          {
-            "title": "Brankáři Vladař s Vejmelkou na výhry nedosáhli, slaví Pittsburgh a Vegas",
-            "publishedAt": "2026-04-28T05:57:51Z"
           }
         ]
       }

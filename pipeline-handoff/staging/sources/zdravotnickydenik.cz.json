@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T09:45:32.424282Z",
+  "ingestedAt": "2026-04-28T10:14:15.411348Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pribram-nemocnice-zasah-policie/",
+      "dt": "2026-04-28T10:01:52Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dokumenty",
+        "kamery",
+        "nemocnici",
+        "policie",
+        "příbramské",
+        "zabavila",
+        "zasahovala"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,33 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zákaz kratomu, nebo přísnější regulace? Vláda vytváří speciální pracovní skupinu",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/kratomu-zakaz-regulace-vlada/",
-      "dt": "2026-04-27T11:35:59Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "kratomu",
-        "nebo",
-        "pracovní",
-        "přísnější",
-        "regulace",
-        "skupinu",
-        "speciální",
-        "vláda",
-        "vytváří",
-        "zákaz"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90594,
+      "bytes": 88027,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T09:28:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:01:52Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -329,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
+            "publishedAt": "2026-04-28T10:01:52Z"
+          },
           {
             "title": "Stamiliony pro zodpovědné: VZP rekordně odměňuje za preventivní prohlídky a screening",
             "publishedAt": "2026-04-28T09:28:38Z"
@@ -356,10 +357,6 @@
           {
             "title": "Pozor na první den v nové práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
             "publishedAt": "2026-04-27T14:12:12Z"
-          },
-          {
-            "title": "Některá oddělení na Vysočině zřejmě skončí. Hejtman okomentoval i počet nemocnic",
-            "publishedAt": "2026-04-27T13:40:13Z"
           }
         ]
       }

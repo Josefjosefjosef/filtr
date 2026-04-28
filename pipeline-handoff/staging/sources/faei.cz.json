@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-28T09:45:32.424282Z",
+  "ingestedAt": "2026-04-28T10:14:15.411348Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Hrozí vám energetická chudoba? Ukáže to unikátní interaktivní mapa",
+      "url": "https://profitonline.cz/hrozi-vam-energeticka-chudoba-ukaze-to-unikatni-interaktivni-mapa/",
+      "dt": "2026-04-28T10:00:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "chudoba",
+        "energetická",
+        "hrozí",
+        "interaktivní",
+        "mapa",
+        "ukáže",
+        "unikátní",
+        "vám"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,31 +295,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Týden na akciových trzích: Index PX oslabil více než evropské akcie",
-      "url": "https://profitonline.cz/tyden-na-akciovych-trzich-index-px-oslabil-vice-nez-evropske-akcie/",
-      "dt": "2026-04-24T17:00:37Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akcie",
-        "akciových",
-        "evropské",
-        "index",
-        "než",
-        "oslabil",
-        "trzích",
-        "týden"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +305,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18920,
+      "bytes": 19019,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +342,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:00:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -357,6 +357,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrozí vám energetická chudoba? Ukáže to unikátní interaktivní mapa",
+            "publishedAt": "2026-04-28T10:00:34Z"
+          },
           {
             "title": "Digitální proces, analogový konec. Moderní přístup končí u ručního podpisu",
             "publishedAt": "2026-04-28T08:00:36Z"
@@ -384,10 +388,6 @@
           {
             "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách lidstva (2.)",
             "publishedAt": "2026-04-26T04:00:29Z"
-          },
-          {
-            "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách (1.)",
-            "publishedAt": "2026-04-25T10:00:24Z"
           }
         ]
       }
