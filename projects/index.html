@@ -303,7 +303,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=fix-weather-history-video-premium-20260428" />
+    <link rel="stylesheet" href="/assets/app.css?v=fix-radio-seo-below-buttons-20260428" />
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
@@ -1880,46 +1880,10 @@ style-src 'self' 'unsafe-inline' https:;
                       <h2>Rádio</h2>
                       <div class="iuSectionHeaderLine" aria-hidden="true"></div>
                     </div>
-                    <p class="iuSectionSubtitle">
-                      Online rádia na jeden klik — rychlé odkazy na nejpoužívanější české stanice.
+                    <p class="iuSectionSubtitle" id="iuRadioIntroShort">
+                      Online rádia na jeden klik — rychlé odkazy na nejoblíbenější české stanice.
                     </p>
-                    <section class="iuSeoText" aria-label="SEO text – Rádio">
-                      <h2>Česká online rádia – Radiožurnál, Dvojka, Vltava, Evropa 2, Impuls a další</h2>
-
-                      <p>
-                        Sekce Rádio na infoUzel.cz obsahuje přehled českých rozhlasových stanic,
-                        například Radiožurnál, Dvojku, Vltavu, Evropu 2, Impuls,
-                        Fajn rádio, Kiss, Rádio Beat a Blaník.
-                        Stačí vybrat stanici a otevřít její oficiální vysílání.
-                      </p>
-
-                      <p>
-                        infoUzel.cz funguje jako rozcestník – odkazy vedou
-                        na oficiální weby jednotlivých rádií a obvykle se otevřou v nové kartě.
-                        Samotné přehrávání probíhá na stránkách poskytovatele.
-                      </p>
-
-                      <h3>Stanice v této sekci</h3>
-                      <ul>
-                        <li>Radiožurnál – zpravodajství Českého rozhlasu</li>
-                        <li>Dvojka – mluvené slovo</li>
-                        <li>Vltava – kultura a hudba</li>
-                        <li>Evropa 2 – pop a zábava</li>
-                        <li>Impuls – hity a servis</li>
-                        <li>Fajn rádio – aktuální hity</li>
-                        <li>Kiss – hudba a zábava</li>
-                        <li>Rádio Beat – rock</li>
-                        <li>Blaník – české hity</li>
-                      </ul>
-
-                      <h3>FAQ</h3>
-                      <p><strong>Přehrává se rádio přímo na infoUzel.cz?</strong><br>
-                        Ne. infoUzel.cz poskytuje odkazy na oficiální streamy rádií.</p>
-
-                      <p><strong>Mohu si napsat písničku na přání?</strong><br>
-                        Ano, pokud to daná stanice umožňuje — obvykle přímo na webu příslušného rádia.</p>
-                    </section>
-                    <div class="iuRadioMount">
+                    <div class="iuRadioMount" id="iuRadioStationsMount">
                       <div class="iuRadioGrid" role="list" aria-label="Odkazy na rádia">
                         <a class="iuRadioChip" href="https://radiozurnal.rozhlas.cz/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Radiožurnál</span><span class="iuRadioChipDesc">Zpravodajství ČRo</span></a>
                         <a class="iuRadioChip" href="https://dvojka.rozhlas.cz/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Dvojka</span><span class="iuRadioChipDesc">Mluvené slovo</span></a>
@@ -1932,6 +1896,32 @@ style-src 'self' 'unsafe-inline' https:;
                         <a class="iuRadioChip" href="https://www.radioblanik.cz/" target="_blank" rel="noopener noreferrer"><span class="iuRadioChipTitle">Blaník</span><span class="iuRadioChipDesc">České hity</span></a>
                       </div>
                     </div>
+                    <section class="iuSeoText iu-radio-seo-block" id="iuRadioSeoBlock" aria-label="SEO text – Rádio">
+                      <h2>Česká online rádia na jednom místě</h2>
+                      <p>
+                        Sekce Rádio na infoUzel.cz slouží jako rychlý rozcestník na oblíbené české rozhlasové stanice. Najdete zde odkazy na Radiožurnál, Dvojku, Vltavu, Evropu 2, Impuls, Fajn rádio, Kiss, Rádio Beat a Blaník.
+                      </p>
+                      <p>
+                        infoUzel.cz rádio přímo nepřehrává. Po výběru stanice se otevře její oficiální web nebo online vysílání. Díky tomu uživatel vždy pokračuje na ověřený zdroj provozovatele rádia.
+                      </p>
+                      <h3>Stanice v této sekci</h3>
+                      <ul>
+                        <li>Radiožurnál — zpravodajství Českého rozhlasu</li>
+                        <li>Dvojka — mluvené slovo</li>
+                        <li>Vltava — kultura a hudba</li>
+                        <li>Evropa 2 — pop a zábava</li>
+                        <li>Impuls — hity a servis</li>
+                        <li>Fajn rádio — aktuální hity</li>
+                        <li>Kiss — hudba a zábava</li>
+                        <li>Rádio Beat — rock</li>
+                        <li>Blaník — české hity</li>
+                      </ul>
+                      <h3>FAQ</h3>
+                      <p>
+                        <strong>Přehrává se rádio přímo na infoUzel.cz?</strong><br>
+                        Ne. infoUzel.cz poskytuje odkazy na oficiální weby a online vysílání jednotlivých rádií.
+                      </p>
+                    </section>
                   </div>
                   <div id="iuTvOnlineView" class="iuRadioView iuTvOnlineView" data-view-host="tvonline" hidden>
                     <div class="iuSectionHeader iuSectionHeader--tvonline">
