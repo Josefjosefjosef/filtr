@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T08:45:02.346128Z",
+  "ingestedAt": "2026-04-28T09:14:57.531039Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,32 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Steam Controller nadchne PC hráče. Je to obří gamepad, ale myslí na detaily",
+      "url": "https://doupe.zive.cz/steam-controller-nadchne-pc-hrace-je-to-obri-gamepad-ale-mysli-na-detaily",
+      "dt": "2026-04-28T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "controller",
+        "detaily",
+        "gamepad",
+        "hráče",
+        "myslí",
+        "nadchne",
+        "obří",
+        "steam"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -954,36 +980,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "ChatGPT má nejlepší generátor obrázků na světě. Ježíše ve Fabii zvládá jako král, nakreslí i český komiks",
-      "url": "https://www.zive.cz/clanky/chatgpt-ma-nejlepsi-generator-obrazku-na-svete-jezise-ve-fabii-zvlada-jako-kral-nakresli-i-cesky-komiks/sc-3-a-240816/default.aspx",
-      "dt": "2026-04-22T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chatgpt",
-        "fabii",
-        "generátor",
-        "jako",
-        "ježíše",
-        "komiks",
-        "král",
-        "nakreslí",
-        "nejlepší",
-        "obrázků",
-        "světě",
-        "zvládá",
-        "český"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -994,7 +990,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23005,
+      "bytes": 22884,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1031,7 +1027,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1049,6 +1045,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Steam Controller nadchne PC hráče. Je to obří gamepad, ale myslí na detaily",
+            "publishedAt": "2026-04-28T08:45:00Z"
           },
           {
             "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
@@ -1073,10 +1073,6 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
-          },
-          {
-            "title": "Firefox 150 opravuje enormních 271 zranitelných míst. Našla je zakázaná AI Claude Mythos",
-            "publishedAt": "2026-04-27T10:45:00Z"
           }
         ]
       }

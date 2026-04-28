@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-28T08:45:02.346128Z",
+  "ingestedAt": "2026-04-28T09:14:57.531039Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová pravidla pro školní jídelny se odkládají o další rok",
+      "url": "https://www.zdravezpravy.cz/2026/04/28/nova-pravidla-pro-skolni-jidelny-se-odkladaji-o-dalsi-rok/",
+      "dt": "2026-04-28T07:37:21Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "další",
+        "jídelny",
+        "nová",
+        "odkládají",
+        "pravidla",
+        "rok",
+        "školní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,32 +488,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nová imunoterapie rakovinu zvládne, tvrdí vědci. Chce to jen čas",
-      "url": "https://www.zdravezpravy.cz/2026/04/18/nova-imunoterapie-rakovinu-zvladne-tvrdi-vedci-chce-to-jen-cas/",
-      "dt": "2026-04-18T06:30:20Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "chce",
-        "imunoterapie",
-        "jen",
-        "nová",
-        "rakovinu",
-        "tvrdí",
-        "vědci",
-        "zvládne",
-        "čas"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -500,7 +498,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 207554,
+      "bytes": 201441,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -537,7 +535,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-27T13:00:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:37:21Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -552,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová pravidla pro školní jídelny se odkládají o další rok",
+            "publishedAt": "2026-04-28T07:37:21Z"
+          },
           {
             "title": "VZP ČR otevře 1.7. dočasné úhrady pro technologické inovace",
             "publishedAt": "2026-04-27T13:00:58Z"
@@ -579,10 +581,6 @@
           {
             "title": "Nákaz dengue rychle přibývá. Lidé si je vozí z dovolených",
             "publishedAt": "2026-04-24T04:16:21Z"
-          },
-          {
-            "title": "Veterinární správa zakázala prodej 44 výživ pro kojence",
-            "publishedAt": "2026-04-23T16:20:41Z"
           }
         ]
       }

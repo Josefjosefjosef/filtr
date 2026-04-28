@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T08:45:02.346128Z",
+  "ingestedAt": "2026-04-28T09:14:57.531039Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dukla, nebo Šelmy? O volejbalovém titulu rozhodne poslední bitva",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbal-pate-finale-pozvanka-dukla-liberec-selmy-brno.A260427_928966_sporty_ten",
+      "dt": "2026-04-28T08:23:27Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bitva",
+        "dukla",
+        "nebo",
+        "poslední",
+        "rozhodne",
+        "titulu",
+        "volejbalovém",
+        "šelmy"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -752,31 +777,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ondra zdolává skály a chystá se do Prahy. A olympiáda v LA? Nevzdávám ji, říká",
-      "url": "https://www.idnes.cz/sport/ostatni/adam-ondra-svetovy-pohar-praha-sportovni-lezeni.A260427_105242_sporty_pls",
-      "dt": "2026-04-27T13:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chystá",
-        "nevzdávám",
-        "olympiáda",
-        "ondra",
-        "prahy",
-        "skály",
-        "zdolává",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46283,
+      "bytes": 46185,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:23:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -839,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dukla, nebo Šelmy? O volejbalovém titulu rozhodne poslední bitva",
+            "publishedAt": "2026-04-28T08:23:27Z"
+          },
           {
             "title": "Obhájci titulu z Oklahoma City slaví rychlý postup, Denver odvrátil vyřazení",
             "publishedAt": "2026-04-28T07:18:00Z"
@@ -865,10 +869,6 @@
           },
           {
             "title": "Poznáte fotbalové trenéry podle fotky? Otestujte své znalosti",
-            "publishedAt": "2026-04-27T22:00:00Z"
-          },
-          {
-            "title": "Ťuk ťuk: Nařiďte penaltu! Itálie řeší další skandál, točí se kolem šéfa rozhodčích",
             "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]

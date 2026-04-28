@@ -1,25 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T08:45:02.346128Z",
+  "ingestedAt": "2026-04-28T09:14:57.531039Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Hrůzostrašný nález. Na stadionu Schalke našla uklízečka mrtvé tělo",
+      "title": "Hrůzostrašný nález. Na fotbalovém stadionu našla uklízečka mrtvé tělo",
       "url": "https://www.sport.cz/clanek/fotbal-bundesliga-hruzostrasny-nalez-na-stadionu-schalke-nasla-uklizecka-mrtve-telo-5444642",
       "dt": "2026-04-28T08:35:06Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
+        "fotbalovém",
         "hrůzostrašný",
         "mrtvé",
         "našla",
         "nález",
-        "schalke",
         "stadionu",
         "tělo",
         "uklízečka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Historický počin. Žena trumfla muže, porazila Čecha i tři bývalé mistry světa",
+      "url": "https://www.sport.cz/clanek/ostatni-historicky-pocin-zena-trumfla-muze-porazila-cecha-i-tri-byvale-mistry-sveta-5444644",
+      "dt": "2026-04-28T08:46:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bývalé",
+        "historický",
+        "mistry",
+        "muže",
+        "porazila",
+        "počin",
+        "světa",
+        "trumfla",
+        "tři",
+        "čecha",
+        "žena"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -133,20 +161,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Veteránova noční můra. Svou chybou připravil Vejmelku o hokejku a pomohl soupeři k výhře",
+      "title": "Veteránova noční můra. Mazák připravil Vejmelku o hokejku a pomohl Vegas k výhře",
       "url": "https://www.sport.cz/clanek/hokej-nhl-veteranova-nocni-mura-svou-chybou-pripravil-vejmelku-o-hokejku-a-pomohl-souperi-k-vyhre-5444637",
       "dt": "2026-04-28T07:54:09Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "chybou",
         "hokejku",
+        "mazák",
         "můra",
         "noční",
         "pomohl",
         "připravil",
-        "soupeři",
-        "svou",
+        "vegas",
         "vejmelku",
         "veteránova",
         "výhře"
@@ -754,33 +781,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česká hvězda šokovala svět. Výjimečný výkon vznikl i díky nečekanému rozhodnutí",
-      "url": "https://www.sport.cz/clanek/lezeni-ceska-hvezda-sokovala-svet-vyjimecny-vykon-vznikl-i-diky-necekanemu-rozhodnuti-5444468",
-      "dt": "2026-04-27T16:59:32Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "díky",
-        "hvězda",
-        "nečekanému",
-        "rozhodnutí",
-        "svět",
-        "vznikl",
-        "výjimečný",
-        "výkon",
-        "česká",
-        "šokovala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43473,
+      "bytes": 43315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:35:06Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:46:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,8 +844,12 @@
         },
         "sample_titles": [
           {
-            "title": "Hrůzostrašný nález. Na stadionu Schalke našla uklízečka mrtvé tělo",
+            "title": "Hrůzostrašný nález. Na fotbalovém stadionu našla uklízečka mrtvé tělo",
             "publishedAt": "2026-04-28T08:35:06Z"
+          },
+          {
+            "title": "Historický počin. Žena trumfla muže, porazila Čecha i tři bývalé mistry světa",
+            "publishedAt": "2026-04-28T08:46:51Z"
           },
           {
             "title": "Do Vítkovic se vrací hokejoví útočníci Bernovský a Petr",
@@ -864,16 +868,12 @@
             "publishedAt": "2026-04-28T08:11:18Z"
           },
           {
-            "title": "Veteránova noční můra. Svou chybou připravil Vejmelku o hokejku a pomohl soupeři k výhře",
+            "title": "Veteránova noční můra. Mazák připravil Vejmelku o hokejku a pomohl Vegas k výhře",
             "publishedAt": "2026-04-28T07:54:09Z"
           },
           {
             "title": "Zápas i celá sezona mohly vypadat jinak! Podle Rosického sudí na Bohemce zásadně poškodil Spartu",
             "publishedAt": "2026-04-28T07:35:18Z"
-          },
-          {
-            "title": "Český trojlístek se pokusí probít do čtvrtfinále. Bohatý program rozjede Lehečka",
-            "publishedAt": "2026-04-28T07:26:23Z"
           }
         ]
       }
