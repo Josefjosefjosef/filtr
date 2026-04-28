@@ -11970,6 +11970,15 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {
       return;
     }
+    /* P0 mobile/tablet Domů: explicit hub reset must never be blocked by transient web-nav overlay lock; stale locks caused no-op setTab("") and queued microtasks. */
+    try {
+      window.__iuNavOverlayLock = false;
+    } catch (_) {}
+    var hubSeq = 0;
+    try {
+      window.__iuHubResetSeq = (typeof window.__iuHubResetSeq === "number" ? window.__iuHubResetSeq : 0) + 1;
+      hubSeq = window.__iuHubResetSeq;
+    } catch (_) {}
     try {
       var qsPm = new URLSearchParams(String(window.location.search || ""));
       if (String(qsPm.get("iuPerfMarks") || "") === "1" && typeof performance !== "undefined" && performance.mark) {
@@ -12048,16 +12057,25 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof queueMicrotask === "function") {
         queueMicrotask(function () {
+          try {
+            if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
+          } catch (_) {}
           iuFinishProjectsHubUrlAndApply();
         });
       } else if (typeof window.requestAnimationFrame === "function") {
         window.requestAnimationFrame(function () {
+          try {
+            if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
+          } catch (_) {}
           iuFinishProjectsHubUrlAndApply();
         });
       } else {
         iuFinishProjectsHubUrlAndApply();
       }
     } catch (_) {
+      try {
+        if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
+      } catch (_) {}
       iuFinishProjectsHubUrlAndApply();
     }
   }
@@ -12068,6 +12086,7 @@ function buildVideoAsArticleCard(it) {
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
+      if (window.__iuMobileGateTabInitDone) return;
       var wrap = document.getElementById("iuMobileGateWrap");
       var tabNav = document.getElementById("iuMobileGateTabNav");
       var tabTools = document.getElementById("iuMobileGateTabTools");
@@ -12273,9 +12292,15 @@ function buildVideoAsArticleCard(it) {
       }
       function iuMobileGateNavTabToggleFromUserAction() {
         iuMobileGatePerfMark("iu-gate-nav-toggle-start");
+        var navToggleSeq = 0;
+        try {
+          window.__iuNavGateToggleSeq = (typeof window.__iuNavGateToggleSeq === "number" ? window.__iuNavGateToggleSeq : 0) + 1;
+          navToggleSeq = window.__iuNavGateToggleSeq;
+        } catch (_) {}
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         var next = cur === "nav" ? "" : "nav";
         var scheduleNavHashPush = false;
+        var needHistBackNav = false;
         if (!next) {
           try {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
@@ -12283,10 +12308,7 @@ function buildVideoAsArticleCard(it) {
           try {
             if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
               var stClose = history.state && history.state.iu_nav_overlay === true;
-              if (stClose) {
-                history.back();
-                return;
-              }
+              if (stClose) needHistBackNav = true;
             }
           } catch (_) {}
         } else {
@@ -12296,11 +12318,17 @@ function buildVideoAsArticleCard(it) {
             scheduleNavHashPush = false;
           }
         }
+        /* P0 mobile/tablet: always apply gate DOM synchronously; history.back() for URL sync runs only after setTab (never return early — that skipped setTab and deferred close until popstate). */
         setTab(next);
         iuMobileGatePerfMark("iu-gate-nav-toggle-after-setTab");
         if (scheduleNavHashPush) {
           try {
             queueMicrotask(function () {
+              try {
+                if (typeof window.__iuNavGateToggleSeq === "number" && window.__iuNavGateToggleSeq !== navToggleSeq) return;
+                var gateNowPush = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+                if (gateNowPush !== "nav") return;
+              } catch (_) {}
               try {
                 iuMobileGatePerfMark("iu-gate-nav-hash-microtask");
                 var uNav = new URL(window.location.href);
@@ -12323,17 +12351,25 @@ function buildVideoAsArticleCard(it) {
             });
           } catch (_) {
             try {
-              if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-                var uNav2 = new URL(window.location.href);
-                uNav2.hash = "iu-nav";
-                history.pushState(
-                  { iu_nav_overlay: true, iu_nav_origin: "homepage" },
-                  "",
-                  uNav2.toString()
-                );
+              if (typeof window.__iuNavGateToggleSeq !== "number" || window.__iuNavGateToggleSeq === navToggleSeq) {
+                var gateNowPush2 = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+                if (gateNowPush2 === "nav" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+                  var uNav2 = new URL(window.location.href);
+                  uNav2.hash = "iu-nav";
+                  history.pushState(
+                    { iu_nav_overlay: true, iu_nav_origin: "homepage" },
+                    "",
+                    uNav2.toString()
+                  );
+                }
               }
             } catch (_){}
           }
+        }
+        if (!next && needHistBackNav) {
+          try {
+            history.back();
+          } catch (_) {}
         }
       }
       tabNav.addEventListener("click", function () {
@@ -12342,7 +12378,6 @@ function buildVideoAsArticleCard(it) {
       try {
         wrap.__iuMobileGateNavTabToggleFromUserAction = iuMobileGateNavTabToggleFromUserAction;
       } catch (_) {}
-      var lastToolsToggleTs = 0;
       function iuMindMenuDebugEnabled() {
         try {
           if (typeof window.iuIsProdHost === "function" && window.iuIsProdHost()) return false;
@@ -12508,9 +12543,7 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       function iuHandleToolsTabClick(ev) {
-        var now = Date.now();
-        if (now - lastToolsToggleTs < 120) return;
-        lastToolsToggleTs = now;
+        /* P0 mobile/tablet: no time-based throttle — 120ms discard caused MindMenu/bottom-bar to ignore rapid taps and stack perceived lag. */
         if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         setTab(cur === "tools" ? "" : "tools");
@@ -12520,6 +12553,7 @@ function buildVideoAsArticleCard(it) {
         wrap.__iuMobileGateSetTab = setTab;
       } catch (_) {}
       setTab("");
+      window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}
   }
 
@@ -12697,6 +12731,14 @@ function buildVideoAsArticleCard(it) {
               return;
             }
             if (k === "mindmenu") {
+              try {
+                var wMind = document.getElementById("iuMobileGateWrap");
+                if (wMind && typeof wMind.__iuMobileGateSetTab === "function") {
+                  var curMind = String(wMind.getAttribute("data-iu-mobile-gate") || "").trim();
+                  wMind.__iuMobileGateSetTab(curMind === "tools" ? "" : "tools");
+                  return;
+                }
+              } catch (_) {}
               if (tabTools && typeof tabTools.click === "function") tabTools.click();
               return;
             }
