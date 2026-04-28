@@ -27506,6 +27506,16 @@ function buildVideoAsArticleCard(it) {
     try{ document.body && (document.body.dataset.section = section); }catch{}
     try{ document.documentElement && (document.documentElement.dataset.section = section); }catch{}
     try{
+      var iuTmSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
+      if (iuTmSec[section]) {
+        if (document.documentElement) document.documentElement.setAttribute("data-iu-tool-main", "1");
+        if (document.body) document.body.setAttribute("data-iu-tool-main", "1");
+      } else {
+        if (document.documentElement) document.documentElement.removeAttribute("data-iu-tool-main");
+        if (document.body) document.body.removeAttribute("data-iu-tool-main");
+      }
+    }catch(_iuTm){}
+    try{
       const iuFc = ["media", "feed", "hry", "kultura", "veda", "vzdelavani"].indexOf(section) !== -1 ? "1" : "0";
       if (document.body) document.body.setAttribute("data-iu-fc", iuFc);
       if (document.documentElement) document.documentElement.setAttribute("data-iu-fc", iuFc);
