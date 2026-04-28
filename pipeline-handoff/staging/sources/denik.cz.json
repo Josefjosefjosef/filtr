@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T13:09:07.438029Z",
+  "ingestedAt": "2026-04-28T13:34:36.878897Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Opálené v Beskydech vzniká nový bike park. Takto vypadá z výšky",
+      "url": "https://www.denik.cz/ctenar-reporter/obrazem-na-opalene-v-beskydech-vznika-novy-bike-park-20260426.html",
+      "dt": "2026-04-28T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "beskydech",
+        "bike",
+        "nový",
+        "opálené",
+        "park",
+        "takto",
+        "vypadá",
+        "vzniká",
+        "výšky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie na Slovensku zadržela muže hledaného Interpolem: Chytila ho na balkoně",
+      "url": "https://www.denik.cz/staty-eu/slovenska-policie-zadrzela-muze-hledaneho-interpolem.html",
+      "dt": "2026-04-28T12:51:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "balkoně",
+        "chytila",
+        "hledaného",
+        "interpolem",
+        "muže",
+        "policie",
+        "slovensku",
+        "zadržela"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -595,59 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odčiňme křivdy, řekl Jaroslav Seifert. Druhý sjezd spisovatelů otřásl režimem",
-      "url": "https://www.denik.cz/historie/sjezd-svazu-cs-spisovatelu-jaroslav-seifert-frantisek-hrubin-1956.html",
-      "dt": "2026-04-28T03:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "druhý",
-        "jaroslav",
-        "křivdy",
-        "odčiňme",
-        "otřásl",
-        "režimem",
-        "seifert",
-        "sjezd",
-        "spisovatelů",
-        "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Týdny či měsíce v nemocnici? Vedle léčby je důležitá i výživa, říkají odborníci",
-      "url": "https://www.denik.cz/zdravotnictvi/tydny-ci-mesice-v-nemocnici-vedle-lecby-je-dulezita-i-vyziva-rikaji-odbornici-20.html",
-      "dt": "2026-04-28T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "důležitá",
-        "léčby",
-        "měsíce",
-        "nemocnici",
-        "odborníci",
-        "týdny",
-        "vedle",
-        "výživa",
-        "říkají"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29710,
+      "bytes": 28917,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,12 +693,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T12:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T13:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 20,
+          "zpravy": 21,
           "finance": 3,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +710,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Opálené v Beskydech vzniká nový bike park. Takto vypadá z výšky",
+            "publishedAt": "2026-04-28T13:00:00Z"
+          },
+          {
+            "title": "Policie na Slovensku zadržela muže hledaného Interpolem: Chytila ho na balkoně",
+            "publishedAt": "2026-04-28T12:51:00Z"
+          },
           {
             "title": "Na Kroměřížsku natočili prachové rarášky. Jsou jako malé tornádo, má je i Mars",
             "publishedAt": "2026-04-28T12:27:00Z"
@@ -735,14 +741,6 @@
           {
             "title": "Čápa na Semilsku zabil proud z elektrického vedení. Město chce nápravu",
             "publishedAt": "2026-04-28T11:05:00Z"
-          },
-          {
-            "title": "Rakousko zpřísňuje pravidla. I Češi mohou za vjezd do měst vyfasovat obří pokutu",
-            "publishedAt": "2026-04-28T10:50:00Z"
-          },
-          {
-            "title": "Ve Vrchlabí našli v Labi tělo ženy. Policie žádá o pomoc s identifikací",
-            "publishedAt": "2026-04-28T10:15:00Z"
           }
         ]
       }
