@@ -37,8 +37,14 @@ jobs:
           python -m py_compile scripts/build_articles.py
           python -m py_compile scripts/ingest_telemetry.py
           python -m py_compile scripts/build_videos.py
+          python -m py_compile scripts/build_weather_history.py
+          python -m py_compile scripts/iu_blocked_sources.py
+          python -m py_compile scripts/weather_pocasicko_guard.py
           python -m py_compile scripts/iu_feed_classification.py
           python -m py_compile scripts/validate_feed_classification.py
+
+      - name: Počasíčko / pocasicko export guard
+        run: python scripts/weather_pocasicko_guard.py
 
       - name: Feed classification unit tests
         run: python scripts/test_iu_feed_classification.py

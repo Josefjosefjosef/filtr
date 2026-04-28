@@ -49,6 +49,9 @@ jobs:
       - name: Weather outside-temp emphasis guard
         run: npm run weather-emphasis-guard
 
+      - name: Počasíčko / pocasicko data guard
+        run: npm run weather-pocasicko-guard
+
       - name: CZ vertical sections guard (hry/kultura/veda/vzdelavani)
         run: npm run section-cz-guard
 

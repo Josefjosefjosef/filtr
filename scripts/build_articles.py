@@ -36,6 +36,7 @@ _SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 
+from iu_blocked_sources import iu_is_blocked_pocasicko_source
 from iu_registry import (
     SOURCE_BATCH_INTERNAL_GAP_MS_DEFAULT,
     collapse_feeds_by_url,
@@ -2100,6 +2101,9 @@ def load_youtube_feeds(path: str) -> list:
         if not channel:
             channel = "YouTube"
 
+        if iu_is_blocked_pocasicko_source(channel, str(item.get("name") or "")):
+            continue
+
         # source do FEED REPORTu
         source = f"YouTube – {channel}".strip()
 
@@ -2863,6 +2867,8 @@ def _publish_article_outputs(bundle: dict) -> int:
         vid = (v.get("videoId") or "").strip()
         if not vid or vid in seen_vid:
             continue
+        if iu_is_blocked_pocasicko_source(str(v.get("channel") or ""), str(v.get("title") or ""), str(v.get("sourceKey") or "")):
+            continue
         src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
         if per_source.get(src_key, 0) >= max_per_source:
             continue
@@ -3302,8 +3308,14 @@ def main() -> int:
                 section = infer_section(link, title, fallback_topic=fallback_topic)
                 section = stable_section(section)
 
+                t_yt = fix_cz_mojibake(clean_title_basic(title))
+                ch_yt = channel_name or "YouTube"
+                meta_src_yt = (meta.get("source") or "") if isinstance(meta, dict) else ""
+                if iu_is_blocked_pocasicko_source(ch_yt, t_yt, str(meta_src_yt)):
+                    continue
+
                 yt_videos.append({
-                    "title": fix_cz_mojibake(clean_title_basic(title)),
+                    "title": t_yt,
                     "url": link,
                     "videoId": vid,
                     "publishedAt": dt.isoformat().replace("+00:00", "Z"),
@@ -3747,6 +3759,8 @@ def _legacy_main_removed_placeholder():
     for v in yt_sorted:
         vid = (v.get("videoId") or "").strip()
         if not vid or vid in seen_vid:
+            continue
+        if iu_is_blocked_pocasicko_source(str(v.get("channel") or ""), str(v.get("title") or ""), str(v.get("sourceKey") or "")):
             continue
         src_key = str(v.get("sourceKey") or v.get("channel") or "YouTube")
         if per_source.get(src_key, 0) >= max_per_source:
