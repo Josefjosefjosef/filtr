@@ -15591,6 +15591,8 @@ function buildVideoAsArticleCard(it) {
     const host = document.getElementById("iuWeatherHistoryPlayerHost");
     if (!card || !fallback || !host) return;
 
+    try{ card.classList.remove("iu-weather-video-card--playing"); }catch{}
+
     if (!pick || !iuValidYtId(String(pick.id || "").trim())) {
       card.hidden = true;
       fallback.hidden = false;
@@ -15628,8 +15630,6 @@ function buildVideoAsArticleCard(it) {
     line.textContent = [year ? `Rok ${year}` : "", source].filter(Boolean).join(" • ");
     note.textContent = noteTxt;
 
-    try{ if (img) img.style.display = ""; }catch{}
-
     // Reset player host on every render (prevents stale embeds).
     try{ host.replaceChildren(); }catch{}
     try{ host.hidden = true; }catch{}
@@ -15640,6 +15640,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherHistoryOpenPreview(pick){
     const host = document.getElementById("iuWeatherHistoryPlayerHost");
+    const card = document.getElementById("iuWeatherHistoryCard");
     if (!host) return;
     if (!pick || !iuValidYtId(String(pick.id || "").trim())) return;
 
@@ -15662,10 +15663,7 @@ function buildVideoAsArticleCard(it) {
       host.appendChild(node);
       host.hidden = false;
 
-      try{
-        const im2 = document.getElementById("iuWeatherHistoryThumb");
-        if (im2) im2.style.display = "none";
-      }catch{}
+      try{ if (card) card.classList.add("iu-weather-video-card--playing"); }catch{}
 
       // Trigger existing Media-like inline embed handler.
       const poster = node.querySelector(".iuVideoPoster");
@@ -15675,6 +15673,7 @@ function buildVideoAsArticleCard(it) {
       // no debug logs in production
     }catch{
       try{ host.hidden = true; }catch{}
+      try{ if (card) card.classList.remove("iu-weather-video-card--playing"); }catch{}
     }
   }
 

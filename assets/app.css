@@ -5405,38 +5405,162 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   text-align: left;
 }
 
-#iuWeatherView .iuWeatherHistoryCard{
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 12px;
+/* Počasí — historické video: prémiová karta (scoped, bez dopadu na Média) */
+#iuWeatherView .iu-weather-video-card.iuWeatherHistoryCard{
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 16px;
   overflow: hidden;
-  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  background: linear-gradient(165deg, rgba(12, 28, 52, 0.92) 0%, rgba(8, 18, 38, 0.96) 45%, rgba(10, 24, 48, 0.94) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 10px 32px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(56, 189, 248, 0.12);
+  transition: box-shadow 0.16s ease, filter 0.16s ease;
 }
 
-#iuWeatherView .iuWeatherHistoryPlay{
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay{
   width: 100%;
-  display: grid;
-  grid-template-columns: 180px 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 12px;
   text-align: left;
   border: 0;
   background: transparent;
   color: inherit;
   padding: 12px;
+  margin: 0;
   cursor: pointer;
+  box-sizing: border-box;
+  border-radius: 15px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay:focus-visible{
+  outline: 2px solid rgba(56, 189, 248, 0.85);
+  outline-offset: 3px;
+}
+
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay:active{
+  transform: scale(0.992);
+  filter: brightness(1.04);
+}
+
+#iuWeatherView .iu-weather-video-shell{
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  isolation: isolate;
+  box-sizing: border-box;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(56, 189, 248, 0.18) 0%, transparent 55%),
+    radial-gradient(90% 70% at 50% 100%, rgba(30, 64, 120, 0.45) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(15, 35, 62, 0.98) 0%, rgba(6, 14, 28, 0.99) 100%);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.14) inset,
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 8px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay:active .iu-weather-video-shell{
+  transform: scale(0.996);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.22) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 4px 18px rgba(0, 0, 0, 0.26);
+}
+
+#iuWeatherView .iu-weather-video-card--playing .iu-weather-video-shell{
+  display: none;
+}
+
+#iuWeatherView .iu-weather-video-thumb{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 #iuWeatherView .iuWeatherHistoryThumb{
-  width: 180px;
-  aspect-ratio: 16 / 9;
-  height: auto;
-  border-radius: 10px;
+  width: 100%;
+  height: 100%;
   display: block;
-  object-fit: cover;
-  background: rgba(255,255,255,0.06);
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  background: transparent;
+  vertical-align: middle;
 }
 
-#iuWeatherView .iuWeatherHistoryMeta{
+#iuWeatherView .iu-weather-video-gradient{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(4, 12, 26, 0.62) 0%,
+    rgba(4, 12, 26, 0.18) 38%,
+    rgba(30, 58, 138, 0.2) 100%
+  );
+  opacity: 0.95;
+}
+
+#iuWeatherView .iu-weather-video-play{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  padding: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: rgba(14, 42, 74, 0.98);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(224, 242, 254, 0.95) 100%);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.35),
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(56, 189, 248, 0.35);
+  transform: translate(-50%, -50%) translateZ(0);
+  pointer-events: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay:hover .iu-weather-video-play{
+  transform: translate(-50%, -50%) scale(1.04);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.45),
+    0 14px 40px rgba(0, 0, 0, 0.38),
+    0 0 30px rgba(56, 189, 248, 0.42);
+}
+
+#iuWeatherView .iu-weather-video-card__btn.iuWeatherHistoryPlay:active .iu-weather-video-play{
+  transform: translate(-50%, -50%) scale(0.97);
+  filter: brightness(0.98);
+}
+
+#iuWeatherView .iu-weather-video-playSvg{
+  display: block;
+}
+
+#iuWeatherView .iu-weather-video-meta.iuWeatherHistoryMeta{
   min-width: 0;
+  padding: 0 2px 2px;
 }
 
 #iuWeatherView .iuWeatherHistoryTitle{
@@ -5462,8 +5586,67 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
   font-size: 0.9rem;
 }
 
-#iuWeatherView .iuWeatherHistoryPlayerHost{
-  padding: 0 12px 12px 12px;
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host{
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host article.news-card.iuVideoCard{
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid rgba(56, 189, 248, 0.22) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 8px 28px rgba(0, 0, 0, 0.32),
+    0 0 24px rgba(56, 189, 248, 0.12) !important;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoFrame{
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(ellipse 100% 88% at 50% 42%, rgba(56, 189, 248, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(12, 24, 48, 1) 0%, rgba(3, 8, 18, 1) 100%) !important;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoCard[data-iu-loaded="1"] .iuVideoFrame{
+  background:
+    radial-gradient(ellipse 100% 88% at 50% 42%, rgba(56, 189, 248, 0.16) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(8, 16, 34, 1) 0%, rgba(2, 5, 12, 1) 100%) !important;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoPoster{
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoMeta{
+  padding-top: 10px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoTitle,
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoSub,
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoChannel,
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoTime{
+  color: rgba(248, 250, 252, 0.94) !important;
+}
+
+#iuWeatherView #iuWeatherHistoryPlayerHost.iu-weather-video-embed-host .iuVideoDot{
+  opacity: 0.72;
 }
 
 #iuWeatherView .iuWeatherHistoryFallback{
@@ -5493,15 +5676,6 @@ html[data-section="pocasi"] #iuWeatherView #iuWxNotes .iuNotesInput{
 }
 #iuWeatherView .iuWeatherHistorySeo li{
   margin: 6px 0;
-}
-
-@media (max-width: 520px){
-  #iuWeatherView .iuWeatherHistoryPlay{
-    grid-template-columns: 1fr;
-  }
-  #iuWeatherView .iuWeatherHistoryThumb{
-    width: 100%;
-  }
 }
 
 .iuWeatherMapPickerOverlay{

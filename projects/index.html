@@ -303,7 +303,7 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=fix-tv-online-clearance-scroll-padding-20260428e" />
+    <link rel="stylesheet" href="/assets/app.css?v=fix-weather-history-video-premium-20260428" />
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
@@ -1433,24 +1433,35 @@ style-src 'self' 'unsafe-inline' https:;
                         </p>
                       </div>
 
-                      <div id="iuWeatherHistoryCard" class="iuWeatherHistoryCard" hidden>
+                      <div id="iuWeatherHistoryCard" class="iuWeatherHistoryCard iu-weather-video-card" hidden>
                         <button id="iuWeatherHistoryPlay"
-                                class="iuWeatherHistoryPlay"
+                                class="iuWeatherHistoryPlay iu-weather-video-card__btn"
                                 type="button"
                                 aria-label="Přehrát historickou předpověď počasí">
-                          <img id="iuWeatherHistoryThumb"
-                               class="iuWeatherHistoryThumb"
-                               alt="Náhled historické předpovědi počasí"
-                               loading="lazy"
-                               decoding="async">
-                          <div class="iuWeatherHistoryMeta">
+                          <div class="iu-weather-video-shell">
+                            <div class="iu-weather-video-thumb">
+                              <img id="iuWeatherHistoryThumb"
+                                   class="iuWeatherHistoryThumb"
+                                   alt="Náhled historické předpovědi počasí"
+                                   loading="lazy"
+                                   decoding="async">
+                              <span class="iu-weather-video-gradient" aria-hidden="true"></span>
+                              <span class="iu-weather-video-play" aria-hidden="true">
+                                <svg class="iu-weather-video-playSvg" viewBox="0 0 24 24" width="34" height="34" focusable="false" aria-hidden="true">
+                                  <circle class="iu-weather-video-playRing" cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.35" opacity="0.35"></circle>
+                                  <path d="M10 8.2v7.6L16.2 12 10 8.2z" fill="currentColor"></path>
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="iuWeatherHistoryMeta iu-weather-video-meta">
                             <div id="iuWeatherHistoryTitle" class="iuWeatherHistoryTitle"></div>
                             <div id="iuWeatherHistoryLine" class="iuWeatherHistoryLine"></div>
                             <div id="iuWeatherHistoryNote" class="iuWeatherHistoryNote"></div>
                             <div class="iuWeatherHistoryHint">Přehraje se jako náhled u nás (stejně jako v sekci Média).</div>
                           </div>
                         </button>
-                        <div id="iuWeatherHistoryPlayerHost" class="iuWeatherHistoryPlayerHost" hidden></div>
+                        <div id="iuWeatherHistoryPlayerHost" class="iuWeatherHistoryPlayerHost iu-weather-video-embed-host" hidden></div>
                       </div>
 
                       <div class="iuWeatherHistorySeo" aria-label="Historie meteorologie (SEO)">
@@ -3364,7 +3375,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=fix-mobile-tool-host-bottom-pad-mainvisible-20260428"></script>
+    <script type="module" src="/assets/app.js?v=fix-weather-history-video-premium-20260428"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
