@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T14:04:44.231125Z",
+  "ingestedAt": "2026-04-28T14:35:06.407571Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Turisté pozor: V oblíbených dovolenkových destinacích v Evropě se šíří exotická horečka",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/cestovani-horecka-evropa/",
+      "dt": "2026-04-28T14:32:01Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "destinacích",
+        "dovolenkových",
+        "evropě",
+        "exotická",
+        "horečka",
+        "oblíbených",
+        "pozor",
+        "turisté",
+        "šíří"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,34 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Pozor na první den v nové práci: U zdravotního pojištění rozhoduje víc, než si myslíte",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/prvni-den-v-praci-zdravotni-pojisteni/",
-      "dt": "2026-04-27T14:12:12Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "den",
-        "myslíte",
-        "než",
-        "nové",
-        "pojištění",
-        "pozor",
-        "první",
-        "práci",
-        "rozhoduje",
-        "víc",
-        "zdravotního"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90012,
+      "bytes": 88344,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,10 +312,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T12:47:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T14:32:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "cestovani": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -329,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Turisté pozor: V oblíbených dovolenkových destinacích v Evropě se šíří exotická horečka",
+            "publishedAt": "2026-04-28T14:32:01Z"
+          },
           {
             "title": "Nová vojenská nemocnice v Praze je nesmysl. Černochová popsala důvod",
             "publishedAt": "2026-04-28T12:47:14Z"
@@ -356,10 +359,6 @@
           {
             "title": "Cesta z pravěku. Inovace už na úhradu nebudou čekat roky, rozhodl nový šéf VZP",
             "publishedAt": "2026-04-28T06:00:00Z"
-          },
-          {
-            "title": "Nepředvídatelné úhrady brzdí inovace, říká Toman. Dohodovací řízení čeká zásadní změna",
-            "publishedAt": "2026-04-28T05:00:00Z"
           }
         ]
       }
