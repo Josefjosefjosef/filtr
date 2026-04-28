@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Měla jsem mindráky, říká hvězda filmu Ďábel nosí Pradu 2. Dnes už je nad věcí",
+      "url": "https://www.denik.cz/film-a-televize/dabel-nosi-pradu-2-anne-hathawayova-mindraky-ze-vzhledu.html",
+      "dt": "2026-04-28T06:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "filmu",
+        "hvězda",
+        "jsem",
+        "mindráky",
+        "měla",
+        "nosí",
+        "pradu",
+        "věcí",
+        "ďábel",
+        "říká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -628,33 +655,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kladno slaví další úspěch. Budoucí návrháři přivezli zlato z prestižní soutěže",
-      "url": "https://kladensky.denik.cz/ctenar-reporter/kladno-slavi-dalsi-uspech-budouci-navrhari-privezli-zlato-z-prestizni-souteze-20.html",
-      "dt": "2026-04-27T13:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "budoucí",
-        "další",
-        "kladno",
-        "návrháři",
-        "prestižní",
-        "přivezli",
-        "slaví",
-        "soutěže",
-        "zlato",
-        "úspěch"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -702,7 +702,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T04:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -719,6 +719,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Měla jsem mindráky, říká hvězda filmu Ďábel nosí Pradu 2. Dnes už je nad věcí",
+            "publishedAt": "2026-04-28T06:00:00Z"
+          },
           {
             "title": "Městský vlak v Indonésii smetl dálkový spoj. Počet obětí vzrostl na čtrnáct",
             "publishedAt": "2026-04-28T04:36:00Z"
@@ -746,10 +750,6 @@
           {
             "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
             "publishedAt": "2026-04-27T19:40:00Z"
-          },
-          {
-            "title": "U Jakarty se srazily vlaky. Indonéské úřady hlásí čtyři mrtvé",
-            "publishedAt": "2026-04-27T19:04:00Z"
           }
         ]
       }

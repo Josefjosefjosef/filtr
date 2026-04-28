@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
     {
       "section": "zdravi",
@@ -108,6 +108,36 @@
         "sezona",
         "svět",
         "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vymahač Bujnoch ostřeluje snahy reorganizovat zmrzlinářskou firmu ze skupiny Twist. Hraje se o kontrolu nad  celým holdingem",
+      "url": "https://byznys.hn.cz/c1-67871470-vymahac-bujnoch-ostreluje-snahy-reorganizovat-zmrzlinarskou-firmu-ze-skupiny-twist-hraje-se-o-kontrolu-nad-celym-holdingem",
+      "dt": "2026-04-27T22:31:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bujnoch",
+        "celým",
+        "firmu",
+        "holdingem",
+        "hraje",
+        "kontrolu",
+        "ostřeluje",
+        "reorganizovat",
+        "skupiny",
+        "snahy",
+        "twist",
+        "vymahač",
+        "zmrzlinářskou"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1142,35 +1172,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Realitní fondy vyhrály loni i nad akciovými. Masivní přítok kapitálu jim dovolil hojně nakupovat",
-      "url": "https://archiv.hn.cz/c1-67870340-realitni-fondy-vyhraly-loni-i-nad-akciovymi-masivni-pritok-kapitalu-jim-dovolil-hojne-nakupovat",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "akciovými",
-        "dovolil",
-        "fondy",
-        "hojně",
-        "jim",
-        "kapitálu",
-        "loni",
-        "masivní",
-        "nakupovat",
-        "přítok",
-        "realitní",
-        "vyhrály"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1181,7 +1182,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184255,
+      "bytes": 184209,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1253,6 +1254,10 @@
             "publishedAt": "2026-04-28T03:01:00Z"
           },
           {
+            "title": "Vymahač Bujnoch ostřeluje snahy reorganizovat zmrzlinářskou firmu ze skupiny Twist. Hraje se o kontrolu nad  celým holdingem",
+            "publishedAt": "2026-04-27T22:31:00Z"
+          },
+          {
             "title": "Ministerstvo chce odložit změny ve&nbsp;školních jídelnách",
             "publishedAt": "2026-04-27T22:00:00Z"
           },
@@ -1262,10 +1267,6 @@
           },
           {
             "title": "Vládní návrh zrušit služební zákon ohrožuje nezávislost úředníků. Státní správa má být profesionální, ne slepě poslušná",
-            "publishedAt": "2026-04-27T22:00:00Z"
-          },
-          {
-            "title": "Na&nbsp;úspory se zaručeným výsledkem vsadil i&nbsp;pražský dopravní podnik. EPC projekty mu&nbsp;mají ročně ušetřit 17,7 milionu",
             "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]

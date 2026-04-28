@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vláda chce plnit závazky k NATO, uvedla Murová. Dle Kovářové vůle chybí",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-chce-plnit-zavazky-k-nato-uvedla-murova-dle-kovarove-vule-chybi-372866",
+      "dt": "2026-04-28T06:12:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chce",
+        "chybí",
+        "dle",
+        "kovářové",
+        "murová",
+        "nato",
+        "plnit",
+        "uvedla",
+        "vláda",
+        "vůle",
+        "závazky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,20 +86,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán „prorůstá“ Irákem. USA blokují Bagdádu stamiliony z ropy",
+      "title": "Trump hraje v Iráku šachy s Íránem. Bagdád nedostal peníze z vlastní ropy",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/iran-prorusta-irakem-usa-blokuji-bagdadu-stamiliony-z-ropy-372838",
       "dt": "2026-04-28T05:00:00Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "bagdádu",
-        "blokují",
-        "irákem",
-        "prorůstá",
+        "bagdád",
+        "hraje",
+        "iráku",
+        "nedostal",
+        "peníze",
         "ropy",
-        "stamiliony",
-        "usa",
-        "írán"
+        "trump",
+        "vlastní",
+        "íránem",
+        "šachy"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -746,26 +776,29 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
+      "section": "sport",
       "contentType": "article",
-      "title": "Touha po dokonalosti nás dohání, upozorňuje Šindelka Systémem něhy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/touha-po-dokonalosti-nas-dohani-upozornuje-sindelka-systemem-nehy-372832",
-      "dt": "2026-04-27T09:30:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-nezastavil-pittsburgh-penguins-si-vynutili-sesty-zapas-vegas-srovnalo-serii-s-utahem-156490",
+      "dt": "2026-04-28T06:15:46Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "dohání",
-        "dokonalosti",
-        "nás",
-        "něhy",
-        "systémem",
-        "touha",
-        "upozorňuje",
-        "šindelka"
+        "nezastavil",
+        "penguins",
+        "pittsburgh",
+        "srovnalo",
+        "sérii",
+        "utahem",
+        "vegas",
+        "vladař",
+        "vynutili",
+        "zápas",
+        "šestý"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1490,29 +1523,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zbrojovka si poradila se slávistickým béčkem, rozhodl Vachoušek",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/zbrojovka-si-poradila-se-slavistickym-beckem-rozhodl-vachousek-156459",
-      "dt": "2026-04-26T10:34:20Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "béčkem",
-        "poradila",
-        "rozhodl",
-        "slávistickým",
-        "vachoušek",
-        "zbrojovka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1523,7 +1533,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41442,
+      "bytes": 42194,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1583,11 +1593,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:12:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "other": 4,
+          "zpravy": 26,
+          "other": 3,
           "finance": 1
         },
         "drop_counts": {
@@ -1601,6 +1611,10 @@
         },
         "sample_titles": [
           {
+            "title": "Vláda chce plnit závazky k NATO, uvedla Murová. Dle Kovářové vůle chybí",
+            "publishedAt": "2026-04-28T06:12:59Z"
+          },
+          {
             "title": "Námořníci v Hormuzském průlivu čelí nedostatku jídla a pitné vody",
             "publishedAt": "2026-04-28T05:43:00Z"
           },
@@ -1609,7 +1623,7 @@
             "publishedAt": "2026-04-28T05:30:00Z"
           },
           {
-            "title": "Írán „prorůstá“ Irákem. USA blokují Bagdádu stamiliony z ropy",
+            "title": "Trump hraje v Iráku šachy s Íránem. Bagdád nedostal peníze z vlastní ropy",
             "publishedAt": "2026-04-28T05:00:00Z"
           },
           {
@@ -1627,10 +1641,6 @@
           {
             "title": "Ozbrojenci unesli ze sirotčince v Nigérii 23 dětí",
             "publishedAt": "2026-04-28T02:21:47Z"
-          },
-          {
-            "title": "Ministerstvo chce vyšší odměny pro lidi, kteří chodí na preventivní prohlídky",
-            "publishedAt": "2026-04-27T20:26:25Z"
           }
         ]
       }
@@ -1642,7 +1652,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38239,
+      "bytes": 38395,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1679,7 +1689,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T20:39:58Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:15:46Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1694,6 +1704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
+            "publishedAt": "2026-04-28T06:15:46Z"
+          },
           {
             "title": "Trenéry roku jsou Petr Fuksa a Patrik Augusta",
             "publishedAt": "2026-04-27T20:39:58Z"
@@ -1721,10 +1735,6 @@
           {
             "title": "Petrovický se stal oficiálně trenérem Motoru. Pomůže mu Jiruš, který skončil ve Spartě",
             "publishedAt": "2026-04-27T11:04:20Z"
-          },
-          {
-            "title": "Fotbal fokus podcast: Zoufalý Baník, pokuta kvůli Jedličkovi? Co Dvorník a pozice Hyského?",
-            "publishedAt": "2026-04-27T10:28:00Z"
           }
         ]
       }
@@ -1736,7 +1746,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77173,
+      "bytes": 77167,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

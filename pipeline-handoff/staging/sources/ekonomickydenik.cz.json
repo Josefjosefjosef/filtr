@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
+      "url": "https://ekonomickydenik.cz/konec-prirucnich-zavazadel-zdarma-lufthansa/",
+      "dt": "2026-04-28T06:19:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "konec",
+        "lufthansa",
+        "přitvrzuje",
+        "příručních",
+        "zavazadel",
+        "zdarma"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,34 +778,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Spor o světelnou závoru. Praha ji stopla, kritici varují: jde o hazard s bezpečností dětí",
-      "url": "https://ekonomickydenik.cz/svetelna-zavora-praha-zastupitele-beranek/",
-      "dt": "2026-04-25T15:17:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bezpečností",
-        "dětí",
-        "hazard",
-        "jde",
-        "kritici",
-        "praha",
-        "spor",
-        "stopla",
-        "světelnou",
-        "varují",
-        "závoru"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70833,
+      "bytes": 70439,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:17:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -847,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
+            "publishedAt": "2026-04-28T06:19:00Z"
+          },
           {
             "title": "Trumpova Amerika se vrací k jaderné energii. Zájem táhnou malé rychlé reaktory",
             "publishedAt": "2026-04-28T05:17:16Z"
@@ -874,10 +873,6 @@
           {
             "title": "Lyžáky, jehly i žabky. Řidiči jsou za volantem kreativní, pojišťovny ale varují",
             "publishedAt": "2026-04-27T13:44:33Z"
-          },
-          {
-            "title": "Stát podpoří produkci zelené náhrady zemního plynu. Vyjde to až na 90 miliard",
-            "publishedAt": "2026-04-27T12:56:16Z"
           }
         ]
       }

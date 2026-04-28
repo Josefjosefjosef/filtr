@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Žasl i Vémola. Slovenka znovu ohromila, pak zadržovala slzy",
+      "url": "https://www.sport.cz/clanek/bojove-sporty-mma-zasl-i-vemola-slovenka-znovu-ohromila-pak-zadrzovala-slzy-5444164",
+      "dt": "2026-04-28T06:12:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ohromila",
+        "pak",
+        "slovenka",
+        "slzy",
+        "vémola",
+        "zadržovala",
+        "znovu",
+        "žasl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,30 +780,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Změna pravidel. Od příštího roku budou sety v badmintonu kratší",
-      "url": "https://www.sport.cz/clanek/ostatni-zmena-pravidel-od-pristiho-roku-budou-sety-v-badmintonu-kratsi-5444351",
-      "dt": "2026-04-27T13:39:31Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "badmintonu",
-        "kratší",
-        "pravidel",
-        "příštího",
-        "roku",
-        "sety",
-        "změna"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -789,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41764,
+      "bytes": 42517,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:52:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:12:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -841,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žasl i Vémola. Slovenka znovu ohromila, pak zadržovala slzy",
+            "publishedAt": "2026-04-28T06:12:56Z"
+          },
           {
             "title": "Vladař si vítězný gól Crosbyho letky za rámeček rozhodně nedá, Vejmelka pětkrát kapituloval",
             "publishedAt": "2026-04-28T03:49:16Z"
@@ -868,10 +873,6 @@
           {
             "title": "Manchester United si upevnil třetí příčku",
             "publishedAt": "2026-04-27T21:03:37Z"
-          },
-          {
-            "title": "Bergamo si prohrou s Cagliari zkomplikovalo boj o fotbalovou Evropu",
-            "publishedAt": "2026-04-27T18:56:58Z"
           }
         ]
       }

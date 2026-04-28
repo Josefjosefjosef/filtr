@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-28T06:04:31.384573Z",
+  "ingestedAt": "2026-04-28T06:30:12.070312Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nemovitost ve Španělsku: Co vám realitka neřekne, dokud nepodepíšete",
+      "url": "https://www.penize.cz/nakup-a-prodej-nemovitosti/488949-nemovitost-ve-spanelsku-co-vam-realitka-nerekne-dokud-nepodepisete",
+      "dt": "2026-04-28T08:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "dokud",
+        "nemovitost",
+        "nepodepíšete",
+        "neřekne",
+        "realitka",
+        "vám",
+        "španělsku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -480,31 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dividenda ČEZ opět klesne, potvrdilo představenstvo. Navrhuje 42 korun",
-      "url": "https://www.penize.cz/burza-cennych-papiru-praha/488717-dividenda-cez-opet-klesne-potvrdilo-predstavenstvo-navrhuje-42-korun",
-      "dt": "2026-04-22T17:15:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dividenda",
-        "klesne",
-        "korun",
-        "navrhuje",
-        "opět",
-        "potvrdilo",
-        "představenstvo",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18423,
+      "bytes": 18193,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -569,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nemovitost ve Španělsku: Co vám realitka neřekne, dokud nepodepíšete",
+            "publishedAt": "2026-04-28T08:00:00Z"
+          },
           {
             "title": "Přehledy pro zdravotní pojišťovny a ČSSZ přehledně krok za krokem",
             "publishedAt": "2026-04-28T05:05:00Z"
@@ -596,10 +599,6 @@
           {
             "title": "Jakou fixaci hypotéky si teď vybrat? Pozor i na sázení, radí expert",
             "publishedAt": "2026-04-27T05:00:00Z"
-          },
-          {
-            "title": "Kola na nosiči. Co když spadnou nebo poškodí jiné auto",
-            "publishedAt": "2026-04-26T09:49:00Z"
           }
         ]
       }
