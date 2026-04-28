@@ -260,7 +260,8 @@ style-src 'self' 'unsafe-inline' https:;
         :root{
           --iu-mobile-bottom-nav-h:56px;
           --iu-mobile-bottom-safe:env(safe-area-inset-bottom,0px);
-          --iu-mobile-bottom-nav-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 16px);
+          --iu-mobile-bottom-nav-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 32px);
+          --iu-mobile-bottom-nav-safe-space:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 32px);
         }
         html,body{height:auto!important;min-height:100%!important}
         html{padding-bottom:var(--iu-mobile-bottom-nav-space);box-sizing:border-box}
@@ -301,7 +302,7 @@ style-src 'self' 'unsafe-inline' https:;
       #iuTvProgramView .iuViewBody{display:block}
       #iuTvProgramView .iuTvProgramView__body{box-sizing:border-box}
       @media(max-width:900px){
-        #iuTvProgramView .iuTvProgramView__body{padding-bottom:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 24px)}
+        #iuTvProgramView .iuTvProgramView__body{padding-bottom:0}
       }
       @media(min-width:901px){
         #iuTvProgramView .iuTvProgramView__body{padding-bottom:max(32px,calc(24px + env(safe-area-inset-bottom, 0px)))}
