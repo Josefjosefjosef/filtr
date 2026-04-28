@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T03:40:12.944600Z",
+  "ingestedAt": "2026-04-28T04:05:18.425843Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Otevírací doba obchodů 1. a 8. května: Který svátek je zavřeno, co rozvážky",
+      "url": "https://www.denik.cz/ekonomika/oteviraci-doba-obchodu-patek-svatek-prace-1-kvetna-den-osvobozeni-8-kvetna.html",
+      "dt": "2026-04-28T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "doba",
+        "května",
+        "obchodů",
+        "otevírací",
+        "rozvážky",
+        "svátek",
+        "zavřeno"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -162,18 +186,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Německý turista zemřel v Egyptě. Uštkla ho kobra v kalhotách",
+      "title": "Zaříkávač hadů v Egyptě pustil plaza do kalhot turistovi, ten zemřel",
       "url": "https://www.denik.cz/ze_sveta/nemecko-egypt-turista-kobra-smrt.html",
       "dt": "2026-04-27T18:56:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "egyptě",
-        "kalhotách",
-        "kobra",
-        "německý",
-        "turista",
-        "uštkla",
+        "hadů",
+        "kalhot",
+        "plaza",
+        "pustil",
+        "ten",
+        "turistovi",
+        "zaříkávač",
         "zemřel"
       ],
       "feedCategory": "zpravy",
@@ -209,7 +235,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Marketér Jakub Horák se zotavuje. Dělá pokroky, napsala partnerka",
+      "title": "Marketér Horák se po krvácení do mozku zotavuje. Dělá pokroky, napsala partnerka",
       "url": "https://www.denik.cz/z_domova/jakub-horak-nemoc-rehabilitace-dela-pokroky.html",
       "dt": "2026-04-27T18:33:00Z",
       "media_raw": "Deník",
@@ -217,8 +243,9 @@
       "tokens": [
         "dělá",
         "horák",
-        "jakub",
+        "krvácení",
         "marketér",
+        "mozku",
         "napsala",
         "partnerka",
         "pokroky",
@@ -626,31 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kupka: Turkovy výroky? Za hranou. Podobnost s nacistickou rétorikou je zřejmá",
-      "url": "https://www.denik.cz/z_domova/deratizace-parazit-filip-turek-kritika-martn-kupka-andrej-babis-ho-ma-vyrazit.html",
-      "dt": "2026-04-27T12:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hranou",
-        "kupka",
-        "nacistickou",
-        "podobnost",
-        "rétorikou",
-        "turkovy",
-        "výroky",
-        "zřejmá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29062,
+      "bytes": 29533,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,12 +700,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "zdravi": 1,
-          "finance": 2
+          "finance": 3,
+          "zpravy": 21,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -715,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Otevírací doba obchodů 1. a 8. května: Který svátek je zavřeno, co rozvážky",
+            "publishedAt": "2026-04-28T03:30:00Z"
+          },
           {
             "title": "Odčiňme křivdy, řekl Jaroslav Seifert. Druhý sjezd spisovatelů otřásl režimem",
             "publishedAt": "2026-04-28T03:00:00Z"
@@ -740,12 +746,8 @@
             "publishedAt": "2026-04-27T19:04:00Z"
           },
           {
-            "title": "Německý turista zemřel v Egyptě. Uštkla ho kobra v kalhotách",
+            "title": "Zaříkávač hadů v Egyptě pustil plaza do kalhot turistovi, ten zemřel",
             "publishedAt": "2026-04-27T18:56:00Z"
-          },
-          {
-            "title": "Střelce na Trumpa obvinili. Je stíhaný pro atentát na prezidenta",
-            "publishedAt": "2026-04-27T18:39:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-28T03:40:12.944600Z",
+  "ingestedAt": "2026-04-28T04:05:18.425843Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "88 minut hackerům stačí k ovládnutí firmy, varuje expert na kyberbezpečnost",
+      "url": "https://profitonline.cz/88-minut-hackerum-staci-k-ovladnuti-firmy-varuje-expert-na-kyberbezpecnost/",
+      "dt": "2026-04-28T04:00:34Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "expert",
+        "firmy",
+        "hackerům",
+        "kyberbezpečnost",
+        "minut",
+        "ovládnutí",
+        "stačí",
+        "varuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,30 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "ČEZ upřesnil první kroky k postátnění výroby elektřiny",
-      "url": "https://profitonline.cz/cez-upresnil-prvni-kroky-k-postatneni-vyroby-elektriny/",
-      "dt": "2026-04-24T08:00:14Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "elektřiny",
-        "kroky",
-        "postátnění",
-        "první",
-        "upřesnil",
-        "výroby",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18614,
+      "bytes": 18843,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,11 +341,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-27T18:00:19Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T04:00:34Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zdravi": 1
+          "finance": 12
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -356,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "88 minut hackerům stačí k ovládnutí firmy, varuje expert na kyberbezpečnost",
+            "publishedAt": "2026-04-28T04:00:34Z"
+          },
           {
             "title": "Paradox bezpečného přístavu: Proč cena zlata strádá?",
             "publishedAt": "2026-04-27T18:00:19Z"
@@ -383,10 +387,6 @@
           {
             "title": "U Bumbrlíčka vznikla před 100 lety současná největší ochranářská organizace",
             "publishedAt": "2026-04-25T08:00:21Z"
-          },
-          {
-            "title": "Arm bude nově konkurovat svým dosavadním klíčovým zákazníkům",
-            "publishedAt": "2026-04-25T06:00:17Z"
           }
         ]
       }

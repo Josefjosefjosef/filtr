@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T03:40:12.944600Z",
+  "ingestedAt": "2026-04-28T04:05:18.425843Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař si vítězný gól Crosbyho letky za rámeček rozhodně nedá",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-si-vitezny-gol-crosbyho-letky-za-ramecek-rozhodne-neda-5444619",
+      "dt": "2026-04-28T03:49:16Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "crosbyho",
+        "gól",
+        "letky",
+        "nedá",
+        "rozhodně",
+        "rámeček",
+        "vladař",
+        "vítězný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -746,31 +771,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Mbappé kvůli zranění nedohrál, do MS by ale měl být v pořádku",
-      "url": "https://www.sport.cz/clanek/fotbal-la-liga-mbappe-kvuli-zraneni-nedohral-do-ms-by-ale-mel-byt-v-poradku-5442572",
-      "dt": "2026-04-25T08:57:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "být",
-        "kvůli",
-        "mbappé",
-        "měl",
-        "nedohrál",
-        "pořádku",
-        "zranění"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41732,
+      "bytes": 41839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +818,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T21:03:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T03:49:16Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,6 +833,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař si vítězný gól Crosbyho letky za rámeček rozhodně nedá",
+            "publishedAt": "2026-04-28T03:49:16Z"
+          },
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-27T21:03:00Z"
@@ -860,10 +864,6 @@
           {
             "title": "Čeští mladíci už znají soupeře pro čtvrtfinále, hrát budou v poledne v Bratislavě",
             "publishedAt": "2026-04-27T14:31:34Z"
-          },
-          {
-            "title": "Hororový pád z tribuny do průchodu! Fanoušek Plzně už je mimo ohrožení života",
-            "publishedAt": "2026-04-27T18:47:36Z"
           }
         ]
       }
