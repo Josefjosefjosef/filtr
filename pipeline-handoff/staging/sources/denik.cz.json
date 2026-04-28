@@ -1,24 +1,50 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T10:39:08.222150Z",
+  "ingestedAt": "2026-04-28T11:04:32.335334Z",
   "items": [
     {
       "section": "krimi",
       "contentType": "article",
-      "title": "V příbramské nemocnici a středočeském krajském úřadě zasahovala policie",
+      "title": "Ve Vrchlabí našli v Labi tělo ženy. Policie žádá o pomoc s identifikací",
+      "url": "https://www.denik.cz/krimi/policie-nasla-v-labi-telo-zeny-verejnost-zada-o-pomoc-s-jeji-identifikaci-202604.html",
+      "dt": "2026-04-28T10:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "identifikací",
+        "labi",
+        "našli",
+        "policie",
+        "pomoc",
+        "tělo",
+        "vrchlabí",
+        "ženy",
+        "žádá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "NCOZ zasahovala v příbramské nemocnici a na úřadě, šlo o dokumenty",
       "url": "https://www.denik.cz/krimi/v-pribramske-nemocnici-a-stredoceskem-krajskem-urade-zasahovala-policie-2026.html",
       "dt": "2026-04-28T10:03:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
-        "krajském",
+        "dokumenty",
+        "ncoz",
         "nemocnici",
-        "policie",
         "příbramské",
-        "středočeském",
         "zasahovala",
-        "úřadě"
+        "úřadě",
+        "šlo"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -242,7 +268,7 @@
     {
       "section": "doprava",
       "contentType": "article",
-      "title": "Na Benešovsku vykolejil vlak, hasiči museli evakuovat cestující",
+      "title": "Na Benešovsku vykolejil vlak. Hasiči museli evakuovat cestující",
       "url": "https://www.denik.cz/nehody/nehoda-vykolejeny-vlak-cerveny-ujezd-votice-benesovsko.html",
       "dt": "2026-04-28T06:33:00Z",
       "media_raw": "Deník",
@@ -623,32 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Oligarchové balí kufry. Po volbách v Maďarsku mizí do zahraničí miliardy forintů",
-      "url": "https://www.denik.cz/staty-eu/madarsko-prevod-majetku-do-zahranici-prohra-fidesz-orban-korupce-tisza-magyar.html",
-      "dt": "2026-04-27T17:32:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "balí",
-        "forintů",
-        "kufry",
-        "maďarsku",
-        "miliardy",
-        "mizí",
-        "oligarchové",
-        "volbách",
-        "zahraničí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29621,
+      "bytes": 29483,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -714,7 +714,11 @@
         },
         "sample_titles": [
           {
-            "title": "V příbramské nemocnici a středočeském krajském úřadě zasahovala policie",
+            "title": "Ve Vrchlabí našli v Labi tělo ženy. Policie žádá o pomoc s identifikací",
+            "publishedAt": "2026-04-28T10:15:00Z"
+          },
+          {
+            "title": "NCOZ zasahovala v příbramské nemocnici a na úřadě, šlo o dokumenty",
             "publishedAt": "2026-04-28T10:03:00Z"
           },
           {
@@ -740,10 +744,6 @@
           {
             "title": "Stojí za pádem ředitele VZP tajná služba? Její šéf Koudelka mlží",
             "publishedAt": "2026-04-28T08:23:00Z"
-          },
-          {
-            "title": "Je tu rozhodující den pro Timmyho: Klíčové je velrybě nasadit popruh",
-            "publishedAt": "2026-04-28T08:11:00Z"
           }
         ]
       }

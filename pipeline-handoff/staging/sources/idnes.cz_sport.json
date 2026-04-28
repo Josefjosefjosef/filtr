@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T10:39:08.222150Z",
+  "ingestedAt": "2026-04-28T11:04:32.335334Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Žlutá amnestie. Na šampionátu se karty budou mazat po skupinách i po čtvrtfinále",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/zlute-karty-amnestie-vymazani-zlute-karty-zakladni-skupiny-ctvrtfinale.A260428_111903_ms-fotbal_min",
+      "dt": "2026-04-28T10:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "amnestie",
+        "karty",
+        "mazat",
+        "skupinách",
+        "čtvrtfinále",
+        "šampionátu",
+        "žlutá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -755,32 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejlepší trenér ligy pokračuje v Pardubicích. Šotnar prodloužil o tři roky",
-      "url": "https://www.idnes.cz/sport/basket/trener-sotnar-povede-basketbalisty-pardubic-dalsi-tri-roky.A260427_162629_sport-basket_mama",
-      "dt": "2026-04-27T14:32:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ligy",
-        "nejlepší",
-        "pardubicích",
-        "pokračuje",
-        "prodloužil",
-        "roky",
-        "trenér",
-        "tři",
-        "šotnar"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45917,
+      "bytes": 45823,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žlutá amnestie. Na šampionátu se karty budou mazat po skupinách i po čtvrtfinále",
+            "publishedAt": "2026-04-28T10:30:00Z"
+          },
           {
             "title": "POHLED: Zlatá doba brankářská? Do hokejové špičky se valí mocná česká vlna",
             "publishedAt": "2026-04-28T10:00:00Z"
@@ -870,10 +872,6 @@
           {
             "title": "Ty vole, Alby, já brečím! Šlégr o baráži, přebírání klubu i novém stadionu",
             "publishedAt": "2026-04-28T07:10:00Z"
-          },
-          {
-            "title": "Hrát jako v NHL, nebo se změnit? V Česku na to nejsou zvyklí, říká Laukův otec",
-            "publishedAt": "2026-04-28T06:53:00Z"
           }
         ]
       }

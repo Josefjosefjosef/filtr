@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T10:39:08.222150Z",
+  "ingestedAt": "2026-04-28T11:04:32.335334Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kotví u vás ruské lodě s kradeným obilím. Zelenskyj kritizuje Izrael",
+      "url": "https://ekonomickydenik.cz/ruske-lode-krade-obili-zelenskyj/",
+      "dt": "2026-04-28T11:00:34Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "izrael",
+        "kotví",
+        "kradeným",
+        "kritizuje",
+        "lodě",
+        "obilím",
+        "ruské",
+        "vás",
+        "zelenskyj"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Konec drahé elektřiny? Unie chystá daňovou revoluci, která znevýhodní plyn i benzin",
+      "url": "https://ekonomickydenik.cz/konec-drahe-elektriny-brusel-chysta-revoluci/",
+      "dt": "2026-04-28T10:40:51Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "benzin",
+        "chystá",
+        "daňovou",
+        "drahé",
+        "elektřiny",
+        "konec",
+        "plyn",
+        "revoluci",
+        "unie",
+        "znevýhodní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -726,55 +779,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Černý pasažér NATO? Česko nesplní výdaje 2 procenta HDP na obranu",
-      "url": "https://ekonomickydenik.cz/nato-obrana-hdp-babis/",
-      "dt": "2026-04-26T10:03:04Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hdp",
-        "nato",
-        "nesplní",
-        "obranu",
-        "pasažér",
-        "procenta",
-        "výdaje",
-        "černý",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nová nemocnice v Praze bude vojenská, oznámil Babiš",
-      "url": "https://ekonomickydenik.cz/babis-nemocnice-praha/",
-      "dt": "2026-04-26T09:06:08Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babiš",
-        "nemocnice",
-        "nová",
-        "oznámil",
-        "praze",
-        "vojenská"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -785,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70418,
+      "bytes": 70825,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -822,12 +826,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:35:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:00:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
-          "zpravy": 4,
-          "zdravi": 1
+          "zdravi": 1,
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -839,6 +843,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kotví u vás ruské lodě s kradeným obilím. Zelenskyj kritizuje Izrael",
+            "publishedAt": "2026-04-28T11:00:34Z"
+          },
+          {
+            "title": "Konec drahé elektřiny? Unie chystá daňovou revoluci, která znevýhodní plyn i benzin",
+            "publishedAt": "2026-04-28T10:40:51Z"
+          },
           {
             "title": "Nadskočil a vykolejil. Strojvedoucího ráno oslnilo slunce",
             "publishedAt": "2026-04-28T10:35:31Z"
@@ -862,14 +874,6 @@
           {
             "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
             "publishedAt": "2026-04-28T06:19:00Z"
-          },
-          {
-            "title": "Trumpova Amerika se vrací k jaderné energii. Zájem táhnou malé rychlé reaktory",
-            "publishedAt": "2026-04-28T05:17:16Z"
-          },
-          {
-            "title": "Daně 2026: Na podání přiznání zbývá už jen pár dní. Jak si lhůtu ještě prodloužit?",
-            "publishedAt": "2026-04-27T18:02:54Z"
           }
         ]
       }

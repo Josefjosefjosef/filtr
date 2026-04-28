@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-28T10:39:08.222150Z",
+  "ingestedAt": "2026-04-28T11:04:32.335334Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Nejstrmější lanovka světa se rozjela ve Švýcarsku",
+      "url": "https://www.svetcestovatele.cz/nejstrmejsi-lanovka-sveta-se-rozjela-ve-svycarsku/",
+      "dt": "2026-04-28T11:00:46Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "lanovka",
+        "nejstrmější",
+        "rozjela",
+        "světa",
+        "švýcarsku"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -516,34 +538,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Tak tenhle pytlák mě dostal. Zdrhal tak rychle, že na břehu nechal i přítelkyni. To si tedy pomohl",
-      "url": "https://www.svetcestovatele.cz/tak-tenhle-pytlak-me-dostal-zdrhal-tak-rychle-ze-na-brehu-nechal-i-pritelkyni-to-si-tedy-pomohl/",
-      "dt": "2026-04-14T04:00:25Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "břehu",
-        "dostal",
-        "nechal",
-        "pomohl",
-        "pytlák",
-        "přítelkyni",
-        "rychle",
-        "tak",
-        "tedy",
-        "tenhle",
-        "zdrhal"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +548,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 125710,
+      "bytes": 125478,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,7 +585,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T04:00:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:00:46Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -606,6 +600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejstrmější lanovka světa se rozjela ve Švýcarsku",
+            "publishedAt": "2026-04-28T11:00:46Z"
+          },
           {
             "title": "Potkala jsem cvoka na hygienu. Bohužel jsem ho obsluhovala",
             "publishedAt": "2026-04-28T04:00:26Z"
@@ -633,10 +631,6 @@
           {
             "title": "Náš útulek se rozrostl o dva králíčky, třetí bezcitnost lidí nepřežil. Nálezce to obrečel",
             "publishedAt": "2026-04-23T04:00:24Z"
-          },
-          {
-            "title": "Uličkové vši v letadle: Fenomén, který vám spolehlivě zkazí i tu nejkrásnější dovolenou",
-            "publishedAt": "2026-04-22T04:00:01Z"
           }
         ]
       }
