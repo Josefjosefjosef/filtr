@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-28T17:29:15.950250Z",
+  "ingestedAt": "2026-04-28T17:59:10.417613Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rozchod na magistrátu. Pražští lidovci spojili síly s Prahou sobě, mají tři místa",
+      "url": "https://www.idnes.cz/praha/zpravy/praha-sobe-kdu-csl-komunalni-volby-praha-magistrat.A260428_183603_praha-zpravy_sahu",
+      "dt": "2026-04-28T17:14:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "lidovci",
+        "magistrátu",
+        "mají",
+        "místa",
+        "prahou",
+        "pražští",
+        "rozchod",
+        "sobě",
+        "spojili",
+        "síly",
+        "tři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -746,33 +774,6 @@
         "sebrala",
         "telefony",
         "unicorn"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Je to serval na útěku? Strážníci sledovali šelmu u Brandýsa, pak zmizela v poli s řepkou",
-      "url": "https://www.idnes.cz/praha/zpravy/brandys-serval-na-uteku-patrani-policie-majitel.A260428_142857_praha-zpravy_ichuc",
-      "dt": "2026-04-28T13:12:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "brandýsa",
-        "pak",
-        "poli",
-        "serval",
-        "sledovali",
-        "strážníci",
-        "zmizela",
-        "útěku",
-        "řepkou",
-        "šelmu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1574,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50812,
+      "bytes": 51014,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:03:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T17:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1628,6 +1629,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozchod na magistrátu. Pražští lidovci spojili síly s Prahou sobě, mají tři místa",
+            "publishedAt": "2026-04-28T17:14:00Z"
+          },
           {
             "title": "Mediální výbor vyzve Klempíře ke stažení zákona, opozice využila převahy hlasů",
             "publishedAt": "2026-04-28T17:03:52Z"
@@ -1655,10 +1660,6 @@
           {
             "title": "To probereme později, přerušil král podle odezíračky rtů pokus Trumpa o konverzaci",
             "publishedAt": "2026-04-28T16:09:00Z"
-          },
-          {
-            "title": "Stovky lidí protestovaly v Brně proti sjezdu landsmanšaftu, Okamura mluvil o ostudě",
-            "publishedAt": "2026-04-28T15:41:33Z"
           }
         ]
       }

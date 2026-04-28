@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T17:29:15.950250Z",
+  "ingestedAt": "2026-04-28T17:59:10.417613Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rusko se topí v krizi, tvrdí Švédi. Putin má žádat o peníze na válku oligarchy",
+      "url": "https://www.denik.cz/staty-mimo-eu/rusko-financni-katastrofa-vladimir-putin-shani-penize-na-valku-od-oligarchu.html",
+      "dt": "2026-04-28T17:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "krizi",
+        "oligarchy",
+        "peníze",
+        "putin",
+        "rusko",
+        "topí",
+        "tvrdí",
+        "válku",
+        "švédi",
+        "žádat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,30 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Je tu rozhodující den pro Timmyho: Klíčové je velrybě nasadit popruh",
-      "url": "https://www.denik.cz/staty-eu/velryby-keporkak-timmy-zachrana-klicovy-den-popruhy-lod.html",
-      "dt": "2026-04-28T08:11:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "den",
-        "klíčové",
-        "nasadit",
-        "popruh",
-        "rozhodující",
-        "timmyho",
-        "velrybě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28736,
+      "bytes": 28858,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T17:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -715,6 +718,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko se topí v krizi, tvrdí Švédi. Putin má žádat o peníze na válku oligarchy",
+            "publishedAt": "2026-04-28T17:30:00Z"
+          },
           {
             "title": "Lepší podmínky pro mazlíčky: Europoslanci schválili normu na ochranu psů a koček",
             "publishedAt": "2026-04-28T16:10:00Z"
@@ -742,10 +749,6 @@
           {
             "title": "Německo plánuje zdanit sladké nápoje. Podraží i odvody z alkoholu a cigaret",
             "publishedAt": "2026-04-28T13:19:00Z"
-          },
-          {
-            "title": "Na Opálené v Beskydech vzniká nový bike park. Takto vypadá z výšky",
-            "publishedAt": "2026-04-28T13:00:00Z"
           }
         ]
       }
