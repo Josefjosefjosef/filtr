@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sportovní série EA Sports UFC se vrací, známe datum vydání",
+      "url": "https://zing.cz/article/sportovni-serie-ea-sports-ufc-se-vraci-zname-datum-vydani",
+      "dt": "2026-04-28T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "datum",
+        "sportovní",
+        "sports",
+        "série",
+        "ufc",
+        "vrací",
+        "vydání",
+        "známe"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,33 +983,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "The Expanse: Osiris Reborn spouští betaverzi a ukazuje 35 minut dlouhý gameplay",
-      "url": "https://zing.cz/article/the-expanse-osiris-reborn-spousti-betaverzi-a-ukazuje-35-minut-dlouhy-gameplay",
-      "dt": "2026-04-23T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "betaverzi",
-        "dlouhý",
-        "expanse",
-        "gameplay",
-        "minut",
-        "osiris",
-        "reborn",
-        "spouští",
-        "the",
-        "ukazuje"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -995,7 +993,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125140,
+      "bytes": 125116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1032,10 +1030,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 40
+          "zpravy": 1,
+          "other": 39
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1047,6 +1046,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sportovní série EA Sports UFC se vrací, známe datum vydání",
+            "publishedAt": "2026-04-28T08:00:00Z"
+          },
           {
             "title": "Autoři série Just Cause pracují na nové AAA hře",
             "publishedAt": "2026-04-28T06:00:00Z"
@@ -1074,10 +1077,6 @@
           {
             "title": "Ubisoft má chystat další remake ze série Assassin's Creed",
             "publishedAt": "2026-04-27T12:00:00Z"
-          },
-          {
-            "title": "EA nemá o návrat Titanfallu očividně zájem. Šance se chopilo nezávislé studio",
-            "publishedAt": "2026-04-27T10:00:00Z"
           }
         ]
       }

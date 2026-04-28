@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "IKEA zavádí věrnostní body. Za nákupy i aktivitu nabídne lidem odměny",
+      "url": "https://www.penize.cz/nakupy/488993-ikea-zavadi-vernostni-body-za-nakupy-i-aktivitu-nabidne-lidem-odmeny",
+      "dt": "2026-04-28T10:06:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "aktivitu",
+        "body",
+        "ikea",
+        "lidem",
+        "nabídne",
+        "nákupy",
+        "odměny",
+        "věrnostní",
+        "zavádí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,32 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Spořitelna má soutěž a speciální karty k filmu Star Wars: Mandalorian a Grogu",
-      "url": "https://www.penize.cz/debetni-karty/488721-sporitelna-ma-soutez-a-karty-star-wars-mandalorian-grogu",
-      "dt": "2026-04-22T18:30:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "filmu",
-        "grogu",
-        "karty",
-        "mandalorian",
-        "soutěž",
-        "speciální",
-        "spořitelna",
-        "star",
-        "wars"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -514,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18192,
+      "bytes": 18241,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -551,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T10:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 14,
@@ -568,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "IKEA zavádí věrnostní body. Za nákupy i aktivitu nabídne lidem odměny",
+            "publishedAt": "2026-04-28T10:06:00Z"
+          },
           {
             "title": "Nemovitost ve Španělsku: Co vám realitka neřekne, dokud nepodepíšete",
             "publishedAt": "2026-04-28T08:00:00Z"
@@ -595,10 +599,6 @@
           {
             "title": "Poslední týden na daňové přiznání. Návody, změny a časté chyby",
             "publishedAt": "2026-04-27T05:05:00Z"
-          },
-          {
-            "title": "Jakou fixaci hypotéky si teď vybrat? Pozor i na sázení, radí expert",
-            "publishedAt": "2026-04-27T05:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Rusku zadrželi bývalou dětskou modelku kvůli protestu proti vypnutí Telegramu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-sofia-chepik-telegram-internet-protest-zatceni-moskva.A260428_085601_zahranicni_tmps",
+      "dt": "2026-04-28T07:53:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bývalou",
+        "dětskou",
+        "kvůli",
+        "modelku",
+        "protestu",
+        "proti",
+        "rusku",
+        "telegramu",
+        "vypnutí",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -762,29 +789,29 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "finance",
       "contentType": "article",
-      "title": "Na Žižkově zazněly dva výstřely. Z okna domu střílel silně opilý muž",
-      "url": "https://www.idnes.cz/praha/zpravy/praha-policie-muz-zbran-pistole-flobert-strelba.A260427_175931_praha-zpravy_berr",
-      "dt": "2026-04-27T16:33:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
+      "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
+      "url": "https://www.idnes.cz/ekonomika/domaci/rakovina-lecba-protonove-centrum-nador-fyzik.A260424_170932_ekonomika_iape",
+      "dt": "2026-04-28T08:00:00Z",
+      "media_raw": "iDNES / Ekonomika",
+      "media_norm": "iDNES / Ekonomika",
       "tokens": [
-        "domu",
-        "dva",
-        "muž",
-        "okna",
-        "opilý",
-        "silně",
-        "střílel",
-        "výstřely",
-        "zazněly",
-        "žižkově"
+        "centra",
+        "fyzik",
+        "léčba",
+        "nádor",
+        "obkreslí",
+        "protony",
+        "rakoviny",
+        "superpřesná",
+        "vedoucí",
+        "říká"
       ],
-      "feedCategory": "zpravy",
+      "feedCategory": "finance",
       "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
+      "feedId": "fin_idnes_ekonomika",
+      "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
     },
@@ -1538,32 +1565,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "idnes.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ceny pohonných hmot ve středu vzrostou o desítky haléřů, hlásí ministerstvo",
-      "url": "https://www.idnes.cz/ekonomika/domaci/pohonne-hmoty-ceny-vzrostou-podle-ministerstva-financi-o-desitky-haleru.A260421_141733_ekonomika_jira",
-      "dt": "2026-04-21T12:32:00Z",
-      "media_raw": "iDNES / Ekonomika",
-      "media_norm": "iDNES / Ekonomika",
-      "tokens": [
-        "ceny",
-        "desítky",
-        "haléřů",
-        "hlásí",
-        "hmot",
-        "ministerstvo",
-        "pohonných",
-        "středu",
-        "vzrostou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rubric",
-      "feedId": "fin_idnes_ekonomika",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1574,7 +1575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 45390,
+      "bytes": 45246,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1611,7 +1612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:38:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:53:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1627,6 +1628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Rusku zadrželi bývalou dětskou modelku kvůli protestu proti vypnutí Telegramu",
+            "publishedAt": "2026-04-28T07:53:00Z"
+          },
           {
             "title": "VIDEO: Oblečení dolů a šup do kašny. Plzeňští strážníci načapali dalšího otužilce",
             "publishedAt": "2026-04-28T07:38:00Z"
@@ -1654,10 +1659,6 @@
           {
             "title": "Stavět více bytů a domy místo paneláků. Ministryně Mrázová o dostupnosti bydlení",
             "publishedAt": "2026-04-28T06:52:00Z"
-          },
-          {
-            "title": "Na Benešovsku vykolejil osobní vlak, provoz na koridoru stojí",
-            "publishedAt": "2026-04-28T06:22:59Z"
           }
         ]
       }
@@ -1669,7 +1670,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=ekonomika",
-      "bytes": 44240,
+      "bytes": 44293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1706,7 +1707,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T15:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 30
@@ -1721,6 +1722,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
+            "publishedAt": "2026-04-28T08:00:00Z"
+          },
           {
             "title": "EET 2.0 je připravena, obstrukce opozice nečekám, sdělila Schillerová",
             "publishedAt": "2026-04-27T15:35:00Z"
@@ -1748,10 +1753,6 @@
           {
             "title": "Lokomotivě je třeba umět naslouchat, říká budoucí mechanik",
             "publishedAt": "2026-04-26T22:01:00Z"
-          },
-          {
-            "title": "Z kuchyně až do továrny. Recept ladila roky, teď má „továrnu“ na modelínu",
-            "publishedAt": "2026-04-26T22:00:00Z"
           }
         ]
       }

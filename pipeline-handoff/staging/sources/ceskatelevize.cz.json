@@ -1,8 +1,56 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ropa zdražuje, Brent překročil 110 dolarů za barel",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ropa-zdrazuje-brent-prekrocil-110-dolaru-za-barel-372873",
+      "dt": "2026-04-28T08:08:33Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "110",
+        "barel",
+        "brent",
+        "dolarů",
+        "překročil",
+        "ropa",
+        "zdražuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rafinerie v ruském Tuapse po ukrajinském úderu opět hoří",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/rafinerie-v-ruskem-tuapse-po-ukrajinskem-uderu-opet-hori-372874",
+      "dt": "2026-04-28T08:02:12Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hoří",
+        "opět",
+        "rafinerie",
+        "ruském",
+        "tuapse",
+        "ukrajinském",
+        "úderu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -717,58 +765,6 @@
         "při",
         "streamu",
         "vybral"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Vědci sestavili obří mapu vesmíru, naznačili zpochybnění Einsteinovy konstanty",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/vedci-sestavili-obri-mapu-vesmiru-muze-zmenit-pohled-na-temnou-energii-372839",
-      "dt": "2026-04-27T12:54:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "einsteinovy",
-        "konstanty",
-        "mapu",
-        "naznačili",
-        "obří",
-        "sestavili",
-        "vesmíru",
-        "vědci",
-        "zpochybnění"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slovensko podalo žalobu proti rozhodnutí EU ukončit dovoz ruského plynu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/slovensko-podalo-zalobu-proti-rozhodnuti-eu-ukoncit-dovoz-ruskeho-plynu-372837",
-      "dt": "2026-04-27T11:29:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "dovoz",
-        "plynu",
-        "podalo",
-        "proti",
-        "rozhodnutí",
-        "ruského",
-        "slovensko",
-        "ukončit",
-        "žalobu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1535,7 +1531,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42741,
+      "bytes": 42791,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1595,11 +1591,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:06:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:08:33Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "finance": 1,
           "zpravy": 28,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1611,6 +1608,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ropa zdražuje, Brent překročil 110 dolarů za barel",
+            "publishedAt": "2026-04-28T08:08:33Z"
+          },
+          {
+            "title": "Rafinerie v ruském Tuapse po ukrajinském úderu opět hoří",
+            "publishedAt": "2026-04-28T08:02:12Z"
+          },
           {
             "title": "Tajemný investor a slabí hráči. Reportéři ČT šli po stopách sázkařské mafie",
             "publishedAt": "2026-04-28T07:06:13Z"
@@ -1634,14 +1639,6 @@
           {
             "title": "Stát mění způsob poskytování právní pomoci cizincům. Hrozí, že to vyjde dráž",
             "publishedAt": "2026-04-28T05:30:00Z"
-          },
-          {
-            "title": "Írán „prorůstá“ Irákem. USA blokují Bagdádu stamiliony z ropy",
-            "publishedAt": "2026-04-28T05:00:00Z"
-          },
-          {
-            "title": "Lidé zaplatili za mobilní domy, nedostali nic. Firmy dluží skoro tři sta milionů",
-            "publishedAt": "2026-04-28T04:21:00Z"
           }
         ]
       }
@@ -1747,7 +1744,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77209,
+      "bytes": 76974,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

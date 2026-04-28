@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
+      "url": "https://mobilmania.zive.cz/clanky/openai-chce-vyuzit-zavahani-applu-s-umelou-inteligenci-chysta-vlastni-telefon-pro-eru-ai-agentu/sc-3-a-1364637/default.aspx",
+      "dt": "2026-04-28T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "agentů",
+        "applu",
+        "chce",
+        "chystá",
+        "inteligencí",
+        "openai",
+        "telefon",
+        "umělou",
+        "vlastní",
+        "využít",
+        "zaváhání",
+        "éru"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -955,33 +984,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze hry Saros. Náročná, ale férová akce v záři zlověstného slunce",
-      "url": "https://doupe.zive.cz/saros-recenze-ps5",
-      "dt": "2026-04-24T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "akce",
-        "ale",
-        "férová",
-        "hry",
-        "náročná",
-        "recenze",
-        "saros",
-        "slunce",
-        "zlověstného",
-        "záři"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +994,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23071,
+      "bytes": 23005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1031,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1047,6 +1049,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
+            "publishedAt": "2026-04-28T07:45:00Z"
           },
           {
             "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
@@ -1071,10 +1077,6 @@
           {
             "title": "Firefox 150 opravuje enormních 271 zranitelných míst. Našla je zakázaná AI Claude Mythos",
             "publishedAt": "2026-04-27T10:45:00Z"
-          },
-          {
-            "title": "Populární textový editor z Windows vyšel i na macOS. Notepad++ to ale bude mít těžké",
-            "publishedAt": "2026-04-27T08:45:00Z"
           }
         ]
       }

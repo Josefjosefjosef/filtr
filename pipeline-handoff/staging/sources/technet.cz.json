@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-28T07:50:33.433400Z",
+  "ingestedAt": "2026-04-28T08:19:11.635385Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
+      "url": "https://www.idnes.cz/ekonomika/domaci/rakovina-lecba-protonove-centrum-nador-fyzik.A260424_170932_ekonomika_iape",
+      "dt": "2026-04-28T08:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "centra",
+        "fyzik",
+        "léčba",
+        "nádor",
+        "obkreslí",
+        "protony",
+        "rakoviny",
+        "superpřesná",
+        "vedoucí",
+        "říká"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -668,7 +695,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Tři roky výroba, desítky let servis: zakázka, která změní celé odvětví",
       "url": "https://www.idnes.cz/technet/technika/vop-cz-servis-firma-vlastimil-navratil-vyroba-taros.A260417_091910_ekonomika_iape",
@@ -746,31 +773,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Před 100 lety se narodila Alžběta II., princezna, s níž se nepočítalo na trůn",
-      "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-kralovna-alzbeta-ii-narozeni.A260420_114507_pred-100-lety_vov",
-      "dt": "2026-04-20T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "100",
-        "alžběta",
-        "lety",
-        "narodila",
-        "nepočítalo",
-        "níž",
-        "princezna",
-        "trůn"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +783,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46327,
+      "bytes": 46131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +820,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 27,
@@ -834,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
+            "publishedAt": "2026-04-28T08:00:00Z"
+          },
           {
             "title": "Před 25 lety začal vesmírný turismus. První soukromník letěl sojuzem",
             "publishedAt": "2026-04-28T05:00:00Z"
@@ -860,10 +866,6 @@
           },
           {
             "title": "Milník válčení. Americký torpédoborec po desítkách let použil námořní dělo",
-            "publishedAt": "2026-04-26T22:00:00Z"
-          },
-          {
-            "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
             "publishedAt": "2026-04-26T22:00:00Z"
           }
         ]
