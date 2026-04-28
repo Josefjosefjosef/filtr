@@ -3608,11 +3608,18 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
-/* P0 mobile ≤900 (spolu s #iuMobileBottomNav v index.html): rezerva nad fixní spodní lištou + safe-area + buffer. */
-@media (max-width: 900px) {
+/* P0: telefon má větší buffer (častěji document scroll); tablet ≤900 menší buffer (#leftContent scroll, jinak příliš velká díra). Bez +168px. */
+@media (max-width: 767px) {
   :root{
-    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 168px);
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 40px);
   }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+  :root{
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 12px + 8px);
+  }
+}
+@media (max-width: 900px) {
   html{
     scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
   }
@@ -4519,8 +4526,8 @@ body[data-section="home"] .iuHomeCanvas{
   --iuSectionAccent: var(--iuNavAccent-pocasi, #38BDF8);
 }
 
-/* P0: bottom safe padding na tool hostech musí přebít .iuWeatherView / .iuRadioView shorthand — až po .iuWeatherView + vázat na iu-mobileMainVisible (reálný flow po Menu). */
-@media (max-width: 900px) {
+/* P0: na telefonu (≤767) je scroll typicky document — padding na hostech + #feed. Na tabletu portrait (768–900) drží rezervu jen #leftContent (níže), aby nevznikl dvojitý padding. */
+@media (max-width: 767px) {
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
     box-sizing: border-box !important;
@@ -8461,8 +8468,8 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #feed{
       height: 100%;
       overflow-y: auto;
-      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
-      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 8px));
+      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 8px));
       box-sizing: border-box;
       
       min-height: min(320px, 48vh);
@@ -8479,8 +8486,9 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
-      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      /* Tablet portrait tool: kompaktní rezerva + safe-area (real-flow proof clearance cca 16–48px). */
+      scroll-padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+      padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
       box-sizing: border-box;
     }
     body.iu-mobileMainVisible:is(
@@ -8808,7 +8816,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     touch-action: pan-y !important;
     display: flex !important;
     flex-direction: column !important;
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px)) !important;
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 28px)) !important;
     box-sizing: border-box !important;
   }
   
