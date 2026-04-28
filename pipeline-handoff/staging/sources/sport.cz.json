@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T06:30:12.070312Z",
+  "ingestedAt": "2026-04-28T06:59:53.407283Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Devatenáctiletý Flagg byl v těsném hlasování zvolen Nováčkem roku NBA",
+      "url": "https://www.sport.cz/clanek/basketbal-devatenactilety-flagg-byl-v-tesnem-hlasovani-zvolen-novackem-roku-nba-5444628",
+      "dt": "2026-04-28T06:44:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "devatenáctiletý",
+        "flagg",
+        "hlasování",
+        "nba",
+        "nováčkem",
+        "roku",
+        "těsném",
+        "zvolen"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,37 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "ZAOSTŘENO NA PLAY OFF: Byl jsem úplně zdrcený, šokovala Antoše barážová hysterie. Extraliga prý nesmí ustoupit",
-      "url": "https://www.sport.cz/clanek/podcasty-zaostreno-zaostreno-na-play-off-na-co-koukali-a-proc-aspon-nesli-na-video-nechape-antos-sudi-po-zakroku-mandata-5444157",
-      "dt": "2026-04-27T11:36:17Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "antoše",
-        "barážová",
-        "extraliga",
-        "hysterie",
-        "jsem",
-        "nesmí",
-        "off",
-        "play",
-        "prý",
-        "ustoupit",
-        "zaostřeno",
-        "zdrcený",
-        "úplně",
-        "šokovala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42517,
+      "bytes": 41673,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:12:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:44:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Devatenáctiletý Flagg byl v těsném hlasování zvolen Nováčkem roku NBA",
+            "publishedAt": "2026-04-28T06:44:51Z"
+          },
           {
             "title": "Žasl i Vémola. Slovenka znovu ohromila, pak zadržovala slzy",
             "publishedAt": "2026-04-28T06:12:56Z"
@@ -869,10 +867,6 @@
           {
             "title": "Fantastický výkon Noskové, vyřadila světovou trojku. Ve čtvrtfinále je i Plíšková. Raduje se také Menšík",
             "publishedAt": "2026-04-27T08:25:46Z"
-          },
-          {
-            "title": "Manchester United si upevnil třetí příčku",
-            "publishedAt": "2026-04-27T21:03:37Z"
           }
         ]
       }

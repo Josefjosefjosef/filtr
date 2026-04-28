@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-28T06:30:12.070312Z",
+  "ingestedAt": "2026-04-28T06:59:53.407283Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "PowerWash Simulator 2 v létě zamíří do galaxie Star Wars - INDIAN",
+      "url": "https://indian-tv.cz/clanek/powerwash-simulator-2-v-lete-zamiri-do-galaxie-star-wars-kui0wd",
+      "dt": "2026-04-28T06:28:26Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "galaxie",
+        "indian",
+        "létě",
+        "powerwash",
+        "simulator",
+        "star",
+        "wars",
+        "zamíří"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1046,31 +1071,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Kodžima navštívil Xbox. Tajemná krabička rozjela spekulace - INDIAN",
-      "url": "https://indian-tv.cz/clanek/kodzima-navstivil-xbox-tajemna-krabicka-rozjela-spekulace-77jh16",
-      "dt": "2026-04-23T13:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "indian",
-        "kodžima",
-        "krabička",
-        "navštívil",
-        "rozjela",
-        "spekulace",
-        "tajemná",
-        "xbox"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1081,7 +1081,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 212155,
+      "bytes": 212420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1118,7 +1118,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T17:55:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:28:26Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1134,6 +1134,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "PowerWash Simulator 2 v létě zamíří do galaxie Star Wars - INDIAN",
+            "publishedAt": "2026-04-28T06:28:26Z"
+          },
           {
             "title": "Vyšší cena potvrzena. Nová generace Steam Controlleru vyjde v květnu - INDIAN",
             "publishedAt": "2026-04-27T17:55:36Z"
@@ -1161,10 +1165,6 @@
           {
             "title": "Kultovní série Život Není Krásný se vrací v plnohodnotné adventuře s podtitulem Poslední Exekuce - INDIAN",
             "publishedAt": "2026-04-27T09:00:00Z"
-          },
-          {
-            "title": "The Crew 2 vylepšuje offline mód a hnutí Stop Killing Games slaví dílčí vítězství - INDIAN",
-            "publishedAt": "2026-04-27T08:00:00Z"
           }
         ]
       }

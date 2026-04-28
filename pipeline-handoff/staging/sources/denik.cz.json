@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T06:30:12.070312Z",
+  "ingestedAt": "2026-04-28T06:59:53.407283Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "U Votic vykolejil osobní vlak, provoz na koridoru stojí",
+      "url": "https://www.denik.cz/nehody/nehoda-vykolejeny-vlak-cerveny-ujezd-votice-benesovsko.html",
+      "dt": "2026-04-28T06:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "koridoru",
+        "osobní",
+        "provoz",
+        "stojí",
+        "vlak",
+        "votic",
+        "vykolejil"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -629,32 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Olomoucká Flora přitáhla desetitisícové davy. Lidé si odnášeli květiny i zážitky",
-      "url": "https://www.denik.cz/regiony/olomouc-jarni-flora-2026-davy-lidi-kvetiny-hudba-program.html",
-      "dt": "2026-04-27T13:10:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "davy",
-        "desetitisícové",
-        "flora",
-        "květiny",
-        "lidé",
-        "odnášeli",
-        "olomoucká",
-        "přitáhla",
-        "zážitky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -665,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29303,
+      "bytes": 29110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -702,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 21,
@@ -719,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U Votic vykolejil osobní vlak, provoz na koridoru stojí",
+            "publishedAt": "2026-04-28T06:05:00Z"
+          },
           {
             "title": "Měla jsem mindráky, říká hvězda filmu Ďábel nosí Pradu 2. Dnes už je nad věcí",
             "publishedAt": "2026-04-28T06:00:00Z"
@@ -746,10 +748,6 @@
           {
             "title": "Jen tři stovky na valorizaci důchodů? Výpočtem ještě zamává krize, říká Juchelka",
             "publishedAt": "2026-04-28T02:00:00Z"
-          },
-          {
-            "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
-            "publishedAt": "2026-04-27T19:40:00Z"
           }
         ]
       }

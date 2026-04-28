@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T06:30:12.070312Z",
+  "ingestedAt": "2026-04-28T06:59:53.407283Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
+      "url": "https://www.zive.cz/clanky/nejlevnejsi-monitor-msi-pro-mp341cqw/sc-3-a-240903/default.aspx",
+      "dt": "2026-04-28T06:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "1440",
+        "3440",
+        "3690",
+        "jen",
+        "monitor",
+        "msi",
+        "nejlevnější",
+        "rozlišením",
+        "stojí",
+        "tohle"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -955,33 +982,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Polovina internetu už používá IPv6, říká Google. Česko je podprůměrné, Slovensko ostuda",
-      "url": "https://www.zive.cz/clanky/polovina-internetu-uz-pouziva-ipv6-rika-google-cesko-je-podprumerne-slovensko-ostuda/sc-3-a-240832/default.aspx",
-      "dt": "2026-04-23T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "google",
-        "internetu",
-        "ipv6",
-        "ostuda",
-        "podprůměrné",
-        "polovina",
-        "používá",
-        "slovensko",
-        "česko",
-        "říká"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +992,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23123,
+      "bytes": 23071,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1029,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-27T18:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1047,6 +1047,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
+            "publishedAt": "2026-04-28T06:45:00Z"
           },
           {
             "title": "EnSHITifikace. Proč se kdysi skvělé služby úmyslně zhoršují a proč je to dobré pro byznys",
@@ -1071,10 +1075,6 @@
           {
             "title": "Populární textový editor z Windows vyšel i na macOS. Notepad++ to ale bude mít těžké",
             "publishedAt": "2026-04-27T08:45:00Z"
-          },
-          {
-            "title": "Nové mobily jsou vždy „nejlepší v historii“. Jenže často jen díky chytrému srovnání a hvězdičkám",
-            "publishedAt": "2026-04-27T15:45:00Z"
           }
         ]
       }
