@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-28T17:59:10.417613Z",
+  "ingestedAt": "2026-04-28T18:29:17.384490Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "The Blood of Dawnwalker od veteránů z CD Projektu odhalilo datum vydání",
+      "url": "https://zing.cz/article/the-blood-of-dawnwalker-od-veteranu-z-cd-projektu-odhalilo-datum-vydani",
+      "dt": "2026-04-28T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "blood",
+        "datum",
+        "dawnwalker",
+        "odhalilo",
+        "projektu",
+        "the",
+        "veteránů",
+        "vydání"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -952,30 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vychází Masters of Albion, poslední hra od Petera Molyneuxe",
-      "url": "https://zing.cz/article/vychazi-masters-of-albion-posledni-hra-od-petera-molyneuxe",
-      "dt": "2026-04-23T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "albion",
-        "hra",
-        "masters",
-        "molyneuxe",
-        "petera",
-        "poslední",
-        "vychází"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -986,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125131,
+      "bytes": 125218,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1023,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1039,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "The Blood of Dawnwalker od veteránů z CD Projektu odhalilo datum vydání",
+            "publishedAt": "2026-04-28T18:00:00Z"
+          },
           {
             "title": "Hráči na PlayStationu řeší novou DRM ochranu u digitálně zakoupených her",
             "publishedAt": "2026-04-28T16:00:00Z"
@@ -1066,10 +1071,6 @@
           {
             "title": "Assassin's Creed Hexe přichází o game directora, 50 lidí a magii",
             "publishedAt": "2026-04-28T05:00:00Z"
-          },
-          {
-            "title": "Pohřbil PlayStation hru s Venomem? Spekulace se rozcházejí",
-            "publishedAt": "2026-04-28T04:00:00Z"
           }
         ]
       }

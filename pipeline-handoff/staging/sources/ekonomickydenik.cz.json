@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T17:59:10.417613Z",
+  "ingestedAt": "2026-04-28T18:29:17.384490Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Drony: Evropa tvoří akční plán, Česko už je dál. Co odhalil Zůna s Řehkou?",
+      "url": "https://ekonomickydenik.cz/drony-akcni-plan-zuna-rehka/",
+      "dt": "2026-04-28T18:10:08Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "akční",
+        "drony",
+        "evropa",
+        "odhalil",
+        "plán",
+        "tvoří",
+        "zůna",
+        "česko",
+        "řehkou"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -761,33 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "„Papír, který nemá žádnou váhu.“ Expert drsně odsoudil obchodní dohodu s USA",
-      "url": "https://ekonomickydenik.cz/expert-odsoudil-obchodni-dohodu-usa/",
-      "dt": "2026-04-27T12:26:33Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dohodu",
-        "drsně",
-        "expert",
-        "nemá",
-        "obchodní",
-        "odsoudil",
-        "papír",
-        "usa",
-        "váhu",
-        "žádnou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73353,
+      "bytes": 73342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,12 +834,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:10:08Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 23,
+          "finance": 24,
           "zdravi": 2,
-          "zpravy": 5
+          "zpravy": 4
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -852,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Drony: Evropa tvoří akční plán, Česko už je dál. Co odhalil Zůna s Řehkou?",
+            "publishedAt": "2026-04-28T18:10:08Z"
+          },
           {
             "title": "Nevydaný podcast s prezidentem a „tajný“ YouTube kanál? Řehka šel proti Zůnovi",
             "publishedAt": "2026-04-28T17:36:00Z"
@@ -879,10 +882,6 @@
           {
             "title": "Raději dluhy než ruský útok. Polsko a Pobaltí chtějí další miliardy z Bruselu",
             "publishedAt": "2026-04-28T14:03:45Z"
-          },
-          {
-            "title": "Rozdělit ČEZ je chyba. Ratingová agentura varuje před poklesem zisku i vyšším zadlužením",
-            "publishedAt": "2026-04-28T13:48:17Z"
           }
         ]
       }

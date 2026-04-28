@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T17:59:10.417613Z",
+  "ingestedAt": "2026-04-28T18:29:17.384490Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ruský exprezident Medveděv píše učebnice. Školáky poučí o společenských vědách",
+      "url": "https://www.denik.cz/staty-mimo-eu/dmitrij-medvedev-rusko-ucebnice.html",
+      "dt": "2026-04-28T17:53:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "exprezident",
+        "medveděv",
+        "poučí",
+        "píše",
+        "ruský",
+        "společenských",
+        "učebnice",
+        "vědách",
+        "školáky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -627,33 +653,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Stojí za pádem ředitele VZP tajná služba? Její šéf Koudelka mlží",
-      "url": "https://www.denik.cz/z_domova/stoji-za-padem-sefa-vzp-tajna-sluzba-bis-jeji-sef-michal-koudelka-mlzi.html",
-      "dt": "2026-04-28T08:23:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "její",
-        "koudelka",
-        "mlží",
-        "pádem",
-        "služba",
-        "stojí",
-        "tajná",
-        "vzp",
-        "ředitele",
-        "šéf"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +663,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28858,
+      "bytes": 28687,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,7 +700,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T17:53:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -718,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ruský exprezident Medveděv píše učebnice. Školáky poučí o společenských vědách",
+            "publishedAt": "2026-04-28T17:53:00Z"
+          },
           {
             "title": "Rusko se topí v krizi, tvrdí Švédi. Putin má žádat o peníze na válku oligarchy",
             "publishedAt": "2026-04-28T17:30:00Z"
@@ -745,10 +748,6 @@
           {
             "title": "Spojené arabské emiráty opouští OPEC. Chtějí větší pružnost v obchodu s ropou",
             "publishedAt": "2026-04-28T14:09:00Z"
-          },
-          {
-            "title": "Německo plánuje zdanit sladké nápoje. Podraží i odvody z alkoholu a cigaret",
-            "publishedAt": "2026-04-28T13:19:00Z"
           }
         ]
       }
