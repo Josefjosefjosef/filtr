@@ -3608,10 +3608,16 @@ body[data-iu-fc="1"] #feed{
   }
 }
 
-/* P0 mobile/tablet ≤900: rezerva nad fixní spodní lištou — poslední karty nesmí zmizet pod #iuMobileBottomNav. */
+/* P0 mobile ≤900 (spolu s #iuMobileBottomNav v index.html): rezerva nad fixní spodní lištou + safe-area + buffer. */
 @media (max-width: 900px) {
+  :root{
+    --iu-mobile-bottom-nav-safe-space: calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 168px);
+  }
+  html{
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
+  }
   body:not(.iu-mobileGateOverlayOpen) #feed:not([hidden]){
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 28px) !important;
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
     box-sizing: border-box !important;
   }
   body:not(.iu-mobileGateOverlayOpen) #iuMapyView:not([hidden]),
@@ -3619,8 +3625,9 @@ body[data-iu-fc="1"] #feed{
   body:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView:not([hidden]),
   body:not(.iu-mobileGateOverlayOpen) #iuRadioView:not([hidden]),
   body:not(.iu-mobileGateOverlayOpen) #iuWeatherView:not([hidden]),
-  body:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView:not([hidden]){
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 28px) !important;
+  body:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView:not([hidden]),
+  body:not(.iu-mobileGateOverlayOpen) #iuTvProgramView:not([hidden]){
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
     box-sizing: border-box !important;
   }
 }
@@ -8450,11 +8457,42 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     #feed{
       height: 100%;
       overflow-y: auto;
-      scroll-padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px);
-      padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px);
+      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
       box-sizing: border-box;
       
       min-height: min(320px, 48vh);
+    }
+    body.iu-mobileMainVisible:is(
+      [data-section="pocasi"],
+      [data-section="mapy"],
+      [data-section="maps"],
+      [data-section="jr"],
+      [data-section="tvprogram"],
+      [data-section="tvonline"],
+      [data-section="radio"]
+    ) #leftContent{
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px));
+      box-sizing: border-box;
+    }
+    body.iu-mobileMainVisible:is(
+      [data-section="pocasi"],
+      [data-section="mapy"],
+      [data-section="maps"],
+      [data-section="jr"],
+      [data-section="tvprogram"],
+      [data-section="tvonline"],
+      [data-section="radio"]
+    ) #leftContent #feed{
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      overflow-y: visible !important;
+      flex: 0 1 auto;
     }
   }
   @media (min-width: 768px) and (max-width: 900px) and (orientation: landscape) {
@@ -8766,7 +8804,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     touch-action: pan-y !important;
     display: flex !important;
     flex-direction: column !important;
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px) !important;
+    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 168px)) !important;
     box-sizing: border-box !important;
   }
   
