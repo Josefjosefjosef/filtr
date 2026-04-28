@@ -1178,8 +1178,6 @@ aside.accordionCol{
 .iu-mmQuickItem[aria-label="Z??silky a sledov??n?­"] i{ color: #e60012; }
 .iu-mmQuickItem[aria-label="Vzory smluv a pln?© moci"] i{ color: #ff0000; }
 .iu-mmQuickItem[aria-label="FinanÄ?n?­ kalkulaÄ?ky"] i{ color: #4285f4; }
-.iu-mmQuickItem[aria-label="Registr smluv"] i{ color: #0066cc; }
-
 .iu-mmQuickItem--inert{ cursor: default; }
 .iu-mmQuickItem--inert:hover{ background: transparent; transform: none; }
 
@@ -10927,10 +10925,6 @@ body .accordionCol .mindMenu .iu-mmTopTools + section.iu-mmQuickLinks:not(.iu-mo
 
 .accordionCol .mindMenu .iu-mmSectionHead + .iu-mmQuickGrid{
   margin-top: var(--iu-rr-blockTopGap, 12px);
-}
-
-.accordionCol .mindMenu .iu-mmQuickLinks:first-child .iu-mmSectionHead{
-  margin-top: 10px;
 }
 
 .accordionCol .mindMenu > section.iu-mmQuickLinks .iu-mmSectionHead{

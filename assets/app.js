@@ -18938,10 +18938,7 @@ function buildVideoAsArticleCard(it) {
     { id: "word_pdf", label: "Převod Word / PDF", accent: "#c62828" },
     { id: "financni_kalkulacky", label: "Finanční kalkulačky", accent: "#4285f4" },
     { id: "vzory_smluv", label: "Vzory smluv a plné moci", accent: "#ff0000" },
-    { id: "komunikace_vzdelavani", label: "Komunikace a vzdělávání", accent: "#6a1b9a" },
     { id: "vytvorit_fakturu", label: "Vytvořit fakturu", accent: "#0f766e" },
-    { id: "registr_smluv", label: "Registr smluv", accent: "#0066cc" },
-    { id: "obchodni_rejstrik", label: "Obchodní rejstřík", accent: "#37474f" },
     { id: "zivnostensky_rejstrik", label: "Živnostenský rejstřík", accent: "#455a64" },
     { id: "naceneni_nakupu_domu", label: "Nákup potravin online", accent: "#2e7d32" }
   ];
@@ -31604,6 +31601,51 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ".mindMenu #iuSilverCalendarSummaryCard .iuCalendarSummary__icon{color:var(--iu-calendar-accent)!important}" +
     ".mindMenu #iuSilverTasksSummaryCard .iuTasksLabel{color:var(--iuTasksAccent,#8b5cf6)!important}" +
     ".mindMenu #iuSilverTasksSummaryCard .iuTasksIcon{color:var(--iuTasksAccent,#8b5cf6)!important}" +
+    "}";
+  try{
+    if (document.getElementById(ID)) return;
+    var st = document.createElement("style");
+    st.id = ID;
+    st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+  }catch(e){}
+})();
+
+// MindMenu mobile/tablet (≤1024px): elevated unified controls — injected (not app.css) for css_debt_guard byte budget.
+(function iuMindMenuMobileTabletElevatedInject(){
+  "use strict";
+  var ID = "iu-mindmenu-mobile-tablet-elevated";
+  var CSS =
+    "@media(max-width:1024px){" +
+    "body #iuMindMenuView .iu-mailbox-pill," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill," +
+    "body #iuMindMenuView .iu-mailbox-gear," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-gear," +
+    "body #iuMindMenuView .iu-pill-social-slot," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-slot," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>span.iuTileLink," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger," +
+    "body #iuMindMenuView .iu-mmTopTool:not(.iu-mmTopTool--imageTile){" +
+    "background:#fff!important;background-color:#fff!important;" +
+    "border:1px solid rgba(15,23,42,.06)!important;" +
+    "box-shadow:0 6px 18px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
+    "body #iuMindMenuView .iu-mailbox-pill:active," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill:active," +
+    "body #iuMindMenuView .iu-mailbox-gear:active," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-gear:active," +
+    "body #iuMindMenuView .iu-pill-social-slot:active," +
+    "body #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-slot:active," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink:active," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink:active," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink:active," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>span.iuTileLink:active," +
+    "body #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger:active," +
+    "body #iuMindMenuView .iu-mmTopTool:not(.iu-mmTopTool--imageTile):active{" +
+    "transform:translateY(1px)!important;" +
+    "box-shadow:0 3px 10px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
     "}";
   try{
     if (document.getElementById(ID)) return;
