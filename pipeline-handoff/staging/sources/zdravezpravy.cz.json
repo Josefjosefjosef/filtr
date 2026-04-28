@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-28T11:34:53.070680Z",
+  "ingestedAt": "2026-04-28T11:59:20.597821Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Na 1. LF UK pomáhá robot Charles a chystá se i nové robotické centrum",
+      "url": "https://www.zdravezpravy.cz/2026/04/28/na-1-lf-uk-pomaha-robot-charles-a-chysta-se-i-nove-roboticke-centrum/",
+      "dt": "2026-04-28T11:37:55Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "centrum",
+        "charles",
+        "chystá",
+        "nové",
+        "pomáhá",
+        "robot",
+        "robotické"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -465,29 +489,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ke křtům se přiklání stále více dospívajících i dospělých osob",
-      "url": "https://www.zdravezpravy.cz/2026/04/20/ke-krtum-se-priklani-stale-vice-dospivajicich-i-dospelych-osob/",
-      "dt": "2026-04-20T12:05:27Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "dospívajících",
-        "dospělých",
-        "křtům",
-        "osob",
-        "přiklání",
-        "stále"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +499,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 195616,
+      "bytes": 197528,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +536,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:15:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:37:55Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -550,6 +551,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na 1. LF UK pomáhá robot Charles a chystá se i nové robotické centrum",
+            "publishedAt": "2026-04-28T11:37:55Z"
+          },
           {
             "title": "Svaz průmyslu a dopravy podporuje Národní očkovací strategii",
             "publishedAt": "2026-04-28T11:15:31Z"
@@ -577,10 +582,6 @@
           {
             "title": "V ČR je jen 500 alergologů. Na vyšetření se čeká i půl roku",
             "publishedAt": "2026-04-26T08:30:10Z"
-          },
-          {
-            "title": "Miroslav Lédl má 400 odběrů krve. Ale chce jich mít 500",
-            "publishedAt": "2026-04-25T09:00:22Z"
           }
         ]
       }

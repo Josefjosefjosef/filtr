@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T11:34:53.070680Z",
+  "ingestedAt": "2026-04-28T11:59:20.597821Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,33 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Smažete aplikaci a druhý den se sama nainstaluje. Problém, se kterým si neví rady ani Apple",
+      "url": "https://mobilmania.zive.cz/clanky/smazana-meditacni-aplikace-se-vraci-jako-bumerang-iphony-trapi-podivna-chyba/sc-3-a-1364635/default.aspx",
+      "dt": "2026-04-28T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aplikaci",
+        "apple",
+        "den",
+        "druhý",
+        "nainstaluje",
+        "neví",
+        "problém",
+        "rady",
+        "sama",
+        "smažete"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -952,35 +979,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Výborný batoh za 719 Kč. Voděodolný Kingsons s objemem 30 litrů pojme notebook i oblečení na dlouhý výlet",
-      "url": "https://www.zive.cz/clanky/vyborny-batoh-za-719-kc-vodeodolny-kingsons-s-objemem-30-litru-pojme-notebook-i-obleceni-na-dlouhy-vylet/sc-3-a-240851/default.aspx",
-      "dt": "2026-04-24T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "719",
-        "batoh",
-        "dlouhý",
-        "kingsons",
-        "litrů",
-        "notebook",
-        "objemem",
-        "oblečení",
-        "pojme",
-        "voděodolný",
-        "výborný",
-        "výlet"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -991,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22879,
+      "bytes": 22631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1028,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1046,6 +1044,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Smažete aplikaci a druhý den se sama nainstaluje. Problém, se kterým si neví rady ani Apple",
+            "publishedAt": "2026-04-28T11:45:00Z"
           },
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
@@ -1070,10 +1072,6 @@
           {
             "title": "EnSHITifikace. Proč se kdysi skvělé služby úmyslně zhoršují a proč je to dobré pro byznys",
             "publishedAt": "2026-04-27T18:45:00Z"
-          },
-          {
-            "title": "V Česku už vzniklo pět milionů datových schránek. Letos po 17 letech změní webovou adresu",
-            "publishedAt": "2026-04-27T14:45:00Z"
           }
         ]
       }

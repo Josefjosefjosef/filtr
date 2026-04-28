@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T11:34:53.070680Z",
+  "ingestedAt": "2026-04-28T11:59:20.597821Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nosková si dál užívá dramatické chvíle a poráží nejlepší. Už nejsem ztracená, těší ji",
+      "url": "https://www.idnes.cz/sport/tenis/tenis-turnaj-madrid-ohlas-linda-noskova.A260428_095617_tenis_pls",
+      "dt": "2026-04-28T11:34:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chvíle",
+        "dramatické",
+        "nejlepší",
+        "nejsem",
+        "nosková",
+        "poráží",
+        "těší",
+        "užívá",
+        "ztracená"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -754,33 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nervy jako v osmnácti, přistihl se Otruba na Lutychu. Seixas je nový impulz, věří",
-      "url": "https://www.idnes.cz/sport/cyklistika/lutych-valonsky-sip-jakub-otruba-tour-de-france.A260427_125838_cyklistika_ipet",
-      "dt": "2026-04-27T15:04:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "impulz",
-        "jako",
-        "lutychu",
-        "nervy",
-        "nový",
-        "osmnácti",
-        "otruba",
-        "přistihl",
-        "seixas",
-        "věří"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45857,
+      "bytes": 45608,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +842,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nosková si dál užívá dramatické chvíle a poráží nejlepší. Už nejsem ztracená, těší ji",
+            "publishedAt": "2026-04-28T11:34:00Z"
+          },
           {
             "title": "Charles Leclerc se stal novou tváří L’Oréal. Fanoušci žádají společný spot se Sainzem",
             "publishedAt": "2026-04-28T11:10:00Z"
@@ -870,10 +873,6 @@
           {
             "title": "Dukla, nebo Šelmy? O volejbalovém titulu rozhodne poslední bitva",
             "publishedAt": "2026-04-28T08:23:27Z"
-          },
-          {
-            "title": "Obhájci titulu z Oklahoma City slaví rychlý postup, Denver odvrátil vyřazení",
-            "publishedAt": "2026-04-28T07:18:00Z"
           }
         ]
       }

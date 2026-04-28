@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T11:34:53.070680Z",
+  "ingestedAt": "2026-04-28T11:59:20.597821Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Za pokus o zapálení synagogy v Brně dostal mladík sedm let vězení",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/za-pokus-o-zapaleni-synagogy-v-brne-dostal-mladik-sedm-let-vezeni-372890",
+      "dt": "2026-04-28T11:35:50Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "brně",
+        "dostal",
+        "let",
+        "mladík",
+        "pokus",
+        "sedm",
+        "synagogy",
+        "vězení",
+        "zapálení"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -740,32 +766,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Opravy mostních závěrů na novém úseku D3 u Českých Budějovic zpomalily dopravu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/jihocesky-kraj/opravy-mostnich-zaveru-na-novem-useku-d3-u-ceskych-budejovic-zpomalily-dopravu-372857",
-      "dt": "2026-04-27T17:26:17Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "budějovic",
-        "dopravu",
-        "mostních",
-        "novém",
-        "opravy",
-        "zpomalily",
-        "závěrů",
-        "úseku",
-        "českých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Dostál k novému systému: Raději bych byl doma s rodinou a neobjížděl všechny závody",
@@ -876,7 +876,7 @@
       "section": "sport",
       "contentType": "article",
       "title": "Trenéry roku jsou Petr Fuksa a Patrik Augusta",
-      "url": "https://sport.ceskatelevize.cz/clanek/rychlostni-kanoistika/trenery-roku-jsou-petr-fuksa-a-patrik-augusta-156489",
+      "url": "https://sport.ceskatelevize.cz/clanek/ostatni/trenery-roku-jsou-petr-fuksa-a-patrik-augusta-156489",
       "dt": "2026-04-27T20:39:58Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
@@ -1528,7 +1528,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43382,
+      "bytes": 43423,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1588,7 +1588,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T11:27:35Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T11:35:50Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1605,6 +1605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Za pokus o zapálení synagogy v Brně dostal mladík sedm let vězení",
+            "publishedAt": "2026-04-28T11:35:50Z"
+          },
           {
             "title": "Izrael vyzval k evakuaci sedmnácti vesnic v Libanonu navzdory příměří",
             "publishedAt": "2026-04-28T11:27:35Z"
@@ -1632,10 +1636,6 @@
           {
             "title": "Čeští vědci chtějí odstraňovat léky z vody s pomocí světla. Popsali, jak na to",
             "publishedAt": "2026-04-28T09:30:53Z"
-          },
-          {
-            "title": "Rocky konečně zdolal „své“ schody. Philadelphské muzeum ale sochu léta odmítalo",
-            "publishedAt": "2026-04-28T09:06:07Z"
           }
         ]
       }
@@ -1647,7 +1647,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38537,
+      "bytes": 38481,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1741,7 +1741,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77425,
+      "bytes": 77402,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
