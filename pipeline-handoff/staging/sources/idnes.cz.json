@@ -1,25 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-28T16:04:33.358516Z",
+  "ingestedAt": "2026-04-28T16:29:25.535179Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Politici brojí proti sudetskému sjezdu v Brně, Zeman obvinil Čechy z kolaborace",
-      "url": "https://www.idnes.cz/zpravy/domaci/sudetonemecky-sjezd-debata-zeman-rajchl-brno-nemci-cesko-sudety.A260427_084539_domaci_svm",
-      "dt": "2026-04-28T15:51:00Z",
+      "title": "Rozpaky z atentátu a vyhlazení Putinem. Co si dle odezíračky řekli Trump a Karel III.",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/odezirani-ze-rtu-odhalilo-co-prezident-trump-rekl-krali-karlu-iii-po-prijezdu-kralovske-rodiny-do-bi.A260428_173403_zahranicni_remy",
+      "dt": "2026-04-28T16:09:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "brně",
-        "brojí",
+        "atentátu",
+        "dle",
+        "iii",
+        "karel",
+        "odezíračky",
+        "putinem",
+        "rozpaky",
+        "trump",
+        "vyhlazení",
+        "řekli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rajchl přirovnal sudetský sjezd ke Ku-klux-klanu, Zeman viní Čechy z kolaborace",
+      "url": "https://www.idnes.cz/zpravy/domaci/sudetonemecky-sjezd-debata-zeman-rajchl-brno-nemci-cesko-sudety.A260427_084539_domaci_svm",
+      "dt": "2026-04-28T16:07:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "klanu",
+        "klux",
         "kolaborace",
-        "obvinil",
-        "politici",
-        "proti",
-        "sjezdu",
-        "sudetskému",
+        "přirovnal",
+        "rajchl",
+        "sjezd",
+        "sudetský",
+        "viní",
         "zeman",
         "čechy"
       ],
@@ -746,31 +773,6 @@
         "zmařený",
         "útočníci",
         "částečně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "IKEA testuje sedmimílové boty. Pomáhají skladníkům ve vyřizování objednávek",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/ikea-inovace-roboticke-boty.A260428_102328_eko-zahranicni_vebe",
-      "dt": "2026-04-28T12:52:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "boty",
-        "ikea",
-        "objednávek",
-        "pomáhají",
-        "sedmimílové",
-        "skladníkům",
-        "testuje",
-        "vyřizování"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1569,7 +1571,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50673,
+      "bytes": 51332,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1606,12 +1608,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:51:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:09:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "other": 2,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1624,8 +1626,12 @@
         },
         "sample_titles": [
           {
-            "title": "Politici brojí proti sudetskému sjezdu v Brně, Zeman obvinil Čechy z kolaborace",
-            "publishedAt": "2026-04-28T15:51:00Z"
+            "title": "Rozpaky z atentátu a vyhlazení Putinem. Co si dle odezíračky řekli Trump a Karel III.",
+            "publishedAt": "2026-04-28T16:09:00Z"
+          },
+          {
+            "title": "Rajchl přirovnal sudetský sjezd ke Ku-klux-klanu, Zeman viní Čechy z kolaborace",
+            "publishedAt": "2026-04-28T16:07:00Z"
           },
           {
             "title": "Mediální výbor vyzve Klempíře ke stažení zákona, opozice využila převahy hlasů",
@@ -1650,10 +1656,6 @@
           {
             "title": "Rodičovský příspěvek vzroste na 400 tisíc korun, Juchelka má hotový návrh",
             "publishedAt": "2026-04-28T15:23:29Z"
-          },
-          {
-            "title": "Satoranský, Dykovi či Hartl. Podívejte se, kdo se přišel rozloučit s Janem Potměšilem",
-            "publishedAt": "2026-04-28T15:12:00Z"
           }
         ]
       }

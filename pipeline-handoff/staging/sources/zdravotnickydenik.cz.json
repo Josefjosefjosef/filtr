@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T16:04:33.358516Z",
+  "ingestedAt": "2026-04-28T16:29:25.535179Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nová šance pro české pacienty: CAR-T léčba cílí na selhávající imunitu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/car-t-lecba-cili-na-selhavajici-imunitu/",
+      "dt": "2026-04-28T16:05:34Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "car",
+        "cílí",
+        "imunitu",
+        "léčba",
+        "nová",
+        "pacienty",
+        "selhávající",
+        "české",
+        "šance"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,34 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nepředvídatelné úhrady brzdí inovace, říká Toman. Dohodovací řízení čeká zásadní změna",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/uhrady-inovace-toman-dohodovaci-rizeni/",
-      "dt": "2026-04-28T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "brzdí",
-        "dohodovací",
-        "inovace",
-        "nepředvídatelné",
-        "toman",
-        "změna",
-        "zásadní",
-        "úhrady",
-        "čeká",
-        "říká",
-        "řízení"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91340,
+      "bytes": 86478,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:29:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:05:34Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -329,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nová šance pro české pacienty: CAR-T léčba cílí na selhávající imunitu",
+            "publishedAt": "2026-04-28T16:05:34Z"
+          },
           {
             "title": "Průlom v léčbě hluchoty: Genová terapie vrací dětem sluch, výrobce ji poskytne zdarma",
             "publishedAt": "2026-04-28T15:29:09Z"
@@ -356,10 +358,6 @@
           {
             "title": "Peklo za mřížemi: V amerických věznicích umírají stovky psychicky nemocných v izolaci a špíně",
             "publishedAt": "2026-04-28T08:00:00Z"
-          },
-          {
-            "title": "Alarmující čísla: Proti chřipce se očkuje jen 11 % zdravotníků",
-            "publishedAt": "2026-04-28T07:00:00Z"
           }
         ]
       }

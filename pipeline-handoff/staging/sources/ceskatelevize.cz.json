@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T16:04:33.358516Z",
+  "ingestedAt": "2026-04-28T16:29:25.535179Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Šluknov požádá o dotaci na odkup bytů na problémovém sídlišti",
+      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/ustecky-kraj/sluknov-pozada-o-dotaci-na-odkup-bytu-na-problemovem-sidlisti-372908",
+      "dt": "2026-04-28T16:00:56Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bytů",
+        "dotaci",
+        "odkup",
+        "požádá",
+        "problémovém",
+        "sídlišti",
+        "šluknov"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -745,46 +769,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vláda chce plnit závazky k NATO, uvedla Murová. Dle Kovářové vůle chybí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vlada-chce-plnit-zavazky-k-nato-uvedla-murova-dle-kovarove-vule-chybi-372866",
-      "dt": "2026-04-28T06:12:59Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chce",
-        "chybí",
-        "dle",
-        "kovářové",
-        "murová",
-        "nato",
-        "plnit",
-        "uvedla",
-        "vláda",
-        "vůle",
-        "závazky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
-      "title": "Lehečka si v Madridu poradil i s Musettim",
+      "title": "Lehečka si v Madridu poradil i s Musettim. Siniaková se vrátí na post deblové jedničky",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/lehecka-si-v-madridu-poradil-i-s-musettim-156494",
       "dt": "2026-04-28T12:47:10Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "deblové",
+        "jedničky",
         "lehečka",
         "madridu",
         "musettim",
-        "poradil"
+        "poradil",
+        "post",
+        "siniaková",
+        "vrátí"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1532,7 +1533,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43743,
+      "bytes": 43513,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1592,11 +1593,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:47:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:00:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 23,
+          "finance": 2,
           "other": 5
         },
         "drop_counts": {
@@ -1609,6 +1610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šluknov požádá o dotaci na odkup bytů na problémovém sídlišti",
+            "publishedAt": "2026-04-28T16:00:56Z"
+          },
           {
             "title": "Kvůli napětí ve světě zdraží energie, obávají se podle průzkumu Češi",
             "publishedAt": "2026-04-28T15:47:37Z"
@@ -1636,10 +1641,6 @@
           {
             "title": "Propojenost severu a jihu je zásadní pro odolnost a bezpečnost Evropy, míní Pavel",
             "publishedAt": "2026-04-28T14:48:36Z"
-          },
-          {
-            "title": "Po vzoru Hormuzu. Úvahy o mýtném v klíčových průlivech sílí",
-            "publishedAt": "2026-04-28T14:29:02Z"
           }
         ]
       }
@@ -1651,7 +1652,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38055,
+      "bytes": 38409,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1704,7 +1705,7 @@
         },
         "sample_titles": [
           {
-            "title": "Lehečka si v Madridu poradil i s Musettim",
+            "title": "Lehečka si v Madridu poradil i s Musettim. Siniaková se vrátí na post deblové jedničky",
             "publishedAt": "2026-04-28T12:47:10Z"
           },
           {
@@ -1745,7 +1746,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77426,
+      "bytes": 77438,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
