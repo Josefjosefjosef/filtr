@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T19:29:18.712295Z",
+  "ingestedAt": "2026-04-28T20:00:50.104816Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řidič autobusu v Polsku děsil cestující. Srazil zvíře, s rozbitým sklem jel dál",
+      "url": "https://www.denik.cz/staty-eu/polsko-autobus-los-srazka-flixbus-poznan-zgierz-lodz-varsava.html",
+      "dt": "2026-04-28T19:28:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "autobusu",
+        "cestující",
+        "děsil",
+        "jel",
+        "polsku",
+        "rozbitým",
+        "sklem",
+        "srazil",
+        "zvíře",
+        "řidič"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,34 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Karel III. v Bílém domě. USA navštívil v době, kdy Trump kritizuje spojence NATO",
-      "url": "https://www.denik.cz/ze_sveta/donald-trump-kral-karel-iii-camilla-melania-navsteva.html",
-      "dt": "2026-04-28T08:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bílém",
-        "době",
-        "domě",
-        "iii",
-        "karel",
-        "kritizuje",
-        "nato",
-        "navštívil",
-        "spojence",
-        "trump",
-        "usa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28687,
+      "bytes": 28456,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T19:28:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -717,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řidič autobusu v Polsku děsil cestující. Srazil zvíře, s rozbitým sklem jel dál",
+            "publishedAt": "2026-04-28T19:28:00Z"
+          },
           {
             "title": "Ruský exprezident Medveděv píše učebnice. Školáky poučí o společenských vědách",
             "publishedAt": "2026-04-28T17:53:00Z"
@@ -744,10 +747,6 @@
           {
             "title": "V Břeclavi spustili obří bateriové úložiště. Uchová přebytky elektřiny",
             "publishedAt": "2026-04-28T14:21:00Z"
-          },
-          {
-            "title": "Spojené arabské emiráty opouští OPEC. Chtějí větší pružnost v obchodu s ropou",
-            "publishedAt": "2026-04-28T14:09:00Z"
           }
         ]
       }

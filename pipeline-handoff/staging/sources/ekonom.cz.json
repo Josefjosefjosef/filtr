@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonom.cz",
-  "ingestedAt": "2026-04-28T19:29:18.712295Z",
+  "ingestedAt": "2026-04-28T20:00:50.104816Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Umění náboru: Proč je důležitá &bdquo;chemie&ldquo; i data a jak poznat toxického kandidáta, který může firmu rozložit",
+      "url": "https://podcasty.ekonom.cz/c1-67871940-umeni-naboru-proc-je-dulezita-bdquo-chemie-ldquo-i-data-a-jak-poznat-toxickeho-kandidata-ktery-muze-firmu-rozlozit",
+      "dt": "2026-04-28T19:07:00Z",
+      "media_raw": "Ekonom (HN)",
+      "media_norm": "Ekonom (HN)",
+      "tokens": [
+        "bdquo",
+        "chemie",
+        "data",
+        "důležitá",
+        "firmu",
+        "kandidáta",
+        "ldquo",
+        "náboru",
+        "poznat",
+        "proč",
+        "rozložit",
+        "toxického",
+        "umění"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonom",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "ekonom.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -530,13 +560,13 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://ekonom.cz/?p=400000_rss",
-      "bytes": 23661,
+      "bytes": 24946,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 19,
-      "itemsKept": 19,
-      "accepted": 19,
+      "itemsParsed": 20,
+      "itemsKept": 20,
+      "accepted": 20,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_ekonom",
@@ -566,11 +596,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 19,
-        "raw_feed_latest_publishedAt": "2026-04-22T22:00:00Z",
-        "valid_publishedAt_count": 19,
+        "raw_feed_new_item_count": 20,
+        "raw_feed_latest_publishedAt": "2026-04-28T19:07:00Z",
+        "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 16,
+          "finance": 17,
           "zpravy": 3
         },
         "drop_counts": {
@@ -583,6 +613,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umění náboru: Proč je důležitá &bdquo;chemie&ldquo; i data a jak poznat toxického kandidáta, který může firmu rozložit",
+            "publishedAt": "2026-04-28T19:07:00Z"
+          },
           {
             "title": "Od crash testů k salátovým zálivkám s Radimem Stráníkem z firmy Fermato",
             "publishedAt": "2026-04-22T16:00:00Z"
@@ -610,10 +644,6 @@
           {
             "title": "Letem světem",
             "publishedAt": "2026-04-22T22:00:00Z"
-          },
-          {
-            "title": "Smysl bytí ve&nbsp;světě AI",
-            "publishedAt": "2026-04-22T16:00:00Z"
           }
         ]
       }
