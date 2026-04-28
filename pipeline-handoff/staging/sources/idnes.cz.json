@@ -1,8 +1,63 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-28T06:59:53.407283Z",
+  "ingestedAt": "2026-04-28T07:24:35.575924Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Hodila dítě do popelnice a vyčetla senátu podjatost. Případ znovu řeší soud",
+      "url": "https://www.idnes.cz/usti/zpravy/krajsky-soud-strekov-dite-kontejner-matka-dokazovani.A260428_090634_usti-zpravy_grr",
+      "dt": "2026-04-28T07:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dítě",
+        "hodila",
+        "podjatost",
+        "popelnice",
+        "případ",
+        "senátu",
+        "soud",
+        "vyčetla",
+        "znovu",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud potrestal strážníky, kteří nechali ležet opilce u garáže. Tam ho zajelo auto",
+      "url": "https://www.idnes.cz/brno/zpravy/soud-straznici-opilec-garaz-prejeti-autem-brno-trest.A260428_083904_brno-zpravy_krut",
+      "dt": "2026-04-28T07:05:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "auto",
+        "garáže",
+        "kteří",
+        "ležet",
+        "nechali",
+        "opilce",
+        "potrestal",
+        "soud",
+        "strážníky",
+        "tam",
+        "zajelo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -728,56 +783,6 @@
         "stojí",
         "ázerbájdžánu",
         "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odvolací soud začal řešit střet cyklisty s řidičkou, která později zemřela",
-      "url": "https://www.idnes.cz/zpravy/domaci/odvolaci-soud-dnes-zacal-resit-stret-cyklisty-s-ridickou-zvazi-dalsi-dukazy.A260427_173827_krimi_remy",
-      "dt": "2026-04-27T15:42:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "cyklisty",
-        "odvolací",
-        "později",
-        "soud",
-        "střet",
-        "začal",
-        "zemřela",
-        "řešit",
-        "řidičkou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "EET 2.0 je připravena, obstrukce opozice nečekám, sdělila Schillerová",
-      "url": "https://www.idnes.cz/ekonomika/domaci/schillerova-finance-konference-cnn.A260427_131626_ekonomika_base",
-      "dt": "2026-04-27T15:35:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "eet",
-        "nečekám",
-        "obstrukce",
-        "opozice",
-        "připravena",
-        "schillerová",
-        "sdělila"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1572,7 +1577,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 45162,
+      "bytes": 45734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1609,11 +1614,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:52:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 3
+          "zpravy": 28,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1625,6 +1630,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hodila dítě do popelnice a vyčetla senátu podjatost. Případ znovu řeší soud",
+            "publishedAt": "2026-04-28T07:17:00Z"
+          },
+          {
+            "title": "Soud potrestal strážníky, kteří nechali ležet opilce u garáže. Tam ho zajelo auto",
+            "publishedAt": "2026-04-28T07:05:00Z"
+          },
           {
             "title": "Noční razie proti motorkářům Hells Angels. V akci je 1200 policistů",
             "publishedAt": "2026-04-28T06:52:10Z"
@@ -1648,14 +1661,6 @@
           {
             "title": "Fond zkoumá střet zájmů u národních dotací Agrofertu za miliardu korun",
             "publishedAt": "2026-04-28T04:32:00Z"
-          },
-          {
-            "title": "Jak bude o prodlouženém víkendu? Meteorologové upřesnili předpověď",
-            "publishedAt": "2026-04-28T04:09:00Z"
-          },
-          {
-            "title": "Svědectví o zoufalé snaze utéct z hořících Pompejí. Našly se nové kostry",
-            "publishedAt": "2026-04-28T04:00:00Z"
           }
         ]
       }

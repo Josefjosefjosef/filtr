@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T06:59:53.407283Z",
+  "ingestedAt": "2026-04-28T07:24:35.575924Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Alarmující čísla: Proti chřipce se očkuje jen 11 % zdravotníků",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/alarmujici-cisla-proti-chripce-se-ockuje-jen-11-zdravotniku/",
+      "dt": "2026-04-28T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "alarmující",
+        "chřipce",
+        "jen",
+        "očkuje",
+        "proti",
+        "zdravotníků",
+        "čísla"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Další odklad kontroverzní stravovací vyhlášky. Kdy začnou platit nová pravidla?",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/stravovaci-vyhlaska-kdy-zacnou-platit-nova-pravidla/",
-      "dt": "2026-04-27T08:36:42Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "další",
-        "kontroverzní",
-        "nová",
-        "odklad",
-        "platit",
-        "pravidla",
-        "stravovací",
-        "vyhlášky",
-        "začnou"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 80541,
+      "bytes": 84064,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +332,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alarmující čísla: Proti chřipce se očkuje jen 11 % zdravotníků",
+            "publishedAt": "2026-04-28T07:00:00Z"
+          },
           {
             "title": "Cesta z pravěku. Inovace už na úhradu nebudou čekat roky, rozhodl nový šéf VZP",
             "publishedAt": "2026-04-28T06:00:00Z"
@@ -361,10 +363,6 @@
           {
             "title": "Zákaz kratomu, nebo přísnější regulace? Vláda vytváří speciální pracovní skupinu",
             "publishedAt": "2026-04-27T11:35:59Z"
-          },
-          {
-            "title": "Na prevenci za odměnu: Vojtěch prozradil, kolik byste mohli dostat na účet",
-            "publishedAt": "2026-04-27T09:54:35Z"
           }
         ]
       }

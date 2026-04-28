@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T06:59:53.407283Z",
+  "ingestedAt": "2026-04-28T07:24:35.575924Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Sekyra staví další stovky bytů na pražském Smíchově. Ve třetí etapě projektu za desítky miliard vznikne na 800 bytů",
+      "url": "https://byznys.hn.cz/c1-67871520-sekyra-stavi-dalsi-stovky-bytu-na-prazskem-smichove-ve-treti-etape-projektu-za-desitky-miliard-vznikne-na-800-bytu",
+      "dt": "2026-04-28T06:15:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "800",
+        "bytů",
+        "další",
+        "desítky",
+        "etapě",
+        "miliard",
+        "pražském",
+        "projektu",
+        "sekyra",
+        "smíchově",
+        "staví",
+        "stovky",
+        "třetí",
+        "vznikne"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1152,26 +1183,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Finanční trhy (27. 4. 2026)",
-      "url": "https://archiv.hn.cz/c1-67870660-financni-trhy-27-4-2026",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "finanční",
-        "trhy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1182,7 +1193,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184209,
+      "bytes": 184197,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1219,11 +1230,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T05:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T06:15:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 34,
+          "zdravi": 3,
           "zpravy": 2,
           "sport": 1
         },
@@ -1237,6 +1248,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sekyra staví další stovky bytů na pražském Smíchově. Ve třetí etapě projektu za desítky miliard vznikne na 800 bytů",
+            "publishedAt": "2026-04-28T06:15:00Z"
+          },
           {
             "title": "Záhady kolem hořčíku: klasické krevní testy skutečnou hladinu neodhalí, doplněk z lékáren může způsobit spíše nevolnost",
             "publishedAt": "2026-04-28T05:33:00Z"
@@ -1263,10 +1278,6 @@
           },
           {
             "title": "Finanční trhy (28. 4. 2026)",
-            "publishedAt": "2026-04-27T22:00:00Z"
-          },
-          {
-            "title": "Vládní návrh zrušit služební zákon ohrožuje nezávislost úředníků. Státní správa má být profesionální, ne slepě poslušná",
             "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]

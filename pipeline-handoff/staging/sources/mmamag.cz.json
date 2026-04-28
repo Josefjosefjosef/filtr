@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-28T06:59:53.407283Z",
+  "ingestedAt": "2026-04-28T07:24:35.575924Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "UFC míří do Bělehradu a slovenský bojovník se přidal ke stáji plné hvězd. Všechno do sebe zapadá",
+      "url": "https://www.mmamag.cz/vlasto-cepo-ufc-belehrad/",
+      "dt": "2026-04-28T07:20:59Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "bojovník",
+        "bělehradu",
+        "hvězd",
+        "míří",
+        "plné",
+        "přidal",
+        "sebe",
+        "slovenský",
+        "stáji",
+        "ufc",
+        "všechno",
+        "zapadá"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1121,35 +1150,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "UFC Vegas: Američan švihl pravačkou a bývalý šampion v BJJ se sesypal jako domeček z karet",
-      "url": "https://www.mmamag.cz/ufc-vegas-spann-ko-buchecha/",
-      "dt": "2026-04-26T18:59:49Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "američan",
-        "bjj",
-        "bývalý",
-        "domeček",
-        "jako",
-        "karet",
-        "pravačkou",
-        "sesypal",
-        "ufc",
-        "vegas",
-        "šampion",
-        "švihl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1160,7 +1160,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 74547,
+      "bytes": 74476,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,7 +1197,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T04:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T07:20:59Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1212,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "UFC míří do Bělehradu a slovenský bojovník se přidal ke stáji plné hvězd. Všechno do sebe zapadá",
+            "publishedAt": "2026-04-28T07:20:59Z"
+          },
           {
             "title": "Souboj Fury vs. Joshua je hotová věc. Megazápas je potvrzený na konec roku, vysílat ho bude Netflix",
             "publishedAt": "2026-04-28T04:10:00Z"
@@ -1239,10 +1243,6 @@
           {
             "title": "Tvrdý knokaut v boxu bez rukavic měl fatální následky. Justin Thornton po zápase zemřel",
             "publishedAt": "2026-04-28T03:10:00Z"
-          },
-          {
-            "title": "UFC přineslo krásce slávu, ale ne peníze. VanZant si díky pikantním snímkům vydělala za jediný den více než za celou kariéru",
-            "publishedAt": "2026-04-28T03:00:00Z"
           }
         ]
       }
