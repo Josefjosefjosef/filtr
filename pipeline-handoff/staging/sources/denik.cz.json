@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T04:29:09.585372Z",
+  "ingestedAt": "2026-04-28T04:55:03.401203Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Srážka vlaků v Indonésii: Počet obětí vzrostl na čtrnáct",
+      "url": "https://www.denik.cz/ze_sveta/srazka-vlaku-v-indonesii-pocet-obeti-vzrostl-na-ctrnact.html",
+      "dt": "2026-04-28T04:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "indonésii",
+        "obětí",
+        "počet",
+        "srážka",
+        "vlaků",
+        "vzrostl",
+        "čtrnáct"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -133,10 +157,10 @@
       "_dt_serialized": true
     },
     {
-      "section": "pocasi",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
-      "url": "https://www.denik.cz/pocasi/donald-trump-melanie-jimmy-kimmel-abc-pozadavek-propusteni.html",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-melanie-jimmy-kimmel-abc-pozadavek-propusteni.html",
       "dt": "2026-04-27T19:40:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
@@ -627,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Střelba na Trumpově večeru: Jeho mluvčí ji předpověděla, Kennedy utekl bez ženy",
-      "url": "https://www.denik.cz/ze_sveta/strelba-v-bilem-dome-mluvci-trumpa-ji-predpovedela-kennedy-utekl-bez-manzelky.html",
-      "dt": "2026-04-27T12:27:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jeho",
-        "kennedy",
-        "mluvčí",
-        "předpověděla",
-        "střelba",
-        "trumpově",
-        "utekl",
-        "večeru",
-        "ženy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -663,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29533,
+      "bytes": 29280,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -700,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T04:36:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 3,
           "zpravy": 21,
+          "finance": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -717,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Srážka vlaků v Indonésii: Počet obětí vzrostl na čtrnáct",
+            "publishedAt": "2026-04-28T04:36:00Z"
+          },
           {
             "title": "Otevírací doba obchodů 1. a 8. května: Který svátek je zavřeno, co rozvážky",
             "publishedAt": "2026-04-28T03:30:00Z"
@@ -744,10 +746,6 @@
           {
             "title": "U Jakarty se srazily vlaky. Indonéské úřady hlásí čtyři mrtvé",
             "publishedAt": "2026-04-27T19:04:00Z"
-          },
-          {
-            "title": "Zaříkávač hadů v Egyptě pustil plaza do kalhot turistovi, ten zemřel",
-            "publishedAt": "2026-04-27T18:56:00Z"
           }
         ]
       }
