@@ -3766,8 +3766,8 @@ html[data-section="radio"] #iuRadioView .iuRadioGrid{
   background: linear-gradient(90deg, color-mix(in srgb, var(--iuSectionAccent, var(--iuNavAccent-radio, #8b5cf6)) 58%, transparent) 0%, color-mix(in srgb, var(--iuSectionAccent, var(--iuNavAccent-radio, #8b5cf6)) 22%, transparent) 45%, transparent 100%);
 }
 #iuRadioView > .iuSectionSubtitle{ margin: 0 0 14px; line-height: 1.45; }
-#iuRadioView .iuRadioMount{ margin-top: 0; }
-#iuRadioView .iuSeoText{ margin-top: 16px; }
+#iuRadioView .iuRadioMount{ margin-top: 0; margin-bottom: 0; }
+#iuRadioView .iuSeoText.iu-radio-seo-block{ margin-top: 14px; }
 
 .iuRadioHead{
   display: flex;
