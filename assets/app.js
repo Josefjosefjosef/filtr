@@ -12127,8 +12127,16 @@ function buildVideoAsArticleCard(it) {
             if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
           } catch (_){}
         }
-        if (gateVal !== "tools") {
-          iuCloseNarrowAiOverlayWhenLeavingTools();
+        /* P0 perf: only run narrow-AI teardown when leaving tools — opening nav from hub (prev "") must not scan/close AI every tap. */
+        try {
+          var prevGateTab = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+          if (prevGateTab === "tools" && gateVal !== "tools") {
+            iuCloseNarrowAiOverlayWhenLeavingTools();
+          }
+        } catch (_pg) {
+          if (gateVal !== "tools") {
+            iuCloseNarrowAiOverlayWhenLeavingTools();
+          }
         }
         wrap.setAttribute("data-iu-mobile-gate", value || "");
         if (!value) {
@@ -12164,9 +12172,9 @@ function buildVideoAsArticleCard(it) {
           panelNav.hidden = false;
           panelTools.hidden = true;
           try {
-            content.scrollTop = 0;
-            if (panelNav) panelNav.scrollTop = 0;
-            if (panelTools) panelTools.scrollTop = 0;
+            if (content.scrollTop) content.scrollTop = 0;
+            if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
+            if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
           } catch (_) {}
           iuMobileGatePerfMark("iu-gate-nav-visible-sync");
         } else if (value === "tools") {
@@ -12176,9 +12184,9 @@ function buildVideoAsArticleCard(it) {
           panelNav.hidden = true;
           panelTools.hidden = false;
           try {
-            content.scrollTop = 0;
-            if (panelNav) panelNav.scrollTop = 0;
-            if (panelTools) panelTools.scrollTop = 0;
+            if (content.scrollTop) content.scrollTop = 0;
+            if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
+            if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
           } catch (_) {}
         } else {
           tabNav.setAttribute("aria-selected", "false");
@@ -12204,9 +12212,9 @@ function buildVideoAsArticleCard(it) {
           if (value === "nav" || value === "tools") {
             window.requestAnimationFrame(function () {
               try {
-                content.scrollTop = 0;
-                if (panelNav) panelNav.scrollTop = 0;
-                if (panelTools) panelTools.scrollTop = 0;
+                if (content.scrollTop) content.scrollTop = 0;
+                if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
+                if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
               } catch (_) {}
               try {
                 var bb = document.getElementById("iuMobileGateBack");
