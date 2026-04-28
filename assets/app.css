@@ -4544,6 +4544,19 @@ body[data-section="home"] .iuHomeCanvas{
   }
 }
 
+/* P0 regression guard (≤900): tool host jako scroll kontejner — min. scroll-padding nad lištou (bez nových tříd). */
+@media (max-width: 900px) {
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuMapsView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuJrEmptyView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuRadioView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuWeatherView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView,
+  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvProgramView{
+    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
+  }
+}
+
 body[data-section="pocasi"] #iuWeatherView .iuWeatherFeed{
   background: color-mix(in srgb, var(--iuSectionAccent, #38BDF8) 72%, #071726 28%);
   border-radius: 16px;
