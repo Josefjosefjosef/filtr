@@ -1,28 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T21:24:15.728589Z",
+  "ingestedAt": "2026-04-28T21:54:21.988688Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "TENIS ONLINE: Menšík bojuje o čtvrtfinále! Lehečka smetl favorita, Siniaková znovu jedničkou",
+      "title": "TENIS ONLINE: Menšík ztratil úvodní sadu. Lehečka smetl favorita, Sabalenková senzačně končí",
       "url": "https://www.sport.cz/clanek/tenis-cesky-trojlistek-se-pokusi-probit-do-ctvrtfinale-bohaty-program-rozjede-lehecka-5444627",
       "dt": "2026-04-28T07:26:23Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bojuje",
         "favorita",
-        "jedničkou",
+        "končí",
         "lehečka",
         "menšík",
         "online",
-        "siniaková",
+        "sabalenková",
+        "sadu",
+        "senzačně",
         "smetl",
         "tenis",
-        "znovu",
-        "čtvrtfinále"
+        "ztratil",
+        "úvodní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V půlce sezony bychom finále brali, ale teď to bolí, svěřil se Kacetl",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-v-pulce-sezony-bychom-finale-brali-ale-ted-to-boli-sveril-se-kacetl-5445203",
+      "dt": "2026-04-28T21:26:23Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "ale",
+        "bolí",
+        "brali",
+        "bychom",
+        "finále",
+        "kacetl",
+        "půlce",
+        "sezony",
+        "svěřil"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -757,34 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Zpráva z televize ho zarazila do křesla. Nejlepší český kouč o divokém plánu syna netušil",
-      "url": "https://www.sport.cz/clanek/vodni-sporty-zprava-z-televize-ho-zarazila-do-kresla-nejlepsi-cesky-kouc-o-divokem-planu-syna-netusil-5444677",
-      "dt": "2026-04-28T11:17:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "divokém",
-        "kouč",
-        "křesla",
-        "nejlepší",
-        "netušil",
-        "plánu",
-        "syna",
-        "televize",
-        "zarazila",
-        "zpráva",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44081,
+      "bytes": 44526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T20:49:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T21:26:23Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,8 +847,12 @@
         },
         "sample_titles": [
           {
-            "title": "TENIS ONLINE: Menšík bojuje o čtvrtfinále! Lehečka smetl favorita, Siniaková znovu jedničkou",
+            "title": "TENIS ONLINE: Menšík ztratil úvodní sadu. Lehečka smetl favorita, Sabalenková senzačně končí",
             "publishedAt": "2026-04-28T07:26:23Z"
+          },
+          {
+            "title": "V půlce sezony bychom finále brali, ale teď to bolí, svěřil se Kacetl",
+            "publishedAt": "2026-04-28T21:26:23Z"
           },
           {
             "title": "Ohromné drama, devět gólů a nový rekord Ligy mistrů! Ofenzivní festival ovládlo PSG, Bayern musí dotahovat",
@@ -874,10 +877,6 @@
           {
             "title": "Jeden zápas nám tady ukradli a vyhráli zaslouženě, ocenil sílu soupeře třinecký Nestrašil",
             "publishedAt": "2026-04-28T20:12:09Z"
-          },
-          {
-            "title": "SESTŘIH: Pardubice jsou po čtrnácti letech mistry extraligy! Titul vystřelil Červenka",
-            "publishedAt": "2026-04-28T09:49:19Z"
           }
         ]
       }

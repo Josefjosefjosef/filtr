@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T21:24:15.728589Z",
+  "ingestedAt": "2026-04-28T21:54:21.988688Z",
   "items": [
     {
       "section": "aktualne",
@@ -757,6 +757,31 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Žabka: Za celou sezonu stříbro bereme, ale teď jsme zklamaní",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/zabka-za-celou-sezonu-stribro-bereme-ale-ted-jsme-zklamani-156501",
+      "dt": "2026-04-28T21:38:21Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "ale",
+        "bereme",
+        "celou",
+        "jsme",
+        "sezonu",
+        "stříbro",
+        "zklamaní",
+        "žabka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Ofenzivní festival v Parku princů vyšel lépe PSG, Bayern si odvezl porážku 4:5",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ofenzivni-festival-v-parku-princu-vysel-lepe-psg-bayern-si-odvezl-porazku-45-156500",
       "dt": "2026-04-28T21:15:22Z",
@@ -1495,29 +1520,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Chelsea je ve finále Anglického poháru, porazila Leeds 1:0",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/chelsea-je-ve-finale-anglickeho-poharu-porazila-leeds-10-156472",
-      "dt": "2026-04-26T16:34:46Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anglického",
-        "chelsea",
-        "finále",
-        "leeds",
-        "poháru",
-        "porazila"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1647,7 +1649,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38328,
+      "bytes": 38692,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1684,7 +1686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T21:15:22Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T21:38:21Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1699,6 +1701,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žabka: Za celou sezonu stříbro bereme, ale teď jsme zklamaní",
+            "publishedAt": "2026-04-28T21:38:21Z"
+          },
           {
             "title": "Ofenzivní festival v Parku princů vyšel lépe PSG, Bayern si odvezl porážku 4:5",
             "publishedAt": "2026-04-28T21:15:22Z"
@@ -1726,10 +1732,6 @@
           {
             "title": "Lehečka si v Madridu poradil i s Musettim. Siniaková se vrátí na post deblové jedničky",
             "publishedAt": "2026-04-28T12:47:10Z"
-          },
-          {
-            "title": "Česká reprezentace do 18 let narazí ve čtvrtfinále MS na Finsko, přímý přenos nabídne ČT sport",
-            "publishedAt": "2026-04-28T12:00:00Z"
           }
         ]
       }
@@ -1741,7 +1743,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77534,
+      "bytes": 77530,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
