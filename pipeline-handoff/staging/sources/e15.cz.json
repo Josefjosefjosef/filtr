@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-28T03:10:13.306898Z",
+  "ingestedAt": "2026-04-28T03:40:12.944600Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Faitova Jet Investment staví logistický areál na břehu Baltu. Sází na rostoucí zájem o polské přístavy",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/faitova-jet-investment-stavi-logisticky-areal-na-brehu-baltu-sazi-na-rostouci-zajem-o-polske-pristavy-1432419",
+      "dt": "2026-04-28T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "areál",
+        "baltu",
+        "břehu",
+        "faitova",
+        "investment",
+        "jet",
+        "logistický",
+        "polské",
+        "přístavy",
+        "rostoucí",
+        "staví",
+        "sází",
+        "zájem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -962,28 +992,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
-      "contentType": "article",
-      "title": "8_8_2026__Royal Golf & Polo Cup 2026",
-      "url": "https://www.e15.cz/elite15-royal-golf-polo-cup-2026",
-      "dt": "2026-04-27T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "cup",
-        "golf",
-        "polo",
-        "royal"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "zdravi",
       "contentType": "article",
       "title": "Léky na obezitu mění ekonomiku a mohou posílit udržitelnost veřejného zdravotnictví",
@@ -1017,11 +1025,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 48587,
+      "bytes": 47525,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 48,
+      "itemsParsed": 47,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1054,11 +1062,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T01:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T03:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 1,
+          "zpravy": 2,
+          "finance": 37,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1071,6 +1079,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Faitova Jet Investment staví logistický areál na břehu Baltu. Sází na rostoucí zájem o polské přístavy",
+            "publishedAt": "2026-04-28T03:30:00Z"
+          },
           {
             "title": "Od neurovědy po geopolitiku. Začínají SHIFTS 2026",
             "publishedAt": "2026-04-28T01:00:00Z"
@@ -1098,10 +1110,6 @@
           {
             "title": "Slevy na dani: Kdy je můžete uplatnit?",
             "publishedAt": "2026-04-27T13:30:00Z"
-          },
-          {
-            "title": "Česká pošta má nového šéfa, ministr vnitra jmenoval ředitelem Richarda Hodula",
-            "publishedAt": "2026-04-27T13:20:00Z"
           }
         ]
       }
