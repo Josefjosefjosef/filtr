@@ -303,7 +303,56 @@ style-src 'self' 'unsafe-inline' https:;
       }
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=fix-radio-seo-below-buttons-20260428" />
+    <link rel="stylesheet" href="/assets/app.css?v=fix-mapy-navigace-cls-tool-cold-url-20260428" />
+    <style id="iuMapyNavToolMainClsGuard">
+      /* P0 CLS: cold ?section=… tool routes — chrome dřív než iu-mobileMainVisible (data-iu-tool-main v index + applySection). */
+      @media (max-width: 767px) {
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuMapyView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuMapsView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuJrEmptyView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuRadioView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuWeatherView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuTvOnlineView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuTvProgramView{
+          padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
+          box-sizing: border-box !important;
+        }
+      }
+      @media (max-width: 900px) {
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuMapyView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuMapsView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuJrEmptyView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuRadioView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuWeatherView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuTvOnlineView,
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuTvProgramView{
+          scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space);
+        }
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #leftContent{
+          display: block !important;
+        }
+        body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"]:not(.iu-mobileMainVisible) #iuMobileGateWrap{
+          display: none !important;
+        }
+        @media (min-width: 768px) and (max-width: 900px) and (orientation: portrait) {
+          body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"] #leftContent{
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+            padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+            box-sizing: border-box;
+          }
+          body:not(.iu-mobileGateOverlayOpen)[data-iu-tool-main="1"] #leftContent #feed{
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            overflow-y: visible !important;
+            flex: 0 1 auto;
+          }
+        }
+      }
+    </style>
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
@@ -547,6 +596,14 @@ style-src 'self' 'unsafe-inline' https:;
         var iuFc = (sec === "media" || sec === "feed" || sec === "hry" || sec === "kultura" || sec === "veda" || sec === "vzdelavani") ? "1" : "0";
         document.documentElement.setAttribute("data-iu-fc", iuFc);
         document.body.setAttribute("data-iu-fc", iuFc);
+        var iuTm = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
+        if (iuTm[sec]) {
+          document.documentElement.setAttribute("data-iu-tool-main", "1");
+          document.body.setAttribute("data-iu-tool-main", "1");
+        } else {
+          document.documentElement.removeAttribute("data-iu-tool-main");
+          document.body.removeAttribute("data-iu-tool-main");
+        }
       }catch(e){}
     })();
     </script>
