@@ -21412,3 +21412,26 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 }
 
 /* === CALENDAR ACCENT HARD LOCK (DO NOT MODIFY) === */
+
+/* P0 TV program: viditelná ikonka v levém railu / mobilním Menu panelu (≤1024px) — pouze tvprogram, #B8860B; nepřebíjí desktop >1024px. */
+@media (max-width: 1024px){
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon svg,
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] .iu-leftNavIcon *,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon *,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] .iu-leftNavIcon *{
+    color: #B8860B !important;
+    stroke: #B8860B !important;
+    fill: none !important;
+  }
+  #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent="tvprogram"] svg path,
+  body #iuMobileGatePanelNav #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg path,
+  body #iuMobileFirstBlock #iuLeftRail .iu-leftNavItem[data-rail="tvprogram"] svg path{
+    stroke: #B8860B !important;
+    fill: none !important;
+  }
+}
