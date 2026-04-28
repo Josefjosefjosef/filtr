@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T15:05:52.255849Z",
+  "ingestedAt": "2026-04-28T15:34:42.983290Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Jaká korupce? Je to žena na svém místě! Rozhovor s voličem ANO o sociálním bytě pro ministryni Zuzanu Mrázovou",
+      "url": "https://archiv.hn.cz/c1-67871800-jaka-korupce-je-to-zena-na-svem-miste-rozhovor-s-volicem-ano-o-socialnim-byte-pro-ministryni-zuzanu-mrazovou",
+      "dt": "2026-04-28T14:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ano",
+        "bytě",
+        "jaká",
+        "korupce",
+        "ministryni",
+        "mrázovou",
+        "místě",
+        "rozhovor",
+        "sociálním",
+        "svém",
+        "voličem",
+        "zuzanu",
+        "žena"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -1137,36 +1167,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Emoční pusto v rodinách. Už deset procent malých dětí řeší své problémy hlavně s umělou inteligencí",
-      "url": "https://podcasty.hn.cz/c1-67871300-emocni-pusto-v-rodinach-uz-deset-procent-malych-deti-resi-sve-problemy-hlavne-s-umelou-inteligenci",
-      "dt": "2026-04-27T11:11:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "deset",
-        "dětí",
-        "emoční",
-        "hlavně",
-        "inteligencí",
-        "malých",
-        "problémy",
-        "procent",
-        "pusto",
-        "rodinách",
-        "své",
-        "umělou",
-        "řeší"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1177,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184768,
+      "bytes": 184797,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1214,11 +1214,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T14:29:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T14:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 4,
-          "finance": 33,
+          "zpravy": 5,
+          "finance": 32,
           "sport": 2,
           "zdravi": 1
         },
@@ -1232,6 +1232,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaká korupce? Je to žena na svém místě! Rozhovor s voličem ANO o sociálním bytě pro ministryni Zuzanu Mrázovou",
+            "publishedAt": "2026-04-28T14:45:00Z"
+          },
           {
             "title": "Rusové nesmějí nejen do lázní, ale ani k soudu. Zákaz vstupu do Česka komplikuje rozplétání pádu ERB bank",
             "publishedAt": "2026-04-28T14:29:00Z"
@@ -1259,10 +1263,6 @@
           {
             "title": "České firmy řeší dvě mnohem důležitější věci, než jsou ceny energií. Když chcete hrát evropskou ligu, musíte přilákat nejlepší lidi",
             "publishedAt": "2026-04-28T12:35:00Z"
-          },
-          {
-            "title": "Policie provedla razii v Unicornu, zátah může souviset se zmizelými iPhony z kauzy Mamut",
-            "publishedAt": "2026-04-28T12:31:00Z"
           }
         ]
       }

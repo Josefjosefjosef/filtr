@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T15:05:52.255849Z",
+  "ingestedAt": "2026-04-28T15:34:42.983290Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Třinec - Pardubice 1:2. Rychlý obrat hostů, trefuje se Tourigny",
+      "url": "https://www.idnes.cz/hokej/extraliga/6-finale-trinec-pardubice-online-zpravodajstvi.A260428_125319_hokej_drev",
+      "dt": "2026-04-28T15:29:53Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "hostů",
+        "obrat",
+        "pardubice",
+        "rychlý",
+        "tourigny",
+        "trefuje",
+        "třinec"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Širuček otočil a mladší parťáci navázali. Stolní tenisté na úvod MS porazili Bahrajn",
+      "url": "https://www.idnes.cz/sport/ostatni/stolni-tenis-ms-v-londyne.A260428_171401_sporty_kazdt",
+      "dt": "2026-04-28T15:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bahrajn",
+        "mladší",
+        "navázali",
+        "otočil",
+        "parťáci",
+        "porazili",
+        "stolní",
+        "tenisté",
+        "úvod",
+        "širuček"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -735,57 +786,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Choreo i speciální dresy. Kustodka se po 27 letech v klubu dočkala velkého rozloučení",
-      "url": "https://www.idnes.cz/sport/trendy/go-ahead-eagles-kustodka-pradlena-rozlouceni-choreo-dresy.A260427_112218_trendy_subt",
-      "dt": "2026-04-27T17:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "choreo",
-        "dočkala",
-        "dresy",
-        "klubu",
-        "kustodka",
-        "letech",
-        "rozloučení",
-        "speciální",
-        "velkého"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Otazníky před nadstavbou: co stačí Slavii k titulu? Co potřebuje Baník k záchraně?",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/nadstavba-fotbalove-ligy-o-jake-pohary-se-hraje-slavia-titul-banik-zachrana.A260427_170616_fotbal_min",
-      "dt": "2026-04-27T16:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "baník",
-        "nadstavbou",
-        "otazníky",
-        "potřebuje",
-        "slavii",
-        "stačí",
-        "titulu",
-        "záchraně"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45695,
+      "bytes": 45523,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T14:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:29:53Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -848,6 +848,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ONLINE: Třinec - Pardubice 1:2. Rychlý obrat hostů, trefuje se Tourigny",
+            "publishedAt": "2026-04-28T15:29:53Z"
+          },
+          {
+            "title": "Širuček otočil a mladší parťáci navázali. Stolní tenisté na úvod MS porazili Bahrajn",
+            "publishedAt": "2026-04-28T15:27:00Z"
+          },
           {
             "title": "Nový člen týmu? Zlepšovač nálady, ale i budíček. Dostál o roli otce a kajakáře",
             "publishedAt": "2026-04-28T14:16:00Z"
@@ -871,14 +879,6 @@
           {
             "title": "Nosková si dál užívá dramatické chvíle a poráží nejlepší. Už nejsem ztracená, těší ji",
             "publishedAt": "2026-04-28T11:34:00Z"
-          },
-          {
-            "title": "S extraligou a svazem se nehádám, koupil jsem si boxovací pytel, říká majitel Dukly Jihlava",
-            "publishedAt": "2026-04-28T11:30:00Z"
-          },
-          {
-            "title": "Charles Leclerc se stal novou tváří L’Oréal. Fanoušci žádají společný spot se Sainzem",
-            "publishedAt": "2026-04-28T11:10:00Z"
           }
         ]
       }

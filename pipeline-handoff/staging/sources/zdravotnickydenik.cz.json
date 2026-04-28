@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-28T15:05:52.255849Z",
+  "ingestedAt": "2026-04-28T15:34:42.983290Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Průlom v léčbě hluchoty: Genová terapie vrací dětem sluch, výrobce ji poskytne zdarma",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/genova-terapie-deti-sluch-prvni-lecba-sveho-druhu/",
+      "dt": "2026-04-28T15:29:09Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dětem",
+        "genová",
+        "hluchoty",
+        "léčbě",
+        "poskytne",
+        "průlom",
+        "sluch",
+        "terapie",
+        "vrací",
+        "výrobce",
+        "zdarma"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -238,33 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Duškov: Takto změníme placení zdravotní péče. Nemáme licenci na druhé Lourdy",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/duskov-takto-zmenime-placeni-zdravotni-pece/",
-      "dt": "2026-04-27T15:13:06Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "druhé",
-        "duškov",
-        "licenci",
-        "lourdy",
-        "nemáme",
-        "placení",
-        "péče",
-        "takto",
-        "zdravotní",
-        "změníme"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89013,
+      "bytes": 89053,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,11 +313,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T14:32:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:29:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "cestovani": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "cestovani": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -328,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Průlom v léčbě hluchoty: Genová terapie vrací dětem sluch, výrobce ji poskytne zdarma",
+            "publishedAt": "2026-04-28T15:29:09Z"
+          },
           {
             "title": "Turisté pozor: V oblíbených dovolenkových destinacích v Evropě se šíří exotická horečka",
             "publishedAt": "2026-04-28T14:32:01Z"
@@ -355,10 +360,6 @@
           {
             "title": "Alarmující čísla: Proti chřipce se očkuje jen 11 % zdravotníků",
             "publishedAt": "2026-04-28T07:00:00Z"
-          },
-          {
-            "title": "Cesta z pravěku. Inovace už na úhradu nebudou čekat roky, rozhodl nový šéf VZP",
-            "publishedAt": "2026-04-28T06:00:00Z"
           }
         ]
       }
