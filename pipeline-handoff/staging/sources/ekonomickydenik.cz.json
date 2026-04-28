@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T15:34:42.983290Z",
+  "ingestedAt": "2026-04-28T16:04:33.358516Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Překvapení a tvrdá rána: Třetí největší producent ropy opouští OPEC",
+      "url": "https://ekonomickydenik.cz/prekvapeni-tvrda-rana-opousti-opec/",
+      "dt": "2026-04-28T15:38:59Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "největší",
+        "opec",
+        "opouští",
+        "producent",
+        "překvapení",
+        "ropy",
+        "rána",
+        "tvrdá",
+        "třetí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -32,7 +58,7 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Kvůli Babišovu střetu zájmů bude fondu vymáhat miliony. Podpory šly desítkám firem",
+      "title": "Kvůli Babišovu střetu zájmů bude fond vymáhat miliony. Podpory šly desítkám firem",
       "url": "https://ekonomickydenik.cz/babis-stret-zajmu-fond-miliony/",
       "dt": "2026-04-28T14:50:15Z",
       "media_raw": "Ekonomický deník",
@@ -41,7 +67,7 @@
         "babišovu",
         "desítkám",
         "firem",
-        "fondu",
+        "fond",
         "kvůli",
         "miliony",
         "podpory",
@@ -761,33 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Armáda je v demografické pasti. Její výstavba se musí úplně změnit, říká Zůna",
-      "url": "https://ekonomickydenik.cz/armada-demograficka-past-koncepce-zuna/",
-      "dt": "2026-04-27T09:30:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "armáda",
-        "demografické",
-        "její",
-        "musí",
-        "pasti",
-        "výstavba",
-        "změnit",
-        "zůna",
-        "úplně",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71964,
+      "bytes": 71983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:38:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -853,11 +852,15 @@
         },
         "sample_titles": [
           {
+            "title": "Překvapení a tvrdá rána: Třetí největší producent ropy opouští OPEC",
+            "publishedAt": "2026-04-28T15:38:59Z"
+          },
+          {
             "title": "Toman: Nepředvídatelné úhrady brzdí inovace. Dohodovací řízení se zásadě změní",
             "publishedAt": "2026-04-28T15:05:00Z"
           },
           {
-            "title": "Kvůli Babišovu střetu zájmů bude fondu vymáhat miliony. Podpory šly desítkám firem",
+            "title": "Kvůli Babišovu střetu zájmů bude fond vymáhat miliony. Podpory šly desítkám firem",
             "publishedAt": "2026-04-28T14:50:15Z"
           },
           {
@@ -879,10 +882,6 @@
           {
             "title": "Největší znečišťovatelé v Česku. Ekologové zveřejnili nelichotivý seznam",
             "publishedAt": "2026-04-28T12:56:24Z"
-          },
-          {
-            "title": "Snižte daně na pivo, vyzývají pivovarníci vládu. Češi už nepijí jako dřív",
-            "publishedAt": "2026-04-28T12:24:40Z"
           }
         ]
       }

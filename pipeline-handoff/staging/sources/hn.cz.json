@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T15:34:42.983290Z",
+  "ingestedAt": "2026-04-28T16:04:33.358516Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Další spor o větrníky. Poslanci budou řešit, kdy je lze považovat za strategicky významnou infrastrukturu",
+      "url": "https://byznys.hn.cz/c1-67871780-dalsi-spor-o-vetrniky-poslanci-budou-resit-kdy-je-lze-povazovat-za-strategicky-vyznamnou-infrastrukturu",
+      "dt": "2026-04-28T15:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "další",
+        "infrastrukturu",
+        "lze",
+        "poslanci",
+        "považovat",
+        "spor",
+        "strategicky",
+        "významnou",
+        "větrníky",
+        "řešit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -349,6 +376,36 @@
         "tomu",
         "trenažér",
         "řešení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Platit lidi podle regionu a na pohovoru neříkat bonusy. Byznys navrhuje zmírnit pravidla o rovných odměnách",
+      "url": "https://domaci.hn.cz/c1-67871580-platit-lidi-podle-regionu-a-na-pohovoru-nerikat-bonusy-byznys-navrhuje-zmirnit-pravidla-o-rovnych-odmenach",
+      "dt": "2026-04-28T08:52:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bonusy",
+        "byznys",
+        "lidi",
+        "navrhuje",
+        "neříkat",
+        "odměnách",
+        "platit",
+        "podle",
+        "pohovoru",
+        "pravidla",
+        "regionu",
+        "rovných",
+        "zmírnit"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1107,66 +1164,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vybudoval společnost, která svařuje pro světové firmy. Teď popisuje, co vše obnáší rozhodnutí ji prodat. A co ho těší víc než inkasované stamiliony",
-      "url": "https://archiv.hn.cz/c1-67868740-vybudoval-spolecnost-ktera-svaruje-pro-svetove-firmy-ted-popisuje-co-vse-obnasi-rozhodnuti-ji-prodat-a-co-ho-tesi-vic-nez-inkasovane-stamiliony",
-      "dt": "2026-04-27T11:37:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "firmy",
-        "inkasované",
-        "než",
-        "obnáší",
-        "popisuje",
-        "prodat",
-        "rozhodnutí",
-        "společnost",
-        "stamiliony",
-        "svařuje",
-        "světové",
-        "těší",
-        "vybudoval",
-        "víc",
-        "vše"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "OpenAI se chystá uvést na trh vlastní AI telefon. Nechává si pro něj vyvinout speciální čipy",
-      "url": "https://archiv.hn.cz/c1-67871270-openai-se-chysta-uvest-na-trh-vlastni-ai-telefon-nechava-si-pro-nej-vyvinout-specialni-cipy",
-      "dt": "2026-04-27T11:20:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "chystá",
-        "nechává",
-        "něj",
-        "openai",
-        "speciální",
-        "telefon",
-        "trh",
-        "uvést",
-        "vlastní",
-        "vyvinout",
-        "čipy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1174,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184797,
+      "bytes": 184634,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1214,11 +1211,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 32,
+          "zpravy": 5,
           "sport": 2,
           "zdravi": 1
         },
@@ -1232,6 +1229,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další spor o větrníky. Poslanci budou řešit, kdy je lze považovat za strategicky významnou infrastrukturu",
+            "publishedAt": "2026-04-28T15:40:00Z"
+          },
           {
             "title": "Jaká korupce? Je to žena na svém místě! Rozhovor s voličem ANO o sociálním bytě pro ministryni Zuzanu Mrázovou",
             "publishedAt": "2026-04-28T14:45:00Z"
@@ -1259,10 +1260,6 @@
           {
             "title": "Stometrové 3+kk v novostavbě? Před 20 lety standard, dnes minulost, říká Igor Klajmon ze Sekyra Group",
             "publishedAt": "2026-04-28T13:00:00Z"
-          },
-          {
-            "title": "České firmy řeší dvě mnohem důležitější věci, než jsou ceny energií. Když chcete hrát evropskou ligu, musíte přilákat nejlepší lidi",
-            "publishedAt": "2026-04-28T12:35:00Z"
           }
         ]
       }

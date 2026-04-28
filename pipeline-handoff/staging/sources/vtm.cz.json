@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T15:34:42.983290Z",
+  "ingestedAt": "2026-04-28T16:04:33.358516Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,34 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Evropská komise chce omezit výhody Gemini v Androidu. Podle Googlu je to neoprávněný zásah",
+      "url": "https://mobilmania.zive.cz/clanky/evropska-komise-chce-omezit-vyhody-gemini-v-androidu-podle-googlu-je-to-neopravneny-zasah/sc-3-a-1364639/default.aspx",
+      "dt": "2026-04-28T15:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "androidu",
+        "chce",
+        "evropská",
+        "gemini",
+        "googlu",
+        "komise",
+        "neoprávněný",
+        "omezit",
+        "podle",
+        "výhody",
+        "zásah"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -952,32 +980,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Chytrý už může být i uchošťour. Bebird EarSight Ultra má kameru, Wi-Fi a spoustu příslušenství",
-      "url": "https://www.zive.cz/clanky/nejlevnejsi-otoskop-bebird-earsight-ultra/sc-3-a-240870/default.aspx",
-      "dt": "2026-04-25T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "bebird",
-        "být",
-        "chytrý",
-        "earsight",
-        "kameru",
-        "příslušenství",
-        "spoustu",
-        "uchošťour",
-        "ultra"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -988,7 +990,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22606,
+      "bytes": 22450,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1025,7 +1027,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T15:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1043,6 +1045,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Evropská komise chce omezit výhody Gemini v Androidu. Podle Googlu je to neoprávněný zásah",
+            "publishedAt": "2026-04-28T15:45:00Z"
           },
           {
             "title": "OneDrive pro Windows zvládne synchronizovat až milion souborů, ale jen na dostatečně výkonných počítačích",
@@ -1067,10 +1073,6 @@
           {
             "title": "Steam Controller nadchne PC hráče. Je to obří gamepad, ale myslí na detaily",
             "publishedAt": "2026-04-28T08:45:00Z"
-          },
-          {
-            "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
-            "publishedAt": "2026-04-28T07:45:00Z"
           }
         ]
       }
