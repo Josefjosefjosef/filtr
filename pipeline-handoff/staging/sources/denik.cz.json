@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T02:19:42.561202Z",
+  "ingestedAt": "2026-04-28T02:45:15.981351Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jen tři stovky na valorizaci? Výpočtem ještě zamává krize, očekává Juchelka",
+      "url": "https://www.denik.cz/ekonomika/ekonomika-cesko-duchody-valorizace-zakon-vlada-seniori-mzdy-inflace.html",
+      "dt": "2026-04-28T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jen",
+        "ještě",
+        "juchelka",
+        "krize",
+        "očekává",
+        "stovky",
+        "tři",
+        "valorizaci",
+        "výpočtem",
+        "zamává"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -627,33 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Černobyl projeli na kolečkách. Viděli tlupy psů, bující přírodu i šťastného dědu",
-      "url": "https://www.denik.cz/z_domova/cernobyl-projel-na-koleckach-jan-dusek-videl-tlupy-psu-bujici-prirodu.html",
-      "dt": "2026-04-27T11:08:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bující",
-        "dědu",
-        "kolečkách",
-        "projeli",
-        "psů",
-        "přírodu",
-        "tlupy",
-        "viděli",
-        "černobyl",
-        "šťastného"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28314,
+      "bytes": 28373,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-27T19:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -717,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jen tři stovky na valorizaci? Výpočtem ještě zamává krize, očekává Juchelka",
+            "publishedAt": "2026-04-28T02:00:00Z"
+          },
           {
             "title": "Trump znovu útočí na Kimmela. Opět požaduje, aby ABC moderátora propustila",
             "publishedAt": "2026-04-27T19:40:00Z"
@@ -744,10 +748,6 @@
           {
             "title": "Litva vyšetřuje pokus o vraždy. Úřady případ spojují s ruskými tajnými službami",
             "publishedAt": "2026-04-27T16:59:00Z"
-          },
-          {
-            "title": "Zemřeli na útěku. Archeologové našli dvě oběti u Pompejí",
-            "publishedAt": "2026-04-27T16:43:00Z"
           }
         ]
       }
