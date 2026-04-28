@@ -31619,30 +31619,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "@media(max-width:1024px){" +
     "body #iuMindMenuView .iu-mailbox-pill," +
     "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill," +
-    "body #iuMindMenuView .iu-mailbox-gear," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-gear," +
-    "body #iuMindMenuView .iu-pill-social-slot," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-slot," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>span.iuTileLink," +
-    "body #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger," +
     "body #iuMindMenuView .iu-mmTopTool:not(.iu-mmTopTool--imageTile){" +
     "background:#fff!important;background-color:#fff!important;" +
     "border:1px solid rgba(15,23,42,.06)!important;" +
     "box-shadow:0 6px 18px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
     "body #iuMindMenuView .iu-mailbox-pill:active," +
     "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-pill:active," +
-    "body #iuMindMenuView .iu-mailbox-gear:active," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-mailbox-gear:active," +
-    "body #iuMindMenuView .iu-pill-social-slot:active," +
-    "body #iuMobileGatePanelTools #iuMindMenuView .iu-pill-social-slot:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>a.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>button.iuTileLink:active," +
     "body #iuMindMenuView section.iu-mmQuickLinks .iu-mmQuickGrid .iuTile>span.iuTileLink:active," +
-    "body #iuMindMenuView section.iu-mmQuickLinks .iu-quicktools-settings-trigger:active," +
     "body #iuMindMenuView .iu-mmTopTool:not(.iu-mmTopTool--imageTile):active{" +
     "transform:translateY(1px)!important;" +
     "box-shadow:0 3px 10px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)!important}" +
