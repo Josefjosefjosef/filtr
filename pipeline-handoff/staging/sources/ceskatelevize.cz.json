@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T18:29:17.384490Z",
+  "ingestedAt": "2026-04-28T18:59:53.717198Z",
   "items": [
     {
       "section": "aktualne",
@@ -636,19 +636,20 @@
     {
       "section": "veda",
       "contentType": "article",
-      "title": "„Dnes se rozhodne.“ Dobrovolníci opět zkouší zachránit keporkaka v Německu",
+      "title": "Nákladní člun se s keporkakem zvaným Timmy vydal do Severního moře",
       "url": "https://ct24.ceskatelevize.cz/clanek/veda/dnes-se-rozhodne-dobrovolnici-opet-zkousi-zachranit-keporkaka-v-nemecku-372879",
       "dt": "2026-04-28T09:36:51Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "dobrovolníci",
-        "keporkaka",
-        "německu",
-        "opět",
-        "rozhodne",
-        "zachránit",
-        "zkouší"
+        "keporkakem",
+        "moře",
+        "nákladní",
+        "severního",
+        "timmy",
+        "vydal",
+        "zvaným",
+        "člun"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -765,7 +766,32 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Reprezentaci se pro hokejové MS omluvili útočníci Ondřej Kaše a Filip Chlapík",
+      "title": "Titul patří Šelmám. Rozhodující finále mělo rekordní návštěvu",
+      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/titul-patri-selmam-rozhodujici-finale-melo-rekordni-navstevu-156497",
+      "dt": "2026-04-28T18:24:06Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "finále",
+        "mělo",
+        "návštěvu",
+        "patří",
+        "rekordní",
+        "rozhodující",
+        "titul",
+        "šelmám"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Reprezentaci se omluvili Ondřej Kaše a Filip Chlapík, s týmem už trénuje Hronek",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentaci-se-pro-hokejove-ms-omluvili-utocnici-ondrej-kase-a-chlapik-156496",
       "dt": "2026-04-28T18:09:14Z",
       "media_raw": "ČT sport",
@@ -773,12 +799,13 @@
       "tokens": [
         "chlapík",
         "filip",
-        "hokejové",
+        "hronek",
         "kaše",
         "omluvili",
         "ondřej",
         "reprezentaci",
-        "útočníci"
+        "trénuje",
+        "týmem"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1498,30 +1525,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Titul číslo dvacet. USK Praha znovu slaví",
-      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/titul-cislo-dvacet-usk-praha-znovu-slavi-156467",
-      "dt": "2026-04-26T14:51:21Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dvacet",
-        "praha",
-        "slaví",
-        "titul",
-        "usk",
-        "znovu",
-        "číslo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1532,7 +1535,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42647,
+      "bytes": 42659,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1651,7 +1654,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38072,
+      "bytes": 38473,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1688,7 +1691,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T18:09:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:24:06Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1704,7 +1707,11 @@
         },
         "sample_titles": [
           {
-            "title": "Reprezentaci se pro hokejové MS omluvili útočníci Ondřej Kaše a Filip Chlapík",
+            "title": "Titul patří Šelmám. Rozhodující finále mělo rekordní návštěvu",
+            "publishedAt": "2026-04-28T18:24:06Z"
+          },
+          {
+            "title": "Reprezentaci se omluvili Ondřej Kaše a Filip Chlapík, s týmem už trénuje Hronek",
             "publishedAt": "2026-04-28T18:09:14Z"
           },
           {
@@ -1730,10 +1737,6 @@
           {
             "title": "Obhájci z Oklahomy jsou v druhém kole, Denver odvrátil konec sezony",
             "publishedAt": "2026-04-28T07:36:17Z"
-          },
-          {
-            "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
-            "publishedAt": "2026-04-28T06:15:46Z"
           }
         ]
       }

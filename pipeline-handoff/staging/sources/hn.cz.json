@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T18:29:17.384490Z",
+  "ingestedAt": "2026-04-28T18:59:53.717198Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Evropa může jen tiše závidět. Největší autosalon světa mají v Číně, dominují mu kopie známých off-roadů a elektromobily",
+      "url": "https://auto.hn.cz/c1-67871870-evropa-muze-jen-tise-zavidet-nejvetsi-autosalon-sveta-maji-v-cine-dominuji-mu-kopie-znamych-off-roadu-a-elektromobily",
+      "dt": "2026-04-28T18:38:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "autosalon",
+        "dominují",
+        "elektromobily",
+        "evropa",
+        "jen",
+        "kopie",
+        "mají",
+        "největší",
+        "off",
+        "roadů",
+        "světa",
+        "tiše",
+        "známých",
+        "závidět",
+        "číně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1137,36 +1169,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Když hledám největší brzdu české ekonomiky, dívám se na AI a trendy práce, říká šéf ČSOB Blažek",
-      "url": "https://archiv.hn.cz/c1-67871360-kdyz-hledam-nejvetsi-brzdu-ceske-ekonomiky-divam-se-na-ai-a-trendy-prace-rika-sef-csob-blazek",
-      "dt": "2026-04-27T12:38:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "blažek",
-        "brzdu",
-        "dívám",
-        "ekonomiky",
-        "hledám",
-        "když",
-        "největší",
-        "práce",
-        "trendy",
-        "české",
-        "čsob",
-        "říká",
-        "šéf"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1177,7 +1179,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184780,
+      "bytes": 184804,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1214,13 +1216,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:38:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
+          "zdravi": 2,
+          "finance": 31,
           "zpravy": 5,
-          "sport": 2,
-          "zdravi": 1
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1232,6 +1234,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa může jen tiše závidět. Největší autosalon světa mají v Číně, dominují mu kopie známých off-roadů a elektromobily",
+            "publishedAt": "2026-04-28T18:38:00Z"
+          },
           {
             "title": "Místo mantinelů legalizace? Úprava švarcsystému dál naráží, v rozpočtu může podle kritiků chybět přes 100 miliard ročně",
             "publishedAt": "2026-04-28T17:28:00Z"
@@ -1259,10 +1265,6 @@
           {
             "title": "Proč kněz studuje ekonomii? Církev je velkým investorem směřujícím k samofinancování",
             "publishedAt": "2026-04-28T13:47:00Z"
-          },
-          {
-            "title": "OPEC opouští klíčový člen. Odchod Spojených arabských emirátů může oslabit jednotu organizace i pozici Saúdské Arábie",
-            "publishedAt": "2026-04-28T13:34:00Z"
           }
         ]
       }

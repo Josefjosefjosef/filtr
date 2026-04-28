@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-28T18:29:17.384490Z",
+  "ingestedAt": "2026-04-28T18:59:53.717198Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,32 @@
         "starý",
         "telefon",
         "zvládne"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Hráli jsme Medix. Česká strategie, která maže hranici mezi uměním a zábavou",
+      "url": "https://doupe.zive.cz/hrali-jsme-medix-ceska-strategie-ktera-maze-hranici-mezi-umenim-a-zabavou",
+      "dt": "2026-04-28T18:15:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "hranici",
+        "hráli",
+        "jsme",
+        "maže",
+        "medix",
+        "strategie",
+        "uměním",
+        "zábavou",
+        "česká"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -949,32 +975,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Evropský unikát v Česku. Infinix GT 50 Pro má herní design a šikovná dotyková tlačítka",
-      "url": "https://mobilmania.zive.cz/clanky/evropsky-unikat-v-cesku-infinix-gt-50-pro-ma-herni-design-a-sikovna-dotykova-tlacitka/sc-3-a-1364609/default.aspx",
-      "dt": "2026-04-25T12:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "design",
-        "dotyková",
-        "evropský",
-        "herní",
-        "infinix",
-        "tlačítka",
-        "unikát",
-        "česku",
-        "šikovná"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -985,7 +985,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22545,
+      "bytes": 22700,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1022,7 +1022,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-28T17:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T18:15:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1040,6 +1040,10 @@
           {
             "title": "Nepotřebujete Raspberry Pi. Starý telefon zvládne roli domácího serveru lépe a bez dalších investic",
             "publishedAt": "2026-04-27T17:45:00Z"
+          },
+          {
+            "title": "Hráli jsme Medix. Česká strategie, která maže hranici mezi uměním a zábavou",
+            "publishedAt": "2026-04-28T18:15:00Z"
           },
           {
             "title": "Digitální gramotnost v Česku. Jsme nad evropským průměrem, v bankovních online službách patříme ke špičce",
@@ -1064,10 +1068,6 @@
           {
             "title": "Smažete aplikaci a druhý den se sama nainstaluje. Problém, se kterým si neví rady ani Apple",
             "publishedAt": "2026-04-28T11:45:00Z"
-          },
-          {
-            "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
-            "publishedAt": "2026-04-27T12:45:00Z"
           }
         ]
       }
