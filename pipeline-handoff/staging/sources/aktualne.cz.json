@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-28T16:29:25.535179Z",
+  "ingestedAt": "2026-04-28T17:00:34.049578Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Brně se protestovalo proti sjezdu sudetských Němců. Okamura ho ostře kritizuje",
+      "url": "https://zpravy.aktualne.cz/domaci/v-brne-se-protestuje-proti-sjezdu-sudetskych-nemcu-okamura-ho-ostre-kritizuje/r~aaa290b2bd2e33c345dcf749e6285a41/",
+      "dt": "2026-04-28T16:28:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "brně",
+        "kritizuje",
+        "němců",
+        "okamura",
+        "ostře",
+        "protestovalo",
+        "proti",
+        "sjezdu",
+        "sudetských"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,20 +262,19 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Třinec - Pardubice 2:2. Oceláři bojují o sedmý zápas, Nestrašil vyrovnává",
+      "title": "Třinec - Pardubice 3:3. Dynamo začne třetí dějství ve třech",
       "url": "https://sport.aktualne.cz/hokej/trinec-pardubice-vrati-se-ocelari-pohar-pro-dynamo-uz-je-nachystany-na-stadionu/r~aaa29239f10abcacf7db8573144d0d38/",
       "dt": "2026-04-28T14:51:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "bojují",
-        "nestrašil",
-        "oceláři",
+        "dynamo",
+        "dějství",
         "pardubice",
-        "sedmý",
+        "třech",
+        "třetí",
         "třinec",
-        "vyrovnává",
-        "zápas"
+        "začne"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -495,32 +520,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel bude ve středu jednat se Zůnou o výběru nového náčelníka generálního štábu",
-      "url": "https://zpravy.aktualne.cz/domaci/pavel-bude-ve-stredu-jednat-se-zunou-o-vyberu-noveho-nacelnika-generalniho-stabu/r~aaa290f4660a4b98dfc7b507247f4697/",
-      "dt": "2026-04-28T11:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "generálního",
-        "jednat",
-        "nového",
-        "náčelníka",
-        "pavel",
-        "středu",
-        "výběru",
-        "zůnou",
-        "štábu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -531,7 +530,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21995,
+      "bytes": 22077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -568,7 +567,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:07:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:28:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 15,
@@ -585,6 +584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Brně se protestovalo proti sjezdu sudetských Němců. Okamura ho ostře kritizuje",
+            "publishedAt": "2026-04-28T16:28:00Z"
+          },
           {
             "title": "„Teď to nevydávejte, je to politicky citlivé.“ Řehka otevřeně o „zakázaném“ podcastu s prezidentem",
             "publishedAt": "2026-04-28T16:07:00Z"
@@ -612,10 +615,6 @@
           {
             "title": "USA už nejsou v pozici, aby diktovaly politiku nezávislým státům, vzkazuje Írán",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Orbán nabídl rezignaci z vedení Fideszu. Rozhodne o tom sněm, oznámil poslanec",
-            "publishedAt": "2026-04-28T15:30:00Z"
           }
         ]
       }

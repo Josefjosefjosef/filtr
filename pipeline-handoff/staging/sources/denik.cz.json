@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T16:29:25.535179Z",
+  "ingestedAt": "2026-04-28T17:00:34.049578Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lepší podmínky pro mazlíčky: Europoslanci schválili normu na ochranu psů a koček",
+      "url": "https://www.denik.cz/cesko-a-eu/europarlament-pravidla-kocky-psi-cipovani.html",
+      "dt": "2026-04-28T16:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "europoslanci",
+        "koček",
+        "lepší",
+        "mazlíčky",
+        "normu",
+        "ochranu",
+        "podmínky",
+        "psů",
+        "schválili"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -625,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zvuky z hrobu na Slovensku mají až hororová vysvětlení. Policie počká na pitvu",
-      "url": "https://www.denik.cz/staty-eu/slovensko-zvuky-z-hrobu-vysvetleni-policie-ceka-na-pitvu.html",
-      "dt": "2026-04-28T07:11:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hororová",
-        "hrobu",
-        "mají",
-        "pitvu",
-        "policie",
-        "počká",
-        "slovensku",
-        "vysvětlení",
-        "zvuky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28569,
+      "bytes": 28736,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:35:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -715,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lepší podmínky pro mazlíčky: Europoslanci schválili normu na ochranu psů a koček",
+            "publishedAt": "2026-04-28T16:10:00Z"
+          },
           {
             "title": "Orbán naznačil konec v čele Fideszu. Rozhodne sněm, stoupenci žádají setrvání",
             "publishedAt": "2026-04-28T15:35:00Z"
@@ -742,10 +746,6 @@
           {
             "title": "Na Opálené v Beskydech vzniká nový bike park. Takto vypadá z výšky",
             "publishedAt": "2026-04-28T13:00:00Z"
-          },
-          {
-            "title": "Policie na Slovensku zadržela muže hledaného Interpolem: Chytila ho na balkoně",
-            "publishedAt": "2026-04-28T12:51:00Z"
           }
         ]
       }

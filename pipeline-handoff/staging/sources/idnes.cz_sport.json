@@ -1,24 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T16:29:25.535179Z",
+  "ingestedAt": "2026-04-28T17:00:34.049578Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Třinec - Pardubice 3:3. Na Červenkův gól bleskově reaguje Kundrátek",
-      "url": "https://www.idnes.cz/hokej/extraliga/6-finale-trinec-pardubice-online-zpravodajstvi.A260428_125319_hokej_drev",
-      "dt": "2026-04-28T16:23:49Z",
+      "title": "Dynamo podalo nabídku na odkup stadionu. Nic jsme neobdrželi, zní z města",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/ceske-budejovice-fotbal-odkup-stadionu.A260428_182013_fot_dsouteze_kazdt",
+      "dt": "2026-04-28T16:50:34Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "bleskově",
-        "gól",
-        "kundrátek",
+        "dynamo",
+        "jsme",
+        "města",
+        "nabídku",
+        "neobdrželi",
+        "nic",
+        "odkup",
+        "podalo",
+        "stadionu",
+        "zní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "ONLINE: Třinec - Pardubice 3:3. Domácí v přesilovce pět na tři, hosty ale drží Will",
+      "url": "https://www.idnes.cz/hokej/extraliga/6-finale-trinec-pardubice-online-zpravodajstvi.A260428_125319_hokej_drev",
+      "dt": "2026-04-28T16:43:09Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "domácí",
+        "drží",
+        "hosty",
         "pardubice",
-        "reaguje",
+        "pět",
+        "přesilovce",
+        "tři",
         "třinec",
-        "červenkův"
+        "will"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -759,33 +789,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Brněnští basketbalisté zdolali na úvod play off Děčín. Hradec se přiblížil záchraně",
-      "url": "https://www.idnes.cz/sport/basket/brno-decin-hradec-kralove-zlin-basketbal-baraz-play-off.A260427_205951_sport-basket_hava",
-      "dt": "2026-04-27T19:58:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "basketbalisté",
-        "brněnští",
-        "děčín",
-        "hradec",
-        "off",
-        "play",
-        "přiblížil",
-        "zdolali",
-        "záchraně",
-        "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46265,
+      "bytes": 46180,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:23:49Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:50:34Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,8 +852,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Třinec - Pardubice 3:3. Na Červenkův gól bleskově reaguje Kundrátek",
-            "publishedAt": "2026-04-28T16:23:49Z"
+            "title": "Dynamo podalo nabídku na odkup stadionu. Nic jsme neobdrželi, zní z města",
+            "publishedAt": "2026-04-28T16:50:34Z"
+          },
+          {
+            "title": "ONLINE: Třinec - Pardubice 3:3. Domácí v přesilovce pět na tři, hosty ale drží Will",
+            "publishedAt": "2026-04-28T16:43:09Z"
           },
           {
             "title": "Lehečka si v Madridu zahraje čtvrtfinále, Siniaková bude opět světovou jedničkou",
@@ -875,10 +882,6 @@
           {
             "title": "Nový člen týmu? Zlepšovač nálady, ale i budíček. Dostál o roli otce a kajakáře",
             "publishedAt": "2026-04-28T14:16:00Z"
-          },
-          {
-            "title": "United blízko Lize mistrů a Carrick sklízí chválu. Bude trenérem i v příští sezoně?",
-            "publishedAt": "2026-04-28T13:18:00Z"
           }
         ]
       }

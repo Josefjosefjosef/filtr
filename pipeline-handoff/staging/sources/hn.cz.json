@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T16:29:25.535179Z",
+  "ingestedAt": "2026-04-28T17:00:34.049578Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tatra chce zvýšit výrobu vozidel, investuje miliardy. Kvůli nové hale v Kopřivnici už požádala o posudek EIA",
+      "url": "https://archiv.hn.cz/c1-67871790-tatra-investuje-pres-dve-miliardy-chce-zvysit-vyrobu-vozidel-zazadala-o-posudek-eia-pro-novou-halu-a-stroje-v-koprivnici",
+      "dt": "2026-04-28T16:33:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chce",
+        "eia",
+        "hale",
+        "investuje",
+        "kopřivnici",
+        "kvůli",
+        "miliardy",
+        "nové",
+        "posudek",
+        "požádala",
+        "tatra",
+        "vozidel",
+        "výrobu",
+        "zvýšit"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1134,36 +1165,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Vládní opatření na kontrolu cen paliv budou pokračovat, oznámila Schillerová. Původně je měl nahradit nový zákon",
-      "url": "https://archiv.hn.cz/c1-67871330-vladni-opatreni-na-kontrolu-cen-paliv-budou-pokracovat-oznamila-schillerova-puvodne-je-mel-nahradit-novy-zakon",
-      "dt": "2026-04-27T11:37:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "cen",
-        "kontrolu",
-        "měl",
-        "nahradit",
-        "nový",
-        "opatření",
-        "oznámila",
-        "paliv",
-        "pokračovat",
-        "původně",
-        "schillerová",
-        "vládní",
-        "zákon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1174,7 +1175,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184634,
+      "bytes": 184628,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1211,7 +1212,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:33:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1229,6 +1230,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tatra chce zvýšit výrobu vozidel, investuje miliardy. Kvůli nové hale v Kopřivnici už požádala o posudek EIA",
+            "publishedAt": "2026-04-28T16:33:00Z"
+          },
           {
             "title": "Další spor o větrníky. Poslanci budou řešit, kdy je lze považovat za strategicky významnou infrastrukturu",
             "publishedAt": "2026-04-28T15:40:00Z"
@@ -1256,10 +1261,6 @@
           {
             "title": "Neměli jsme argumenty, abychom to u soudu vyhráli, říká šéf fondu, který zastavil vymáhání miliard po Agrofertu",
             "publishedAt": "2026-04-28T13:26:00Z"
-          },
-          {
-            "title": "Stometrové 3+kk v novostavbě? Před 20 lety standard, dnes minulost, říká Igor Klajmon ze Sekyra Group",
-            "publishedAt": "2026-04-28T13:00:00Z"
           }
         ]
       }

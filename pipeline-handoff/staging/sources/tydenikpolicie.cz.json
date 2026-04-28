@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-28T16:29:25.535179Z",
+  "ingestedAt": "2026-04-28T17:00:34.049578Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rozčílený muž rozbil v Praze pěstí skleněnou výplň dveří odjíždějícího autobusu",
+      "url": "https://tydenikpolicie.cz/rozcileny-muz-rozbil-v-praze-pesti-sklenenou-vypln-dveri-odjizdejiciho-autobusu/",
+      "dt": "2026-04-28T16:49:36Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "autobusu",
+        "dveří",
+        "muž",
+        "odjíždějícího",
+        "praze",
+        "pěstí",
+        "rozbil",
+        "rozčílený",
+        "skleněnou",
+        "výplň"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,30 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dealer v Klášterci nad Ohří házel zákazníkům pervitin z okna",
-      "url": "https://tydenikpolicie.cz/dealer-v-klasterci-nad-ohri-hazel-zakaznikum-pervitin-z-okna/",
-      "dt": "2026-04-28T13:12:33Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "dealer",
-        "házel",
-        "klášterci",
-        "ohří",
-        "okna",
-        "pervitin",
-        "zákazníkům"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -263,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15333,
+      "bytes": 15313,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -300,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:01:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T16:49:36Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -315,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rozčílený muž rozbil v Praze pěstí skleněnou výplň dveří odjíždějícího autobusu",
+            "publishedAt": "2026-04-28T16:49:36Z"
+          },
           {
             "title": "Strážníci v pražském Motole dopadli muže, který měl ve křoví onanovat před ženami",
             "publishedAt": "2026-04-28T16:01:07Z"
@@ -342,10 +349,6 @@
           {
             "title": "Berounští policisté poskytovali první pomoc muži po pádu ze střechy",
             "publishedAt": "2026-04-28T15:06:33Z"
-          },
-          {
-            "title": "Pod smyšlenými legendami měl připravit několik mužů o miliony korun",
-            "publishedAt": "2026-04-28T14:39:16Z"
           }
         ]
       }
