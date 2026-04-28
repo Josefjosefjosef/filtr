@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T02:45:15.981351Z",
+  "ingestedAt": "2026-04-28T03:10:13.306898Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejistá sezona. Svět čeká na to, kdy se krize s dodávkami leteckého paliva promítne do cen letenek",
+      "url": "https://byznys.hn.cz/c1-67871170-nejista-sezona-svet-ceka-na-to-kdy-se-krize-s-dodavkami-leteckeho-paliva-promitne-do-cen-letenek",
+      "dt": "2026-04-28T03:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cen",
+        "dodávkami",
+        "krize",
+        "leteckého",
+        "letenek",
+        "nejistá",
+        "paliva",
+        "promítne",
+        "sezona",
+        "svět",
+        "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1130,34 +1158,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Špatný mír je rozbuška. Před 155 lety Němci zadupali Francii a dnes svět chybu opakuje",
-      "url": "https://archiv.hn.cz/c1-67868940-spatny-mir-je-rozbuska-pred-155-lety-nemci-zadupali-francii-a-dnes-svet-chybu-opakuje",
-      "dt": "2026-04-26T16:47:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "155",
-        "chybu",
-        "francii",
-        "lety",
-        "mír",
-        "němci",
-        "opakuje",
-        "rozbuška",
-        "svět",
-        "zadupali",
-        "špatný"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1168,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184259,
+      "bytes": 184261,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,7 +1205,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-27T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T03:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1223,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejistá sezona. Svět čeká na to, kdy se krize s dodávkami leteckého paliva promítne do cen letenek",
+            "publishedAt": "2026-04-28T03:01:00Z"
+          },
           {
             "title": "Ministerstvo chce odložit změny ve&nbsp;školních jídelnách",
             "publishedAt": "2026-04-27T22:00:00Z"
@@ -1250,10 +1254,6 @@
           {
             "title": "Obchodníky nic netlačí k plnění zásobníků. Nemůžou vydělat na rozdílu mezi letní a zimní cenou plynu",
             "publishedAt": "2026-04-27T15:35:00Z"
-          },
-          {
-            "title": "Nové spojenectví chce porazit Netanjahua. Zatím se dali dohromady dva izraelští expremiéři a lákají další opozičníky",
-            "publishedAt": "2026-04-27T14:34:00Z"
           }
         ]
       }
