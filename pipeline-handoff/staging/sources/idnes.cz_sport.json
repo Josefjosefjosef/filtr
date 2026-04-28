@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T23:19:30.373789Z",
+  "ingestedAt": "2026-04-28T23:44:25.495983Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Menšík trápil Zvereva, v Madridu ale končí. Lehečkova jízda pokračuje do čtvrtfinále",
+      "url": "https://www.idnes.cz/sport/tenis/tenisovy-turnaj-v-madridu-vysledky.A260428_141944_tenis_ald",
+      "dt": "2026-04-28T23:35:17Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "jízda",
+        "končí",
+        "lehečkova",
+        "madridu",
+        "menšík",
+        "pokračuje",
+        "trápil",
+        "zvereva",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -126,31 +153,6 @@
         "program",
         "semifinále",
         "výsledky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Lehečka si v Madridu zahraje čtvrtfinále, Siniaková bude opět světovou jedničkou",
-      "url": "https://www.idnes.cz/sport/tenis/tenisovy-turnaj-v-madridu-vysledky.A260428_141944_tenis_ald",
-      "dt": "2026-04-28T20:58:58Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jedničkou",
-        "lehečka",
-        "madridu",
-        "opět",
-        "siniaková",
-        "světovou",
-        "zahraje",
-        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -803,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47683,
+      "bytes": 47830,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T23:35:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Menšík trápil Zvereva, v Madridu ale končí. Lehečkova jízda pokračuje do čtvrtfinále",
+            "publishedAt": "2026-04-28T23:35:17Z"
+          },
           {
             "title": "Vstupenka za 48 milionů? Infantino ceny na MS hájí: Jsme nezisková organizace",
             "publishedAt": "2026-04-28T22:00:00Z"
@@ -874,10 +880,6 @@
           {
             "title": "Pavouk Ligy mistrů 2025/26: program a výsledky od semifinále po finále",
             "publishedAt": "2026-04-28T21:03:00Z"
-          },
-          {
-            "title": "Lehečka si v Madridu zahraje čtvrtfinále, Siniaková bude opět světovou jedničkou",
-            "publishedAt": "2026-04-28T20:58:58Z"
           },
           {
             "title": "Je to hořké! Měli jsme na ně, míní Adámek. Třinec byl podle něj ve finále poprvé lepší",
