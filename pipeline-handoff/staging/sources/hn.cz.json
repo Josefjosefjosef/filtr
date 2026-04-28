@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-28T08:19:11.635385Z",
+  "ingestedAt": "2026-04-28T08:45:02.346128Z",
   "items": [
     {
       "section": "finance",
@@ -32,6 +32,34 @@
       "_dt_serialized": true
     },
     {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Byl jsem ministrem průmyslu při ruském útoku na východní křídlo NATO. Co bylo nejtěžší rozhodnutí?",
+      "url": "https://archiv.hn.cz/c1-67871530-byl-jsem-ministrem-prumyslu-pri-ruskem-utoku-na-vychodni-kridlo-nato-co-bylo-nejtezsi-rozhodnuti",
+      "dt": "2026-04-28T06:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "jsem",
+        "křídlo",
+        "ministrem",
+        "nato",
+        "nejtěžší",
+        "průmyslu",
+        "při",
+        "rozhodnutí",
+        "ruském",
+        "východní",
+        "útoku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "finance",
       "contentType": "article",
       "title": "Sekyra staví další stovky bytů na pražském Smíchově. Ve třetí etapě miliardového projektu vznikne na 800 bytů",
@@ -53,6 +81,32 @@
         "stovky",
         "třetí",
         "vznikne"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trump nemůže otočit zápas s Íránem a Evropa si dává vlastní gól",
+      "url": "https://archiv.hn.cz/c1-67871090-trump-nemuze-otocit-zapas-s-iranem-a-evropa-si-dava-vlastni-gol",
+      "dt": "2026-04-28T06:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dává",
+        "evropa",
+        "gól",
+        "nemůže",
+        "otočit",
+        "trump",
+        "vlastní",
+        "zápas",
+        "íránem"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1123,64 +1177,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Otočka za necelý rok. Čupr a spol. rychle probrali německého výrobce kojenecké výživy Töpfer",
-      "url": "https://archiv.hn.cz/c1-67870880-otocka-za-necely-rok-cupr-a-spol-rychle-probrali-nemeckeho-vyrobce-kojenecke-vyzivy-topfer",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "kojenecké",
-        "necelý",
-        "německého",
-        "otočka",
-        "probrali",
-        "rok",
-        "rychle",
-        "spol",
-        "töpfer",
-        "výrobce",
-        "výživy",
-        "čupr"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Chodí do kostela a umí anglicky. Jančura si oblíbil Filipínce, chce na nich postavit servis RegioJetu",
-      "url": "https://archiv.hn.cz/c1-67870820-bdquo-chodi-do-kostela-a-umi-anglicky-ldquo-jancura-si-oblibil-filipince-chce-na-nich-postavit-servis-regiojetu",
-      "dt": "2026-04-26T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "anglicky",
-        "chce",
-        "chodí",
-        "filipínce",
-        "jančura",
-        "kostela",
-        "nich",
-        "oblíbil",
-        "postavit",
-        "regiojetu",
-        "servis",
-        "umí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1191,7 +1187,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184355,
+      "bytes": 184110,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1231,10 +1227,10 @@
         "raw_feed_latest_publishedAt": "2026-04-28T07:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zdravi": 3,
-          "zpravy": 2,
-          "sport": 1
+          "finance": 32,
+          "zpravy": 3,
+          "sport": 2,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1251,8 +1247,16 @@
             "publishedAt": "2026-04-28T07:40:00Z"
           },
           {
+            "title": "Byl jsem ministrem průmyslu při ruském útoku na východní křídlo NATO. Co bylo nejtěžší rozhodnutí?",
+            "publishedAt": "2026-04-28T06:43:00Z"
+          },
+          {
             "title": "Sekyra staví další stovky bytů na pražském Smíchově. Ve třetí etapě miliardového projektu vznikne na 800 bytů",
             "publishedAt": "2026-04-28T06:15:00Z"
+          },
+          {
+            "title": "Trump nemůže otočit zápas s Íránem a Evropa si dává vlastní gól",
+            "publishedAt": "2026-04-28T06:00:00Z"
           },
           {
             "title": "Záhady kolem hořčíku: klasické krevní testy skutečnou hladinu neodhalí, doplněk z lékáren může způsobit spíše nevolnost",
@@ -1269,14 +1273,6 @@
           {
             "title": "Nejistá sezona. Svět čeká na to, kdy se krize s dodávkami leteckého paliva promítne do cen letenek",
             "publishedAt": "2026-04-28T03:01:00Z"
-          },
-          {
-            "title": "Vymahač Bujnoch ostřeluje snahy reorganizovat zmrzlinářskou firmu ze skupiny Twist. Hraje se o kontrolu nad celým holdingem",
-            "publishedAt": "2026-04-27T22:31:00Z"
-          },
-          {
-            "title": "Ministerstvo chce odložit změny ve&nbsp;školních jídelnách",
-            "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]
       }

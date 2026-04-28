@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-28T08:19:11.635385Z",
+  "ingestedAt": "2026-04-28T08:45:02.346128Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dojde k omezení letů? Smartwings jednají s piloty o snížení úvazků",
+      "url": "https://ekonomickydenik.cz/smartwings-lety-piloti-odbory/",
+      "dt": "2026-04-28T08:30:03Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dojde",
+        "jednají",
+        "letů",
+        "omezení",
+        "piloty",
+        "smartwings",
+        "snížení",
+        "úvazků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -752,32 +777,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Máme všechny trumfy“. Trump zrušil mírovou cestu vyjednavačů do Pákistánu",
-      "url": "https://ekonomickydenik.cz/trump-vyjednavaci-pakistan-mir/",
-      "dt": "2026-04-25T17:02:09Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cestu",
-        "máme",
-        "mírovou",
-        "pákistánu",
-        "trumfy",
-        "trump",
-        "vyjednavačů",
-        "všechny",
-        "zrušil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -788,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70529,
+      "bytes": 70775,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -825,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T06:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:30:03Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -842,6 +841,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dojde k omezení letů? Smartwings jednají s piloty o snížení úvazků",
+            "publishedAt": "2026-04-28T08:30:03Z"
+          },
           {
             "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
             "publishedAt": "2026-04-28T06:19:00Z"
@@ -869,10 +872,6 @@
           {
             "title": "Kdo je nový šéf České pošty? Metnar jmenoval manažera Richarda Hodula",
             "publishedAt": "2026-04-27T15:12:00Z"
-          },
-          {
-            "title": "Lyžáky, jehly i žabky. Řidiči jsou za volantem kreativní, pojišťovny ale varují",
-            "publishedAt": "2026-04-27T13:44:33Z"
           }
         ]
       }

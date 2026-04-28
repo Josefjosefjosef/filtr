@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T08:19:11.635385Z",
+  "ingestedAt": "2026-04-28T08:45:02.346128Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Zemřel za úsvitu druhého dne, chránil se hmoždířem. Vědci popsali smrt v Pompejích",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/zemrel-za-usvitu-druheho-dne-chranil-se-hmozdirem-vedci-popsali-smrt-v-pompejich-372871",
+      "dt": "2026-04-28T08:28:31Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "chránil",
+        "dne",
+        "druhého",
+        "hmoždířem",
+        "pompejích",
+        "popsali",
+        "smrt",
+        "vědci",
+        "zemřel",
+        "úsvitu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -749,26 +776,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Polský influencer při charitativním streamu vybral 1,4 miliardy korun",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/polsky-influencer-pri-charitativnim-streamu-vybral-14-miliardy-korun-372845",
-      "dt": "2026-04-27T13:02:20Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Baráž? Tu bude hrát Baník v tom lepším případě, míní jeho bývalí trenéři",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/baraz-tu-bude-hrat-banik-v-tom-lepsim-pripade-mini-jeho-byvali-treneri-156487",
+      "dt": "2026-04-28T08:20:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "charitativním",
-        "influencer",
-        "korun",
-        "miliardy",
-        "polský",
-        "při",
-        "streamu",
-        "vybral"
+        "baník",
+        "baráž",
+        "bývalí",
+        "hrát",
+        "jeho",
+        "lepším",
+        "míní",
+        "případě",
+        "tom",
+        "trenéři"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1495,32 +1524,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Sparta a Slavia v ženské lize nezaváhaly, Plzni stačí k záchraně bod",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/fotbalistky-fc-praha-podlehly-plzni-12-156461",
-      "dt": "2026-04-26T11:01:01Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bod",
-        "lize",
-        "nezaváhaly",
-        "plzni",
-        "slavia",
-        "sparta",
-        "stačí",
-        "záchraně",
-        "ženské"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1531,7 +1534,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42791,
+      "bytes": 42619,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1591,12 +1594,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T08:08:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:28:31Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 2,
           "finance": 1,
-          "zpravy": 28,
-          "other": 1
+          "zpravy": 27
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1608,6 +1611,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zemřel za úsvitu druhého dne, chránil se hmoždířem. Vědci popsali smrt v Pompejích",
+            "publishedAt": "2026-04-28T08:28:31Z"
+          },
           {
             "title": "Ropa zdražuje, Brent překročil 110 dolarů za barel",
             "publishedAt": "2026-04-28T08:08:33Z"
@@ -1635,10 +1642,6 @@
           {
             "title": "Námořníci u Hormuzského průlivu čelí nedostatku jídla a pitné vody",
             "publishedAt": "2026-04-28T05:43:00Z"
-          },
-          {
-            "title": "Stát mění způsob poskytování právní pomoci cizincům. Hrozí, že to vyjde dráž",
-            "publishedAt": "2026-04-28T05:30:00Z"
           }
         ]
       }
@@ -1650,7 +1653,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38374,
+      "bytes": 38606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1687,7 +1690,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T07:36:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T08:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1702,6 +1705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Baráž? Tu bude hrát Baník v tom lepším případě, míní jeho bývalí trenéři",
+            "publishedAt": "2026-04-28T08:20:00Z"
+          },
           {
             "title": "Obhájci z Oklahomy jsou v druhém kole, Denver odvrátil konec sezony",
             "publishedAt": "2026-04-28T07:36:17Z"
@@ -1729,10 +1736,6 @@
           {
             "title": "Rozhodčí u červených karet v Edenu ani na Bohemians nechybovali",
             "publishedAt": "2026-04-27T12:43:04Z"
-          },
-          {
-            "title": "U Ledecké nebudou pokračovat lyžařští trenéři Gamper a Bank",
-            "publishedAt": "2026-04-27T11:20:40Z"
           }
         ]
       }
@@ -1744,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76974,
+      "bytes": 76978,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
