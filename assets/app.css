@@ -3716,8 +3716,13 @@ html[data-section="tvonline"] #iuTvOnlineView{
   padding: 11px 10px;
   transition: none;
 }
+#iuTvOnlineView a.iuRadioChip.iu-tv-online-card .iuRadioChipTitle,
+#iuTvOnlineView a.iuRadioChip.iu-tv-online-card .iuRadioChipDesc{
+  pointer-events: none;
+}
 #iuTvOnlineView a.iuRadioChip.iu-tv-online-card:active{
   transform: scale(0.985);
+  filter: brightness(0.97);
 }
 #iuTvOnlineView .iu-tv-online-card-title{
   font-size: 15px;
@@ -3732,8 +3737,12 @@ html[data-section="tvonline"] #iuTvOnlineView{
   line-height: 1.2;
 }
 @media (max-width: 767px) {
-  body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView.iuRadioView{
-    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space) + 8px) !important;
+  /* TV online: nesnižovat globální safe-space — pouze přidat cílený buffer (scrollIntoView / dolní lišta). */
+  html[data-section="tvonline"]{
+    scroll-padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space) + 18px);
+  }
+  body[data-section="tvonline"].iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView a.iu-tv-online-card{
+    scroll-margin-bottom: 24px;
   }
 }
 
@@ -4594,6 +4603,10 @@ body[data-section="home"] .iuHomeCanvas{
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView,
   body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvProgramView{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space) !important;
+    box-sizing: border-box !important;
+  }
+  body[data-section="tvonline"].iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) #iuTvOnlineView.iuRadioView{
+    padding-bottom: calc(var(--iu-mobile-bottom-nav-safe-space) + 20px) !important;
     box-sizing: border-box !important;
   }
 }
