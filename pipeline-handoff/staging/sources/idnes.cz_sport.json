@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-28T04:55:03.401203Z",
+  "ingestedAt": "2026-04-28T06:04:31.384573Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Brankáři Vladař s Vejmelkou na výhry nedosáhli, slaví Pittsburgh a Vegas",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-vejmelka.A260428_065716_nhl_mkr",
+      "dt": "2026-04-28T05:57:51Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brankáři",
+        "nedosáhli",
+        "pittsburgh",
+        "slaví",
+        "vegas",
+        "vejmelkou",
+        "vladař",
+        "výhry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České hokejové hry 2026: Program, výsledky, Češi, kde sledovat",
+      "url": "https://www.idnes.cz/hokej/reprezentace/ceske-hokejove-hry-2026.A260425_105231_ms-hokej-2026_ald",
+      "dt": "2026-04-28T05:04:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "hokejové",
+        "hry",
+        "program",
+        "sledovat",
+        "výsledky",
+        "české",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -725,58 +775,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Divoké Bečvanské El Clásico. Po valašském derby fanynka knokautovala rozhodčího",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/becvandske-el-clasico-horni-prostredni-becva-inzultace-rozhodci.A260427_134719_fot_dsouteze_ten",
-      "dt": "2026-04-27T11:52:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bečvanské",
-        "clásico",
-        "derby",
-        "divoké",
-        "fanynka",
-        "knokautovala",
-        "rozhodčího",
-        "valašském"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kondelík: V Třinci musíme začít jako v neděli. To byla nejlepší třetina v play off",
-      "url": "https://www.idnes.cz/hokej/extraliga/extraliga-play-off-finale-pardubice-trinec-jachym-kondelik.A260427_122451_hokej_mvo",
-      "dt": "2026-04-27T11:38:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "jako",
-        "kondelík",
-        "musíme",
-        "neděli",
-        "nejlepší",
-        "off",
-        "play",
-        "třetina",
-        "třinci",
-        "začít"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -787,7 +785,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46939,
+      "bytes": 46422,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -824,7 +822,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-27T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T05:57:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -839,6 +837,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Brankáři Vladař s Vejmelkou na výhry nedosáhli, slaví Pittsburgh a Vegas",
+            "publishedAt": "2026-04-28T05:57:51Z"
+          },
+          {
+            "title": "České hokejové hry 2026: Program, výsledky, Češi, kde sledovat",
+            "publishedAt": "2026-04-28T05:04:00Z"
+          },
           {
             "title": "Poznáte fotbalové trenéry podle fotky? Otestujte své znalosti",
             "publishedAt": "2026-04-27T22:00:00Z"
@@ -862,14 +868,6 @@
           {
             "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
             "publishedAt": "2026-04-27T19:19:00Z"
-          },
-          {
-            "title": "Vždy špatná varianta, čílili se volejbalisté Karlovarska. Padli u Lvů, finále je srovnané",
-            "publishedAt": "2026-04-27T19:07:00Z"
-          },
-          {
-            "title": "Augusta a Fuksa se stali trenéry roku. Ocenění získal i otec olympionika Jílka",
-            "publishedAt": "2026-04-27T18:21:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-28T04:55:03.401203Z",
+  "ingestedAt": "2026-04-28T06:04:31.384573Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Před 25 lety začal vesmírný turismus. První soukromník letěl sojuzem",
+      "url": "https://www.idnes.cz/technet/vesmir/vesmir-iss-turista-taxi-dennis-tito-soukroma-cesta-sojuz.A260427_151417_tec_vesmir_vse",
+      "dt": "2026-04-28T05:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "lety",
+        "letěl",
+        "první",
+        "sojuzem",
+        "soukromník",
+        "turismus",
+        "vesmírný",
+        "začal"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -746,31 +771,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V ČSSR se „díky“ RVHP vyráběly i zastaralé tramvaje T2D pro NDR",
-      "url": "https://www.idnes.cz/technet/technika/tramvaj-tatra-t2d.A260420_134208_tec_technika_erp/foto",
-      "dt": "2026-04-20T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "díky",
-        "ndr",
-        "rvhp",
-        "t2d",
-        "tramvaje",
-        "vyráběly",
-        "zastaralé",
-        "čssr"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +781,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46618,
+      "bytes": 46327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,11 +818,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 26,
-          "zpravy": 4
+          "other": 27,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -834,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Před 25 lety začal vesmírný turismus. První soukromník letěl sojuzem",
+            "publishedAt": "2026-04-28T05:00:00Z"
+          },
           {
             "title": "Co je supply chain útok? Hackeři útočí na ty, kterým nejvíc věříte",
             "publishedAt": "2026-04-28T02:00:00Z"
@@ -861,10 +865,6 @@
           {
             "title": "Chce nás osvobodit od velkých firem. A takto funguje jeho správa fotografií",
             "publishedAt": "2026-04-26T22:00:00Z"
-          },
-          {
-            "title": "Tragédie letu China Airlines 140. Airbus spadl před 32 lety u Nagoji",
-            "publishedAt": "2026-04-26T02:00:00Z"
           }
         ]
       }
