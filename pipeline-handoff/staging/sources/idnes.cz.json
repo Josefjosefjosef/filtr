@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-28T20:29:16.109726Z",
+  "ingestedAt": "2026-04-28T20:54:34.765413Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ohrozila fotografie mušlí Trumpa na životě? V USA obvinili exšéfa FBI Comeyho",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/ministerstvo-spravedlnosti-usa-obvineni-exsef-fbi-hrozba-donald-trump.A260428_221311_zahranicni_mikp",
+      "dt": "2026-04-28T20:26:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "comeyho",
+        "exšéfa",
+        "fbi",
+        "fotografie",
+        "mušlí",
+        "obvinili",
+        "ohrozila",
+        "trumpa",
+        "usa",
+        "životě"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -750,32 +777,6 @@
         "podívejte",
         "prodlouženém",
         "víkendu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Největší sucho za desítky let. Třeboňským rybníkům chybí už přes 20 procent vody",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/rozmberk-sucho-malo-vody-rybari-vylov.A260428_155635_budejovice-zpravy_mrl",
-      "dt": "2026-04-28T14:27:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "chybí",
-        "desítky",
-        "let",
-        "největší",
-        "procent",
-        "rybníkům",
-        "sucho",
-        "třeboňským",
-        "vody"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1577,7 +1578,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50542,
+      "bytes": 50504,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1614,7 +1615,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T20:16:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T20:26:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1631,6 +1632,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ohrozila fotografie mušlí Trumpa na životě? V USA obvinili exšéfa FBI Comeyho",
+            "publishedAt": "2026-04-28T20:26:00Z"
+          },
           {
             "title": "Mediální výbor vyzve ke stažení zákona. Dětinské politické divadlo, míní Klempíř",
             "publishedAt": "2026-04-28T20:16:45Z"
@@ -1658,10 +1663,6 @@
           {
             "title": "Česko vysychá až alarmující rychlostí, podzemní vody je nejméně za 35 let",
             "publishedAt": "2026-04-28T18:28:00Z"
-          },
-          {
-            "title": "Zajišťovat bezpečnost není volbou pohodlnosti, ale nutností, řekl Pavel",
-            "publishedAt": "2026-04-28T18:06:00Z"
           }
         ]
       }

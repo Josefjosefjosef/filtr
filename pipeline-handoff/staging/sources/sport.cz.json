@@ -1,29 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-28T20:29:16.109726Z",
+  "ingestedAt": "2026-04-28T20:54:34.765413Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Strhující bitva v Paříži! PSG zasadilo dva rychlé údery, s Bayernem je zle",
+      "title": "Konečně ho máme! Sedlák se v Pardubicích stal ikonou a dočkal se vysněného poháru",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-konecne-ho-mame-sedlak-se-v-pardubicich-stal-ikonou-a-dockal-se-vysneneho-poharu-5445176",
+      "dt": "2026-04-28T20:49:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dočkal",
+        "ikonou",
+        "konečně",
+        "máme",
+        "pardubicích",
+        "poháru",
+        "sedlák",
+        "stal",
+        "vysněného"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "FOTBAL ONLINE: Neskutečná bitva v Lize mistrů! Bayern se rychle zvedl ze dna, je tu opět drama",
       "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-dalsi-velka-bitva-v-lize-mistru-psg-hosti-v-semifinale-bayern-5444641",
       "dt": "2026-04-28T08:20:08Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bayernem",
+        "bayern",
         "bitva",
-        "dva",
+        "dna",
+        "drama",
         "fotbal",
+        "lize",
+        "mistrů",
+        "neskutečná",
         "online",
-        "paříži",
-        "psg",
-        "rychlé",
-        "strhující",
-        "zasadilo",
-        "zle",
-        "údery"
+        "opět",
+        "rychle",
+        "zvedl"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -756,31 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stud smíšený se vztekem. Bostonský kouč apeloval na Pastrňáka a spol.",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-stud-smiseny-se-vztekem-bostonsky-kouc-apeloval-na-pastrnaka-a-spol-potrebujeme-od-lidru-mnohem-vic-5444651",
-      "dt": "2026-04-28T10:22:05Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "apeloval",
-        "bostonský",
-        "kouč",
-        "pastrňáka",
-        "smíšený",
-        "spol",
-        "stud",
-        "vztekem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43390,
+      "bytes": 44012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T20:12:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T20:49:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,7 +845,11 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Strhující bitva v Paříži! PSG zasadilo dva rychlé údery, s Bayernem je zle",
+            "title": "Konečně ho máme! Sedlák se v Pardubicích stal ikonou a dočkal se vysněného poháru",
+            "publishedAt": "2026-04-28T20:49:47Z"
+          },
+          {
+            "title": "FOTBAL ONLINE: Neskutečná bitva v Lize mistrů! Bayern se rychle zvedl ze dna, je tu opět drama",
             "publishedAt": "2026-04-28T08:20:08Z"
           },
           {
@@ -870,10 +875,6 @@
           {
             "title": "Olympijská medaile z Milána je k mání. Jílkův soupeř ji věnoval do aukce",
             "publishedAt": "2026-04-28T17:36:54Z"
-          },
-          {
-            "title": "McDavid může popáté získat Cenu Teda Lindsayho a vyrovnat Gretzkého",
-            "publishedAt": "2026-04-28T17:23:27Z"
           }
         ]
       }
