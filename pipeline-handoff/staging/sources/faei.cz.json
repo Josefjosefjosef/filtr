@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-28T20:00:50.104816Z",
+  "ingestedAt": "2026-04-28T20:29:16.109726Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Standard & Poor’s varuje, že společnosti ČEZ zhorší rating",
+      "url": "https://profitonline.cz/standard-poors-varuje-ze-spolecnosti-cez-zhorsi-rating/",
+      "dt": "2026-04-28T20:10:45Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "poor",
+        "rating",
+        "společnosti",
+        "standard",
+        "varuje",
+        "zhorší",
+        "čez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,31 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Evropská digitální závislost. Když nás USA vypnou, bude to katastrofa",
-      "url": "https://profitonline.cz/evropska-digitalni-zavislost-kdyz-nas-usa-vypnou-bude-to-katastrofa/",
-      "dt": "2026-04-25T04:00:32Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "digitální",
-        "evropská",
-        "katastrofa",
-        "když",
-        "nás",
-        "usa",
-        "vypnou",
-        "závislost"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19019,
+      "bytes": 18841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-28T10:00:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T20:10:45Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -357,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Standard & Poor’s varuje, že společnosti ČEZ zhorší rating",
+            "publishedAt": "2026-04-28T20:10:45Z"
+          },
           {
             "title": "Hrozí vám energetická chudoba? Ukáže to unikátní interaktivní mapa",
             "publishedAt": "2026-04-28T10:00:34Z"
@@ -384,10 +387,6 @@
           {
             "title": "Slovensku kvůli vysokým deficitům zhoršili rating",
             "publishedAt": "2026-04-26T08:10:16Z"
-          },
-          {
-            "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách lidstva (2.)",
-            "publishedAt": "2026-04-26T04:00:29Z"
           }
         ]
       }
