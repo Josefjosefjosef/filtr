@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-28T20:54:34.765413Z",
+  "ingestedAt": "2026-04-28T21:24:15.728589Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Karel III. promluvil v americkém Kongresu. Vyzval k pevné spolupráci spojenců",
+      "url": "https://www.denik.cz/ze_sveta/karel-iii-projev-kongres.html",
+      "dt": "2026-04-28T20:39:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "americkém",
+        "iii",
+        "karel",
+        "kongresu",
+        "pevné",
+        "promluvil",
+        "spojenců",
+        "spolupráci",
+        "vyzval"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -626,32 +652,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Partneři měli v Teplicích utýrat štěně. Oba u soudu vinu odmítli",
-      "url": "https://www.denik.cz/krimi/teplice-soud-tyrani-zvirat-jezevcik-pes-20260428.html",
-      "dt": "2026-04-28T08:45:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "měli",
-        "oba",
-        "odmítli",
-        "partneři",
-        "soudu",
-        "teplicích",
-        "utýrat",
-        "vinu",
-        "štěně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -662,7 +662,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28456,
+      "bytes": 28289,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -699,7 +699,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-28T19:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T20:39:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -716,6 +716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Karel III. promluvil v americkém Kongresu. Vyzval k pevné spolupráci spojenců",
+            "publishedAt": "2026-04-28T20:39:00Z"
+          },
           {
             "title": "Řidič autobusu v Polsku děsil cestující. Srazil zvíře, s rozbitým sklem jel dál",
             "publishedAt": "2026-04-28T19:28:00Z"
@@ -743,10 +747,6 @@
           {
             "title": "Požár baru ve Švýcarsku: Právníci zhlédli hrozivá videa, rodinám je nedoporučují",
             "publishedAt": "2026-04-28T14:29:00Z"
-          },
-          {
-            "title": "V Břeclavi spustili obří bateriové úložiště. Uchová přebytky elektřiny",
-            "publishedAt": "2026-04-28T14:21:00Z"
           }
         ]
       }

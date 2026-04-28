@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-28T20:54:34.765413Z",
+  "ingestedAt": "2026-04-28T21:24:15.728589Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Na co obrana? PSG sehrálo s Bayernem bláznivé semifinále",
+      "url": "https://sport.aktualne.cz/na-co-obrana-psg-sehralo-s-bayernem-blaznive-semifinale/r~aaa29f2035fc05bb8b0012ced4a7e655/",
+      "dt": "2026-04-28T21:06:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bayernem",
+        "bláznivé",
+        "obrana",
+        "psg",
+        "sehrálo",
+        "semifinále"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Titul jsem si nekoupil, řekl Dědek. Nezastaví se. U zlaté jízdy poznal hlavní rozdíl",
+      "url": "https://sport.aktualne.cz/hokej/titul-jsem-si-nekoupil-rekl-dedek-nezastavi-se-u-zlate-jizdy-poznal-hlavni-rozdil/r~aaa298481152e5795eb38b214c0f28b6/",
+      "dt": "2026-04-28T20:46:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dědek",
+        "hlavní",
+        "jsem",
+        "jízdy",
+        "nekoupil",
+        "nezastaví",
+        "poznal",
+        "rozdíl",
+        "titul",
+        "zlaté",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -461,56 +512,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kubovo hnutí Naše Česko posiluje: Daczická odchází z ODS",
-      "url": "https://zpravy.aktualne.cz/domaci/kubovo-hnuti-nase-cesko-posiluje-daczicka-odchazi-z-ods/r~aaa297172ddedbc41ac03483c54cb7f4/",
-      "dt": "2026-04-28T15:12:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "daczická",
-        "hnutí",
-        "kubovo",
-        "naše",
-        "odchází",
-        "ods",
-        "posiluje",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie zasahovala v příbramské nemocnici a na krajském úřadě, zadržela 13 lidí",
-      "url": "https://zpravy.aktualne.cz/domaci/policie-zasahovala-v-pribramske-nemocnici-a-na-krajskem-urade-zadrzela-13-lidi/r~aaa29cd8873e38c3c361f686ffc99b18/",
-      "dt": "2026-04-28T15:46:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "krajském",
-        "lidí",
-        "nemocnici",
-        "policie",
-        "příbramské",
-        "zadržela",
-        "zasahovala",
-        "úřadě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -521,7 +522,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22249,
+      "bytes": 22327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -558,11 +559,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T19:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T21:06:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 14,
-          "sport": 4,
+          "sport": 6,
+          "zpravy": 12,
           "finance": 2
         },
         "drop_counts": {
@@ -575,6 +576,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na co obrana? PSG sehrálo s Bayernem bláznivé semifinále",
+            "publishedAt": "2026-04-28T21:06:00Z"
+          },
+          {
+            "title": "Titul jsem si nekoupil, řekl Dědek. Nezastaví se. U zlaté jízdy poznal hlavní rozdíl",
+            "publishedAt": "2026-04-28T20:46:00Z"
+          },
           {
             "title": "USA už nejsou v pozici, aby diktovaly politiku nezávislým státům, vzkazuje Írán",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -598,14 +607,6 @@
           {
             "title": "Tisíce příběhů o Češích stíhaných sovětskou KGB se dočkaly digitalizace",
             "publishedAt": "2026-04-28T18:50:00Z"
-          },
-          {
-            "title": "Výbor hlasy opozice vyzval Klempíře, ať stáhne zákon o médiích",
-            "publishedAt": "2026-04-28T18:29:00Z"
-          },
-          {
-            "title": "Ukrajinci našli slabinu Moskvy. Ruská obrana nestíhá, otevírá se cesta až na Ural",
-            "publishedAt": "2026-04-28T18:13:00Z"
           }
         ]
       }

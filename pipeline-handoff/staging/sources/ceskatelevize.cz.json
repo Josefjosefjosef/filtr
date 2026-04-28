@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T20:54:34.765413Z",
+  "ingestedAt": "2026-04-28T21:24:15.728589Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Americké ministerstvo obvinilo exšéfa FBI kvůli údajné hrozbě Trumpovi",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/americke-ministerstvo-obvinilo-exsefa-fbi-kvuli-udajne-hrozbe-trumpovi-372915",
+      "dt": "2026-04-28T20:51:27Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "americké",
+        "exšéfa",
+        "fbi",
+        "hrozbě",
+        "kvůli",
+        "ministerstvo",
+        "obvinilo",
+        "trumpovi",
+        "údajné"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,29 +755,28 @@
       "_dt_serialized": true
     },
     {
-      "section": "kultura",
+      "section": "sport",
       "contentType": "article",
-      "title": "Rocky konečně zdolal „své“ schody. Philadelphské muzeum ale sochu léta odmítalo",
-      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/rocky-konecne-zdolal-sve-schody-philadelphske-muzeum-ale-sochu-leta-odmitalo-372852",
-      "dt": "2026-04-28T09:06:07Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Ofenzivní festival v Parku princů vyšel lépe PSG, Bayern si odvezl porážku 4:5",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ofenzivni-festival-v-parku-princu-vysel-lepe-psg-bayern-si-odvezl-porazku-45-156500",
+      "dt": "2026-04-28T21:15:22Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "ale",
-        "konečně",
-        "léta",
-        "muzeum",
-        "odmítalo",
-        "philadelphské",
-        "rocky",
-        "schody",
-        "sochu",
-        "své",
-        "zdolal"
+        "bayern",
+        "festival",
+        "lépe",
+        "odvezl",
+        "ofenzivní",
+        "parku",
+        "porážku",
+        "princů",
+        "psg",
+        "vyšel"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1493,32 +1518,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Dortmund se opět kvalifikoval do Ligy mistrů, Stuttgart s Brémami jen remizoval",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/stuttgart-s-bremami-pouze-remizoval-ctvrte-misto-ale-uhajil-156471",
-      "dt": "2026-04-26T15:59:07Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "brémami",
-        "dortmund",
-        "jen",
-        "kvalifikoval",
-        "ligy",
-        "mistrů",
-        "opět",
-        "remizoval",
-        "stuttgart"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1529,7 +1528,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43052,
+      "bytes": 42942,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1589,12 +1588,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T19:11:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T20:51:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
+          "zpravy": 26,
           "finance": 1,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1606,6 +1605,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Americké ministerstvo obvinilo exšéfa FBI kvůli údajné hrozbě Trumpovi",
+            "publishedAt": "2026-04-28T20:51:27Z"
+          },
           {
             "title": "„Tsunami cestovního ruchu.“ Jak zachránit města zahlcená masovou turistikou",
             "publishedAt": "2026-04-28T19:11:54Z"
@@ -1633,10 +1636,6 @@
           {
             "title": "Šluknov požádá o dotaci na odkup bytů na problémovém sídlišti",
             "publishedAt": "2026-04-28T16:00:56Z"
-          },
-          {
-            "title": "Kvůli napětí ve světě zdraží energie, obávají se podle průzkumu Češi",
-            "publishedAt": "2026-04-28T15:47:37Z"
           }
         ]
       }
@@ -1648,7 +1647,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38361,
+      "bytes": 38328,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1685,7 +1684,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T20:36:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T21:15:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1700,6 +1699,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ofenzivní festival v Parku princů vyšel lépe PSG, Bayern si odvezl porážku 4:5",
+            "publishedAt": "2026-04-28T21:15:22Z"
+          },
           {
             "title": "Červenka: Každý měl roli, kterou plnil na sto procent. Jeden bez druhého bychom nevyhráli",
             "publishedAt": "2026-04-28T20:36:47Z"
@@ -1727,10 +1730,6 @@
           {
             "title": "Česká reprezentace do 18 let narazí ve čtvrtfinále MS na Finsko, přímý přenos nabídne ČT sport",
             "publishedAt": "2026-04-28T12:00:00Z"
-          },
-          {
-            "title": "Dostál k novému systému: Raději bych byl doma s rodinou a neobjížděl všechny závody",
-            "publishedAt": "2026-04-28T09:43:46Z"
           }
         ]
       }
@@ -1742,7 +1741,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77490,
+      "bytes": 77534,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
