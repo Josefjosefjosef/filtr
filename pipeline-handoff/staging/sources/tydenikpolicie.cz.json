@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T22:05:07.167494Z",
+  "ingestedAt": "2026-04-29T22:35:46.870436Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Strážníci v Karlových Varech pomohli při záchraně lidského života",
+      "url": "https://tydenikpolicie.cz/straznici-v-karlovych-varech-pomohli-pri-zachrane-lidskeho-zivota/",
+      "dt": "2026-04-29T22:02:27Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "karlových",
+        "lidského",
+        "pomohli",
+        "při",
+        "strážníci",
+        "varech",
+        "záchraně",
+        "života"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -236,33 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie zasahovala v Jablonci nad Nisou. Muž vyhrožoval napadením, hrozilo, že může být ozbrojený",
-      "url": "https://tydenikpolicie.cz/policie-zasahuje-v-jablonci-nad-nisou-muz-vyhrozuje-napadenim-muze-byt-ozbrojeny/",
-      "dt": "2026-04-29T11:52:20Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "být",
-        "hrozilo",
-        "jablonci",
-        "muž",
-        "napadením",
-        "nisou",
-        "ozbrojený",
-        "policie",
-        "vyhrožoval",
-        "zasahovala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16457,
+      "bytes": 16345,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T21:08:32Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T22:02:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strážníci v Karlových Varech pomohli při záchraně lidského života",
+            "publishedAt": "2026-04-29T22:02:27Z"
+          },
           {
             "title": "Muž byl po napadení seniora v Mariánských Lázních propuštěn na svobodu. Vzápětí přepadl benzínku",
             "publishedAt": "2026-04-29T21:08:32Z"
@@ -352,10 +354,6 @@
           {
             "title": "Čtveřici cizinců podezřelých ze série krádeží v prodejnách se podařilo dopadnout díky pozornému policistovi",
             "publishedAt": "2026-04-29T13:27:12Z"
-          },
-          {
-            "title": "V hořícím bytě v Karviné našli hasiči vážně popáleného muže",
-            "publishedAt": "2026-04-29T12:15:21Z"
           }
         ]
       }
