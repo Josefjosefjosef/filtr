@@ -6435,6 +6435,43 @@ html[data-section="mapy"] #iuMapyView .iuMapyGrid{
   gap: 9px;
 }
 
+/* Mapy & Navigace — SEO blok pod tlačítky (čitelná karta, rezerva nad spodní lištou). */
+#iuMapyView .iu-maps-seo-block{
+  margin-top: 14px;
+  margin-bottom: 20px;
+  padding: 16px 18px 22px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--iuSectionAccent, #22C55E) 18%, rgba(11,27,43,0.10));
+  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--iuSectionAccent, #22C55E) 5%, #f4f9f6) 100%);
+  box-shadow: 0 1px 0 rgba(11,27,43,0.04);
+  line-height: 1.62;
+  font-size: 14px;
+  color: rgba(11,27,43,0.92);
+}
+@media (min-width: 901px){
+  #iuMapyView .iu-maps-seo-block{
+    max-width: min(820px, 100%);
+    padding-bottom: 22px;
+  }
+}
+#iuMapyView .iu-maps-seo-block h2{
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.28;
+  color: color-mix(in srgb, var(--iuSectionAccent, #22C55E) 88%, #0f766e);
+}
+#iuMapyView .iu-maps-seo-block p{
+  margin: 0 0 12px;
+}
+#iuMapyView .iu-maps-seo-block p:last-child{
+  margin-bottom: 0;
+}
+
 /* Mapy + TV online + Rádio: společná dlaždice; accent z --iuSectionAccent; hover jen fine pointer. */
 :is(#iuMapyView,#iuMapsView,#iuTvOnlineView,#iuRadioView) .iuRadioChip{
   -webkit-tap-highlight-color: transparent;
