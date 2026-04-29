@@ -10031,7 +10031,11 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
 /* JR: premium chips; fine-pointer hover only; coarse = no sticky :hover + tap scale (selectors split for CSS debt guard). */
 #iuJrEmptyView.iuJrEmptyView{padding:14px 12px 16px}
 #iuJrEmptyView .iuSectionHeader--jr{margin:0 0 8px;align-items:center}
-#iuJrEmptyView .iuSectionHeader--jr h2{font-size:clamp(19px,1.05rem + .6vw,22px);font-weight:820;letter-spacing:.045em;line-height:1.2}
+#iuJrEmptyView .iuSectionHeader--jr h2{font-size:clamp(19px,1.05rem + .6vw,22px);font-weight:820;letter-spacing:.045em;line-height:1.2;color:#F59E0B}
+#iuJrEmptyView .iu-timetables-seo-block{margin:16px 0 12px;padding:14px 14px 16px;box-sizing:border-box;width:100%;max-width:100%;border-radius:12px;border:1px solid color-mix(in srgb,var(--iuSectionAccent) 20%,rgba(11,27,43,.1));background:linear-gradient(165deg,#fbfcfd,#f6f2eb 52%,#f8fafc);box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)}
+#iuJrEmptyView .iu-timetables-seo-block h2{margin:0 0 10px;font-size:clamp(16px,.95rem + .5vw,18px);font-weight:780;letter-spacing:.02em;line-height:1.25;color:#F59E0B}
+#iuJrEmptyView .iu-timetables-seo-block p{margin:0 0 10px;color:rgba(11,27,43,.88);font-size:14px;line-height:1.45}
+#iuJrEmptyView .iu-timetables-seo-block p:last-child{margin-bottom:0}
 #iuJrEmptyView .iuSectionHeader--jr .iuSectionHeaderLine{height:3px;border-radius:999px;opacity:1;background:linear-gradient(90deg,color-mix(in srgb,var(--iuSectionAccent) 72%,transparent) 0%,color-mix(in srgb,var(--iuSectionAccent) 28%,transparent) 38%,transparent 100%)}
 #iuJrEmptyView>.iuSectionSubtitle{margin:2px 0 12px;line-height:1.38}
 #newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip{
