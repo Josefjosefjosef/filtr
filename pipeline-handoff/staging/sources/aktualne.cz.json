@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-29T04:30:07.280154Z",
+  "ingestedAt": "2026-04-29T04:54:49.006495Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Boston žije díky Pastrňákovi! Česká hvězda nádherně rozhodla v prodloužení",
+      "url": "https://sport.aktualne.cz/hokej/boston-zije-diky-pastrnakovi-ceska-hvezda-nadherne-rozhodla-v-prodlouzeni/r~aaa29bad7a29a49cee030c364c44baf3/",
+      "dt": "2026-04-29T04:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "boston",
+        "díky",
+        "hvězda",
+        "nádherně",
+        "pastrňákovi",
+        "prodloužení",
+        "rozhodla",
+        "česká",
+        "žije"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -500,32 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pavel bude ve středu jednat se Zůnou o výběru nového náčelníka generálního štábu",
-      "url": "https://zpravy.aktualne.cz/domaci/pavel-bude-ve-stredu-jednat-se-zunou-o-vyberu-noveho-nacelnika-generalniho-stabu/r~aaa290f4660a4b98dfc7b507247f4697/",
-      "dt": "2026-04-28T11:56:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "generálního",
-        "jednat",
-        "nového",
-        "náčelníka",
-        "pavel",
-        "středu",
-        "výběru",
-        "zůnou",
-        "štábu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22551,
+      "bytes": 22495,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,14 +573,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T04:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "sport": 6,
+          "zpravy": 11,
           "other": 1,
           "finance": 1,
-          "zdravi": 1,
-          "sport": 5
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -592,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boston žije díky Pastrňákovi! Česká hvězda nádherně rozhodla v prodloužení",
+            "publishedAt": "2026-04-29T04:29:00Z"
+          },
           {
             "title": "Írán jsme vojensky porazili, řekl Trump na večeři s britským králem",
             "publishedAt": "2026-02-28T14:04:00Z"
@@ -618,10 +622,6 @@
           },
           {
             "title": "„Babičko, nasedni!“ Ukrajinci zachránili ženu uprostřed palby. Zvolili kuriozní řešení",
-            "publishedAt": "2026-04-29T03:30:00Z"
-          },
-          {
-            "title": "Unikátní mapa smrti. Víme, kde Češi žijí dlouho, a kde naopak umírají předčasně",
             "publishedAt": "2026-04-29T03:30:00Z"
           }
         ]
