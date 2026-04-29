@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Regression guard: Silver weather line — only "Venku je X °C" is emphasized
- * (.silver-weather-outside-temp). DOM + computed style + CLS/overflow/rail/console.
+ * Regression guard: Silver weather line — temperature emphasis (.silver-weather-outside-temp).
+ * Supports compact strip: numeric "X °C" / "—°C" in .silver-weather-outside-temp plus optional "Venku je " prefix sibling.
+ * DOM + computed style + CLS/overflow/rail/console.
  *
  * Run: node scripts/proofs/weather_emphasis_guard.mjs
  */
@@ -303,7 +304,9 @@ async function main() {
           kids[0].classList.contains("silver-weather-dpart");
 
         const txt = emph ? String(emph.textContent || "").trim() : "";
-        const venkuOk = /Venku\s+je\s+\d+\s*°C/i.test(txt);
+        const venkuOk = /Venku\s+je\s+-?\d+\s*°C/i.test(txt);
+        const compactTempOk = /^-?\d+\s*°C$/.test(txt) || txt === "—°C";
+        const tempOk = venkuOk || compactTempOk;
         const noLeak =
           !/Pocitově/i.test(txt) &&
           !/Oblačno/i.test(txt) &&
@@ -317,7 +320,12 @@ async function main() {
         const statusInEmph = !!(status && emph && emph.contains(status));
 
         const cs = emph ? window.getComputedStyle(emph) : null;
-        const lineCS = line1 ? window.getComputedStyle(line1) : null;
+        const line1Display = line1 ? String(window.getComputedStyle(line1).display || "") : "";
+        const lineAnchor =
+          line1 && line1Display === "contents"
+            ? line1.closest("#iuSilverWeatherCard") || line1.parentElement
+            : line1;
+        const lineCS = lineAnchor ? window.getComputedStyle(lineAnchor) : null;
         const feelsCS = feels ? window.getComputedStyle(feels) : null;
 
         const wEm = cs ? parseFloat(cs.fontWeight) || 0 : 0;
@@ -333,6 +341,8 @@ async function main() {
           line1Exists: !!line1,
           emphExists: !!emph,
           venkuOk,
+          compactTempOk,
+          tempOk,
           firstIsIcon,
           noLeak,
           iconInEmph,
@@ -355,7 +365,7 @@ async function main() {
       const ok =
         check.line1Exists &&
         check.emphExists &&
-        check.venkuOk &&
+        check.tempOk &&
         check.firstIsIcon &&
         check.noLeak &&
         !check.iconInEmph &&

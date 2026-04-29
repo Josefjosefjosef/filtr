@@ -11447,17 +11447,22 @@ function buildVideoAsArticleCard(it) {
       const fl = typeof st.current.feelsLikeC === "number" ? Math.round(st.current.feelsLikeC) : null;
       const stat = iuSilverWeatherStatusShort(st);
       const tip = iuSilverWeatherPickTip(st);
-      const tStr = t != null ? `Venku je ${t} °C` : "Venku je —°C";
+      const tStr = t != null ? `${t} °C` : "—°C";
       const flStr = fl != null ? `Pocitově ${fl} °C` : "Pocitově —°C";
       line1.innerHTML =
-        `<span class="silver-weather-dpart" aria-hidden="true">${escapeHtml(dp)}</span> ` +
-        `<span class="silver-weather-outside-temp" data-iu-silver-weather-hook="temp">${escapeHtml(tStr)}</span>` +
-        `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
-        `<span data-iu-silver-weather-hook="feels">${escapeHtml(flStr)}</span>` +
-        `<span class="silver-weather-line__sep" aria-hidden="true"> | </span>` +
+        `<span class="silver-weather-dpart" aria-hidden="true">${escapeHtml(dp)}</span>` +
+        `<span class="iu-weather-compact-tempCol">` +
+        `<span class="iu-weather-temp-prefix" aria-hidden="true">Venku je </span>` +
+        `<span class="silver-weather-outside-temp iu-weather-compact-temp" data-iu-silver-weather-hook="temp">${escapeHtml(tStr)}</span>` +
+        `<span class="iu-weather-compact-feels" data-iu-silver-weather-hook="feels">${escapeHtml(flStr)}</span>` +
+        `</span>` +
+        `<span class="iu-weather-compact-divider" aria-hidden="true"></span>` +
+        `<span class="iu-weather-compact-status">` +
         `<span class="silver-weather-stat" aria-hidden="true">${escapeHtml(stat.icon)}</span>` +
-        `<span data-iu-silver-weather-hook="status"> ${escapeHtml(stat.text)}</span>`;
-      line2.innerHTML = `<span data-iu-silver-weather-hook="tip">${escapeHtml(tip)}</span>`;
+        `<span data-iu-silver-weather-hook="status"> ${escapeHtml(stat.text)}</span>` +
+        `</span>`;
+      line2.innerHTML =
+        `<span class="iu-weather-compact-advice" data-iu-silver-weather-hook="tip">${escapeHtml(tip)}</span>`;
       try{
         card.setAttribute("data-iu-silver-wx-phase", "data");
         card.setAttribute("data-iu-silver-wx-tip", iuSilverWeatherTipCategory(st));
