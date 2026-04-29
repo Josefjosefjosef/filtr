@@ -552,4 +552,231 @@
     border-color: #818cf8;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
   }
+
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailHost,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailHost {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailAdd,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailAdd {
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto;
+    align-self: flex-start;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    min-height: 120px;
+    margin: 0 0 8px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5f5;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 16px !important;
+    line-height: 1.4;
+    resize: vertical;
+    font-family: inherit;
+    -webkit-text-size-adjust: 100%;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea:focus,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea:focus {
+    border-color: #818cf8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions .iuSilverParcelWatch__btnSecondary,
+  #iuMobileSilverSlot
+    #silver-slot
+    #iuSilverParcelWatch
+    .iuSilverParcelWatch__detailEditActions
+    .iuSilverParcelWatch__btnSecondary {
+    width: auto;
+    flex: 0 0 auto;
+    min-height: 44px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions .iuSilverParcelWatch__btnGhost,
+  #iuMobileSilverSlot
+    #silver-slot
+    #iuSilverParcelWatch
+    .iuSilverParcelWatch__detailEditActions
+    .iuSilverParcelWatch__btnGhost {
+    width: auto;
+    flex: 0 0 auto;
+    min-height: 40px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailLine,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailLine {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #0f172a;
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailRaw,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailRaw {
+    margin-top: 4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailManage,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailManage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink--danger,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink--danger {
+    color: #b45309;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav {
+    margin-top: 8px;
+    width: auto;
+    align-self: flex-start;
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 1025px) {
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailHost,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailHost {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(100, 160, 220, 0.22);
+    min-width: 0;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailAdd,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailAdd {
+    margin: 0;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px dashed rgba(160, 190, 220, 0.45);
+    background: transparent;
+    color: rgba(210, 224, 240, 0.85);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    min-height: 110px;
+    margin: 0 0 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(120, 180, 230, 0.4);
+    background: rgba(6, 12, 24, 0.45);
+    color: #f4f9ff;
+    font-size: 16px !important;
+    line-height: 1.4;
+    resize: vertical;
+    font-family: inherit;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea:focus,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailTextarea:focus {
+    border-color: rgba(140, 210, 255, 0.55);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(80, 160, 255, 0.2);
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailEditActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailLine,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailLine {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: rgba(236, 244, 255, 0.94);
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailRaw,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailRaw {
+    margin-top: 4px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(4, 10, 22, 0.35);
+    border: 1px solid rgba(100, 160, 220, 0.22);
+    color: rgba(230, 240, 252, 0.92);
+    font-size: 12.5px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailManage,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__detailManage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: rgba(186, 210, 236, 0.88);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink--danger,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailLink--danger {
+    color: rgba(255, 200, 140, 0.9);
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav {
+    margin-top: 8px;
+    width: auto;
+    align-self: flex-start;
+  }
 }
