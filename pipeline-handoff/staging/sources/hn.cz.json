@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-29T14:44:43.783866Z",
+  "ingestedAt": "2026-04-29T15:15:22.053630Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Škola úspěšného byznysmena je v mezinárodních testech nejlepší v Česku. Na jakou dovednost žáků klade důraz?",
+      "url": "https://domaci.hn.cz/c1-67871910-skola-uspesneho-byznysmena-je-v-mezinarodnich-testech-nejlepsi-v-cesku-na-jakou-dovednost-zaku-klade-duraz",
+      "dt": "2026-04-29T14:51:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "byznysmena",
+        "dovednost",
+        "důraz",
+        "jakou",
+        "klade",
+        "mezinárodních",
+        "nejlepší",
+        "testech",
+        "úspěšného",
+        "česku",
+        "škola",
+        "žáků"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1129,35 +1158,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Roboti se stopkami? Výkon v práci pohlídá AI, algoritmy se po kurýrech prosadí napříč byznysem, předpovídá ekonomka",
-      "url": "https://archiv.hn.cz/c1-67871050-roboti-se-stopkami-vykon-v-praci-pohlida-ai-algoritmy-se-po-kuryrech-prosadi-napric-byznysem-predpovida-ekonomka",
-      "dt": "2026-04-28T11:02:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "algoritmy",
-        "byznysem",
-        "ekonomka",
-        "kurýrech",
-        "napříč",
-        "pohlídá",
-        "prosadí",
-        "práci",
-        "předpovídá",
-        "roboti",
-        "stopkami",
-        "výkon"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1168,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183729,
+      "bytes": 183689,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,7 +1205,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T14:51:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1223,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Škola úspěšného byznysmena je v mezinárodních testech nejlepší v Česku. Na jakou dovednost žáků klade důraz?",
+            "publishedAt": "2026-04-29T14:51:00Z"
+          },
           {
             "title": "Máte moc peněz na účtech! Motoristé chtějí vyčíst šumavskému parku stamilionové rezervy, podle expertů se ale budou hodit",
             "publishedAt": "2026-04-29T14:39:00Z"
@@ -1250,10 +1254,6 @@
           {
             "title": "Europarlament hlasoval o změnách v emisních povolenkách. Navrhuje posílit ochranu domácností před výraznými cenovými výkyvy",
             "publishedAt": "2026-04-29T11:52:00Z"
-          },
-          {
-            "title": "Snížení DPH na pivo restaurační sektor nezachrání, svět se obrací k pivu i vínu zády",
-            "publishedAt": "2026-04-29T11:41:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T14:44:43.783866Z",
+  "ingestedAt": "2026-04-29T15:15:22.053630Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jednotná nabíječka už míří i k notebookům. Začala platit nová pravidla",
+      "url": "https://www.denik.cz/ekonomika/ekonomika-jednotna-nabijecka-pro-notebooky-pravidla-cesko.html",
+      "dt": "2026-04-29T14:20:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "jednotná",
+        "míří",
+        "nabíječka",
+        "notebookům",
+        "nová",
+        "platit",
+        "pravidla",
+        "začala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Velká banka měla odstávku: Nefungovaly některé služby, varovala před podvodníky",
-      "url": "https://www.denik.cz/ekonomika/fio-banka-odstavka-systemu-upozorneni-na-podvodniky.html",
-      "dt": "2026-04-29T06:47:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "banka",
-        "měla",
-        "nefungovaly",
-        "některé",
-        "odstávku",
-        "podvodníky",
-        "služby",
-        "varovala",
-        "velká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29280,
+      "bytes": 29719,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,11 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T14:20:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "finance": 1,
+          "zpravy": 24
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -712,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jednotná nabíječka už míří i k notebookům. Začala platit nová pravidla",
+            "publishedAt": "2026-04-29T14:20:00Z"
+          },
           {
             "title": "Recenze: Alchemised. Dark fantasy, která vás pohltí i vyčerpá",
             "publishedAt": "2026-04-29T14:00:00Z"
@@ -739,10 +742,6 @@
           {
             "title": "Pepco stahuje z prodeje nebezpečný náramek. Dětem může způsobit zranění",
             "publishedAt": "2026-04-29T11:57:00Z"
-          },
-          {
-            "title": "Muž u synagogy v Londýně pobodal dva Židy. Policie útočníka dopadla",
-            "publishedAt": "2026-04-29T11:38:00Z"
           }
         ]
       }

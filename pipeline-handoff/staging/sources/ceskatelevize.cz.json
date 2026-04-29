@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T14:44:43.783866Z",
+  "ingestedAt": "2026-04-29T15:15:22.053630Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Film o Jacksonovi postrádá skandály, diváci se ale hrnou",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/film-o-jacksonovi-postrada-skandaly-divaci-se-ale-hrnou-372941",
+      "dt": "2026-04-29T14:51:32Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "ale",
+        "diváci",
+        "film",
+        "hrnou",
+        "jacksonovi",
+        "postrádá",
+        "skandály"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Česko zasáhlo sucho, situace se jen tak nezlepší. Na Slovensku je ještě hůř",
+      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/cesko-zasahlo-sucho-situace-se-jen-tak-nezlepsi-na-slovensku-je-jeste-hur-372891",
+      "dt": "2026-04-29T14:48:36Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hůř",
+        "jen",
+        "ještě",
+        "nezlepší",
+        "situace",
+        "slovensku",
+        "sucho",
+        "tak",
+        "zasáhlo",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -699,54 +750,6 @@
         "vojensky",
         "írán",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Spojené státy vydají pasy s vyobrazením Trumpa",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/spojene-staty-vydaji-pasy-s-vyobrazenim-trumpa-372917",
-      "dt": "2026-04-28T23:43:43Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "pasy",
-        "spojené",
-        "státy",
-        "trumpa",
-        "vydají",
-        "vyobrazením"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Bývalého šéfa FBI obvinili kvůli fotce vyskládaných mušlí",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/americke-ministerstvo-obvinilo-exsefa-fbi-kvuli-udajne-hrozbe-trumpovi-372915",
-      "dt": "2026-04-28T20:51:27Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "bývalého",
-        "fbi",
-        "fotce",
-        "kvůli",
-        "mušlí",
-        "obvinili",
-        "vyskládaných",
-        "šéfa"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1531,7 +1534,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42186,
+      "bytes": 42163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1591,12 +1594,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:27:10Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T14:51:32Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 3,
-          "other": 5
+          "other": 6,
+          "zpravy": 21,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1608,6 +1611,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Film o Jacksonovi postrádá skandály, diváci se ale hrnou",
+            "publishedAt": "2026-04-29T14:51:32Z"
+          },
+          {
+            "title": "Česko zasáhlo sucho, situace se jen tak nezlepší. Na Slovensku je ještě hůř",
+            "publishedAt": "2026-04-29T14:48:36Z"
+          },
           {
             "title": "Paměť pod palbou. Ruská armáda ničí ukrajinské kulturní dědictví",
             "publishedAt": "2026-04-29T14:27:10Z"
@@ -1631,14 +1642,6 @@
           {
             "title": "Evropský parlament schválil svou pozici k úpravě systému ETS 2",
             "publishedAt": "2026-04-29T11:56:43Z"
-          },
-          {
-            "title": "ŘSD zahájilo stavbu D35 mezi Hořicemi a Úlibicemi na Jičínsku",
-            "publishedAt": "2026-04-29T11:39:20Z"
-          },
-          {
-            "title": "Do očí se jim propsal život i válka, říká fotograf o lidech z Náhorního Karabachu",
-            "publishedAt": "2026-04-29T11:00:00Z"
           }
         ]
       }
@@ -1744,7 +1747,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77064,
+      "bytes": 77090,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
