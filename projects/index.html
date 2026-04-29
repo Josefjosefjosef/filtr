@@ -233,7 +233,7 @@ style-src 'self' 'unsafe-inline' https:;
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:13px;line-height:1.3;padding:5px 8px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;margin:0!important;align-self:stretch}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card strong{font-size:14px}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card *{min-width:0;overflow-wrap:anywhere}
-        #silver-slot .iu-info-cards-mobile-tablet+#iuSilverWelcomeStackSeparatorTallBefore{margin-top:12px}
+        #silver-slot .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:12px}
         #silver-slot #iuSilverTallScrollSection{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;margin:12px 10px 0 10px!important}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-text{white-space:normal!important;overflow-wrap:anywhere;overflow-x:visible;text-overflow:unset;min-width:0}
         #silver-slot .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{white-space:normal!important;min-width:0}
@@ -244,7 +244,7 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHeroPremium{margin-top:14px!important}
         #iuHolidayMonetizeCard.iu-holiday-monetize-card{margin-top:14px!important}
         #silver-slot .iu-info-cards-mobile-tablet{margin-top:14px!important}
-        #silver-slot .iu-info-cards-mobile-tablet+#iuSilverWelcomeStackSeparatorTallBefore{margin-top:14px!important}
+        #silver-slot .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:14px!important}
         #silver-slot #iuSilverTallScrollSection{margin-top:14px!important}
       }
       @media(max-width:480px){
@@ -795,45 +795,6 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                           </div>
                         </section>
-                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
-                          <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
-                          <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
-                          <div class="iuSilverParcelWatch__mainShell">
-                            <div class="iuSilverParcelWatch__row">
-                              <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
-                              <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
-                            </div>
-                          </div>
-                          <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
-                          <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
-                          <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
-                          <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
-                        </section>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
-                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card iu-holiday-card" data-iu-nameday-gender="unknown" data-iu-daypart="" aria-label="Svátek">
-                          <div class="iu-holiday-card__row">
-                            <div class="iu-holiday-card__giftWrap" aria-hidden="true">
-                              <div class="iu-holiday-card__giftCircle">
-                                <svg class="iu-holiday-card__giftSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-                                  <rect x="4" y="10" width="16" height="11" rx="2" fill="#ffffff"/>
-                                  <path d="M12 10V21" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-                                  <path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="#ffffff"/>
-                                  <ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
-                                  <ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
-                                </svg>
-                              </div>
-                            </div>
-                            <div class="iu-holiday-card__text">
-                              <div class="iu-holiday-card__line1" id="iuHolidayLine1"><span class="poprej-bold">Popřej oslavence</span></div>
-                              <div class="iu-holiday-card__line2" id="iuHolidayLine2">Dnes má svátek</div>
-                            </div>
-                            <div class="iu-nameday-cta iu-nameday-cta--slotMobile iu-holiday-card__actions" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
-                              <button type="button" class="silver-weather-btn iu-nameday-wish" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 10V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="currentColor"/><ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/><ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/></svg> Vytvořit přání</button>
-                              <button type="button" class="silver-weather-btn iu-nameday-flowers" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="3.5" fill="currentColor"/><circle cx="8" cy="14" r="3.2" fill="currentColor"/><circle cx="16" cy="14" r="3.2" fill="currentColor"/><path fill="currentColor" d="M11 17h2v5h-2z"/></svg> Poslat květiny</button>
-                            </div>
-                          </div>
-                        </section>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="iu-info-cards-mobile-tablet" id="iuInfoCardsMobileTablet" data-iu-info-cards-mobile-tablet>
                         <div class="silver-weather-card iu-mini-overview-card iu-mini-overview-card--weather iu-info-card" id="iuSilverWeatherCard" data-iu-silver-weather-card data-iu-silver-wx-phase="firstVisit" data-iu-silver-wx-layout="setup">
                           <div class="silver-weather-line1" id="iuSilverWeatherLine1" data-iu-silver-weather-line="1" data-iu-silver-weather-slot="summary"><span class="silver-weather-dpart" aria-hidden="true">🌤️</span> <span>Zobrazit počasí pro tvoji polohu?</span></div>
@@ -887,6 +848,45 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </div>
                         </div>
+                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
+                          <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
+                          <div class="iuSilverParcelWatch__mainShell">
+                            <div class="iuSilverParcelWatch__row">
+                              <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                              <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
+                            </div>
+                          </div>
+                          <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
+                          <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
+                          <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
+                          <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
+                        </section>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
+                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card iu-holiday-card" data-iu-nameday-gender="unknown" data-iu-daypart="" aria-label="Svátek">
+                          <div class="iu-holiday-card__row">
+                            <div class="iu-holiday-card__giftWrap" aria-hidden="true">
+                              <div class="iu-holiday-card__giftCircle">
+                                <svg class="iu-holiday-card__giftSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                                  <rect x="4" y="10" width="16" height="11" rx="2" fill="#ffffff"/>
+                                  <path d="M12 10V21" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                                  <path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="#ffffff"/>
+                                  <ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
+                                  <ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
+                                </svg>
+                              </div>
+                            </div>
+                            <div class="iu-holiday-card__text">
+                              <div class="iu-holiday-card__line1" id="iuHolidayLine1"><span class="poprej-bold">Popřej oslavence</span></div>
+                              <div class="iu-holiday-card__line2" id="iuHolidayLine2">Dnes má svátek</div>
+                            </div>
+                            <div class="iu-nameday-cta iu-nameday-cta--slotMobile iu-holiday-card__actions" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
+                              <button type="button" class="silver-weather-btn iu-nameday-wish" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 10V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="currentColor"/><ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/><ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/></svg> Vytvořit přání</button>
+                              <button type="button" class="silver-weather-btn iu-nameday-flowers" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="3.5" fill="currentColor"/><circle cx="8" cy="14" r="3.2" fill="currentColor"/><circle cx="16" cy="14" r="3.2" fill="currentColor"/><path fill="currentColor" d="M11 17h2v5h-2z"/></svg> Poslat květiny</button>
+                            </div>
+                          </div>
+                        </section>
+                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
                         <section class="iuSilverTallScrollSection" id="iuSilverTallScrollSection" aria-label="Infouzel náhled" data-iu-silver-tall-scroll>
                           <div class="iuSilverStackChromaFrame iuSilverTallScrollChromaFrame" data-iu-silver-stack-chroma-frame>
