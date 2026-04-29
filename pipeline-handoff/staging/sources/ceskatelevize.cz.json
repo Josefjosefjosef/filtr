@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T20:20:25.645899Z",
+  "ingestedAt": "2026-04-29T21:35:36.477526Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Florida schválila nový plán volebních obvodů, měl by posílit republikány",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/florida-schvalila-novy-plan-volebnich-obvodu-mel-by-posilit-republikany-372956",
+      "dt": "2026-04-29T21:17:38Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "florida",
+        "měl",
+        "nový",
+        "obvodů",
+        "plán",
+        "posílit",
+        "republikány",
+        "schválila",
+        "volebních"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -743,25 +769,23 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "O zahraniční politice debatovali v Událostech, komentářích Lipavský a Petříček",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/o-zahranicni-politice-debatovali-v-udalostech-komentarich-lipavsky-a-petricek-372916",
-      "dt": "2026-04-29T08:32:47Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Semifinále LM mezi Atléticem a Arsenalem vítěze nemělo",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/semifinale-lm-mezi-atleticem-a-arsenalem-viteze-nemelo-156518",
+      "dt": "2026-04-29T21:10:42Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "debatovali",
-        "komentářích",
-        "lipavský",
-        "petříček",
-        "politice",
-        "událostech",
-        "zahraniční"
+        "arsenalem",
+        "atléticem",
+        "nemělo",
+        "semifinále",
+        "vítěze"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -868,16 +892,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Plíšková si madridské semifinále nezahraje",
+      "title": "Nosková ani Plíšková si madridské semifinále nezahrají. Vypadl také Lehečka",
       "url": "https://sport.ceskatelevize.cz/clanek/tenis/pliskova-si-madridske-semifinale-nezahraje-156512",
       "dt": "2026-04-29T13:45:02Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
+        "lehečka",
         "madridské",
-        "nezahraje",
+        "nezahrají",
+        "nosková",
         "plíšková",
-        "semifinále"
+        "semifinále",
+        "také",
+        "vypadl"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1507,28 +1535,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Volejbalové finále je po druhém zápase srovnané 1:1",
-      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/volejbalove-finale-je-po-druhem-zapase-srovnane-11-156488",
-      "dt": "2026-04-27T18:48:30Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "druhém",
-        "finále",
-        "srovnané",
-        "volejbalové",
-        "zápase"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1539,7 +1545,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42294,
+      "bytes": 42201,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1599,7 +1605,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:38:15Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T21:17:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -1616,6 +1622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Florida schválila nový plán volebních obvodů, měl by posílit republikány",
+            "publishedAt": "2026-04-29T21:17:38Z"
+          },
           {
             "title": "Putin a Trump si telefonovali, řešit měli příměří v rusko-ukrajinské válce",
             "publishedAt": "2026-04-29T19:38:15Z"
@@ -1643,10 +1653,6 @@
           {
             "title": "Válka s Íránem dosud USA podle odhadů stála 25 miliard dolarů, uvedl Pentagon",
             "publishedAt": "2026-04-29T16:42:46Z"
-          },
-          {
-            "title": "SOUHRN: Zásadní události středy 29. dubna",
-            "publishedAt": "2026-04-29T16:30:00Z"
           }
         ]
       }
@@ -1658,7 +1664,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38827,
+      "bytes": 39115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1695,7 +1701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:38:02Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T21:10:42Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1710,6 +1716,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Semifinále LM mezi Atléticem a Arsenalem vítěze nemělo",
+            "publishedAt": "2026-04-29T21:10:42Z"
+          },
           {
             "title": "MS družstev přineslo české porážky, ženy ale stále myslí na postup",
             "publishedAt": "2026-04-29T19:38:02Z"
@@ -1727,7 +1737,7 @@
             "publishedAt": "2026-04-29T15:11:38Z"
           },
           {
-            "title": "Plíšková si madridské semifinále nezahraje",
+            "title": "Nosková ani Plíšková si madridské semifinále nezahrají. Vypadl také Lehečka",
             "publishedAt": "2026-04-29T13:45:02Z"
           },
           {
@@ -1737,10 +1747,6 @@
           {
             "title": "Tisk o devítigólovém thrilleru PSG a Bayernu: Zápas, jaký jsme dlouho neviděli",
             "publishedAt": "2026-04-29T10:13:37Z"
-          },
-          {
-            "title": "Osmnáctka si po čtyřech letech zahraje semifinále MS, po Finech narazí na Švédy",
-            "publishedAt": "2026-04-29T10:00:00Z"
           }
         ]
       }
@@ -1752,7 +1758,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77172,
+      "bytes": 77133,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

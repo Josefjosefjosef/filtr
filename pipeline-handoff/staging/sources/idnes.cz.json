@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-29T20:20:25.645899Z",
+  "ingestedAt": "2026-04-29T21:35:36.477526Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Úsek D6 blokovala nehoda kamionů, na dálnici se vysypaly plastové lahve",
+      "url": "https://www.idnes.cz/praha/zpravy/d6-unhost-kladno-nehoda-policie-plastove-lahve-kamion.A260429_211239_praha-zpravy_berr",
+      "dt": "2026-04-29T20:17:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "blokovala",
+        "dálnici",
+        "kamionů",
+        "lahve",
+        "nehoda",
+        "plastové",
+        "vysypaly",
+        "úsek"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -22,31 +47,6 @@
         "uvádí",
         "vládne",
         "žije"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "D6 u Unhoště uzavřela nehoda kamionů, na dálnici se vysypaly plastové lahve",
-      "url": "https://www.idnes.cz/praha/zpravy/d6-unhost-kladno-nehoda-policie-plastove-lahve-kamion.A260429_211239_praha-zpravy_berr",
-      "dt": "2026-04-29T20:01:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dálnici",
-        "kamionů",
-        "lahve",
-        "nehoda",
-        "plastové",
-        "unhoště",
-        "uzavřela",
-        "vysypaly"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48310,
+      "bytes": 48304,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,7 +1629,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T20:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T20:17:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1647,12 +1647,12 @@
         },
         "sample_titles": [
           {
-            "title": "Putin žije ve strachu, vládne z poloviny tajnými dekrety, uvádí bývalý oligarcha",
-            "publishedAt": "2026-04-29T20:02:00Z"
+            "title": "Úsek D6 blokovala nehoda kamionů, na dálnici se vysypaly plastové lahve",
+            "publishedAt": "2026-04-29T20:17:00Z"
           },
           {
-            "title": "D6 u Unhoště uzavřela nehoda kamionů, na dálnici se vysypaly plastové lahve",
-            "publishedAt": "2026-04-29T20:01:00Z"
+            "title": "Putin žije ve strachu, vládne z poloviny tajnými dekrety, uvádí bývalý oligarcha",
+            "publishedAt": "2026-04-29T20:02:00Z"
           },
           {
             "title": "Trump a Putin se shodli na příměří během květnových oslav, řešili také Írán",

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T20:20:25.645899Z",
+  "ingestedAt": "2026-04-29T21:35:36.477526Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "D6 u Unhoště uzavřela nehoda dvou kamionů. Na dálnici se vysypaly plastové lahve",
+      "url": "https://www.denik.cz/nehody/d6-u-unhoste-uzavrela-nehoda-dvou-kamionu-na-dalnici-se-vysypaly-plastove-lahve.html",
+      "dt": "2026-04-29T19:57:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dvou",
+        "dálnici",
+        "kamionů",
+        "lahve",
+        "nehoda",
+        "plastové",
+        "unhoště",
+        "uzavřela",
+        "vysypaly"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,31 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V Česku se znovu objevila nebezpečná sršeň asijská. Zaznamenali ji u Rozvadova",
-      "url": "https://www.denik.cz/regiony/srsen-asijka-objevena-rozvadov-odbornici-rychly-zasah.html",
-      "dt": "2026-04-29T09:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "asijská",
-        "nebezpečná",
-        "objevila",
-        "rozvadova",
-        "sršeň",
-        "zaznamenali",
-        "znovu",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29869,
+      "bytes": 29881,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T19:57:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -710,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "D6 u Unhoště uzavřela nehoda dvou kamionů. Na dálnici se vysypaly plastové lahve",
+            "publishedAt": "2026-04-29T19:57:00Z"
+          },
           {
             "title": "Irská policie vyšetřuje smrt Češky. Matku tří dětí někdo brutálně ubodal",
             "publishedAt": "2026-04-29T19:06:00Z"
@@ -737,10 +742,6 @@
           {
             "title": "Jednotná nabíječka už míří i k notebookům. Začala platit nová pravidla",
             "publishedAt": "2026-04-29T14:20:00Z"
-          },
-          {
-            "title": "Recenze: Alchemised. Dark fantasy, která vás pohltí i vyčerpá",
-            "publishedAt": "2026-04-29T14:00:00Z"
           }
         ]
       }

@@ -1,24 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T20:20:25.645899Z",
+  "ingestedAt": "2026-04-29T21:35:36.477526Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Atlético - Arsenal 0:1, Gyökeres se trefil z penalty, tu mají i domácí",
+      "title": "Atlético - Arsenal 1:1, oba góly padly z penalt, šance domácích na výhru nestačily",
       "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-semifinale-atletico-madrid-arsenal-online-vysledek.A260429_145042_fot_pohary_duff",
-      "dt": "2026-04-29T20:16:13Z",
+      "dt": "2026-04-29T21:11:47Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "arsenal",
         "atlético",
-        "domácí",
-        "gyökeres",
-        "mají",
-        "penalty",
-        "trefil"
+        "domácích",
+        "góly",
+        "nestačily",
+        "oba",
+        "padly",
+        "penalt",
+        "výhru",
+        "šance"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nosková se loučí s Madridem kanárem od Ukrajinky, ve čtvrtfinále skončila i Plíšková",
+      "url": "https://www.idnes.cz/sport/tenis/pliskova-madrid-potapovova-ctvrtfinale-wta-tenis.A260429_154639_tenis_kazdt",
+      "dt": "2026-04-29T20:17:40Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "kanárem",
+        "loučí",
+        "madridem",
+        "nosková",
+        "plíšková",
+        "skončila",
+        "ukrajinky",
+        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -330,33 +358,6 @@
         "verstappen",
         "vyhrál",
         "vynucené"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Smazala tři mečboly, pak neuhájila náskok. Plíšková v Madridu končí ve čtvrtfinále",
-      "url": "https://www.idnes.cz/sport/tenis/pliskova-madrid-potapovova-ctvrtfinale-wta-tenis.A260429_154639_tenis_kazdt",
-      "dt": "2026-04-29T14:02:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "končí",
-        "madridu",
-        "mečboly",
-        "neuhájila",
-        "náskok",
-        "pak",
-        "plíšková",
-        "smazala",
-        "tři",
-        "čtvrtfinále"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -798,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49032,
+      "bytes": 49107,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +836,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T20:16:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T21:11:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,8 +852,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Atlético - Arsenal 0:1, Gyökeres se trefil z penalty, tu mají i domácí",
-            "publishedAt": "2026-04-29T20:16:13Z"
+            "title": "Atlético - Arsenal 1:1, oba góly padly z penalt, šance domácích na výhru nestačily",
+            "publishedAt": "2026-04-29T21:11:47Z"
+          },
+          {
+            "title": "Nosková se loučí s Madridem kanárem od Ukrajinky, ve čtvrtfinále skončila i Plíšková",
+            "publishedAt": "2026-04-29T20:17:40Z"
           },
           {
             "title": "Druhý den stolním tenistům nevyšel. Na MS prohrálo české družstvo mužů i žen",
@@ -877,10 +882,6 @@
           {
             "title": "Konec dva měsíce po debutu na OH. Dvaadvacetiletá Češka uzavřela kariéru",
             "publishedAt": "2026-04-29T18:13:00Z"
-          },
-          {
-            "title": "Selhání zámořských favoritů. Kanada i USA končí na MS do 18 let už ve čtvrtfinále",
-            "publishedAt": "2026-04-29T17:38:00Z"
           }
         ]
       }

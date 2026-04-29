@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-29T20:20:25.645899Z",
+  "ingestedAt": "2026-04-29T21:35:36.477526Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čtvrtfinálová konečná. Po dvou tenistkách na španělské antuce vypadl i Lehečka",
+      "url": "https://sport.aktualne.cz/tenis/cestu-pliskove-ukoncila-v-madridu-potapovova-cesce-nepomohly-ani-tri-odvracene-mecboly/r~aaa29477d4dfafc185fd60e2e025485f/",
+      "dt": "2026-04-29T13:09:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "antuce",
+        "dvou",
+        "konečná",
+        "lehečka",
+        "tenistkách",
+        "vypadl",
+        "čtvrtfinálová",
+        "španělské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V Madridu padaly góly jen z penalt. Arsenal si z Atlética veze remízu",
+      "url": "https://sport.aktualne.cz/fotbal/v-madridu-padaly-goly-jen-z-penalt-arsenal-si-z-atletica-veze-remizu/r~aaa29070dbbcbfc6ee9f41849bc723dc/",
+      "dt": "2026-04-29T21:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "arsenal",
+        "atlética",
+        "góly",
+        "jen",
+        "madridu",
+        "padaly",
+        "penalt",
+        "remízu",
+        "veze"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -52,30 +103,6 @@
         "unie",
         "uvolnění",
         "zadržuje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češky v Madridu dohrály. Pro Noskovou i Plíškovou byla konečná ve čtvrtfinále",
-      "url": "https://sport.aktualne.cz/tenis/cestu-pliskove-ukoncila-v-madridu-potapovova-cesce-nepomohly-ani-tri-odvracene-mecboly/r~aaa29477d4dfafc185fd60e2e025485f/",
-      "dt": "2026-04-29T13:09:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dohrály",
-        "konečná",
-        "madridu",
-        "noskovou",
-        "plíškovou",
-        "češky",
-        "čtvrtfinále"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -508,34 +535,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zemřel Oskar Petr ze skupiny Marsyas. Autor hitů kapely Lucie i Anety Langerové",
-      "url": "https://magazin.aktualne.cz/kultura/hudba/zemrel-oskar-petr-ze-skupiny-marsyas-autor-slavnych-hitu-lucie-i-anety-langerove/r~aaa297a9c3ebbfadb4cff804e98c571a/",
-      "dt": "2026-04-29T14:24:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "anety",
-        "autor",
-        "hitů",
-        "kapely",
-        "langerové",
-        "lucie",
-        "marsyas",
-        "oskar",
-        "petr",
-        "skupiny",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -546,7 +545,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22912,
+      "bytes": 22959,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -583,13 +582,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T21:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 6,
           "zpravy": 12,
-          "sport": 5,
           "finance": 1,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -602,16 +601,20 @@
         },
         "sample_titles": [
           {
+            "title": "Čtvrtfinálová konečná. Po dvou tenistkách na španělské antuce vypadl i Lehečka",
+            "publishedAt": "2026-04-29T13:09:00Z"
+          },
+          {
+            "title": "V Madridu padaly góly jen z penalt. Arsenal si z Atlética veze remízu",
+            "publishedAt": "2026-04-29T21:00:00Z"
+          },
+          {
             "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
             "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Evropská unie zadržuje Maďarsku 18 miliard eur. Magyar očekává do měsíce dohodu o uvolnění",
             "publishedAt": "2026-04-29T17:02:00Z"
-          },
-          {
-            "title": "Češky v Madridu dohrály. Pro Noskovou i Plíškovou byla konečná ve čtvrtfinále",
-            "publishedAt": "2026-04-29T13:09:00Z"
           },
           {
             "title": "Úspěšná trefa: Ukrajinci zasáhli cíl v hloubi Ruska, 1500 km od hranic",
@@ -628,10 +631,6 @@
           {
             "title": "Osmnáctka porazila Finy, na MS si zahraje o medaile. Zámoří sčítá nevídané ztráty",
             "publishedAt": "2026-04-29T12:22:00Z"
-          },
-          {
-            "title": "Medaile z „prokletého“ MS je blízko. Čechům nahrává šokující krach favorita",
-            "publishedAt": "2026-04-29T16:24:00Z"
           }
         ]
       }
