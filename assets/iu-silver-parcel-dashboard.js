@@ -211,6 +211,17 @@ try {
     );
   }
 
+  function isMobileTabletDetailUx() {
+    try {
+      return (
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(max-width: 1024px)").matches
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
   function renderCarrierPicker(item, host) {
     var meta = window.IU_MINDMENU_PARCEL_CARRIER_META;
     if (!meta || !host) return;
@@ -280,14 +291,39 @@ try {
       rowBtn.className = "iuSilverParcelWatch__detailEditActions";
       var saveB = document.createElement("button");
       saveB.type = "button";
-      saveB.className = "iuSilverParcelWatch__btnSecondary";
+      saveB.className =
+        "iuSilverParcelWatch__btnSecondary iuSilverParcelWatch__detailSave";
       saveB.textContent = "Uložit";
       var cancelB = document.createElement("button");
       cancelB.type = "button";
       cancelB.className = "iuSilverParcelWatch__btnGhost";
       cancelB.textContent = "Zrušit";
+
+      function syncDetailSaveState() {
+        var hasText = String(ta.value || "").trim().length > 0;
+        if (isMobileTabletDetailUx()) {
+          saveB.disabled = !hasText;
+          if (hasText) {
+            saveB.classList.add("iuSilverParcelWatch__detailSave--active");
+          } else {
+            saveB.classList.remove("iuSilverParcelWatch__detailSave--active");
+          }
+        } else {
+          saveB.disabled = false;
+          saveB.classList.remove("iuSilverParcelWatch__detailSave--active");
+        }
+      }
+      syncDetailSaveState();
+      ta.addEventListener("input", syncDetailSaveState);
+      ta.addEventListener("paste", function () {
+        setTimeout(syncDetailSaveState, 0);
+      });
+
       saveB.addEventListener("click", function () {
         var raw = String(ta.value || "").trim();
+        if (isMobileTabletDetailUx() && !raw.length) {
+          return;
+        }
         var list = readList();
         for (var i = 0; i < list.length; i++) {
           if (list[i].id === item.id) {
@@ -348,7 +384,7 @@ try {
         var navD = document.createElement("button");
         navD.type = "button";
         navD.className =
-          "iuSilverParcelWatch__btnSecondary iuSilverParcelWatch__btnDetailNav";
+          "iuSilverParcelWatch__btnSecondary iuSilverParcelWatch__btnDetailNav iuSilverParcelWatch__btnDetailNav--address";
         navD.textContent = "Navigovat";
         navD.addEventListener("click", function () {
           window.open(
