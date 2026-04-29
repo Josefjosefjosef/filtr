@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Další Čuprův německý zásek. Vytáhl do černých čísel tamní krachující firmu",
+      "url": "https://www.e15.cz/byznys/potraviny/dalsi-cupruv-nemecky-zasek-vytahl-do-cernych-cisel-tamni-krachujici-firmu-1432476",
+      "dt": "2026-04-29T12:05:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "další",
+        "firmu",
+        "krachující",
+        "německý",
+        "tamní",
+        "vytáhl",
+        "zásek",
+        "černých",
+        "čuprův",
+        "čísel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1052,35 +1079,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Miliardový projekt na břehu Baltu. Faitova Jet Investment sází na rostoucí zájem o polské přístavy",
-      "url": "https://www.e15.cz/byznys/doprava-a-logistika/miliardovy-projekt-na-brehu-baltu-faitova-jet-investment-sazi-na-rostouci-zajem-o-polske-pristavy-1432419",
-      "dt": "2026-04-28T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "baltu",
-        "břehu",
-        "faitova",
-        "investment",
-        "jet",
-        "miliardový",
-        "polské",
-        "projekt",
-        "přístavy",
-        "rostoucí",
-        "sází",
-        "zájem"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1089,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52870,
+      "bytes": 52841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,11 +1126,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 2
+          "finance": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1144,6 +1142,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další Čuprův německý zásek. Vytáhl do černých čísel tamní krachující firmu",
+            "publishedAt": "2026-04-29T12:05:00Z"
+          },
           {
             "title": "Europarlament zmírnil kurz povolenek. Nerudová dostala do hry výjimku pro bydlení",
             "publishedAt": "2026-04-29T11:30:00Z"
@@ -1171,10 +1173,6 @@
           {
             "title": "Křetínského EPH a TotalEnergies založily energetického obra. Zaměří se na flexibilní výrobu elektřiny",
             "publishedAt": "2026-04-29T07:45:00Z"
-          },
-          {
-            "title": "INVESTIČNÍ ONLINE: Cena benzinu v USA je nejvýše od začátku války s Íránem",
-            "publishedAt": "2026-04-29T07:00:00Z"
           }
         ]
       }

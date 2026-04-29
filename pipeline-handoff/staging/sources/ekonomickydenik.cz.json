@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Připlatíme si za dovolené? Booking hledí do budoucna s obavami",
+      "url": "https://ekonomickydenik.cz/priplatime-dovolene-booking-obavy/",
+      "dt": "2026-04-29T12:03:40Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "booking",
+        "budoucna",
+        "dovolené",
+        "hledí",
+        "obavami",
+        "připlatíme"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -764,31 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dojde k omezení letů? Smartwings jednají s piloty o snížení úvazků",
-      "url": "https://ekonomickydenik.cz/smartwings-lety-piloti-odbory/",
-      "dt": "2026-04-28T08:30:03Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dojde",
-        "jednají",
-        "letů",
-        "omezení",
-        "piloty",
-        "smartwings",
-        "snížení",
-        "úvazků"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73744,
+      "bytes": 74150,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,11 +834,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T11:42:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:03:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 24,
+          "zdravi": 3,
           "zpravy": 3
         },
         "drop_counts": {
@@ -853,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Připlatíme si za dovolené? Booking hledí do budoucna s obavami",
+            "publishedAt": "2026-04-29T12:03:40Z"
+          },
           {
             "title": "Krutílek: Nerudová promarnila šanci. U povolenek udělala krok vpřed a dva zpět",
             "publishedAt": "2026-04-29T11:42:24Z"
@@ -880,10 +882,6 @@
           {
             "title": "Investice se vrátí za 3,5 roku. Další firmy se pouští do stavby bateriových úložišť",
             "publishedAt": "2026-04-29T05:45:00Z"
-          },
-          {
-            "title": "Churchill je zpět? Evropa tlačí na zbrojní unii proti nebezpečí z Východu",
-            "publishedAt": "2026-04-29T04:50:00Z"
           }
         ]
       }

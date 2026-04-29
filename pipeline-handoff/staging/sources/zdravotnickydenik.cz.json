@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nevídaná záchrana života: Lékař zašil pobodanému muži srdce přímo na ulici",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/lekar-zasil-pobodanemu-muzi-srdce-mimo-nemocnici/",
+      "dt": "2026-04-29T12:20:45Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "lékař",
+        "muži",
+        "nevídaná",
+        "pobodanému",
+        "přímo",
+        "srdce",
+        "ulici",
+        "zašil",
+        "záchrana",
+        "života"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,32 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Turisté pozor: V oblíbených dovolenkových destinacích v Evropě se šíří exotická horečka",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/cestovani-horecka-evropa/",
-      "dt": "2026-04-28T14:32:01Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "destinacích",
-        "dovolenkových",
-        "evropě",
-        "exotická",
-        "horečka",
-        "oblíbených",
-        "pozor",
-        "turisté",
-        "šíří"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,8 +283,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 99331,
-      "reason": "fetch_timeout",
+      "bytes": 97292,
+      "reason": "",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -319,11 +320,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:54:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:20:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "cestovani": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -335,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nevídaná záchrana života: Lékař zašil pobodanému muži srdce přímo na ulici",
+            "publishedAt": "2026-04-29T12:20:45Z"
+          },
           {
             "title": "Německo schválilo historickou reformu zdravotního pojištění. Čekají se vyšší doplatky",
             "publishedAt": "2026-04-29T10:54:51Z"
@@ -362,10 +366,6 @@
           {
             "title": "Hrozí dražší zdravotní péče? SPD varuje před dopady plánovaných škrtů",
             "publishedAt": "2026-04-29T05:00:00Z"
-          },
-          {
-            "title": "Nová šance pro české pacienty: CAR-T léčba cílí na selhávající imunitu",
-            "publishedAt": "2026-04-28T16:05:34Z"
           }
         ]
       }

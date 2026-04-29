@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "České Lékaře bez hranic nově vede Tomáš Bendl",
+      "url": "https://www.zdravezpravy.cz/2026/04/29/ceske-lekare-bez-hranic-nove-vede-tomas-bendl/",
+      "dt": "2026-04-29T11:32:20Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "bendl",
+        "hranic",
+        "lékaře",
+        "nově",
+        "tomáš",
+        "vede",
+        "české"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -467,30 +491,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Respirační nemoci se nyní sledují téměř v reálném čase",
-      "url": "https://www.zdravezpravy.cz/2026/04/21/respiracni-nemoci-sleduje-mzd-cr-v-case-jisti-se-proti-epidemiim/",
-      "dt": "2026-04-21T17:13:24Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "nemoci",
-        "nyní",
-        "respirační",
-        "reálném",
-        "sledují",
-        "téměř",
-        "čase"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -501,7 +501,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 200575,
+      "bytes": 195886,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -538,7 +538,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T09:11:31Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:32:20Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -553,6 +553,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "České Lékaře bez hranic nově vede Tomáš Bendl",
+            "publishedAt": "2026-04-29T11:32:20Z"
+          },
           {
             "title": "Kvůli západonilské horečce platí omezení darování krve po návratu z některých zemí",
             "publishedAt": "2026-04-29T09:11:31Z"
@@ -580,10 +584,6 @@
           {
             "title": "VZP ČR otevře 1.7. dočasné úhrady pro technologické inovace",
             "publishedAt": "2026-04-27T13:00:58Z"
-          },
-          {
-            "title": "Z farmaceutického průmyslu těží veřejné rozpočty 25 miliard korun",
-            "publishedAt": "2026-04-27T11:57:31Z"
           }
         ]
       }

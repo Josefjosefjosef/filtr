@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Na Steamu vyšla nová westernová hra, od hráčů sbírá nadšené recenze",
+      "url": "https://zing.cz/article/na-steamu-vysla-nova-westernova-hra-od-hracu-sbira-nadsene-recenze",
+      "dt": "2026-04-29T12:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hra",
+        "hráčů",
+        "nadšené",
+        "nová",
+        "recenze",
+        "sbírá",
+        "steamu",
+        "vyšla",
+        "westernová"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -952,32 +978,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Bondovka 007 First Light se blíží, podívejte se na několik nových ukázek",
-      "url": "https://zing.cz/article/bondovka-007-first-light-se-blizi-podivejte-se-na-nekolik-novych-ukazek",
-      "dt": "2026-04-24T06:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "007",
-        "blíží",
-        "bondovka",
-        "first",
-        "light",
-        "nových",
-        "několik",
-        "podívejte",
-        "ukázek"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -988,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125166,
+      "bytes": 125152,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1025,7 +1025,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1041,6 +1041,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Steamu vyšla nová westernová hra, od hráčů sbírá nadšené recenze",
+            "publishedAt": "2026-04-29T12:00:00Z"
+          },
           {
             "title": "Steamu i nadále dominují piráti a další čerstvě vydané novinky",
             "publishedAt": "2026-04-29T10:00:00Z"
@@ -1068,10 +1072,6 @@
           {
             "title": "The Division Resurgence překvapivě vyšlo na PC",
             "publishedAt": "2026-04-28T14:00:00Z"
-          },
-          {
-            "title": "Akční sci-fi adventura Aphelion od tvůrců Life is Strange je venku",
-            "publishedAt": "2026-04-28T12:00:00Z"
           }
         ]
       }

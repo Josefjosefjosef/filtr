@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Děčín může doma urvat mečbol v sérii s Brnem. Grepl: Hráče musím vrátit na zem",
+      "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-maxa-nbl-treti-zapas-decin-brno.A260429_134111_sport-basket_ten",
+      "dt": "2026-04-29T12:14:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "brnem",
+        "doma",
+        "děčín",
+        "grepl",
+        "hráče",
+        "mečbol",
+        "musím",
+        "sérii",
+        "urvat",
+        "vrátit",
+        "zem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Narozeninový dárek pro mladou tenistku? Po postupu do semifinále má jediné přání",
+      "url": "https://www.idnes.cz/sport/trendy/narozeninovy-darek-pro-mladou-tenistku-po-postupu-do-semifinale-ma-jedine-prani.A260429_112705_trendy_blah",
+      "dt": "2026-04-29T12:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dárek",
+        "jediné",
+        "mladou",
+        "narozeninový",
+        "postupu",
+        "přání",
+        "semifinále",
+        "tenistku"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -744,60 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "PSG - Bayern 5:4, epická podívaná na úvod semifinále LM. Lepší pozici získal obhájce",
-      "url": "https://www.idnes.cz/fotbal/pohary/liga-mistru-semifinale-psg-bayern-mnichov-online-vysledem.A260428_120751_fot_pohary_tals",
-      "dt": "2026-04-28T21:24:23Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bayern",
-        "epická",
-        "lepší",
-        "obhájce",
-        "podívaná",
-        "pozici",
-        "psg",
-        "semifinále",
-        "získal",
-        "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "České týmy mužů i žen na MS ve stolním tenisu družstev uspěly v prvních zápasech",
-      "url": "https://www.idnes.cz/sport/ostatni/stolni-tenis-ms-v-londyne.A260428_171401_sporty_kazdt",
-      "dt": "2026-04-28T21:08:46Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "družstev",
-        "mužů",
-        "prvních",
-        "stolním",
-        "tenisu",
-        "týmy",
-        "uspěly",
-        "zápasech",
-        "české",
-        "žen"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49504,
+      "bytes": 49848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T11:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -860,6 +859,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Děčín může doma urvat mečbol v sérii s Brnem. Grepl: Hráče musím vrátit na zem",
+            "publishedAt": "2026-04-29T12:14:00Z"
+          },
+          {
+            "title": "Narozeninový dárek pro mladou tenistku? Po postupu do semifinále má jediné přání",
+            "publishedAt": "2026-04-29T12:00:00Z"
+          },
           {
             "title": "Pražský maraton 2026: trasa, program, mapa, dopravní omezení",
             "publishedAt": "2026-04-29T11:43:00Z"
@@ -883,14 +890,6 @@
           {
             "title": "Žabka dostal ke stříbru i novou smlouvu: Bez kluků by to nešlo, smekám před nimi",
             "publishedAt": "2026-04-29T10:39:00Z"
-          },
-          {
-            "title": "Děčín zvrátil duel v Brně, střelecký souboj potěšil víc Dawese. Opava zaskočila Ústí",
-            "publishedAt": "2026-04-29T10:07:59Z"
-          },
-          {
-            "title": "New York? Párty jsou tu i na ulici, říká Chmelař. Rulíkovi dá vybrat z „meníčka“",
-            "publishedAt": "2026-04-29T10:00:00Z"
           }
         ]
       }

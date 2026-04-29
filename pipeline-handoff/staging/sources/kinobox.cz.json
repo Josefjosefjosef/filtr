@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Django a Zorro spojí síly. Oscarový autor píše film na motivy Tarantinova kultovního komiksu",
+      "url": "https://www.kinobox.cz/clanky/filmy/53163-django-a-zorro-pospolu-oscarovy-autor-pise-film-na-motivy-tarantinova-kultovniho-komiksu",
+      "dt": "2026-04-29T12:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "autor",
+        "django",
+        "film",
+        "komiksu",
+        "kultovního",
+        "motivy",
+        "oscarový",
+        "píše",
+        "spojí",
+        "síly",
+        "tarantinova",
+        "zorro"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -527,35 +556,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Texaský masakr motorovou pilou se vrátí rovnou dvakrát. O jeden se postará slibný hororový tvůrce",
-      "url": "https://www.kinobox.cz/clanky/filmy/52936-texaske-masakry-budeme-mit-rovnou-dva-o-jeden-z-nich-se-postara-slibny-hororovy-tvurce",
-      "dt": "2026-04-27T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dvakrát",
-        "hororový",
-        "jeden",
-        "masakr",
-        "motorovou",
-        "pilou",
-        "postará",
-        "rovnou",
-        "slibný",
-        "texaský",
-        "tvůrce",
-        "vrátí"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -566,7 +566,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27188,
+      "bytes": 27609,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -603,7 +603,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -618,6 +618,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Django a Zorro spojí síly. Oscarový autor píše film na motivy Tarantinova kultovního komiksu",
+            "publishedAt": "2026-04-29T12:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Stallone a Schwarzenegger v jedné cele, z níž není úniku",
             "publishedAt": "2026-04-29T10:00:00Z"
@@ -645,10 +649,6 @@
           {
             "title": "Nicolas Cage dostává na budku a rozdává rány. Komiksový Spider-Noir baví ve stylovém traileru",
             "publishedAt": "2026-04-28T14:00:00Z"
-          },
-          {
-            "title": "Přehlížený český film dobývá Netflix. V kinech se neobjevil, na streamu je ale hitem",
-            "publishedAt": "2026-04-28T12:00:00Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Šéf Take-Two uklidňuje hráče: GTA 6 prý nebude přemrštěně drahé - INDIAN",
+      "url": "https://indian-tv.cz/clanek/sef-take-two-uklidnuje-hrace-gta-6-pry-nebude-drahe-f3yr09",
+      "dt": "2026-04-29T12:00:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "drahé",
+        "gta",
+        "hráče",
+        "indian",
+        "nebude",
+        "prý",
+        "přemrštěně",
+        "take",
+        "two",
+        "uklidňuje",
+        "šéf"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1053,32 +1081,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Microsoft chystá předplatné Xbox Game Pass Starter Edition - INDIAN",
-      "url": "https://indian-tv.cz/clanek/microsoft-chysta-predplatne-xbox-game-pass-starter-edition-5p66fd",
-      "dt": "2026-04-25T12:52:20Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "chystá",
-        "edition",
-        "game",
-        "indian",
-        "microsoft",
-        "pass",
-        "předplatné",
-        "starter",
-        "xbox"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1089,8 +1091,8 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 212972,
-      "reason": "",
+      "bytes": 213685,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 60,
@@ -1126,7 +1128,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T11:49:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1142,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf Take-Two uklidňuje hráče: GTA 6 prý nebude přemrštěně drahé - INDIAN",
+            "publishedAt": "2026-04-29T12:00:00Z"
+          },
           {
             "title": "Pearl Abyss rozdává odměny vývojářům za úspěch Crimson Desert - INDIAN",
             "publishedAt": "2026-04-29T11:49:09Z"
@@ -1169,10 +1175,6 @@
           {
             "title": "Heroesy se vrací ve velkém stylu a hrají se skvěle - Heroes Olden Era - INDIAN",
             "publishedAt": "2026-04-28T19:29:30Z"
-          },
-          {
-            "title": "Upíří Zaklínač 3? The Blood of Dawnwalker se představilo v plné parádě - INDIAN",
-            "publishedAt": "2026-04-28T16:26:58Z"
           }
         ]
       }

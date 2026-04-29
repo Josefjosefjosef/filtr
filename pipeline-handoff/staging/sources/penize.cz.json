@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-29T12:00:41.638328Z",
+  "ingestedAt": "2026-04-29T12:29:59.589982Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Maximální ceny benzinu a nafty na čtvrtek 30. dubna",
+      "url": "https://www.penize.cz/doprava/489083-maximalni-ceny-benzinu-a-nafty-na-ctvrtek-30-dubna",
+      "dt": "2026-04-29T13:58:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "benzinu",
+        "ceny",
+        "dubna",
+        "maximální",
+        "nafty",
+        "čtvrtek"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +501,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdy bude v roce 2026 Den matek a proč ho vlastně slavíme",
-      "url": "https://www.penize.cz/spotrebitel/488790-svatek-matek-kdy-je-v-roce-2026-2027-2028-den-matek-a-jeho-historie",
-      "dt": "2026-04-24T04:55:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "2026",
-        "den",
-        "matek",
-        "proč",
-        "roce",
-        "slavíme",
-        "vlastně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18410,
+      "bytes": 18681,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,13 +548,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T13:58:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 12,
+          "zpravy": 6,
+          "finance": 11,
           "cestovani": 1,
           "sport": 1,
-          "zpravy": 5,
           "zdravi": 1
         },
         "drop_counts": {
@@ -568,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny benzinu a nafty na čtvrtek 30. dubna",
+            "publishedAt": "2026-04-29T13:58:00Z"
+          },
           {
             "title": "Vyplatí se koučink, nebo je to drahá iluze? Týden s experty nabídne odpovědi",
             "publishedAt": "2026-04-29T08:00:00Z"
@@ -595,10 +598,6 @@
           {
             "title": "Nemovitost ve Španělsku: Co vám realitka neřekne, dokud nepodepíšete",
             "publishedAt": "2026-04-28T08:00:00Z"
-          },
-          {
-            "title": "Přehledy pro zdravotní pojišťovny a ČSSZ přehledně krok za krokem",
-            "publishedAt": "2026-04-28T05:05:00Z"
           }
         ]
       }
