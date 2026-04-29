@@ -477,6 +477,88 @@ async function runSmoke() {
       fail(`Education preview click did not set section=vzdelavani: ${afterEducationClick}`);
     }
 
+    await gotoProjectsMediaForSmoke(page);
+    try {
+      await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    } catch (e) {
+      fail(`Silver parcel watch input missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    await page.waitForFunction(
+      () => !!(window.IU_SILVER_PARCEL_FACADE && window.IU_PARCEL_TRACKING_ENGINE),
+      { timeout: 15000 }
+    );
+    await page.evaluate(() => {
+      try {
+        localStorage.removeItem("iu_silver_parcel_watch_v1");
+      } catch (_) {}
+    });
+    await page.waitForTimeout(200);
+    await page.fill("#iuSilverParcelWatchInput", "bad@@@");
+    await page.click("#iuSilverParcelWatchSave");
+    await page.waitForTimeout(400);
+    const silverParcelBad = await page.evaluate(() => {
+      const e = document.getElementById("iuSilverParcelWatchErr");
+      const t = e ? String(e.textContent || "") : "";
+      return { ok: !!(e && !e.hidden && t.indexOf("Neplatný formát") >= 0), t };
+    });
+    if (!silverParcelBad || !silverParcelBad.ok) {
+      fail(`Silver parcel invalid format: ${JSON.stringify(silverParcelBad)}`);
+    }
+    await page.fill("#iuSilverParcelWatchInput", "Z9876543210");
+    await page.click("#iuSilverParcelWatchSave");
+    await page.waitForTimeout(600);
+    const silverParcelOverlayClosed = await page.evaluate(() => {
+      const m = document.getElementById("iuParcelsPopover");
+      return !m || !m.classList.contains("is-open");
+    });
+    if (!silverParcelOverlayClosed) {
+      fail("Silver parcel save must not open MindMenu parcels overlay");
+    }
+    const silverParcelSaved = await page.evaluate(() => {
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      const ls = (() => {
+        try {
+          return localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+        } catch (_) {
+          return "";
+        }
+      })();
+      return {
+        ok: t.indexOf("Z9876543210") >= 0 && t.indexOf("Zásilkovna") >= 0 && ls.indexOf("Z9876543210") >= 0,
+        t: t.slice(0, 240),
+        lsLen: ls.length,
+      };
+    });
+    if (!silverParcelSaved || !silverParcelSaved.ok) {
+      fail(`Silver parcel save + localStorage: ${JSON.stringify(silverParcelSaved)}`);
+    }
+    await page.fill("#iuSilverParcelWatchInput", "Z9876543210");
+    await page.click("#iuSilverParcelWatchSave");
+    await page.waitForTimeout(350);
+    const silverParcelDup = await page.evaluate(() => {
+      const e = document.getElementById("iuSilverParcelWatchErr");
+      const t = e ? String(e.textContent || "") : "";
+      return { ok: !!(e && !e.hidden && t.indexOf("už v seznamu") >= 0), t };
+    });
+    if (!silverParcelDup || !silverParcelDup.ok) {
+      fail(`Silver parcel duplicate guard: ${JSON.stringify(silverParcelDup)}`);
+    }
+    const parcelsBtn = await page.$("#iuParcelsBtn");
+    if (parcelsBtn) {
+      await parcelsBtn.click();
+      await page.waitForTimeout(500);
+      const silverParcelManual = await page.evaluate(() => {
+        const m = document.getElementById("iuParcelsPopover");
+        return !!(m && m.classList.contains("is-open"));
+      });
+      if (!silverParcelManual) {
+        fail("Silver parcel smoke: manual MindMenu parcels overlay did not open");
+      }
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(350);
+    }
+
     const navSelectors = ["a.iu-leftNavItem", "a[data-rail]", ".iuLeftNav a", "nav a"];
     let navEl = null;
     for (const sel of navSelectors) {

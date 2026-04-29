@@ -20395,6 +20395,14 @@ function buildVideoAsArticleCard(it) {
     },
   };
 
+  try {
+    window.IU_MINDMENU_PARCEL_CARRIER_META = Object.fromEntries(
+      Object.keys(carriers).map(function (k) {
+        return [k, { name: carriers[k].name || k }];
+      }),
+    );
+  } catch (_) {}
+
   function iuParcelsIsNarrow() {
     return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
   }
@@ -20765,6 +20773,17 @@ function buildVideoAsArticleCard(it) {
     return { ok: true, detection: det, destination: dest };
   }
 
+  /** Silver dashboard: same engine as MindMenu, never opens overlay or tabs. */
+  function iuSilverParcelEngineResolve(opts) {
+    const o = opts && typeof opts === "object" ? opts : {};
+    return runTrackingLookup({
+      trackingNumber: o.trackingNumber,
+      postalCode: o.postalCode,
+      carrierHint: o.carrierHint,
+      open: false,
+    });
+  }
+
   function prefillTrackingInput(value) {
     if (!quickInput) return;
     quickInput.value = value != null ? String(value) : "";
@@ -20774,6 +20793,7 @@ function buildVideoAsArticleCard(it) {
     window.IU_SILVER_PARCEL_FACADE = {
       prefillTrackingInput,
       runTrackingLookup,
+      iuSilverParcelEngineResolve,
       getTrackingLookupPreviewResult: () => __parcelLastPreview,
       createTrackingWatchCandidate,
       openTrackingDestination: (detectionResult, postalDigits) => {

@@ -1,0 +1,276 @@
+/**
+ * Silver homepage — Hlídej mi zásilku (MindMenu engine bridge, localStorage only).
+ * Grid/flex placement lives here so app.css css_debt_guard baseline stays unchanged.
+ */
+@media (min-width: 1025px) {
+  #silver-slot #iuSilverParcelWatch {
+    grid-column: 1 / -1;
+    grid-row: 8;
+    min-width: 0;
+    align-self: stretch;
+  }
+  #silver-slot #iuSilverWelcomeStackSeparatorBeforeSilver {
+    grid-column: 1 / -1;
+    grid-row: 9;
+  }
+  #silver-slot #iuSilverHomeShellMountPoint.iuSilverHomeShellMountPoint {
+    grid-column: 1 / -1;
+    grid-row: 10;
+  }
+  #silver-slot #iuSilverWelcomeStack > .silver-shell.silver-shell--stackConnected {
+    grid-column: 1 / -1;
+    grid-row: 10;
+  }
+}
+
+@media (max-width: 900px) {
+  #silver-slot #iuSilverParcelWatch {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    align-self: stretch !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+}
+
+#silver-slot #iuSilverParcelWatch,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 10px;
+  padding: 12px 14px 14px;
+  border-radius: 14px;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(12, 24, 48, 0.55) 100%
+  );
+  border: 1px solid rgba(130, 200, 255, 0.18);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow-x: hidden;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(248, 252, 255, 0.96);
+  line-height: 1.25;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__lead,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__lead {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(226, 236, 248, 0.82);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+  min-width: 0;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
+  flex: 1 1 160px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 180, 230, 0.35);
+  background: rgba(6, 12, 24, 0.45);
+  color: #f4f9ff;
+  font-size: 14px;
+  outline: none;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input::placeholder {
+  color: rgba(200, 218, 236, 0.55);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input:focus,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input:focus {
+  border-color: rgba(140, 210, 255, 0.55);
+  box-shadow: 0 0 0 2px rgba(80, 160, 255, 0.2);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save {
+  flex: 0 0 auto;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #061018;
+  background: linear-gradient(180deg, #c8ecff 0%, #7ec8ff 100%);
+  box-shadow: 0 4px 14px rgba(0, 40, 80, 0.35);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save:active,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__save:active {
+  transform: translateY(1px);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__err,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__err {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #ffb4b4;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list,
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__showall,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__showall {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(140, 190, 240, 0.35);
+  background: rgba(8, 16, 32, 0.35);
+  color: rgba(230, 242, 255, 0.92);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(4, 10, 22, 0.42);
+  border: 1px solid rgba(100, 160, 220, 0.2);
+  min-width: 0;
+  box-sizing: border-box;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card--done,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__card--done {
+  opacity: 0.88;
+  border-style: dashed;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle {
+  font-weight: 700;
+  font-size: 13.5px;
+  margin-bottom: 6px;
+  color: rgba(248, 252, 255, 0.96);
+  word-break: break-all;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(230, 240, 252, 0.9);
+  margin-top: 2px;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow--muted,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow--muted {
+  color: rgba(200, 216, 232, 0.72);
+  font-size: 12px;
+  margin-top: 6px;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__purgeNote,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__purgeNote {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(255, 220, 160, 0.88);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__doneHead,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__doneHead {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(200, 220, 240, 0.65);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__actions,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnPrimary,
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnSecondary,
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnGhost,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnPrimary,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnSecondary,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnGhost {
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnPrimary,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnPrimary {
+  background: rgba(110, 190, 255, 0.22);
+  border-color: rgba(150, 210, 255, 0.45);
+  color: #eaf6ff;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnSecondary,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnSecondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(160, 190, 220, 0.28);
+  color: rgba(236, 244, 255, 0.92);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnGhost,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnGhost {
+  background: transparent;
+  border-color: rgba(140, 170, 200, 0.22);
+  color: rgba(210, 224, 240, 0.75);
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__picker,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__chip,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__chip {
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 180, 230, 0.3);
+  background: rgba(8, 16, 30, 0.5);
+  color: rgba(230, 240, 252, 0.9);
+  font-size: 11px;
+  cursor: pointer;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__glsRow,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__glsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  align-items: center;
+}
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__glsPsc,
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__glsPsc {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 180, 230, 0.35);
+  background: rgba(6, 12, 24, 0.45);
+  color: #f4f9ff;
+  font-size: 13px;
+}

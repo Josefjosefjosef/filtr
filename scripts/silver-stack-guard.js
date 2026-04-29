@@ -135,6 +135,22 @@ if (!/id="iuEducationPreviewCardMount"[\s\S]*?data-iu-education-preview-mount/.t
   fail("❌ Silver tall viewport must include Vzdělávání preview mount (#iuEducationPreviewCardMount + data-iu-education-preview-mount)");
 }
 
+if (!/id="iuSilverParcelWatch"[\s\S]*?id="iuSilverParcelWatchInput"/.test(html)) {
+  fail("❌ Silver parcel watch block must include #iuSilverParcelWatch + #iuSilverParcelWatchInput");
+}
+
+if (!/id="iuSilverParcelWatchSave"/.test(html)) {
+  fail("❌ Silver parcel watch must expose #iuSilverParcelWatchSave");
+}
+
+if (!/iu-silver-parcel-dashboard\.css/.test(html)) {
+  fail("❌ projects/index.html must link iu-silver-parcel-dashboard.css");
+}
+
+if (!/iu-silver-parcel-dashboard\.js/.test(html)) {
+  fail("❌ projects/index.html must load iu-silver-parcel-dashboard.js after app.js");
+}
+
 if (html.indexOf("iuSilverCalendarSummaryShowDay") !== -1) {
   fail("❌ Calendar box3 must not render legacy CTA button (iuSilverCalendarSummaryShowDay)");
 }
