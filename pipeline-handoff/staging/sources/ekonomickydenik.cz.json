@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-29T17:00:19.284944Z",
+  "ingestedAt": "2026-04-29T18:14:38.456078Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zajíček: Podnikatelé potřebují méně byrokracie, zohledňovat se musí i bezpečnost",
+      "url": "https://ekonomickydenik.cz/zajicek-podnikatele-mene-byrokracie-bezpecnost/",
+      "dt": "2026-04-29T18:05:18Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bezpečnost",
+        "byrokracie",
+        "musí",
+        "podnikatelé",
+        "potřebují",
+        "zajíček",
+        "zohledňovat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -764,33 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Snižte daně na pivo, vyzývají pivovarníci vládu. Češi už nepijí jako dřív",
-      "url": "https://ekonomickydenik.cz/snizte-dane-na-pivo-vyzyvaji-pivovarnici-vladu/",
-      "dt": "2026-04-28T12:24:40Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "daně",
-        "dřív",
-        "jako",
-        "nepijí",
-        "pivo",
-        "pivovarníci",
-        "snižte",
-        "vládu",
-        "vyzývají",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 76991,
+      "bytes": 76872,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T15:57:26Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T18:05:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 3,
           "finance": 25,
+          "zpravy": 3,
           "zdravi": 2
         },
         "drop_counts": {
@@ -855,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zajíček: Podnikatelé potřebují méně byrokracie, zohledňovat se musí i bezpečnost",
+            "publishedAt": "2026-04-29T18:05:18Z"
+          },
           {
             "title": "Lovci dronů: Policie přiznává stovky nelegálních letů nad Prahou i nasazení těžké techniky",
             "publishedAt": "2026-04-29T15:57:26Z"
@@ -882,10 +883,6 @@
           {
             "title": "Propast v důvěře Čechů: Pavlovi většina věří, Babišova vláda výrazně ztrácí",
             "publishedAt": "2026-04-29T12:48:47Z"
-          },
-          {
-            "title": "Koleje a voda netáhnou. Proč se v Česku vozí náklad hlavně po silnici?",
-            "publishedAt": "2026-04-29T12:41:00Z"
           }
         ]
       }
