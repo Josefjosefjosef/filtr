@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T10:29:35.491440Z",
+  "ingestedAt": "2026-04-29T11:00:25.994556Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Třinečtí oceláři se zase rvali o titul a jejich trenér Žabka si uhrál novou smlouvu",
+      "url": "https://www.idnes.cz/hokej/extraliga/boris-zabka-ocelari-trinec-rozhovor-stribro-po-finale.A260429_115029_hokej_jsl",
+      "dt": "2026-04-29T10:39:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "jejich",
+        "novou",
+        "oceláři",
+        "rvali",
+        "smlouvu",
+        "titul",
+        "trenér",
+        "třinečtí",
+        "uhrál",
+        "zase",
+        "žabka"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -775,32 +803,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třinec - Pardubice 4:5P. Dynamo slaví po 14 letech titul, prodloužení rozhodl Červenka",
-      "url": "https://www.idnes.cz/hokej/extraliga/6-finale-trinec-pardubice-online-zpravodajstvi.A260428_125319_hokej_drev",
-      "dt": "2026-04-28T18:36:35Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dynamo",
-        "letech",
-        "pardubice",
-        "prodloužení",
-        "rozhodl",
-        "slaví",
-        "titul",
-        "třinec",
-        "červenka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +813,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48670,
+      "bytes": 48433,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +850,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:07:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T10:39:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -863,6 +865,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třinečtí oceláři se zase rvali o titul a jejich trenér Žabka si uhrál novou smlouvu",
+            "publishedAt": "2026-04-29T10:39:00Z"
+          },
           {
             "title": "Děčín zvrátil duel v Brně, střelecký souboj potěšil víc Dawese. Opava zaskočila Ústí",
             "publishedAt": "2026-04-29T10:07:59Z"
@@ -890,10 +896,6 @@
           {
             "title": "Ruští a běloruští boxeři se můžou vrátit do mezinárodního ringu, vlajku mít nesmějí",
             "publishedAt": "2026-04-29T08:18:00Z"
-          },
-          {
-            "title": "Krejčímu skončila sezona, Wembanyama dal stopku. Souboj Jalenů pro Brunsona",
-            "publishedAt": "2026-04-29T08:15:08Z"
           }
         ]
       }

@@ -1,27 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T10:29:35.491440Z",
+  "ingestedAt": "2026-04-29T11:00:25.994556Z",
   "items": [
     {
       "section": "zdravi",
       "contentType": "article",
-      "title": "Soud opět uznal psychiatra Cimického vinným ze znásilnění. Výši trestu teprve oznámí",
+      "title": "Německo schválilo historickou reformu zdravotního pojištění. Čekají se vyšší doplatky",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecko-reforma-zdravotni-pojisteni-doplatky/",
+      "dt": "2026-04-29T10:54:51Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "doplatky",
+        "historickou",
+        "německo",
+        "pojištění",
+        "reformu",
+        "schválilo",
+        "vyšší",
+        "zdravotního",
+        "čekají"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Soud opět uznal psychiatra Cimického vinným ze znásilnění. Případ ale ještě skončit nemusí",
       "url": "https://www.zdravotnickydenik.cz/2026/04/cimicky-soud-znasilneni-rozsudek/",
       "dt": "2026-04-29T10:00:56Z",
       "media_raw": "Zdravotnický deník",
       "media_norm": "Zdravotnický deník",
       "tokens": [
+        "ale",
         "cimického",
+        "ještě",
+        "nemusí",
         "opět",
-        "oznámí",
         "psychiatra",
+        "případ",
+        "skončit",
         "soud",
-        "teprve",
-        "trestu",
         "uznal",
         "vinným",
-        "výši",
         "znásilnění"
       ],
       "feedCategory": "zdravi",
@@ -244,31 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nová vojenská nemocnice v Praze je nesmysl. Černochová popsala důvod",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nova-vojenska-nemocnice-cernochova-babis/",
-      "dt": "2026-04-28T12:47:14Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "důvod",
-        "nemocnice",
-        "nesmysl",
-        "nová",
-        "popsala",
-        "praze",
-        "vojenská",
-        "černochová"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 97922,
+      "bytes": 97768,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:00:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T10:54:51Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -333,7 +335,11 @@
         },
         "sample_titles": [
           {
-            "title": "Soud opět uznal psychiatra Cimického vinným ze znásilnění. Výši trestu teprve oznámí",
+            "title": "Německo schválilo historickou reformu zdravotního pojištění. Čekají se vyšší doplatky",
+            "publishedAt": "2026-04-29T10:54:51Z"
+          },
+          {
+            "title": "Soud opět uznal psychiatra Cimického vinným ze znásilnění. Případ ale ještě skončit nemusí",
             "publishedAt": "2026-04-29T10:00:56Z"
           },
           {
@@ -359,10 +365,6 @@
           {
             "title": "Nová šance pro české pacienty: CAR-T léčba cílí na selhávající imunitu",
             "publishedAt": "2026-04-28T16:05:34Z"
-          },
-          {
-            "title": "Průlom v léčbě hluchoty: Genová terapie vrací dětem sluch, výrobce ji poskytne zdarma",
-            "publishedAt": "2026-04-28T15:29:09Z"
           }
         ]
       }

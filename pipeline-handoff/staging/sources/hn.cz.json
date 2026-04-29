@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-29T10:29:35.491440Z",
+  "ingestedAt": "2026-04-29T11:00:25.994556Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Že má Trump lepší karty? Íránský režim je přesvědčen o opaku, do míru s USA se nehrne. Spoléhá na tři M",
+      "url": "https://zahranicni.hn.cz/c1-67872040-ze-ma-trump-lepsi-karty-iransky-rezim-je-presvedcen-o-opaku-do-miru-s-usa-se-nehrne-spoleha-na-tri-m",
+      "dt": "2026-04-29T10:45:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "karty",
+        "lepší",
+        "míru",
+        "nehrne",
+        "opaku",
+        "přesvědčen",
+        "režim",
+        "spoléhá",
+        "trump",
+        "tři",
+        "usa",
+        "íránský"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1129,32 +1158,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Budou kvůli válce na Blízkém východě drahé úvěry? Napovědět může tento týden",
-      "url": "https://podcasty.hn.cz/c1-67871370-budou-kvuli-valce-na-blizkem-vychode-drahe-uvery-napovedet-muze-tento-tyden",
-      "dt": "2026-04-28T04:44:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "blízkém",
-        "drahé",
-        "kvůli",
-        "napovědět",
-        "tento",
-        "týden",
-        "válce",
-        "východě",
-        "úvěry"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1165,7 +1168,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184071,
+      "bytes": 184088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1202,7 +1205,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T10:45:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1220,6 +1223,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Že má Trump lepší karty? Íránský režim je přesvědčen o opaku, do míru s USA se nehrne. Spoléhá na tři M",
+            "publishedAt": "2026-04-29T10:45:00Z"
+          },
           {
             "title": "Prologis prodává sklady v klíčových logistických uzlech. Cení si je na pár miliard korun",
             "publishedAt": "2026-04-29T10:23:00Z"
@@ -1247,10 +1254,6 @@
           {
             "title": "Za kulturní válkou se odehrávají politické změny, které nám mohou způsobit rozsáhlé škody",
             "publishedAt": "2026-04-29T06:56:00Z"
-          },
-          {
-            "title": "Výpočetní výkon je zbraň. Seymour Cray to pochopil desítky let před vlnou AI a postavil nejlepší superpočítače světa",
-            "publishedAt": "2026-04-29T06:15:00Z"
           }
         ]
       }
