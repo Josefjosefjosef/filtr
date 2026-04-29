@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T11:00:25.994556Z",
+  "ingestedAt": "2026-04-29T11:29:55.870605Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Poslední vystoupení legendy. Setkání s Messnerem si nenechal ujít ani Petr Pavel",
+      "url": "https://www.idnes.cz/sport/trendy/posledni-vystoupeni-legendy-setkani-s-messnerem-si-nenechal-ujit-ani-petr-pavel.A260429_102116_trendy_blah",
+      "dt": "2026-04-29T10:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "legendy",
+        "messnerem",
+        "nenechal",
+        "pavel",
+        "petr",
+        "poslední",
+        "setkání",
+        "ujít",
+        "vystoupení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -776,33 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík vyhlíží Pastrňáka se Zachou. Váží si Hronka, osloví finalisty play off",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ms-2026-rulik-posily-nhl-pastrnak-zacha-hronek-brankari.A260428_205959_ms-hokej-2026_pkr",
-      "dt": "2026-04-28T19:42:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finalisty",
-        "hronka",
-        "off",
-        "osloví",
-        "pastrňáka",
-        "play",
-        "rulík",
-        "vyhlíží",
-        "váží",
-        "zachou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -813,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48433,
+      "bytes": 48843,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -850,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:39:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T10:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -865,6 +864,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Poslední vystoupení legendy. Setkání s Messnerem si nenechal ujít ani Petr Pavel",
+            "publishedAt": "2026-04-29T10:45:00Z"
+          },
           {
             "title": "Třinečtí oceláři se zase rvali o titul a jejich trenér Žabka si uhrál novou smlouvu",
             "publishedAt": "2026-04-29T10:39:00Z"
@@ -892,10 +895,6 @@
           {
             "title": "OBRAZEM: Hektolitry šampaňského a euforie uprostřed noci. Hokejoví mistři slavili",
             "publishedAt": "2026-04-29T08:40:00Z"
-          },
-          {
-            "title": "Ruští a běloruští boxeři se můžou vrátit do mezinárodního ringu, vlajku mít nesmějí",
-            "publishedAt": "2026-04-29T08:18:00Z"
           }
         ]
       }

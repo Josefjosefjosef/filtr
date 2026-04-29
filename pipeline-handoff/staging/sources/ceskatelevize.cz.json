@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T11:00:25.994556Z",
+  "ingestedAt": "2026-04-29T11:29:55.870605Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Do očí se jim propsal život i válka, říká fotograf o lidech z Náhorního Karabachu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/do-oci-se-jim-propsal-zivot-i-valka-rika-fotograf-o-lidech-z-nahorniho-karabachu-372876",
+      "dt": "2026-04-29T11:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "fotograf",
+        "jim",
+        "karabachu",
+        "lidech",
+        "náhorního",
+        "očí",
+        "propsal",
+        "válka",
+        "říká",
+        "život"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Komise žaluje Česko a Maďarsko kvůli evropskému zatýkacímu rozkazu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/komise-zaluje-cesko-a-madarsko-kvuli-evropskemu-zatykacimu-rozkazu-372934",
+      "dt": "2026-04-29T10:54:44Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "evropskému",
+        "komise",
+        "kvůli",
+        "maďarsko",
+        "rozkazu",
+        "zatýkacímu",
+        "česko",
+        "žaluje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -689,58 +741,6 @@
         "problémovém",
         "sídlišti",
         "šluknov"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kvůli napětí ve světě zdraží energie, obávají se podle průzkumu Češi",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/kvuli-napeti-ve-svete-zdrazi-energie-obavaji-se-podle-pruzkumu-cesi-372889",
-      "dt": "2026-04-28T15:47:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "energie",
-        "kvůli",
-        "napětí",
-        "obávají",
-        "podle",
-        "průzkumu",
-        "světě",
-        "zdraží",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Daczická míří z ODS ke Kubovu hnutí, středočeskou koalici to ovlivnit nemá",
-      "url": "https://ct24.ceskatelevize.cz/clanek/regiony/stredocesky-kraj/daczicka-miri-z-ods-ke-kubovu-hnuti-stredoceskou-koalici-to-ovlivnit-nema-372907",
-      "dt": "2026-04-28T15:24:45Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "daczická",
-        "hnutí",
-        "koalici",
-        "kubovu",
-        "míří",
-        "nemá",
-        "ods",
-        "ovlivnit",
-        "středočeskou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1527,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41491,
+      "bytes": 41015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1587,12 +1587,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:40:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "other": 4,
           "zpravy": 24,
-          "finance": 3,
-          "other": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1604,6 +1604,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Do očí se jim propsal život i válka, říká fotograf o lidech z Náhorního Karabachu",
+            "publishedAt": "2026-04-29T11:00:00Z"
+          },
+          {
+            "title": "Komise žaluje Česko a Maďarsko kvůli evropskému zatýkacímu rozkazu",
+            "publishedAt": "2026-04-29T10:54:44Z"
+          },
           {
             "title": "Znečištění Mekongu těžkými kovy ohrožuje životy obyvatel i thajskou ekonomiku",
             "publishedAt": "2026-04-29T10:40:54Z"
@@ -1627,14 +1635,6 @@
           {
             "title": "Mužům se špatně vyjadřují emoce, říká tvůrce seriálu o toxické maskulinitě",
             "publishedAt": "2026-04-29T09:36:18Z"
-          },
-          {
-            "title": "V Evropě přibylo rostlin, které upřednostňují dusíkatou půdu. Reagují tak na člověka",
-            "publishedAt": "2026-04-29T09:14:57Z"
-          },
-          {
-            "title": "Česko musí zlepšit prevenci korupce u poslanců a soudců, uvádí skupina Rady Evropy",
-            "publishedAt": "2026-04-29T08:35:23Z"
           }
         ]
       }
@@ -1740,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77678,
+      "bytes": 77459,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
