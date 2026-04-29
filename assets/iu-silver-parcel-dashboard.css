@@ -60,6 +60,10 @@
     line-height: 1.45;
     color: rgba(226, 236, 248, 0.82);
   }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell {
+    display: contents;
+  }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row {
     display: flex;
@@ -296,6 +300,24 @@
     line-height: 1.45;
     color: #475569;
   }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5f5;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    transition: box-shadow 0.18s ease;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell:focus-within,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell:focus-within {
+    box-shadow:
+      0 4px 12px rgba(15, 23, 42, 0.06),
+      0 0 0 2px rgba(99, 102, 241, 0.15);
+  }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__row {
     display: flex;
@@ -305,11 +327,12 @@
     align-items: stretch;
     min-width: 0;
     box-sizing: border-box;
-    padding: 12px;
-    border-radius: 12px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__input {
@@ -719,7 +742,9 @@
     #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav--address,
     #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__btnDetailNav--address,
     #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave,
-    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave {
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch #iuSilverParcelWatchSave.iuSilverParcelWatch__mainSave,
+    #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell,
+    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__mainShell {
       transition: none !important;
       transform: none !important;
     }
