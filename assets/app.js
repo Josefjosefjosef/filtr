@@ -10910,7 +10910,13 @@ function buildVideoAsArticleCard(it) {
 
     function openSvatekOverlay(){
       try{
-        root.removeAttribute("hidden");
+        /* P0: iuHideAllOverlaysNow sets display:none on every .iuModal — must clear when opening. */
+        if (typeof window.iuSetElOpenVisible === "function") {
+          window.iuSetElOpenVisible(root, true);
+        } else {
+          root.removeAttribute("hidden");
+          if (root.style && root.style.display === "none") root.style.display = "";
+        }
         root.setAttribute("aria-hidden", "false");
         setPillExpanded(true);
       }catch(_){}
@@ -10919,7 +10925,11 @@ function buildVideoAsArticleCard(it) {
     function closeSvatekOverlay(opts){
       opts = opts || {};
       try{
-        root.setAttribute("hidden", "");
+        if (typeof window.iuSetElOpenVisible === "function") {
+          window.iuSetElOpenVisible(root, false);
+        } else {
+          root.setAttribute("hidden", "");
+        }
         root.setAttribute("aria-hidden", "true");
         setPillExpanded(false);
       }catch(_){}
