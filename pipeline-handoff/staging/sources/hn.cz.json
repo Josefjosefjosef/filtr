@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-29T07:09:59.906390Z",
+  "ingestedAt": "2026-04-29T07:39:42.817577Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Polovinu lidí propustil. O čem se mluví za zavřenými dveřmi a jak chce investiční elita na AI vydělat",
+      "url": "https://podcasty.hn.cz/c1-67872020-polovinu-lidi-propustil-o-cem-se-mluvi-za-zavrenymi-dvermi-a-jak-chce-investicni-elita-na-ai-vydelat",
+      "dt": "2026-04-29T07:20:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "chce",
+        "dveřmi",
+        "elita",
+        "investiční",
+        "lidí",
+        "mluví",
+        "polovinu",
+        "propustil",
+        "vydělat",
+        "zavřenými",
+        "čem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -1120,35 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V Říčanech chtěli zvednout daň za sklady a průmyslové areály, ale zvýšili ji omylem i majitelům bytů",
-      "url": "https://archiv.hn.cz/c1-67871410-v-ricanech-chteli-zvednout-dan-za-sklady-a-prumyslove-arealy-ale-zvysili-ji-omylem-i-majitelum-bytu",
-      "dt": "2026-04-27T16:24:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "areály",
-        "bytů",
-        "chtěli",
-        "daň",
-        "majitelům",
-        "omylem",
-        "průmyslové",
-        "sklady",
-        "zvednout",
-        "zvýšili",
-        "říčanech"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1159,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184266,
+      "bytes": 184154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1196,11 +1195,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T05:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T07:20:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
           "finance": 31,
+          "zpravy": 5,
           "zdravi": 2,
           "sport": 2
         },
@@ -1214,6 +1213,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polovinu lidí propustil. O čem se mluví za zavřenými dveřmi a jak chce investiční elita na AI vydělat",
+            "publishedAt": "2026-04-29T07:20:00Z"
+          },
           {
             "title": "Evropa je nejrychleji se oteplující kontinent. Ubývá sněhu i ledu a tropické teploty zažívají i za polárním kruhem",
             "publishedAt": "2026-04-29T05:23:00Z"
@@ -1241,10 +1244,6 @@
           {
             "title": "Evropa může jen tiše závidět. Největší autosalon světa mají v Číně, dominují mu kopie známých off-roadů a elektromobily",
             "publishedAt": "2026-04-28T18:38:00Z"
-          },
-          {
-            "title": "Místo mantinelů legalizace? Úprava švarcsystému naráží, v rozpočtu může podle kritiků chybět přes 100 miliard ročně",
-            "publishedAt": "2026-04-28T17:28:00Z"
           }
         ]
       }

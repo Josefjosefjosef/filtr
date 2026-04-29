@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T07:09:59.906390Z",
+  "ingestedAt": "2026-04-29T07:39:42.817577Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Umělá čočka? Ne, stačí laser. Nový zákrok zbaví lidí závislosti na brýlích",
+      "url": "https://www.denik.cz/regiony/umele-cocky-laser-novy-zakrok-brno-bez-bryle-oko-neovize-zrak.html",
+      "dt": "2026-04-29T06:48:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brýlích",
+        "laser",
+        "lidí",
+        "nový",
+        "stačí",
+        "umělá",
+        "zbaví",
+        "zákrok",
+        "závislosti",
+        "čočka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Velká banka měla odstávku: Nefungovaly některé služby, varovala před podvodníky",
+      "url": "https://www.denik.cz/ekonomika/fio-banka-odstavka-systemu-upozorneni-na-podvodniky.html",
+      "dt": "2026-04-29T06:47:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "banka",
+        "měla",
+        "nefungovaly",
+        "některé",
+        "odstávku",
+        "podvodníky",
+        "služby",
+        "varovala",
+        "velká"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -187,20 +240,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Extrémní proměny: Monika bývala úspěšnou atletkou. Dnes se ani nedívá do zrcadla",
+      "title": "Extrémní proměny: Monika bývala atletkou. Dnes má 130 kg a nedívá do zrcadla",
       "url": "https://www.denik.cz/film-a-televize/extremni-promeny-monika-mullerova.html",
       "dt": "2026-04-29T02:20:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "130",
         "atletkou",
         "bývala",
         "extrémní",
         "monika",
         "nedívá",
         "proměny",
-        "zrcadla",
-        "úspěšnou"
+        "zrcadla"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -598,56 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Na Kroměřížsku natočili prachové rarášky. Jsou jako malé tornádo, má je i Mars",
-      "url": "https://www.denik.cz/pocasi/prachovy-dabel-rarasek-video-kromeriz.html",
-      "dt": "2026-04-28T12:27:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jako",
-        "kroměřížsku",
-        "malé",
-        "mars",
-        "natočili",
-        "prachové",
-        "rarášky",
-        "tornádo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Radioaktivita z Černobylu zasáhla i Česko. Mapa ukazuje, které kraje nejvíc",
-      "url": "https://www.denik.cz/z_domova/cernobyl-havarie-cesko-mapa-kontaminace-pocasi-jak-se-siril-radioaktivni-mrak.html",
-      "dt": "2026-04-28T12:07:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "kraje",
-        "mapa",
-        "nejvíc",
-        "radioaktivita",
-        "ukazuje",
-        "zasáhla",
-        "černobylu",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -658,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28446,
+      "bytes": 28619,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -695,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:48:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -711,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umělá čočka? Ne, stačí laser. Nový zákrok zbaví lidí závislosti na brýlích",
+            "publishedAt": "2026-04-29T06:48:00Z"
+          },
+          {
+            "title": "Velká banka měla odstávku: Nefungovaly některé služby, varovala před podvodníky",
+            "publishedAt": "2026-04-29T06:47:00Z"
+          },
           {
             "title": "Jiřina Bohdalová: Člověk by měl žít tak, aby na něj z krabičky nevylezl čertík",
             "publishedAt": "2026-04-29T06:00:00Z"
@@ -734,14 +745,6 @@
           {
             "title": "Čas na elektronické podání daní se krátí: Termín, jak neudělat chybu, co sankce",
             "publishedAt": "2026-04-29T03:30:00Z"
-          },
-          {
-            "title": "Před 30 lety odpálili v Bratislavě policistu Remiáše. Roli hrál únos syna Kováče",
-            "publishedAt": "2026-04-29T03:00:00Z"
-          },
-          {
-            "title": "Extrémní proměny: Monika bývala úspěšnou atletkou. Dnes se ani nedívá do zrcadla",
-            "publishedAt": "2026-04-29T02:20:00Z"
           }
         ]
       }
