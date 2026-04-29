@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T05:19:33.331593Z",
+  "ingestedAt": "2026-04-29T05:45:09.279990Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "28 v 28. Černá Hora má být za dva roky v Evropské unii",
+      "url": "https://www.denik.cz/evropa-pro-cechy/cerna-hora-vstup-do-evropske-unie.html",
+      "dt": "2026-04-29T05:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "být",
+        "dva",
+        "evropské",
+        "hora",
+        "roky",
+        "unii",
+        "černá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -624,31 +648,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdraví, nebo obrana? Babiš u supernemocnice zkouší italskou cestu",
-      "url": "https://prazsky.denik.cz/zpravy_region/zdravi-nebo-obrana-babis-u-supernemocnice-zkousi-italskou-cestu-20260428.html",
-      "dt": "2026-04-28T11:12:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "babiš",
-        "cestu",
-        "italskou",
-        "nebo",
-        "obrana",
-        "supernemocnice",
-        "zdraví",
-        "zkouší"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +658,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28987,
+      "bytes": 28635,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,12 +695,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T04:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T05:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 2,
-          "zdravi": 1
+          "zpravy": 23,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -713,6 +711,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "28 v 28. Černá Hora má být za dva roky v Evropské unii",
+            "publishedAt": "2026-04-29T05:00:00Z"
+          },
           {
             "title": "U Brandýsa nad Labem se zřejmě toulá serval. Šelma zmizela v poli",
             "publishedAt": "2026-04-29T04:50:00Z"
@@ -740,10 +742,6 @@
           {
             "title": "Tělocvikář místo instruktora. Doplácení na plavání může snížit kvalitu výuky",
             "publishedAt": "2026-04-29T02:00:00Z"
-          },
-          {
-            "title": "Karel III. promluvil v americkém Kongresu. Vyzval k pevné spolupráci spojenců",
-            "publishedAt": "2026-04-28T20:39:00Z"
           }
         ]
       }

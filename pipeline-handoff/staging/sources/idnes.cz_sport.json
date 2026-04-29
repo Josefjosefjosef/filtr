@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T05:19:33.331593Z",
+  "ingestedAt": "2026-04-29T05:45:09.279990Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák gólem z prodloužení udržel Boston ve hře, radoval se i Edmonton",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-zacha-dostal.A260429_070939_nhl_mkr",
+      "dt": "2026-04-29T05:28:55Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "boston",
+        "edmonton",
+        "gólem",
+        "hře",
+        "pastrňák",
+        "prodloužení",
+        "radoval",
+        "udržel"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -772,30 +797,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Žlutá amnestie. Na šampionátu se karty budou mazat po skupinách i po čtvrtfinále",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/zlute-karty-amnestie-vymazani-zlute-karty-zakladni-skupiny-ctvrtfinale.A260428_111903_ms-fotbal_min",
-      "dt": "2026-04-28T10:30:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "amnestie",
-        "karty",
-        "mazat",
-        "skupinách",
-        "čtvrtfinále",
-        "šampionátu",
-        "žlutá"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48002,
+      "bytes": 47935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,7 +844,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T05:08:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T05:28:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -858,6 +859,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák gólem z prodloužení udržel Boston ve hře, radoval se i Edmonton",
+            "publishedAt": "2026-04-29T05:28:55Z"
+          },
           {
             "title": "Krejčímu skončila sezona, Wembanyama dal stopku. Souboj Jalenů pro Brunsona",
             "publishedAt": "2026-04-29T05:08:07Z"
@@ -885,10 +890,6 @@
           {
             "title": "PSG - Bayern 5:4, epická podívaná na úvod semifinále LM. Lepší pozici získal obhájce",
             "publishedAt": "2026-04-28T21:24:23Z"
-          },
-          {
-            "title": "České týmy mužů i žen na MS ve stolním tenisu družstev uspěly v prvních zápasech",
-            "publishedAt": "2026-04-28T21:08:46Z"
           }
         ]
       }
