@@ -6715,7 +6715,6 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         try{
           const doc = metaEl.ownerDocument;
-          metaEl.textContent = "";
           const dateCluster = doc.createElement("span");
           dateCluster.className = "iuSilverWelcomeMetaDateCluster";
           dateCluster.appendChild(doc.createTextNode("Dnes je "));
@@ -6747,7 +6746,6 @@ function buildVideoAsArticleCard(it) {
             spanDate.textContent = datePartFallback;
             dateCluster.appendChild(spanDate);
           }
-          metaEl.appendChild(dateCluster);
           const ndCluster = doc.createElement("span");
           ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
           ndCluster.appendChild(doc.createTextNode(" \u00B7 sv\u00E1tek m\u00E1 "));
@@ -6773,7 +6771,8 @@ function buildVideoAsArticleCard(it) {
             pillBtn.appendChild(spanIcon);
           }
           ndCluster.appendChild(pillBtn);
-          metaEl.appendChild(ndCluster);
+          /* Jedna DOM výměna — žádný mezikrok s prázdným meta (reload flash / CLS). */
+          metaEl.replaceChildren(dateCluster, ndCluster);
         }catch{}
         try{
           const leadEl = document.getElementById("svatekOverlayLead");
