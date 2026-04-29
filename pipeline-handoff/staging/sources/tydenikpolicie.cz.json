@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T06:39:41.038821Z",
+  "ingestedAt": "2026-04-29T07:09:59.906390Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté řeší napadení mladíka v Táboře. Hledají dva cyklisty, kteří by pomohli pomoci svým svědectvím",
+      "url": "https://tydenikpolicie.cz/policiste-resi-napadeni-mladika-v-tabore-hledaji-dva-cyklisty-kteri-by-pomohli-pomoci-svym-svedectvim/",
+      "dt": "2026-04-29T07:06:16Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "cyklisty",
+        "dva",
+        "hledají",
+        "kteří",
+        "mladíka",
+        "napadení",
+        "policisté",
+        "pomoci",
+        "pomohli",
+        "svým",
+        "svědectvím",
+        "táboře",
+        "řeší"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -233,30 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Strážníci v Kladně převedli početnou kachní rodinku přes silnici",
-      "url": "https://tydenikpolicie.cz/straznici-v-kladne-prevedli-pocetnou-kachni-rodinku-pres-silnici/",
-      "dt": "2026-04-28T19:02:40Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "kachní",
-        "kladně",
-        "početnou",
-        "převedli",
-        "rodinku",
-        "silnici",
-        "strážníci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16159,
+      "bytes": 16023,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:02:46Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T07:06:16Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté řeší napadení mladíka v Táboře. Hledají dva cyklisty, kteří by pomohli pomoci svým svědectvím",
+            "publishedAt": "2026-04-29T07:06:16Z"
+          },
           {
             "title": "Na Sokolovsku proběhla další dopravně bezpečnostní akce",
             "publishedAt": "2026-04-29T06:02:46Z"
@@ -346,10 +356,6 @@
           {
             "title": "Cyklistka po pádu z kola na Olomoucku nadýchala policistům 4,75 promile",
             "publishedAt": "2026-04-28T22:13:46Z"
-          },
-          {
-            "title": "Hasiči v Brně likvidovali ve 22. nadzemním podlaží administrativní budovy požár v bateriovém uložišti",
-            "publishedAt": "2026-04-28T22:12:11Z"
           }
         ]
       }

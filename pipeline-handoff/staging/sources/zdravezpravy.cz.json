@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-29T06:39:41.038821Z",
+  "ingestedAt": "2026-04-29T07:09:59.906390Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Aspirin jako prevence proti rakovině a nemocím srdce a cév? Možná ano",
+      "url": "https://www.zdravezpravy.cz/2026/04/29/aspirin-jako-prevence-proti-rakovine-a-nemocim-srdce-a-cev-mozna-ano/",
+      "dt": "2026-04-29T06:30:16Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "ano",
+        "aspirin",
+        "cév",
+        "jako",
+        "možná",
+        "nemocím",
+        "prevence",
+        "proti",
+        "rakovině",
+        "srdce"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -461,33 +488,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Ženy v EU mají o čtvrtinu nižší důchod než muži. V Česku je rozdíl menší",
-      "url": "https://www.zdravezpravy.cz/2026/04/21/zeny-v-eu-maji-o-ctvrtinu-nizsi-duchod-nez-muzi-v-cesku-je-rozdil-mensi/",
-      "dt": "2026-04-21T06:40:34Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "důchod",
-        "mají",
-        "menší",
-        "muži",
-        "než",
-        "nižší",
-        "rozdíl",
-        "česku",
-        "čtvrtinu",
-        "ženy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +498,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 191252,
+      "bytes": 199039,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +535,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-28T15:30:09Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:30:16Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -550,6 +550,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Aspirin jako prevence proti rakovině a nemocím srdce a cév? Možná ano",
+            "publishedAt": "2026-04-29T06:30:16Z"
+          },
           {
             "title": "Šanci zestárnout mají v Česku bohatí lidé. Ti chudí už moc ne",
             "publishedAt": "2026-04-28T15:30:09Z"
@@ -577,10 +581,6 @@
           {
             "title": "Česko vystaví čtvrtou vojenskou nemocnici. Doba si to žádá…",
             "publishedAt": "2026-04-27T08:50:22Z"
-          },
-          {
-            "title": "3. ročník Kongresu následné intenzivní péče upoutal i letos",
-            "publishedAt": "2026-04-27T07:19:04Z"
           }
         ]
       }

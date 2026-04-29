@@ -1,14 +1,41 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T06:39:41.038821Z",
+  "ingestedAt": "2026-04-29T07:09:59.906390Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nekoupil jsem si titul, ale hráče, kteří ho vybojovali, hlásí majitel Dynama",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokej-extraliga-play-off-finale-pardubice-trinec-petr-dedek-rozhovor.A260429_044853_hokej_mvo",
+      "dt": "2026-04-29T06:58:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ale",
+        "dynama",
+        "hlásí",
+        "hráče",
+        "jsem",
+        "kteří",
+        "majitel",
+        "nekoupil",
+        "titul",
+        "vybojovali"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Krejčímu skončila sezona, Wembanyama dal stopku. Souboj Jalenů pro Brunsona",
       "url": "https://www.idnes.cz/sport/basket/prvni-kolo-play-off-nba-boston-philadelphia-97-113-new-york-atlanta-126-97-san-antonio-portland-114.A260429_065339_sport-basket_ten",
-      "dt": "2026-04-29T06:33:36Z",
+      "dt": "2026-04-29T06:49:54Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -772,32 +799,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nosková si dál užívá dramatické chvíle a poráží nejlepší. Už nejsem ztracená, těší ji",
-      "url": "https://www.idnes.cz/sport/tenis/tenis-turnaj-madrid-ohlas-linda-noskova.A260428_095617_tenis_pls",
-      "dt": "2026-04-28T11:34:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chvíle",
-        "dramatické",
-        "nejlepší",
-        "nejsem",
-        "nosková",
-        "poráží",
-        "těší",
-        "užívá",
-        "ztracená"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48134,
+      "bytes": 48348,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:33:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -861,8 +862,12 @@
         },
         "sample_titles": [
           {
+            "title": "Nekoupil jsem si titul, ale hráče, kteří ho vybojovali, hlásí majitel Dynama",
+            "publishedAt": "2026-04-29T06:58:00Z"
+          },
+          {
             "title": "Krejčímu skončila sezona, Wembanyama dal stopku. Souboj Jalenů pro Brunsona",
-            "publishedAt": "2026-04-29T06:33:36Z"
+            "publishedAt": "2026-04-29T06:49:54Z"
           },
           {
             "title": "Pastrňák gólem z prodloužení udržel Boston ve hře, Edmonton vyhnal Dostála",
@@ -887,10 +892,6 @@
           {
             "title": "Menšík trápil Zvereva, v Madridu ale končí. Lehečkova jízda pokračuje do čtvrtfinále",
             "publishedAt": "2026-04-28T23:35:17Z"
-          },
-          {
-            "title": "Vstupenka za 48 milionů? Infantino ceny na MS hájí: Jsme nezisková organizace",
-            "publishedAt": "2026-04-28T22:00:00Z"
           }
         ]
       }

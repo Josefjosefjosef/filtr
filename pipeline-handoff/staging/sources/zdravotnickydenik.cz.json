@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T06:39:41.038821Z",
+  "ingestedAt": "2026-04-29T07:09:59.906390Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Masivní migrace pojištěnců: Jedna zdravotní pojišťovna válcuje všechny ostatní",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/migrace-pojistencu-zdravotni-pojistovny/",
+      "dt": "2026-04-29T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "jedna",
+        "masivní",
+        "migrace",
+        "ostatní",
+        "pojištěnců",
+        "pojišťovna",
+        "válcuje",
+        "všechny",
+        "zdravotní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,33 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Peklo za mřížemi: V amerických věznicích umírají stovky psychicky nemocných v izolaci a špíně",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/americke-veznice-psychicky-nemocni/",
-      "dt": "2026-04-28T08:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "amerických",
-        "izolaci",
-        "mřížemi",
-        "nemocných",
-        "peklo",
-        "psychicky",
-        "stovky",
-        "umírají",
-        "věznicích",
-        "špíně"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 93808,
+      "bytes": 104204,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -328,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Masivní migrace pojištěnců: Jedna zdravotní pojišťovna válcuje všechny ostatní",
+            "publishedAt": "2026-04-29T07:00:00Z"
+          },
           {
             "title": "2x vyšší úmrtnost. Ministerstvo chce utnout operace určitých nádorů na malých pracovištích",
             "publishedAt": "2026-04-29T06:00:00Z"
@@ -355,10 +358,6 @@
           {
             "title": "Evropě hrozí nedostatek léků, varují farmaceutičtí obři. Ženou Brusel k soudu kvůli směrnici",
             "publishedAt": "2026-04-28T11:24:41Z"
-          },
-          {
-            "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
-            "publishedAt": "2026-04-28T10:01:52Z"
           }
         ]
       }
