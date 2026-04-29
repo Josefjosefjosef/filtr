@@ -46,10 +46,30 @@ function iuSwReloadGuardShouldSkip() {
   }
 }
 
-/** SKIP_WAITING + one reload — no bottom banner / manual CTA. */
+/** SKIP_WAITING + at most one page reload per session for real SW updates (never on first cold install). */
 function iuSilentSwReloadFromWorker(worker) {
   if (!worker) return;
+  try {
+    /* First document load without a prior controller: skipWaiting + claim() attach without reload. */
+    if (typeof window !== "undefined" && window.__iuSwHadControllerBeforeRegister !== true) {
+      try {
+        worker.postMessage({ type: "SKIP_WAITING" });
+      } catch (_) {}
+      return;
+    }
+  } catch (_) {}
+  try {
+    if (sessionStorage.getItem("iu_sw_update_reload_used") === "1") {
+      try {
+        worker.postMessage({ type: "SKIP_WAITING" });
+      } catch (_) {}
+      return;
+    }
+  } catch (_) {}
   if (iuSwReloadGuardShouldSkip()) return;
+  try {
+    sessionStorage.setItem("iu_sw_update_reload_used", "1");
+  } catch (_) {}
   try {
     worker.postMessage({ type: "SKIP_WAITING" });
   } catch (_) {}
@@ -235,6 +255,11 @@ try {
       if (p !== "/projects/" && p !== "/projects" && p.indexOf("/projects/") !== 0) return;
       if (!("serviceWorker" in navigator)) return;
       try {
+        if (typeof window !== "undefined" && !Object.prototype.hasOwnProperty.call(window, "__iuSwHadControllerBeforeRegister")) {
+          window.__iuSwHadControllerBeforeRegister = !!navigator.serviceWorker.controller;
+        }
+      } catch (eBoot) {}
+      try {
         if (new URLSearchParams(location.search).get("nosw") === "1") {
           navigator.serviceWorker.getRegistrations().then(function (regs) {
             return Promise.all(
@@ -270,6 +295,17 @@ try {
         })
         .then(function () {
           if (navigator.serviceWorker.controller) return;
+          /** P0 first install: never hard-reload — only real updates (had controller before register) may use the timer. */
+          var hadCtlAtRegister = false;
+          try {
+            hadCtlAtRegister = typeof window !== "undefined" && window.__iuSwHadControllerBeforeRegister === true;
+          } catch (_) {}
+          if (!hadCtlAtRegister) {
+            try {
+              sessionStorage.removeItem("iu_sw_hard_reload_once");
+            } catch (eClr0) {}
+            return;
+          }
           /** P0 smoke/Playwright: immediate reload() races page.goto (same URL) → "interrupted by another navigation".
            *  sw.js runs skipWaiting + clients.claim() — controller often attaches without a hard reload; wait for that first. */
           var tid = null;
@@ -15601,6 +15637,17 @@ function buildVideoAsArticleCard(it) {
       if (!reg) return;
       selfDiag.swController = navigator.serviceWorker?.controller ? "yes" : "no";
       if (reg.waiting) {
+        try {
+          if (typeof window !== "undefined" && window.__iuSwHadControllerBeforeRegister !== true) {
+            try {
+              reg.waiting.postMessage({ type: "SKIP_WAITING" });
+            } catch (_) {}
+            selfDiag.swWaiting = "no";
+            logSelfStatus();
+            updateSwStatusLabel();
+            return;
+          }
+        } catch (_) {}
         addTelemetryEvent("sw", "waiting");
         selfDiag.swWaiting = "yes";
         logSelfStatus();
@@ -15615,6 +15662,14 @@ function buildVideoAsArticleCard(it) {
         if (!installing) return;
         installing.addEventListener("statechange", () => {
           if (installing.state === "installed" && reg.waiting) {
+            try {
+              if (typeof window !== "undefined" && window.__iuSwHadControllerBeforeRegister !== true) {
+                try {
+                  reg.waiting.postMessage({ type: "SKIP_WAITING" });
+                } catch (_) {}
+                return;
+              }
+            } catch (_) {}
             scheduleSWReload(reg.waiting);
           }
         });
@@ -19800,6 +19855,16 @@ function buildVideoAsArticleCard(it) {
         startAutoRefresh();
       } catch (_) {}
     }
+
+    try {
+      if (
+        typeof window !== "undefined" &&
+        "serviceWorker" in navigator &&
+        !Object.prototype.hasOwnProperty.call(window, "__iuSwHadControllerBeforeRegister")
+      ) {
+        window.__iuSwHadControllerBeforeRegister = !!navigator.serviceWorker.controller;
+      }
+    } catch (_) {}
 
     watchForSWUpdates();
     updateSwStatusLabel();
