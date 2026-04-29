@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T19:50:31.132012Z",
+  "ingestedAt": "2026-04-29T20:20:25.645899Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dobrovolně hospitalizovaný pacient se nevrátil z vycházky do bohnické léčebny",
+      "url": "https://tydenikpolicie.cz/dobrovolne-hospitalizovany-pacient-se-nevratil-z-vychazky-do-bohnicke-lecebny/",
+      "dt": "2026-04-29T20:08:15Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "bohnické",
+        "dobrovolně",
+        "hospitalizovaný",
+        "léčebny",
+        "nevrátil",
+        "pacient",
+        "vycházky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -242,29 +266,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Sokolovsku proběhla další dopravně bezpečnostní akce",
-      "url": "https://tydenikpolicie.cz/na-sokolovsku-probehla-dalsi-dopravne-bezpecnostni-akce/",
-      "dt": "2026-04-29T06:02:46Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "akce",
-        "bezpečnostní",
-        "další",
-        "dopravně",
-        "proběhla",
-        "sokolovsku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16531,
+      "bytes": 16550,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T13:27:12Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T20:08:15Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -327,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dobrovolně hospitalizovaný pacient se nevrátil z vycházky do bohnické léčebny",
+            "publishedAt": "2026-04-29T20:08:15Z"
+          },
           {
             "title": "Čtveřici cizinců podezřelých ze série krádeží v prodejnách se podařilo dopadnout díky pozornému policistovi",
             "publishedAt": "2026-04-29T13:27:12Z"
@@ -354,10 +359,6 @@
           {
             "title": "Strážníci přistihli v centru Prahy cizince, který posprejoval mobilní oplocení. Tvrdil, že netušil, že se to nesmí",
             "publishedAt": "2026-04-29T07:15:06Z"
-          },
-          {
-            "title": "Celní správa nepolevuje v kontrolách přeprav odpadů",
-            "publishedAt": "2026-04-29T07:12:12Z"
           }
         ]
       }
