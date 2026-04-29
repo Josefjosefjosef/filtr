@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-29T12:59:57.703322Z",
+  "ingestedAt": "2026-04-29T14:14:35.016217Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Bez souhlasu je to znásilnění. Pravidla proti agresorům se mají sjednotit",
+      "url": "https://ekonomickydenik.cz/bez-souhlasu-znasilneni/",
+      "dt": "2026-04-29T13:29:39Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "agresorům",
+        "mají",
+        "pravidla",
+        "proti",
+        "sjednotit",
+        "souhlasu",
+        "znásilnění"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Napětí v Senátu: Ministři nechodí, senátorky se pohádaly",
+      "url": "https://ekonomickydenik.cz/napeti-senat-ministri-nechodi/",
+      "dt": "2026-04-29T13:13:54Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ministři",
+        "napětí",
+        "nechodí",
+        "pohádaly",
+        "senátorky",
+        "senátu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -740,54 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nadskočil a vykolejil. Strojvedoucího ráno oslnilo slunce",
-      "url": "https://ekonomickydenik.cz/nadskocil-vykolejil-strojvedouci-oslnilo-slunce/",
-      "dt": "2026-04-28T10:35:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "nadskočil",
-        "oslnilo",
-        "ráno",
-        "slunce",
-        "strojvedoucího",
-        "vykolejil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Urazila Turka a hrozila jí pokuta. Po rvačce v baru se ještě omlouvala",
-      "url": "https://ekonomickydenik.cz/debil-zaznelo-o-turkovi-za-slova-z-baru-se-zena-musela-omluvit/",
-      "dt": "2026-04-28T10:22:25Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "baru",
-        "hrozila",
-        "ještě",
-        "omlouvala",
-        "pokuta",
-        "rvačce",
-        "turka",
-        "urazila"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74935,
+      "bytes": 75907,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,12 +834,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T12:48:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T13:29:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zdravi": 3,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 24,
+          "zdravi": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -852,6 +851,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bez souhlasu je to znásilnění. Pravidla proti agresorům se mají sjednotit",
+            "publishedAt": "2026-04-29T13:29:39Z"
+          },
+          {
+            "title": "Napětí v Senátu: Ministři nechodí, senátorky se pohádaly",
+            "publishedAt": "2026-04-29T13:13:54Z"
+          },
           {
             "title": "Propast v důvěře Čechů: Pavlovi většina věří, Babišova vláda výrazně ztrácí",
             "publishedAt": "2026-04-29T12:48:47Z"
@@ -875,14 +882,6 @@
           {
             "title": "Jsme jen kruhový objezd Evropy. Pavel na summitu zkritizoval dopravní zaostalost Česka",
             "publishedAt": "2026-04-29T10:32:37Z"
-          },
-          {
-            "title": "Stavební právo v pohybu. Jak zabránit nejistotě? Odpoví Hana Landová a další experti",
-            "publishedAt": "2026-04-29T10:11:43Z"
-          },
-          {
-            "title": "EPH stěhuje dceřinou firmu z Prahy do Amsterdamu. Před tím stáhlo 13 miliard korun",
-            "publishedAt": "2026-04-29T08:34:32Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-29T12:59:57.703322Z",
+  "ingestedAt": "2026-04-29T14:14:35.016217Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Recenze Adorable Adventures – zážitek pro celou rodinu",
+      "url": "https://zing.cz/article/recenze-adorable-adventures-zazitek-pro-celou-rodinu",
+      "dt": "2026-04-29T13:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "adorable",
+        "adventures",
+        "celou",
+        "recenze",
+        "rodinu",
+        "zážitek"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -956,28 +979,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Recenze Saros – psychologie zatmění slunce",
-      "url": "https://zing.cz/article/recenze-saros-psychologie-zatmeni-slunce",
-      "dt": "2026-04-24T07:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "psychologie",
-        "recenze",
-        "saros",
-        "slunce",
-        "zatmění"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -988,7 +989,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125152,
+      "bytes": 125115,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1025,7 +1026,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T13:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1041,6 +1042,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Recenze Adorable Adventures – zážitek pro celou rodinu",
+            "publishedAt": "2026-04-29T13:00:00Z"
+          },
           {
             "title": "Na Steamu vyšla nová westernová hra, od hráčů sbírá nadšené recenze",
             "publishedAt": "2026-04-29T12:00:00Z"
@@ -1068,10 +1073,6 @@
           {
             "title": "Hráči na PlayStationu řeší novou DRM ochranu u digitálně zakoupených her",
             "publishedAt": "2026-04-28T16:00:00Z"
-          },
-          {
-            "title": "The Division Resurgence překvapivě vyšlo na PC",
-            "publishedAt": "2026-04-28T14:00:00Z"
           }
         ]
       }
