@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T02:35:31.374720Z",
+  "ingestedAt": "2026-04-29T03:06:23.660973Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pardubice slaví titul, centrum zaplnily tisíce lidí. V noci přivítaly mistry",
+      "url": "https://www.idnes.cz/pardubice/zpravy/hokej-extraliga-utkani-pernstynske-namesti-pardubice-fanousci.A260428_165436_pardubice-zpravy_lank",
+      "dt": "2026-04-29T02:42:56Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "centrum",
+        "lidí",
+        "mistry",
+        "noci",
+        "pardubice",
+        "přivítaly",
+        "slaví",
+        "tisíce",
+        "titul",
+        "zaplnily"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -286,33 +313,6 @@
         "nastříleli",
         "otočce",
         "srovnal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice slaví titul, centrum zaplnily tisíce lidí. V noci přivítají mistry",
-      "url": "https://www.idnes.cz/pardubice/zpravy/hokej-extraliga-utkani-pernstynske-namesti-pardubice-fanousci.A260428_165436_pardubice-zpravy_lank",
-      "dt": "2026-04-28T18:56:19Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "centrum",
-        "lidí",
-        "mistry",
-        "noci",
-        "pardubice",
-        "přivítají",
-        "slaví",
-        "tisíce",
-        "titul",
-        "zaplnily"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -805,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 47830,
+      "bytes": 47828,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T23:35:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T02:42:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -857,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pardubice slaví titul, centrum zaplnily tisíce lidí. V noci přivítaly mistry",
+            "publishedAt": "2026-04-29T02:42:56Z"
+          },
           {
             "title": "Menšík trápil Zvereva, v Madridu ale končí. Lehečkova jízda pokračuje do čtvrtfinále",
             "publishedAt": "2026-04-28T23:35:17Z"
@@ -884,10 +888,6 @@
           {
             "title": "Je to hořké! Měli jsme na ně, míní Adámek. Třinec byl podle něj ve finále poprvé lepší",
             "publishedAt": "2026-04-28T20:39:00Z"
-          },
-          {
-            "title": "Brno má volejbalový titul! Šelmy dokonaly otočku, slaví s rekordní návštěvou",
-            "publishedAt": "2026-04-28T19:50:22Z"
           }
         ]
       }
