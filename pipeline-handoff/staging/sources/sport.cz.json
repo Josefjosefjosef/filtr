@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-29T03:35:38.879953Z",
+  "ingestedAt": "2026-04-29T04:04:55.532744Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák spasil Boston. Zápas ukončil parádní akcí",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnak-spasil-boston-zapas-ukoncil-paradni-akci-5445415",
+      "dt": "2026-04-29T03:47:38Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "akcí",
+        "boston",
+        "parádní",
+        "pastrňák",
+        "spasil",
+        "ukončil",
+        "zápas"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -753,34 +777,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Velké vítězství Noskové ohromilo tenisový svět. Je jako Sabalenková, práskl semifinalista Wimbledonu",
-      "url": "https://www.sport.cz/clanek/tenis-noskove-po-skalpu-svetove-trojky-dekuji-v-polsku-je-jako-sabalenkova-praskl-semifinalista-wimbledonu-5444653",
-      "dt": "2026-04-28T11:00:09Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "jako",
-        "noskové",
-        "ohromilo",
-        "práskl",
-        "sabalenková",
-        "semifinalista",
-        "svět",
-        "tenisový",
-        "velké",
-        "vítězství",
-        "wimbledonu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +787,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44435,
+      "bytes": 44464,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +824,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T21:26:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T03:47:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +839,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák spasil Boston. Zápas ukončil parádní akcí",
+            "publishedAt": "2026-04-29T03:47:38Z"
+          },
           {
             "title": "Menšík trápil světovou trojku. Lehečka smetl favorita, Sabalenková končí",
             "publishedAt": "2026-04-28T07:26:23Z"
@@ -870,10 +870,6 @@
           {
             "title": "Čeští stolní tenisté začali na MS vítězně",
             "publishedAt": "2026-04-28T15:06:27Z"
-          },
-          {
-            "title": "Jeden zápas nám tady ukradli a vyhráli zaslouženě, ocenil sílu soupeře třinecký Nestrašil",
-            "publishedAt": "2026-04-28T20:12:09Z"
           }
         ]
       }
