@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-29T08:49:24.635781Z",
+  "ingestedAt": "2026-04-29T09:20:10.710559Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Viva la bačkorová revolución! Hnidopišská poznámka vysloužilého petičníka",
+      "url": "https://www.lidovky.cz/nazory/petice-backory-prezuvky-zakladni-skola-milion-chvilek-cesky-rozhlas-ceska-televize-gamifikace-revolu.A260427_120929_ln_nazory_lrj",
+      "dt": "2026-04-29T08:32:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "bačkorová",
+        "hnidopišská",
+        "petičníka",
+        "poznámka",
+        "revolución",
+        "viva",
+        "vysloužilého"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -742,33 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tři roky výroba, desítky let servis: zakázka, která změní celé odvětví",
-      "url": "https://www.idnes.cz/technet/technika/vop-cz-servis-firma-vlastimil-navratil-vyroba-taros.A260417_091910_ekonomika_iape",
-      "dt": "2026-04-21T08:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "celé",
-        "desítky",
-        "let",
-        "odvětví",
-        "roky",
-        "servis",
-        "tři",
-        "výroba",
-        "zakázka",
-        "změní"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -779,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46176,
+      "bytes": 45753,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -816,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:32:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "other": 23
+          "other": 24,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -832,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Viva la bačkorová revolución! Hnidopišská poznámka vysloužilého petičníka",
+            "publishedAt": "2026-04-29T08:32:00Z"
+          },
           {
             "title": "Tragédie sovětských výsadkářů. Cvičení v Mongolsku se změnilo v peklo",
             "publishedAt": "2026-04-28T22:00:00Z"
@@ -859,10 +860,6 @@
           {
             "title": "Chytré brýle vyvolávají obavy právníků. Vývojáři řeší, jak odhalit „šmíráky“",
             "publishedAt": "2026-04-27T22:00:00Z"
-          },
-          {
-            "title": "Web od AI, hotový za 5 minut? Vyzkoušeli jsme Webglobe AI WebEditor",
-            "publishedAt": "2026-04-27T13:00:00Z"
           }
         ]
       }

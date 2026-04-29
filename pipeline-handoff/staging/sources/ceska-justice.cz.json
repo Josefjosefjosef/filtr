@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-29T08:49:24.635781Z",
+  "ingestedAt": "2026-04-29T09:20:10.710559Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trend skrývání majetků. Česko musí přitlačit v prevenci korupce u soudců a poslanců",
+      "url": "https://www.ceska-justice.cz/2026/04/trend-skryvani-majetku-cesko-musi-pritlacit-v-prevenci-korupce/",
+      "dt": "2026-04-29T08:48:31Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "korupce",
+        "majetků",
+        "musí",
+        "poslanců",
+        "prevenci",
+        "přitlačit",
+        "skrývání",
+        "soudců",
+        "trend",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,33 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Nebudeme prověřovat každého kocoura za stodolou, obce odmítají povinné kastrace koček",
-      "url": "https://www.ceska-justice.cz/2026/04/obce-odmitaji-povinne-kastrace-kocek/",
-      "dt": "2026-04-27T15:04:38Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "kastrace",
-        "každého",
-        "kocoura",
-        "koček",
-        "nebudeme",
-        "obce",
-        "odmítají",
-        "povinné",
-        "prověřovat",
-        "stodolou"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 134518,
+      "bytes": 133104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:39:45Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:48:31Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trend skrývání majetků. Česko musí přitlačit v prevenci korupce u soudců a poslanců",
+            "publishedAt": "2026-04-29T08:48:31Z"
+          },
           {
             "title": "Proč chtěl Filip Turek omluvu? Nadávky v baru zazněly jinak, tvrdí advokát",
             "publishedAt": "2026-04-29T06:39:45Z"
@@ -361,10 +365,6 @@
           {
             "title": "Při rvačce v baru urazila Filipa Turka. Úřad musel řešit omluvu a pokutu",
             "publishedAt": "2026-04-28T07:59:06Z"
-          },
-          {
-            "title": "Rychlejší dálnice i byty? Vláda vsadila na jeden superúřad. Může ale ztroskotat na lidech",
-            "publishedAt": "2026-04-28T07:40:34Z"
           }
         ]
       }

@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T08:49:24.635781Z",
+  "ingestedAt": "2026-04-29T09:20:10.710559Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Doktory nebudou obíhat pacienti, ale jejich data. VZP testuje nový model zdravotní péče",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pilot-vzp-nemoci-ledvin/",
+      "dt": "2026-04-29T09:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "ale",
+        "data",
+        "doktory",
+        "jejich",
+        "model",
+        "nebudou",
+        "nový",
+        "obíhat",
+        "pacienti",
+        "péče",
+        "testuje",
+        "vzp",
+        "zdravotní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,30 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pribram-nemocnice-zasah-policie/",
-      "dt": "2026-04-28T10:01:52Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dokumenty",
-        "kamery",
-        "nemocnici",
-        "policie",
-        "příbramské",
-        "zabavila",
-        "zasahovala"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 103265,
+      "bytes": 101839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T09:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -327,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Doktory nebudou obíhat pacienti, ale jejich data. VZP testuje nový model zdravotní péče",
+            "publishedAt": "2026-04-29T09:00:00Z"
+          },
           {
             "title": "Vojtěch se bije za Národní očkovací strategii. Senátní výbor ho podpořil",
             "publishedAt": "2026-04-29T08:00:00Z"
@@ -354,10 +364,6 @@
           {
             "title": "Turisté pozor: V oblíbených dovolenkových destinacích v Evropě se šíří exotická horečka",
             "publishedAt": "2026-04-28T14:32:01Z"
-          },
-          {
-            "title": "Nová vojenská nemocnice v Praze je nesmysl. Černochová popsala důvod",
-            "publishedAt": "2026-04-28T12:47:14Z"
           }
         ]
       }

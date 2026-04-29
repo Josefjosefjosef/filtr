@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-29T08:49:24.635781Z",
+  "ingestedAt": "2026-04-29T09:20:10.710559Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Třetí Top Gun hledá nového režiséra. Tvůrce miliardového hitu se nevrátí",
+      "url": "https://www.kinobox.cz/clanky/filmy/53135-top-gun-3-je-v-pripravach-hleda-se-reziser",
+      "dt": "2026-04-29T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "gun",
+        "hitu",
+        "hledá",
+        "miliardového",
+        "nevrátí",
+        "nového",
+        "režiséra",
+        "top",
+        "tvůrce",
+        "třetí"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -533,32 +560,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Kriminální hit Buldok z Poděbrad končí. Nahradí ho nečekaná seriálová volba",
-      "url": "https://www.kinobox.cz/clanky/serialy/52968-kriminalni-hit-buldok-z-podebrad-konci-nahradi-ho-necekana-serialova-volba",
-      "dt": "2026-04-26T14:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "buldok",
-        "hit",
-        "končí",
-        "kriminální",
-        "nahradí",
-        "nečekaná",
-        "poděbrad",
-        "seriálová",
-        "volba"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -569,7 +570,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27120,
+      "bytes": 27078,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -606,7 +607,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -621,6 +622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třetí Top Gun hledá nového režiséra. Tvůrce miliardového hitu se nevrátí",
+            "publishedAt": "2026-04-29T09:00:00Z"
+          },
           {
             "title": "Cena pro Hurvínka, česká fantasy a filmy z celého světa. Zlín Film Festival představil letošní program",
             "publishedAt": "2026-04-29T08:00:00Z"
@@ -648,10 +653,6 @@
           {
             "title": "Kinobox Daily: Šéfová na zabití a život v troskách? Wanted je ultimátní terapie pro každého úředníka",
             "publishedAt": "2026-04-28T10:00:00Z"
-          },
-          {
-            "title": "Válka plná ohně a krve. Třetí Rod draka láká v traileru na obří bitvy a brutální úmrtí",
-            "publishedAt": "2026-04-28T09:00:00Z"
           }
         ]
       }

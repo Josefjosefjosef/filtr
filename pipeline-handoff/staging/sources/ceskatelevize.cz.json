@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T08:49:24.635781Z",
+  "ingestedAt": "2026-04-29T09:20:10.710559Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "V Evropě přibylo rostlin, které upřednostňují dusíkatou půdu. Reagují tak na člověka",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/v-evrope-pribylo-rostlin-ktere-uprednostnuji-dusikatou-pudu-reaguji-tak-na-cloveka-372922",
+      "dt": "2026-04-29T09:14:57Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dusíkatou",
+        "evropě",
+        "přibylo",
+        "půdu",
+        "reagují",
+        "rostlin",
+        "tak",
+        "upřednostňují",
+        "člověka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,22 +84,21 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Celostátní sněm Hospodářské komory volí nové vedení, do čela kandiduje Zajíček",
+      "title": "Podnikatelé čelí dramatickému nárůstu regulace, míní prezident Hospodářské komory",
       "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/projev-zajicka-na-snemu-hospodarske-komory-372920",
       "dt": "2026-04-29T08:09:46Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "celostátní",
+        "dramatickému",
         "hospodářské",
-        "kandiduje",
         "komory",
-        "nové",
-        "sněm",
-        "vedení",
-        "volí",
-        "zajíček",
-        "čela"
+        "míní",
+        "nárůstu",
+        "podnikatelé",
+        "prezident",
+        "regulace",
+        "čelí"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -713,31 +738,6 @@
         "sílí",
         "vzoru",
         "úvahy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Největším znečišťovatelem v Česku byla loni podle ekologů elektrárna Počerady",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/nejvetsim-znecistovatelem-v-cesku-byla-loni-podle-ekologu-elektrarna-pocerady-372901",
-      "dt": "2026-04-28T14:06:06Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "ekologů",
-        "elektrárna",
-        "loni",
-        "největším",
-        "podle",
-        "počerady",
-        "znečišťovatelem",
-        "česku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1531,7 +1531,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41734,
+      "bytes": 41633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1591,12 +1591,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:35:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T09:14:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 2,
-          "other": 1
+          "other": 2,
+          "zpravy": 26,
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1609,6 +1609,10 @@
         },
         "sample_titles": [
           {
+            "title": "V Evropě přibylo rostlin, které upřednostňují dusíkatou půdu. Reagují tak na člověka",
+            "publishedAt": "2026-04-29T09:14:57Z"
+          },
+          {
             "title": "Česko musí zlepšit prevenci korupce u poslanců a soudců, uvádí skupina Rady Evropy",
             "publishedAt": "2026-04-29T08:35:23Z"
           },
@@ -1617,7 +1621,7 @@
             "publishedAt": "2026-04-29T08:32:47Z"
           },
           {
-            "title": "Celostátní sněm Hospodářské komory volí nové vedení, do čela kandiduje Zajíček",
+            "title": "Podnikatelé čelí dramatickému nárůstu regulace, míní prezident Hospodářské komory",
             "publishedAt": "2026-04-29T08:09:46Z"
           },
           {
@@ -1635,10 +1639,6 @@
           {
             "title": "Ruský útok zabil ženu v Sumské oblasti, dva lidé jsou zranění",
             "publishedAt": "2026-04-29T05:56:10Z"
-          },
-          {
-            "title": "Přibývá požárů fotovoltaik a elektrických dopravních prostředků",
-            "publishedAt": "2026-04-29T05:27:00Z"
           }
         ]
       }
@@ -1744,7 +1744,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77474,
+      "bytes": 77610,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
