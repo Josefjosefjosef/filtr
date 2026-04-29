@@ -26,6 +26,25 @@
     return { rawTrimmed: t, collapsed: collapsed, forDetection: collapsed };
   }
 
+  /**
+   * Silver / shared UI: format-only gate (does not judge carrier match).
+   * Allowed: A–Z, 0–9, ASCII hyphen after trim + inner space collapse.
+   */
+  function validateTrackingNumberFormat(raw) {
+    var norm = normalizeTrackingIntent(raw);
+    var c = norm.forDetection;
+    if (!c) {
+      return { ok: false, reason: "empty", collapsed: "", display: "" };
+    }
+    if (c.length > 64) {
+      return { ok: false, reason: "too_long", collapsed: c, display: norm.collapsed };
+    }
+    if (!/^[A-Z0-9\-]+$/.test(c)) {
+      return { ok: false, reason: "bad_chars", collapsed: c, display: norm.collapsed };
+    }
+    return { ok: true, reason: "", collapsed: c, display: norm.collapsed };
+  }
+
   function isUpuLikeCzechPost(t) {
     return /^[A-Z]{2}\d{9}[A-Z]{2}$/.test(t) || /^[A-Z]{2}\d{10}[A-Z]{2}$/.test(t);
   }
@@ -255,6 +274,7 @@
   global.IU_PARCEL_TRACKING_ENGINE = {
     IU_TRACKING_SHIPMENT_STATUS: IU_TRACKING_SHIPMENT_STATUS,
     normalizeTrackingIntent: normalizeTrackingIntent,
+    validateTrackingNumberFormat: validateTrackingNumberFormat,
     detectCarrier: detectCarrier,
     getCarrierDetectionResult: getCarrierDetectionResult,
     buildTrackingDestination: buildTrackingDestination,

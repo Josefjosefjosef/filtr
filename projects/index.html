@@ -450,6 +450,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=3" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
@@ -793,6 +794,18 @@ style-src 'self' 'unsafe-inline' https:;
                               </div>
                             </div>
                           </div>
+                        </section>
+                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
+                          <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
+                          <div class="iuSilverParcelWatch__row">
+                            <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                            <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
+                          </div>
+                          <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
+                          <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
+                          <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
+                          <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
                         </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
                         <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card iu-holiday-card" data-iu-nameday-gender="unknown" data-iu-daypart="" aria-label="Svátek">
@@ -3382,7 +3395,7 @@ style-src 'self' 'unsafe-inline' https:;
       }catch(_){}
     })();
     </script>
-    <script defer src="/assets/iu-parcel-tracking-engine.js?v=1"></script>
+    <script defer src="/assets/iu-parcel-tracking-engine.js?v=2"></script>
     <script defer src="/assets/iu-home-load-audit.js?v=home-audit-first-shell-stable-2"></script>
     <!-- Opt-in homepage perf (?iuPerfProbe=1): marks from real navigation start (before module app.js). -->
     <script>
@@ -3408,7 +3421,8 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=fix-weather-history-video-premium-20260428"></script>
+    <script type="module" src="/assets/app.js?v=feat-silver-parcel-dashboard-20260429"></script>
+    <script defer src="/assets/iu-silver-parcel-dashboard.js?v=1"></script>
     <script>
     (function(){
       try { document.documentElement.setAttribute("data-iu-html-after-appjs", "reached"); } catch(e){}
