@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T03:06:23.660973Z",
+  "ingestedAt": "2026-04-29T03:35:38.879953Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Před 30 lety odpálili v Bratislavě policistu Remiáše. Roli hrál únos syna Kováče",
+      "url": "https://www.denik.cz/historie/vrazda-roberta-remiase-1996-bratislava-unos-michala-kovace-mladsiho.html",
+      "dt": "2026-04-29T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bratislavě",
+        "hrál",
+        "kováče",
+        "lety",
+        "odpálili",
+        "policistu",
+        "remiáše",
+        "roli",
+        "syna",
+        "únos"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,30 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "NCOZ zasahovala v příbramské nemocnici a na úřadě. Šlo o dokumenty",
-      "url": "https://www.denik.cz/krimi/v-pribramske-nemocnici-a-stredoceskem-krajskem-urade-zasahovala-policie-2026.html",
-      "dt": "2026-04-28T10:03:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dokumenty",
-        "ncoz",
-        "nemocnici",
-        "příbramské",
-        "zasahovala",
-        "úřadě",
-        "šlo"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28431,
+      "bytes": 28792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T02:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -710,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Před 30 lety odpálili v Bratislavě policistu Remiáše. Roli hrál únos syna Kováče",
+            "publishedAt": "2026-04-29T03:00:00Z"
+          },
           {
             "title": "Extrémní proměny: Monika bývala úspěšnou atletkou. Dnes se ani nedívá do zrcadla",
             "publishedAt": "2026-04-29T02:20:00Z"
@@ -737,10 +744,6 @@
           {
             "title": "Rusko se topí v krizi, tvrdí Švédi. Putin má žádat o peníze na válku oligarchy",
             "publishedAt": "2026-04-28T17:30:00Z"
-          },
-          {
-            "title": "Lepší podmínky pro mazlíčky: Europoslanci schválili normu na ochranu psů a koček",
-            "publishedAt": "2026-04-28T16:10:00Z"
           }
         ]
       }
