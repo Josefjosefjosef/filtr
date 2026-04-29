@@ -382,8 +382,13 @@ style-src 'self' 'unsafe-inline' https:;
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
       #iuTvProgramView .iuViewBody{display:block}
       #iuTvProgramView .iuTvProgramView__body{box-sizing:border-box}
-      @media(max-width:900px){
+      @media(max-width:767px){
         #iuTvProgramView .iuTvProgramView__body{padding-bottom:0}
+      }
+      @media(min-width:768px) and (max-width:900px){
+        #iuTvProgramView .iuTvProgramView__body{
+          padding-bottom:max(28px,var(--iu-mobile-bottom-nav-safe-space,calc(56px + env(safe-area-inset-bottom,0px) + 28px)))
+        }
       }
       @media(min-width:901px){
         #iuTvProgramView .iuTvProgramView__body{padding-bottom:max(32px,calc(24px + env(safe-area-inset-bottom, 0px)))}
@@ -470,6 +475,16 @@ style-src 'self' 'unsafe-inline' https:;
       #iuTvPgPrimaPageConfirm .iuTvProgramChoiceOverlay__primaBtn{flex:1 1 auto}
       html.iuTvOverlayScrollLock{overflow:hidden!important}
       html.iuTvOverlayScrollLock body{overflow:hidden!important}
+      #iuTvProgramView .iu-tv-seo-block{box-sizing:border-box;margin:22px auto 0;width:100%;max-width:min(720px,100%);padding:20px 20px 22px;border-radius:16px;border:1px solid rgba(15,23,42,.1);background:rgba(248,250,252,.97);box-shadow:0 4px 22px rgba(7,12,19,.14),0 1px 0 rgba(255,255,255,.55) inset;color:rgba(15,23,42,.92)}
+      #iuTvProgramView .iu-tv-seo-block__title{margin:0 0 12px;font-size:16px;font-weight:900;line-height:1.25;color:var(--iuSectionAccent,#10B981)}
+      #iuTvProgramView .iu-tv-seo-block__lead{margin:0 0 14px;font-size:14px;line-height:1.55;color:rgba(30,41,59,.92)}
+      #iuTvProgramView .iu-tv-seo-block__list{margin:0 0 14px;padding-left:1.2rem;font-size:14px;line-height:1.5;color:rgba(30,41,59,.9)}
+      #iuTvProgramView .iu-tv-seo-block__list li{margin:0 0 8px}
+      #iuTvProgramView .iu-tv-seo-block__list li:last-child{margin-bottom:0}
+      #iuTvProgramView .iu-tv-seo-block__foot{margin:0;font-size:13px;line-height:1.5;color:rgba(51,65,85,.92)}
+      @media(max-width:900px){
+        #iuTvProgramView .iu-tv-seo-block{margin-bottom:12px}
+      }
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
@@ -1691,6 +1706,25 @@ style-src 'self' 'unsafe-inline' https:;
                         <p class="iuTvPgLead">Rychlé odkazy na hlavní TV programy. Odkazy se otevřou v nové kartě.</p>
                         <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="TV programy stanic"></div>
                       </div>
+
+                      <aside class="iu-tv-seo-block" aria-label="Informace o sekci TV program">
+                        <h3 class="iu-tv-seo-block__title">TV program online přehledně</h3>
+                        <p class="iu-tv-seo-block__lead">
+                          Najdi rychle aktuální TV program na dnes večer, filmy, seriály, sportovní přenosy, zprávy i pořady pro děti. Sekce TV program na
+                          infoUzel.cz slouží jako jednoduchý rozcestník na hlavní televizní programy a oficiální přehledy stanic. Vybereš typ obsahu nebo
+                          konkrétní stanici a otevřeš odpovídající TV program v nové kartě.
+                        </p>
+                        <ul class="iu-tv-seo-block__list">
+                          <li>rychlý výběr filmů, seriálů, sportu, zpráv, dětského obsahu a zábavy</li>
+                          <li>odkazy na hlavní TV programy stanic</li>
+                          <li>čistý přehled vhodný pro mobil, tablet i počítač</li>
+                          <li>bez zbytečného hledání a bez zahlcení reklamními prvky</li>
+                        </ul>
+                        <p class="iu-tv-seo-block__foot">
+                          TV program je určený jako praktický rozcestník. Samotné vysílací časy, změny programu a aktuální pořady se vždy řídí informacemi
+                          uvedenými na oficiálních stránkách jednotlivých televizních stanic.
+                        </p>
+                      </aside>
 
                       <div id="iuTvProgramChoiceOverlay" class="iuTvProgramChoiceOverlay" hidden aria-hidden="true">
                         <div class="iuTvProgramChoiceOverlay__backdrop" data-iu-tv-choice-close tabindex="-1" aria-hidden="true"></div>
