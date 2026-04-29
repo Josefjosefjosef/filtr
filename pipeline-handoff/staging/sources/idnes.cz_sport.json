@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T16:31:34.150566Z",
+  "ingestedAt": "2026-04-29T17:00:19.284944Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jak zastavit soupeře? Sebrat mu vlajku! Nové olympijské sporty se představují",
+      "url": "https://www.idnes.cz/oh/los-angeles-2028/nove-olympijske-sporty-los-angeles-2028.A260429_163224_olympiada-losangeles-2028_ikuc",
+      "dt": "2026-04-29T16:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "nové",
+        "olympijské",
+        "představují",
+        "sebrat",
+        "soupeře",
+        "sporty",
+        "vlajku",
+        "zastavit"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Čeští stolní tenisté jasně podlehli Slovinsku, na MS jsou blízko vyřazení",
+      "url": "https://www.idnes.cz/sport/ostatni/ceski-stolni-teniste-ms-slovinsko-londyn-vyrazeni-druzstva.A260429_180635_sporty_kazdt",
+      "dt": "2026-04-29T16:13:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "blízko",
+        "jasně",
+        "podlehli",
+        "slovinsku",
+        "stolní",
+        "tenisté",
+        "vyřazení",
+        "čeští"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -740,60 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V offsidu už 14 let. I kvůli historii chceme Viktorku v lize, hlásí žižkovský trenér",
-      "url": "https://www.idnes.cz/fotbal/domaci-souteze/trener-viktoria-zizkov-jindrich-tichai-utok-na-postup.A260427_184458_fot_dsouteze_pbi",
-      "dt": "2026-04-29T07:08:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chceme",
-        "historii",
-        "hlásí",
-        "kvůli",
-        "let",
-        "lize",
-        "offsidu",
-        "trenér",
-        "viktorku",
-        "žižkovský"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nekoupil jsem si titul, ale hráče, kteří ho vybojovali, hlásí majitel Dynama",
-      "url": "https://www.idnes.cz/hokej/extraliga/hokej-extraliga-play-off-finale-pardubice-trinec-petr-dedek-rozhovor.A260429_044853_hokej_mvo",
-      "dt": "2026-04-29T06:58:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "ale",
-        "dynama",
-        "hlásí",
-        "hráče",
-        "jsem",
-        "kteří",
-        "majitel",
-        "nekoupil",
-        "titul",
-        "vybojovali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 50080,
+      "bytes": 49339,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T15:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T16:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +852,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak zastavit soupeře? Sebrat mu vlajku! Nové olympijské sporty se představují",
+            "publishedAt": "2026-04-29T16:30:00Z"
+          },
+          {
+            "title": "Čeští stolní tenisté jasně podlehli Slovinsku, na MS jsou blízko vyřazení",
+            "publishedAt": "2026-04-29T16:13:00Z"
+          },
           {
             "title": "Dembélé, král fotbalového skvostu: Dva góly, vybojovaná penalta i asistence",
             "publishedAt": "2026-04-29T15:01:00Z"
@@ -879,14 +883,6 @@
           {
             "title": "Mistři dramat v akci, Třinec nikdy nešetří. A i prohrou potvrdil, že je v Česku unikátem",
             "publishedAt": "2026-04-29T13:01:00Z"
-          },
-          {
-            "title": "Osmnáctka je jediný krok od medaile. Ve světovém čtvrtfinále udolala Finsko",
-            "publishedAt": "2026-04-29T12:36:00Z"
-          },
-          {
-            "title": "Spláceli dluh prostitucí? Mafii nevyšla sázka, Černaj měl ztrátu jedenáct milionů",
-            "publishedAt": "2026-04-29T12:26:00Z"
           }
         ]
       }

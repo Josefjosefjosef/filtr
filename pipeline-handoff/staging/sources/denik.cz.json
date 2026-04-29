@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T16:31:34.150566Z",
+  "ingestedAt": "2026-04-29T17:00:19.284944Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Závažné nedostatky. Rada ČRo vyzvala Klempíře k přepracování mediálního zákona",
+      "url": "https://www.denik.cz/z_domova/cesky-rozhlas-medialni-zakon-oto-klempir.html",
+      "dt": "2026-04-29T16:28:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "klempíře",
+        "mediálního",
+        "nedostatky",
+        "přepracování",
+        "rada",
+        "vyzvala",
+        "zákona",
+        "závažné",
+        "čro"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,33 +645,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Kyberšmejdi udeřili naplno, obětí mohl být každý: Za 3 měsíce škoda 800 milionů",
-      "url": "https://www.denik.cz/krimi/cesko-krimi-kybersmejdi-falesni-policiste-a-bankeri-utoci-v-cesku-rekordni-skody.html",
-      "dt": "2026-04-29T08:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "800",
-        "být",
-        "každý",
-        "kyberšmejdi",
-        "milionů",
-        "měsíce",
-        "naplno",
-        "obětí",
-        "udeřili",
-        "škoda"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -656,7 +655,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29988,
+      "bytes": 29929,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -693,7 +692,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T15:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T16:28:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -709,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Závažné nedostatky. Rada ČRo vyzvala Klempíře k přepracování mediálního zákona",
+            "publishedAt": "2026-04-29T16:28:00Z"
+          },
           {
             "title": "Unikátní operace: Lékaři zachránili pacientce ruku, použili „břišního policajta“",
             "publishedAt": "2026-04-29T15:40:00Z"
@@ -736,10 +739,6 @@
           {
             "title": "Nezapomenutelná podívaná v Mostě: Histo Cup s sebou přináší to nejzajímavější",
             "publishedAt": "2026-04-29T13:00:00Z"
-          },
-          {
-            "title": "Karel III. si utahoval z Donalda Trumpa: Bez nás byste mluvili francouzsky",
-            "publishedAt": "2026-04-29T12:55:00Z"
           }
         ]
       }

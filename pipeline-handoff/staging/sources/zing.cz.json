@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-29T16:31:34.150566Z",
+  "ingestedAt": "2026-04-29T17:00:19.284944Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Květnová nabídka her v PlayStation Plus byla oficiálně představena",
+      "url": "https://zing.cz/article/kvetnova-nabidka-her-v-playstation-plus-byla-oficialne-predstavena",
+      "dt": "2026-04-29T16:30:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "her",
+        "květnová",
+        "nabídka",
+        "oficiálně",
+        "playstation",
+        "plus",
+        "představena"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -953,32 +977,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Vychází druhoválečná strategie a nová hra od ceněného studia Double Fine",
-      "url": "https://zing.cz/article/vychazi-druhovalecna-strategie-a-nova-hra-od-ceneneho-studia-double-fine",
-      "dt": "2026-04-24T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "ceněného",
-        "double",
-        "druhoválečná",
-        "fine",
-        "hra",
-        "nová",
-        "strategie",
-        "studia",
-        "vychází"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -989,7 +987,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125198,
+      "bytes": 125169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1026,7 +1024,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T16:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1042,6 +1040,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Květnová nabídka her v PlayStation Plus byla oficiálně představena",
+            "publishedAt": "2026-04-29T16:30:00Z"
+          },
           {
             "title": "České studio Amanita Design oznámilo datum vydání hry Phonopolis",
             "publishedAt": "2026-04-29T16:00:00Z"
@@ -1069,10 +1071,6 @@
           {
             "title": "2K přidává ve spolupráci s Denuvem do svých her další vrstvu ochrany",
             "publishedAt": "2026-04-29T06:00:00Z"
-          },
-          {
-            "title": "Studio Spiders bylo uzavřeno, autoři her GreedFall a Steelrising končí",
-            "publishedAt": "2026-04-29T04:00:00Z"
           }
         ]
       }
