@@ -544,6 +544,122 @@ async function runSmoke() {
     if (!silverParcelDup || !silverParcelDup.ok) {
       fail(`Silver parcel duplicate guard: ${JSON.stringify(silverParcelDup)}`);
     }
+
+    const smsSample =
+      "Nyni k vydeji! Heslo 1369168. Zasilka Z1904219183.Po-Ne 00:05-23:55; 01.05.2026 00:05-23:55. Cerpaci stanice MEDOS, Ceskobrodska 831.";
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(200);
+    const overflow390 = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    );
+    if (overflow390) {
+      fail("Silver parcel detail: mobile overflowX must be false before detail edit");
+    }
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.waitForTimeout(200);
+    const overflow768 = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    );
+    if (overflow768) {
+      fail("Silver parcel detail: tablet overflowX must be false before detail edit");
+    }
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.waitForTimeout(200);
+
+    await page.locator(".iuSilverParcelWatch__btnDetailAdd").first().click();
+    await page.waitForTimeout(300);
+    const detailTa = page.locator(".iuSilverParcelWatch__detailTextarea").first();
+    await detailTa.waitFor({ state: "visible", timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    const detailFs = await detailTa.evaluate((el) => parseFloat(getComputedStyle(el).fontSize) || 0);
+    if (detailFs < 16) {
+      fail(`Silver parcel detail textarea font-size must be >=16px, got ${detailFs}`);
+    }
+    await detailTa.fill(smsSample);
+    await page
+      .locator(".iuSilverParcelWatch__detailEditActions .iuSilverParcelWatch__btnSecondary")
+      .filter({ hasText: "Uložit" })
+      .click();
+    await page.waitForTimeout(500);
+    const silverParcelDetailProof = await page.evaluate(() => {
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      const ov =
+        document.documentElement.scrollWidth > document.documentElement.clientWidth + 1;
+      const ls = (() => {
+        try {
+          return localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+        } catch (_) {
+          return "";
+        }
+      })();
+      return {
+        hasDetailLine: t.indexOf("Připraveno k vyzvednutí") >= 0,
+        hasPassword: t.indexOf("1369168") >= 0,
+        hasAddr: t.indexOf("MEDOS") >= 0,
+        hasHours: t.indexOf("Po–Ne") >= 0 || t.indexOf("Po-Ne") >= 0,
+        navCount: document.querySelectorAll(".iuSilverParcelWatch__btnDetailNav").length,
+        lsHasDetail: ls.indexOf("detailRawText") >= 0,
+        overflowX: ov,
+      };
+    });
+    if (!silverParcelDetailProof.hasDetailLine) {
+      fail("Silver parcel detail: expected parsed status line");
+    }
+    if (!silverParcelDetailProof.hasPassword) {
+      fail("Silver parcel detail: expected password in card");
+    }
+    if (!silverParcelDetailProof.hasAddr) {
+      fail("Silver parcel detail: expected address in card");
+    }
+    if (!silverParcelDetailProof.hasHours) {
+      fail("Silver parcel detail: expected opening hours line");
+    }
+    if (silverParcelDetailProof.navCount < 1) {
+      fail("Silver parcel detail: expected Navigovat for parsed address");
+    }
+    if (!silverParcelDetailProof.lsHasDetail) {
+      fail("Silver parcel detail: expected detailRawText in localStorage");
+    }
+    if (silverParcelDetailProof.overflowX) {
+      fail("Silver parcel detail: overflowX must be false");
+    }
+    const parserOk = await page.evaluate((sample) => {
+      if (typeof globalThis.iuParseParcelUserDetail !== "function") return false;
+      var p = globalThis.iuParseParcelUserDetail(sample);
+      return !!(
+        p &&
+        p.statusHeadline === "Připraveno k vyzvednutí" &&
+        p.password === "1369168" &&
+        p.addressLine &&
+        String(p.addressLine).indexOf("MEDOS") >= 0 &&
+        p.openingHours
+      );
+    }, smsSample);
+    if (!parserOk) {
+      fail("Silver parcel detail: iuParseParcelUserDetail sample parse mismatch");
+    }
+    await page
+      .locator(".iuSilverParcelWatch__btnDetailLink")
+      .filter({ hasText: "Odstranit detail" })
+      .click();
+    await page.waitForTimeout(400);
+    const afterRemove = await page.evaluate(() => {
+      var ls = "";
+      try {
+        ls = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+      } catch (_) {}
+      return {
+        lsHasDetail: ls.indexOf("detailRawText") >= 0,
+        hasAdd: !!document.querySelector(".iuSilverParcelWatch__btnDetailAdd"),
+      };
+    });
+    if (afterRemove.lsHasDetail) {
+      fail("Silver parcel detail: detailRawText must be removed after Odstranit");
+    }
+    if (!afterRemove.hasAdd) {
+      fail("Silver parcel detail: Přidat detail must return after remove");
+    }
+
     const parcelsBtn = await page.$("#iuParcelsBtn");
     if (parcelsBtn) {
       await parcelsBtn.click();

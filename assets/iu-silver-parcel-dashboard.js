@@ -2,11 +2,65 @@
  * Silver-only dashboard: localStorage + IU_SILVER_PARCEL_FACADE / IU_PARCEL_TRACKING_ENGINE.
  * Does not open MindMenu parcels overlay; does not duplicate carrier URL logic.
  */
+
+/**
+ * Parse optional user-pasted SMS / note. Conservative: only patterns we recognize;
+ * never invent data. Used only for local display on the Silver parcel card.
+ * @param {string} text
+ * @returns {{ version: number, statusHeadline: string|null, password: string|null, openingHours: string|null, addressLine: string|null, addressDisplay: string|null, hasStructured: boolean }}
+ */
+function iuParseParcelUserDetail(text) {
+  var t = String(text || "").trim();
+  var base = {
+    version: 1,
+    statusHeadline: null,
+    password: null,
+    openingHours: null,
+    addressLine: null,
+    addressDisplay: null,
+    hasStructured: false,
+  };
+  if (!t) return base;
+  if (
+    /\bk\s+vydeji\b/i.test(t) ||
+    /\bk\s+výdeji\b/i.test(t) ||
+    /\bk\s+vyzvednut(i|í)\b/i.test(t)
+  ) {
+    base.statusHeadline = "Připraveno k vyzvednutí";
+  }
+  var hp = t.match(/\bHeslo\s+(\d{4,10})\b/i);
+  if (hp) base.password = hp[1];
+  var op = t.match(/\bPo[-–]Ne\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/i);
+  if (op) {
+    base.openingHours = "Po–Ne " + op[1] + "–" + op[2];
+  }
+  var ap = t.match(/(?:Cerpaci|Čerpací)\s+stanic[ei]\s+([^.\n\r]+)/i);
+  if (ap) {
+    var body = String(ap[1] || "").trim();
+    if (body) {
+      base.addressLine = body;
+      base.addressDisplay = "Čerpací stanice " + body;
+    }
+  }
+  base.hasStructured = !!(
+    base.statusHeadline ||
+    base.password ||
+    base.openingHours ||
+    base.addressLine
+  );
+  return base;
+}
+
+try {
+  globalThis.iuParseParcelUserDetail = iuParseParcelUserDetail;
+} catch (_) {}
+
 (function () {
   "use strict";
 
   var LS_KEY = "iu_silver_parcel_watch_v1";
   var MAX = 10;
+  var detailEditId = null;
   var ERR_FORMAT =
     "Neplatný formát čísla zásilky. Zkontroluj číslo a zkus to znovu.";
   var ERR_LIMIT = "Limit 10 zásilek dosažen. Nejdřív jednu zásilku odeber.";
@@ -189,6 +243,163 @@
     }
   }
 
+  function renderDetailSection(item, host, isEditing) {
+    host.innerHTML = "";
+    var hasStored = item.detailRawText && String(item.detailRawText).trim();
+    var parsed =
+      item.detailParsed && typeof item.detailParsed === "object"
+        ? item.detailParsed
+        : null;
+    if (!parsed && hasStored) {
+      parsed = iuParseParcelUserDetail(String(item.detailRawText));
+    }
+
+    if (!hasStored && !isEditing) {
+      var addB = document.createElement("button");
+      addB.type = "button";
+      addB.className = "iuSilverParcelWatch__btnDetailAdd";
+      addB.textContent = "➕ Přidat detail";
+      addB.addEventListener("click", function () {
+        detailEditId = item.id;
+        render();
+      });
+      host.appendChild(addB);
+      return;
+    }
+
+    if (isEditing) {
+      var ta = document.createElement("textarea");
+      ta.className = "iuSilverParcelWatch__detailTextarea";
+      ta.setAttribute(
+        "aria-label",
+        "Vlož zprávu od dopravce nebo vlastní poznámku",
+      );
+      ta.placeholder = "Vlož zprávu od dopravce nebo vlastní poznámku";
+      ta.value = item.detailRawText ? String(item.detailRawText) : "";
+      var rowBtn = document.createElement("div");
+      rowBtn.className = "iuSilverParcelWatch__detailEditActions";
+      var saveB = document.createElement("button");
+      saveB.type = "button";
+      saveB.className = "iuSilverParcelWatch__btnSecondary";
+      saveB.textContent = "Uložit";
+      var cancelB = document.createElement("button");
+      cancelB.type = "button";
+      cancelB.className = "iuSilverParcelWatch__btnGhost";
+      cancelB.textContent = "Zrušit";
+      saveB.addEventListener("click", function () {
+        var raw = String(ta.value || "").trim();
+        var list = readList();
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].id === item.id) {
+            if (raw) {
+              list[i].detailRawText = raw;
+              list[i].detailParsed = iuParseParcelUserDetail(raw);
+              list[i].detailUpdatedAt = Date.now();
+            } else {
+              delete list[i].detailRawText;
+              delete list[i].detailParsed;
+              delete list[i].detailUpdatedAt;
+            }
+            break;
+          }
+        }
+        writeList(list);
+        detailEditId = null;
+        render();
+      });
+      cancelB.addEventListener("click", function () {
+        detailEditId = null;
+        render();
+      });
+      rowBtn.appendChild(saveB);
+      rowBtn.appendChild(cancelB);
+      host.appendChild(ta);
+      host.appendChild(rowBtn);
+      return;
+    }
+
+    var structured = parsed && parsed.hasStructured;
+    if (structured) {
+      if (parsed.statusHeadline) {
+        var d1 = document.createElement("div");
+        d1.className = "iuSilverParcelWatch__detailLine";
+        d1.textContent = "📦 " + parsed.statusHeadline;
+        host.appendChild(d1);
+      }
+      if (parsed.addressDisplay) {
+        var d2 = document.createElement("div");
+        d2.className = "iuSilverParcelWatch__detailLine";
+        d2.textContent = "📍 " + parsed.addressDisplay;
+        host.appendChild(d2);
+      }
+      if (parsed.password) {
+        var d3 = document.createElement("div");
+        d3.className = "iuSilverParcelWatch__detailLine";
+        d3.textContent = "🔑 Heslo: " + parsed.password;
+        host.appendChild(d3);
+      }
+      if (parsed.openingHours) {
+        var d4 = document.createElement("div");
+        d4.className = "iuSilverParcelWatch__detailLine";
+        d4.textContent = "🕒 " + parsed.openingHours;
+        host.appendChild(d4);
+      }
+      if (parsed.addressLine && String(parsed.addressLine).trim()) {
+        var navD = document.createElement("button");
+        navD.type = "button";
+        navD.className =
+          "iuSilverParcelWatch__btnSecondary iuSilverParcelWatch__btnDetailNav";
+        navD.textContent = "Navigovat";
+        navD.addEventListener("click", function () {
+          window.open(
+            mapsUrlForQuery(parsed.addressLine),
+            "_blank",
+            "noopener,noreferrer",
+          );
+        });
+        host.appendChild(navD);
+      }
+    } else {
+      var rawDiv = document.createElement("div");
+      rawDiv.className = "iuSilverParcelWatch__detailRaw";
+      rawDiv.textContent = String(item.detailRawText || "");
+      host.appendChild(rawDiv);
+    }
+
+    var editRow = document.createElement("div");
+    editRow.className = "iuSilverParcelWatch__detailManage";
+    var editB = document.createElement("button");
+    editB.type = "button";
+    editB.className = "iuSilverParcelWatch__btnDetailLink";
+    editB.textContent = "Upravit detail";
+    editB.addEventListener("click", function () {
+      detailEditId = item.id;
+      render();
+    });
+    var delB = document.createElement("button");
+    delB.type = "button";
+    delB.className =
+      "iuSilverParcelWatch__btnDetailLink iuSilverParcelWatch__btnDetailLink--danger";
+    delB.textContent = "Odstranit detail";
+    delB.addEventListener("click", function () {
+      var list = readList();
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].id === item.id) {
+          delete list[i].detailRawText;
+          delete list[i].detailParsed;
+          delete list[i].detailUpdatedAt;
+          break;
+        }
+      }
+      writeList(list);
+      if (detailEditId === item.id) detailEditId = null;
+      render();
+    });
+    editRow.appendChild(editB);
+    editRow.appendChild(delB);
+    host.appendChild(editRow);
+  }
+
   function renderCard(item) {
     var wrap = document.createElement("div");
     wrap.className = "iuSilverParcelWatch__card";
@@ -275,6 +486,11 @@
       glsRow.appendChild(glsBtn);
       wrap.appendChild(glsRow);
     }
+
+    var detailHost = document.createElement("div");
+    detailHost.className = "iuSilverParcelWatch__detailHost";
+    renderDetailSection(item, detailHost, detailEditId === item.id);
+    wrap.appendChild(detailHost);
 
     var actions = document.createElement("div");
     actions.className = "iuSilverParcelWatch__actions";
