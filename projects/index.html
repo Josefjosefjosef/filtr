@@ -317,17 +317,6 @@ style-src 'self' 'unsafe-inline' https:;
       .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
       .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
       .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
-      /* P0 mobile/tablet adaptive typography ≤768: posun od (i), 1 řádek meta, fluid clamp + pill inherit; desktop beze změny. */
-      @media(max-width:768px){
-        #silver-slot #iuSilverWelcomeTextBlock,#iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock{padding-top:12px!important;box-sizing:border-box}
-        #iuSilverWelcomeCard .iuSilverWelcomeMeta,#silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta{white-space:nowrap!important;flex-wrap:nowrap!important;max-width:100%;min-width:0;overflow-x:visible;font-size:clamp(13px,2.8vw,15px)!important;line-height:1.25}
-        .iuSilverWelcomeMetaDateCluster{flex:1 1 auto!important;min-width:0!important;max-width:none}
-        .iuSilverWelcomeMetaSvatekCluster{flex:0 0 auto}
-        #iuSilverWelcomeCard .svatek-pill,#silver-slot #iuSilverWelcomeCard .svatek-pill{font-size:inherit}
-      }
-      @media(max-width:360px){
-        #iuSilverWelcomeCard .iuSilverWelcomeMeta,#silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta{font-size:clamp(12px,3vw,14px)!important;line-height:1.25}
-      }
       #svatekOverlay.iuSvatekOverlayRoot{z-index:99988;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box}
       #svatekOverlay .iuSvatekOverlayCard{width:100%;max-width:340px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;position:relative;contain:none!important}
       #svatekOverlay .iuSvatekOverlayClose{position:absolute;top:12px;right:12px;width:38px;height:38px;padding:0;margin:0;border:none;border-radius:10px;background:#eef2f7;color:#0f172a;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-sizing:border-box}
