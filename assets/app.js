@@ -262,10 +262,9 @@ try {
             if (reg.waiting && navigator.serviceWorker.controller) {
               iuSilentSwReloadFromWorker(reg.waiting);
             }
-            try {
-              var u = reg.update();
-              if (u && typeof u.catch === "function") u.catch(function () {});
-            } catch (e2) {}
+            /* P0 cold start: do NOT call reg.update() here. register() already checks for updates; an immediate
+               update() can race first install (skipWaiting) and surface a transient waiting worker + silent reload,
+               doubling navigations on a clean profile (Playwright + real devices). watchForSWUpdates() still probes. */
           } catch (e) {}
           return navigator.serviceWorker.ready;
         })
