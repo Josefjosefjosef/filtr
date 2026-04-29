@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-29T05:45:09.279990Z",
+  "ingestedAt": "2026-04-29T06:10:33.855743Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Fed i ECB ponechají úrokové sazby beze změny",
+      "url": "https://profitonline.cz/fed-i-ecb-ponechaji-urokove-sazby-beze-zmeny/",
+      "dt": "2026-04-29T06:00:52Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "beze",
+        "ecb",
+        "fed",
+        "ponechají",
+        "sazby",
+        "změny",
+        "úrokové"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,31 +293,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "U Bumbrlíčka vznikla před 100 lety současná největší ochranářská organizace",
-      "url": "https://profitonline.cz/u-bumbrlicka-vznikla-pred-100-lety-soucasna-nejvetsi-ochranarska-organizace/",
-      "dt": "2026-04-25T08:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "100",
-        "bumbrlíčka",
-        "lety",
-        "největší",
-        "ochranářská",
-        "organizace",
-        "současná",
-        "vznikla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -304,7 +303,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18936,
+      "bytes": 18841,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -341,7 +340,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-29T04:00:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:00:52Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -356,6 +355,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Fed i ECB ponechají úrokové sazby beze změny",
+            "publishedAt": "2026-04-29T06:00:52Z"
+          },
           {
             "title": "Brusel chce, aby výše mzdy byla už v inzerátech. V Česku to bude jinak",
             "publishedAt": "2026-04-29T04:00:29Z"
@@ -383,10 +386,6 @@
           {
             "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
             "publishedAt": "2026-04-27T08:00:12Z"
-          },
-          {
-            "title": "The Economist: Jak se Evropa uregulovala do naprosté závislosti na Americe",
-            "publishedAt": "2026-04-27T04:00:25Z"
           }
         ]
       }

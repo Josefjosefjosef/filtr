@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T05:45:09.279990Z",
+  "ingestedAt": "2026-04-29T06:10:33.855743Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na Sokolovsku proběhla další dopravně bezpečnostní akce",
+      "url": "https://tydenikpolicie.cz/na-sokolovsku-probehla-dalsi-dopravne-bezpecnostni-akce/",
+      "dt": "2026-04-29T06:02:46Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "akce",
+        "bezpečnostní",
+        "další",
+        "dopravně",
+        "proběhla",
+        "sokolovsku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -234,33 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rozčílený muž rozbil v Praze pěstí skleněnou výplň dveří odjíždějícího autobusu",
-      "url": "https://tydenikpolicie.cz/rozcileny-muz-rozbil-v-praze-pesti-sklenenou-vypln-dveri-odjizdejiciho-autobusu/",
-      "dt": "2026-04-28T16:49:36Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "autobusu",
-        "dveří",
-        "muž",
-        "odjíždějícího",
-        "praze",
-        "pěstí",
-        "rozbil",
-        "rozčílený",
-        "skleněnou",
-        "výplň"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16151,
+      "bytes": 16159,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T04:02:08Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:02:46Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na Sokolovsku proběhla další dopravně bezpečnostní akce",
+            "publishedAt": "2026-04-29T06:02:46Z"
+          },
           {
             "title": "Dálniční policisté hledají svědky i viníka nehody na dálnici D3",
             "publishedAt": "2026-04-29T04:02:08Z"
@@ -350,10 +350,6 @@
           {
             "title": "Hasiči v Brně likvidovali ve 22. nadzemním podlaží administrativní budovy požár v bateriovém uložišti",
             "publishedAt": "2026-04-28T22:12:11Z"
-          },
-          {
-            "title": "Recidivista si chtěl z prodejny ve Strakonicích odnést batoh plný masa",
-            "publishedAt": "2026-04-28T22:02:11Z"
           }
         ]
       }

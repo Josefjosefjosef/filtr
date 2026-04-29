@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T05:45:09.279990Z",
+  "ingestedAt": "2026-04-29T06:10:33.855743Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "2x vyšší úmrtnost. Ministerstvo chce utnout operace určitých nádorů na malých pracovištích",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/ministerstvo-reformuje-centrovou-peci/",
+      "dt": "2026-04-29T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chce",
+        "malých",
+        "ministerstvo",
+        "nádorů",
+        "operace",
+        "pracovištích",
+        "určitých",
+        "utnout",
+        "vyšší",
+        "úmrtnost"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -238,30 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Alarmující čísla: Proti chřipce se očkuje jen 11 % zdravotníků",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/alarmujici-cisla-proti-chripce-se-ockuje-jen-11-zdravotniku/",
-      "dt": "2026-04-28T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "alarmující",
-        "chřipce",
-        "jen",
-        "očkuje",
-        "proti",
-        "zdravotníků",
-        "čísla"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 85650,
+      "bytes": 92349,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -325,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "2x vyšší úmrtnost. Ministerstvo chce utnout operace určitých nádorů na malých pracovištích",
+            "publishedAt": "2026-04-29T06:00:00Z"
+          },
           {
             "title": "Hrozí dražší zdravotní péče? SPD varuje před dopady plánovaných škrtů",
             "publishedAt": "2026-04-29T05:00:00Z"
@@ -352,10 +359,6 @@
           {
             "title": "V příbramské nemocnici zasahovala policie. Zabavila dokumenty a kamery",
             "publishedAt": "2026-04-28T10:01:52Z"
-          },
-          {
-            "title": "Stamiliony pro zodpovědné: VZP rekordně odměňuje za preventivní prohlídky a screening",
-            "publishedAt": "2026-04-28T09:28:38Z"
           }
         ]
       }

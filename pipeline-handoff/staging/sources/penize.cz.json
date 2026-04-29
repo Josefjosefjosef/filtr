@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-29T05:45:09.279990Z",
+  "ingestedAt": "2026-04-29T06:10:33.855743Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Vyplatí se koučink, nebo je to drahá iluze? Týden s experty nabídne odpovědi",
+      "url": "https://www.penize.cz/spotrebitel/488920-vyplati-se-koucink-nebo-je-to-draha-iluze-tyden-s-experty-nabidne-odpovedi",
+      "dt": "2026-04-29T08:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "drahá",
+        "experty",
+        "iluze",
+        "koučink",
+        "nabídne",
+        "nebo",
+        "odpovědi",
+        "týden",
+        "vyplatí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -476,31 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komerční banka vyplatí rekordní dividendu, schválila valná hromada",
-      "url": "https://www.penize.cz/burza-cennych-papiru-praha/469401-komercni-banka-vyplati-rekordni-dividendu-schvalila-valna-hromada",
-      "dt": "2026-04-23T16:15:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "banka",
-        "dividendu",
-        "hromada",
-        "komerční",
-        "rekordní",
-        "schválila",
-        "valná",
-        "vyplatí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18387,
+      "bytes": 18410,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T05:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "cestovani": 1,
           "finance": 12,
+          "cestovani": 1,
           "sport": 1,
           "zpravy": 5,
           "zdravi": 1
@@ -567,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyplatí se koučink, nebo je to drahá iluze? Týden s experty nabídne odpovědi",
+            "publishedAt": "2026-04-29T08:00:00Z"
+          },
           {
             "title": "Místo letenky jen ztracené peníze. Aerolinky v Česku čelí prvním hromadným žalobám",
             "publishedAt": "2026-04-29T05:05:00Z"
@@ -594,10 +599,6 @@
           {
             "title": "Přehledy pro zdravotní pojišťovny a ČSSZ přehledně krok za krokem",
             "publishedAt": "2026-04-28T05:05:00Z"
-          },
-          {
-            "title": "Psychotest čeká každého pilota, u lékařů povinný není. Expert o náboru lidí i toxické práci",
-            "publishedAt": "2026-04-28T05:00:00Z"
           }
         ]
       }
