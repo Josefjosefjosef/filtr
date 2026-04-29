@@ -375,6 +375,47 @@ async function runSmoke() {
     if (!educationProbe || !educationProbe.ok) {
       fail(`Education preview regression: ${JSON.stringify(educationProbe)}`);
     }
+
+    // Počasí historical inline video must teardown (no background audio) when leaving the section
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=pocasi`);
+    await page.waitForTimeout(1600);
+    try {
+      await page.waitForSelector("#iuWeatherHistoryPlay", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    } catch (e) {
+      fail(`Weather history play control missing: ${e && e.message ? e.message : String(e)}`);
+    }
+    const wxPlayHidden = await page.evaluate(() => {
+      const btn = document.getElementById("iuWeatherHistoryPlay");
+      const card = document.getElementById("iuWeatherHistoryCard");
+      if (!btn) return { ok: false, reason: "no_btn" };
+      if (card && card.hidden) return { ok: false, reason: "card_hidden" };
+      return { ok: true };
+    });
+    if (!wxPlayHidden || !wxPlayHidden.ok) {
+      fail(`Weather history card not ready for play: ${JSON.stringify(wxPlayHidden)}`);
+    }
+    await page.click("#iuWeatherHistoryPlay");
+    await page.waitForTimeout(900);
+    try {
+      await page.waitForSelector("#iuWeatherHistoryPlayerHost iframe.iuVideoIframe", { timeout: 20000 });
+    } catch (e) {
+      fail(`Weather inline iframe missing after play: ${e && e.message ? e.message : String(e)}`);
+    }
+    await page.click('.iu-leftNavItem[data-accent="media"][data-media-topic="all"]');
+    await page.waitForTimeout(900);
+    const wxAutopauseProbe = await page.evaluate(() => {
+      const wv = document.getElementById("iuWeatherView");
+      if (!wv) return { ok: false, reason: "no_weather_view" };
+      const ifr = wv.querySelector("#iuWeatherHistoryPlayerHost iframe, .iu-weather-video-embed-host iframe");
+      const host = document.getElementById("iuWeatherHistoryPlayerHost");
+      const kids = host && typeof host.childElementCount === "number" ? host.childElementCount : -1;
+      const src = ifr && ifr.getAttribute ? String(ifr.getAttribute("src") || "") : "";
+      return { ok: !ifr && kids === 0, hasIframe: !!ifr, hostKids: kids, srcLen: src.length };
+    });
+    if (!wxAutopauseProbe || !wxAutopauseProbe.ok) {
+      fail(`Weather video autopause regression: ${JSON.stringify(wxAutopauseProbe)}`);
+    }
+
     await page.click("#iuFinancePreviewCard");
     await page.waitForTimeout(500);
     const afterFinanceClick = page.url();
