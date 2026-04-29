@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T04:04:55.532744Z",
+  "ingestedAt": "2026-04-29T04:30:07.280154Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čína rozjela diplomatickou ofenzivu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/cina-rozjela-diplomatickou-ofenzivu-372909",
+      "dt": "2026-04-29T04:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "diplomatickou",
+        "ofenzivu",
+        "rozjela",
+        "čína"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -724,29 +745,6 @@
         "zadržela",
         "zasahovala",
         "úřadě"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Koloseum chystá obranu proti překupníkům se vstupenkami",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/listky-na-italske-pamatky-vykupuji-prekupnici-koloseum-uz-proti-nim-chysta-opatreni-372882",
-      "dt": "2026-04-28T09:49:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chystá",
-        "koloseum",
-        "obranu",
-        "proti",
-        "překupníkům",
-        "vstupenkami"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1531,7 +1529,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42786,
+      "bytes": 42557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1591,11 +1589,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T02:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T04:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 2,
           "zpravy": 27,
+          "other": 2,
           "finance": 1
         },
         "drop_counts": {
@@ -1608,6 +1606,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čína rozjela diplomatickou ofenzivu",
+            "publishedAt": "2026-04-29T04:01:00Z"
+          },
           {
             "title": "Zpráva o klimatu v Evropě za rok 2025: rekordní vlny veder i úbytek ledovců",
             "publishedAt": "2026-04-29T02:00:00Z"
@@ -1635,10 +1637,6 @@
           {
             "title": "Jaro je pro plazy kritické. Hady v Podyjí ohrožují cyklisté",
             "publishedAt": "2026-04-28T18:05:30Z"
-          },
-          {
-            "title": "Na post náčelníka generálního štábu jsou čtyři kandidáti, uvedl Zůna",
-            "publishedAt": "2026-04-28T18:05:06Z"
           }
         ]
       }
@@ -1744,7 +1742,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77389,
+      "bytes": 77393,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

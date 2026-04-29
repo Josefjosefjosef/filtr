@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T04:04:55.532744Z",
+  "ingestedAt": "2026-04-29T04:30:07.280154Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Polský Štětín jako Paříž severu. Překvapí moderní tváří, třeba na cestě k Baltu",
+      "url": "https://www.denik.cz/staty-eu/polsky-stetin-jako-pariz-severu-prekvapi-moderni-tvari-na-ceste-k-baltu.html",
+      "dt": "2026-04-29T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "baltu",
+        "cestě",
+        "jako",
+        "moderní",
+        "paříž",
+        "polský",
+        "překvapí",
+        "severu",
+        "tváří",
+        "třeba",
+        "štětín"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -623,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rakousko zpřísňuje pravidla. I Češi mohou za vjezd do měst vyfasovat obří pokutu",
-      "url": "https://www.denik.cz/staty-eu/rakousko-zakaz-vjezdu-budou-sledovat-kamery-hrozi-pokuty.html",
-      "dt": "2026-04-28T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "měst",
-        "obří",
-        "pokutu",
-        "pravidla",
-        "rakousko",
-        "vjezd",
-        "vyfasovat",
-        "zpřísňuje",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28826,
+      "bytes": 29075,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,11 +698,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 22,
+          "finance": 2,
           "zdravi": 1
         },
         "drop_counts": {
@@ -713,6 +715,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Polský Štětín jako Paříž severu. Překvapí moderní tváří, třeba na cestě k Baltu",
+            "publishedAt": "2026-04-29T04:05:00Z"
+          },
           {
             "title": "Čas na elektronické podání daní se krátí: Termín, jak neudělat chybu, co sankce",
             "publishedAt": "2026-04-29T03:30:00Z"
@@ -740,10 +746,6 @@
           {
             "title": "Řidič autobusu v Polsku děsil cestující. Srazil zvíře, s rozbitým sklem jel dál",
             "publishedAt": "2026-04-28T19:28:00Z"
-          },
-          {
-            "title": "Ruský exprezident Medveděv píše učebnice. Školáky poučí o společenských vědách",
-            "publishedAt": "2026-04-28T17:53:00Z"
           }
         ]
       }
