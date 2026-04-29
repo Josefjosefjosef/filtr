@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>infoUzel.cz</title>
 
-  <!-- fallback redirect -->
-  <meta http-equiv="refresh" content="0; url=/projects/" />
-
   <style>
     html, body {
       margin: 0;
@@ -27,8 +24,17 @@
   <script>
     (function () {
       try {
+        var p = String(location.pathname || "").replace(/\\/g, "/");
         var target = "/projects/";
-        if (location.pathname !== target) location.replace(target);
+        if (p === target || p.indexOf("/projects/") === 0) return;
+        var host = String(location.hostname || "").toLowerCase();
+        /* P0: prod canonical host is apex — relative replace to /projects/ on www costs an extra full
+           navigation (www/projects → apex) after this shell; jump straight to apex /projects/ (one less document). */
+        if (host === "www.infouzel.cz") {
+          location.replace("https://infouzel.cz/projects/");
+          return;
+        }
+        location.replace(target);
       } catch (e) {}
     })();
   </script>

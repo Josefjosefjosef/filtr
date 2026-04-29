@@ -282,14 +282,29 @@ try {
           function hardReloadIfStillNoController() {
             if (navigator.serviceWorker.controller) {
               markSwSettled();
+              try {
+                sessionStorage.removeItem("iu_sw_hard_reload_once");
+              } catch (eClr) {}
               return;
             }
+            /* P0 cold / slow networks: claim() can attach after serviceWorker.ready; 600ms caused an extra
+               full reload + visible blink on first visit. One hard reload max per tab session if still no controller. */
+            try {
+              if (sessionStorage.getItem("iu_sw_hard_reload_once") === "1") {
+                markSwSettled();
+                return;
+              }
+              sessionStorage.setItem("iu_sw_hard_reload_once", "1");
+            } catch (eOnce) {}
             markSwSettled();
             location.reload();
           }
           try {
             navigator.serviceWorker.addEventListener("controllerchange", function onCc() {
               if (navigator.serviceWorker.controller) {
+                try {
+                  sessionStorage.removeItem("iu_sw_hard_reload_once");
+                } catch (eR0) {}
                 try {
                   navigator.serviceWorker.removeEventListener("controllerchange", onCc);
                 } catch (eR) {}
@@ -306,6 +321,9 @@ try {
           try {
             window.queueMicrotask(function () {
               if (navigator.serviceWorker.controller) {
+                try {
+                  sessionStorage.removeItem("iu_sw_hard_reload_once");
+                } catch (eMs) {}
                 if (tid !== null) {
                   try {
                     clearTimeout(tid);
@@ -318,6 +336,9 @@ try {
           } catch (eQ) {
             window.setTimeout(function () {
               if (navigator.serviceWorker.controller) {
+                try {
+                  sessionStorage.removeItem("iu_sw_hard_reload_once");
+                } catch (eMs2) {}
                 if (tid !== null) {
                   try {
                     clearTimeout(tid);
@@ -328,7 +349,7 @@ try {
               }
             }, 0);
           }
-          tid = window.setTimeout(hardReloadIfStillNoController, 600);
+          tid = window.setTimeout(hardReloadIfStillNoController, 4000);
         })
         .catch(function () {});
     } catch (e) {}
