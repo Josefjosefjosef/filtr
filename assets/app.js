@@ -6574,6 +6574,19 @@ function buildVideoAsArticleCard(it) {
       }catch{}
       return (typeof window.innerWidth === "number" ? window.innerWidth : 1024) > 900;
     }
+    /** P0 welcome meta řádek data: „Je …“ jen mobile/tablet (≤1024px); desktop (≥1025px) ponechá „Dnes je …“. */
+    function silverWelcomeMetaDateLinePrefix(win){
+      let w = win;
+      try{
+        if (!w || typeof w.matchMedia !== "function") w = window;
+      }catch(_){ w = window; }
+      let narrow = false;
+      try{
+        if (typeof w.matchMedia === "function") narrow = w.matchMedia("(max-width: 1024px)").matches;
+        else if (typeof w.innerWidth === "number") narrow = w.innerWidth <= 1024;
+      }catch(_){}
+      return narrow ? "Je " : "Dnes je ";
+    }
     function fitMetaFont(){
       try{
         if (!metaEl) return;
@@ -6717,7 +6730,11 @@ function buildVideoAsArticleCard(it) {
           const doc = metaEl.ownerDocument;
           const dateCluster = doc.createElement("span");
           dateCluster.className = "iuSilverWelcomeMetaDateCluster";
-          dateCluster.appendChild(doc.createTextNode("Dnes je "));
+          const winForMq =
+            metaEl && metaEl.ownerDocument && metaEl.ownerDocument.defaultView
+              ? metaEl.ownerDocument.defaultView
+              : window;
+          dateCluster.appendChild(doc.createTextNode(silverWelcomeMetaDateLinePrefix(winForMq)));
           if (dlongParts){
             if (wLower){
               const spanWd = doc.createElement("span");
@@ -6803,6 +6820,18 @@ function buildVideoAsArticleCard(it) {
 
     window.iuSilverWelcomeRefresh = refresh;
     window.iuSilverWelcomeScheduleFit = scheduleSilverWelcomeFit;
+
+    try{
+      if (!window.__iuSilverWelcomeJePrefixMq){
+        window.__iuSilverWelcomeJePrefixMq = 1;
+        const mqJe = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 1024px)") : null;
+        const onJeMq = function(){
+          try{ refresh(); }catch(_){}
+        };
+        if (mqJe && typeof mqJe.addEventListener === "function") mqJe.addEventListener("change", onJeMq);
+        else if (mqJe && typeof mqJe.addListener === "function") mqJe.addListener(onJeMq);
+      }
+    }catch(_){}
 
     try{
       iuPoprejEnsureMobileCssInjected();
