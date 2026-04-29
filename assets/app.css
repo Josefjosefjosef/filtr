@@ -15516,28 +15516,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   #iuMobileSilverSlot #silver-slot #iuSilverWeatherCard{
     min-height: 120px !important;
   }
-  #silver-slot #iuHolidayMonetizeCard,
-  #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
-    min-height: 0 !important;
-  }
-  
   #silver-slot #iuSilverHeroPremium,
   #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium{
     padding-bottom: 10px !important;
     margin-bottom: 1px !important;
   }
   
-  #iuHolidayMonetizeCard.iu-holiday-monetize-card{
-    padding-bottom: 10px !important;
-    margin-top: 13px !important;
-    min-height: 0 !important;
-  }
-  @media (min-width: 768px) and (max-width: 1024px){
-    #silver-slot #iuHolidayMonetizeCard.iu-holiday-monetize-card,
-    #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard.iu-holiday-monetize-card{
-      margin-top: 14px !important;
-    }
-  }
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;
   }
@@ -16209,8 +16193,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   
   #silver-slot #iuSilverHeroPremium,
-  #silver-slot #iuSilverWelcomeStackSeparatorHeroHoliday,
-  #silver-slot #iuHolidayMonetizeCard,
   #silver-slot #iuSilverWelcomeStackSeparatorHolidayWeather{
     display: none !important;
   }
@@ -21099,10 +21081,6 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   #silver-slot #iuInfoCardsMobileTablet,
   #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet{
     min-height: 160px !important;
-  }
-  #silver-slot #iuHolidayMonetizeCard,
-  #iuMobileSilverSlot #silver-slot #iuHolidayMonetizeCard{
-    min-height: 0 !important;
   }
   #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions{
     min-height: 72px !important;

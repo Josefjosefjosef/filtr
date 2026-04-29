@@ -123,18 +123,10 @@ style-src 'self' 'unsafe-inline' https:;
       .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTile{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:center;pointer-events:none;display:block}
       #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile{gap:0!important}
       #iuMobileGatePanelTools .mindMenu .iu-mmTopTool.iu-mmTopTool--imageTile .iu-mmTopToolImageTileWrap{flex:1 1 auto!important;align-self:stretch!important;min-height:0!important;min-width:0!important;width:100%!important}
-      /* P0: mobile/tablet Silver hero + holiday + mini overview — inline kvůli css_debt_guard (app.css size baseline). */
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn,
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:hover,
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayMaleAccent)}
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn,
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:hover,
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn:active{color:var(--iuNamedayFemaleAccent)}
+      /* P0: mobile/tablet Silver hero + mini overview — inline kvůli css_debt_guard (app.css size baseline). */
       #silver-slot #iuSilverWelcomeStack>.silver-welcome-stack__separator{display:none!important}
       @media(max-width:1024px){
         .iu-nameday-cta--slotDesktop{display:none!important}
-        #iuSilverWelcomeStackSeparatorHeroHoliday{display:none!important;height:0!important;min-height:0!important;max-height:0!important;margin:0!important;opacity:0!important}
-        .silver-welcome-stack--evening #iuSilverWelcomeStackSeparatorHeroHoliday{background:linear-gradient(180deg,rgba(15,36,56,.35) 0%,rgba(22,45,68,.5) 100%)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--morning{background:linear-gradient(135deg,#f8fbff 0%,#eef5ff 50%,#e4ecfa 100%)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--lateMorning{background:linear-gradient(135deg,#f8fbff 0%,#eef5ff 50%,#e4ecfa 100%)!important}
         #iuSilverWelcomeStack.silver-welcome-stack--afternoon{background:#ffffff!important}
@@ -178,38 +170,6 @@ style-src 'self' 'unsafe-inline' https:;
         #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputRow.iuSilverHomeComposerShell,#iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInputRow.iuSilverHomeComposerShell{width:100%!important;max-width:100%!important;min-width:0!important;align-self:stretch!important;box-sizing:border-box!important}
         #silver-slot #iuSilverWelcomeCard{padding-top:8px!important;padding-bottom:0!important}
         #silver-slot #iuSilverWelcomeTextBlock{gap:2px!important}
-        #iuHolidayMonetizeCard.iu-holiday-monetize-card{width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;box-sizing:border-box;padding:10px 12px 12px;margin:12px 10px 0 10px;border:1px solid rgba(20,45,75,.14);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(248,251,255,.96) 100%);box-shadow:0 8px 22px rgba(15,35,55,.1),inset 0 1px 0 rgba(255,255,255,.76)}
-        #iuSilverWelcomeStack.silver-welcome-stack--morning #iuHolidayMonetizeCard.iu-holiday-monetize-card{background:radial-gradient(ellipse 105% 68% at 52% 20%,rgba(255,255,255,.72) 0%,transparent 54%),radial-gradient(ellipse 55% 45% at 88% 78%,rgba(220,232,248,.35) 0%,transparent 50%),linear-gradient(135deg,#f8fbff 0%,#eef5ff 50%,#e4ecfa 100%);border-color:rgba(20,45,75,.12)}
-        #iuSilverWelcomeStack.silver-welcome-stack--lateMorning #iuHolidayMonetizeCard.iu-holiday-monetize-card,
-        #iuSilverWelcomeStack.silver-welcome-stack--afternoon #iuHolidayMonetizeCard.iu-holiday-monetize-card{background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);border-color:rgba(20,45,75,.14)}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard.iu-holiday-monetize-card{border:1px solid rgba(180,200,255,.2)!important;background:rgba(10,18,35,.72)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 12px 36px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.1)!important}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{background:rgba(5,12,26,.58)!important;border:1px solid rgba(147,197,253,.38)!important;color:rgba(191,219,254,.96)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);transition:box-shadow .15s ease,border-color .15s ease,background .15s ease}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn:hover,#iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn:active{background:rgba(8,18,38,.62)!important;border-color:rgba(186,230,253,.5)!important;color:rgba(224,242,254,.99)!important;box-shadow:0 0 20px rgba(56,189,248,.18),inset 0 1px 0 rgba(255,255,255,.1)}
-        #iuHolidayMonetizeCard.iu-holiday-monetize-card{overflow:hidden}
-        #iuHolidayMonetizeCard .iu-holiday-card__row{display:flex!important;flex-flow:row wrap!important;align-items:center!important;gap:8px!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftWrap{flex:0 0 auto!important;align-self:center!important;display:flex;align-items:center;justify-content:center}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftCircle,#iuHolidayMonetizeCard .poprej-icon,#iuNamedayCtaMobile .poprej-icon{width:26px!important;height:26px!important;min-width:26px!important;max-width:26px!important;box-sizing:border-box!important;flex-shrink:0!important;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1)}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftSvg,#iuHolidayMonetizeCard .poprej-icon svg,#iuNamedayCtaMobile .poprej-icon svg{display:block!important;transform:scale(0.8);transform-origin:center}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftCircle{color:var(--iuNamedayMaleAccent)}
-        #iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{color:var(--iuNamedayFemaleAccent)}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftSvg rect,#iuHolidayMonetizeCard .iu-holiday-card__giftSvg ellipse{fill:currentColor!important;stroke:none!important}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftSvg path{fill:currentColor!important;stroke:currentColor!important}
-        #iuHolidayMonetizeCard.iu-holiday-card--male .iu-holiday-card__giftCircle{border-color:color-mix(in srgb,var(--iuNamedayMaleAccent) 72%,#fff 28%);box-shadow:0 0 0 1px color-mix(in srgb,var(--iuNamedayMaleAccent) 35%,transparent)}
-        #iuHolidayMonetizeCard.iu-holiday-card--female .iu-holiday-card__giftCircle{border-color:color-mix(in srgb,var(--iuNamedayFemaleAccent) 75%,#fff 25%);box-shadow:0 0 0 1px color-mix(in srgb,var(--iuNamedayFemaleAccent) 38%,transparent)}
-        #iuHolidayMonetizeCard .iu-holiday-card__giftSvg{display:block;flex:0 0 auto}
-        #iuHolidayMonetizeCard .iu-holiday-card__text{display:block!important;flex:1 1 0!important;min-width:0!important;max-width:100%!important;align-self:center!important;overflow-x:hidden!important;white-space:normal!important;overflow-wrap:anywhere!important;font:inherit!important}
-        #iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard .poprej-title,#iuHolidayMonetizeCard .poprej-subtitle{display:inline!important;margin:0!important;padding:0!important;letter-spacing:-.02em;color:rgba(15,35,55,.96)}
-        #iuHolidayMonetizeCard #iuHolidayLine1,#iuHolidayMonetizeCard .iu-holiday-card__line1,#iuHolidayMonetizeCard .poprej-title{font-size:clamp(.82rem,3vw,.98rem)!important;font-weight:400!important;line-height:1.22!important}
-        #iuHolidayMonetizeCard #iuHolidayLine2,#iuHolidayMonetizeCard .iu-holiday-card__line2,#iuHolidayMonetizeCard .poprej-subtitle{font-size:clamp(.72rem,2.5vw,.88rem)!important;font-weight:400!important;line-height:1.25!important;color:rgba(38,58,82,.78)}
-        #iuHolidayMonetizeCard .poprej-bold{font-weight:600!important}
-        #iuHolidayMonetizeCard #iuHolidayLine2::before,#iuHolidayMonetizeCard .iu-holiday-card__line2::before,#iuHolidayMonetizeCard .poprej-subtitle::before{content:" – "!important;font-weight:400!important}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard #iuHolidayLine1,#iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard .iu-holiday-card__line1,#iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard .poprej-title{color:rgba(252,248,255,.98)}
-        #iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard #iuHolidayLine2,#iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard .iu-holiday-card__line2,#iuSilverWelcomeStack.silver-welcome-stack--evening #iuHolidayMonetizeCard .poprej-subtitle{color:rgba(230,232,248,.82)}
-        #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:center!important;gap:8px!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}
-        #iuHolidayMonetizeCard #iuNamedayCtaMobile.iu-holiday-card__actions .silver-weather-btn{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;white-space:normal!important;line-height:1.08!important;text-align:center!important;overflow-wrap:anywhere!important;word-break:break-word!important;min-height:44px!important;padding-top:10px!important;padding-bottom:10px!important;padding-left:8px!important;padding-right:8px!important;font-size:clamp(10px,2.7vw,12px)!important;font-weight:650!important}
-        #iuHolidayMonetizeCard #iuNamedayCtaMobile .iu-poprej-btnIcon{flex:0 0 auto;width:16px;height:16px;display:block;pointer-events:none}
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="male"] #iuNamedayCtaMobile .silver-weather-btn{border-color:color-mix(in srgb,var(--iuNamedayMaleAccent) 50%,rgba(255,255,255,.22))!important}
-        #iuHolidayMonetizeCard[data-iu-nameday-gender="female"] #iuNamedayCtaMobile .silver-weather-btn{border-color:color-mix(in srgb,var(--iuNamedayFemaleAccent) 52%,rgba(255,255,255,.22))!important}
         #iuSilverWeatherCard #iuSilverWeatherActions{display:none!important}
         .iu-mini-overview-card--weather{border-radius:14px;margin:6px var(--iuSilverStackPadX,12px);padding:10px 12px!important;background:linear-gradient(155deg,rgba(30,58,95,.55) 0%,rgba(15,30,48,.72) 100%);border:1px solid rgba(125,211,252,.18);box-shadow:0 6px 20px rgba(0,0,0,.2)}
         .iu-mini-overview-card--calendar{border-radius:14px;margin:6px var(--iuSilverStackPadX,12px);padding:10px 12px!important;background:linear-gradient(155deg,rgba(55,48,120,.55) 0%,rgba(24,28,52,.78) 100%);border:1px solid rgba(167,139,250,.28);box-shadow:0 6px 20px rgba(0,0,0,.22)}
@@ -242,7 +202,6 @@ style-src 'self' 'unsafe-inline' https:;
       }
       @media(min-width:768px) and (max-width:1024px){
         #iuSilverHeroPremium{margin-top:14px!important}
-        #iuHolidayMonetizeCard.iu-holiday-monetize-card{margin-top:14px!important}
         #silver-slot .iu-info-cards-mobile-tablet{margin-top:14px!important}
         #silver-slot .iu-info-cards-mobile-tablet~#iuSilverWelcomeStackSeparatorTallBefore{margin-top:14px!important}
         #silver-slot #iuSilverTallScrollSection{margin-top:14px!important}
@@ -251,7 +210,6 @@ style-src 'self' 'unsafe-inline' https:;
         #silver-slot .iu-info-cards-mobile-tablet{grid-auto-rows:minmax(112px,auto)}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{font-size:12px;padding:10px 8px!important}
       }
-      @media(min-width:1025px){#iuNamedayCtaMobile,#iuHolidayMonetizeCard{display:none!important}}
       @media(min-width:768px) and (max-width:1024px){
         .iu-hero-figureImg{max-height:220px}
       }
@@ -352,6 +310,35 @@ style-src 'self' 'unsafe-inline' https:;
           }
         }
       }
+    </style>
+    <style id="iuSvatekPillOverlayCss">
+      /* P0: svátek pill + malý overlay — projects/index.html (mimo app.css css_debt_guard). */
+      #iuSilverWelcomeCard{--male-color:var(--iuNamedayMaleAccent);--female-color:var(--iuNamedayFemaleAccent)}
+      .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
+      .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
+      .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
+      @media(max-width:520px){
+        #iuSilverWelcomeCard .iuSilverWelcomeMeta{white-space:normal;flex-wrap:wrap}
+        .iuSilverWelcomeMetaDateCluster{flex:1 0 100%}
+      }
+      #svatekOverlay.iuSvatekOverlayRoot{z-index:99988;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box}
+      #svatekOverlay .iuSvatekOverlayCard{width:100%;max-width:340px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;position:relative;contain:none!important}
+      #svatekOverlay .iuSvatekOverlayClose{position:absolute;top:12px;right:12px;width:38px;height:38px;padding:0;margin:0;border:none;border-radius:10px;background:#eef2f7;color:#0f172a;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-sizing:border-box}
+      #svatekOverlay .iuSvatekOverlayClose:active{transform:scale(.96)}
+      #svatekOverlay .iuSvatekOverlayLead{margin:0 40px 14px 0;font-size:16px;font-weight:600;line-height:1.35;color:rgba(15,30,45,.95)}
+      #svatekOverlay .iuSvatekOverlayActions{display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;align-items:stretch;justify-content:center}
+      #svatekOverlay .iuSvatekOverlayActions .silver-weather-btn{flex:1 1 140px;min-height:44px}
+      .svatek-pill{appearance:none;-webkit-appearance:none;margin:0 0 0 4px;padding:4px 12px;border:1px solid rgba(15,35,55,.16);border-radius:999px;background:rgba(248,250,252,.92);box-shadow:0 1px 2px rgba(15,23,42,.06);font:inherit;font-weight:600;letter-spacing:inherit;line-height:1.2;cursor:pointer;-webkit-tap-highlight-color:transparent;display:inline-flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:6px;min-height:36px;white-space:nowrap;color:inherit;vertical-align:baseline;box-sizing:border-box;max-width:100%}
+      .svatek-pill:hover{background:rgba(241,245,249,.98)}
+      .svatek-pill:active{transform:scale(.99)}
+      .silver-welcome-stack--evening .svatek-pill{background:rgba(15,25,45,.55);border-color:rgba(148,180,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+      .silver-welcome-stack--evening .svatek-pill:hover{background:rgba(20,32,58,.62)}
+      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name{font-weight:700}
+      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-male{color:var(--male-color)}
+      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-female{color:var(--female-color)}
+      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-male~.svatek-icon{color:var(--male-color)}
+      #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name.gender-female~.svatek-icon{color:var(--female-color)}
+      .silver-welcome-stack--evening #iuSilverWelcomeCard .iuSilverWelcomeMeta .svatek-name:not(.gender-male):not(.gender-female){color:rgba(255,255,255,.96)}
     </style>
     <style id="iuTvProgramPremiumCss">
       /* P0 TV program: scoped v projects/index.html (css_debt_guard app.css duplicate + size baseline). */
@@ -848,30 +835,6 @@ style-src 'self' 'unsafe-inline' https:;
                           </div>
                         </div>
                         </div>
-                        <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHeroHoliday" aria-hidden="true"></div>
-                        <section id="iuHolidayMonetizeCard" class="iu-holiday-monetize-card iu-holiday-card" data-iu-nameday-gender="unknown" data-iu-daypart="" aria-label="Svátek">
-                          <div class="iu-holiday-card__row">
-                            <div class="iu-holiday-card__giftWrap" aria-hidden="true">
-                              <div class="iu-holiday-card__giftCircle">
-                                <svg class="iu-holiday-card__giftSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-                                  <rect x="4" y="10" width="16" height="11" rx="2" fill="#ffffff"/>
-                                  <path d="M12 10V21" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-                                  <path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="#ffffff"/>
-                                  <ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
-                                  <ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="#ffffff"/>
-                                </svg>
-                              </div>
-                            </div>
-                            <div class="iu-holiday-card__text">
-                              <div class="iu-holiday-card__line1" id="iuHolidayLine1"><span class="poprej-bold">Popřej oslavence</span></div>
-                              <div class="iu-holiday-card__line2" id="iuHolidayLine2">Dnes má svátek</div>
-                            </div>
-                            <div class="iu-nameday-cta iu-nameday-cta--slotMobile iu-holiday-card__actions" id="iuNamedayCtaMobile" data-iu-nameday-cta-mobile>
-                              <button type="button" class="silver-weather-btn iu-nameday-wish" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 10V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M12 10c-2.2 0-4-1.6-4-3.5h8c0 1.9-1.8 3.5-4 3.5z" fill="currentColor"/><ellipse cx="9" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/><ellipse cx="15" cy="6.5" rx="2.2" ry="2.5" fill="currentColor"/></svg> Vytvořit přání</button>
-                              <button type="button" class="silver-weather-btn iu-nameday-flowers" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="3.5" fill="currentColor"/><circle cx="8" cy="14" r="3.2" fill="currentColor"/><circle cx="16" cy="14" r="3.2" fill="currentColor"/><path fill="currentColor" d="M11 17h2v5h-2z"/></svg> Poslat květiny</button>
-                            </div>
-                          </div>
-                        </section>
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
                           <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
                           <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
@@ -3745,6 +3708,16 @@ style-src 'self' 'unsafe-inline' https:;
       </div>
     </div>
 
+    <div id="svatekOverlay" class="iuModal iuSvatekOverlayRoot" hidden aria-hidden="true">
+      <div class="iuModalCard iuSvatekOverlayCard" role="dialog" aria-modal="true" aria-labelledby="svatekOverlayLead">
+        <button type="button" class="iuSvatekOverlayClose" aria-label="Zavřít">×</button>
+        <p class="iuSvatekOverlayLead" id="svatekOverlayLead">Popřej oslavence – Dnes má svátek</p>
+        <div class="iuSvatekOverlayActions">
+          <button type="button" class="silver-weather-btn" id="svatekOverlayWishBtn">Vytvořit přání</button>
+          <button type="button" class="silver-weather-btn iu-nameday-flowers" id="svatekOverlayFlowersBtn" data-iu-poprej-icon="1"><svg class="iu-poprej-btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="3.5" fill="currentColor"/><circle cx="8" cy="14" r="3.2" fill="currentColor"/><circle cx="16" cy="14" r="3.2" fill="currentColor"/><path fill="currentColor" d="M11 17h2v5h-2z"/></svg> Poslat květiny</button>
+        </div>
+      </div>
+    </div>
     <div id="iuNamedayWishOverlay" class="iuModal" hidden aria-hidden="true">
       <div class="iuModalCard" id="iuNamedayWishCard" role="dialog" aria-modal="true" aria-labelledby="iuNamedayWishTitle">
         <button type="button" class="iu-overlay-close" aria-label="Zavřít">×</button>
