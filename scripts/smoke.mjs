@@ -547,6 +547,43 @@ async function runSmoke() {
 
     const smsSample =
       "Nyni k vydeji! Heslo 1369168. Zasilka Z1904219183.Po-Ne 00:05-23:55; 01.05.2026 00:05-23:55. Cerpaci stanice MEDOS, Ceskobrodska 831.";
+
+    async function assertDetailSaveMicroUx(label) {
+      await page.locator(".iuSilverParcelWatch__btnDetailAdd").first().click();
+      await page.waitForTimeout(280);
+      const ta = page.locator(".iuSilverParcelWatch__detailTextarea").first();
+      await ta.waitFor({ state: "visible", timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+      const saveBtn = page.locator(".iuSilverParcelWatch__detailSave").first();
+      if (!(await saveBtn.isDisabled())) {
+        fail(`Silver parcel detail save: must be disabled when empty (${label})`);
+      }
+      await ta.fill("   ");
+      await page.waitForTimeout(120);
+      if (!(await saveBtn.isDisabled())) {
+        fail(`Silver parcel detail save: must be disabled when spaces-only (${label})`);
+      }
+      await ta.fill("x");
+      await page.waitForTimeout(120);
+      if (await saveBtn.isDisabled()) {
+        fail(`Silver parcel detail save: must be enabled with real text (${label})`);
+      }
+      const activeOk = await page.locator(".iuSilverParcelWatch__detailSave--active").count();
+      if (activeOk < 1) {
+        fail(`Silver parcel detail save: expected --active with text (${label})`);
+      }
+      const greenish = await saveBtn.evaluate((el) => {
+        const s = getComputedStyle(el);
+        const bi = String(s.backgroundImage || "");
+        const bc = String(s.backgroundColor || "");
+        return bi.indexOf("gradient") >= 0 || bc.indexOf("rgb(21, 128, 61)") >= 0 || bc.indexOf("rgb(22,163,74)") >= 0;
+      });
+      if (!greenish) {
+        fail(`Silver parcel detail save: expected green gradient when active (${label})`);
+      }
+      await page.locator(".iuSilverParcelWatch__detailEditActions .iuSilverParcelWatch__btnGhost").filter({ hasText: "Zrušit" }).click();
+      await page.waitForTimeout(250);
+    }
+
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(200);
     const overflow390 = await page.evaluate(
@@ -555,6 +592,8 @@ async function runSmoke() {
     if (overflow390) {
       fail("Silver parcel detail: mobile overflowX must be false before detail edit");
     }
+    await assertDetailSaveMicroUx("390x844");
+
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.waitForTimeout(200);
     const overflow768 = await page.evaluate(
@@ -563,7 +602,9 @@ async function runSmoke() {
     if (overflow768) {
       fail("Silver parcel detail: tablet overflowX must be false before detail edit");
     }
-    await page.setViewportSize({ width: 1366, height: 768 });
+    await assertDetailSaveMicroUx("768x1024");
+
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(200);
 
     await page.locator(".iuSilverParcelWatch__btnDetailAdd").first().click();
@@ -575,10 +616,7 @@ async function runSmoke() {
       fail(`Silver parcel detail textarea font-size must be >=16px, got ${detailFs}`);
     }
     await detailTa.fill(smsSample);
-    await page
-      .locator(".iuSilverParcelWatch__detailEditActions .iuSilverParcelWatch__btnSecondary")
-      .filter({ hasText: "Uložit" })
-      .click();
+    await page.locator(".iuSilverParcelWatch__detailSave").filter({ hasText: "Uložit" }).click();
     await page.waitForTimeout(500);
     const silverParcelDetailProof = await page.evaluate(() => {
       const list = document.getElementById("iuSilverParcelWatchList");
@@ -617,6 +655,14 @@ async function runSmoke() {
     if (silverParcelDetailProof.navCount < 1) {
       fail("Silver parcel detail: expected Navigovat for parsed address");
     }
+    const navGreen = await page.locator(".iuSilverParcelWatch__btnDetailNav--address").first().evaluate((el) => {
+      const s = getComputedStyle(el);
+      const bi = String(s.backgroundImage || "");
+      return bi.indexOf("gradient") >= 0 || String(s.backgroundColor || "").indexOf("128, 61") >= 0;
+    });
+    if (!navGreen) {
+      fail("Silver parcel detail: Navigovat must use green success style when address parsed");
+    }
     if (!silverParcelDetailProof.lsHasDetail) {
       fail("Silver parcel detail: expected detailRawText in localStorage");
     }
@@ -638,6 +684,24 @@ async function runSmoke() {
     if (!parserOk) {
       fail("Silver parcel detail: iuParseParcelUserDetail sample parse mismatch");
     }
+
+    await page
+      .locator(".iuSilverParcelWatch__btnDetailLink")
+      .filter({ hasText: "Odstranit detail" })
+      .click();
+    await page.waitForTimeout(350);
+    await page.locator(".iuSilverParcelWatch__btnDetailAdd").first().click();
+    await page.waitForTimeout(280);
+    await page.locator(".iuSilverParcelWatch__detailTextarea").first().fill("jen poznámka bez adresy a bez hesla");
+    await page.locator(".iuSilverParcelWatch__detailSave").filter({ hasText: "Uložit" }).click();
+    await page.waitForTimeout(450);
+    const noAddrNav = await page.evaluate(() => {
+      return document.querySelectorAll(".iuSilverParcelWatch__btnDetailNav--address").length;
+    });
+    if (noAddrNav !== 0) {
+      fail("Silver parcel detail: Navigovat--address must not appear without parsed address");
+    }
+
     await page
       .locator(".iuSilverParcelWatch__btnDetailLink")
       .filter({ hasText: "Odstranit detail" })
@@ -659,6 +723,9 @@ async function runSmoke() {
     if (!afterRemove.hasAdd) {
       fail("Silver parcel detail: Přidat detail must return after remove");
     }
+
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.waitForTimeout(200);
 
     const parcelsBtn = await page.$("#iuParcelsBtn");
     if (parcelsBtn) {
