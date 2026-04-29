@@ -16680,35 +16680,61 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   color: var(--iuNamedayFemaleAccent);
 }
 
-/* P0 projects: svátek meta row — mobile/tablet typography v app.css (prod cache / pořadí); desktop min-width 769 beze změny. */
+/* P0 projects: svátek meta row — mobile/tablet compact one-line row (no flex-grow date cluster); desktop min-width 769 beze změny. */
 @media (max-width: 768px) {
   #silver-slot #iuSilverWelcomeTextBlock,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock {
     padding-top: 12px;
     box-sizing: border-box;
   }
+  /* Column flex parent defaults to stretch — bez align-self by meta box roztáhl na 100 % a vypadalo to jako space-between. */
+  #silver-slot #iuSilverWelcomeTextBlock > .iuSilverWelcomeMeta,
+  #iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock > .iuSilverWelcomeMeta {
+    align-self: flex-start;
+  }
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
-    display: flex;
+    display: inline-flex;
+    flex-direction: row;
     flex-wrap: nowrap !important;
     align-items: baseline;
-    white-space: nowrap !important;
+    justify-content: flex-start;
+    gap: 0.35em;
+    width: auto;
     max-width: 100%;
     min-width: 0;
+    box-sizing: border-box;
+    white-space: nowrap !important;
     overflow-x: visible;
-    font-size: clamp(13px, 2.8vw, 15px);
+    font-size: clamp(14px, 3.15vw, 16px);
     line-height: 1.25;
     letter-spacing: -0.015em;
+    margin-left: 0;
+    margin-right: 0;
   }
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaDateCluster,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaDateCluster {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    flex-basis: auto !important;
+    width: auto !important;
     max-width: none;
+    min-width: 0;
+    white-space: nowrap !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMetaSvatekCluster {
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    max-width: none;
+    white-space: nowrap !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   #silver-slot #iuSilverWelcomeCard .svatek-pill,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .svatek-pill {
@@ -16718,7 +16744,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 @media (max-width: 360px) {
   #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta,
   #iuMobileSilverSlot #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
-    font-size: clamp(12px, 3vw, 14px);
+    font-size: clamp(12.5px, 3vw, 14px);
     line-height: 1.25;
   }
 }
