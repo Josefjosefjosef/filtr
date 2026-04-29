@@ -719,6 +719,35 @@ async function runSmoke() {
     if (overflow390) {
       fail("Silver parcel detail: mobile overflowX must be false before detail edit");
     }
+    const silverMainShell390 = await page.evaluate(() => {
+      const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
+      const watch = document.getElementById("iuSilverParcelWatch");
+      const inp = document.getElementById("iuSilverParcelWatchInput");
+      const sav = document.getElementById("iuSilverParcelWatchSave");
+      if (!shell || !watch || !inp || !sav) return { ok: false, reason: "missing" };
+      if (!shell.contains(inp) || !shell.contains(sav)) return { ok: false, reason: "children" };
+      const sh = shell.getBoundingClientRect();
+      const wh = watch.getBoundingClientRect();
+      if (sh.left < wh.left - 2 || sh.right > wh.right + 2) return { ok: false, reason: "bounds" };
+      const bg = getComputedStyle(shell).backgroundColor || "";
+      const hasShellBg = bg.indexOf("241, 245, 249") >= 0 || bg.indexOf("241,245,249") >= 0;
+      if (!hasShellBg) return { ok: false, reason: "bg", bg };
+      inp.focus();
+      return { ok: true };
+    });
+    if (!silverMainShell390.ok) {
+      fail(`Silver parcel main shell (390): ${JSON.stringify(silverMainShell390)}`);
+    }
+    await page.waitForTimeout(120);
+    const silverMainShellGlow390 = await page.evaluate(() => {
+      const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
+      if (!shell) return false;
+      const b = String(getComputedStyle(shell).boxShadow || "");
+      return b.indexOf("99, 102, 241") >= 0 || b.indexOf("99,102,241") >= 0;
+    });
+    if (!silverMainShellGlow390) {
+      fail("Silver parcel main shell: expected focus-within glow on input focus (390)");
+    }
     await assertDetailSaveMicroUx("390x844");
 
     await page.setViewportSize({ width: 768, height: 1024 });
@@ -728,6 +757,15 @@ async function runSmoke() {
     );
     if (overflow768) {
       fail("Silver parcel detail: tablet overflowX must be false before detail edit");
+    }
+    const silverMainShell768 = await page.evaluate(() => {
+      const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
+      const inp = document.getElementById("iuSilverParcelWatchInput");
+      const sav = document.getElementById("iuSilverParcelWatchSave");
+      return !!(shell && inp && sav && shell.contains(inp) && shell.contains(sav));
+    });
+    if (!silverMainShell768) {
+      fail("Silver parcel main shell: input+save must live inside mainShell (768)");
     }
     await assertDetailSaveMicroUx("768x1024");
 

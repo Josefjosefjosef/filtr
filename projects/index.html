@@ -450,7 +450,7 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=7" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=8" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
@@ -798,9 +798,11 @@ style-src 'self' 'unsafe-inline' https:;
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Hlídej mi zásilku" data-iu-silver-parcel-watch="1">
                           <h3 class="iuSilverParcelWatch__title">📦 Hlídej mi zásilku</h3>
                           <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a Silver ji bude hlídat.</p>
-                          <div class="iuSilverParcelWatch__row">
-                            <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
-                            <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
+                          <div class="iuSilverParcelWatch__mainShell">
+                            <div class="iuSilverParcelWatch__row">
+                              <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                              <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Uložit</button>
+                            </div>
                           </div>
                           <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
                           <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
