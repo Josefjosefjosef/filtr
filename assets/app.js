@@ -5894,11 +5894,31 @@ function buildVideoAsArticleCard(it) {
     return "";
   }
 
+  /** P0 svátek overlay: stejná „Popřej …“ logika jako dříve spodní karta (bez DOM závislosti na meta). */
+  function iuSvatekBuildPoprejLineFromRaw(raw, namedayGender){
+    let line = "Popřej oslavence";
+    try{
+      const r = String(raw || "").trim();
+      const voc = iuSafeVocativeSingleFirstName(r);
+      const v = voc ? String(voc) : "";
+      if (v) {
+        line = "Popřej " + v;
+      } else if (r && r !== "—" && !/[;,]/.test(r)) {
+        if (namedayGender === "female" && /ie$/i.test(r)) {
+          line = "Popřej " + r.slice(0, -2) + "ii";
+        } else {
+          line = "Popřej " + r;
+        }
+      }
+    }catch(_){}
+    return line;
+  }
+
   window.getNamedayPersonFromWelcomeBox = function(){
     try{
       const meta = document.getElementById("iuSilverWelcomeMeta");
       if (!meta) return "";
-      const nameEl = meta.querySelector(".iuNameStrong");
+      const nameEl = meta.querySelector(".svatek-name") || meta.querySelector(".iuNameStrong");
       const rawTail = nameEl ? String(nameEl.textContent || "").trim() : "";
       const v = iuSafeVocativeSingleFirstName(rawTail);
       return v ? String(v) : "";
@@ -6642,10 +6662,6 @@ function buildVideoAsArticleCard(it) {
         }catch{}
         cardEl.setAttribute("data-iu-silver-welcome-variant", k);
         cardEl.setAttribute("data-iu-daypart", daypart);
-        try{
-          const holidayCard = document.getElementById("iuHolidayMonetizeCard");
-          if (holidayCard) holidayCard.setAttribute("data-iu-daypart", daypart);
-        }catch{}
       }catch{}
     }
     function refresh(opts){
@@ -6698,112 +6714,80 @@ function buildVideoAsArticleCard(it) {
           cardEl.setAttribute("data-iu-nameday-gender", namedayGender);
         }catch{}
         try{
-          const hol = document.getElementById("iuHolidayMonetizeCard");
-          if (hol) {
-            hol.setAttribute("data-iu-nameday-gender", namedayGender);
-            hol.classList.remove("iu-holiday-card--male", "iu-holiday-card--female");
-            if (namedayGender === "male") hol.classList.add("iu-holiday-card--male");
-            else if (namedayGender === "female") hol.classList.add("iu-holiday-card--female");
-          }
-        }catch{}
-        try{
           const doc = metaEl.ownerDocument;
           metaEl.textContent = "";
-          metaEl.appendChild(doc.createTextNode("Dnes je "));
+          const dateCluster = doc.createElement("span");
+          dateCluster.className = "iuSilverWelcomeMetaDateCluster";
+          dateCluster.appendChild(doc.createTextNode("Dnes je "));
           if (dlongParts){
             if (wLower){
               const spanWd = doc.createElement("span");
               spanWd.className = "iuDateStrong";
               spanWd.textContent = wLower;
-              metaEl.appendChild(spanWd);
-              metaEl.appendChild(doc.createTextNode(" "));
+              dateCluster.appendChild(spanWd);
+              dateCluster.appendChild(doc.createTextNode(" "));
             }
             const spanDn = doc.createElement("span");
             spanDn.className = "iuDateStrong";
             spanDn.textContent = dlongParts.dayNum;
-            metaEl.appendChild(spanDn);
-            metaEl.appendChild(doc.createTextNode(" "));
+            dateCluster.appendChild(spanDn);
+            dateCluster.appendChild(doc.createTextNode(" "));
             const spanMo = doc.createElement("span");
             spanMo.className = "iuDateStrong";
             spanMo.textContent = dlongParts.month;
-            metaEl.appendChild(spanMo);
-            metaEl.appendChild(doc.createTextNode(" "));
+            dateCluster.appendChild(spanMo);
+            dateCluster.appendChild(doc.createTextNode(" "));
             const spanYr = doc.createElement("span");
             spanYr.className = "iuDateStrong";
             spanYr.textContent = dlongParts.year;
-            metaEl.appendChild(spanYr);
+            dateCluster.appendChild(spanYr);
           } else {
             const spanDate = doc.createElement("span");
             spanDate.className = "iuDateStrong";
             spanDate.textContent = datePartFallback;
-            metaEl.appendChild(spanDate);
+            dateCluster.appendChild(spanDate);
           }
-          metaEl.appendChild(doc.createTextNode(" · svátek má "));
+          metaEl.appendChild(dateCluster);
+          const ndCluster = doc.createElement("span");
+          ndCluster.className = "iuSilverWelcomeMetaSvatekCluster";
+          ndCluster.appendChild(doc.createTextNode(" \u00B7 sv\u00E1tek m\u00E1 "));
+          const pillBtn = doc.createElement("button");
+          pillBtn.className = "svatek-pill";
+          pillBtn.type = "button";
+          pillBtn.setAttribute("aria-expanded", "false");
+          pillBtn.setAttribute("aria-controls", "svatekOverlay");
           const spanName = doc.createElement("span");
-          spanName.className = "iuNameStrong";
-          if (namedayGender === "male" || namedayGender === "female") {
-            spanName.classList.add("iuNameStrong--namedayGender");
-            spanName.setAttribute("data-iu-nameday-name-gender", namedayGender);
-          } else {
-            try{
-              spanName.removeAttribute("data-iu-nameday-name-gender");
-            }catch{}
+          spanName.className = "svatek-name";
+          if (namedayGender === "male") {
+            spanName.classList.add("gender-male");
+          } else if (namedayGender === "female") {
+            spanName.classList.add("gender-female");
           }
           spanName.appendChild(doc.createTextNode(namePart));
-          metaEl.appendChild(spanName);
+          pillBtn.appendChild(spanName);
           if (namedayGender === "male" || namedayGender === "female") {
-            const emojiEl = doc.createElement("span");
-            emojiEl.className = "iuNamedayEmoji";
-            emojiEl.setAttribute("aria-hidden", "true");
-            emojiEl.appendChild(doc.createTextNode("\uD83C\uDF89"));
-            metaEl.appendChild(emojiEl);
+            const spanIcon = doc.createElement("span");
+            spanIcon.className = "svatek-icon";
+            spanIcon.setAttribute("aria-hidden", "true");
+            spanIcon.appendChild(doc.createTextNode("\uD83C\uDF89"));
+            pillBtn.appendChild(spanIcon);
           }
+          ndCluster.appendChild(pillBtn);
+          metaEl.appendChild(ndCluster);
         }catch{}
+        try{
+          const leadEl = document.getElementById("svatekOverlayLead");
+          if (leadEl) {
+            const poprejLine = iuSvatekBuildPoprejLineFromRaw(namePart, namedayGender);
+            leadEl.textContent = poprejLine + " \u2013 Dnes m\u00E1 sv\u00E1tek";
+          }
+        }catch(_){}
         if (silverWelcomeUseJsMetaFit()) {
           try{ fitMetaFont(); }catch{}
           /* Jedno fitMetaFont výše; další schedule jen při resize (ResizeObserver) — duplicitní 2× RAF dřív přidávalo CLS. */
         } else {
           try{ metaEl.style.removeProperty("font-size"); }catch{}
         }
-        try{
-          const holLine1 = document.getElementById("iuHolidayLine1");
-          if (holLine1){
-            let voc = "";
-            try{
-              if (typeof window.getNamedayPersonFromWelcomeBox === "function"){
-                voc = String(window.getNamedayPersonFromWelcomeBox() || "").trim();
-              }
-            }catch(_){}
-            let raw = "";
-            try{
-              const spanN = metaEl.querySelector(".iuNameStrong");
-              raw = spanN ? String(spanN.textContent || "").trim() : "";
-            }catch(_){}
-            let line = "Popřej oslavence";
-            if (voc){
-              line = "Popřej " + voc;
-            } else if (raw && raw !== "—" && !/[;,]/.test(raw)){
-              if ((namedayGender === "female") && /ie$/i.test(raw)){
-                line = "Popřej " + raw.slice(0, -2) + "ii";
-              } else {
-                line = "Popřej " + raw;
-              }
-            }
-            try{
-              const doc = holLine1.ownerDocument;
-              let bold = holLine1.querySelector(":scope > .poprej-bold");
-              if (!bold){
-                holLine1.textContent = "";
-                bold = doc.createElement("span");
-                bold.className = "poprej-bold";
-                holLine1.appendChild(bold);
-              }
-              bold.textContent = line;
-            }catch(_){
-              holLine1.textContent = line;
-            }
-          }
-        }catch{}
         try{
           if (typeof requestAnimationFrame === "function"){
             requestAnimationFrame(function(){
@@ -10893,6 +10877,150 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  /** P0: malý overlay „Popřej …“ po kliku na sváteční pill; po „Vytvořit přání“ se vrátí po zavření modálu přání. */
+  function iuSvatekOverlayInit(){
+    try{
+      if (window.__iuSvatekOverlayInit) return;
+      window.__iuSvatekOverlayInit = 1;
+    }catch(_){}
+
+    const root = document.getElementById("svatekOverlay");
+    const panelEl = root && root.querySelector(".iuSvatekOverlayCard");
+    const btnClose = root && root.querySelector(".iuSvatekOverlayClose");
+    const btnWish = document.getElementById("svatekOverlayWishBtn");
+    const pillHost = document.getElementById("iuSilverWelcomeCard");
+    if (!root || !pillHost) return;
+
+    let restoreAfterWish = false;
+
+    function isSvatekOpen(){
+      try{
+        return !root.hasAttribute("hidden");
+      }catch(_){
+        return false;
+      }
+    }
+
+    function setPillExpanded(on){
+      try{
+        const pill = document.querySelector("#iuSilverWelcomeMeta .svatek-pill");
+        if (pill) pill.setAttribute("aria-expanded", on ? "true" : "false");
+      }catch(_){}
+    }
+
+    function openSvatekOverlay(){
+      try{
+        root.removeAttribute("hidden");
+        root.setAttribute("aria-hidden", "false");
+        setPillExpanded(true);
+      }catch(_){}
+    }
+
+    function closeSvatekOverlay(opts){
+      opts = opts || {};
+      try{
+        root.setAttribute("hidden", "");
+        root.setAttribute("aria-hidden", "true");
+        setPillExpanded(false);
+      }catch(_){}
+      if (!opts.keepRestoreFlag) {
+        restoreAfterWish = false;
+      }
+    }
+
+    try{
+      window.iuSvatekNotifyNamedayWishClosed = function(){
+        try{
+          if (restoreAfterWish){
+            restoreAfterWish = false;
+            openSvatekOverlay();
+          }
+        }catch(_){}
+      };
+    }catch(_){}
+
+    try{
+      pillHost.addEventListener(
+        "click",
+        function(ev){
+          try{
+            const pill = ev.target && ev.target.closest && ev.target.closest(".svatek-pill");
+            if (!pill || !pillHost.contains(pill)) return;
+            ev.preventDefault();
+            openSvatekOverlay();
+          }catch(_){}
+        },
+        false
+      );
+    }catch(_){}
+
+    try{
+      if (btnClose) {
+        btnClose.addEventListener("click", function(ev){
+          try{
+            ev.preventDefault();
+          }catch(_){}
+          closeSvatekOverlay();
+        });
+      }
+    }catch(_){}
+
+    try{
+      root.addEventListener("click", function(ev){
+        try{
+          if (ev.target === root) closeSvatekOverlay();
+        }catch(_){}
+      });
+    }catch(_){}
+
+    try{
+      if (panelEl) {
+        panelEl.addEventListener("click", function(ev){
+          try{
+            ev.stopPropagation();
+          }catch(_){}
+        });
+      }
+    }catch(_){}
+
+    try{
+      document.addEventListener(
+        "keydown",
+        function(ev){
+          try{
+            if (!isSvatekOpen()) return;
+            const wish = document.getElementById("iuNamedayWishOverlay");
+            if (wish && !wish.hasAttribute("hidden")) return;
+            if (ev.key !== "Escape") return;
+            ev.preventDefault();
+            closeSvatekOverlay();
+          }catch(_){}
+        },
+        true
+      );
+    }catch(_){}
+
+    try{
+      if (btnWish) {
+        btnWish.addEventListener("click", function(ev){
+          try{
+            ev.preventDefault();
+            if (!isSvatekOpen()) return;
+            restoreAfterWish = true;
+            closeSvatekOverlay({ keepRestoreFlag: true });
+            try{
+              if (typeof window.iuNamedayWishOpen === "function") window.iuNamedayWishOpen();
+              else {
+                const ref = document.querySelector("#iuNamedayCta .iu-nameday-wish");
+                if (ref) ref.click();
+              }
+            }catch(_){}
+          }catch(_){}
+        });
+      }
+    }catch(_){}
+  }
+
   /** Silver welcome: přání k svátku — overlay Tykat/Vykat, kopírování, bez zásahu do weather/map. */
   function iuNamedayWishInit(){
     try{
@@ -10981,6 +11109,15 @@ function buildVideoAsArticleCard(it) {
 
     function openOverlay(){
       try{
+        try{
+          const svo = document.getElementById("svatekOverlay");
+          if (svo && !svo.hasAttribute("hidden")) {
+            svo.setAttribute("hidden", "");
+            svo.setAttribute("aria-hidden", "true");
+            const pill = document.querySelector("#iuSilverWelcomeMeta .svatek-pill");
+            if (pill) pill.setAttribute("aria-expanded", "false");
+          }
+        }catch(_){}
         setMode("tykat");
         try{ overlay.style.display = ""; }catch{}
         overlay.removeAttribute("hidden");
@@ -10993,8 +11130,18 @@ function buildVideoAsArticleCard(it) {
       try{
         overlay.setAttribute("hidden", "");
         overlay.setAttribute("aria-hidden", "true");
+        try{
+          if (typeof window.iuSvatekNotifyNamedayWishClosed === "function") window.iuSvatekNotifyNamedayWishClosed();
+        }catch(_){}
       }catch{}
     }
+
+    try{
+      window.iuNamedayWishOpen = openOverlay;
+    }catch(_){}
+    try{
+      window.iuNamedayWishClose = closeOverlay;
+    }catch(_){}
 
     try{
       const btnClose = overlay.querySelector(".iu-overlay-close");
@@ -19463,6 +19610,7 @@ function buildVideoAsArticleCard(it) {
       }, 900);
     }catch{}
     try{ iuNamedayWishInit(); }catch{}
+    try{ iuSvatekOverlayInit(); }catch{}
     try{ iuSilverHeroQuickActionsInit(); }catch{}
 
     if (btnToggleDebug) {
