@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T11:29:55.870605Z",
+  "ingestedAt": "2026-04-29T12:00:41.638328Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "EK žaluje Česko a Maďarsko kvůli evropskému zatýkacímu rozkazu",
+      "url": "https://www.denik.cz/staty-eu/evropska-komise-zaloba-cesko-madarsko-evropsky-zatykaci-rozkaz.html",
+      "dt": "2026-04-29T11:13:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "evropskému",
+        "kvůli",
+        "maďarsko",
+        "rozkazu",
+        "zatýkacímu",
+        "česko",
+        "žaluje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Sdílení elektřiny v Česku trhá rekordy. Březnová bilance překonala loňské léto",
+      "url": "https://www.denik.cz/energie/sdileni-elektriny-trha-rekordy-breznova-bilance-prekonala-lonske-leto.html",
+      "dt": "2026-04-29T11:09:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bilance",
+        "březnová",
+        "elektřiny",
+        "loňské",
+        "léto",
+        "překonala",
+        "rekordy",
+        "sdílení",
+        "trhá",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -600,57 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Tělocvikář místo instruktora. Doplácení na plavání může snížit kvalitu výuky",
-      "url": "https://www.denik.cz/skolstvi-a-vzdelavani/cesko-skola-povinne-plavani-doplaceni-kvalita-vyuky-telocvikari.html",
-      "dt": "2026-04-29T02:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "doplácení",
-        "instruktora",
-        "kvalitu",
-        "místo",
-        "plavání",
-        "snížit",
-        "tělocvikář",
-        "výuky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Karel III. promluvil v americkém Kongresu. Vyzval k pevné spolupráci spojenců",
-      "url": "https://www.denik.cz/ze_sveta/karel-iii-projev-kongres.html",
-      "dt": "2026-04-28T20:39:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "americkém",
-        "iii",
-        "karel",
-        "kongresu",
-        "pevné",
-        "promluvil",
-        "spojenců",
-        "spolupráci",
-        "vyzval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29326,
+      "bytes": 29103,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:13:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -714,6 +714,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "EK žaluje Česko a Maďarsko kvůli evropskému zatýkacímu rozkazu",
+            "publishedAt": "2026-04-29T11:13:00Z"
+          },
+          {
+            "title": "Sdílení elektřiny v Česku trhá rekordy. Březnová bilance překonala loňské léto",
+            "publishedAt": "2026-04-29T11:09:00Z"
+          },
           {
             "title": "Pět let vězení a zákaz činnosti. Cimický je vinný ze znásilnění, rozhodl soud",
             "publishedAt": "2026-04-29T10:50:00Z"
@@ -737,14 +745,6 @@
           {
             "title": "MAPA: První den s letním počasím se blíží. Meteorologové překvapili datem",
             "publishedAt": "2026-04-29T09:24:00Z"
-          },
-          {
-            "title": "V Česku se znovu objevila nebezpečná sršeň asijská. Zaznamenali ji u Rozvadova",
-            "publishedAt": "2026-04-29T09:00:00Z"
-          },
-          {
-            "title": "Růžový sen. Rozkvetlé sakury v Liberci lákají fotografy i turisty",
-            "publishedAt": "2026-04-29T08:40:00Z"
           }
         ]
       }

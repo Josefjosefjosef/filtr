@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-29T11:29:55.870605Z",
+  "ingestedAt": "2026-04-29T12:00:41.638328Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,33 @@
         "všichni",
         "znáte",
         "úplně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Propálí svítilna na telefonech Samsung plasty? Virální videa neříkají celou pravdu",
+      "url": "https://mobilmania.zive.cz/clanky/propali-svitilna-na-telefonech-samsung-plasty-viralni-videa-nerikaji-celou-pravdu/sc-3-a-1364633/default.aspx",
+      "dt": "2026-04-29T11:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "celou",
+        "neříkají",
+        "plasty",
+        "pravdu",
+        "propálí",
+        "samsung",
+        "svítilna",
+        "telefonech",
+        "videa",
+        "virální"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -936,36 +963,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Na mobily v Česku útočí spyware, který se tváří jako Netflix nebo známé hry. Sbírá informace o uživatelích",
-      "url": "https://mobilmania.zive.cz/clanky/prehled-hrozeb-pro-android-skodlivy-software-spyware-malware-a-dalsi-zranitelnosti/sc-3-a-1359020/default.aspx",
-      "dt": "2026-04-27T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "hry",
-        "informace",
-        "jako",
-        "mobily",
-        "nebo",
-        "netflix",
-        "sbírá",
-        "spyware",
-        "tváří",
-        "uživatelích",
-        "známé",
-        "útočí",
-        "česku"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -976,7 +973,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22758,
+      "bytes": 22942,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1013,7 +1010,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1031,6 +1028,10 @@
           {
             "title": "Znáte nejčastější chyby při focení mobilem? Děláme je snad úplně všichni",
             "publishedAt": "2026-04-28T17:15:00Z"
+          },
+          {
+            "title": "Propálí svítilna na telefonech Samsung plasty? Virální videa neříkají celou pravdu",
+            "publishedAt": "2026-04-29T11:45:00Z"
           },
           {
             "title": "Česká AI gigafactory je ve vážném ohrožení. Evropská komise řeší peníze, mluví se o možném fiasku",
@@ -1055,10 +1056,6 @@
           {
             "title": "Hráli jsme Medix. Česká strategie, která maže hranici mezi uměním a zábavou",
             "publishedAt": "2026-04-28T18:15:00Z"
-          },
-          {
-            "title": "Smažete aplikaci a druhý den se sama nainstaluje. Problém, se kterým si neví rady ani Apple",
-            "publishedAt": "2026-04-28T11:45:00Z"
           }
         ]
       }

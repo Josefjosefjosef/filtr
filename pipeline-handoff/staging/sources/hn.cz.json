@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-29T11:29:55.870605Z",
+  "ingestedAt": "2026-04-29T12:00:41.638328Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Cimický má jít za sexuální útoky a vydírání na pět let do vězení, rozhodl opět soud",
+      "url": "https://domaci.hn.cz/c1-67872180-cimicky-ma-jit-za-sexualni-utoky-a-vydirani-na-pet-let-do-vezeni-rozhodl-opet-soud",
+      "dt": "2026-04-29T11:40:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cimický",
+        "jít",
+        "let",
+        "opět",
+        "pět",
+        "rozhodl",
+        "sexuální",
+        "soud",
+        "vydírání",
+        "vězení",
+        "útoky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1131,34 +1159,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Smějeme se s Andrejem Babišem. Premiér prokázal zatím nejvyšší stupeň neznalosti Evropy a světa",
-      "url": "https://podcasty.hn.cz/c1-67871220-smejeme-se-s-andrejem-babisem-premier-prokazal-zatim-nejvyssi-stupen-neznalosti-evropy-a-sveta",
-      "dt": "2026-04-28T04:56:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "andrejem",
-        "babišem",
-        "evropy",
-        "nejvyšší",
-        "neznalosti",
-        "premiér",
-        "prokázal",
-        "smějeme",
-        "stupeň",
-        "světa",
-        "zatím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1169,7 +1169,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184096,
+      "bytes": 183978,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1206,11 +1206,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:40:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
-          "zpravy": 5,
+          "zpravy": 6,
+          "finance": 31,
           "zdravi": 1,
           "sport": 2
         },
@@ -1224,6 +1224,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cimický má jít za sexuální útoky a vydírání na pět let do vězení, rozhodl opět soud",
+            "publishedAt": "2026-04-29T11:40:00Z"
+          },
           {
             "title": "Že má Trump lepší karty? Íránský režim je přesvědčen o opaku, do míru s USA se nehrne. Spoléhá na tři M",
             "publishedAt": "2026-04-29T10:45:00Z"
@@ -1251,10 +1255,6 @@
           {
             "title": "Polovinu lidí propustil. O čem se mluví za zavřenými dveřmi a jak chce investiční elita na AI vydělat",
             "publishedAt": "2026-04-29T07:20:00Z"
-          },
-          {
-            "title": "Za kulturní válkou se odehrávají politické změny, které nám mohou způsobit rozsáhlé škody",
-            "publishedAt": "2026-04-29T06:56:00Z"
           }
         ]
       }

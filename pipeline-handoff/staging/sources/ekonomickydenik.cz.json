@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-29T11:29:55.870605Z",
+  "ingestedAt": "2026-04-29T12:00:41.638328Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Krutílek: Nerudová promarnila šanci. U povolenek udělala krok vpřed a dva zpět",
+      "url": "https://ekonomickydenik.cz/krutilek-nerudova-promarnila-sanci/",
+      "dt": "2026-04-29T11:42:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "dva",
+        "krok",
+        "krutílek",
+        "nerudová",
+        "povolenek",
+        "promarnila",
+        "udělala",
+        "vpřed",
+        "zpět",
+        "šanci"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -762,29 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Konec příručních zavazadel zdarma. Lufthansa přitvrzuje",
-      "url": "https://ekonomickydenik.cz/konec-prirucnich-zavazadel-zdarma-lufthansa/",
-      "dt": "2026-04-28T06:19:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "konec",
-        "lufthansa",
-        "přitvrzuje",
-        "příručních",
-        "zavazadel",
-        "zdarma"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73509,
+      "bytes": 73744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,11 +836,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:48:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:42:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zdravi": 2,
+          "zdravi": 3,
+          "finance": 24,
           "zpravy": 3
         },
         "drop_counts": {
@@ -849,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Krutílek: Nerudová promarnila šanci. U povolenek udělala krok vpřed a dva zpět",
+            "publishedAt": "2026-04-29T11:42:24Z"
+          },
           {
             "title": "ČEZ odtajnil, kolik si vydělali šéfové i jakou navrhuje dividendu",
             "publishedAt": "2026-04-29T10:48:52Z"
@@ -876,10 +884,6 @@
           {
             "title": "Churchill je zpět? Evropa tlačí na zbrojní unii proti nebezpečí z Východu",
             "publishedAt": "2026-04-29T04:50:00Z"
-          },
-          {
-            "title": "Čím nahradíme uhlí při vytápění? O budoucnosti mluvil Tobola z Veolie",
-            "publishedAt": "2026-04-29T04:05:00Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T11:29:55.870605Z",
+  "ingestedAt": "2026-04-29T12:00:41.638328Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie zasahuje v Jablonci nad Nisou. Muž vyhrožuje napadením, může být ozbrojený",
+      "url": "https://tydenikpolicie.cz/policie-zasahuje-v-jablonci-nad-nisou-muz-vyhrozuje-napadenim-muze-byt-ozbrojeny/",
+      "dt": "2026-04-29T11:52:20Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "být",
+        "jablonci",
+        "muž",
+        "napadením",
+        "nisou",
+        "ozbrojený",
+        "policie",
+        "vyhrožuje",
+        "zasahuje"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,35 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hlídkaři z Českých Budějovic mají k dispozici nové Škody Kodiaq. Jedna je určena pro velitele policie",
-      "url": "https://tydenikpolicie.cz/hlidkari-z-ceskych-budejovic-maji-k-dispozici-nove-skody-kodiaq-jedna-je-urcena-pro-velitele-policie/",
-      "dt": "2026-04-28T22:20:59Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "budějovic",
-        "dispozici",
-        "hlídkaři",
-        "jedna",
-        "kodiaq",
-        "mají",
-        "nové",
-        "policie",
-        "určena",
-        "velitele",
-        "českých",
-        "škody"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -270,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16379,
+      "bytes": 16388,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:09:44Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:52:20Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policie zasahuje v Jablonci nad Nisou. Muž vyhrožuje napadením, může být ozbrojený",
+            "publishedAt": "2026-04-29T11:52:20Z"
+          },
           {
             "title": "Zásahová jednotka si na Jablonecku došla pro podezřelého z výroby a prodeje pervitinu",
             "publishedAt": "2026-04-29T08:09:44Z"
@@ -349,10 +350,6 @@
           {
             "title": "Dálniční policisté hledají svědky i viníka nehody na dálnici D3",
             "publishedAt": "2026-04-29T04:02:08Z"
-          },
-          {
-            "title": "U popelnic v Plzni odchytili strážníci zakrslého králíka",
-            "publishedAt": "2026-04-29T02:02:27Z"
           }
         ]
       }
