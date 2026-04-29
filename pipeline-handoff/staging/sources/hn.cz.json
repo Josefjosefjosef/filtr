@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-29T12:29:59.589982Z",
+  "ingestedAt": "2026-04-29T12:59:57.703322Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Europarlament hlasoval o změnách v emisních povolenkách. Navrhuje posílit ochranu domácností před výraznými cenovými výkyvy",
+      "url": "https://domaci.hn.cz/c1-67872200-europarlament-hlasoval-o-zmenach-v-emisnich-povolenkach-navrhuje-posilit-ochranu-domacnosti-pred-vyraznymi-cenovymi-vykyvy",
+      "dt": "2026-04-29T11:52:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cenovými",
+        "domácností",
+        "emisních",
+        "europarlament",
+        "hlasoval",
+        "navrhuje",
+        "ochranu",
+        "posílit",
+        "povolenkách",
+        "výkyvy",
+        "výraznými",
+        "změnách"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -1130,35 +1159,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Utajený hořčík: jeho hladina je pro tělo klíčová, jenže z běžných testů ji člověk nepozná. Co s tím?",
-      "url": "https://domaci.hn.cz/c1-67871450-zahady-kolem-horciku-klasicke-krevni-testy-skutecnou-hladinu-neodhali-doplnek-z-lekaren-muze-zpusobit-spise-nevolnost",
-      "dt": "2026-04-28T05:33:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "běžných",
-        "hladina",
-        "hořčík",
-        "jeho",
-        "jenže",
-        "klíčová",
-        "nepozná",
-        "testů",
-        "tím",
-        "tělo",
-        "utajený",
-        "člověk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1169,7 +1169,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183978,
+      "bytes": 183883,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1206,11 +1206,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T11:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T11:52:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 6,
           "finance": 31,
+          "zpravy": 6,
           "zdravi": 1,
           "sport": 2
         },
@@ -1224,6 +1224,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Europarlament hlasoval o změnách v emisních povolenkách. Navrhuje posílit ochranu domácností před výraznými cenovými výkyvy",
+            "publishedAt": "2026-04-29T11:52:00Z"
+          },
           {
             "title": "Cimický má jít za sexuální útoky a vydírání na pět let do vězení, rozhodl opět soud",
             "publishedAt": "2026-04-29T11:40:00Z"
@@ -1251,10 +1255,6 @@
           {
             "title": "Česko by si mělo přestat hrát na ostrov. Přijměme euro, aby exportéři neplýtvali penězi a investoři viděli předvídatelné prostředí",
             "publishedAt": "2026-04-29T07:38:00Z"
-          },
-          {
-            "title": "Polovinu lidí propustil. O čem se mluví za zavřenými dveřmi a jak chce investiční elita na AI vydělat",
-            "publishedAt": "2026-04-29T07:20:00Z"
           }
         ]
       }

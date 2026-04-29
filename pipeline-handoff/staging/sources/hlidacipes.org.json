@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hlidacipes.org",
-  "ingestedAt": "2026-04-29T12:29:59.589982Z",
+  "ingestedAt": "2026-04-29T12:59:57.703322Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "René Šifta: Rozvádíte se? Tak to byste tohle měli vědět",
+      "url": "https://hlidacipes.org/rene-sifta-rozvadite-se-tak-to-byste-tohle-meli-vedet/",
+      "dt": "2026-04-29T12:30:11Z",
+      "media_raw": "HlídacíPes",
+      "media_norm": "HlídacíPes",
+      "tokens": [
+        "byste",
+        "měli",
+        "rené",
+        "rozvádíte",
+        "tak",
+        "tohle",
+        "vědět",
+        "šifta"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_hlidacipes",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "hlidacipes.org",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,31 +260,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "hlidacipes.org",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pracovala pro GRU, šířila dezinfo a teď žaluje Česko. Kdo je Natallia Sudlianková",
-      "url": "https://hlidacipes.org/pracovala-pro-gru-sirila-dezinfo-a-ted-zaluje-cesko-kdo-je-natallia-sudliankova/",
-      "dt": "2026-04-25T05:30:57Z",
-      "media_raw": "HlídacíPes",
-      "media_norm": "HlídacíPes",
-      "tokens": [
-        "dezinfo",
-        "gru",
-        "natallia",
-        "pracovala",
-        "sudlianková",
-        "česko",
-        "šířila",
-        "žaluje"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_hlidacipes",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "hlidacipes.org",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -268,9 +268,9 @@
       "source": "HlídacíPes",
       "topic": "aktualne",
       "httpStatus": 200,
-      "contentType": "application/rss+xml; charset=utf-8",
+      "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://hlidacipes.org/feed/",
-      "bytes": 18007,
+      "bytes": 17798,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -307,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T09:30:13Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T12:30:11Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -322,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "René Šifta: Rozvádíte se? Tak to byste tohle měli vědět",
+            "publishedAt": "2026-04-29T12:30:11Z"
+          },
           {
             "title": "Jan Urban: Strach ze sudeťáků a česká politika jako forma duševní choroby",
             "publishedAt": "2026-04-29T09:30:13Z"
@@ -349,10 +353,6 @@
           {
             "title": "Obchodník s chudobou? Další šikanózní žaloba Petra Štrunce byla zamítnuta",
             "publishedAt": "2026-04-27T04:30:27Z"
-          },
-          {
-            "title": "Petr Pithart: Jak mne Klaus porazil v boji o Pražský hrad. A rehabilitoval komunisty!",
-            "publishedAt": "2026-04-26T05:30:36Z"
           }
         ]
       }
