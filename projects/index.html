@@ -317,9 +317,20 @@ style-src 'self' 'unsafe-inline' https:;
       .iuSilverWelcomeMeta{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:0}
       .iuSilverWelcomeMetaDateCluster,.iuSilverWelcomeMetaSvatekCluster{min-width:0}
       .iuSilverWelcomeMetaSvatekCluster{display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;max-width:100%}
-      @media(max-width:520px){
-        #iuSilverWelcomeCard .iuSilverWelcomeMeta{white-space:normal;flex-wrap:wrap}
-        .iuSilverWelcomeMetaDateCluster{flex:1 0 100%}
+      /* P0 mobile/tablet ≤768: posun textu níže od (i), druhý řádek vždy 1 line + škálování písma; desktop beze změny. */
+      @media(max-width:768px){
+        #silver-slot #iuSilverWelcomeTextBlock,#iuMobileSilverSlot #silver-slot #iuSilverWelcomeTextBlock{padding-top:12px!important;box-sizing:border-box}
+        #iuSilverWelcomeCard .iuSilverWelcomeMeta,#silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta{white-space:nowrap!important;flex-wrap:nowrap!important;max-width:100%;min-width:0;overflow-x:visible}
+        .iuSilverWelcomeMetaDateCluster{flex:1 1 auto!important;min-width:0!important;max-width:none}
+        .iuSilverWelcomeMetaSvatekCluster{flex:0 0 auto}
+        #iuSilverWelcomeCard .iuSilverWelcomeMeta{font-size:clamp(12px,3.05vw,14px);line-height:1.2}
+      }
+      @media(max-width:390px){
+        #iuSilverWelcomeCard .iuSilverWelcomeMeta{font-size:12px;line-height:1.2}
+        #iuSilverWelcomeCard .svatek-pill{font-size:12px;padding:4px 8px;min-height:36px}
+      }
+      @media(max-width:360px){
+        #iuSilverWelcomeCard .iuSilverWelcomeMeta{font-size:11px;line-height:1.2}
       }
       #svatekOverlay.iuSvatekOverlayRoot{z-index:99988;background:rgba(15,30,45,.45);padding:16px;box-sizing:border-box}
       #svatekOverlay .iuSvatekOverlayCard{width:100%;max-width:340px;height:auto!important;max-height:none!important;min-height:min-content;overflow:visible!important;padding:18px 18px 16px;position:relative;contain:none!important}
