@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-29T09:20:10.710559Z",
+  "ingestedAt": "2026-04-29T10:29:35.491440Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Stallone a Schwarzenegger v jedné cele, z níž není úniku",
+      "url": "https://www.kinobox.cz/clanky/daily/53192-kinobox-daily-stallone-a-schwarzenegger-v-jedne-cele-z-niz-neni-uniku",
+      "dt": "2026-04-29T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "cele",
+        "daily",
+        "jedné",
+        "kinobox",
+        "níž",
+        "schwarzenegger",
+        "stallone",
+        "úniku"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -531,35 +556,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Srdcovka: Stopaři jsou perfektním anti-westernem. Hlavní hvězdě nikdy nedošlo, o čem příběh doopravdy je",
-      "url": "https://www.kinobox.cz/clanky/filmy/52999-stopari-jsou-perfektnim-anti-westernem-jeho-hlavni-hvezde-nikdy-nedoslo-o-cem-pribeh-doopravdy-je",
-      "dt": "2026-04-26T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "anti",
-        "doopravdy",
-        "hlavní",
-        "hvězdě",
-        "nedošlo",
-        "nikdy",
-        "perfektním",
-        "příběh",
-        "srdcovka",
-        "stopaři",
-        "westernem",
-        "čem"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -570,7 +566,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 27078,
+      "bytes": 27188,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -607,7 +603,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -622,6 +618,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Stallone a Schwarzenegger v jedné cele, z níž není úniku",
+            "publishedAt": "2026-04-29T10:00:00Z"
+          },
           {
             "title": "Třetí Top Gun hledá nového režiséra. Tvůrce miliardového hitu se nevrátí",
             "publishedAt": "2026-04-29T09:00:00Z"
@@ -649,10 +649,6 @@
           {
             "title": "Přehlížený český film dobývá Netflix. V kinech se neobjevil, na streamu je ale hitem",
             "publishedAt": "2026-04-28T12:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Šéfová na zabití a život v troskách? Wanted je ultimátní terapie pro každého úředníka",
-            "publishedAt": "2026-04-28T10:00:00Z"
           }
         ]
       }

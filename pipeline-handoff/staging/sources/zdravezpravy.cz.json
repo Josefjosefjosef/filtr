@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-04-29T09:20:10.710559Z",
+  "ingestedAt": "2026-04-29T10:29:35.491440Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Kvůli západonilské horečce platí omezení darování krve po návratu z některých zemí",
+      "url": "https://www.zdravezpravy.cz/2026/04/29/kvuli-zapadonilske-horecce-plati-omezeni-darovani-krve-po-navratu-z-nekterych-zemi/",
+      "dt": "2026-04-29T09:11:31Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "darování",
+        "horečce",
+        "krve",
+        "kvůli",
+        "návratu",
+        "některých",
+        "omezení",
+        "platí",
+        "zemí",
+        "západonilské"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -464,30 +491,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravotní pojišťovny se do JMHZ nezahrnuly, přehledy mají zvlášť",
-      "url": "https://www.zdravezpravy.cz/2026/04/21/zdravotni-pojistovny-se-do-jmhz-nezahrnuly-prehledy-maji-zvlast/",
-      "dt": "2026-04-21T09:21:39Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "jmhz",
-        "mají",
-        "nezahrnuly",
-        "pojišťovny",
-        "přehledy",
-        "zdravotní",
-        "zvlášť"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -498,7 +501,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 199039,
+      "bytes": 200575,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -535,7 +538,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:30:16Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T09:11:31Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -550,6 +553,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kvůli západonilské horečce platí omezení darování krve po návratu z některých zemí",
+            "publishedAt": "2026-04-29T09:11:31Z"
+          },
           {
             "title": "Aspirin jako prevence proti rakovině a nemocím srdce a cév? Možná ano",
             "publishedAt": "2026-04-29T06:30:16Z"
@@ -577,10 +584,6 @@
           {
             "title": "Z farmaceutického průmyslu těží veřejné rozpočty 25 miliard korun",
             "publishedAt": "2026-04-27T11:57:31Z"
-          },
-          {
-            "title": "Česko vystaví čtvrtou vojenskou nemocnici. Doba si to žádá…",
-            "publishedAt": "2026-04-27T08:50:22Z"
           }
         ]
       }
