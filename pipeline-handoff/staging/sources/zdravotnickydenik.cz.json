@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T04:54:49.006495Z",
+  "ingestedAt": "2026-04-29T05:19:33.331593Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Hrozí dražší zdravotní péče? SPD varuje před dopady plánovaných škrtů",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-pece-spd-dopady-skrty/",
+      "dt": "2026-04-29T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dopady",
+        "dražší",
+        "hrozí",
+        "plánovaných",
+        "péče",
+        "spd",
+        "varuje",
+        "zdravotní",
+        "škrtů"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -236,34 +262,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Cesta z pravěku. Inovace už na úhradu nebudou čekat roky, rozhodl nový šéf VZP",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vzp-inovace-uhrady/",
-      "dt": "2026-04-28T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cesta",
-        "inovace",
-        "nebudou",
-        "nový",
-        "pravěku",
-        "roky",
-        "rozhodl",
-        "vzp",
-        "úhradu",
-        "čekat",
-        "šéf"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +272,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 86478,
+      "bytes": 85650,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +309,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-28T16:05:34Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 9,
@@ -327,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hrozí dražší zdravotní péče? SPD varuje před dopady plánovaných škrtů",
+            "publishedAt": "2026-04-29T05:00:00Z"
+          },
           {
             "title": "Nová šance pro české pacienty: CAR-T léčba cílí na selhávající imunitu",
             "publishedAt": "2026-04-28T16:05:34Z"
@@ -354,10 +356,6 @@
           {
             "title": "Stamiliony pro zodpovědné: VZP rekordně odměňuje za preventivní prohlídky a screening",
             "publishedAt": "2026-04-28T09:28:38Z"
-          },
-          {
-            "title": "Peklo za mřížemi: V amerických věznicích umírají stovky psychicky nemocných v izolaci a špíně",
-            "publishedAt": "2026-04-28T08:00:00Z"
           }
         ]
       }
