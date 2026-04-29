@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T07:39:42.817577Z",
+  "ingestedAt": "2026-04-29T08:49:24.635781Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zásahová jednotka si na Jablonecku došla pro podezřelého z výroby a prodeje pervitinu",
+      "url": "https://tydenikpolicie.cz/zasahova-jednotka-si-na-jablonecku-dosla-pro-podezreleho-z-vyroby-a-prodeje-pervitinu/",
+      "dt": "2026-04-29T08:09:44Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "došla",
+        "jablonecku",
+        "jednotka",
+        "pervitinu",
+        "podezřelého",
+        "prodeje",
+        "výroby",
+        "zásahová"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -235,33 +260,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Seniorka si myslela, že si píše se syrským lékařem. Přišla o více než 300 tisíc korun",
-      "url": "https://tydenikpolicie.cz/seniorka-si-myslela-ze-si-pise-se-syrskym-lekarem-prisla-o-vice-nez-300-tisic-korun/",
-      "dt": "2026-04-28T22:16:38Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "300",
-        "korun",
-        "lékařem",
-        "myslela",
-        "než",
-        "píše",
-        "přišla",
-        "seniorka",
-        "syrským",
-        "tisíc"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +270,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15977,
+      "bytes": 16379,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +307,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T07:21:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:09:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +322,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zásahová jednotka si na Jablonecku došla pro podezřelého z výroby a prodeje pervitinu",
+            "publishedAt": "2026-04-29T08:09:44Z"
+          },
           {
             "title": "Strážníci v Olomouci vyjížděli k hlášenému vloupání do výdejních boxů",
             "publishedAt": "2026-04-29T07:21:23Z"
@@ -351,10 +353,6 @@
           {
             "title": "U popelnic v Plzni odchytili strážníci zakrslého králíka",
             "publishedAt": "2026-04-29T02:02:27Z"
-          },
-          {
-            "title": "Odložená peněženka spadla do křižovatky v Kladně z projíždějícího auta. Pomohl kamerový systém i městská policie",
-            "publishedAt": "2026-04-29T00:02:36Z"
           }
         ]
       }

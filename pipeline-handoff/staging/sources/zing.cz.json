@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-29T07:39:42.817577Z",
+  "ingestedAt": "2026-04-29T08:49:24.635781Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Alien: Isolation 2 bude pohánět Unreal Engine 5",
+      "url": "https://zing.cz/article/alien-isolation-2-bude-pohanet-unreal-engine-5",
+      "dt": "2026-04-29T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "alien",
+        "engine",
+        "isolation",
+        "pohánět",
+        "unreal"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -956,32 +978,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Assassin's Creed Black Flag Resynced odhaluje HW nároky a chybějící češtinu",
-      "url": "https://zing.cz/article/assassin-s-creed-black-flag-resynced-odhaluje-hw-naroky-a-chybejici-cestinu",
-      "dt": "2026-04-23T17:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "assassin",
-        "black",
-        "chybějící",
-        "creed",
-        "flag",
-        "nároky",
-        "odhaluje",
-        "resynced",
-        "češtinu"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -992,7 +988,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125213,
+      "bytes": 125169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1029,7 +1025,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1045,6 +1041,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alien: Isolation 2 bude pohánět Unreal Engine 5",
+            "publishedAt": "2026-04-29T08:00:00Z"
+          },
           {
             "title": "2K přidává ve spolupráci s Denuvem do svých her další vrstvu ochrany",
             "publishedAt": "2026-04-29T06:00:00Z"
@@ -1072,10 +1072,6 @@
           {
             "title": "Podívejte se na srovnání mezi Assassin's Creed Black Flag Resynced a originálem",
             "publishedAt": "2026-04-28T10:00:00Z"
-          },
-          {
-            "title": "Sportovní série EA Sports UFC se vrací, známe datum vydání",
-            "publishedAt": "2026-04-28T08:00:00Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-04-29T07:39:42.817577Z",
+  "ingestedAt": "2026-04-29T08:49:24.635781Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "„Chudák, už má tohle…“ Jiřina Bohdalová přiznala, že raději zapomíná své hodinky pro seniory",
+      "url": "https://www.betterlife.cz/chudak-uz-ma-tohle-jirina-bohdalova-priznala-ze-radeji-zapomina-sve-hodinky-pro-seniory/",
+      "dt": "2026-04-29T07:58:30Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "bohdalová",
+        "chudák",
+        "hodinky",
+        "jiřina",
+        "přiznala",
+        "raději",
+        "seniory",
+        "své",
+        "tohle",
+        "zapomíná"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -256,31 +283,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Seriál Ulice čeká dramatické rozuzlení. Pachatel se prozradil sám",
-      "url": "https://www.betterlife.cz/serial-ulice-ceka-dramaticke-rozuzleni-pachatel-se-prozradil-sam/",
-      "dt": "2026-04-25T16:27:21Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "dramatické",
-        "pachatel",
-        "prozradil",
-        "rozuzlení",
-        "seriál",
-        "sám",
-        "ulice",
-        "čeká"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -291,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 64455,
+      "bytes": 65363,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -351,11 +353,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T05:59:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T07:58:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zdravi": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -367,6 +368,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Chudák, už má tohle…“ Jiřina Bohdalová přiznala, že raději zapomíná své hodinky pro seniory",
+            "publishedAt": "2026-04-29T07:58:30Z"
+          },
           {
             "title": "Finále Naked Attraction přinese kuriózní zkoušku poslušnosti. Favorit s nadprůměrnými proporcemi odchází kvůli obavám první",
             "publishedAt": "2026-04-29T05:59:14Z"
@@ -394,10 +399,6 @@
           {
             "title": "Květnové státní svátky a otevírací doba obchodů. Pravidla pro pátky se výrazně liší",
             "publishedAt": "2026-04-27T05:58:37Z"
-          },
-          {
-            "title": "Příští týden v seriálu Ulice: Otevřou se staré rány, Magdino nečekané rozhodnutí a problémy se společným bydlením",
-            "publishedAt": "2026-04-26T16:28:10Z"
           }
         ]
       }

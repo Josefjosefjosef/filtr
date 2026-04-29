@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-29T07:39:42.817577Z",
+  "ingestedAt": "2026-04-29T08:49:24.635781Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Stačí jeden špatný prompt a firma přijde o svá data",
+      "url": "https://profitonline.cz/staci-jeden-spatny-prompt-a-firma-prijde-o-sva-data/",
+      "dt": "2026-04-29T08:00:47Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "data",
+        "firma",
+        "jeden",
+        "prompt",
+        "přijde",
+        "stačí",
+        "svá",
+        "špatný"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -269,30 +294,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Okamžiky dějin: 40. výročí největší jaderné katastrofy v dějinách (1.)",
-      "url": "https://profitonline.cz/okamziky-dejin-40-vyroci-nejvetsi-jaderne-katastrofy-v-dejinach-1/",
-      "dt": "2026-04-25T10:00:24Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "dějin",
-        "dějinách",
-        "jaderné",
-        "katastrofy",
-        "největší",
-        "okamžiky",
-        "výročí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -303,7 +304,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18841,
+      "bytes": 19005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -340,7 +341,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T08:00:47Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -355,6 +356,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Stačí jeden špatný prompt a firma přijde o svá data",
+            "publishedAt": "2026-04-29T08:00:47Z"
+          },
           {
             "title": "Fed i ECB ponechají úrokové sazby beze změny",
             "publishedAt": "2026-04-29T06:00:52Z"
@@ -382,10 +387,6 @@
           {
             "title": "Paradox bezpečného přístavu: Proč cena zlata strádá?",
             "publishedAt": "2026-04-27T18:00:19Z"
-          },
-          {
-            "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
-            "publishedAt": "2026-04-27T08:00:12Z"
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-29T07:39:42.817577Z",
+  "ingestedAt": "2026-04-29T08:49:24.635781Z",
   "items": [
     {
       "section": "veda",
@@ -22,6 +22,31 @@
         "všichni",
         "znáte",
         "úplně"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Odteď se už nové notebooky uvedené do EU musí nabíjet pomocí USB-C",
+      "url": "https://www.zive.cz/clanky/odted-se-uz-nove-notebooky-uvedene-do-eu-musi-nabijet-pomoci-usb-c/sc-3-a-240929/default.aspx",
+      "dt": "2026-04-29T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "musí",
+        "nabíjet",
+        "notebooky",
+        "nové",
+        "odteď",
+        "pomocí",
+        "usb",
+        "uvedené"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -941,37 +966,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "DJI Lito jsou „blbuvzdorné“ drony, které nenarazí do prvního stromu. Lidar z profi modelů dostanete za dosud nevídanou cenu",
-      "url": "https://www.zive.cz/clanky/dji-lito-jsou-blbuvzdorne-drony-ktere-nenarazi-do-prvniho-stromu-lidar-z-profi-modelu-dostanete-za-dosud-nevidanou-cenu/sc-3-a-240849/default.aspx",
-      "dt": "2026-04-24T05:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "blbuvzdorné",
-        "cenu",
-        "dji",
-        "dostanete",
-        "dosud",
-        "drony",
-        "lidar",
-        "lito",
-        "modelů",
-        "nenarazí",
-        "nevídanou",
-        "profi",
-        "prvního",
-        "stromu"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -982,7 +976,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22835,
+      "bytes": 22739,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1019,7 +1013,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-29T06:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1037,6 +1031,10 @@
           {
             "title": "Znáte nejčastější chyby při focení mobilem? Děláme je snad úplně všichni",
             "publishedAt": "2026-04-28T17:15:00Z"
+          },
+          {
+            "title": "Odteď se už nové notebooky uvedené do EU musí nabíjet pomocí USB-C",
+            "publishedAt": "2026-04-29T07:45:00Z"
           },
           {
             "title": "Recenze televizoru Philips 55OLED820. Skvělý 4K OLED s Ambilightem a dobrým zvukem",
@@ -1061,10 +1059,6 @@
           {
             "title": "Příběh o tom, jak chlápek fénem ofouknul meteostanici a vyhrál 34 tisíc dolarů",
             "publishedAt": "2026-04-27T12:45:00Z"
-          },
-          {
-            "title": "Nejlevnější monitor s rozlišením 3440 × 1440 px. Tohle MSI stojí jen 3690 Kč",
-            "publishedAt": "2026-04-28T06:45:00Z"
           }
         ]
       }
