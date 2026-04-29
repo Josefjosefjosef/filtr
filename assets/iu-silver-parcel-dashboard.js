@@ -118,7 +118,7 @@
     if (det.state === "exact_match" || det.state === "probable_match") {
       return {
         carrierLabel: det.carrierLabel || "zatím nepoznán",
-        statusLabel: "otevři oficiální tracking",
+        statusLabel: "Klikni pro aktuální stav zásilky",
       };
     }
     return {
@@ -279,6 +279,15 @@
     var actions = document.createElement("div");
     actions.className = "iuSilverParcelWatch__actions";
 
+    var openT = document.createElement("button");
+    openT.type = "button";
+    openT.className = "iuSilverParcelWatch__btnPrimary";
+    openT.textContent = "Otevřít tracking";
+    openT.addEventListener("click", function () {
+      openOfficialForItem(item);
+    });
+    actions.appendChild(openT);
+
     if (item.pickupAddressVerified) {
       var nav = document.createElement("button");
       nav.type = "button";
@@ -290,29 +299,24 @@
       actions.appendChild(nav);
     }
 
-    var openT = document.createElement("button");
-    openT.type = "button";
-    openT.className = "iuSilverParcelWatch__btnPrimary";
-    openT.textContent = "Otevřít tracking";
-    openT.addEventListener("click", function () {
-      openOfficialForItem(item);
-    });
-    actions.appendChild(openT);
-
-    var pickCarrier = document.createElement("button");
-    pickCarrier.type = "button";
-    pickCarrier.className = "iuSilverParcelWatch__btnSecondary";
-    pickCarrier.textContent = "Vybrat dopravce";
-    var pickerHost = document.createElement("div");
-    pickerHost.className = "iuSilverParcelWatch__picker";
-    pickerHost.hidden = true;
-    pickCarrier.addEventListener("click", function () {
-      pickerHost.hidden = !pickerHost.hidden;
-      if (!pickerHost.hidden && pickerHost.childElementCount === 0) {
-        renderCarrierPicker(item, pickerHost);
-      }
-    });
-    actions.appendChild(pickCarrier);
+    var carrierUnknown = ui.carrierLabel === "zatím nepoznán";
+    var pickerHost = null;
+    if (carrierUnknown) {
+      var pickCarrier = document.createElement("button");
+      pickCarrier.type = "button";
+      pickCarrier.className = "iuSilverParcelWatch__btnSecondary";
+      pickCarrier.textContent = "Vybrat dopravce";
+      pickerHost = document.createElement("div");
+      pickerHost.className = "iuSilverParcelWatch__picker";
+      pickerHost.hidden = true;
+      pickCarrier.addEventListener("click", function () {
+        pickerHost.hidden = !pickerHost.hidden;
+        if (!pickerHost.hidden && pickerHost.childElementCount === 0) {
+          renderCarrierPicker(item, pickerHost);
+        }
+      });
+      actions.appendChild(pickCarrier);
+    }
 
     var hideB = document.createElement("button");
     hideB.type = "button";
@@ -328,7 +332,7 @@
     actions.appendChild(hideB);
 
     wrap.appendChild(actions);
-    wrap.appendChild(pickerHost);
+    if (pickerHost) wrap.appendChild(pickerHost);
 
     return wrap;
   }
