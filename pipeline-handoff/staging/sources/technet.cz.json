@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-29T21:35:36.477526Z",
+  "ingestedAt": "2026-04-29T22:05:07.167494Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Neumíme to udělat lépe, možná později. Apple nechá jedno zařízení, jak je",
+      "url": "https://www.idnes.cz/technet/pc-mac/apple-produkt-zarizeni-upgrade-design-vyroba.A260217_171512_hardware_vse",
+      "dt": "2026-04-29T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "apple",
+        "jedno",
+        "lépe",
+        "možná",
+        "nechá",
+        "neumíme",
+        "později",
+        "udělat",
+        "zařízení"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -564,7 +590,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Možná vás překvapí, na co se soustředí přicházející Wi-Fi 8",
       "url": "https://www.idnes.cz/technet/pc-mac/wi-fi-8-ieee-802-11bn-bezdratova-komunikace-internet-router-pripojeni-rychlost.A260318_131332_hardware_vse",
@@ -586,7 +612,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Toyota demonstruje svůj posun v robotice na basketbalistovi. Nový CUE7 září",
       "url": "https://www.idnes.cz/technet/technika/robot-cue7-toyota-basketbal.A260422_104336_tec_technika_alv",
@@ -740,32 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump plánuje utratit za zbrojení 1,5 bilionu dolarů. Víme, co chce koupit",
-      "url": "https://www.idnes.cz/technet/vojenstvi/trump-administrativa-rozpocet-zbrojeni-spojene-staty-americke-ozbrojene-sily-dawg-zlata-kopule.A260421_145723_vojenstvi_ilrj",
-      "dt": "2026-04-21T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "bilionu",
-        "chce",
-        "dolarů",
-        "koupit",
-        "plánuje",
-        "trump",
-        "utratit",
-        "víme",
-        "zbrojení"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45753,
+      "bytes": 45558,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T08:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 23,
-          "zpravy": 7
+          "other": 22,
+          "zpravy": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neumíme to udělat lépe, možná později. Apple nechá jedno zařízení, jak je",
+            "publishedAt": "2026-04-29T22:00:00Z"
+          },
           {
             "title": "Viva la bačkorová revolución! Hnidopišská poznámka vysloužilého petičníka",
             "publishedAt": "2026-04-29T08:32:00Z"
@@ -855,10 +859,6 @@
           },
           {
             "title": "Před 100 lety se zrodil mezinárodní řidičák. V Paříži se řešily i brzdy a světla",
-            "publishedAt": "2026-04-27T22:00:00Z"
-          },
-          {
-            "title": "Chytré brýle vyvolávají obavy právníků. Vývojáři řeší, jak odhalit „šmíráky“",
             "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]
