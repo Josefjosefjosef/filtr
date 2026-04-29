@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-29T15:15:22.053630Z",
+  "ingestedAt": "2026-04-29T16:31:34.150566Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dembélé, král fotbalového skvostu: Dva góly, vybojovaná penalta i asistence",
+      "url": "https://www.idnes.cz/fotbal/pohary/dembele-kral-fotbaloveho-skvostu-dva-goly-vybojovana-penalta-i-asistence.A260429_100532_fot_pohary_duff",
+      "dt": "2026-04-29T15:01:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "asistence",
+        "dembélé",
+        "dva",
+        "fotbalového",
+        "góly",
+        "král",
+        "penalta",
+        "skvostu",
+        "vybojovaná"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,32 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pastrňák gólem z prodloužení udržel Boston ve hře, Edmonton vyhnal Dostála",
-      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-zacha-dostal.A260429_070939_nhl_mkr",
-      "dt": "2026-04-29T06:15:34Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "boston",
-        "dostála",
-        "edmonton",
-        "gólem",
-        "hře",
-        "pastrňák",
-        "prodloužení",
-        "udržel",
-        "vyhnal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49753,
+      "bytes": 50080,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T15:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dembélé, král fotbalového skvostu: Dva góly, vybojovaná penalta i asistence",
+            "publishedAt": "2026-04-29T15:01:00Z"
+          },
           {
             "title": "Ještě nekončíme! Jak Oilers za 10 minut vyhnali Dostála z brány a odvrátili vyřazení",
             "publishedAt": "2026-04-29T14:43:00Z"
@@ -883,10 +887,6 @@
           {
             "title": "Spláceli dluh prostitucí? Mafii nevyšla sázka, Černaj měl ztrátu jedenáct milionů",
             "publishedAt": "2026-04-29T12:26:00Z"
-          },
-          {
-            "title": "Děčín může doma urvat mečbol v sérii s Brnem. Grepl: Hráče musím vrátit na zem",
-            "publishedAt": "2026-04-29T12:14:00Z"
           }
         ]
       }

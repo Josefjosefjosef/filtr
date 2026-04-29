@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T15:15:22.053630Z",
+  "ingestedAt": "2026-04-29T16:31:34.150566Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nové informace o policejním zásahu v příbramské nemocnici: Kterých zakázek se týkal?",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/policejni-zasah-pribramska-nemocnice-zakazky/",
+      "dt": "2026-04-29T15:24:48Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "informace",
+        "kterých",
+        "nemocnici",
+        "nové",
+        "policejním",
+        "příbramské",
+        "týkal",
+        "zakázek",
+        "zásahu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,33 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "2x vyšší úmrtnost. Ministerstvo chce utnout operace určitých nádorů na malých pracovištích",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/ministerstvo-reformuje-centrovou-peci/",
-      "dt": "2026-04-29T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chce",
-        "malých",
-        "ministerstvo",
-        "nádorů",
-        "operace",
-        "pracovištích",
-        "určitých",
-        "utnout",
-        "vyšší",
-        "úmrtnost"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,8 +281,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96084,
-      "reason": "",
+      "bytes": 84100,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -319,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:35:23Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T15:24:48Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -334,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nové informace o policejním zásahu v příbramské nemocnici: Kterých zakázek se týkal?",
+            "publishedAt": "2026-04-29T15:24:48Z"
+          },
           {
             "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
             "publishedAt": "2026-04-29T14:35:23Z"
@@ -361,10 +364,6 @@
           {
             "title": "Doktory nebudou obíhat pacienti, ale jejich data. VZP testuje nový model zdravotní péče",
             "publishedAt": "2026-04-29T09:00:00Z"
-          },
-          {
-            "title": "Vojtěch se bije za Národní očkovací strategii. Senátní výbor ho podpořil",
-            "publishedAt": "2026-04-29T08:00:00Z"
           }
         ]
       }
