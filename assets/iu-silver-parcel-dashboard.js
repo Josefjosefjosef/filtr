@@ -271,9 +271,10 @@ try {
       ta.className = "iuSilverParcelWatch__detailTextarea";
       ta.setAttribute(
         "aria-label",
-        "Vlož zprávu od dopravce nebo vlastní poznámku",
+        "Vlož SMS od dopravce, že je zásilka připravena k vyzvednutí, nebo přidej vlastní poznámku",
       );
-      ta.placeholder = "Vlož zprávu od dopravce nebo vlastní poznámku";
+      ta.placeholder =
+        "Vlož SMS od dopravce, že je zásilka připravena k vyzvednutí, nebo přidej vlastní poznámku";
       ta.value = item.detailRawText ? String(item.detailRawText) : "";
       var rowBtn = document.createElement("div");
       rowBtn.className = "iuSilverParcelWatch__detailEditActions";

@@ -674,6 +674,12 @@ async function runSmoke() {
       await page.waitForTimeout(280);
       const ta = page.locator(".iuSilverParcelWatch__detailTextarea").first();
       await ta.waitFor({ state: "visible", timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+      const expectedDetailPh =
+        "Vlož SMS od dopravce, že je zásilka připravena k vyzvednutí, nebo přidej vlastní poznámku";
+      const phVal = await ta.getAttribute("placeholder");
+      if (phVal !== expectedDetailPh) {
+        fail(`Silver parcel detail placeholder mismatch (${label}): ${JSON.stringify(phVal)}`);
+      }
       const saveBtn = page.locator(".iuSilverParcelWatch__detailSave").first();
       if (!(await saveBtn.isDisabled())) {
         fail(`Silver parcel detail save: must be disabled when empty (${label})`);
