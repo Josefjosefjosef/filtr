@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-29T14:14:35.016217Z",
+  "ingestedAt": "2026-04-29T14:44:43.783866Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Šéf Take-Two potvrdil datum vydání GTA VI a nevyloučil návrat L.A. Noire",
+      "url": "https://zing.cz/article/sef-take-two-potvrdil-datum-vydani-gta-vi-zaroven-nevyloucil-navrat-l-a-noire",
+      "dt": "2026-04-29T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "datum",
+        "gta",
+        "nevyloučil",
+        "noire",
+        "návrat",
+        "potvrdil",
+        "take",
+        "two",
+        "vydání",
+        "šéf"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -953,32 +980,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Česká hra Brno Transit je venku, tvůrce láká na skutečný horor",
-      "url": "https://zing.cz/article/ceska-hra-brno-transit-je-venku-tvurce-laka-na-skutecny-horor",
-      "dt": "2026-04-24T08:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "brno",
-        "horor",
-        "hra",
-        "láká",
-        "skutečný",
-        "transit",
-        "tvůrce",
-        "venku",
-        "česká"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -989,7 +990,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125115,
+      "bytes": 125225,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1026,7 +1027,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T14:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1042,6 +1043,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf Take-Two potvrdil datum vydání GTA VI a nevyloučil návrat L.A. Noire",
+            "publishedAt": "2026-04-29T14:00:00Z"
+          },
           {
             "title": "Recenze Adorable Adventures – zážitek pro celou rodinu",
             "publishedAt": "2026-04-29T13:00:00Z"
@@ -1069,10 +1074,6 @@
           {
             "title": "The Blood of Dawnwalker od veteránů z CD Projektu odhalilo datum vydání",
             "publishedAt": "2026-04-28T18:00:00Z"
-          },
-          {
-            "title": "Hráči na PlayStationu řeší novou DRM ochranu u digitálně zakoupených her",
-            "publishedAt": "2026-04-28T16:00:00Z"
           }
         ]
       }

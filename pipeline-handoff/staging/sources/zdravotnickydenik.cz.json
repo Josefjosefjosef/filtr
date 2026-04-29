@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-29T14:14:35.016217Z",
+  "ingestedAt": "2026-04-29T14:44:43.783866Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-vybor-mistopredseda-vesecka/",
+      "dt": "2026-04-29T14:35:23Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bývalá",
+        "jím",
+        "motoristy",
+        "místopředsedu",
+        "nejvyšší",
+        "státní",
+        "třetího",
+        "vybral",
+        "výbor",
+        "zdravotní",
+        "zástupkyně"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Hrozí dražší zdravotní péče? SPD varuje před dopady plánovaných škrtů",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-pece-spd-dopady-skrty/",
-      "dt": "2026-04-29T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dopady",
-        "dražší",
-        "hrozí",
-        "plánovaných",
-        "péče",
-        "spd",
-        "varuje",
-        "zdravotní",
-        "škrtů"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98317,
+      "bytes": 96084,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T13:55:40Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T14:35:23Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -332,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
+            "publishedAt": "2026-04-29T14:35:23Z"
+          },
           {
             "title": "Větší hrozba než válka v Íránu. Nová evropská pravidla děsí farmaceutický průmysl",
             "publishedAt": "2026-04-29T13:55:40Z"
@@ -359,10 +365,6 @@
           {
             "title": "Vojtěch se bije za Národní očkovací strategii. Senátní výbor ho podpořil",
             "publishedAt": "2026-04-29T08:00:00Z"
-          },
-          {
-            "title": "Masivní migrace pojištěnců: Jedna zdravotní pojišťovna válcuje všechny ostatní",
-            "publishedAt": "2026-04-29T07:00:00Z"
           }
         ]
       }
