@@ -15585,6 +15585,48 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  /**
+   * P0: stop Počasí inline YouTube preview only (#iuWeatherHistoryPlayerHost inside #iuWeatherView).
+   * Idempotent; does not touch feed / Média video cards. Prefer clearing iframe src + host teardown.
+   */
+  function stopWeatherInlineVideo(reason) {
+    try {
+      void reason;
+      const wv = document.getElementById("iuWeatherView");
+      if (!wv) return;
+      const host = document.getElementById("iuWeatherHistoryPlayerHost");
+      const card = document.getElementById("iuWeatherHistoryCard");
+      if (host && wv.contains(host)) {
+        try {
+          const frames = host.querySelectorAll("iframe");
+          for (let i = 0; i < frames.length; i++) {
+            const fr = frames[i];
+            try {
+              fr.src = "about:blank";
+            } catch (_s) {}
+            try {
+              fr.removeAttribute("src");
+            } catch (_r) {}
+          }
+        } catch (_q) {}
+        try {
+          host.replaceChildren();
+        } catch (_c) {}
+        try {
+          host.hidden = true;
+        } catch (_h) {}
+      }
+      if (card && wv.contains(card)) {
+        try {
+          card.classList.remove("iu-weather-video-card--playing");
+        } catch (_p) {}
+      }
+    } catch (_outer) {}
+  }
+  try {
+    window.stopWeatherInlineVideo = stopWeatherInlineVideo;
+  } catch (_exp) {}
+
   function iuWeatherHistoryRenderPick(pick){
     const card = document.getElementById("iuWeatherHistoryCard");
     const fallback = document.getElementById("iuWeatherHistoryFallback");
@@ -27482,6 +27524,12 @@ function buildVideoAsArticleCard(it) {
     } catch (_hub) {}
     const nav = readUrlNavState();
     const section = nav.section;
+    /* P0 Počasí inline video: must not keep playing in background when leaving weather / any other section applies. */
+    try {
+      if (section !== "pocasi") {
+        stopWeatherInlineVideo("applySection_non_weather");
+      }
+    } catch (_wxVidStop) {}
     const usesFeed = iuProjectsNavUsesFeedPipeline(nav);
     try {
       const fp = typeof window !== "undefined" && window.__iuFeedPipelineState ? window.__iuFeedPipelineState : null;

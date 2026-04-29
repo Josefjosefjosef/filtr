@@ -113,6 +113,31 @@ def check_fetch_paths(app_js: Path):
     return issues
 
 
+def check_weather_inline_video_autopause(app_js: Path):
+    """Regression: Počasí YouTube preview must teardown when leaving the section (assets/app.js)."""
+    issues = []
+    if not app_js.exists():
+        return issues
+    t = app_js.read_text(encoding="utf-8")
+    if "function stopWeatherInlineVideo" not in t:
+        issues.append(
+            "assets/app.js must define stopWeatherInlineVideo(reason) for Počasí inline video cleanup"
+        )
+    if "window.stopWeatherInlineVideo" not in t:
+        issues.append("assets/app.js must expose stopWeatherInlineVideo on window for diagnostics/tests")
+    if "stopWeatherInlineVideo(" not in t:
+        issues.append("assets/app.js must call stopWeatherInlineVideo when leaving non–Počasí section")
+    if 'stopWeatherInlineVideo("applySection_non_weather")' not in t:
+        issues.append(
+            "assets/app.js must invoke stopWeatherInlineVideo from applySectionFromURL (applySection_non_weather)"
+        )
+    if "iuWeatherHistoryPlayerHost" not in t:
+        issues.append(
+            "assets/app.js stopWeatherInlineVideo must target iuWeatherHistoryPlayerHost (Počasí embed host)"
+        )
+    return issues
+
+
 def check_section_feed_header(app_js: Path, index_html: Path):
     """Regresní guard: feed #dataUpdatedAt nesmí používat globální dataset generatedAt ani starý text."""
     issues = []
@@ -149,6 +174,8 @@ def main():
     app_js = ROOT / "assets" / "app.js"
     if app_js.exists():
         issues += check_fetch_paths(app_js)
+
+    issues += check_weather_inline_video_autopause(app_js)
 
     issues += check_section_feed_header(app_js, projects_index)
 
