@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-29T19:24:50.987891Z",
+  "ingestedAt": "2026-04-29T19:50:31.132012Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Irská policie vyšetřuje smrt Češky. Matku tří dětí někdo brutálně ubodal",
+      "url": "https://www.denik.cz/staty-eu/irsko-ceska-napadeni-pobodani-vrazda-smrt.html",
+      "dt": "2026-04-29T19:06:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "brutálně",
+        "dětí",
+        "irská",
+        "matku",
+        "někdo",
+        "policie",
+        "smrt",
+        "tří",
+        "ubodal",
+        "vyšetřuje",
+        "češky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,31 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Růžový sen. Rozkvetlé sakury v Liberci lákají fotografy i turisty",
-      "url": "https://www.denik.cz/regiony/liberec-sakury-zhorelecka-fotografie-ruzove.html",
-      "dt": "2026-04-29T08:40:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fotografy",
-        "liberci",
-        "lákají",
-        "rozkvetlé",
-        "růžový",
-        "sakury",
-        "sen",
-        "turisty"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -654,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30001,
+      "bytes": 29869,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -691,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-29T17:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T19:06:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -707,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Irská policie vyšetřuje smrt Češky. Matku tří dětí někdo brutálně ubodal",
+            "publishedAt": "2026-04-29T19:06:00Z"
+          },
           {
             "title": "V obchodním centru ve Zlíně unikla nebezpečná látka. Dva lidé jsou v nemocnici",
             "publishedAt": "2026-04-29T17:25:00Z"
@@ -734,10 +741,6 @@
           {
             "title": "Recenze: Alchemised. Dark fantasy, která vás pohltí i vyčerpá",
             "publishedAt": "2026-04-29T14:00:00Z"
-          },
-          {
-            "title": "Zemřel hudebník Oskar Petr. Napsal hity pro Lucii či Anetu Langerovou",
-            "publishedAt": "2026-04-29T13:56:00Z"
           }
         ]
       }

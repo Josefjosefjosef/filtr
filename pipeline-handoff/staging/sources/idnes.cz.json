@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-29T19:24:50.987891Z",
+  "ingestedAt": "2026-04-29T19:50:31.132012Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "D6 u Unhoště uzavřela nehoda kamionů, na dálnici se vysypaly plastové lahve",
+      "url": "https://www.idnes.cz/praha/zpravy/d6-unhost-kladno-nehoda-policie-plastove-lahve-kamion.A260429_211239_praha-zpravy_berr",
+      "dt": "2026-04-29T19:23:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dálnici",
+        "kamionů",
+        "lahve",
+        "nehoda",
+        "plastové",
+        "unhoště",
+        "uzavřela",
+        "vysypaly"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -763,31 +788,6 @@
         "zadržela",
         "zhoubě",
         "zásahovka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Přehlídka v Moskvě bude bez kolony vojenské techniky. Poprvé od začátku války",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/moskva-prehlidka-vojenska-technika-valka-na-ukrajine.A260429_083847_zahranicni_kurl",
-      "dt": "2026-04-29T14:23:38Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "kolony",
-        "moskvě",
-        "poprvé",
-        "přehlídka",
-        "techniky",
-        "vojenské",
-        "války",
-        "začátku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1591,7 +1591,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48915,
+      "bytes": 48265,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1628,7 +1628,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T19:23:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1645,6 +1645,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "D6 u Unhoště uzavřela nehoda kamionů, na dálnici se vysypaly plastové lahve",
+            "publishedAt": "2026-04-29T19:23:00Z"
+          },
           {
             "title": "Okamura a Foldyna si v Bělehradě prohlédli EXPO, zítra je přijme Vučič",
             "publishedAt": "2026-04-29T19:04:00Z"
@@ -1672,10 +1676,6 @@
           {
             "title": "Trump a Putin se shodli na příměří během květnových oslav, řešili také Írán",
             "publishedAt": "2026-04-29T17:52:00Z"
-          },
-          {
-            "title": "Kdo po Řehkovi? Babiš dostal čtyři jména, nominaci bude řešit po návratu z Asie",
-            "publishedAt": "2026-04-29T17:46:00Z"
           }
         ]
       }

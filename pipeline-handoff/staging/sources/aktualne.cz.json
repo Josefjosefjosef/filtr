@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-29T19:24:50.987891Z",
+  "ingestedAt": "2026-04-29T19:50:31.132012Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Češky v Madridu dohrály. Pro Noskovou i Plíškovou byla konečná ve čtvrtfinále",
+      "url": "https://sport.aktualne.cz/tenis/cestu-pliskove-ukoncila-v-madridu-potapovova-cesce-nepomohly-ani-tri-odvracene-mecboly/r~aaa29477d4dfafc185fd60e2e025485f/",
+      "dt": "2026-04-29T13:09:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dohrály",
+        "konečná",
+        "madridu",
+        "noskovou",
+        "plíškovou",
+        "češky",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -21,6 +45,35 @@
         "ukrajinci",
         "zasáhli",
         "úspěšná"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
+      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
+      "dt": "2026-02-28T14:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dolarů",
+        "miliard",
+        "odhadů",
+        "pentagon",
+        "podle",
+        "spojené",
+        "stála",
+        "státy",
+        "tvrdí",
+        "válka",
+        "zatím",
+        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -126,35 +179,6 @@
         "prokletého",
         "čechům",
         "šokující"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
-      "url": "https://zpravy.aktualne.cz/zahranici/bezny-clanek-gg-wcady7vtkpp4iwamg1kmog/r~aaa29c34ff7ce29c89d00a17c963ac4c/",
-      "dt": "2026-02-28T14:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dolarů",
-        "miliard",
-        "odhadů",
-        "pentagon",
-        "podle",
-        "spojené",
-        "stála",
-        "státy",
-        "tvrdí",
-        "válka",
-        "zatím",
-        "íránem"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -512,33 +536,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "V šestnácti jsem se teprve hledala, popisuje těžké začátky v cizině parkurová jezdkyně",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/v-sestnacti-jsem-se-teprve-hledala-popisuje-tezke-zacatky-v-cizine-parkurova-jezdkyne/r~aaa29e6d85e4a8d89e534e66d3eb52e0/",
-      "dt": "2026-04-29T14:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cizině",
-        "hledala",
-        "jezdkyně",
-        "jsem",
-        "parkurová",
-        "popisuje",
-        "teprve",
-        "těžké",
-        "začátky",
-        "šestnácti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -549,7 +546,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23015,
+      "bytes": 22908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -589,9 +586,9 @@
         "raw_feed_latest_publishedAt": "2026-04-29T19:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 5,
           "zpravy": 12,
           "finance": 1,
-          "sport": 5,
           "other": 2
         },
         "drop_counts": {
@@ -605,8 +602,16 @@
         },
         "sample_titles": [
           {
+            "title": "Češky v Madridu dohrály. Pro Noskovou i Plíškovou byla konečná ve čtvrtfinále",
+            "publishedAt": "2026-04-29T13:09:00Z"
+          },
+          {
             "title": "Úspěšná trefa: Ukrajinci zasáhli cíl v hloubi Ruska, 1500 km od hranic",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
+            "publishedAt": "2026-02-28T14:04:00Z"
           },
           {
             "title": "Nařídil to „El Money“. Útoky na majetek britského premiéra měla platit tajemná postava",
@@ -625,16 +630,8 @@
             "publishedAt": "2026-04-29T16:24:00Z"
           },
           {
-            "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
-            "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
             "title": "Trump se nechá zvěčnit i na pasech. Podle experta jde o varovný signál",
             "publishedAt": "2026-04-29T18:15:00Z"
-          },
-          {
-            "title": "Na Mlýnici jako při Tour de France. Drsňáky zase přivítá Král Šumavy",
-            "publishedAt": "2026-04-29T18:00:00Z"
           }
         ]
       }

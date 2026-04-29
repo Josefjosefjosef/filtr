@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-29T19:24:50.987891Z",
+  "ingestedAt": "2026-04-29T19:50:31.132012Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putin a Trump si telefonovali, řešit měli příměří v rusko-ukrajinské válce",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/putin-a-trump-si-telefonovali-resit-meli-primeri-v-rusko-ukrajinske-valce-372955",
+      "dt": "2026-04-29T19:38:15Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "měli",
+        "putin",
+        "příměří",
+        "rusko",
+        "telefonovali",
+        "trump",
+        "ukrajinské",
+        "válce",
+        "řešit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -741,25 +767,27 @@
       "_dt_serialized": true
     },
     {
-      "section": "finance",
+      "section": "sport",
       "contentType": "article",
-      "title": "Prezidentem Hospodářské komory byl opět zvolen Zdeněk Zajíček",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/projev-zajicka-na-snemu-hospodarske-komory-372920",
-      "dt": "2026-04-29T08:09:46Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "MS družstev přineslo české porážky, ženy ale stále myslí na postup",
+      "url": "https://sport.ceskatelevize.cz/clanek/stolni-tenis/ms-druzstev-prineslo-ceske-porazky-zeny-ale-stale-mysli-na-postup-156517",
+      "dt": "2026-04-29T19:38:02Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "hospodářské",
-        "komory",
-        "opět",
-        "prezidentem",
-        "zajíček",
-        "zdeněk",
-        "zvolen"
+        "ale",
+        "družstev",
+        "myslí",
+        "porážky",
+        "postup",
+        "přineslo",
+        "stále",
+        "české",
+        "ženy"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1501,35 +1529,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rytířský souboj ovládlo Znojmo, zápas poprvé řídila žena. Sígrs slaví premiérovou výhru",
-      "url": "https://sport.ceskatelevize.cz/clanek/americky-fotbal/rytirsky-souboj-ovladlo-znojmo-zapas-poprve-ridila-zena-sigrs-slavi-premierovou-vyhru-156486",
-      "dt": "2026-04-27T13:09:31Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "ovládlo",
-        "poprvé",
-        "premiérovou",
-        "rytířský",
-        "slaví",
-        "souboj",
-        "sígrs",
-        "výhru",
-        "znojmo",
-        "zápas",
-        "řídila",
-        "žena"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1540,7 +1539,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42190,
+      "bytes": 42293,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1600,12 +1599,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T18:35:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T19:38:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 23,
           "other": 5,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1617,6 +1616,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Putin a Trump si telefonovali, řešit měli příměří v rusko-ukrajinské válce",
+            "publishedAt": "2026-04-29T19:38:15Z"
+          },
           {
             "title": "Ropa kvůli Blízkému východu dál zdražuje, Brent je nejvýš od roku 2022",
             "publishedAt": "2026-04-29T18:35:05Z"
@@ -1644,10 +1647,6 @@
           {
             "title": "SOUHRN: Zásadní události středy 29. dubna",
             "publishedAt": "2026-04-29T16:30:00Z"
-          },
-          {
-            "title": "Odlesňování mírně zpomaluje, úbytek lesů však zůstává alarmující",
-            "publishedAt": "2026-04-29T16:00:00Z"
           }
         ]
       }
@@ -1659,7 +1658,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38942,
+      "bytes": 38827,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1696,7 +1695,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T19:38:02Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1711,6 +1710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "MS družstev přineslo české porážky, ženy ale stále myslí na postup",
+            "publishedAt": "2026-04-29T19:38:02Z"
+          },
           {
             "title": "Ústí díky povedenému závěru srovnalo sérii s Opavou",
             "publishedAt": "2026-04-29T19:10:00Z"
@@ -1738,10 +1741,6 @@
           {
             "title": "Osmnáctka si po čtyřech letech zahraje semifinále MS, po Finech narazí na Švédy",
             "publishedAt": "2026-04-29T10:00:00Z"
-          },
-          {
-            "title": "Rusové a Bělorusové smějí opět boxovat v mezinárodních soutěžích",
-            "publishedAt": "2026-04-29T08:39:45Z"
           }
         ]
       }
@@ -1753,7 +1752,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77128,
+      "bytes": 77134,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
