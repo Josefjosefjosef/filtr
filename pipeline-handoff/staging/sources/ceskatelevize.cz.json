@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-28T23:44:25.495983Z",
+  "ingestedAt": "2026-04-29T00:15:55.095855Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spojené státy vydají pasy s vyobrazením Trumpa",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/spojene-staty-vydaji-pasy-s-vyobrazenim-trumpa-372917",
+      "dt": "2026-04-28T23:43:43Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "pasy",
+        "spojené",
+        "státy",
+        "trumpa",
+        "vydají",
+        "vyobrazením"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -720,32 +743,6 @@
         "vydal",
         "zvaným",
         "člun"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Čeští vědci chtějí odstraňovat léky z vody s pomocí světla. Popsali, jak na to",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/cesti-vedci-chteji-odstranovat-leky-z-vody-s-pomoci-svetla-popsali-jak-na-to-372875",
-      "dt": "2026-04-28T09:30:53Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chtějí",
-        "léky",
-        "odstraňovat",
-        "pomocí",
-        "popsali",
-        "světla",
-        "vody",
-        "vědci",
-        "čeští"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1530,7 +1527,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42942,
+      "bytes": 42854,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1590,12 +1587,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-28T20:51:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-28T23:43:43Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "finance": 1,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1607,6 +1604,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spojené státy vydají pasy s vyobrazením Trumpa",
+            "publishedAt": "2026-04-28T23:43:43Z"
+          },
           {
             "title": "Americké ministerstvo obvinilo exšéfa FBI kvůli údajné hrozbě Trumpovi",
             "publishedAt": "2026-04-28T20:51:27Z"
@@ -1634,10 +1635,6 @@
           {
             "title": "SOUHRN: Zásadní události úterý 28. dubna",
             "publishedAt": "2026-04-28T16:30:00Z"
-          },
-          {
-            "title": "Šluknov požádá o dotaci na odkup bytů na problémovém sídlišti",
-            "publishedAt": "2026-04-28T16:00:56Z"
           }
         ]
       }
@@ -1743,7 +1740,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77620,
+      "bytes": 77682,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
