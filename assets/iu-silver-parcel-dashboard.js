@@ -181,18 +181,6 @@ try {
     };
   }
 
-  function applyPurgeRules(items) {
-    var now = Date.now();
-    var out = [];
-    for (var i = 0; i < items.length; i++) {
-      var it = items[i];
-      if (it.purgeAfterAt && now > it.purgeAfterAt) continue;
-      out.push(it);
-    }
-    if (out.length !== items.length) writeList(out);
-    return out;
-  }
-
   function openOfficialForItem(item) {
     var fac = window.IU_SILVER_PARCEL_FACADE;
     var eng = window.IU_PARCEL_TRACKING_ENGINE;
@@ -480,14 +468,6 @@ try {
     if (rowPick) wrap.appendChild(rowPick);
     wrap.appendChild(rowTime);
 
-    if (isCompleted && item.purgeAfterAt) {
-      var purge = document.createElement("div");
-      purge.className = "iuSilverParcelWatch__purgeNote";
-      purge.textContent =
-        "Za 2 dny bude automaticky odstraněna.";
-      wrap.appendChild(purge);
-    }
-
     var glsRow = null;
     if ((item.carrierHint === "gls" || (det && det.carrierKey === "gls")) && det && det.requiresPostalCode) {
       glsRow = document.createElement("div");
@@ -572,8 +552,10 @@ try {
 
     var hideB = document.createElement("button");
     hideB.type = "button";
-    hideB.className = "iuSilverParcelWatch__btnGhost";
-    hideB.textContent = "Skrýt";
+    hideB.className =
+      "iuSilverParcelWatch__btnGhost iuSilverParcelWatch__btnRemoveParcel";
+    hideB.setAttribute("aria-label", "Odstranit zásilku ze seznamu");
+    hideB.textContent = "Odstranit";
     hideB.addEventListener("click", function () {
       var list = readList().filter(function (x) {
         return x.id !== item.id;
@@ -594,7 +576,7 @@ try {
     listEl.innerHTML = "";
     if (completedEl) completedEl.innerHTML = "";
 
-    var items = applyPurgeRules(readList());
+    var items = readList();
     var active = [];
     var done = [];
     for (var i = 0; i < items.length; i++) {
@@ -634,6 +616,12 @@ try {
 
   function onSave() {
     clearErr();
+    if (isMobileTabletDetailUx()) {
+      var trimmedMain = String(inp && inp.value ? inp.value : "").trim();
+      if (!trimmedMain.length) {
+        return;
+      }
+    }
     var eng = window.IU_PARCEL_TRACKING_ENGINE;
     var fac = window.IU_SILVER_PARCEL_FACADE;
     if (!eng || !fac || typeof eng.validateTrackingNumberFormat !== "function") {
@@ -669,13 +657,13 @@ try {
       terminalVerified: null,
       pickupAddressVerified: "",
       completedAt: null,
-      purgeAfterAt: null,
       lastDetection: null,
     };
 
     list.push(item);
     writeList(list);
     if (inp) inp.value = "";
+    syncMainSaveState();
 
     setTimeout(function () {
       var fresh = readList();
@@ -708,21 +696,50 @@ try {
     writeList(list);
   }
 
+  function syncMainSaveState() {
+    if (!inp || !btnSave) return;
+    var has = String(inp.value || "").trim().length > 0;
+    if (isMobileTabletDetailUx()) {
+      btnSave.disabled = !has;
+      if (has) {
+        btnSave.classList.add("iuSilverParcelWatch__mainSave--active");
+      } else {
+        btnSave.classList.remove("iuSilverParcelWatch__mainSave--active");
+      }
+    } else {
+      btnSave.disabled = false;
+      btnSave.classList.remove("iuSilverParcelWatch__mainSave--active");
+    }
+  }
+
   function init() {
     if (!root || !inp || !btnSave || !listEl) return;
     try {
       window.__IU_SILVER_PARCEL_DASHBOARD = 1;
     } catch (_) {}
 
+    btnSave.classList.add("iuSilverParcelWatch__mainSave");
+
     refreshAllFromEngine();
-    render();
 
     window.addEventListener("pageshow", function () {
       refreshAllFromEngine();
       render();
+      syncMainSaveState();
     });
 
     btnSave.addEventListener("click", onSave);
+    inp.addEventListener("input", syncMainSaveState);
+    inp.addEventListener("paste", function () {
+      setTimeout(syncMainSaveState, 0);
+    });
+    try {
+      var mqMain = window.matchMedia("(max-width: 1024px)");
+      if (mqMain && typeof mqMain.addEventListener === "function") {
+        mqMain.addEventListener("change", syncMainSaveState);
+      }
+    } catch (_) {}
+
     inp.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -736,6 +753,7 @@ try {
       });
     }
 
+    syncMainSaveState();
     render();
   }
 

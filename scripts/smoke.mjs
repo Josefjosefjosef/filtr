@@ -493,6 +493,64 @@ async function runSmoke() {
       } catch (_) {}
     });
     await page.waitForTimeout(200);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(200);
+    await page.evaluate(() => {
+      const inp = document.getElementById("iuSilverParcelWatchInput");
+      if (inp) {
+        inp.value = "";
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
+    await page.waitForTimeout(120);
+    const mainSaveEmpty = await page.evaluate(() => {
+      const b = document.getElementById("iuSilverParcelWatchSave");
+      const inp = document.getElementById("iuSilverParcelWatchInput");
+      return {
+        disabled: !!(b && b.disabled),
+        active: !!(b && b.classList.contains("iuSilverParcelWatch__mainSave--active")),
+        fs: inp ? parseFloat(getComputedStyle(inp).fontSize) || 0 : 0,
+      };
+    });
+    if (!mainSaveEmpty.disabled || mainSaveEmpty.active) {
+      fail(`Silver parcel main save: must be disabled when empty (390): ${JSON.stringify(mainSaveEmpty)}`);
+    }
+    if (mainSaveEmpty.fs < 16) {
+      fail(`Silver parcel main input font-size must be >=16px, got ${mainSaveEmpty.fs}`);
+    }
+    await page.fill("#iuSilverParcelWatchInput", "   ");
+    await page.waitForTimeout(120);
+    const mainSaveSpaces = await page.evaluate(() => {
+      const b = document.getElementById("iuSilverParcelWatchSave");
+      return {
+        disabled: !!(b && b.disabled),
+        active: !!(b && b.classList.contains("iuSilverParcelWatch__mainSave--active")),
+      };
+    });
+    if (!mainSaveSpaces.disabled || mainSaveSpaces.active) {
+      fail(`Silver parcel main save: must be disabled when spaces-only (390): ${JSON.stringify(mainSaveSpaces)}`);
+    }
+    await page.fill("#iuSilverParcelWatchInput", "Z0000000001");
+    await page.waitForTimeout(120);
+    const mainSaveHasText = await page.evaluate(() => {
+      const b = document.getElementById("iuSilverParcelWatchSave");
+      return {
+        disabled: !!(b && b.disabled),
+        active: !!(b && b.classList.contains("iuSilverParcelWatch__mainSave--active")),
+      };
+    });
+    if (mainSaveHasText.disabled || !mainSaveHasText.active) {
+      fail(`Silver parcel main save: must be active with text (390): ${JSON.stringify(mainSaveHasText)}`);
+    }
+    const mainGreen = await page.locator("#iuSilverParcelWatchSave").evaluate((el) => {
+      const s = getComputedStyle(el);
+      const bi = String(s.backgroundImage || "");
+      const bc = String(s.backgroundColor || "");
+      return bi.indexOf("gradient") >= 0 || bc.indexOf("128, 61") >= 0 || bc.indexOf("163, 74") >= 0;
+    });
+    if (!mainGreen) {
+      fail("Silver parcel main save: expected green success style when active (390)");
+    }
     await page.fill("#iuSilverParcelWatchInput", "bad@@@");
     await page.click("#iuSilverParcelWatchSave");
     await page.waitForTimeout(400);
@@ -533,6 +591,42 @@ async function runSmoke() {
     if (!silverParcelSaved || !silverParcelSaved.ok) {
       fail(`Silver parcel save + localStorage: ${JSON.stringify(silverParcelSaved)}`);
     }
+    const silverParcelCardRemoveUx = await page.evaluate(() => {
+      const hosts = [
+        document.getElementById("iuSilverParcelWatchList"),
+        document.getElementById("iuSilverParcelWatchCompleted"),
+      ];
+      var blob = "";
+      for (var i = 0; i < hosts.length; i++) {
+        if (hosts[i]) blob += hosts[i].textContent || "";
+      }
+      const rm = document.querySelector(".iuSilverParcelWatch__btnRemoveParcel");
+      var red = false;
+      if (rm) {
+        var s = getComputedStyle(rm);
+        var c = String(s.color || "");
+        red =
+          c.indexOf("185, 28, 28") >= 0 ||
+          c.indexOf("220, 38, 38") >= 0 ||
+          c.indexOf("rgb(185") >= 0;
+      }
+      return {
+        hasSkryt: blob.indexOf("Skrýt") >= 0,
+        hasOdstranit: blob.indexOf("Odstranit") >= 0,
+        rmText: rm ? String(rm.textContent || "").trim() : "",
+        red,
+        rmExists: !!rm,
+      };
+    });
+    if (silverParcelCardRemoveUx.hasSkryt) {
+      fail("Silver parcel card: must not show label Skrýt");
+    }
+    if (!silverParcelCardRemoveUx.rmExists || silverParcelCardRemoveUx.rmText !== "Odstranit") {
+      fail(`Silver parcel card: expected Odstranit remove button: ${JSON.stringify(silverParcelCardRemoveUx)}`);
+    }
+    if (!silverParcelCardRemoveUx.red) {
+      fail("Silver parcel card: Odstranit must use destructive red styling");
+    }
     await page.fill("#iuSilverParcelWatchInput", "Z9876543210");
     await page.click("#iuSilverParcelWatchSave");
     await page.waitForTimeout(350);
@@ -543,6 +637,33 @@ async function runSmoke() {
     });
     if (!silverParcelDup || !silverParcelDup.ok) {
       fail(`Silver parcel duplicate guard: ${JSON.stringify(silverParcelDup)}`);
+    }
+
+    await page.evaluate(() => {
+      try {
+        var raw = localStorage.getItem("iu_silver_parcel_watch_v1");
+        var j = JSON.parse(raw || "[]");
+        if (j.length && j[0]) {
+          j[0].purgeAfterAt = 1;
+          localStorage.setItem("iu_silver_parcel_watch_v1", JSON.stringify(j));
+        }
+      } catch (_) {}
+    });
+    await gotoDomContentLoaded(page, `${BASE}/projects/?section=media`);
+    await gotoProjectsMediaForSmoke(page);
+    await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    await page.waitForFunction(
+      () => !!(window.IU_SILVER_PARCEL_FACADE && window.IU_PARCEL_TRACKING_ENGINE),
+      { timeout: 15000 },
+    );
+    await page.waitForTimeout(400);
+    const silverParcelPurgeImmune = await page.evaluate(() => {
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      return { hasZ: t.indexOf("Z9876543210") >= 0 };
+    });
+    if (!silverParcelPurgeImmune.hasZ) {
+      fail("Silver parcel: stale purgeAfterAt must not remove item after reload");
     }
 
     const smsSample =
@@ -722,6 +843,21 @@ async function runSmoke() {
     }
     if (!afterRemove.hasAdd) {
       fail("Silver parcel detail: Přidat detail must return after remove");
+    }
+
+    await page.locator(".iuSilverParcelWatch__btnRemoveParcel").first().click();
+    await page.waitForTimeout(450);
+    const silverParcelManualRemove = await page.evaluate(() => {
+      var ls = "";
+      try {
+        ls = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+      } catch (_) {}
+      const list = document.getElementById("iuSilverParcelWatchList");
+      const t = list ? String(list.textContent || "") : "";
+      return { lsHasZ: ls.indexOf("Z9876543210") >= 0, listHasZ: t.indexOf("Z9876543210") >= 0 };
+    });
+    if (silverParcelManualRemove.lsHasZ || silverParcelManualRemove.listHasZ) {
+      fail(`Silver parcel: manual Odstranit must clear item: ${JSON.stringify(silverParcelManualRemove)}`);
     }
 
     await page.setViewportSize({ width: 1366, height: 768 });
