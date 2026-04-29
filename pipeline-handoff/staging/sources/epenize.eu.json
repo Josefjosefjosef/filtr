@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-29T22:35:46.870436Z",
+  "ingestedAt": "2026-04-29T23:49:23.829942Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
+      "url": "https://www.epenize.eu/byvaly-reditel-fbi-dal-na-instagram-musle-maga-v-tom-vidi-rozkaz-k-vrazde/",
+      "dt": "2026-04-29T23:00:38Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "bývalý",
+        "dal",
+        "fbi",
+        "instagram",
+        "maga",
+        "mušle",
+        "rozkaz",
+        "tom",
+        "vidí",
+        "vraždě",
+        "ředitel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -471,34 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trumpův energetický náčelník je prý „úplně mimo“ a benzín za stovku je prý jen demokratický hoax",
-      "url": "https://www.epenize.eu/trumpuv-energeticky-nacelnik-je-pry-uplne-mimo-a-benzin-za-stovku-je-pry-jen-demokraticky-hoax/",
-      "dt": "2026-04-20T23:00:35Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "benzín",
-        "demokratický",
-        "energetický",
-        "hoax",
-        "jen",
-        "mimo",
-        "náčelník",
-        "prý",
-        "stovku",
-        "trumpův",
-        "úplně"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109233,
+      "bytes": 109005,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,11 +546,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:13:17Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T23:00:38Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 19,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 18
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
+            "publishedAt": "2026-04-29T23:00:38Z"
+          },
           {
             "title": "Trefný Fiala na síti: Neoficiální klub přátel Kremlu- Rajchl, Zeman, Hamplová",
             "publishedAt": "2026-04-29T14:13:17Z"
@@ -589,10 +593,6 @@
           {
             "title": "Fotografování škol: Nekonečný byznys na dětech i rodičích",
             "publishedAt": "2026-04-26T07:00:31Z"
-          },
-          {
-            "title": "Papež Lev versus Trump: Popravčí čety a souboj o přízeň Američanů",
-            "publishedAt": "2026-04-25T23:00:40Z"
           }
         ]
       }
