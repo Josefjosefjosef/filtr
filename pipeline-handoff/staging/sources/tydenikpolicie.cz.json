@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-29T01:41:16.700473Z",
+  "ingestedAt": "2026-04-29T02:09:33.851913Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "U popelnic v Plzni odchytili strážníci zakrslého králíka",
+      "url": "https://tydenikpolicie.cz/u-popelnic-v-plzni-odchytili-straznici-zakrsleho-kralika/",
+      "dt": "2026-04-29T02:02:27Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "králíka",
+        "odchytili",
+        "plzni",
+        "popelnic",
+        "strážníci",
+        "zakrslého"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,28 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V poli u Brandýsa nad Labem se objevil serval",
-      "url": "https://tydenikpolicie.cz/v-poli-u-brandysa-nad-labem-se-objevil-serval/",
-      "dt": "2026-04-28T15:51:03Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brandýsa",
-        "labem",
-        "objevil",
-        "poli",
-        "serval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -272,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 15785,
+      "bytes": 15946,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -309,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T00:02:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T02:02:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -324,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "U popelnic v Plzni odchytili strážníci zakrslého králíka",
+            "publishedAt": "2026-04-29T02:02:27Z"
+          },
           {
             "title": "Odložená peněženka spadla do křižovatky v Kladně z projíždějícího auta. Pomohl kamerový systém i městská policie",
             "publishedAt": "2026-04-29T00:02:36Z"
@@ -351,10 +356,6 @@
           {
             "title": "Strážníci v Kladně převedli početnou kachní rodinku přes silnici",
             "publishedAt": "2026-04-28T19:02:40Z"
-          },
-          {
-            "title": "Rozčílený muž rozbil v Praze pěstí skleněnou výplň dveří odjíždějícího autobusu",
-            "publishedAt": "2026-04-28T16:49:36Z"
           }
         ]
       }
