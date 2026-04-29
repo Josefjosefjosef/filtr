@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-29T18:14:38.456078Z",
+  "ingestedAt": "2026-04-29T19:24:50.987891Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zlevní odchod Emirátů z kartelu OPEC pohonné hmoty?",
+      "url": "https://profitonline.cz/zlevni-odchod-emiratu-z-kartelu-opec-pohonne-hmoty/",
+      "dt": "2026-04-29T18:30:03Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "emirátů",
+        "hmoty",
+        "kartelu",
+        "odchod",
+        "opec",
+        "pohonné",
+        "zlevní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,29 +296,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Slovensku kvůli vysokým deficitům zhoršili rating",
-      "url": "https://profitonline.cz/slovensku-kvuli-vysokym-deficitum-zhorsili-rating/",
-      "dt": "2026-04-26T08:10:16Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "deficitům",
-        "kvůli",
-        "rating",
-        "slovensku",
-        "vysokým",
-        "zhoršili"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -305,7 +306,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19082,
+      "bytes": 18898,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -342,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-29T10:00:24Z",
+        "raw_feed_latest_publishedAt": "2026-04-29T18:30:03Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -357,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zlevní odchod Emirátů z kartelu OPEC pohonné hmoty?",
+            "publishedAt": "2026-04-29T18:30:03Z"
+          },
           {
             "title": "Češi nechtějí platit daně. Zrušíme je stejně jako televizní poplatky?",
             "publishedAt": "2026-04-29T10:00:24Z"
@@ -384,10 +389,6 @@
           {
             "title": "Digitální proces, analogový konec. Moderní přístup končí u ručního podpisu",
             "publishedAt": "2026-04-28T08:00:36Z"
-          },
-          {
-            "title": "88 minut hackerům stačí k ovládnutí firmy, varuje expert na kyberbezpečnost",
-            "publishedAt": "2026-04-28T04:00:34Z"
           }
         ]
       }
