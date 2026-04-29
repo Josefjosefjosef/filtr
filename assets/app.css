@@ -16424,6 +16424,59 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   
 }
 
+/* Silver weather compact: stack shell (mobile layout lives in projects/index.html to stay under app.css size budget). */
+.iu-weather-compact-stack{
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px){
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .silver-weather-line1{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 6px;
+    row-gap: 4px;
+  }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-divider{
+    display: none !important;
+  }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-tempCol{
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 4px;
+    min-width: 0;
+  }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-feels::before{
+    content: " | ";
+    font-weight: 500;
+    color: inherit;
+    opacity: 0.75;
+  }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status{
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+    color: inherit;
+  }
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase="data"] .iu-weather-compact-status::before{
+    content: " | ";
+    font-weight: 500;
+    color: inherit;
+    opacity: 0.75;
+  }
+}
+
 .silver-weather-card[data-iu-silver-wx-phase="data"]{
   cursor: pointer;
 }
