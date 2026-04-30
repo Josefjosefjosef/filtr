@@ -941,6 +941,10 @@ try {
   /** P0 reload-only: smaller batches so each frame does less innerHTML+layout work (cold path unchanged). */
   const IU_FEED_RELOAD_FIRST_DOM_BATCH = 8;
   const IU_FEED_RELOAD_APPEND_CHUNK = 10;
+  /**
+   * P0 feed batching: viewport-aware chunk sizes + optional inner yields (splits innerHTML work).
+   * Reload path still uses IU_FEED_RELOAD_* only (tighter caps).
+   */
   const IU_VIDEO_PICK_WINDOW = 240;
   const IU_VIDEO_QUEUE_PREFIX = "iu_video_queue_v1:";
   const IU_VIDEO_SEEN_KEY_V1 = "iu_video_seen_v1";
@@ -4883,6 +4887,15 @@ try {
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;
     iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
+    state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
+    const iuRenderFeedToken = state.__iuRenderFeedGeneration;
+    function iuRenderFeedStaleP() {
+      try {
+        return state.__iuRenderFeedGeneration !== iuRenderFeedToken;
+      } catch (_) {
+        return false;
+      }
+    }
     const safeTarget = insideTarget(target, feedEl);
     if (emptyBox) {
       emptyBox.style.display = "none";
@@ -5083,6 +5096,9 @@ try {
     const reloadDomTight = iuFeedReloadDomTightenP();
     const feedSectionHeaderEl = iuBuildFeedSectionHeaderElement();
     while (pos < visibleItems.length) {
+      if (iuRenderFeedStaleP()) {
+        return;
+      }
       const batchMax = firstDomBatch
         ? reloadDomTight
           ? IU_FEED_RELOAD_FIRST_DOM_BATCH
@@ -5094,6 +5110,9 @@ try {
       const frag = document.createDocumentFragment();
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
       for (; pos < batchEnd; pos++) {
+        if (iuRenderFeedStaleP()) {
+          return;
+        }
         const item = visibleItems[pos];
         const kind = String(item.contentType || "").toLowerCase();
         if (!ALLOWED_CONTENT_TYPES.has(kind)) {
@@ -5162,6 +5181,9 @@ try {
       }
       if (pos < visibleItems.length) {
         await iuYieldForFeedDomChunk();
+        if (iuRenderFeedStaleP()) {
+          return;
+        }
       }
     }
 
@@ -5217,6 +5239,9 @@ try {
 
     // DOM re-anchor pass: ensure video cards are exactly after 8/16/24... rendered articles.
     try {
+      if (iuRenderFeedStaleP()) {
+        return;
+      }
       window.__iuVideoAnchorSectionKey = sectionKey;
       iuInitVideoAnchorObserver();
       iuEnsureVideoAnchors(sectionKey);
