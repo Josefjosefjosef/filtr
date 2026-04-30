@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T03:19:52.772503Z",
+  "ingestedAt": "2026-04-30T03:50:04.118990Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Čarodějnice a pravidla: Co u ohňů dodržet, kam je hlásit, jaké hrozí pokuty",
+      "url": "https://www.denik.cz/z_domova/paleni-carodejnice-2026-cesko-akce-pravidla-ohen-kam-je-hlasit-jake-hrozi-pokuty.html",
+      "dt": "2026-04-30T03:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dodržet",
+        "hlásit",
+        "hrozí",
+        "jaké",
+        "kam",
+        "ohňů",
+        "pokuty",
+        "pravidla",
+        "čarodějnice"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -623,32 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Španělé pokročili s šetřením tragické vlakové nehody: Závada zmařila 46 životů",
-      "url": "https://www.denik.cz/staty-eu/spanelsko-vlaky-srazka-vykolejeni-adamuz-pricina-zprava.html",
-      "dt": "2026-04-29T10:33:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "nehody",
-        "pokročili",
-        "tragické",
-        "vlakové",
-        "zmařila",
-        "závada",
-        "šetřením",
-        "španělé",
-        "životů"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29910,
+      "bytes": 30234,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T03:30:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čarodějnice a pravidla: Co u ohňů dodržet, kam je hlásit, jaké hrozí pokuty",
+            "publishedAt": "2026-04-30T03:30:00Z"
+          },
           {
             "title": "Koncert skončil brutalitou. Čarodějnice na Lanšperku kdysi tvrdě rozehnala VB",
             "publishedAt": "2026-04-30T03:00:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "V obchodním centru ve Zlíně unikla nebezpečná látka. Dva lidé jsou v nemocnici",
             "publishedAt": "2026-04-29T17:25:00Z"
-          },
-          {
-            "title": "Dvě blokády Hormuzu? Proplout dokáží pašeráci i superjachta ruského oligarchy",
-            "publishedAt": "2026-04-29T17:00:00Z"
           }
         ]
       }
