@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-30T13:49:56.299057Z",
+  "ingestedAt": "2026-04-30T15:04:53.745262Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
+      "url": "https://profitonline.cz/strasak-jmenem-dvouciferna-inflace-mame-se-ji-kvuli-hormuzu-bat/",
+      "dt": "2026-04-30T14:00:07Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "bát",
+        "dvouciferná",
+        "hormuzu",
+        "inflace",
+        "jménem",
+        "kvůli",
+        "máme",
+        "strašák"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -275,31 +300,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "88 minut hackerům stačí k ovládnutí firmy, varuje expert na kyberbezpečnost",
-      "url": "https://profitonline.cz/88-minut-hackerum-staci-k-ovladnuti-firmy-varuje-expert-na-kyberbezpecnost/",
-      "dt": "2026-04-28T04:00:34Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "expert",
-        "firmy",
-        "hackerům",
-        "kyberbezpečnost",
-        "minut",
-        "ovládnutí",
-        "stačí",
-        "varuje"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -310,7 +310,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19088,
+      "bytes": 18914,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,11 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-30T06:40:53Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T14:00:07Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "finance": 11
+          "finance": 11,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -363,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
+            "publishedAt": "2026-04-30T14:00:07Z"
+          },
           {
             "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
             "publishedAt": "2026-04-30T06:40:53Z"
@@ -390,10 +394,6 @@
           {
             "title": "Fed i ECB ponechají úrokové sazby beze změny",
             "publishedAt": "2026-04-29T06:00:52Z"
-          },
-          {
-            "title": "Brusel chce, aby výše mzdy byla už v inzerátech. V Česku to bude jinak",
-            "publishedAt": "2026-04-29T04:00:29Z"
           }
         ]
       }

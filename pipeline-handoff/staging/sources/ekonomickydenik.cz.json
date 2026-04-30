@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-30T13:49:56.299057Z",
+  "ingestedAt": "2026-04-30T15:04:53.745262Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "700 paragrafů místo 200? Zákon má tvrdě zpřísnit dohled nad pohybem cizinců v Česku",
+      "url": "https://ekonomickydenik.cz/700-paragrafu-misto-200-tvrdy-cizinecky-zakon/",
+      "dt": "2026-04-30T14:57:17Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "200",
+        "700",
+        "cizinců",
+        "dohled",
+        "místo",
+        "paragrafů",
+        "pohybem",
+        "tvrdě",
+        "zpřísnit",
+        "zákon",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -754,33 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "EPH stěhuje dceřinou firmu z Prahy do Amsterdamu. Před tím stáhlo 13 miliard korun",
-      "url": "https://ekonomickydenik.cz/eph-stehuje-dceru-z-prahy-do-amsterdamu/",
-      "dt": "2026-04-29T08:34:32Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "amsterdamu",
-        "dceřinou",
-        "eph",
-        "firmu",
-        "korun",
-        "miliard",
-        "prahy",
-        "stáhlo",
-        "stěhuje",
-        "tím"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 76357,
+      "bytes": 76075,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,11 +829,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T13:40:47Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T14:57:17Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 4,
           "finance": 24,
+          "zpravy": 4,
           "zdravi": 2
         },
         "drop_counts": {
@@ -845,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "700 paragrafů místo 200? Zákon má tvrdě zpřísnit dohled nad pohybem cizinců v Česku",
+            "publishedAt": "2026-04-30T14:57:17Z"
+          },
           {
             "title": "„Má černou stavbu a mění zákon,“ zaútočil Hřib na Mrázovou. Poslanci ji vyzvali k rezignaci",
             "publishedAt": "2026-04-30T13:40:47Z"
@@ -872,10 +877,6 @@
           {
             "title": "Konec digitální džungle? Nový zákon si došlápne na online giganty a ochrání děti",
             "publishedAt": "2026-04-30T10:49:22Z"
-          },
-          {
-            "title": "Macinka je z toho venku? Policie odložila případ zpráv prezidentovu poradci",
-            "publishedAt": "2026-04-30T10:36:08Z"
           }
         ]
       }

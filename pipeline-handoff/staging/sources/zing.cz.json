@@ -1,8 +1,55 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-30T13:49:56.299057Z",
+  "ingestedAt": "2026-04-30T15:04:53.745262Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Epic nabízí hru zdarma",
+      "url": "https://zing.cz/article/epic-nabizi-hru-zdarma-21",
+      "dt": "2026-04-30T15:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "epic",
+        "hru",
+        "nabízí",
+        "zdarma"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Film podle herní série Resident Evil obdržel premiérový trailer",
+      "url": "https://zing.cz/article/film-podle-herni-serie-resident-evil-obdrzel",
+      "dt": "2026-04-30T14:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "evil",
+        "film",
+        "herní",
+        "obdržel",
+        "podle",
+        "premiérový",
+        "resident",
+        "série",
+        "trailer"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -945,51 +992,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Heroes of the Storm: rework Arthase a návrat Haunted Mines",
-      "url": "https://zing.cz/article/heroes-of-the-storm-rework-arthase-a-navrat-haunted-mines",
-      "dt": "2026-04-25T12:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "arthase",
-        "haunted",
-        "heroes",
-        "mines",
-        "návrat",
-        "rework",
-        "storm",
-        "the"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Cozy novinky s Terry #51",
-      "url": "https://zing.cz/article/cozy-novinky-s-terry-51",
-      "dt": "2026-04-25T10:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "cozy",
-        "novinky",
-        "terry"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1000,7 +1002,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125413,
+      "bytes": 125401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1037,11 +1039,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T12:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T15:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 39,
-          "zpravy": 1
+          "other": 38,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1053,6 +1055,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Epic nabízí hru zdarma",
+            "publishedAt": "2026-04-30T15:00:00Z"
+          },
+          {
+            "title": "Film podle herní série Resident Evil obdržel premiérový trailer",
+            "publishedAt": "2026-04-30T14:00:00Z"
+          },
           {
             "title": "Čeští vývojáři chystají druhoválečnou střílečku inspirovanou Call of Duty",
             "publishedAt": "2026-04-30T12:00:00Z"
@@ -1076,14 +1086,6 @@
           {
             "title": "Vyšla akce Industria 2, běží na Unreal Enginu 5 a inspiruje se značkou Half-Life",
             "publishedAt": "2026-04-30T04:00:00Z"
-          },
-          {
-            "title": "Květnová nabídka her v PlayStation Plus byla oficiálně představena",
-            "publishedAt": "2026-04-29T16:30:00Z"
-          },
-          {
-            "title": "České studio Amanita Design oznámilo datum vydání hry Phonopolis",
-            "publishedAt": "2026-04-29T16:00:00Z"
           }
         ]
       }
