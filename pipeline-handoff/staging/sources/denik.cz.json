@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T10:05:36.613016Z",
+  "ingestedAt": "2026-04-30T10:34:44.008293Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Náročný zásah v Krkonoších: Záchranáři museli turistku odnést na ramenou",
+      "url": "https://www.denik.cz/regiony/zasah-v-krkonosich-zranenou-turistku-museli-z-odnest-zachranari-na-ramenou-20260.html",
+      "dt": "2026-04-30T10:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "krkonoších",
+        "museli",
+        "náročný",
+        "odnést",
+        "ramenou",
+        "turistku",
+        "záchranáři",
+        "zásah"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -629,31 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jednotná nabíječka už míří i k notebookům. Začala platit nová pravidla",
-      "url": "https://www.denik.cz/ekonomika/ekonomika-jednotna-nabijecka-pro-notebooky-pravidla-cesko.html",
-      "dt": "2026-04-29T14:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "jednotná",
-        "míří",
-        "nabíječka",
-        "notebookům",
-        "nová",
-        "platit",
-        "pravidla",
-        "začala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -664,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29559,
+      "bytes": 29273,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -701,11 +701,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 2
+          "zpravy": 24,
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -717,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Náročný zásah v Krkonoších: Záchranáři museli turistku odnést na ramenou",
+            "publishedAt": "2026-04-30T10:00:00Z"
+          },
           {
             "title": "Pekelně horké léto se blíží: Voda v nádržích bude extra teplá, experti už ví kdy",
             "publishedAt": "2026-04-30T09:15:00Z"
@@ -744,10 +748,6 @@
           {
             "title": "Charlotte Gott vydala první singl. Je připravená uspět v zahraniční konkurenci",
             "publishedAt": "2026-04-30T06:41:00Z"
-          },
-          {
-            "title": "Kouzelná jarní podívaná. Náměstí v Lysé zdobí tulipány, mají neobvyklé barvy",
-            "publishedAt": "2026-04-30T06:04:00Z"
           }
         ]
       }

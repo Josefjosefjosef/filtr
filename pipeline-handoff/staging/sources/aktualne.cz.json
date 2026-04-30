@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-30T10:05:36.613016Z",
+  "ingestedAt": "2026-04-30T10:34:44.008293Z",
   "items": [
     {
       "section": "aktualne",
@@ -21,6 +21,30 @@
         "trump",
         "ukrajinci",
         "věří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policie odložila prověřování Macinkových zpráv prezidentovu poradci",
+      "url": "https://zpravy.aktualne.cz/domaci/policie-odlozila-proverovani-macinkovych-zprav-prezidentovu-poradci/r~aaa293176bf0258a41bf15aa4464d9ca/",
+      "dt": "2026-04-30T10:15:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "macinkových",
+        "odložila",
+        "policie",
+        "poradci",
+        "prezidentovu",
+        "prověřování",
+        "zpráv"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -520,32 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravé potraviny, které mohou zvyšovat riziko rakoviny. Studie přišla s nečekaným zjištěním",
-      "url": "https://magazin.aktualne.cz/zdrave-potraviny-ktere-mohou-zvysovat-riziko-rakoviny-studie-prisla-s-necekanym-zjistenim/r~aaa290e295a968136f034e1492ba773a/",
-      "dt": "2026-04-30T03:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "nečekaným",
-        "potraviny",
-        "přišla",
-        "rakoviny",
-        "riziko",
-        "studie",
-        "zdravé",
-        "zjištěním",
-        "zvyšovat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -556,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22234,
+      "bytes": 22272,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -593,14 +591,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:15:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
+          "zpravy": 13,
           "sport": 2,
           "other": 3,
           "finance": 1,
-          "zdravi": 2
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -615,6 +613,10 @@
           {
             "title": "Jaké příměří dojednal Trump s Putinem? Ukrajinci věří Američanům stále méně",
             "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
+            "title": "Policie odložila prověřování Macinkových zpráv prezidentovu poradci",
+            "publishedAt": "2026-04-30T10:15:00Z"
           },
           {
             "title": "Sezona splouvání Teplé Vltavy v pátek nezačne, je málo vody",
@@ -639,10 +641,6 @@
           {
             "title": "Vysoký plat a rozhoduje od stolu. Juchelka se opřel do soudkyně kvůli zabité holčičce",
             "publishedAt": "2026-04-30T08:14:00Z"
-          },
-          {
-            "title": "Charlotte Gott slaví 20 let. V den svých narozenin vydává debutový singl In Too Deep",
-            "publishedAt": "2026-04-30T07:59:00Z"
           }
         ]
       }

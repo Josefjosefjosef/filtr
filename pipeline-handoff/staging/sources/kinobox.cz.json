@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-30T10:05:36.613016Z",
+  "ingestedAt": "2026-04-30T10:34:44.008293Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Když se z věrné fanynky stane kat. Misery i po 30 letech definuje filmový teror",
+      "url": "https://www.kinobox.cz/clanky/daily/53191-kinobox-daily-kdyz-se-z-verne-fanynky-stane-kat-misery-i-po-30-letech-definuje-filmovy-teror",
+      "dt": "2026-04-30T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "definuje",
+        "fanynky",
+        "filmový",
+        "kat",
+        "když",
+        "kinobox",
+        "letech",
+        "misery",
+        "stane",
+        "teror",
+        "věrné"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -535,32 +564,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "TV tipy: Český válečný film, seriálový Pán prstenů i Schindlerův seznam",
-      "url": "https://www.kinobox.cz/clanky/tema/53126-tv-tipy-cesky-valecny-film-serialovy-pan-prstenu-i-schindleruv-seznam",
-      "dt": "2026-04-27T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "film",
-        "prstenů",
-        "pán",
-        "schindlerův",
-        "seriálový",
-        "seznam",
-        "tipy",
-        "válečný",
-        "český"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -571,7 +574,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28812,
+      "bytes": 28848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -608,7 +611,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -623,6 +626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Když se z věrné fanynky stane kat. Misery i po 30 letech definuje filmový teror",
+            "publishedAt": "2026-04-30T10:00:00Z"
+          },
           {
             "title": "Kdo je nový Snape, herec Paapa Essiedu? Nikdy neviděl filmy a bude jiný než Rickman",
             "publishedAt": "2026-04-30T09:00:00Z"
@@ -650,10 +657,6 @@
           {
             "title": "Django a Zorro spojí síly. Oscarový autor píše film na motivy Tarantinova kultovního komiksu",
             "publishedAt": "2026-04-29T12:00:00Z"
-          },
-          {
-            "title": "Kinobox Daily: Stallone a Schwarzenegger v jedné cele, z níž není úniku",
-            "publishedAt": "2026-04-29T10:00:00Z"
           }
         ]
       }

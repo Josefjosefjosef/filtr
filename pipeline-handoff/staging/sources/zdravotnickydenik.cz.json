@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T10:05:36.613016Z",
+  "ingestedAt": "2026-04-30T10:34:44.008293Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o jeho osudu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/holobrada-pribram-obvineni-kraj/",
+      "dt": "2026-04-30T10:07:30Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "cítím",
+        "jeho",
+        "kraj",
+        "nemocnice",
+        "nevinen",
+        "obviněný",
+        "osudu",
+        "příbramské",
+        "rozhodl",
+        "ředitel"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -239,31 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Přesun miliard z VZP visí ve vzduchu: Senátní výbory se neshodly",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/vybory-senatu-prerozdeleni-vzp-zamestanecke-pojistovny/",
-      "dt": "2026-04-29T13:07:50Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "miliard",
-        "neshodly",
-        "přesun",
-        "senátní",
-        "visí",
-        "vzduchu",
-        "vzp",
-        "výbory"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 75291,
+      "bytes": 74664,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,11 +313,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:01:59Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:07:30Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "zdravi": 9
+          "zdravi": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -327,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o jeho osudu",
+            "publishedAt": "2026-04-30T10:07:30Z"
+          },
           {
             "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
             "publishedAt": "2026-04-30T09:01:59Z"
@@ -354,10 +360,6 @@
           {
             "title": "Nové informace o policejním zásahu v příbramské nemocnici: Kterých zakázek se týkal?",
             "publishedAt": "2026-04-29T15:24:48Z"
-          },
-          {
-            "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
-            "publishedAt": "2026-04-29T14:35:23Z"
           }
         ]
       }
