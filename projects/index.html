@@ -51,6 +51,8 @@ style-src 'self' 'unsafe-inline' https:;
           box-sizing: border-box;
         }
         #iuNamedayWishOverlay .iu-overlay-close{display:none!important}
+        #iuSilverHeroPremium .iu-hero-silverSub,
+        #iuSilverHeroPremium .iu-silver-trust{display:none!important}
       }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
@@ -142,8 +144,13 @@ style-src 'self' 'unsafe-inline' https:;
         .iu-hero-figureImg{position:relative;z-index:1;display:block;width:100%;height:auto;max-height:168px;margin:0;padding:0;object-fit:contain;object-position:left bottom;box-sizing:border-box;filter:drop-shadow(0 0 20px rgba(99,102,241,.35))}
         #iuSilverHeroPremium .iu-hero-silverTitle{margin:0!important;padding:0!important;font-size:clamp(1.14rem, calc(1.02rem + 1.65vw), 1.68rem)!important;font-weight:800!important;letter-spacing:-.03em!important;line-height:1.12!important;color:rgba(248,250,252,.98)!important}
         #iuSilverHeroPremium .iu-hero-silverLines{margin:0!important;padding:0!important;display:flex;flex-direction:column;align-items:stretch;gap:3px}
+        #iuSilverHeroPremium .iu-hero-silverSub{display:block!important;margin:0!important;padding:0!important;font-size:clamp(0.82rem, calc(0.78rem + 0.95vw), 0.98rem)!important;line-height:1.28!important;font-weight:600!important;letter-spacing:-.02em!important;color:rgba(236,242,252,.94)!important}
+        #iuSilverHeroPremium .iu-silver-trust{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:4px!important;box-sizing:border-box!important;margin:7px 0 0!important;padding:0!important}
+        #iuSilverHeroPremium .iu-silver-trust__line{display:block!important;margin:0!important;padding:0!important;font-size:12.5px!important;line-height:1.35!important;font-weight:400!important;letter-spacing:0!important;color:rgba(226,232,240,.78)!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important}
         #iuSilverHeroPremium .iu-hero-silverLines .iu-hero-line{display:block!important;margin:0!important;padding:0!important;white-space:nowrap!important;font-size:clamp(0.82rem, calc(0.78rem + 0.95vw), 0.98rem)!important;line-height:1.28!important;font-weight:600!important;letter-spacing:-.02em!important;color:rgba(236,242,252,.94)!important}
         #iuSilverHeroPremium .iu-hero-silverLines .iu-hero-line--3{font-weight:550!important;opacity:.94!important}
+        #iuSilverHeroPremium .iu-hero-silverLines.iu-hero-silverLines--desktop{display:none!important}
+        #iuSilverHeroPremium #iuSilverHeroInputHost.iu-hero-silverInputHost{margin-top:11px!important}
         .iu-hero-silverInputHost{width:100%;max-width:100%;min-width:0;box-sizing:border-box;min-height:0!important;margin:0;padding:0;flex:0 0 auto}
         .iu-hero-silverInputHost .iuSilverHomeInputWrap{margin-top:0!important;margin-bottom:0!important}
         #iuSilverHeroPremium .iuSilverHomeInputWrap{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
@@ -822,7 +829,12 @@ style-src 'self' 'unsafe-inline' https:;
                                 </div>
                                 <div class="iu-hero-copy">
                                   <h2 class="iu-hero-silverTitle iu-hero-line--1">Jsem Silver.</h2>
-                                  <p class="iu-hero-silverLines" aria-label="Pomůžu ti se vším na infoUzel.cz">
+                                  <p class="iu-hero-silverSub" data-iu-silver-hero-sub>Tvůj soukromý asistent.</p>
+                                  <div class="iu-silver-trust" data-iu-silver-trust>
+                                    <p class="iu-silver-trust__line iu-silver-trust__line--1">🔒 Co napíšeš, zůstává jen u tebe</p>
+                                    <p class="iu-silver-trust__line iu-silver-trust__line--2">Nic neopouští tvoje zařízení</p>
+                                  </div>
+                                  <p class="iu-hero-silverLines iu-hero-silverLines--desktop" aria-label="Pomůžu ti se vším na infoUzel.cz">
                                     <span class="iu-hero-line iu-hero-line--2">Pomůžu ti se vším</span>
                                     <span class="iu-hero-line iu-hero-line--3">na infoUzel.cz</span>
                                   </p>
