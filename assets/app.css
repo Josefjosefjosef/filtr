@@ -14375,12 +14375,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   display: block !important;
 }
 
-body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid{
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  justify-items: center !important;
-  gap: 14px 18px !important;
-}
 body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQuickGrid > *:nth-child(9){
   grid-column: 2 / 4 !important;
 }
@@ -14395,7 +14389,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) .iu-mmQ
   align-items: start !important;
   column-gap: 18px !important;
   row-gap: 6px !important;
-  /* P0 CLS: reserve 3-row quick grid before late paint settles (~92px tracks + gaps). */
   min-height: 320px !important;
 }
 
@@ -15518,43 +15511,13 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 CLS: reserve Silver calendar summary shell before JS fills line1 rest + line2 (no late height jump). */
-#iuSilverCalendarSummaryCard.silver-calendar-summary-card{
-  border-radius: 0;
-  min-height: 104px;
-  box-sizing: border-box;
-}
-#iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{
-  min-height: calc(2 * 1.28 * 1em);
-  box-sizing: border-box;
-}
-#iuSilverCalendarSummaryCard .silver-calendar-summary-line2block{
-  min-height: calc(2 * 1.28 * 1em + 2px);
-  box-sizing: border-box;
-}
-#iuSilverCalendarSummaryCard #iuSilverCalendarSummaryLine2{
-  min-height: calc(2 * 1.28 * 1em);
-  box-sizing: border-box;
-}
-
-/* P0 CLS: mirror calendar reserve on tasks summary (async line fill). */
-#iuSilverTasksSummaryCard.silver-calendar-summary-card{
-  border-radius: 0;
-  min-height: 104px;
-  box-sizing: border-box;
-}
-#iuSilverTasksSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{
-  min-height: calc(2 * 1.28 * 1em);
-  box-sizing: border-box;
-}
-#iuSilverTasksSummaryCard .silver-calendar-summary-line2block{
-  min-height: calc(2 * 1.28 * 1em + 2px);
-  box-sizing: border-box;
-}
-#iuSilverTasksSummaryCard #iuSilverTasksSummaryLine2{
-  min-height: calc(2 * 1.28 * 1em);
-  box-sizing: border-box;
-}
+/* CLS: silver summary — reserve before JS fill */
+#iuSilverCalendarSummaryCard.silver-calendar-summary-card{border-radius:0;min-height:104px;box-sizing:border-box}
+#iuSilverTasksSummaryCard.silver-calendar-summary-card{border-radius:0;min-height:104px;box-sizing:border-box}
+#iuSilverCalendarSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{min-height:2.56em;box-sizing:border-box}
+#iuSilverTasksSummaryCard .silver-calendar-summary-row--1 .silver-calendar-summary-text{min-height:2.56em;box-sizing:border-box}
+#iuSilverCalendarSummaryCard .silver-calendar-summary-line2block{min-height:calc(2.56em + 2px);box-sizing:border-box}
+#iuSilverTasksSummaryCard .silver-calendar-summary-line2block{min-height:calc(2.56em + 2px);box-sizing:border-box}
 
 .iuSilverTallScrollSection{
   width: 100%;
@@ -16402,6 +16365,8 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   #iuSilverWelcomeCard #iuNamedayCta.iu-nameday-cta{
     justify-content: flex-start;
+    min-height: 72px;
+    box-sizing: border-box;
   }
   #iuSilverWelcomeCard #iuNamedayCta .iu-nameday-flowers{
     flex: 0 1 auto;
@@ -16723,12 +16688,6 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   contain: layout;
 }
 
-/* P0 CLS: desktop nameday row reserve (async welcome paint used to grow this block). */
-#iuSilverWelcomeCard #iuNamedayCta.iu-nameday-cta--slotDesktop{
-  min-height: 72px;
-  box-sizing: border-box;
-}
-
 @media (max-width: 900px){
   .iu-nameday-cta{
     flex-wrap: nowrap;
@@ -16984,18 +16943,15 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    /* P0 CLS: headroom above prior 155px so async summary lines do not grow the card. */
     min-height: 168px;
   }
 
-  /* P0 CLS: reserve Silver tall-scroll column before preview tiles hydrate. */
   #silver-slot #iuSilverTallScrollSection.iuSilverTallScrollSection{
     min-height: 360px;
     box-sizing: border-box;
   }
 
-  /* P0 CLS: keep welcome card height stable so nameday row + downstream stack do not jump. */
-  #silver-slot #iuSilverWelcomeCard.iuSilverWelcomeCard{
+  #silver-slot #iuSilverWelcomeStack #iuSilverWelcomeCard.iuSilverWelcomeCard{
     min-height: 240px;
     box-sizing: border-box;
   }
@@ -20041,17 +19997,14 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"
   padding-left: 0 !important;
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlIcon,
 .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuIconTile {
   display: none !important;
-}
-
-.layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iu-mmQuickItemLink {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }
 
 .layout > aside.accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychlé odkazy"] .iuQlText {
