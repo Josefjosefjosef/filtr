@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-04-30T11:05:00.709682Z",
+  "ingestedAt": "2026-04-30T11:34:18.105557Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Saros otevírá své brány, hodnocením překonává všechny dosavadní hry studia",
+      "url": "https://zing.cz/article/saros-otevira-sve-brany-hodnocenim-prekonava-vsechny-dosavadni-hry-studia",
+      "dt": "2026-04-30T10:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "brány",
+        "dosavadní",
+        "hodnocením",
+        "hry",
+        "otevírá",
+        "překonává",
+        "saros",
+        "studia",
+        "své",
+        "všechny"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -958,34 +985,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Nejnovější update Dying Light: The Beast Restored Land vychází vstříc pohodlí",
-      "url": "https://zing.cz/article/nejnovejsi-update-dying-light-the-beast-restored-land-vychazi-vstric-pohodli",
-      "dt": "2026-04-25T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "beast",
-        "dying",
-        "land",
-        "light",
-        "nejnovější",
-        "pohodlí",
-        "restored",
-        "the",
-        "update",
-        "vstříc",
-        "vychází"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -996,7 +995,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125187,
+      "bytes": 125196,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1033,7 +1032,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1049,6 +1048,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Saros otevírá své brány, hodnocením překonává všechny dosavadní hry studia",
+            "publishedAt": "2026-04-30T10:00:00Z"
+          },
           {
             "title": "Závodní série MotoGP je po roce zpátky, nový díl vyšel na PC i konzolích",
             "publishedAt": "2026-04-30T08:00:00Z"
@@ -1076,10 +1079,6 @@
           {
             "title": "Recenze Adorable Adventures – zážitek pro celou rodinu",
             "publishedAt": "2026-04-29T13:00:00Z"
-          },
-          {
-            "title": "Na Steamu vyšla nová westernová hra, od hráčů sbírá nadšené recenze",
-            "publishedAt": "2026-04-29T12:00:00Z"
           }
         ]
       }

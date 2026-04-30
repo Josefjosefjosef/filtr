@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T11:05:00.709682Z",
+  "ingestedAt": "2026-04-30T11:34:18.105557Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/zzs-kraj-vysocina-vypoved-soud/",
+      "dt": "2026-04-30T11:14:56Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dorazil",
+        "hodinu",
+        "později",
+        "proti",
+        "soudu",
+        "uspěl",
+        "vysočiny",
+        "výjezdu",
+        "výpovědi",
+        "záchranář"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,34 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Větší hrozba než válka v Íránu. Nová evropská pravidla děsí farmaceutický průmysl",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nova-evropska-pravidla-desi-farmaceuticky-prumysl/",
-      "dt": "2026-04-29T13:55:40Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "děsí",
-        "evropská",
-        "farmaceutický",
-        "hrozba",
-        "než",
-        "nová",
-        "pravidla",
-        "průmysl",
-        "válka",
-        "větší",
-        "íránu"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 76886,
+      "bytes": 73385,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,11 +313,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T10:07:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T11:14:56Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 9,
-          "zpravy": 1
+          "zpravy": 2,
+          "zdravi": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -330,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
+            "publishedAt": "2026-04-30T11:14:56Z"
+          },
           {
             "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o mém osudu, naznačil",
             "publishedAt": "2026-04-30T10:07:30Z"
@@ -357,10 +360,6 @@
           {
             "title": "Toxin v kojenecké výživě: Přišlo varování rodičům příliš pozdě? Hygienička přiznala nedostatky",
             "publishedAt": "2026-04-29T17:29:01Z"
-          },
-          {
-            "title": "Nové informace o policejním zásahu v příbramské nemocnici: Kterých zakázek se týkal?",
-            "publishedAt": "2026-04-29T15:24:48Z"
           }
         ]
       }

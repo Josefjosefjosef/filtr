@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-30T11:05:00.709682Z",
+  "ingestedAt": "2026-04-30T11:34:18.105557Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jiřina Bohdalová jede furt dál. Unikátní film ukazuje hereckou legendu bez příkras",
+      "url": "https://www.kinobox.cz/clanky/vod/53204-jirina-bohdalova-jede-furt-dal-unikatni-film-ukazuje-hereckou-legendu-bez-prikras",
+      "dt": "2026-04-30T11:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "bohdalová",
+        "film",
+        "furt",
+        "hereckou",
+        "jede",
+        "jiřina",
+        "legendu",
+        "příkras",
+        "ukazuje",
+        "unikátní"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -538,32 +565,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Z Polabí odchází oblíbená postava. Anonymní udání zásadně zatřese dějem",
-      "url": "https://www.kinobox.cz/clanky/serialy/53161-z-polabi-odchazi-oblibena-postava-anonymni-udani-zasadne-zatrese-dejem",
-      "dt": "2026-04-28T06:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "anonymní",
-        "dějem",
-        "oblíbená",
-        "odchází",
-        "polabí",
-        "postava",
-        "udání",
-        "zatřese",
-        "zásadně"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -574,7 +575,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28848,
+      "bytes": 29060,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -611,7 +612,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T11:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -626,6 +627,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jiřina Bohdalová jede furt dál. Unikátní film ukazuje hereckou legendu bez příkras",
+            "publishedAt": "2026-04-30T11:00:00Z"
+          },
           {
             "title": "Kinobox Daily: Když se z věrné fanynky stane kat. Misery i po 30 letech definuje filmový teror",
             "publishedAt": "2026-04-30T10:00:00Z"
@@ -653,10 +658,6 @@
           {
             "title": "Anne Hathaway, Dakota Johnson a erotické dusno. Temná konkurence Pomocnice dráždí mrazivým trailerem",
             "publishedAt": "2026-04-29T14:00:00Z"
-          },
-          {
-            "title": "Django a Zorro spojí síly. Oscarový autor píše film na motivy Tarantinova kultovního komiksu",
-            "publishedAt": "2026-04-29T12:00:00Z"
           }
         ]
       }
