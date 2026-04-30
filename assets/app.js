@@ -5080,6 +5080,21 @@ try {
         }
       });
 
+    /** P0: micro-yield inside outer DOM batch — splits innerHTML/template work (3–6 items) without changing append order. */
+    function iuFeedDomMicroYieldStride() {
+      try {
+        const w = typeof window !== "undefined" && Number.isFinite(window.innerWidth) ? window.innerWidth : 1200;
+        if (w <= 600) return 4;
+        if (w <= 1024) return 5;
+        return 6;
+      } catch (_) {
+        return 5;
+      }
+    }
+
+    /** Same scheduling cost as outer chunk yield — extra yields only split inner long tasks. */
+    const iuYieldForFeedDomMicroSlice = () => iuYieldForFeedDomChunk();
+
     const auditRf = (() => {
       try {
         return window.__IU_APPLYFILTER_AUDIT_ACTIVE_RUN;
@@ -5094,6 +5109,13 @@ try {
     let firstDomBatch = true;
     let firstFeedBatchMarked = false;
     const reloadDomTight = iuFeedReloadDomTightenP();
+    const iuFeedMicroDomYieldOffP = () => {
+      try {
+        return typeof location !== "undefined" && /(?:^|[?&])iuFeedMicro=0(?:&|$)/.test(String(location.search || ""));
+      } catch (_) {
+        return false;
+      }
+    };
     const feedSectionHeaderEl = iuBuildFeedSectionHeaderElement();
     while (pos < visibleItems.length) {
       if (iuRenderFeedStaleP()) {
@@ -5109,6 +5131,8 @@ try {
       firstDomBatch = false;
       const frag = document.createDocumentFragment();
       const batchEnd = Math.min(pos + batchMax, visibleItems.length);
+      let microSinceYield = 0;
+      const microStride = reloadDomTight || iuFeedMicroDomYieldOffP() ? 9999 : iuFeedDomMicroYieldStride();
       for (; pos < batchEnd; pos++) {
         if (iuRenderFeedStaleP()) {
           return;
@@ -5151,6 +5175,14 @@ try {
 
         frag.appendChild(node);
         renderedCount += 1;
+        microSinceYield += 1;
+        if (microSinceYield >= microStride && pos + 1 < batchEnd) {
+          microSinceYield = 0;
+          await iuYieldForFeedDomMicroSlice();
+          if (iuRenderFeedStaleP()) {
+            return;
+          }
+        }
       }
 
       const hasDemoPending = iuAlertDemo && demoFrag.childNodes.length > 0;
