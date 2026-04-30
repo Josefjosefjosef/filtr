@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T21:55:20.872838Z",
+  "ingestedAt": "2026-04-30T23:10:27.355923Z",
   "items": [
     {
       "section": "aktualne",
@@ -775,6 +775,28 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Klapka: Rozbitý mantinel? To se mi stalo poprvé",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/klapka-rozbity-mantinel-to-se-mi-stalo-poprve-156538",
+      "dt": "2026-04-30T22:09:37Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "klapka",
+        "mantinel",
+        "poprvé",
+        "rozbitý",
+        "stalo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Anglický duel v EL zvládl lépe Nottingham, Horníček přispěl k vítězství Bragy",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/anglicky-duel-v-el-zvladl-lepe-nottingham-hornicek-prispel-k-vitezstvi-bragy-156537",
       "dt": "2026-04-30T21:44:33Z",
@@ -871,18 +893,18 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Nymburští basketbalisté deklasovali Ostravu, Pardubice zdolaly Písek",
+      "title": "Nymburští basketbalisté rozdrtili Ostravu, Pardubice zdolaly Písek",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/nymbursti-basketbaliste-deklasovali-ostravu-pardubice-zdolaly-pisek-156533",
       "dt": "2026-04-30T19:30:12Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "basketbalisté",
-        "deklasovali",
         "nymburští",
         "ostravu",
         "pardubice",
         "písek",
+        "rozdrtili",
         "zdolaly"
       ],
       "feedCategory": "sport",
@@ -1479,31 +1501,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kompany k rekordní přestřelce: Skórovat umíme a předvedeme to znovu i doma",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/kompany-k-rekordni-prestrelce-skorovat-umime-a-predvedeme-to-znovu-i-doma-156507",
-      "dt": "2026-04-29T08:17:23Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "doma",
-        "kompany",
-        "předvedeme",
-        "přestřelce",
-        "rekordní",
-        "skórovat",
-        "umíme",
-        "znovu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1633,7 +1630,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37220,
+      "bytes": 37034,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1670,7 +1667,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T21:44:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T22:09:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1685,6 +1682,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klapka: Rozbitý mantinel? To se mi stalo poprvé",
+            "publishedAt": "2026-04-30T22:09:37Z"
+          },
           {
             "title": "Anglický duel v EL zvládl lépe Nottingham, Horníček přispěl k vítězství Bragy",
             "publishedAt": "2026-04-30T21:44:33Z"
@@ -1702,7 +1703,7 @@
             "publishedAt": "2026-04-30T19:33:21Z"
           },
           {
-            "title": "Nymburští basketbalisté deklasovali Ostravu, Pardubice zdolaly Písek",
+            "title": "Nymburští basketbalisté rozdrtili Ostravu, Pardubice zdolaly Písek",
             "publishedAt": "2026-04-30T19:30:12Z"
           },
           {
@@ -1712,10 +1713,6 @@
           {
             "title": "Volejbalistka roku Brancuská míří do Itálie",
             "publishedAt": "2026-04-30T17:56:30Z"
-          },
-          {
-            "title": "Ikonický Hokejista se vrátil před pražskou Sportovní halu",
-            "publishedAt": "2026-04-30T17:31:10Z"
           }
         ]
       }
@@ -1727,7 +1724,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77077,
+      "bytes": 76903,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

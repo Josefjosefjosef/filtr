@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-30T21:55:20.872838Z",
+  "ingestedAt": "2026-04-30T23:10:27.355923Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
+      "url": "https://www.idnes.cz/technet/celebrity-a-laska-k-letani-21-pribehu-ktere-vas-mozna-prekvapi.Q260427_225802_technet_alv",
+      "dt": "2026-04-30T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "celebrity",
+        "láska",
+        "létání",
+        "možná",
+        "překvapí",
+        "příběhů",
+        "vás"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -564,7 +588,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Nouzová přistání a dramatické momenty. Kdyby Aero Ab-11 mohlo vyprávět",
       "url": "https://www.idnes.cz/technet/technika/aero-ab-11-rekordni-let-kbely.A260421_163453_tec_technika_alv",
@@ -588,7 +612,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Sluneční bouře mohou napáchat škody za miliardy. Ale už víme, kdy přijdou, líčí expert",
       "url": "https://www.idnes.cz/technet/veda/martin-svik-surya-model-llm-slunce-erupce-magnetismus-boure-elektromagneticke-zareni-satelit-blackou.A260423_130428_veda_ilrj",
@@ -739,32 +763,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Před dvaceti lety vznikl design, který měl polidštit web. Jenže se zvrtl",
-      "url": "https://www.lidovky.cz/nazory/nekonecne-scrollovani-web-webdesign-uzivatelske-rozhrani-webova-stranka-socialni-sit-aza-raskin.A260420_125059_ln_nazory_lrj",
-      "dt": "2026-04-22T08:02:03Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "design",
-        "dvaceti",
-        "jenže",
-        "lety",
-        "měl",
-        "polidštit",
-        "vznikl",
-        "web",
-        "zvrtl"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45737,
+      "bytes": 45879,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T13:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 23,
-          "zpravy": 7
+          "other": 22,
+          "zpravy": 8
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -828,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
+            "publishedAt": "2026-04-30T22:00:00Z"
+          },
           {
             "title": "Netflix mění aplikaci pro smartphone, scrollovat budete jako u TikToku",
             "publishedAt": "2026-04-30T13:00:00Z"
@@ -855,10 +857,6 @@
           {
             "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
             "publishedAt": "2026-04-28T08:00:00Z"
-          },
-          {
-            "title": "Před 25 lety začal vesmírný turismus. První soukromník letěl sojuzem",
-            "publishedAt": "2026-04-28T05:00:00Z"
           }
         ]
       }
