@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T12:04:55.197367Z",
+  "ingestedAt": "2026-04-30T12:34:28.124247Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Zisk České spořitelny meziročně stoupl o 23 procent, Komerční bance mírně klesl",
+      "url": "https://byznys.hn.cz/c1-67872620-zisk-ceske-sporitelny-mezirocne-stoupl-o-23-procent-komercni-bance-mirne-klesl",
+      "dt": "2026-04-30T12:01:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bance",
+        "klesl",
+        "komerční",
+        "meziročně",
+        "mírně",
+        "procent",
+        "spořitelny",
+        "stoupl",
+        "zisk",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1139,37 +1166,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Čtyřicítka veteránů míří z Prahy na jih. Déšť v Alpách prověřuje jejich vytrvalost, nejstarší unikát odstavila porucha",
-      "url": "https://auto.hn.cz/c1-67872080-ctyricitka-veteranu-miri-z-prahy-na-jih-dest-v-alpach-proveruje-jejich-vytrvalost-nejstarsi-unikat-odstavila-porucha",
-      "dt": "2026-04-29T08:50:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "alpách",
-        "déšť",
-        "jejich",
-        "jih",
-        "míří",
-        "nejstarší",
-        "odstavila",
-        "porucha",
-        "prahy",
-        "prověřuje",
-        "unikát",
-        "veteránů",
-        "vytrvalost",
-        "čtyřicítka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1180,7 +1176,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184378,
+      "bytes": 184369,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1217,7 +1213,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T12:01:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1234,6 +1230,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zisk České spořitelny meziročně stoupl o 23 procent, Komerční bance mírně klesl",
+            "publishedAt": "2026-04-30T12:01:00Z"
+          },
           {
             "title": "Český HDP v prvním čtvrtletí meziročně vzrostl o 2,1 procenta, analytici čekali víc",
             "publishedAt": "2026-04-30T09:43:00Z"
@@ -1261,10 +1261,6 @@
           {
             "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, naopak Škoda Auto &bdquo;jede&ldquo;",
             "publishedAt": "2026-04-30T06:18:00Z"
-          },
-          {
-            "title": "Meta zvýšila zisk o 61 procent na 27 miliard dolarů, zisk i tržby překonaly očekávání",
-            "publishedAt": "2026-04-30T05:34:00Z"
           }
         ]
       }

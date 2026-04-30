@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-30T12:04:55.197367Z",
+  "ingestedAt": "2026-04-30T12:34:28.124247Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Maximální ceny paliv od pátku prudce vzrostou, oznámilo ministerstvo",
+      "url": "https://zpravy.aktualne.cz/ekonomika/maximalni-ceny-paliv-od-patku-prudce-vzrostou-oznamilo-ministerstvo/r~aaa2974cee2b7b6cf35d02bfd2784f77/",
+      "dt": "2026-04-30T12:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "ceny",
+        "maximální",
+        "ministerstvo",
+        "oznámilo",
+        "paliv",
+        "prudce",
+        "pátku",
+        "vzrostou"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Mexiku zatkli drogového bosse „Zahradníka“, chtěl šéfovat mocnému kartelu",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-mexiku-zatkli-drogoveho-bosse-zahradnika-chtel-sefovat-mocnemu-kartelu/r~aaa29c3e6f342b8a26d04f22939c6160/",
+      "dt": "2026-04-30T12:22:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bosse",
+        "chtěl",
+        "drogového",
+        "kartelu",
+        "mexiku",
+        "mocnému",
+        "zahradníka",
+        "zatkli",
+        "šéfovat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -478,62 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Mrazy v noci na čtvrtek nám způsobily škody za stovky milionů korun, tvrdí ovocnáři",
-      "url": "https://zpravy.aktualne.cz/ekonomika/mrazy-v-noci-na-ctvrtek-nam-zpusobily-skody-za-stovky-milionu-korun-tvrdi-ovocnari/r~aaa29e44b16abc36635275d3939fd449/",
-      "dt": "2026-04-30T07:26:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "korun",
-        "milionů",
-        "mrazy",
-        "noci",
-        "nám",
-        "ovocnáři",
-        "stovky",
-        "tvrdí",
-        "způsobily",
-        "čtvrtek",
-        "škody"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael u Řecka zasáhl proti flotile plující do Gazy, zadržel asi 175 lidí",
-      "url": "https://zpravy.aktualne.cz/zahranici/izrael-u-recka-zasahl-proti-flotile-plujici-do-gazy-zadrzel-asi-175-lidi/r~aaa298e263947fd45bd2ed230314d087/",
-      "dt": "2026-04-30T07:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "175",
-        "asi",
-        "flotile",
-        "gazy",
-        "izrael",
-        "lidí",
-        "plující",
-        "proti",
-        "zadržel",
-        "zasáhl",
-        "řecka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -544,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21769,
+      "bytes": 21712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,13 +576,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T11:25:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T12:22:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "finance": 2,
           "zpravy": 14,
           "other": 2,
-          "sport": 2,
-          "finance": 2
+          "sport": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -599,6 +594,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Maximální ceny paliv od pátku prudce vzrostou, oznámilo ministerstvo",
+            "publishedAt": "2026-04-30T12:22:00Z"
+          },
+          {
+            "title": "V Mexiku zatkli drogového bosse „Zahradníka“, chtěl šéfovat mocnému kartelu",
+            "publishedAt": "2026-04-30T12:22:00Z"
+          },
           {
             "title": "Od arkádové nostalgie po virtuální realitu. Sběratel buduje v Česku herní svět za miliony",
             "publishedAt": "2026-04-30T11:25:00Z"
@@ -622,14 +625,6 @@
           {
             "title": "Odepsal Trump Ukrajinu? Prezidentova zmatená slova vyvolávají dohady",
             "publishedAt": "2026-04-30T10:52:00Z"
-          },
-          {
-            "title": "V úspornosti se vyrovná TDI a dostane ho i Octavia. Volkswagen představil nový motor",
-            "publishedAt": "2026-04-30T10:40:00Z"
-          },
-          {
-            "title": "Policie odložila prověřování Macinkových zpráv prezidentovu poradci",
-            "publishedAt": "2026-04-30T10:15:00Z"
           }
         ]
       }
