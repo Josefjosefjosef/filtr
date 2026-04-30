@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-30T11:34:18.105557Z",
+  "ingestedAt": "2026-04-30T12:04:55.197367Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Chlubil se, že má Grand Theft Auto VI. Teď mu nefunguje počítač a prosí o pomoc - INDIAN",
+      "url": "https://indian-tv.cz/clanek/chlubil-se-ze-ma-grand-theft-auto-vi-ted-mu-nefunguje-pc-6xcqt9",
+      "dt": "2026-04-30T11:59:26Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "auto",
+        "chlubil",
+        "grand",
+        "indian",
+        "nefunguje",
+        "pomoc",
+        "počítač",
+        "prosí",
+        "theft"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -1049,33 +1075,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Intenzivní záchranná mise v nebezpečném prostředí hry Into the Fire - INDIAN",
-      "url": "https://indian-tv.cz/clanek/intenzivni-zachranna-mise-v-nebezpecnem-prostredi-qp5k4z",
-      "dt": "2026-04-27T04:30:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "fire",
-        "hry",
-        "indian",
-        "intenzivní",
-        "into",
-        "mise",
-        "nebezpečném",
-        "prostředí",
-        "the",
-        "záchranná"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1086,7 +1085,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 203918,
+      "bytes": 205342,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1123,7 +1122,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T11:20:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T11:59:26Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 40
@@ -1138,6 +1137,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chlubil se, že má Grand Theft Auto VI. Teď mu nefunguje počítač a prosí o pomoc - INDIAN",
+            "publishedAt": "2026-04-30T11:59:26Z"
+          },
           {
             "title": "Vývojáři vylepšují a rozšiřují MindsEye. Také došlo k trvalému zlevnění - INDIAN",
             "publishedAt": "2026-04-30T11:20:18Z"
@@ -1165,10 +1168,6 @@
           {
             "title": "Game Pass zlevnil, Steam Controller je venku a Kingdom Come 2 sbírá ceny - INDIAN",
             "publishedAt": "2026-04-29T16:00:00Z"
-          },
-          {
-            "title": "Denuvo prolomeno u většiny singleplayerových her. DRM přichází s novou ochranou - INDIAN",
-            "publishedAt": "2026-04-29T14:33:00Z"
           }
         ]
       }
