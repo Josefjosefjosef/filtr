@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-30T04:19:49.783452Z",
+  "ingestedAt": "2026-04-30T04:50:12.059116Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Usadil se v NHL, teď chce dlouhán Klapka o důležité roli přesvědčit i Rulíka",
+      "url": "https://www.sport.cz/clanek/hokej-reprezentace-usadil-se-v-nhl-ted-chce-dlouhan-klapka-o-dulezite-roli-presvedcit-i-rulika-5445795",
+      "dt": "2026-04-30T04:22:55Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "chce",
+        "dlouhán",
+        "důležité",
+        "klapka",
+        "nhl",
+        "přesvědčit",
+        "roli",
+        "rulíka",
+        "usadil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,31 +784,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Německá fotbalová liga si půjčí od adidasu téměř 2,5 miliardy korun",
-      "url": "https://www.sport.cz/clanek/fotbal-bundesliga-nemecka-fotbalova-liga-si-pujci-od-adidasu-temer-25-miliardy-korun-5445454",
-      "dt": "2026-04-29T10:02:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "adidasu",
-        "fotbalová",
-        "korun",
-        "liga",
-        "miliardy",
-        "německá",
-        "půjčí",
-        "téměř"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43228,
+      "bytes": 43404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T03:51:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:22:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -846,6 +847,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Usadil se v NHL, teď chce dlouhán Klapka o důležité roli přesvědčit i Rulíka",
+            "publishedAt": "2026-04-30T04:22:55Z"
+          },
           {
             "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval i Dobeš s Montrealem",
             "publishedAt": "2026-04-30T03:51:56Z"
@@ -873,10 +878,6 @@
           {
             "title": "SESTŘIH: Čeští mladíci si na MS zahrají po čtyřech letech o medaile! Panují ale obavy o Tomka",
             "publishedAt": "2026-04-29T06:00:55Z"
-          },
-          {
-            "title": "Absolutní senzace! Lotyši srazili giganta, čeští mladíci už znají soupeře pro semifinále",
-            "publishedAt": "2026-04-29T16:32:35Z"
           }
         ]
       }

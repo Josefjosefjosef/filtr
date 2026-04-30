@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T04:19:49.783452Z",
+  "ingestedAt": "2026-04-30T04:50:12.059116Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Psi posilují psychiku dětí",
+      "url": "https://vikend.hn.cz/c1-67872390-psi-posiluji-psychiku-deti",
+      "dt": "2026-04-29T22:00:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dětí",
+        "posilují",
+        "psi",
+        "psychiku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1127,26 +1148,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Finanční trhy (29. 4. 2026)",
-      "url": "https://archiv.hn.cz/c1-67870680-financni-trhy-29-4-2026",
-      "dt": "2026-04-28T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "2026",
-        "finanční",
-        "trhy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1157,7 +1158,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183972,
+      "bytes": 183444,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1197,9 +1198,9 @@
         "raw_feed_latest_publishedAt": "2026-04-29T22:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 33,
-          "zpravy": 6,
-          "zdravi": 1
+          "zdravi": 2,
+          "finance": 32,
+          "zpravy": 6
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1211,6 +1212,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Psi posilují psychiku dětí",
+            "publishedAt": "2026-04-29T22:00:00Z"
+          },
           {
             "title": "Hlavně žádné skandály. Michael Jackson byl fenomén, ale film o něm je jen produkt",
             "publishedAt": "2026-04-29T22:00:00Z"
@@ -1238,10 +1243,6 @@
           {
             "title": "Soláry jako mramor, střešní tašky nebo dřevo. Rodinná firma z Kopřivnice umí panely, které obstojí i u památkářů",
             "publishedAt": "2026-04-29T16:42:00Z"
-          },
-          {
-            "title": "Rozhodnutí Spojených arabských emirátů o konci v OPEC není zas tak překvapivé. Jaký může mít dopad na trh s ropou?",
-            "publishedAt": "2026-04-29T16:10:00Z"
           }
         ]
       }

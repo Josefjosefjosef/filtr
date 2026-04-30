@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T04:19:49.783452Z",
+  "ingestedAt": "2026-04-30T04:50:12.059116Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dezinformátoři opět mimo. Masaryk nebyl proti evropské federaci, sám ji navrhl",
+      "url": "https://www.denik.cz/z_domova/dezinformace-internet-jana-zwyrtek-hamplova-libor-vondracek-t-g-masark-federace.html",
+      "dt": "2026-04-30T04:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dezinformátoři",
+        "evropské",
+        "federaci",
+        "masaryk",
+        "mimo",
+        "navrhl",
+        "nebyl",
+        "opět",
+        "proti",
+        "sám"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,33 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Pět let vězení a zákaz činnosti. Psychiatr Cimický je vinný, rozhodl soud",
-      "url": "https://www.denik.cz/krimi/soud-poslal-cimickeho-za-znasilneni-a-vydirani-znovu-na-pet-let-do-vezeni-202604.html",
-      "dt": "2026-04-29T10:50:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "cimický",
-        "let",
-        "psychiatr",
-        "pět",
-        "rozhodl",
-        "soud",
-        "vinný",
-        "vězení",
-        "zákaz",
-        "činnosti"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30234,
+      "bytes": 30315,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dezinformátoři opět mimo. Masaryk nebyl proti evropské federaci, sám ji navrhl",
+            "publishedAt": "2026-04-30T04:05:00Z"
+          },
           {
             "title": "Čarodějnice a pravidla: Co u ohňů dodržet, kam je hlásit, jaké hrozí pokuty",
             "publishedAt": "2026-04-30T03:30:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Irská policie vyšetřuje smrt Češky. Matku tří dětí někdo brutálně ubodal",
             "publishedAt": "2026-04-29T19:06:00Z"
-          },
-          {
-            "title": "V obchodním centru ve Zlíně unikla nebezpečná látka. Dva lidé jsou v nemocnici",
-            "publishedAt": "2026-04-29T17:25:00Z"
           }
         ]
       }

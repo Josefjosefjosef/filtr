@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T04:19:49.783452Z",
+  "ingestedAt": "2026-04-30T04:50:12.059116Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Svoboda médií ve světě je nejnižší za 25 let, uvedli Reportéři bez hranic",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/svoboda-medii-ve-svete-je-nejnizsi-za-25-let-uvedli-reporteri-bez-hranic-372962",
+      "dt": "2026-04-30T04:42:25Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "hranic",
+        "let",
+        "médií",
+        "nejnižší",
+        "reportéři",
+        "svoboda",
+        "světě",
+        "uvedli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -735,31 +760,6 @@
         "vydírání",
         "vězení",
         "útoky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Slovenský nejvyšší soud potvrdil útočníkovi na Fica 21 let vězení",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/slovensky-nejvyssi-soud-potvrdil-trest-pro-muze-jenz-postrelil-fica-372929",
-      "dt": "2026-04-29T09:49:15Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "fica",
-        "let",
-        "nejvyšší",
-        "potvrdil",
-        "slovenský",
-        "soud",
-        "vězení",
-        "útočníkovi"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1550,7 +1550,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41614,
+      "bytes": 41711,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1610,7 +1610,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T03:01:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:42:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1627,6 +1627,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Svoboda médií ve světě je nejnižší za 25 let, uvedli Reportéři bez hranic",
+            "publishedAt": "2026-04-30T04:42:25Z"
+          },
           {
             "title": "Zájemci o dotace z Nové zelené úsporám budou muset nově vyplnit renovační pas",
             "publishedAt": "2026-04-30T03:01:00Z"
@@ -1654,10 +1658,6 @@
           {
             "title": "Ropa kvůli Blízkému východu dál zdražuje, Brent je nejvýš od roku 2022",
             "publishedAt": "2026-04-29T18:35:05Z"
-          },
-          {
-            "title": "Začal proces s obviněnými z útoku na Starmerův majetek. Řeší se zapojení Rusů",
-            "publishedAt": "2026-04-29T18:04:11Z"
           }
         ]
       }
@@ -1763,7 +1763,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76989,
+      "bytes": 76983,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
