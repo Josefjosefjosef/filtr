@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-30T09:00:29.951423Z",
+  "ingestedAt": "2026-04-30T09:34:54.584157Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kdo je nový Snape, herec Paapa Essiedu? Nikdy neviděl filmy a bude jiný než Rickman",
+      "url": "https://www.kinobox.cz/clanky/tema/53201-kdo-je-novy-snape-herec-paapa-essiedu-nikdy-nevidel-filmy-a-bude-jiny-nez-rickman",
+      "dt": "2026-04-30T09:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "essiedu",
+        "filmy",
+        "herec",
+        "jiný",
+        "neviděl",
+        "než",
+        "nikdy",
+        "nový",
+        "paapa",
+        "rickman",
+        "snape"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -533,33 +561,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Dáda Patrasová slaví 70 let. Vyrostlo s ní několik generací, každá si ji pamatuje jinak",
-      "url": "https://www.kinobox.cz/clanky/tema/53132-dada-patrasova-slavi-70-let-vyrostlo-s-ni-nekolik-generaci-kazda-si-ji-pamatuje-jinak",
-      "dt": "2026-04-27T16:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "dáda",
-        "generací",
-        "jinak",
-        "každá",
-        "let",
-        "několik",
-        "pamatuje",
-        "patrasová",
-        "slaví",
-        "vyrostlo"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -570,7 +571,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28498,
+      "bytes": 28812,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -607,7 +608,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -622,6 +623,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo je nový Snape, herec Paapa Essiedu? Nikdy neviděl filmy a bude jiný než Rickman",
+            "publishedAt": "2026-04-30T09:00:00Z"
+          },
           {
             "title": "Co nabídne letošní ročník festivalu AFO? 5 tipů, které by vám neměly uniknout",
             "publishedAt": "2026-04-30T08:00:00Z"
@@ -649,10 +654,6 @@
           {
             "title": "Kinobox Daily: Stallone a Schwarzenegger v jedné cele, z níž není úniku",
             "publishedAt": "2026-04-29T10:00:00Z"
-          },
-          {
-            "title": "Třetí Top Gun hledá nového režiséra. Tvůrce miliardového hitu se nevrátí",
-            "publishedAt": "2026-04-29T09:00:00Z"
           }
         ]
       }

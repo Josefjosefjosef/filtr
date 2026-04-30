@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T09:00:29.951423Z",
+  "ingestedAt": "2026-04-30T09:34:54.584157Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/soud-vzp-uplatek-dosetreni/",
+      "dt": "2026-04-30T09:01:59Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "aféra",
+        "nezdály",
+        "obviněných",
+        "soud",
+        "vrátil",
+        "vzp",
+        "výpovědi",
+        "úplatkářská"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -239,33 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nevídaná záchrana života: Lékař zašil pobodanému muži srdce přímo na ulici",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/lekar-zasil-pobodanemu-muzi-srdce-mimo-nemocnici/",
-      "dt": "2026-04-29T12:20:45Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "lékař",
-        "muži",
-        "nevídaná",
-        "pobodanému",
-        "přímo",
-        "srdce",
-        "ulici",
-        "zašil",
-        "záchrana",
-        "života"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 74041,
+      "bytes": 75291,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,10 +311,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T09:01:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 10
+          "zpravy": 1,
+          "zdravi": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -328,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
+            "publishedAt": "2026-04-30T09:01:59Z"
+          },
           {
             "title": "Posun v kauze příbramské nemocnice: Policie stíhá několik lidí a firem",
             "publishedAt": "2026-04-30T08:19:00Z"
@@ -355,10 +358,6 @@
           {
             "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
             "publishedAt": "2026-04-29T14:35:23Z"
-          },
-          {
-            "title": "Větší hrozba než válka v Íránu. Nová evropská pravidla děsí farmaceutický průmysl",
-            "publishedAt": "2026-04-29T13:55:40Z"
           }
         ]
       }
