@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-04-30T10:34:44.008293Z",
+  "ingestedAt": "2026-04-30T11:05:00.709682Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Autem přes Švýcarsko to bude dražší. Co se změní?",
+      "url": "https://www.svetcestovatele.cz/autem-pres-svycarsko-to-bude-drazsi-co-se-zmeni/",
+      "dt": "2026-04-30T11:00:37Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "autem",
+        "dražší",
+        "změní",
+        "švýcarsko"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -513,30 +534,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Býčí skála: jedno z nejtajemnějších a nejděsivějších míst Česku",
-      "url": "https://www.svetcestovatele.cz/byci-skala-jedno-z-nejtajemnejsich-a-nejdesivejsich-mist-cesku/",
-      "dt": "2026-04-16T11:00:30Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "býčí",
-        "jedno",
-        "míst",
-        "nejděsivějších",
-        "nejtajemnějších",
-        "skála",
-        "česku"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -547,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 123301,
+      "bytes": 122467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -584,7 +581,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T11:00:37Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -599,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Autem přes Švýcarsko to bude dražší. Co se změní?",
+            "publishedAt": "2026-04-30T11:00:37Z"
+          },
           {
             "title": "Přijdeme, poplatíme a odjedeme – díky, mami a tati",
             "publishedAt": "2026-04-30T04:00:36Z"
@@ -626,10 +627,6 @@
           {
             "title": "„Ty se máš, jsi celý den doma s dcerou a stát ti to platí.“ „Ale ona umře, chceš si to vyměnit?“",
             "publishedAt": "2026-04-26T04:00:13Z"
-          },
-          {
-            "title": "Dala jsem tchyni ten nejlepší dárek, skončila po něm v nemocnici",
-            "publishedAt": "2026-04-25T04:00:18Z"
           }
         ]
       }

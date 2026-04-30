@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-30T10:34:44.008293Z",
+  "ingestedAt": "2026-04-30T11:05:00.709682Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Neuvěřitelné! Brazilec kopal tři penalty za pět a půl minuty, nedal ani jednu",
+      "url": "https://www.sport.cz/clanek/fotbal-neuveritelne-brazilec-kopal-tri-penalty-za-pet-a-pul-minuty-nedal-ani-jednu-5446192",
+      "dt": "2026-04-30T10:50:18Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brazilec",
+        "jednu",
+        "kopal",
+        "minuty",
+        "nedal",
+        "neuvěřitelné",
+        "penalty",
+        "pět",
+        "půl",
+        "tři"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,30 +783,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Arsenal remizoval s Atlétikem, exsparťan Hancko zavinil penaltu",
-      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-atletico-privita-v-semifinale-ligy-mistru-arsenal-5445439",
-      "dt": "2026-04-29T07:51:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "arsenal",
-        "atlétikem",
-        "exsparťan",
-        "hancko",
-        "penaltu",
-        "remizoval",
-        "zavinil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42229,
+      "bytes": 42335,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T10:13:43Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:50:18Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -843,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neuvěřitelné! Brazilec kopal tři penalty za pět a půl minuty, nedal ani jednu",
+            "publishedAt": "2026-04-30T10:50:18Z"
+          },
           {
             "title": "Sparta má nového hlavního trenéra",
             "publishedAt": "2026-04-30T10:01:59Z"
@@ -870,10 +877,6 @@
           {
             "title": "Novinku na Grácii Orlová otestují i dvě české cyklistické královny",
             "publishedAt": "2026-04-30T09:25:01Z"
-          },
-          {
-            "title": "Novopečeného světového rekordmana v maratonu ocenil keňský prezident",
-            "publishedAt": "2026-04-30T09:21:06Z"
           }
         ]
       }

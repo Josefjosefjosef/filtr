@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-30T10:34:44.008293Z",
+  "ingestedAt": "2026-04-30T11:05:00.709682Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Alza má dvě nové ergonomické myši. Jsou tiché a mají pod palcem pět tlačítek",
+      "url": "https://www.zive.cz/clanky/alza-ma-dve-nove-ergonomicke-mysi-jsou-tiche-a-maji-pod-palcem-pet-tlacitek/sc-3-a-240952/default.aspx",
+      "dt": "2026-04-30T10:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "alza",
+        "dvě",
+        "ergonomické",
+        "mají",
+        "myši",
+        "nové",
+        "palcem",
+        "pět",
+        "tiché",
+        "tlačítek"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -937,33 +964,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "ChatGPT utíká konkurenci. Nový model GPT-5.5 pokořil Claude Opus 4.7 i Gemini 3.1 Pro",
-      "url": "https://www.zive.cz/clanky/chatgpt-utika-konkurenci-novy-model-gpt-55-pokoril-claude-opus-47-i-gemini-31-pro/sc-3-a-240855/default.aspx",
-      "dt": "2026-04-24T11:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chatgpt",
-        "claude",
-        "gemini",
-        "gpt",
-        "konkurenci",
-        "model",
-        "nový",
-        "opus",
-        "pokořil",
-        "utíká"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -974,7 +974,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22943,
+      "bytes": 22908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1011,7 +1011,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T10:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1026,6 +1026,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alza má dvě nové ergonomické myši. Jsou tiché a mají pod palcem pět tlačítek",
+            "publishedAt": "2026-04-30T10:45:00Z"
+          },
           {
             "title": "AirPods už s Androidy fungují skoro jako s iPhony. Google konečně opravil dlouholetou chybu",
             "publishedAt": "2026-04-30T08:45:00Z"
@@ -1053,10 +1057,6 @@
           {
             "title": "Nejlevnější 65\" OLED TV. Tento Panasonic stojí jen 20 990 Kč, loni byl za dvojnásobek",
             "publishedAt": "2026-04-29T15:45:00Z"
-          },
-          {
-            "title": "Odteď se už nové notebooky uvedené do EU musí nabíjet pomocí USB-C",
-            "publishedAt": "2026-04-29T07:45:00Z"
           }
         ]
       }
