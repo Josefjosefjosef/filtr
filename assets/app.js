@@ -1685,6 +1685,16 @@ try {
         appendDebugLine(`[FETCHDIAG] kind=${kind} head=${head}`);
         appendDebugLine(`[FETCHDIAG] kind=${kind} length=${text.length}`);
       }
+      try {
+        const u = String(url || "");
+        if (u.indexOf("articles/index.json") !== -1) {
+          window.__iuArticleShardFetchCounts = window.__iuArticleShardFetchCounts || { index: 0, shard: 0 };
+          window.__iuArticleShardFetchCounts.index += 1;
+        } else if (/\/articles\/\d{4}-\d{2}-\d{2}\.json/i.test(u)) {
+          window.__iuArticleShardFetchCounts = window.__iuArticleShardFetchCounts || { index: 0, shard: 0 };
+          window.__iuArticleShardFetchCounts.shard += 1;
+        }
+      } catch (_) {}
       return data;
     } catch (err) {
       if (isDebugLogging) {
@@ -2295,6 +2305,19 @@ try {
   }
 
   // === DATA RETENTION (sharded articles history) ===
+  /** Opt-in ?iuArticlesBootstrap=1 — must mirror projects/index.html loader flag (no default behavior change). */
+  function iuArticlesBootstrapOptIn() {
+    try {
+      return (
+        new URLSearchParams(String(typeof location !== "undefined" ? location.search || "" : "")).get(
+          "iuArticlesBootstrap",
+        ) === "1"
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
   function dayKeyFromPublished(it){
     const s = String(it?.publishedAt || it?.published || it?.date || it?.time || "").trim();
     return s.length >= 10 ? s.slice(0, 10) : "";
@@ -2335,16 +2358,28 @@ try {
     if (state.retentionIsLoading) return;
     state.retentionIsLoading = true;
     try{
-      // mark already-loaded days from current cache
-      try{
-        state.retentionLoadedDays = new Set(
-          (Array.isArray(state.cachedItems) ? state.cachedItems : [])
-            .filter((x) => x && String(x.contentType || "article").toLowerCase() === "article")
-            .map(dayKeyFromPublished)
-            .filter(Boolean)
-        );
-      }catch{
-        state.retentionLoadedDays = new Set();
+      // mark already-loaded days from current cache (full articles.json path).
+      // Opt-in bootstrap: do NOT treat bootstrap article dates as fully-loaded day shards — otherwise
+      // loadRetentionUntilVisibleCount skips those days and "Další 100" cannot merge older shards.
+      if (!iuArticlesBootstrapOptIn()) {
+        try {
+          state.retentionLoadedDays = new Set(
+            (Array.isArray(state.cachedItems) ? state.cachedItems : [])
+              .filter((x) => x && String(x.contentType || "article").toLowerCase() === "article")
+              .map(dayKeyFromPublished)
+              .filter(Boolean),
+          );
+        } catch (_) {
+          state.retentionLoadedDays = new Set();
+        }
+      } else {
+        try {
+          if (!Array.isArray(state.retentionDays) || state.retentionDays.length === 0) {
+            state.retentionLoadedDays = new Set();
+          }
+        } catch (_) {
+          state.retentionLoadedDays = new Set();
+        }
       }
 
       const indexUrl = iuDataUrl("articles/index.json");
@@ -13770,10 +13805,58 @@ function buildVideoAsArticleCard(it) {
     }
     state.filteredItems = filtered;
 
+    if (iuArticlesBootstrapOptIn() && !query) {
+      const pageCap = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+      const narrow = !!(
+        (state.mediaTopicKey &&
+          String(state.mediaTopicKey).trim() !== "" &&
+          state.mediaTopicKey !== "all") ||
+        (Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse"))
+      );
+      if (narrow && filtered.length > 0 && filtered.length < pageCap) {
+        const nBefore = state.cachedItems.length;
+        state.__iuApplyFilterBusy = false;
+        try {
+          await initRetentionIndex();
+        } catch (_) {}
+        const hasRetention =
+          Array.isArray(state.retentionDays) &&
+          state.retentionDays.length > 0 &&
+          state.retentionCursor < state.retentionDays.length;
+        if (hasRetention) {
+          try {
+            await loadRetentionUntilVisibleCount(pageCap);
+          } catch (_) {}
+          if (state.cachedItems.length > nBefore) {
+            try {
+              await applyFilter({ resetPage: false, render: doRender });
+            } catch (_) {}
+            return;
+          }
+        }
+        state.__iuApplyFilterBusy = true;
+      }
+    }
+
     if (filtered.length === 0) {
       if (query) {
         if (doRender) openSearchModal();
       } else {
+        if (iuArticlesBootstrapOptIn() && doRender) {
+          const nBefore0 = state.cachedItems.length;
+          state.__iuApplyFilterBusy = false;
+          try {
+            await initRetentionIndex();
+            await loadRetentionUntilVisibleCount(Math.max(Number(state.pageSize) || 200, 160));
+          } catch (_) {}
+          if (state.cachedItems.length > nBefore0) {
+            try {
+              await applyFilter({ resetPage: false, render: true });
+            } catch (_) {}
+            return;
+          }
+          state.__iuApplyFilterBusy = true;
+        }
         if (doRender) {
           hideSearchModal();
           renderInlineError("Filtry nenašly žádné články.");
@@ -13824,6 +13907,37 @@ function buildVideoAsArticleCard(it) {
     } finally {
       try {
         state.__iuApplyFilterBusy = false;
+      } catch (_) {}
+      try {
+        if (iuArticlesBootstrapOptIn() && state.hasLoadedData) {
+          const items = Array.isArray(state.cachedItems) ? state.cachedItems : [];
+          let silverPreviewCoverage = true;
+          for (let ti = 0; ti < IU_SILVER_PREVIEW_TOPIC_KEYS.length; ti++) {
+            const key = IU_SILVER_PREVIEW_TOPIC_KEYS[ti];
+            let hit = false;
+            for (let ji = 0; ji < items.length; ji++) {
+              const it = items[ji];
+              if (!it || String(it.contentType || "article").toLowerCase() !== "article") continue;
+              if (iuArticleMatchesMediaTopicKey(it, key)) {
+                hit = true;
+                break;
+              }
+            }
+            if (!hit) {
+              silverPreviewCoverage = false;
+              break;
+            }
+          }
+          window.__iuShardFillProofStats = {
+            cachedItemsLen: Array.isArray(state.cachedItems) ? state.cachedItems.length : 0,
+            filteredItemsLen: Array.isArray(state.filteredItems) ? state.filteredItems.length : 0,
+            articlesLoads: window.__iuArticlesLoaderFetchCounts?.articles ?? 0,
+            bootstrapLoads: window.__iuArticlesLoaderFetchCounts?.bootstrap ?? 0,
+            indexFetches: window.__iuArticleShardFetchCounts?.index ?? 0,
+            shardFetches: window.__iuArticleShardFetchCounts?.shard ?? 0,
+            silverPreviewCoverage,
+          };
+        }
       } catch (_) {}
       try {
         state.__iuYieldBeforeNextApplyFilterRender = false;
