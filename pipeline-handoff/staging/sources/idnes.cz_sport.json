@@ -1,26 +1,78 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-30T16:14:55.094536Z",
+  "ingestedAt": "2026-04-30T16:50:09.156569Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Finsko 0:0. Start domácího turnaje, zraněného Špačka odvedli z ledu",
+      "title": "ONLINE: Česko - Finsko 1:1. Před koncem první třetiny srovnal debutant Melovský",
       "url": "https://www.idnes.cz/hokej/ms-2026/fortuna-hockey-games-cesko-finsko-online-zpravodajstvi.A260430_132800_ms-hokej-2026_drev",
-      "dt": "2026-04-30T16:10:00Z",
+      "dt": "2026-04-30T16:32:37Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "domácího",
+        "debutant",
         "finsko",
-        "ledu",
-        "odvedli",
-        "start",
-        "turnaje",
-        "zraněného",
-        "česko",
-        "špačka"
+        "koncem",
+        "melovský",
+        "první",
+        "srovnal",
+        "třetiny",
+        "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "A zase Pogačar! Slovinec vládne Romandii, vyhrál i druhou etapu. Tentokrát ve spurtu",
+      "url": "https://www.idnes.cz/sport/cyklistika/pogacar-ovladl-druhou-etapu-kolem-romandie-a-upevnil-si-vedeni.A260430_181807_cyklistika_tit",
+      "dt": "2026-04-30T16:22:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "druhou",
+        "etapu",
+        "pogačar",
+        "romandii",
+        "slovinec",
+        "spurtu",
+        "tentokrát",
+        "vládne",
+        "vyhrál",
+        "zase"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Chystá se velkolepý finiš letošního Gira. Kulisy obstará Circus Maximus",
+      "url": "https://www.idnes.cz/sport/cyklistika/chysta-se-velkolepy-finis-letosniho-gira-kulisy-obstara-circus-maximus.A260430_181531_cyklistika_tit",
+      "dt": "2026-04-30T16:16:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chystá",
+        "circus",
+        "finiš",
+        "gira",
+        "kulisy",
+        "letošního",
+        "maximus",
+        "obstará",
+        "velkolepý"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -740,57 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Španěl z El Clásika, nebo dál s Kovaříkem? Fotbal si zvolí nového šéfa rozhodčích",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/komise-rozhodcich-volba-libor-kovarik-carlos-clos-gomez.A260429_122102_fotbal_min",
-      "dt": "2026-04-30T09:11:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "clásika",
-        "fotbal",
-        "kovaříkem",
-        "nebo",
-        "nového",
-        "rozhodčích",
-        "zvolí",
-        "španěl",
-        "šéfa"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stříbro bereme, série byla neskutečná, cení si kouč libereckých volejbalistek",
-      "url": "https://www.idnes.cz/sport/ostatni/dukla-liberec-extraliga-zen-volejbal-stribro-ohlasy.A260430_930008_sporty_ten",
-      "dt": "2026-04-30T09:02:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bereme",
-        "cení",
-        "kouč",
-        "libereckých",
-        "neskutečná",
-        "stříbro",
-        "série",
-        "volejbalistek"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -801,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48953,
+      "bytes": 48534,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -838,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:32:37Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -854,8 +855,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Finsko 0:0. Start domácího turnaje, zraněného Špačka odvedli z ledu",
-            "publishedAt": "2026-04-30T16:10:00Z"
+            "title": "ONLINE: Česko - Finsko 1:1. Před koncem první třetiny srovnal debutant Melovský",
+            "publishedAt": "2026-04-30T16:32:37Z"
+          },
+          {
+            "title": "A zase Pogačar! Slovinec vládne Romandii, vyhrál i druhou etapu. Tentokrát ve spurtu",
+            "publishedAt": "2026-04-30T16:22:00Z"
+          },
+          {
+            "title": "Chystá se velkolepý finiš letošního Gira. Kulisy obstará Circus Maximus",
+            "publishedAt": "2026-04-30T16:16:00Z"
           },
           {
             "title": "Volejbalistka roku Brancuská míří do Itálie. Splnil se mi velký sen, rozplývá se",
@@ -876,14 +885,6 @@
           {
             "title": "Stopka pro Mercada. Sparťanský křídelník zmešká kvůli trestu větší část nadstavby",
             "publishedAt": "2026-04-30T14:56:00Z"
-          },
-          {
-            "title": "Sestry Williamsovy i Pellegriniová. Které sportovkyně inspirovaly panenku Barbie?",
-            "publishedAt": "2026-04-30T14:46:00Z"
-          },
-          {
-            "title": "Stolní tenisté na MS družstev končí, podle očekávání podlehli Španělům",
-            "publishedAt": "2026-04-30T14:40:00Z"
           }
         ]
       }

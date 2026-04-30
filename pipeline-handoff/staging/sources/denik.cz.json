@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T16:14:55.094536Z",
+  "ingestedAt": "2026-04-30T16:50:09.156569Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na sedmdesát mrtvých. Přibylo obětí nehod bez zapnutých pásů",
+      "url": "https://www.denik.cz/z_domova/cesko-dopravni-mehody-nepripoutani.html",
+      "dt": "2026-04-30T16:03:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "mrtvých",
+        "nehod",
+        "obětí",
+        "pásů",
+        "přibylo",
+        "sedmdesát",
+        "zapnutých"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -617,32 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Charlotte Gott vydala první singl. Je připravená uspět v zahraniční konkurenci",
-      "url": "https://www.denik.cz/hudba/charlotte-gott-prvni-singl-in-too-deep.html",
-      "dt": "2026-04-30T06:41:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "charlotte",
-        "gott",
-        "konkurenci",
-        "první",
-        "připravená",
-        "singl",
-        "uspět",
-        "vydala",
-        "zahraniční"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -653,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29369,
+      "bytes": 29639,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -690,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T15:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:03:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -706,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na sedmdesát mrtvých. Přibylo obětí nehod bez zapnutých pásů",
+            "publishedAt": "2026-04-30T16:03:00Z"
+          },
           {
             "title": "Vzal zbraně a čtyři dny jel vlakem. Odhalili časovou osu střelce z Washingtonu",
             "publishedAt": "2026-04-30T15:30:00Z"
@@ -733,10 +735,6 @@
           {
             "title": "Univerzitní studenti se dozvěděli o zákulisí evropských institucí. Díky Deníku",
             "publishedAt": "2026-04-30T13:34:00Z"
-          },
-          {
-            "title": "Mrázová odmítla opoziční výzvy k rezignaci. Předpisy jsem neporušila, tvrdí",
-            "publishedAt": "2026-04-30T13:11:00Z"
           }
         ]
       }

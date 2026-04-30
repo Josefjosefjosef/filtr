@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T16:14:55.094536Z",
+  "ingestedAt": "2026-04-30T16:50:09.156569Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "SOUHRN: Zásadní události čtvrtka 30. dubna",
+      "url": "https://ct24.ceskatelevize.cz/clanek/media/souhrn-zasadni-udalosti-ctvrtka-30-dubna-372987",
+      "dt": "2026-04-30T16:29:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "dubna",
+        "souhrn",
+        "události",
+        "zásadní",
+        "čtvrtka"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -750,27 +772,24 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Florida schválila nový plán volebních obvodů, měl by posílit republikány",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/florida-schvalila-novy-plan-volebnich-obvodu-mel-by-posilit-republikany-372956",
-      "dt": "2026-04-29T21:17:38Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Pogačar vyhrál i druhou etapu Kolem Romandie",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/pogacar-vyhral-i-druhou-etapu-kolem-romandie-156528",
+      "dt": "2026-04-30T16:32:26Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "florida",
-        "měl",
-        "nový",
-        "obvodů",
-        "plán",
-        "posílit",
-        "republikány",
-        "schválila",
-        "volebních"
+        "druhou",
+        "etapu",
+        "kolem",
+        "pogačar",
+        "romandie",
+        "vyhrál"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -778,7 +797,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Euro Hockey Tour Finsko – Česko 0:0",
+      "title": "Euro Hockey Tour Finsko – Česko 1:1",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-finsko-cesko-156522",
       "dt": "2026-04-30T15:30:00Z",
       "media_raw": "ČT sport",
@@ -1501,31 +1520,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Titul patří Šelmám. Rozhodující finále mělo rekordní návštěvu",
-      "url": "https://sport.ceskatelevize.cz/clanek/volejbal/titul-patri-selmam-rozhodujici-finale-melo-rekordni-navstevu-156497",
-      "dt": "2026-04-28T18:24:06Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "mělo",
-        "návštěvu",
-        "patří",
-        "rekordní",
-        "rozhodující",
-        "titul",
-        "šelmám"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1536,7 +1530,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43496,
+      "bytes": 43056,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1596,7 +1590,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1613,6 +1607,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SOUHRN: Zásadní události čtvrtka 30. dubna",
+            "publishedAt": "2026-04-30T16:29:00Z"
+          },
           {
             "title": "Kyjev a Baku prohlubují „přirozené partnerství“",
             "publishedAt": "2026-04-30T16:00:00Z"
@@ -1640,10 +1638,6 @@
           {
             "title": "V Černobylu je nejhůř zamořený Červený les. Po invazi si tam ale Rusové udělali zákopy",
             "publishedAt": "2026-04-30T11:31:54Z"
-          },
-          {
-            "title": "Ropné znečištění z ruské Usť-Lugy se vyplavilo na estonské pláže",
-            "publishedAt": "2026-04-30T11:30:24Z"
           }
         ]
       }
@@ -1655,7 +1649,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38462,
+      "bytes": 38740,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1692,7 +1686,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T15:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:32:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1708,7 +1702,11 @@
         },
         "sample_titles": [
           {
-            "title": "Euro Hockey Tour Finsko – Česko 0:0",
+            "title": "Pogačar vyhrál i druhou etapu Kolem Romandie",
+            "publishedAt": "2026-04-30T16:32:26Z"
+          },
+          {
+            "title": "Euro Hockey Tour Finsko – Česko 1:1",
             "publishedAt": "2026-04-30T15:30:00Z"
           },
           {
@@ -1734,10 +1732,6 @@
           {
             "title": "Nechápu, jak mohl rozhodčí penaltu odvolat. Neskutečně mě to štve, soptil Arteta",
             "publishedAt": "2026-04-30T08:29:56Z"
-          },
-          {
-            "title": "Vladař vynuloval Pittsburgh a podpořil postup Philadelphie, slavil i Dobeš",
-            "publishedAt": "2026-04-30T05:39:38Z"
           }
         ]
       }
@@ -1749,7 +1743,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77171,
+      "bytes": 77120,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
