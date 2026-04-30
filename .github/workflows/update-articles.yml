@@ -226,6 +226,8 @@ jobs:
           echo "[TIME] pipeline_publish_seconds=$((T1-T0))"
           test -s projects/data/articles.json
           test -s projects/data/feed_health.json
+          test -s projects/data/articles/bootstrap.json
+          python scripts/validate_articles_bootstrap.py
 
       - name: True handoff proof (stdout)
         run: |

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -184,6 +185,20 @@ def main():
     data_dir = ROOT / "projects" / "data"
     issues += validate_json(data_dir / "articles.json", "articles")
     issues += validate_json(data_dir / "videos.json", "videos")
+
+    boot_path = data_dir / "articles" / "bootstrap.json"
+    if boot_path.exists():
+        chk = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "validate_articles_bootstrap.py")],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+        )
+        if chk.returncode != 0:
+            tail = ((chk.stderr or "") + (chk.stdout or "")).strip()[:4000]
+            issues.append(f"validate_articles_bootstrap.py failed: {tail or 'no output'}")
+    else:
+        issues.append(f"missing {boot_path} (expected Phase 1 bootstrap output)")
 
     if issues:
         print("Repo guard: FAIL")
