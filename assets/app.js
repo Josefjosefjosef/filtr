@@ -2305,17 +2305,14 @@ try {
   }
 
   // === DATA RETENTION (sharded articles history) ===
-  /** Opt-in ?iuArticlesBootstrap=1 — must mirror projects/index.html loader flag (no default behavior change). */
+  /** Bootstrap+shard primary path unless kill-switch; mirrors window.__iuUseArticlesBootstrapPrimary from projects/index.html. */
   function iuArticlesBootstrapOptIn() {
     try {
-      return (
-        new URLSearchParams(String(typeof location !== "undefined" ? location.search || "" : "")).get(
-          "iuArticlesBootstrap",
-        ) === "1"
-      );
-    } catch (_) {
-      return false;
-    }
+      if (typeof window.__iuUseArticlesBootstrapPrimary === "function") {
+        return window.__iuUseArticlesBootstrapPrimary();
+      }
+    } catch (_) {}
+    return false;
   }
 
   function dayKeyFromPublished(it){
