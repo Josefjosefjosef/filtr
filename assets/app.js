@@ -401,8 +401,13 @@ try {
 
   function iuDataUrl(file) {
     const base = iuBasePath() + "data/" + file;
-    const ver = (typeof document !== "undefined" && document.querySelector) ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim() : '';
-    if (ver && ver !== "iu-data-ver-placeholder" && (file === "articles.json" || file === "videos.json")) return base + "?v=" + ver;
+    if (file === "articles.json" || file === "videos.json") {
+      const verRaw = (typeof document !== "undefined" && document.querySelector)
+        ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim()
+        : '';
+      const vq = !verRaw || verRaw === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : verRaw;
+      return `${base}?v=${encodeURIComponent(vq)}`;
+    }
     return base;
   }
 
@@ -1654,60 +1659,36 @@ try {
   };
 
   async function fetchDiag(url, kind) {
-    if (!isDebugLogging) {
-      return fetchJsonNoCache(url);
-    }
     try {
-      const response = await fetch(url, { cache: "no-store" });
-      const status = response.status;
-      const ok = response.ok;
-      const redirected = response.redirected;
-      const finalUrl = response.url;
-      const contentType = response.headers.get("content-type") || "";
-      const text = await response.text();
-      const head = text.slice(0, 200).replace(/\s+/g, " ");
-      const length = text.length;
-      const diag = {
-        kind,
-        url,
-        finalUrl,
-        status,
-        ok,
-        redirected,
-        contentType,
-        length,
-        head,
-      };
-      if (kind in lastFetchDiag) {
+      const data = await fetchJsonNoCache(url);
+      if (isDebugLogging && data != null && kind in lastFetchDiag) {
+        const text = JSON.stringify(data);
+        const head = text.slice(0, 200).replace(/\s+/g, " ");
+        const diag = {
+          kind,
+          url,
+          finalUrl: url,
+          status: 200,
+          ok: true,
+          redirected: false,
+          contentType: "application/json",
+          length: text.length,
+          head,
+        };
         lastFetchDiag[kind] = diag;
+        const infoLine = `[FETCHDIAG] kind=${kind} url=${url} status=200 ok=true (shared)`;
+        debugLog(infoLine);
+        debugLog(`[FETCHDIAG] kind=${kind} head=${head}`);
+        appendDebugLine(infoLine);
+        appendDebugLine(`[FETCHDIAG] kind=${kind} head=${head}`);
+        appendDebugLine(`[FETCHDIAG] kind=${kind} length=${text.length}`);
       }
-      const infoLine = `[FETCHDIAG] kind=${kind} url=${url} status=${status} ok=${ok} redirected=${redirected} finalUrl=${finalUrl} contentType=${contentType}`;
-      const headLine = `[FETCHDIAG] kind=${kind} head=${head}`;
-      const lengthLine = `[FETCHDIAG] kind=${kind} length=${length}`;
-      debugLog(infoLine);
-      debugLog(headLine);
-      appendDebugLine(infoLine);
-      appendDebugLine(headLine);
-      appendDebugLine(lengthLine);
-      const isLikelyJson =
-        contentType.includes("application/json") ||
-        text.trim().startsWith("{") ||
-        text.trim().startsWith("[");
-      if (!isLikelyJson) {
-        debugWarn(`[FETCHDIAG] kind=${kind} not JSON`, contentType, head);
-        appendDebugLine(`[FETCHDIAG] kind=${kind} not JSON`);
-        return null;
-      }
-      try {
-        return JSON.parse(text);
-      } catch (parseErr) {
-        debugWarn(`[FETCHDIAG] kind=${kind} parse error`, parseErr);
-        appendDebugLine(`[FETCHDIAG] kind=${kind} parse error ${parseErr.message || parseErr}`);
-        return null;
-      }
+      return data;
     } catch (err) {
-      debugWarn(`[FETCHDIAG] kind=${kind} fetch failed`, err);
-      appendDebugLine(`[FETCHDIAG] kind=${kind} fetch failed ${err.message || err}`);
+      if (isDebugLogging) {
+        debugWarn(`[FETCHDIAG] kind=${kind} fetch failed`, err);
+        appendDebugLine(`[FETCHDIAG] kind=${kind} fetch failed ${err.message || err}`);
+      }
       return null;
     }
   }
@@ -1941,11 +1922,17 @@ try {
     const candidate = String(url || "");
     if (!candidate) return "";
     if (!/(articles|videos)\.json/.test(candidate)) return candidate;
-    const separator = candidate.includes("?") ? "&" : "?";
-    return `${candidate}${separator}v=${Date.now()}`;
+    return candidate;
   }
 
   function withTs(url) {
+    const candidate = String(url || "");
+    try {
+      const pathLower = new URL(candidate, location.href).pathname.toLowerCase();
+      if (/(articles|videos)\.json$/i.test(pathLower)) {
+        return candidate;
+      }
+    } catch (_) {}
     const u = new URL(url, location.href);
     u.searchParams.set("ts", String(Date.now()));
     return `${u.pathname}?${u.searchParams.toString()}`;
@@ -1958,6 +1945,14 @@ try {
       backoffMs = 600,
       maxBackoffMs = 2500,
     } = opts;
+
+    const pathLower = new URL(String(url || ""), location.href).pathname.toLowerCase();
+    if ((pathLower.endsWith("/articles.json") || pathLower.endsWith("articles.json")) && typeof window.__iuLoadArticlesJsonOnce === "function") {
+      return await window.__iuLoadArticlesJsonOnce();
+    }
+    if ((pathLower.endsWith("/videos.json") || pathLower.endsWith("videos.json")) && typeof window.__iuLoadVideosJsonOnce === "function") {
+      return await window.__iuLoadVideosJsonOnce();
+    }
 
     let lastErr = null;
 
@@ -2066,6 +2061,10 @@ try {
   function withBust(url) {
     const candidate = String(url || "");
     if (!candidate) return "";
+    try {
+      const pl = new URL(candidate, location.href).pathname.toLowerCase();
+      if (/(articles|videos)\.json$/i.test(pl)) return candidate;
+    } catch (_) {}
     const separator = candidate.includes("?") ? "&" : "?";
     return `${candidate}${separator}v=${Date.now()}`;
   }
@@ -2214,16 +2213,15 @@ try {
   (function(){
     const ARTICLES_ENDPOINT = iuDataUrl("articles.json");
     const VIDEOS_ENDPOINT   = iuDataUrl("videos.json");
-    const hasWithCacheBust = typeof window.withCacheBust === "function";
 
     if (typeof window.makeDataUrl === "function") {
       const _makeDataUrl = window.makeDataUrl;
       window.makeDataUrl = function(type, ...rest){
         if (type === "articles" || type === "article") {
-          return hasWithCacheBust ? window.withCacheBust(ARTICLES_ENDPOINT) : ARTICLES_ENDPOINT;
+          return ARTICLES_ENDPOINT;
         }
         if (type === "videos" || type === "video") {
-          return hasWithCacheBust ? window.withCacheBust(VIDEOS_ENDPOINT) : VIDEOS_ENDPOINT;
+          return VIDEOS_ENDPOINT;
         }
         return _makeDataUrl.call(this, type, ...rest);
       };
@@ -13857,6 +13855,14 @@ function buildVideoAsArticleCard(it) {
     refreshInProgress = true;
     debugLog("[REFRESH] start");
     try {
+      try {
+        if (typeof window.__iuInvalidateArticlesJsonSingleFlight === "function") {
+          window.__iuInvalidateArticlesJsonSingleFlight();
+        }
+        if (typeof window.__iuInvalidateVideosJsonSingleFlight === "function") {
+          window.__iuInvalidateVideosJsonSingleFlight();
+        }
+      } catch (_) {}
       await loadData();
     } catch (error) {
       debugWarn("[REFRESH] error", error && error.message ? error.message : error);

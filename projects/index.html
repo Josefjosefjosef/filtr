@@ -2702,31 +2702,58 @@ style-src 'self' 'unsafe-inline' https:;
         return derived;
       }
 
+      async function runDataProbeLight(){
+        var out = document.getElementById("iuDataProbeOut");
+        function write(t){ if(out) { out.textContent = t; } }
+        try{
+          write("Light probe…");
+          var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
+          var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? ("?v=" + dataVer) : "";
+          var probeUrl = "/projects/data/_probe.txt" + q;
+          var rp = await fetch(probeUrl, { cache: "no-store" });
+          var txt = await rp.text();
+          var head = String(txt || "").replace(/\s+/g, " ").slice(0, 140);
+          write("PROBE status=" + rp.status + " ok=" + rp.ok + " len=" + (txt ? txt.length : 0) + "\n" + head + "\nNOTE: Celý JSON jen po kliknutí „Data probe“.");
+        }catch(e){
+          write("PROBE ERROR: " + (e && (e.message || String(e))));
+        }
+      }
+
       async function runDataProbe(){
         var out = document.getElementById("iuDataProbeOut");
         function write(t){ if(out) { out.textContent = t; } }
         try{
           write("Running…");
-          var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
-          var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "";
-          var aUrl = "/projects/data/articles.json" + q;
-          var vUrl = "/projects/data/videos.json" + q;
-
-          var ra = await fetch(aUrl, { cache: "no-store" });
-          var rv = await fetch(vUrl, { cache: "no-store" });
-
-          var aCt = ra.headers.get("content-type") || "";
-          var vCt = rv.headers.get("content-type") || "";
-
-          var aj = await ra.json();
-          var vj = await rv.json();
+          var aj;
+          var vj;
+          var raOk = true;
+          var rvOk = true;
+          var aCt = "application/json";
+          var vCt = "application/json";
+          if (typeof window.__iuLoadArticlesJsonOnce === "function" && typeof window.__iuLoadVideosJsonOnce === "function") {
+            aj = await window.__iuLoadArticlesJsonOnce();
+            vj = await window.__iuLoadVideosJsonOnce();
+          } else {
+            var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
+            var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "?v=iu-data-ver-placeholder";
+            var aUrl = "/projects/data/articles.json" + q;
+            var vUrl = "/projects/data/videos.json" + q;
+            var ra = await fetch(aUrl, { cache: "no-store" });
+            var rv = await fetch(vUrl, { cache: "no-store" });
+            raOk = ra.ok;
+            rvOk = rv.ok;
+            aCt = ra.headers.get("content-type") || "";
+            vCt = rv.headers.get("content-type") || "";
+            aj = await ra.json();
+            vj = await rv.json();
+          }
 
           var aArr = Array.isArray(aj?.articles) ? aj.articles : (Array.isArray(aj) ? aj : []);
           var vArr = Array.isArray(vj?.videos) ? vj.videos : (Array.isArray(vj) ? vj : []);
 
           var lines = [];
-          lines.push("ART status=" + ra.status + " ok=" + ra.ok + " ct=" + aCt);
-          lines.push("VID status=" + rv.status + " ok=" + rv.ok + " ct=" + vCt);
+          lines.push("ART status=" + (raOk ? "200" : "?") + " ok=" + raOk + " ct=" + aCt + " (shared)");
+          lines.push("VID status=" + (rvOk ? "200" : "?") + " ok=" + rvOk + " ct=" + vCt + " (shared)");
           lines.push("ART articles.length=" + aArr.length + " sample=" + JSON.stringify(pickSample(aArr)));
           lines.push("VID videos.length=" + vArr.length + " sample=" + JSON.stringify(pickSample(vArr)));
           var artSummary = analyzeArticles(aArr);
@@ -2806,9 +2833,9 @@ style-src 'self' 'unsafe-inline' https:;
       bindCopy2Lines();
       bindDataProbe();
       bindDataProbeCopy();
-      // AUTO RUN (no-click) — safe HTML-only probe
-      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 50);
-      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 3600);
+      // AUTO RUN: lightweight _probe.txt only (no full articles.json — avoids duplicate multi-MB GET with app.js loadData)
+      setTimeout(function(){ try{ runDataProbeLight(); }catch(e){} }, 50);
+      setTimeout(function(){ try{ runDataProbeLight(); }catch(e){} }, 3600);
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
@@ -3562,6 +3589,92 @@ style-src 'self' 'unsafe-inline' https:;
     })();
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
+    <!-- P0: jediný globální network GET na articles.json / videos.json (single-flight před crash-shield + app.js). -->
+    <script>
+    (function () {
+      function iuBasePathForData() {
+        try {
+          var p = String(location.pathname || "").toLowerCase().replace(/\\/g, "/");
+          if (p.indexOf("/filtr/") >= 0) return "/filtr/projects/";
+          if (p.indexOf("/projects/") >= 0) return "/projects/";
+          return "/projects/";
+        } catch (_) {
+          return "/projects/";
+        }
+      }
+      function iuMetaDataVer() {
+        try {
+          var m = document.querySelector && document.querySelector('meta[name="iu-data-ver"]');
+          var v = (m && m.getAttribute("content")) ? String(m.getAttribute("content")).trim() : "";
+          return v || "iu-data-ver-placeholder";
+        } catch (_) {
+          return "iu-data-ver-placeholder";
+        }
+      }
+      function iuCanonArticlesJsonUrl() {
+        var ver = iuMetaDataVer();
+        var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
+        return iuBasePathForData() + "data/articles.json?v=" + encodeURIComponent(q);
+      }
+      function iuCanonVideosJsonUrl() {
+        var ver = iuMetaDataVer();
+        var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
+        return iuBasePathForData() + "data/videos.json?v=" + encodeURIComponent(q);
+      }
+      var _ap = null;
+      var _au = "";
+      var _vp = null;
+      var _vu = "";
+      window.__iuInvalidateArticlesJsonSingleFlight = function () {
+        _ap = null;
+        _au = "";
+        window.__iuArticlesJsonPromise = null;
+      };
+      window.__iuInvalidateVideosJsonSingleFlight = function () {
+        _vp = null;
+        _vu = "";
+        window.__iuVideosJsonPromise = null;
+      };
+      window.__iuArticlesJsonPromise = null;
+      window.__iuVideosJsonPromise = null;
+      window.__iuLoadArticlesJsonOnce = function () {
+        var url = iuCanonArticlesJsonUrl();
+        if (_ap && _au === url) {
+          window.__iuArticlesJsonPromise = _ap;
+          return _ap;
+        }
+        _au = url;
+        _ap = fetch(url, {
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: { "cache-control": "no-cache" },
+        }).then(function (res) {
+          if (!res.ok) throw new Error("HTTP_" + res.status);
+          return res.json();
+        });
+        window.__iuArticlesJsonPromise = _ap;
+        return _ap;
+      };
+      window.__iuLoadVideosJsonOnce = function () {
+        var url = iuCanonVideosJsonUrl();
+        if (_vp && _vu === url) {
+          window.__iuVideosJsonPromise = _vp;
+          return _vp;
+        }
+        _vu = url;
+        _vp = fetch(url, {
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: { "cache-control": "no-cache" },
+        }).then(function (res) {
+          if (!res.ok) throw new Error("HTTP_" + res.status);
+          return res.json();
+        });
+        window.__iuVideosJsonPromise = _vp;
+        return _vp;
+      };
+    })();
+    </script>
     <script defer src="/assets/app-crash-shield.js"></script>
     <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
     <script>
@@ -3621,7 +3734,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=fix-global-click-latency-20260430"></script>
+    <script type="module" src="/assets/app.js?v=p0-single-articles-loader-20260430"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){

@@ -329,6 +329,101 @@
     };
   }
 
+  async function loadArticlesThroughSharedOrCache() {
+    if (typeof window.__iuLoadArticlesJsonOnce !== "function") {
+      return safeFetchJSON("articles", DATA.articlesUrl, { timeoutMs: 9000, retries: 2 });
+    }
+    try {
+      const v = await window.__iuLoadArticlesJsonOnce();
+      const text = JSON.stringify(v);
+      rotateWrite("articles", text);
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: true, source: "network" });
+      diagSet("last_ok", { t: nowISO(), note: "data loaded", articles: "ok" });
+      return {
+        ok: true,
+        data: v,
+        source: "network",
+        attempt: 0,
+        fetchedAt: nowISO(),
+      };
+    } catch (e) {
+      log("loadArticlesThroughSharedOrCache fail", e);
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "network", msg: String(e?.message || e) });
+      const cached = readBestCache("articles");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "cache", msg: "shared_fail_fallback" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: e,
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("articles"), cached.text);
+      }
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: e,
+        fetchedAt: nowISO(),
+      };
+    }
+  }
+
+  async function loadVideosThroughSharedOrCache() {
+    if (typeof window.__iuLoadVideosJsonOnce !== "function") {
+      return safeFetchJSON("videos", DATA.videosUrl, { timeoutMs: 9000, retries: 2 });
+    }
+    try {
+      const v = await window.__iuLoadVideosJsonOnce();
+      const text = JSON.stringify(v);
+      rotateWrite("videos", text);
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: true, source: "network" });
+      return {
+        ok: true,
+        data: v,
+        source: "network",
+        attempt: 0,
+        fetchedAt: nowISO(),
+      };
+    } catch (e) {
+      log("loadVideosThroughSharedOrCache fail", e);
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "network", msg: String(e?.message || e) });
+      const cached = readBestCache("videos");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "cache", msg: "shared_fail_fallback" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: e,
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("videos"), cached.text);
+      }
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: e,
+        fetchedAt: nowISO(),
+      };
+    }
+  }
+
   // =========================
   // === DATA LOADER (ARTICLES / VIDEOS / META / STATUS)
   // =========================
@@ -345,10 +440,13 @@
 
   const PROJECTS_DATA_BASE = "/projects/data";
   const dataVer = (typeof document !== "undefined" && document.querySelector) ? (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim() : '';
-  const dataVerQ = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "";
+  const dataVerQParam = (() => {
+    const v = (dataVer && dataVer !== "iu-data-ver-placeholder") ? dataVer : "iu-data-ver-placeholder";
+    return "?v=" + encodeURIComponent(v);
+  })();
   const DATA = {
-    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json${dataVerQ}`,
-    videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQ}`,
+    articlesUrl: `${PROJECTS_DATA_BASE}/articles.json${dataVerQParam}`,
+    videosUrl: `${PROJECTS_DATA_BASE}/videos.json${dataVerQParam}`,
     metaUrl: `${PROJECTS_DATA_BASE}/meta.json`,
     statusUrl: `${PROJECTS_DATA_BASE}/status.json`  // status.json se generuje v workflow
   };
@@ -359,8 +457,8 @@
 
   async function loadAllData() {
     const [articles, videos, meta, status] = await Promise.all([
-      safeFetchJSON("articles", DATA.articlesUrl, { timeoutMs: 9000, retries: 2 }),
-      safeFetchJSON("videos", DATA.videosUrl, { timeoutMs: 9000, retries: 2 }),
+      loadArticlesThroughSharedOrCache(),
+      loadVideosThroughSharedOrCache(),
       safeFetchJSON("meta", DATA.metaUrl, { timeoutMs: 7000, retries: 1 }),
       safeFetchJSON("status", DATA.statusUrl, { timeoutMs: 5000, retries: 1 })
     ]);
