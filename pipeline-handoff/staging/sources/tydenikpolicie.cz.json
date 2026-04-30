@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-30T03:50:04.118990Z",
+  "ingestedAt": "2026-04-30T04:19:49.783452Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Žena chtěla výhodně investovat. Svou platební kartu nepochopitelně předala cizímu muži na ulici",
+      "url": "https://tydenikpolicie.cz/zena-chtela-vyhodne-investovat-svou-platebni-kartu-nepochopitelne-predala-cizimu-muzi-na-ulici/",
+      "dt": "2026-04-30T04:02:01Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "chtěla",
+        "cizímu",
+        "investovat",
+        "kartu",
+        "muži",
+        "nepochopitelně",
+        "platební",
+        "předala",
+        "svou",
+        "ulici",
+        "výhodně",
+        "žena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -228,31 +257,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "V hořícím bytě v Karviné našli hasiči vážně popáleného muže",
-      "url": "https://tydenikpolicie.cz/v-horicim-byte-v-karvine-nasli-hasici-vazne-popaleneho-muze/",
-      "dt": "2026-04-29T12:15:21Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "bytě",
-        "hasiči",
-        "hořícím",
-        "karviné",
-        "muže",
-        "našli",
-        "popáleného",
-        "vážně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -263,7 +267,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16153,
+      "bytes": 16284,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -300,7 +304,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T02:02:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:02:01Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -315,6 +319,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Žena chtěla výhodně investovat. Svou platební kartu nepochopitelně předala cizímu muži na ulici",
+            "publishedAt": "2026-04-30T04:02:01Z"
+          },
           {
             "title": "Mladíci se v Kladně pokusili posprejovat vlak",
             "publishedAt": "2026-04-30T02:02:27Z"
@@ -342,10 +350,6 @@
           {
             "title": "Dálnici D6 na Kladensku uzavřela srážka dvou kamionů. Jeden z nich skončil v poli",
             "publishedAt": "2026-04-29T20:39:41Z"
-          },
-          {
-            "title": "Dobrovolně hospitalizovaný pacient se nevrátil z vycházky do bohnické léčebny",
-            "publishedAt": "2026-04-29T20:08:15Z"
           }
         ]
       }

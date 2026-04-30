@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-30T03:50:04.118990Z",
+  "ingestedAt": "2026-04-30T04:19:49.783452Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Ďábel nosí Pradu 2 hledí do propasti krachujících médií. Očekávaný druhý díl překvapí",
+      "url": "https://magazin.aktualne.cz/kultura/film/dabel-nosi-pradu-2-hledi-do-propasti-krachujicich-medii-ocekavany-druhy-dil-prekvapi/r~aaa29b9bc4d9e3a2afad01e59af5693d/",
+      "dt": "2026-04-30T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "druhý",
+        "díl",
+        "hledí",
+        "krachujících",
+        "médií",
+        "nosí",
+        "očekávaný",
+        "pradu",
+        "propasti",
+        "překvapí",
+        "ďábel"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zdravé potraviny, které mohou zvyšovat riziko rakoviny. Studie přišla s nečekaným zjištěním",
+      "url": "https://magazin.aktualne.cz/zdrave-potraviny-ktere-mohou-zvysovat-riziko-rakoviny-studie-prisla-s-necekanym-zjistenim/r~aaa290e295a968136f034e1492ba773a/",
+      "dt": "2026-04-30T03:59:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "nečekaným",
+        "potraviny",
+        "přišla",
+        "rakoviny",
+        "riziko",
+        "studie",
+        "zdravé",
+        "zjištěním",
+        "zvyšovat"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -489,58 +543,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "To už namíchlo i Putina. Ukrajinci decimují kritické cíle v hloubi Ruska",
-      "url": "https://zpravy.aktualne.cz/zahranici/to-uz-namichlo-i-putina-ukrajinci-decimuji-kriticke-cile-v-hloubi-ruska/r~aaa29ac22187147f3564aa05d78e0250/",
-      "dt": "2026-04-29T15:59:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cíle",
-        "decimují",
-        "hloubi",
-        "kritické",
-        "namíchlo",
-        "putina",
-        "ruska",
-        "ukrajinci"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šokující informace z fotbalové kauzy: švindl nevyšel, šíbr udělal z viníků prostituty",
-      "url": "https://sport.aktualne.cz/fotbal/sokujici-informace-z-fotbalove-kauzy-svindl-nevysel-hraci-museli-dluh-odmakat-prostituci/r~aaa292732d7b149abcbfb588fce3e8bb/",
-      "dt": "2026-04-29T15:33:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "fotbalové",
-        "informace",
-        "kauzy",
-        "nevyšel",
-        "prostituty",
-        "udělal",
-        "viníků",
-        "šokující",
-        "švindl",
-        "šíbr"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -551,7 +553,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23237,
+      "bytes": 23137,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -588,13 +590,14 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 2,
+          "zdravi": 1,
           "finance": 2,
-          "zpravy": 11,
-          "sport": 6,
-          "other": 1
+          "zpravy": 10,
+          "sport": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -606,6 +609,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ďábel nosí Pradu 2 hledí do propasti krachujících médií. Očekávaný druhý díl překvapí",
+            "publishedAt": "2026-04-30T04:00:00Z"
+          },
+          {
+            "title": "Zdravé potraviny, které mohou zvyšovat riziko rakoviny. Studie přišla s nečekaným zjištěním",
+            "publishedAt": "2026-04-30T03:59:00Z"
+          },
           {
             "title": "Velký kombík za nečekaně málo peněz. Kia vysílá do Česka novou zbraň proti Octavii",
             "publishedAt": "2026-04-30T03:40:00Z"
@@ -629,14 +640,6 @@
           {
             "title": "V Madridu padaly góly jen z penalt. Arsenal si z Atlética veze remízu",
             "publishedAt": "2026-04-29T21:00:00Z"
-          },
-          {
-            "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
-            "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Evropská unie zadržuje Maďarsku 18 miliard eur. Magyar očekává do měsíce dohodu o uvolnění",
-            "publishedAt": "2026-04-29T17:02:00Z"
           }
         ]
       }

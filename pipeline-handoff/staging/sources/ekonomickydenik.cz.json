@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-30T03:50:04.118990Z",
+  "ingestedAt": "2026-04-30T04:19:49.783452Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dostupná energie pro všechny? Návrh na snížení cen elektřiny narazil pro nadbytečnost",
+      "url": "https://ekonomickydenik.cz/navrh-snizeni-cen-elektriny-narazil/",
+      "dt": "2026-04-30T04:05:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "cen",
+        "dostupná",
+        "elektřiny",
+        "energie",
+        "nadbytečnost",
+        "narazil",
+        "návrh",
+        "snížení",
+        "všechny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -764,30 +790,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Největší znečišťovatelé v Česku. Ekologové zveřejnili nelichotivý seznam",
-      "url": "https://ekonomickydenik.cz/nejvetsi-znecistovatele-cesko/",
-      "dt": "2026-04-28T12:56:24Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ekologové",
-        "největší",
-        "nelichotivý",
-        "seznam",
-        "znečišťovatelé",
-        "zveřejnili",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 76872,
+      "bytes": 76245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,12 +837,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T18:05:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:05:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 3,
-          "zdravi": 2
+          "zdravi": 3,
+          "finance": 24,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -852,6 +854,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dostupná energie pro všechny? Návrh na snížení cen elektřiny narazil pro nadbytečnost",
+            "publishedAt": "2026-04-30T04:05:00Z"
+          },
           {
             "title": "Zajíček: Podnikatelé potřebují méně byrokracie, zohledňovat se musí i bezpečnost",
             "publishedAt": "2026-04-29T18:05:18Z"
@@ -879,10 +885,6 @@
           {
             "title": "Napětí v Senátu: Ministři nechodí, senátorky se pohádaly",
             "publishedAt": "2026-04-29T13:13:54Z"
-          },
-          {
-            "title": "Propast v důvěře Čechů: Pavlovi většina věří, Babišova vláda výrazně ztrácí",
-            "publishedAt": "2026-04-29T12:48:47Z"
           }
         ]
       }

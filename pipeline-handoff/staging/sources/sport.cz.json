@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-30T03:50:04.118990Z",
+  "ingestedAt": "2026-04-30T04:19:49.783452Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval i Dobeš s Montrealem",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-vychytal-nulu-a-philadelphia-slavi-postup-z-vyhry-se-radoval-i-dobes-s-montrealem-5446159",
+      "dt": "2026-04-30T03:51:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dobeš",
+        "montrealem",
+        "nulu",
+        "philadelphia",
+        "postup",
+        "radoval",
+        "slaví",
+        "vladař",
+        "vychytal",
+        "výhry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,34 +783,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Světová jednička se opřela do pořadatelů. Obětí pozdních zápasů se ale stal hlavně Menšík",
-      "url": "https://www.sport.cz/clanek/tenis-svetova-jednicka-se-oprela-do-poradatelu-obeti-pozdnich-zapasu-se-ale-stal-hlavne-mensik-5445448",
-      "dt": "2026-04-29T09:57:56Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "ale",
-        "hlavně",
-        "jednička",
-        "menšík",
-        "obětí",
-        "opřela",
-        "pozdních",
-        "pořadatelů",
-        "stal",
-        "světová",
-        "zápasů"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +793,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43214,
+      "bytes": 43228,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +830,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T21:24:42Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T03:51:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -847,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval i Dobeš s Montrealem",
+            "publishedAt": "2026-04-30T03:51:56Z"
+          },
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-27T21:03:00Z"
@@ -874,10 +877,6 @@
           {
             "title": "Absolutní senzace! Lotyši srazili giganta, čeští mladíci už znají soupeře pro semifinále",
             "publishedAt": "2026-04-29T16:32:35Z"
-          },
-          {
-            "title": "Semifinále volá! Češi mohou líbat ruce gólmanovi: Je to bůh, zachránil nás",
-            "publishedAt": "2026-04-29T14:19:00Z"
           }
         ]
       }
