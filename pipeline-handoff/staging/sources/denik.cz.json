@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T09:34:54.584157Z",
+  "ingestedAt": "2026-04-30T10:05:36.613016Z",
   "items": [
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "Pekelně horké léto se blíží: Voda v nádržích bude extra teplá, experti už ví kdy",
+      "url": "https://www.denik.cz/pocasi/predpoved-pocasi-koupaci-sezona-2026.html",
+      "dt": "2026-04-30T09:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "blíží",
+        "experti",
+        "extra",
+        "horké",
+        "léto",
+        "nádržích",
+        "pekelně",
+        "teplá",
+        "voda"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -628,29 +654,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Recenze: Alchemised. Dark fantasy, která vás pohltí i vyčerpá",
-      "url": "https://www.denik.cz/literatura/recenze-alchemised-dark-fantasy-ktera-vas-pohlti-nebo-vycerpa.html",
-      "dt": "2026-04-29T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "alchemised",
-        "dark",
-        "fantasy",
-        "pohltí",
-        "vyčerpá",
-        "vás"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +664,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29487,
+      "bytes": 29559,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +701,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T09:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -714,6 +717,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pekelně horké léto se blíží: Voda v nádržích bude extra teplá, experti už ví kdy",
+            "publishedAt": "2026-04-30T09:15:00Z"
+          },
           {
             "title": "Policie po zásahu v Příbrami stíhá šest osob i firmy. Jde o zakázky za miliony",
             "publishedAt": "2026-04-30T08:30:00Z"
@@ -741,10 +748,6 @@
           {
             "title": "Kouzelná jarní podívaná. Náměstí v Lysé zdobí tulipány, mají neobvyklé barvy",
             "publishedAt": "2026-04-30T06:04:00Z"
-          },
-          {
-            "title": "Ďábel nosí Pradu 2 je pohádkou pro média. S výbornými herci",
-            "publishedAt": "2026-04-30T06:00:00Z"
           }
         ]
       }

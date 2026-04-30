@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-30T09:34:54.584157Z",
+  "ingestedAt": "2026-04-30T10:05:36.613016Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Švédský Göteborg z Prahy v květnu. Letenky od 978 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/svedsky-g-teborg-z-prahy-v-kvetnu",
+      "dt": "2026-04-30T09:44:16Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "978",
+        "göteborg",
+        "květnu",
+        "letenky",
+        "prahy",
+        "švédský"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,31 +503,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Další nová linka easyJet z Prahy do Hamburgu. Letenky od 1 796 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/dalsi-nova-linka-easyjet-z-prahy-do-hamburgu",
-      "dt": "2026-04-24T11:55:24Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "796",
-        "další",
-        "easyjet",
-        "hamburgu",
-        "letenky",
-        "linka",
-        "nová",
-        "prahy"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 42095,
+      "bytes": 41675,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:35:33Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T09:44:16Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +565,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Švédský Göteborg z Prahy v květnu. Letenky od 978 Kč",
+            "publishedAt": "2026-04-30T09:44:16Z"
+          },
           {
             "title": "Gran Canaria na týden z Prahy s all-inclusive. Zájezd od 13 490 Kč",
             "publishedAt": "2026-04-30T08:35:33Z"
@@ -594,10 +596,6 @@
           {
             "title": "Fuerteventura z Brna včetně odbaveného zavazadla. Letenky od 4 990 Kč",
             "publishedAt": "2026-04-28T18:00:28Z"
-          },
-          {
-            "title": "Bosna a Hercegovina od května do října na mnoho termínů. Letenky od 489 Kč",
-            "publishedAt": "2026-04-28T14:14:31Z"
           }
         ]
       }

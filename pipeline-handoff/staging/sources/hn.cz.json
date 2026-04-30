@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T09:34:54.584157Z",
+  "ingestedAt": "2026-04-30T10:05:36.613016Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Český HDP v prvním čtvrtletí meziročně vzrostl o 2,1 procenta, analytici čekali víc",
+      "url": "https://byznys.hn.cz/c1-67872540-cesky-hdp-v-prvnim-ctvrtleti-mezirocne-vzrostl-o-2-1-procenta-analytici-cekali-vic",
+      "dt": "2026-04-30T09:43:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "analytici",
+        "hdp",
+        "meziročně",
+        "procenta",
+        "prvním",
+        "vzrostl",
+        "víc",
+        "čekali",
+        "český",
+        "čtvrtletí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -155,20 +182,24 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, na vině jsou i cla",
+      "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, naopak Škoda Auto &bdquo;jede&ldquo;",
       "url": "https://byznys.hn.cz/c1-67872410-volkswagen-ve-ctvrtleti-snizil-provozni-zisk-o-14-procent-na-vine-jsou-i-cla",
       "dt": "2026-04-30T06:18:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
-        "cla",
+        "auto",
+        "bdquo",
+        "jede",
+        "ldquo",
+        "naopak",
         "procent",
         "provozní",
         "snížil",
-        "vině",
         "volkswagen",
         "zisk",
-        "čtvrtletí"
+        "čtvrtletí",
+        "škoda"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1139,33 +1170,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kone kupuje svého německého rivala, vznikne největší výrobce výtahů na světě",
-      "url": "https://archiv.hn.cz/c1-67872110-kone-kupuje-sveho-nemeckeho-rivala-vznikne-nejvetsi-vyrobce-vytahu-na-svete",
-      "dt": "2026-04-29T08:45:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "kone",
-        "kupuje",
-        "největší",
-        "německého",
-        "rivala",
-        "svého",
-        "světě",
-        "vznikne",
-        "výrobce",
-        "výtahů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1176,7 +1180,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184413,
+      "bytes": 184378,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1213,7 +1217,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T09:43:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1230,6 +1234,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český HDP v prvním čtvrtletí meziročně vzrostl o 2,1 procenta, analytici čekali víc",
+            "publishedAt": "2026-04-30T09:43:00Z"
+          },
           {
             "title": "Za tohle Babiš nemůže. Stěžoval si, kolik peněz chce Evropská komise Česku ubrat, ale dostal špatná čísla. Od koho?",
             "publishedAt": "2026-04-30T09:00:00Z"
@@ -1251,16 +1259,12 @@
             "publishedAt": "2026-04-30T07:17:00Z"
           },
           {
-            "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, na vině jsou i cla",
+            "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, naopak Škoda Auto &bdquo;jede&ldquo;",
             "publishedAt": "2026-04-30T06:18:00Z"
           },
           {
             "title": "Meta zvýšila zisk o 61 procent na 27 miliard dolarů, zisk i tržby překonaly očekávání",
             "publishedAt": "2026-04-30T05:34:00Z"
-          },
-          {
-            "title": "Velký rozcestník chytrých hodinek: kde Apple ustrnul, v čem dominuje Garmin a které značky umí překvapit",
-            "publishedAt": "2026-04-30T05:02:00Z"
           }
         ]
       }
