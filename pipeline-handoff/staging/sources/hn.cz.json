@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T06:19:59.179244Z",
+  "ingestedAt": "2026-04-30T06:49:41.116259Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, na vině jsou i cla",
+      "url": "https://byznys.hn.cz/c1-67872410-volkswagen-ve-ctvrtleti-snizil-provozni-zisk-o-14-procent-na-vine-jsou-i-cla",
+      "dt": "2026-04-30T06:18:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "cla",
+        "procent",
+        "provozní",
+        "snížil",
+        "vině",
+        "volkswagen",
+        "zisk",
+        "čtvrtletí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1129,35 +1154,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "Evropa je nejrychleji se oteplující kontinent. Ubývá sněhu i ledu a tropické teploty zažívají i za polárním kruhem",
-      "url": "https://zahranicni.hn.cz/c1-67872000-evropa-je-nejrychleji-se-oteplujici-kontinent-ubyva-snehu-i-ledu-a-tropicke-teploty-zazivaji-i-za-polarnim-kruhem",
-      "dt": "2026-04-29T05:23:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "evropa",
-        "kontinent",
-        "kruhem",
-        "ledu",
-        "nejrychleji",
-        "oteplující",
-        "polárním",
-        "sněhu",
-        "teploty",
-        "tropické",
-        "ubývá",
-        "zažívají"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1164,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184281,
+      "bytes": 184181,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,11 +1201,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:18:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
-          "zpravy": 6,
+          "finance": 33,
+          "zpravy": 5,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1222,6 +1218,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Volkswagen ve čtvrtletí snížil provozní zisk o 14 procent, na vině jsou i cla",
+            "publishedAt": "2026-04-30T06:18:00Z"
+          },
           {
             "title": "Meta zvýšila zisk o 61 procent na 27 miliard dolarů, zisk i tržby překonaly očekávání",
             "publishedAt": "2026-04-30T05:34:00Z"
@@ -1248,10 +1248,6 @@
           },
           {
             "title": "Kulturní tipy: Komediální série plná zahradničení, Nezvalova Manon jako aktuální příběh či blackmetalový výlet do válečných zákopů",
-            "publishedAt": "2026-04-29T22:00:00Z"
-          },
-          {
-            "title": "Finanční trhy (30. 4. 2026)",
             "publishedAt": "2026-04-29T22:00:00Z"
           }
         ]

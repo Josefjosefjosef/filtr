@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-30T06:19:59.179244Z",
+  "ingestedAt": "2026-04-30T06:49:41.116259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Úspěšná trefa: Ukrajinci zasáhli cíl v hloubi Ruska, 1500 km od hranic",
+      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
+      "dt": "2026-01-21T06:45:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "1500",
+        "cíl",
+        "hloubi",
+        "hranic",
+        "ruska",
+        "trefa",
+        "ukrajinci",
+        "zasáhli",
+        "úspěšná"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -445,32 +471,6 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Úspěšná trefa: Ukrajinci zasáhli cíl v hloubi Ruska, 1500 km od hranic",
-      "url": "https://zpravy.aktualne.cz/zahranici/v-kyjeve-kolabuje-elektrina-milion-lidi-je-v-mrazivych-dnech-bez-tepla/r~aaa298a50e59045064ac8cd3d60e8a45/",
-      "dt": "2026-01-21T06:45:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "1500",
-        "cíl",
-        "hloubi",
-        "hranic",
-        "ruska",
-        "trefa",
-        "ukrajinci",
-        "zasáhli",
-        "úspěšná"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
       "title": "Nařídil to „El Money“. Útoky na majetek britského premiéra měla platit tajemná postava",
       "url": "https://zpravy.aktualne.cz/zahranici/naridil-to-el-money-utoky-na-majetek-britskeho-predsedy-mela-platit-tajemna-postava/r~aaa299ea45a07111770e3e2356a91cb6/",
       "dt": "2026-04-29T19:15:00Z",
@@ -557,7 +557,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23298,
+      "bytes": 23301,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -614,6 +614,10 @@
         },
         "sample_titles": [
           {
+            "title": "Úspěšná trefa: Ukrajinci zasáhli cíl v hloubi Ruska, 1500 km od hranic",
+            "publishedAt": "2026-01-21T06:45:00Z"
+          },
+          {
             "title": "„Oto, jdi někam,“ opírá se hudebník ze Survivoru do ministra. Kultura nemá vydělávat, tvrdí",
             "publishedAt": "2026-04-30T06:00:00Z"
           },
@@ -640,10 +644,6 @@
           {
             "title": "Válka s Íránem zatím Spojené státy podle odhadů stála 25 miliard dolarů, tvrdí Pentagon",
             "publishedAt": "2026-02-28T14:04:00Z"
-          },
-          {
-            "title": "Ďábel nosí Pradu 2 hledí do propasti krachujících médií. Očekávaný druhý díl překvapí",
-            "publishedAt": "2026-04-30T04:00:00Z"
           }
         ]
       }

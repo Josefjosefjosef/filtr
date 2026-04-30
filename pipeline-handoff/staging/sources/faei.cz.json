@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-30T06:19:59.179244Z",
+  "ingestedAt": "2026-04-30T06:49:41.116259Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
+      "url": "https://profitonline.cz/novy-most-v-praze-je-dvakrat-drazsi-nez-podobna-stavba-v-helsinkach/",
+      "dt": "2026-04-30T06:40:53Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dražší",
+        "dvakrát",
+        "helsinkách",
+        "most",
+        "než",
+        "nový",
+        "podobná",
+        "praze",
+        "stavba"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -274,30 +300,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Paradox bezpečného přístavu: Proč cena zlata strádá?",
-      "url": "https://profitonline.cz/paradox-bezpecneho-pristavu-proc-cena-zlata-strada/",
-      "dt": "2026-04-27T18:00:19Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bezpečného",
-        "cena",
-        "paradox",
-        "proč",
-        "přístavu",
-        "strádá",
-        "zlata"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -308,7 +310,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18988,
+      "bytes": 19088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -345,10 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-30T06:00:21Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:40:53Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 12
+          "zpravy": 1,
+          "finance": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -360,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
+            "publishedAt": "2026-04-30T06:40:53Z"
+          },
           {
             "title": "Renáta Váchová v čele Alfa Laval pro střední a východní Evropu",
             "publishedAt": "2026-04-30T06:00:21Z"
@@ -387,10 +394,6 @@
           {
             "title": "Brusel chce, aby výše mzdy byla už v inzerátech. V Česku to bude jinak",
             "publishedAt": "2026-04-29T04:00:29Z"
-          },
-          {
-            "title": "Standard & Poor’s varuje, že společnosti ČEZ zhorší rating",
-            "publishedAt": "2026-04-28T20:10:45Z"
           }
         ]
       }

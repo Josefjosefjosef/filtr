@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-30T06:19:59.179244Z",
+  "ingestedAt": "2026-04-30T06:49:41.116259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Cizinec sebral v brněnském květinářství růžový věneček, dal si ho na hlavu a odešel",
+      "url": "https://tydenikpolicie.cz/cizinec-sebral-v-brnenskem-kvetinarstvi-ruzovy-venecek-dal-si-ho-na-hlavu-a-odesel/",
+      "dt": "2026-04-30T06:43:19Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "brněnském",
+        "cizinec",
+        "dal",
+        "hlavu",
+        "květinářství",
+        "odešel",
+        "růžový",
+        "sebral",
+        "věneček"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -229,34 +255,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čtveřici cizinců podezřelých ze série krádeží v prodejnách se podařilo dopadnout díky pozornému policistovi",
-      "url": "https://tydenikpolicie.cz/ctverici-cizincu-podezrelych-ze-serie-kradezi-v-prodejnach-se-podarilo-dopadnout-diky-pozornemu-policistovi/",
-      "dt": "2026-04-29T13:27:12Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "cizinců",
-        "dopadnout",
-        "díky",
-        "krádeží",
-        "podařilo",
-        "podezřelých",
-        "policistovi",
-        "pozornému",
-        "prodejnách",
-        "série",
-        "čtveřici"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -267,7 +265,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16284,
+      "bytes": 16169,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -304,7 +302,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:02:01Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:43:19Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -319,6 +317,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Cizinec sebral v brněnském květinářství růžový věneček, dal si ho na hlavu a odešel",
+            "publishedAt": "2026-04-30T06:43:19Z"
+          },
           {
             "title": "Žena chtěla výhodně investovat. Svou platební kartu nepochopitelně předala cizímu muži na ulici",
             "publishedAt": "2026-04-30T04:02:01Z"
@@ -346,10 +348,6 @@
           {
             "title": "Hasiče napříč republikou zaměstnaly požáry lesů",
             "publishedAt": "2026-04-29T20:52:33Z"
-          },
-          {
-            "title": "Dálnici D6 na Kladensku uzavřela srážka dvou kamionů. Jeden z nich skončil v poli",
-            "publishedAt": "2026-04-29T20:39:41Z"
           }
         ]
       }
