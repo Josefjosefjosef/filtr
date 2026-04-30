@@ -12299,25 +12299,12 @@ function buildVideoAsArticleCard(it) {
         performance.mark("iu-hub-home-before-defer");
       }
     } catch (_) {}
-    /* P0 mobile/tablet Domů: po sync zavření gate naplánuj apply na microtask — dřív než další rAF, stále po dokončení současného handleru. */
+    /* P0 click latency: Domů musí hned změnit URL + sekci — microtask/rAF odkládal první paint o frame+ a působil „mrtvý“ klik. */
     try {
-      if (typeof queueMicrotask === "function") {
-        queueMicrotask(function () {
-          try {
-            if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
-          } catch (_) {}
-          iuFinishProjectsHubUrlAndApply();
-        });
-      } else if (typeof window.requestAnimationFrame === "function") {
-        window.requestAnimationFrame(function () {
-          try {
-            if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
-          } catch (_) {}
-          iuFinishProjectsHubUrlAndApply();
-        });
-      } else {
-        iuFinishProjectsHubUrlAndApply();
-      }
+      try {
+        if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
+      } catch (_) {}
+      iuFinishProjectsHubUrlAndApply();
     } catch (_) {
       try {
         if (typeof window.__iuHubResetSeq === "number" && window.__iuHubResetSeq !== hubSeq) return;
@@ -13000,7 +12987,7 @@ function buildVideoAsArticleCard(it) {
               try {
                 var hero = document.getElementById("iuSilverHeroPremium");
                 if (hero && typeof hero.scrollIntoView === "function") {
-                  hero.scrollIntoView({ block: "center", behavior: "smooth" });
+                  hero.scrollIntoView({ block: "center", behavior: "auto" });
                 }
               } catch (_) {}
               try {
@@ -27893,14 +27880,15 @@ function buildVideoAsArticleCard(it) {
     try {
       iuApplyMobileMainShellFromSectionNav(section, nav);
     } catch (_) {}
+    /* P0 click latency: aktivní stav levé navigace ve stejném tahu jako data-section / showView (ne až v post-apply rAF). */
+    try {
+      setLeftNavForUrlState(nav);
+    } catch (_) {}
 
     try {
       requestAnimationFrame(function iuApplySectionPostPaint() {
         try {
           if (typeof window.iuEnsureArticlesView === "function") window.iuEnsureArticlesView();
-        } catch (_) {}
-        try {
-          setLeftNavForUrlState(nav);
         } catch (_) {}
 
     try {
@@ -28156,7 +28144,11 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try{
-        requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
+        requestAnimationFrame(function () {
+          try {
+            iuScrollMainToTopSmooth();
+          } catch (_) {}
+        });
       }catch{
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
@@ -28215,7 +28207,11 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       try{
-        requestAnimationFrame(() => requestAnimationFrame(() => iuScrollMainToTopSmooth()));
+        requestAnimationFrame(function () {
+          try {
+            iuScrollMainToTopSmooth();
+          } catch (_) {}
+        });
       }catch{
         try{ iuScrollMainToTopSmooth(); }catch{}
       }
