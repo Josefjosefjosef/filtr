@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-30T04:50:12.059116Z",
+  "ingestedAt": "2026-04-30T05:20:17.336119Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Myčka není jen na mytí, vynalézaví Češi v ní začali i vařit. Takto v ní připravíte oběd pro celou rodinu",
+      "url": "https://www.vlasta.cz/inspirace/jak-varit-v-mycce-na-nadobi-bezpecne/",
+      "dt": "2026-04-30T05:02:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "celou",
+        "jen",
+        "mytí",
+        "myčka",
+        "oběd",
+        "připravíte",
+        "rodinu",
+        "takto",
+        "vařit",
+        "vynalézaví",
+        "začali",
+        "češi"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1102,33 +1131,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Dnes v Ulici: Lukáš bojuje o Helenu, chce ji zpět. A Roman odhalil, že plánuje vraždu",
-      "url": "https://www.vlasta.cz/inspirace/dnes-v-ulici-novy-dil-patek-dej-herci-lukas-helena-roman-zofka-karla/",
-      "dt": "2026-04-24T06:33:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "bojuje",
-        "chce",
-        "helenu",
-        "lukáš",
-        "odhalil",
-        "plánuje",
-        "roman",
-        "ulici",
-        "vraždu",
-        "zpět"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1139,7 +1141,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62322,
+      "bytes": 62175,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1176,11 +1178,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:02:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "other": 38,
-          "zpravy": 2
+          "other": 39,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1192,6 +1194,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Myčka není jen na mytí, vynalézaví Češi v ní začali i vařit. Takto v ní připravíte oběd pro celou rodinu",
+            "publishedAt": "2026-04-30T05:02:00Z"
+          },
           {
             "title": "Jak bydlí Zdena Studenková: Kuchyně za statisíce, mramor i posilovna. Takto vypadá luxusní hnízdečko",
             "publishedAt": "2026-04-30T04:32:00Z"
@@ -1219,10 +1225,6 @@
           {
             "title": "Jak bydlí Sandra Nováková z Ulice: Zimní zahrada s luxusní kuchyní a dům na stromě jako splněný sen",
             "publishedAt": "2026-04-29T06:02:00Z"
-          },
-          {
-            "title": "Mozková mlha se netýká jen žen po padesátce. Možná jí trpíte i vy. Není to nemoc, dá se odstranit",
-            "publishedAt": "2026-04-29T05:32:00Z"
           }
         ]
       }

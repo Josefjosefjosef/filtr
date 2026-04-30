@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-30T04:50:12.059116Z",
+  "ingestedAt": "2026-04-30T05:20:17.336119Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Strop pro dotace? Malí farmáři hranici vítají, ministerstvo ale varuje",
+      "url": "https://ekonomickydenik.cz/strop-dotace-farmari-ministestvo/",
+      "dt": "2026-04-30T04:55:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "dotace",
+        "farmáři",
+        "hranici",
+        "malí",
+        "ministerstvo",
+        "strop",
+        "varuje",
+        "vítají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -762,34 +788,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Kdo má dostat dotace? Český ministr bojoval za velké hráče, kteří zajistí potraviny všem",
-      "url": "https://ekonomickydenik.cz/kdo-ma-dostat-dotace-cesky-ministr-bojoval-za-velke-hrace/",
-      "dt": "2026-04-28T13:02:03Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bojoval",
-        "dostat",
-        "dotace",
-        "hráče",
-        "kteří",
-        "ministr",
-        "potraviny",
-        "velké",
-        "všem",
-        "zajistí",
-        "český"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 76245,
+      "bytes": 76163,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,11 +835,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T04:55:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 3,
           "finance": 24,
+          "zdravi": 3,
           "zpravy": 3
         },
         "drop_counts": {
@@ -854,6 +852,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strop pro dotace? Malí farmáři hranici vítají, ministerstvo ale varuje",
+            "publishedAt": "2026-04-30T04:55:00Z"
+          },
           {
             "title": "Dostupná energie pro všechny? Návrh na snížení cen elektřiny narazil pro nadbytečnost",
             "publishedAt": "2026-04-30T04:05:00Z"
@@ -881,10 +883,6 @@
           {
             "title": "Bez souhlasu je to znásilnění. Pravidla proti agresorům se mají sjednotit",
             "publishedAt": "2026-04-29T13:29:39Z"
-          },
-          {
-            "title": "Napětí v Senátu: Ministři nechodí, senátorky se pohádaly",
-            "publishedAt": "2026-04-29T13:13:54Z"
           }
         ]
       }
