@@ -3615,8 +3615,9 @@ style-src 'self' 'unsafe-inline' https:;
     })();
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
-    <!-- P0: jediný globální network GET na articles.json / videos.json (single-flight před crash-shield + app.js).
-         Opt-in: ?iuArticlesBootstrap=1 → nejdřív articles/bootstrap.json, při chybě/invalid fallback na articles.json (default beze změny). -->
+    <!-- P0: jediný globální network GET na primární články (single-flight před crash-shield + app.js).
+         Default: bootstrap.json + retention shardy; kill-switch ?iuArticlesFull=1 nebo ?iuArticlesBootstrap=0 → articles.json;
+         ?iuArticlesBootstrap=1 explicitně (stejný bootstrap režim); fallback na articles.json při chybě bootstrapu. -->
     <script>
     (function () {
       function iuBasePathForData() {
@@ -3648,16 +3649,46 @@ style-src 'self' 'unsafe-inline' https:;
         var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
         return iuBasePathForData() + "data/articles/bootstrap.json?v=" + encodeURIComponent(q);
       }
-      function iuArticlesBootstrapFlag() {
+      function iuArticlesUrlParams() {
         try {
-          return new URLSearchParams(String(location.search || "")).get("iuArticlesBootstrap") === "1";
+          return new URLSearchParams(String(location.search || ""));
+        } catch (_) {
+          return new URLSearchParams();
+        }
+      }
+      function iuArticlesFullForced() {
+        try {
+          return iuArticlesUrlParams().get("iuArticlesFull") === "1";
         } catch (_) {
           return false;
         }
       }
-      function iuPrimaryArticlesLoadKey() {
-        return iuArticlesBootstrapFlag() ? "BOOT:" + iuCanonBootstrapJsonUrl() : "ART:" + iuCanonArticlesJsonUrl();
+      function iuArticlesBootstrapExplicitOff() {
+        try {
+          return iuArticlesUrlParams().get("iuArticlesBootstrap") === "0";
+        } catch (_) {
+          return false;
+        }
       }
+      function iuArticlesBootstrapExplicitOn() {
+        try {
+          return iuArticlesUrlParams().get("iuArticlesBootstrap") === "1";
+        } catch (_) {
+          return false;
+        }
+      }
+      /** Primární zdroj článků = bootstrap, kromě kill-switchů (iuArticlesFull=1 / iuArticlesBootstrap=0). */
+      function iuUseBootstrapPrimaryArticlesSource() {
+        if (iuArticlesFullForced()) return false;
+        if (iuArticlesBootstrapExplicitOff()) return false;
+        return true;
+      }
+      function iuPrimaryArticlesLoadKey() {
+        return iuUseBootstrapPrimaryArticlesSource() ? "BOOT:" + iuCanonBootstrapJsonUrl() : "ART:" + iuCanonArticlesJsonUrl();
+      }
+      try {
+        window.__iuUseArticlesBootstrapPrimary = iuUseBootstrapPrimaryArticlesSource;
+      } catch (_) {}
       function iuValidateBootstrapArticlesPayload(d) {
         if (!d || typeof d !== "object") return false;
         if (d.schemaVersion !== 1) return false;
@@ -3708,6 +3739,9 @@ style-src 'self' 'unsafe-inline' https:;
         try {
           window.__iuArticlesLoaderFetchCounts = { articles: 0, bootstrap: 0 };
         } catch (_) {}
+        try {
+          window.__iuArticlesLoaderMode = "";
+        } catch (_) {}
       };
       window.__iuInvalidateVideosJsonSingleFlight = function () {
         _vp = null;
@@ -3754,17 +3788,28 @@ style-src 'self' 'unsafe-inline' https:;
           });
         }
         var chain;
-        if (iuArticlesBootstrapFlag()) {
+        if (iuUseBootstrapPrimaryArticlesSource()) {
           chain = fetchJsonNoThrow(iuCanonBootstrapJsonUrl())
             .then(function (d) {
               if (!iuValidateBootstrapArticlesPayload(d)) throw new Error("BOOTSTRAP_INVALID");
+              try {
+                window.__iuArticlesLoaderMode = iuArticlesBootstrapExplicitOn() ? "bootstrap-optin" : "bootstrap-default";
+              } catch (_) {}
               return d;
             })
             .catch(function () {
+              try {
+                window.__iuArticlesLoaderMode = "fallback-full";
+              } catch (_) {}
               return fetchJsonNoThrow(iuCanonArticlesJsonUrl());
             });
         } else {
-          chain = fetchJsonNoThrow(iuCanonArticlesJsonUrl());
+          chain = fetchJsonNoThrow(iuCanonArticlesJsonUrl()).then(function (d) {
+            try {
+              window.__iuArticlesLoaderMode = "full-forced";
+            } catch (_) {}
+            return d;
+          });
         }
         window.__iuArticlesLockedUrl = key;
         window.__iuArticlesFetched = true;
@@ -3878,7 +3923,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=p0-bootstrap-shard-fill-20260430"></script>
+    <script type="module" src="/assets/app.js?v=p0-bootstrap-default-rollout-20260430"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
