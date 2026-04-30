@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T07:59:59.735646Z",
+  "ingestedAt": "2026-04-30T08:29:45.040794Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Posun v kauze příbramské nemocnice: Policie stíhá několik lidí a firem",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/pribramska-nemocnice-policie-stihani/",
+      "dt": "2026-04-30T08:19:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "firem",
+        "kauze",
+        "lidí",
+        "nemocnice",
+        "několik",
+        "policie",
+        "posun",
+        "příbramské",
+        "stíhá"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,32 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Německo schválilo historickou reformu zdravotního pojištění. Čekají se vyšší doplatky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nemecko-reforma-zdravotni-pojisteni-doplatky/",
-      "dt": "2026-04-29T10:54:51Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "doplatky",
-        "historickou",
-        "německo",
-        "pojištění",
-        "reformu",
-        "schválilo",
-        "vyšší",
-        "zdravotního",
-        "čekají"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 74275,
+      "bytes": 71983,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T08:19:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -328,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Posun v kauze příbramské nemocnice: Policie stíhá několik lidí a firem",
+            "publishedAt": "2026-04-30T08:19:00Z"
+          },
           {
             "title": "Rakovina u mladých na vzestupu. Důvodem může být jeden znepokojivý civilizační trend",
             "publishedAt": "2026-04-30T07:00:00Z"
@@ -355,10 +359,6 @@
           {
             "title": "Větší hrozba než válka v Íránu. Nová evropská pravidla děsí farmaceutický průmysl",
             "publishedAt": "2026-04-29T13:55:40Z"
-          },
-          {
-            "title": "Přesun miliard z VZP visí ve vzduchu: Senátní výbory se neshodly",
-            "publishedAt": "2026-04-29T13:07:50Z"
           }
         ]
       }

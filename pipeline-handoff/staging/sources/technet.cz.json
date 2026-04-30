@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-04-30T07:59:59.735646Z",
+  "ingestedAt": "2026-04-30T08:29:45.040794Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Češi staví evropskou AI. Brusel ji pak možná paradoxně zakáže vlastní regulací",
+      "url": "https://www.idnes.cz/technet/software/rozstrel-jan-halic-ai-brusel-evropska-umela-inteligence-brusel-zakaz.A260429_190035_software_vov",
+      "dt": "2026-04-30T08:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "brusel",
+        "evropskou",
+        "možná",
+        "pak",
+        "paradoxně",
+        "regulací",
+        "staví",
+        "vlastní",
+        "zakáže",
+        "češi"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,33 +766,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Před 100 lety se měnilo třetí nádvoří Hradu. Plečnik chystal šachovnici z kamene",
-      "url": "https://www.idnes.cz/technet/pred-100-lety/pred-100-lety-prazsky-hrady-plecnik-upravy.A260420_105047_pred-100-lety_vov",
-      "dt": "2026-04-21T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "100",
-        "chystal",
-        "hradu",
-        "kamene",
-        "lety",
-        "měnilo",
-        "nádvoří",
-        "plečnik",
-        "třetí",
-        "šachovnici"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -776,7 +776,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45558,
+      "bytes": 45628,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -813,11 +813,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T08:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 22,
-          "zpravy": 8
+          "other": 23,
+          "zpravy": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -829,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi staví evropskou AI. Brusel ji pak možná paradoxně zakáže vlastní regulací",
+            "publishedAt": "2026-04-30T08:00:00Z"
+          },
           {
             "title": "Neumíme to udělat lépe, možná později. Apple nechá jedno zařízení, jak je",
             "publishedAt": "2026-04-29T22:00:00Z"
@@ -856,10 +860,6 @@
           {
             "title": "Co je supply chain útok? Hackeři útočí na ty, kterým nejvíc věříte",
             "publishedAt": "2026-04-28T02:00:00Z"
-          },
-          {
-            "title": "Před 100 lety se zrodil mezinárodní řidičák. V Paříži se řešily i brzdy a světla",
-            "publishedAt": "2026-04-27T22:00:00Z"
           }
         ]
       }
