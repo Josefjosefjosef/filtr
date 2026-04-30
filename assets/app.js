@@ -5084,7 +5084,7 @@ try {
     function iuFeedDomMicroYieldStride() {
       try {
         const w = typeof window !== "undefined" && Number.isFinite(window.innerWidth) ? window.innerWidth : 1200;
-        if (w <= 600) return 4;
+        if (w <= 600) return 3;
         if (w <= 1024) return 5;
         return 6;
       } catch (_) {
