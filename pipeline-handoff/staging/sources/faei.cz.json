@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-30T20:10:35.228945Z",
+  "ingestedAt": "2026-04-30T20:40:10.647934Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Duben na akciových trzích: Index S&P500 opět na rekordu",
+      "url": "https://profitonline.cz/duben-na-akciovych-trzich-index-sp500-opet-na-rekordu/",
+      "dt": "2026-04-30T18:00:33Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "akciových",
+        "duben",
+        "index",
+        "opět",
+        "p500",
+        "rekordu",
+        "trzích"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,32 +297,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Digitální proces, analogový konec. Moderní přístup končí u ručního podpisu",
-      "url": "https://profitonline.cz/digitalni-proces-analogovy-konec-moderni-pristup-konci-u-rucniho-podpisu/",
-      "dt": "2026-04-28T08:00:36Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "analogový",
-        "digitální",
-        "konec",
-        "končí",
-        "moderní",
-        "podpisu",
-        "proces",
-        "přístup",
-        "ručního"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +307,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18902,
+      "bytes": 18649,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,7 +344,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:00:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T18:00:33Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 11,
@@ -362,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Duben na akciových trzích: Index S&P500 opět na rekordu",
+            "publishedAt": "2026-04-30T18:00:33Z"
+          },
           {
             "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
             "publishedAt": "2026-04-30T14:00:07Z"
@@ -389,10 +391,6 @@
           {
             "title": "Stačí jeden špatný prompt a firma přijde o svá data",
             "publishedAt": "2026-04-29T08:00:47Z"
-          },
-          {
-            "title": "Fed i ECB ponechají úrokové sazby beze změny",
-            "publishedAt": "2026-04-29T06:00:52Z"
           }
         ]
       }

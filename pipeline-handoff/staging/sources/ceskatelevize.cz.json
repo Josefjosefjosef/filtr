@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T20:10:35.228945Z",
+  "ingestedAt": "2026-04-30T20:40:10.647934Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Toto není izolovaný případ.“ Británie čelí rostoucímu antisemitismu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/toto-neni-izolovany-pripad-britanie-celi-rostoucimu-antisemitismu-372993",
+      "dt": "2026-04-30T20:27:20Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "antisemitismu",
+        "británie",
+        "izolovaný",
+        "případ",
+        "rostoucímu",
+        "toto",
+        "čelí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -749,31 +773,6 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Svoboda médií ve světě je nejnižší za 25 let, uvedli Reportéři bez hranic",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/svoboda-medii-ve-svete-je-nejnizsi-za-25-let-uvedli-reporteri-bez-hranic-372962",
-      "dt": "2026-04-30T04:42:25Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "hranic",
-        "let",
-        "médií",
-        "nejnižší",
-        "reportéři",
-        "svoboda",
-        "světě",
-        "uvedli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
       "section": "sport",
       "contentType": "article",
       "title": "Karlovarsko porazilo Lvy a sahá po titulu",
@@ -962,19 +961,18 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Stolní tenisté podlehli Španělům a na MS družstev skončili už ve skupině",
+      "title": "Češi na MS družstev ve stolním tenisu neprošli ze skupin",
       "url": "https://sport.ceskatelevize.cz/clanek/stolni-tenis/stolni-teniste-podlehli-spanelum-a-na-ms-druzstev-skoncili-uz-ve-skupine-156527",
       "dt": "2026-04-30T15:01:34Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "družstev",
-        "podlehli",
-        "skončili",
-        "skupině",
-        "stolní",
-        "tenisté",
-        "španělům"
+        "neprošli",
+        "skupin",
+        "stolním",
+        "tenisu",
+        "češi"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1519,7 +1517,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43411,
+      "bytes": 43372,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1579,7 +1577,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T19:26:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T20:27:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1596,6 +1594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Toto není izolovaný případ.“ Británie čelí rostoucímu antisemitismu",
+            "publishedAt": "2026-04-30T20:27:20Z"
+          },
           {
             "title": "Případ údajného obřího podvodu míří k soudu, škoda přesahuje půl miliardy",
             "publishedAt": "2026-04-30T19:26:37Z"
@@ -1623,10 +1625,6 @@
           {
             "title": "„Duch z Maginotovy linie.“ Občan na jihu Čech odevzdal policii pevnostní minomet",
             "publishedAt": "2026-04-30T14:57:21Z"
-          },
-          {
-            "title": "Změny klimatu a extrémní počasí zdražují potraviny i pojištění, píše Bloomberg",
-            "publishedAt": "2026-04-30T14:13:22Z"
           }
         ]
       }
@@ -1638,7 +1636,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37030,
+      "bytes": 37112,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1732,7 +1730,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77158,
+      "bytes": 77148,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
