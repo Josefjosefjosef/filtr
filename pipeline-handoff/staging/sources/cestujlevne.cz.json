@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-04-30T08:29:45.040794Z",
+  "ingestedAt": "2026-04-30T09:00:29.951423Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Gran Canaria na týden z Prahy s all-inclusive. Zájezd od 13 490 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/gran-canaria-na-tyden-z-prahy-s-all-inclusive",
+      "dt": "2026-04-30T08:35:33Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "490",
+        "all",
+        "canaria",
+        "gran",
+        "inclusive",
+        "prahy",
+        "týden",
+        "zájezd"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,31 +505,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Nová linka Wizz Air z Prahy do Palerma. Letenky od 1 388 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/nova-linka-wizz-air-z-prahy-do-palerma",
-      "dt": "2026-04-24T10:19:07Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "388",
-        "air",
-        "letenky",
-        "linka",
-        "nová",
-        "palerma",
-        "prahy",
-        "wizz"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -515,7 +515,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 42111,
+      "bytes": 42095,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -552,7 +552,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T17:17:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T08:35:33Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -567,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gran Canaria na týden z Prahy s all-inclusive. Zájezd od 13 490 Kč",
+            "publishedAt": "2026-04-30T08:35:33Z"
+          },
           {
             "title": "Korsika z Vídně s Air Corsica včetně odbaveného zavazadla. Letenky od 4 832 Kč",
             "publishedAt": "2026-04-29T17:17:27Z"
@@ -594,10 +598,6 @@
           {
             "title": "Bosna a Hercegovina od května do října na mnoho termínů. Letenky od 489 Kč",
             "publishedAt": "2026-04-28T14:14:31Z"
-          },
-          {
-            "title": "Řím z Prahy v červenci. Letenky od 1 199 Kč",
-            "publishedAt": "2026-04-28T11:09:19Z"
           }
         ]
       }

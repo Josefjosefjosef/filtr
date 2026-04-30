@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-30T08:29:45.040794Z",
+  "ingestedAt": "2026-04-30T09:00:29.951423Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Strach o Vonnovou. Fanoušky znepokojily záběry lyžařky na invalidním vozíku",
+      "url": "https://www.idnes.cz/sport/trendy/strach-o-vonnovou-fanousky-znepokojily-zabery-lyzarky-na-invalidnim-voziku.A260430_095312_trendy_subt",
+      "dt": "2026-04-30T08:40:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fanoušky",
+        "invalidním",
+        "lyžařky",
+        "strach",
+        "vonnovou",
+        "vozíku",
+        "znepokojily",
+        "záběry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pecku nakoply reakce fanoušků po krachu Ústí: Dostali jsme právem přes držku",
+      "url": "https://www.idnes.cz/sport/basket/ladislav-pecka-rozhovor-ctvrtfinale-maxa-nbl-sluneta-usti-nad-labem-opava.A260430_093201_sport-basket_ten",
+      "dt": "2026-04-30T08:37:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dostali",
+        "držku",
+        "fanoušků",
+        "jsme",
+        "krachu",
+        "nakoply",
+        "pecku",
+        "právem",
+        "reakce",
+        "ústí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -733,58 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pražský maraton 2026: trasa, program, mapa, dopravní omezení",
-      "url": "https://www.idnes.cz/sport/atletika/prazsky-maraton-2026.A260429_084317_atletika_ald",
-      "dt": "2026-04-29T11:43:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "2026",
-        "dopravní",
-        "mapa",
-        "maraton",
-        "omezení",
-        "pražský",
-        "program",
-        "trasa"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Fanoušci tepou do Teplic, Řepka klub brání: Na áčko nekašleme, nejsme loseři",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/teplicky-reditel-rudolf-repka-k-nastvanym-fanouskum.A260428_102905_fotbal_pbi",
-      "dt": "2026-04-29T11:38:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brání",
-        "fanoušci",
-        "klub",
-        "loseři",
-        "nejsme",
-        "nekašleme",
-        "teplic",
-        "tepou",
-        "áčko",
-        "řepka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49317,
+      "bytes": 49651,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:06:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T08:40:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -847,6 +847,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Strach o Vonnovou. Fanoušky znepokojily záběry lyžařky na invalidním vozíku",
+            "publishedAt": "2026-04-30T08:40:00Z"
+          },
+          {
+            "title": "Pecku nakoply reakce fanoušků po krachu Ústí: Dostali jsme právem přes držku",
+            "publishedAt": "2026-04-30T08:37:00Z"
+          },
           {
             "title": "Tohle že je zjevná chyba? Arsenal se čílí kvůli odvolané penaltě na Atlétiku",
             "publishedAt": "2026-04-30T08:06:00Z"
@@ -870,14 +878,6 @@
           {
             "title": "Nic nekončí. Lakers se trápí s Houstonem, Cunninghamův rekord zachránil Detroit",
             "publishedAt": "2026-04-30T06:51:57Z"
-          },
-          {
-            "title": "Pavouk Ligy mistrů 2025/26: program a výsledky od semifinále po finále",
-            "publishedAt": "2026-04-29T22:40:00Z"
-          },
-          {
-            "title": "Děti války dobyly šampionát. Bosňan Ljevakovič: Moji Češi, sejdeme se v play off",
-            "publishedAt": "2026-04-29T22:00:00Z"
           }
         ]
       }

@@ -1,26 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T08:29:45.040794Z",
+  "ingestedAt": "2026-04-30T09:00:29.951423Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Ministryně Mrázová má na svém pozemku v Bílině černé stavby. Prý o tom nevěděla",
+      "title": "Po úterním zásahu v příbramské nemocnici policie stíhá šest lidí a tři firmy",
+      "url": "https://www.denik.cz/regiony/po-uternim-zasahu-v-pribramske-nemocnici-policie-stiha-sest-lidi-a-tri-firmy-26.html",
+      "dt": "2026-04-30T08:25:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "firmy",
+        "lidí",
+        "nemocnici",
+        "policie",
+        "příbramské",
+        "stíhá",
+        "tři",
+        "zásahu",
+        "úterním",
+        "šest"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Ministryně Mrázová má na pozemku v Bílině černé stavby. Nevěděla jsem to, tvrdí",
       "url": "https://www.denik.cz/regiony/ministryne-mrazova-cerne-stavby-bilina-20260430.html",
       "dt": "2026-04-30T08:03:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
         "bílině",
+        "jsem",
         "ministryně",
         "mrázová",
         "nevěděla",
         "pozemku",
-        "prý",
         "stavby",
-        "svém",
-        "tom",
+        "tvrdí",
         "černé"
       ],
       "feedCategory": "zpravy",
@@ -625,32 +651,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zemřel hudebník Oskar Petr. Napsal hity pro Lucii či Anetu Langerovou",
-      "url": "https://www.denik.cz/hudba/zemrel-oskar-petr-hudebnik-skladatel.html",
-      "dt": "2026-04-29T13:56:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "anetu",
-        "hity",
-        "hudebník",
-        "langerovou",
-        "lucii",
-        "napsal",
-        "oskar",
-        "petr",
-        "zemřel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -661,7 +661,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29274,
+      "bytes": 29212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -698,7 +698,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T08:25:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -715,7 +715,11 @@
         },
         "sample_titles": [
           {
-            "title": "Ministryně Mrázová má na svém pozemku v Bílině černé stavby. Prý o tom nevěděla",
+            "title": "Po úterním zásahu v příbramské nemocnici policie stíhá šest lidí a tři firmy",
+            "publishedAt": "2026-04-30T08:25:00Z"
+          },
+          {
+            "title": "Ministryně Mrázová má na pozemku v Bílině černé stavby. Nevěděla jsem to, tvrdí",
             "publishedAt": "2026-04-30T08:03:00Z"
           },
           {
@@ -741,10 +745,6 @@
           {
             "title": "Ďábel nosí Pradu 2 je pohádkou pro média. S výbornými herci",
             "publishedAt": "2026-04-30T06:00:00Z"
-          },
-          {
-            "title": "Tereza Kostková brání StarDance: Lidé pořad sledují 20 let, na ČT patří",
-            "publishedAt": "2026-04-30T05:00:00Z"
           }
         ]
       }
