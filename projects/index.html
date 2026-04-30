@@ -3615,7 +3615,8 @@ style-src 'self' 'unsafe-inline' https:;
     })();
     </script>
     <script type="module">import{franc}from"/assets/vendor/franc-min.js";window.franc=franc;</script>
-    <!-- P0: jediný globální network GET na articles.json / videos.json (single-flight před crash-shield + app.js). -->
+    <!-- P0: jediný globální network GET na articles.json / videos.json (single-flight před crash-shield + app.js).
+         Opt-in: ?iuArticlesBootstrap=1 → nejdřív articles/bootstrap.json, při chybě/invalid fallback na articles.json (default beze změny). -->
     <script>
     (function () {
       function iuBasePathForData() {
@@ -3641,6 +3642,40 @@ style-src 'self' 'unsafe-inline' https:;
         var ver = iuMetaDataVer();
         var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
         return iuBasePathForData() + "data/articles.json?v=" + encodeURIComponent(q);
+      }
+      function iuCanonBootstrapJsonUrl() {
+        var ver = iuMetaDataVer();
+        var q = ver === "iu-data-ver-placeholder" ? "iu-data-ver-placeholder" : ver;
+        return iuBasePathForData() + "data/articles/bootstrap.json?v=" + encodeURIComponent(q);
+      }
+      function iuArticlesBootstrapFlag() {
+        try {
+          return new URLSearchParams(String(location.search || "")).get("iuArticlesBootstrap") === "1";
+        } catch (_) {
+          return false;
+        }
+      }
+      function iuPrimaryArticlesLoadKey() {
+        return iuArticlesBootstrapFlag() ? "BOOT:" + iuCanonBootstrapJsonUrl() : "ART:" + iuCanonArticlesJsonUrl();
+      }
+      function iuValidateBootstrapArticlesPayload(d) {
+        if (!d || typeof d !== "object") return false;
+        if (d.schemaVersion !== 1) return false;
+        if (!String(d.generatedAt || "").trim()) return false;
+        if (!Array.isArray(d.articles) || d.articles.length === 0) return false;
+        var a0 = d.articles[0];
+        if (!a0 || typeof a0 !== "object") return false;
+        if (!String(a0.publishedAt || "").trim()) return false;
+        if (!String(a0.title || "").trim()) return false;
+        if (!String(a0.section || "").trim()) return false;
+        var u = String(a0.url || "").trim();
+        if (u.indexOf("http://") === 0 || u.indexOf("https://") === 0) return true;
+        var srcs = a0.sources;
+        if (!Array.isArray(srcs) || !srcs.length) return false;
+        var s0 = srcs[0];
+        if (!s0 || typeof s0 !== "object") return false;
+        var su = String(s0.url || "").trim();
+        return su.indexOf("http://") === 0 || su.indexOf("https://") === 0;
       }
       function iuCanonVideosJsonUrl() {
         var ver = iuMetaDataVer();
@@ -3670,6 +3705,9 @@ style-src 'self' 'unsafe-inline' https:;
         window.__iuArticlesPromise = null;
         window.__iuArticlesLockedUrl = "";
         window.__iuArticlesFetched = false;
+        try {
+          window.__iuArticlesLoaderFetchCounts = { articles: 0, bootstrap: 0 };
+        } catch (_) {}
       };
       window.__iuInvalidateVideosJsonSingleFlight = function () {
         _vp = null;
@@ -3680,27 +3718,57 @@ style-src 'self' 'unsafe-inline' https:;
         window.__iuVideosFetched = false;
       };
       window.__iuLoadArticlesJsonOnce = function () {
-        var url = iuCanonArticlesJsonUrl();
-        if (window.__iuArticlesJsonPromise != null && window.__iuArticlesLockedUrl === url) {
+        var key = iuPrimaryArticlesLoadKey();
+        if (window.__iuArticlesJsonPromise != null && window.__iuArticlesLockedUrl === key) {
           try {
             window.__iuArticlesHardDuplicateBlocked = (window.__iuArticlesHardDuplicateBlocked | 0) + 1;
             window.__iuArticlesSingleFlightReuseCount = (window.__iuArticlesSingleFlightReuseCount | 0) + 1;
           } catch (_) {}
           window.__iuArticlesPromise = window.__iuArticlesJsonPromise;
           _ap = window.__iuArticlesJsonPromise;
-          _au = url;
+          _au = key;
           return window.__iuArticlesJsonPromise;
         }
-        window.__iuArticlesLockedUrl = url;
+        try {
+          if (!window.__iuArticlesLoaderFetchCounts) {
+            window.__iuArticlesLoaderFetchCounts = { articles: 0, bootstrap: 0 };
+          }
+        } catch (_) {}
+        var C = window.__iuArticlesLoaderFetchCounts;
+        function bumpFetchCount(u) {
+          try {
+            if (!C) return;
+            if (String(u).indexOf("bootstrap.json") !== -1) C.bootstrap = (C.bootstrap | 0) + 1;
+            else if (String(u).indexOf("articles.json") !== -1) C.articles = (C.articles | 0) + 1;
+          } catch (_) {}
+        }
+        function fetchJsonNoThrow(url) {
+          bumpFetchCount(url);
+          return fetch(url, {
+            cache: "no-store",
+            credentials: "same-origin",
+            headers: { "cache-control": "no-cache" },
+          }).then(function (res) {
+            if (!res.ok) throw new Error("HTTP_" + res.status);
+            return res.json();
+          });
+        }
+        var chain;
+        if (iuArticlesBootstrapFlag()) {
+          chain = fetchJsonNoThrow(iuCanonBootstrapJsonUrl())
+            .then(function (d) {
+              if (!iuValidateBootstrapArticlesPayload(d)) throw new Error("BOOTSTRAP_INVALID");
+              return d;
+            })
+            .catch(function () {
+              return fetchJsonNoThrow(iuCanonArticlesJsonUrl());
+            });
+        } else {
+          chain = fetchJsonNoThrow(iuCanonArticlesJsonUrl());
+        }
+        window.__iuArticlesLockedUrl = key;
         window.__iuArticlesFetched = true;
-        window.__iuArticlesJsonPromise = fetch(url, {
-          cache: "no-store",
-          credentials: "same-origin",
-          headers: { "cache-control": "no-cache" },
-        }).then(function (res) {
-          if (!res.ok) throw new Error("HTTP_" + res.status);
-          return res.json();
-        }).catch(function (e) {
+        window.__iuArticlesJsonPromise = chain.catch(function (e) {
           window.__iuArticlesJsonPromise = null;
           window.__iuArticlesPromise = null;
           window.__iuArticlesLockedUrl = "";
@@ -3711,7 +3779,7 @@ style-src 'self' 'unsafe-inline' https:;
         });
         window.__iuArticlesPromise = window.__iuArticlesJsonPromise;
         _ap = window.__iuArticlesJsonPromise;
-        _au = url;
+        _au = key;
         return window.__iuArticlesJsonPromise;
       };
       window.__iuLoadVideosJsonOnce = function () {
