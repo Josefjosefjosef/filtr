@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-04-30T15:42:12.500404Z",
+  "ingestedAt": "2026-04-30T16:14:55.094536Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Resident Evil jako čistý horor. Režisér Hodiny zmizení představuje svět, v němž by Milla Jovovich nepřežila",
+      "url": "https://www.kinobox.cz/clanky/filmy/53229-resident-evil-jako-cisty-horor-reziser-hodiny-zmizeni-predstavuje-svet-v-nemz-by-mila-jovovich-neprezila",
+      "dt": "2026-04-30T16:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "evil",
+        "hodiny",
+        "horor",
+        "jako",
+        "jovovich",
+        "milla",
+        "nepřežila",
+        "němž",
+        "představuje",
+        "resident",
+        "režisér",
+        "svět",
+        "zmizení",
+        "čistý"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -535,33 +566,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Přehlížený český film dobývá Netflix. V kinech se neobjevil, na streamu je ale hitem",
-      "url": "https://www.kinobox.cz/clanky/vod/53130-prehlizeny-cesky-film-dobyva-netflix-v-kinech-se-neobjevil-na-streamu-je-ale-hitem",
-      "dt": "2026-04-28T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "ale",
-        "dobývá",
-        "film",
-        "hitem",
-        "kinech",
-        "neobjevil",
-        "netflix",
-        "přehlížený",
-        "streamu",
-        "český"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -572,7 +576,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29193,
+      "bytes": 29467,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -609,7 +613,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T15:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -624,6 +628,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Resident Evil jako čistý horor. Režisér Hodiny zmizení představuje svět, v němž by Milla Jovovich nepřežila",
+            "publishedAt": "2026-04-30T16:00:00Z"
+          },
           {
             "title": "Největší filmový provokatér slaví 70. Lars von Trier dokáže šokovat i posouvat žánrové hranice",
             "publishedAt": "2026-04-30T15:00:00Z"
@@ -651,10 +659,6 @@
           {
             "title": "Co nabídne letošní ročník festivalu AFO? 5 tipů, které by vám neměly uniknout",
             "publishedAt": "2026-04-30T08:00:00Z"
-          },
-          {
-            "title": "Budou létat kosti a skalpy jako v Oldboyovi? Legendární režisér natočí krutý western s trojicí hvězd",
-            "publishedAt": "2026-04-30T07:00:00Z"
           }
         ]
       }
