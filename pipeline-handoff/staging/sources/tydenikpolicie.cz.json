@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-04-30T01:50:00.875260Z",
+  "ingestedAt": "2026-04-30T02:20:44.823108Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Mladíci se v Kladně pokusili posprejovat vlak",
+      "url": "https://tydenikpolicie.cz/mladici-se-v-kladne-pokusili-posprejovat-vlak/",
+      "dt": "2026-04-30T02:02:27Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "kladně",
+        "mladíci",
+        "pokusili",
+        "posprejovat",
+        "vlak"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -231,36 +253,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Kvůli požáru lesa u Oseku na Teplicku byl vyhlášen III. stupeň požárního poplachu. Na místo vzlétl vrtulník",
-      "url": "https://tydenikpolicie.cz/kvuli-pozaru-lesa-u-oseku-na-teplicku-byl-vyhlasen-iii-stupen-pozarniho-poplachu-na-misto-vzletl-vrtulnik/",
-      "dt": "2026-04-29T12:02:15Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "iii",
-        "kvůli",
-        "lesa",
-        "místo",
-        "oseku",
-        "poplachu",
-        "požárního",
-        "požáru",
-        "stupeň",
-        "teplicku",
-        "vrtulník",
-        "vyhlášen",
-        "vzlétl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +263,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16345,
+      "bytes": 16153,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +300,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-29T22:02:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T02:02:27Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +315,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mladíci se v Kladně pokusili posprejovat vlak",
+            "publishedAt": "2026-04-30T02:02:27Z"
+          },
           {
             "title": "Strážníci v Karlových Varech pomohli při záchraně lidského života",
             "publishedAt": "2026-04-29T22:02:27Z"
@@ -350,10 +346,6 @@
           {
             "title": "Dobrovolně hospitalizovaný pacient se nevrátil z vycházky do bohnické léčebny",
             "publishedAt": "2026-04-29T20:08:15Z"
-          },
-          {
-            "title": "Čtveřici cizinců podezřelých ze série krádeží v prodejnách se podařilo dopadnout díky pozornému policistovi",
-            "publishedAt": "2026-04-29T13:27:12Z"
           }
         ]
       }
