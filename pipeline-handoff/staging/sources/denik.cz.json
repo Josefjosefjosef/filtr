@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T17:55:37.496612Z",
+  "ingestedAt": "2026-04-30T18:29:57.557047Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rakouská policie dál hledá otrávenou dětskou výživu. Pátrá po jedné skleničce",
+      "url": "https://www.denik.cz/staty-eu/rakousko-detska-vyziva-jed-na-krysy-spar-hipp-patrani.html",
+      "dt": "2026-04-30T17:28:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětskou",
+        "hledá",
+        "jedné",
+        "otrávenou",
+        "policie",
+        "pátrá",
+        "rakouská",
+        "skleničce",
+        "výživu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -58,7 +84,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Britská vláda dá miliony na ochranu židovských komunit. Reaguje na sérii útoků",
+      "title": "Britská vláda zvýšila stupeň ohrožení. Posílí ochranu židovských komunit",
       "url": "https://www.denik.cz/staty-mimo-eu/velka-britanie-antisemitismus-utoky-vlada-opatreni-kritika.html",
       "dt": "2026-04-30T15:01:00Z",
       "media_raw": "Deník",
@@ -66,12 +92,12 @@
       "tokens": [
         "britská",
         "komunit",
-        "miliony",
         "ochranu",
-        "reaguje",
-        "sérii",
+        "ohrožení",
+        "posílí",
+        "stupeň",
         "vláda",
-        "útoků",
+        "zvýšila",
         "židovských"
       ],
       "feedCategory": "zpravy",
@@ -616,31 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Votvírák se neuskuteční ani letos. Chystáme restart, tvrdí noví pořadatelé",
-      "url": "https://www.denik.cz/regiony/festival-votvirak-2026-nebude-misto-konani-artur-kaiser-dluhy-milovice.html",
-      "dt": "2026-04-30T07:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chystáme",
-        "letos",
-        "neuskuteční",
-        "noví",
-        "pořadatelé",
-        "restart",
-        "tvrdí",
-        "votvírák"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29639,
+      "bytes": 29954,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,7 +689,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:03:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T17:28:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -705,6 +706,10 @@
         },
         "sample_titles": [
           {
+            "title": "Rakouská policie dál hledá otrávenou dětskou výživu. Pátrá po jedné skleničce",
+            "publishedAt": "2026-04-30T17:28:00Z"
+          },
+          {
             "title": "Na sedmdesát mrtvých. Přibylo obětí nehod bez zapnutých pásů",
             "publishedAt": "2026-04-30T16:03:00Z"
           },
@@ -713,7 +718,7 @@
             "publishedAt": "2026-04-30T15:30:00Z"
           },
           {
-            "title": "Britská vláda dá miliony na ochranu židovských komunit. Reaguje na sérii útoků",
+            "title": "Britská vláda zvýšila stupeň ohrožení. Posílí ochranu židovských komunit",
             "publishedAt": "2026-04-30T15:01:00Z"
           },
           {
@@ -731,10 +736,6 @@
           {
             "title": "Přerov hodlá řešit hluk z dálnice D1. V Dluhonicích prokazatelně vzniká, zaznívá",
             "publishedAt": "2026-04-30T13:40:00Z"
-          },
-          {
-            "title": "Univerzitní studenti se dozvěděli o zákulisí evropských institucí. Díky Deníku",
-            "publishedAt": "2026-04-30T13:34:00Z"
           }
         ]
       }

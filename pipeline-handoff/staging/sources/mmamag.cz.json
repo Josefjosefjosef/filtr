@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-30T17:55:37.496612Z",
+  "ingestedAt": "2026-04-30T18:29:57.557047Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "KO měsíce v UFC jde na účet Jiřího Procházky",
+      "url": "https://www.mmamag.cz/ko-mesice-ufc-prochazka/",
+      "dt": "2026-04-30T17:58:36Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "jde",
+        "jiřího",
+        "měsíce",
+        "procházky",
+        "ufc",
+        "účet"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1053,37 +1076,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Bojovník UFC přežil masovou střelbu. Teď tvrdě napadl Danu Whitea za jeho reakci na útok u Bílého domu",
-      "url": "https://www.mmamag.cz/bojovnik-ufc-kritika-dana-white-strelba/",
-      "dt": "2026-04-29T06:31:04Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovník",
-        "bílého",
-        "danu",
-        "domu",
-        "jeho",
-        "masovou",
-        "napadl",
-        "přežil",
-        "reakci",
-        "střelbu",
-        "tvrdě",
-        "ufc",
-        "whitea",
-        "útok"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1094,7 +1086,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 75512,
+      "bytes": 75428,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1131,7 +1123,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:59:37Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T17:58:36Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1146,6 +1138,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "KO měsíce v UFC jde na účet Jiřího Procházky",
+            "publishedAt": "2026-04-30T17:58:36Z"
+          },
           {
             "title": "Pásy nestačí. Szabová potřebuje výhru, na kterou UFC uslyší",
             "publishedAt": "2026-04-30T16:59:37Z"
@@ -1173,10 +1169,6 @@
           {
             "title": "Slovenka je globální hvězdou MMA. Szabová vyletěla do světové top 20",
             "publishedAt": "2026-04-30T09:30:45Z"
-          },
-          {
-            "title": "11 milionů korun měsíčně. Hvězda UFC prozradila, za co utrácí a odkud bere peníze na luxusní život",
-            "publishedAt": "2026-04-30T09:18:03Z"
           }
         ]
       }
