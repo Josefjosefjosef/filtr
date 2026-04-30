@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T12:34:28.124247Z",
+  "ingestedAt": "2026-04-30T13:49:56.299057Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Blamáž na Slovensku: Stavbu vojenské nemocnice za miliardy zastavili, hrozí demolice",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/stavba-nemocnice-presov-prerusena/",
+      "dt": "2026-04-30T13:18:21Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "blamáž",
+        "demolice",
+        "hrozí",
+        "miliardy",
+        "nemocnice",
+        "slovensku",
+        "stavbu",
+        "vojenské",
+        "zastavili"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -238,34 +264,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Zdravotní výbor vybral už třetího místopředsedu za Motoristy. Je jím bývalá nejvyšší státní zástupkyně",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zdravotni-vybor-mistopredseda-vesecka/",
-      "dt": "2026-04-29T14:35:23Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "bývalá",
-        "jím",
-        "motoristy",
-        "místopředsedu",
-        "nejvyšší",
-        "státní",
-        "třetího",
-        "vybral",
-        "výbor",
-        "zdravotní",
-        "zástupkyně"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 73385,
+      "bytes": 73552,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,11 +311,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T11:14:56Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T13:18:21Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "zdravi": 8
+          "zdravi": 8,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -329,6 +327,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blamáž na Slovensku: Stavbu vojenské nemocnice za miliardy zastavili, hrozí demolice",
+            "publishedAt": "2026-04-30T13:18:21Z"
+          },
           {
             "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
             "publishedAt": "2026-04-30T11:14:56Z"
@@ -356,10 +358,6 @@
           {
             "title": "Za co si ve zdravotnictví připlatíme? Soukromí poskytovatelé nastiňují možnosti",
             "publishedAt": "2026-04-30T05:00:00Z"
-          },
-          {
-            "title": "Toxin v kojenecké výživě: Přišlo varování rodičům příliš pozdě? Hygienička přiznala nedostatky",
-            "publishedAt": "2026-04-29T17:29:01Z"
           }
         ]
       }

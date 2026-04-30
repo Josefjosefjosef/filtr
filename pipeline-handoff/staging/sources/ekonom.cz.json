@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonom.cz",
-  "ingestedAt": "2026-04-30T12:34:28.124247Z",
+  "ingestedAt": "2026-04-30T13:49:56.299057Z",
   "items": [
     {
       "section": "finance",
@@ -20,6 +20,29 @@
         "vlně",
         "šimkem",
         "šéfem"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonom",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "ekonom.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "České zaměstnavatele čeká zkouška férového odměňování",
+      "url": "https://pravniradce.ekonom.cz/c1-67872610-ceske-zamestnavatele-ceka-zkouska-feroveho-odmenovani",
+      "dt": "2026-04-29T22:00:00Z",
+      "media_raw": "Ekonom (HN)",
+      "media_norm": "Ekonom (HN)",
+      "tokens": [
+        "férového",
+        "odměňování",
+        "zaměstnavatele",
+        "zkouška",
+        "čeká",
+        "české"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1018,13 +1041,13 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://ekonom.cz/?p=400000_rss",
-      "bytes": 45240,
+      "bytes": 46316,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 37,
-      "itemsKept": 37,
-      "accepted": 37,
+      "itemsParsed": 38,
+      "itemsKept": 38,
+      "accepted": 38,
       "status": "OK",
       "bozo_but_used": false,
       "registryId": "fin_ekonom",
@@ -1054,11 +1077,11 @@
         }
       ],
       "iuTelemetry": {
-        "raw_feed_new_item_count": 37,
+        "raw_feed_new_item_count": 38,
         "raw_feed_latest_publishedAt": "2026-04-29T22:00:00Z",
-        "valid_publishedAt_count": 37,
+        "valid_publishedAt_count": 38,
         "mapped_to_section_count": {
-          "finance": 29,
+          "finance": 30,
           "sport": 1,
           "zdravi": 2,
           "zpravy": 5
@@ -1076,6 +1099,10 @@
           {
             "title": "Na vlně podnikání s Janem Šimkem, šéfem agrárního holdingu JTZE",
             "publishedAt": "2026-04-29T16:00:00Z"
+          },
+          {
+            "title": "České zaměstnavatele čeká zkouška férového odměňování",
+            "publishedAt": "2026-04-29T22:00:00Z"
           },
           {
             "title": "Cílem nové regulace není vybírat pokuty, ale zvýšit odolnost státu",
@@ -1099,10 +1126,6 @@
           },
           {
             "title": "Platy České republiky, s. p. Mnozí ředitelé berou dvakrát víc než ministři",
-            "publishedAt": "2026-04-29T16:00:00Z"
-          },
-          {
-            "title": "Převodní ceny. Dnes žádná dokumentace, zítra drahý problém",
             "publishedAt": "2026-04-29T16:00:00Z"
           }
         ]

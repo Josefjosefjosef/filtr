@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-30T12:34:28.124247Z",
+  "ingestedAt": "2026-04-30T13:49:56.299057Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
+      "url": "https://www.penize.cz/nakupy/489151-kdo-vsechno-si-strhava-penize-z-vasi-karty-dalsi-banka-ukaze-prehled",
+      "dt": "2026-04-30T14:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "banka",
+        "další",
+        "karty",
+        "peníze",
+        "přehled",
+        "strhává",
+        "ukáže",
+        "vaší",
+        "všechno"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -476,31 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Poslední týden na daňové přiznání. Návody, změny a časté chyby",
-      "url": "https://www.penize.cz/dan-z-prijmu-fyzickych-osob/488873-posledni-tyden-na-danove-priznani-navody-zmeny-a-caste-chyby",
-      "dt": "2026-04-27T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "chyby",
-        "daňové",
-        "návody",
-        "poslední",
-        "přiznání",
-        "týden",
-        "změny",
-        "časté"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18968,
+      "bytes": 19021,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T14:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 7,
           "finance": 11,
+          "zpravy": 7,
           "sport": 1,
           "zdravi": 1
         },
@@ -566,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
+            "publishedAt": "2026-04-30T14:30:00Z"
+          },
           {
             "title": "Vyjíždíte na prodloužený víkend? Maximální ceny benzinu a nafty pro začátek května",
             "publishedAt": "2026-04-30T14:04:00Z"
@@ -593,10 +598,6 @@
           {
             "title": "Maximální ceny benzinu a nafty na čtvrtek 30. dubna",
             "publishedAt": "2026-04-29T13:58:00Z"
-          },
-          {
-            "title": "Vyplatí se koučink, nebo je to drahá iluze? Týden s experty nabídne odpovědi",
-            "publishedAt": "2026-04-29T08:00:00Z"
           }
         ]
       }
