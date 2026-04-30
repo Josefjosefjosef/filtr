@@ -329,9 +329,44 @@
     };
   }
 
+  async function waitForGlobalFn(fnName, maxMs = 12000) {
+    const t0 = Date.now();
+    while (typeof window[fnName] !== "function") {
+      if (Date.now() - t0 > maxMs) return false;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    return true;
+  }
+
   async function loadArticlesThroughSharedOrCache() {
-    if (typeof window.__iuLoadArticlesJsonOnce !== "function") {
-      return safeFetchJSON("articles", DATA.articlesUrl, { timeoutMs: 9000, retries: 2 });
+    const ready = await waitForGlobalFn("__iuLoadArticlesJsonOnce", 12000);
+    if (!ready) {
+      const cached = readBestCache("articles");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "cache", msg: "no_loader_cache_only" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: new Error("articles_loader_missing"),
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("articles"), cached.text);
+      }
+      diagPushFetch({ t: nowISO(), name: "articles", url: DATA.articlesUrl, ok: false, source: "none", msg: "no_loader_no_network" });
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: new Error("articles_loader_missing"),
+        fetchedAt: nowISO(),
+      };
     }
     try {
       const v = await window.__iuLoadArticlesJsonOnce();
@@ -378,8 +413,34 @@
   }
 
   async function loadVideosThroughSharedOrCache() {
-    if (typeof window.__iuLoadVideosJsonOnce !== "function") {
-      return safeFetchJSON("videos", DATA.videosUrl, { timeoutMs: 9000, retries: 2 });
+    const ready = await waitForGlobalFn("__iuLoadVideosJsonOnce", 12000);
+    if (!ready) {
+      const cached = readBestCache("videos");
+      if (cached.ok) {
+        const parsed = safeJSONParse(cached.text);
+        if (parsed.ok) {
+          diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "cache", msg: "no_loader_cache_only" });
+          return {
+            ok: false,
+            data: parsed.value,
+            source: "cache",
+            fallbackUsed: true,
+            cacheSlot: cached.slot,
+            error: new Error("videos_loader_missing"),
+            fetchedAt: nowISO(),
+          };
+        }
+        storageSet(cacheQuarantineKey("videos"), cached.text);
+      }
+      diagPushFetch({ t: nowISO(), name: "videos", url: DATA.videosUrl, ok: false, source: "none", msg: "no_loader_no_network" });
+      return {
+        ok: false,
+        data: null,
+        source: "none",
+        fallbackUsed: false,
+        error: new Error("videos_loader_missing"),
+        fetchedAt: nowISO(),
+      };
     }
     try {
       const v = await window.__iuLoadVideosJsonOnce();
@@ -582,6 +643,9 @@
 
   async function bootstrap() {
     try {
+      if (window.__iuCrashShieldBootstrapStarted) return;
+      window.__iuCrashShieldBootstrapStarted = true;
+
       await iuUnregisterServiceWorkersIfNosw();
 
       window.addEventListener("online", () => setStatusBadge("", "ok"));

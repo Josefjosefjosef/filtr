@@ -14182,15 +14182,41 @@ function buildVideoAsArticleCard(it) {
         data = pair.articlesData;
       }
       if (!data) {
-        const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
-        if (!res.ok) {
-          el.textContent = `Články: chyba (${res.status})`;
-          selfDiag.articlesState = "FAIL";
-          selfDiag.articlesCount = "-";
-          logSelfStatus();
-          return;
+        if (typeof window.__iuLoadArticlesJsonOnce === "function") {
+          try {
+            data = await Promise.race([
+              window.__iuLoadArticlesJsonOnce(),
+              new Promise((_, reject) => {
+                setTimeout(() => {
+                  const e = new Error("timeout");
+                  e.name = "AbortError";
+                  reject(e);
+                }, 9000);
+              }),
+            ]);
+          } catch (e) {
+            const msg = String(e && e.message ? e.message : e);
+            const httpMatch = msg.match(/^HTTP_(\d+)/);
+            if (httpMatch) {
+              el.textContent = `Články: chyba (${httpMatch[1]})`;
+              selfDiag.articlesState = "FAIL";
+              selfDiag.articlesCount = "-";
+              logSelfStatus();
+              return;
+            }
+            throw e;
+          }
+        } else {
+          const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
+          if (!res.ok) {
+            el.textContent = `Články: chyba (${res.status})`;
+            selfDiag.articlesState = "FAIL";
+            selfDiag.articlesCount = "-";
+            logSelfStatus();
+            return;
+          }
+          data = await res.json();
         }
-        data = await res.json();
       }
       const size = safeStringify(data).length;
       debugLog("[DATA] size=", size);
