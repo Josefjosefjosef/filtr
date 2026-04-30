@@ -2734,26 +2734,41 @@ style-src 'self' 'unsafe-inline' https:;
             aj = await window.__iuLoadArticlesJsonOnce();
             vj = await window.__iuLoadVideosJsonOnce();
           } else {
-            var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
-            var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? "?v=" + dataVer : "?v=iu-data-ver-placeholder";
-            var aUrl = "/projects/data/articles.json" + q;
-            var vUrl = "/projects/data/videos.json" + q;
-            var ra = await fetch(aUrl, { cache: "no-store" });
-            var rv = await fetch(vUrl, { cache: "no-store" });
-            raOk = ra.ok;
-            rvOk = rv.ok;
-            aCt = ra.headers.get("content-type") || "";
-            vCt = rv.headers.get("content-type") || "";
-            aj = await ra.json();
-            vj = await rv.json();
+            var dataVer2 = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
+            var q2 = (dataVer2 && dataVer2 !== "iu-data-ver-placeholder") ? "?v=" + dataVer2 : "?v=iu-data-ver-placeholder";
+            var baseD = "/projects/data/";
+            var probeUrl2 = baseD + "_probe.txt" + q2;
+            var indexUrl2 = baseD + "articles/index.json" + q2;
+            var aUrl2 = baseD + "articles.json" + q2;
+            var vUrl2 = baseD + "videos.json" + q2;
+            var rp2 = await fetch(probeUrl2, { cache: "no-store" });
+            await rp2.text().catch(function () {});
+            var raHead = await fetch(aUrl2, { method: "HEAD", cache: "no-store" });
+            raOk = raHead.ok;
+            aCt = raHead.headers.get("content-type") || "text/plain";
+            var rvHead = await fetch(vUrl2, { method: "HEAD", cache: "no-store" });
+            rvOk = rvHead.ok;
+            vCt = rvHead.headers.get("content-type") || "";
+            var idx2 = null;
+            try {
+              var ri2 = await fetch(indexUrl2, { cache: "no-store" });
+              if (ri2.ok) idx2 = await ri2.json();
+            } catch (eIdx) {}
+            aj = { articles: [], __iuProbeMode: "head_index_no_get" };
+            if (idx2 && typeof idx2 === "object") {
+              if (Array.isArray(idx2.articles)) aj = { articles: idx2.articles, __iuProbeMode: "index_json" };
+              else if (Array.isArray(idx2.items)) aj = { articles: idx2.items, __iuProbeMode: "index_json" };
+              else if (Array.isArray(idx2.days)) aj = { articles: [], __iuProbeMode: "index_json", __iuIndexDays: idx2.days.length };
+            }
+            vj = { videos: [], __iuProbeMode: "head_only" };
           }
 
           var aArr = Array.isArray(aj?.articles) ? aj.articles : (Array.isArray(aj) ? aj : []);
           var vArr = Array.isArray(vj?.videos) ? vj.videos : (Array.isArray(vj) ? vj : []);
 
           var lines = [];
-          lines.push("ART status=" + (raOk ? "200" : "?") + " ok=" + raOk + " ct=" + aCt + " (shared)");
-          lines.push("VID status=" + (rvOk ? "200" : "?") + " ok=" + rvOk + " ct=" + vCt + " (shared)");
+          lines.push("ART status=" + (raOk ? "200" : "?") + " ok=" + raOk + " ct=" + aCt + " (shared_or_head)");
+          lines.push("VID status=" + (rvOk ? "200" : "?") + " ok=" + rvOk + " ct=" + vCt + " (shared_or_head)");
           lines.push("ART articles.length=" + aArr.length + " sample=" + JSON.stringify(pickSample(aArr)));
           lines.push("VID videos.length=" + vArr.length + " sample=" + JSON.stringify(pickSample(vArr)));
           var artSummary = analyzeArticles(aArr);
@@ -3625,53 +3640,103 @@ style-src 'self' 'unsafe-inline' https:;
       var _au = "";
       var _vp = null;
       var _vu = "";
+      window.__iuArticlesJsonPromise = null;
+      window.__iuArticlesPromise = null;
+      window.__iuVideosJsonPromise = null;
+      window.__iuVideosPromise = null;
+      window.__iuArticlesLockedUrl = "";
+      window.__iuVideosLockedUrl = "";
+      window.__iuArticlesFetched = false;
+      window.__iuVideosFetched = false;
+      window.__iuArticlesSingleFlightReuseCount = 0;
+      window.__iuVideosSingleFlightReuseCount = 0;
+      window.__iuArticlesHardDuplicateBlocked = 0;
+      window.__iuVideosHardDuplicateBlocked = 0;
       window.__iuInvalidateArticlesJsonSingleFlight = function () {
         _ap = null;
         _au = "";
         window.__iuArticlesJsonPromise = null;
+        window.__iuArticlesPromise = null;
+        window.__iuArticlesLockedUrl = "";
+        window.__iuArticlesFetched = false;
       };
       window.__iuInvalidateVideosJsonSingleFlight = function () {
         _vp = null;
         _vu = "";
         window.__iuVideosJsonPromise = null;
+        window.__iuVideosPromise = null;
+        window.__iuVideosLockedUrl = "";
+        window.__iuVideosFetched = false;
       };
-      window.__iuArticlesJsonPromise = null;
-      window.__iuVideosJsonPromise = null;
       window.__iuLoadArticlesJsonOnce = function () {
         var url = iuCanonArticlesJsonUrl();
-        if (_ap && _au === url) {
-          window.__iuArticlesJsonPromise = _ap;
-          return _ap;
+        if (window.__iuArticlesJsonPromise != null && window.__iuArticlesLockedUrl === url) {
+          try {
+            window.__iuArticlesHardDuplicateBlocked = (window.__iuArticlesHardDuplicateBlocked | 0) + 1;
+            window.__iuArticlesSingleFlightReuseCount = (window.__iuArticlesSingleFlightReuseCount | 0) + 1;
+          } catch (_) {}
+          window.__iuArticlesPromise = window.__iuArticlesJsonPromise;
+          _ap = window.__iuArticlesJsonPromise;
+          _au = url;
+          return window.__iuArticlesJsonPromise;
         }
-        _au = url;
-        _ap = fetch(url, {
+        window.__iuArticlesLockedUrl = url;
+        window.__iuArticlesFetched = true;
+        window.__iuArticlesJsonPromise = fetch(url, {
           cache: "no-store",
           credentials: "same-origin",
           headers: { "cache-control": "no-cache" },
         }).then(function (res) {
           if (!res.ok) throw new Error("HTTP_" + res.status);
           return res.json();
+        }).catch(function (e) {
+          window.__iuArticlesJsonPromise = null;
+          window.__iuArticlesPromise = null;
+          window.__iuArticlesLockedUrl = "";
+          window.__iuArticlesFetched = false;
+          _ap = null;
+          _au = "";
+          throw e;
         });
-        window.__iuArticlesJsonPromise = _ap;
-        return _ap;
+        window.__iuArticlesPromise = window.__iuArticlesJsonPromise;
+        _ap = window.__iuArticlesJsonPromise;
+        _au = url;
+        return window.__iuArticlesJsonPromise;
       };
       window.__iuLoadVideosJsonOnce = function () {
         var url = iuCanonVideosJsonUrl();
-        if (_vp && _vu === url) {
-          window.__iuVideosJsonPromise = _vp;
-          return _vp;
+        if (window.__iuVideosJsonPromise != null && window.__iuVideosLockedUrl === url) {
+          try {
+            window.__iuVideosHardDuplicateBlocked = (window.__iuVideosHardDuplicateBlocked | 0) + 1;
+            window.__iuVideosSingleFlightReuseCount = (window.__iuVideosSingleFlightReuseCount | 0) + 1;
+          } catch (_) {}
+          window.__iuVideosPromise = window.__iuVideosJsonPromise;
+          _vp = window.__iuVideosJsonPromise;
+          _vu = url;
+          return window.__iuVideosJsonPromise;
         }
-        _vu = url;
-        _vp = fetch(url, {
+        window.__iuVideosLockedUrl = url;
+        window.__iuVideosFetched = true;
+        window.__iuVideosJsonPromise = fetch(url, {
           cache: "no-store",
           credentials: "same-origin",
           headers: { "cache-control": "no-cache" },
         }).then(function (res) {
           if (!res.ok) throw new Error("HTTP_" + res.status);
           return res.json();
+        }).catch(function (e) {
+          window.__iuVideosJsonPromise = null;
+          window.__iuVideosPromise = null;
+          window.__iuVideosLockedUrl = "";
+          window.__iuVideosFetched = false;
+          _vp = null;
+          _vu = "";
+          throw e;
         });
-        window.__iuVideosJsonPromise = _vp;
-        return _vp;
+        window.__iuVideosPromise = window.__iuVideosJsonPromise;
+        _vp = window.__iuVideosJsonPromise;
+        _vu = url;
+        return window.__iuVideosJsonPromise;
       };
     })();
     </script>
@@ -3734,7 +3799,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=p0-single-articles-loader-20260430"></script>
+    <script type="module" src="/assets/app.js?v=p0-hard-single-articles-20260430"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
