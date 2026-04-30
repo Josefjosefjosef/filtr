@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T18:29:57.557047Z",
+  "ingestedAt": "2026-04-30T18:59:47.464192Z",
   "items": [
     {
       "section": "aktualne",
@@ -777,6 +777,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Kristýna Zemanová dospurtovala v úvodní etapě Gracie druhá",
+      "url": "https://sport.ceskatelevize.cz/clanek/cyklistika/kristyna-zemanova-dospurtovala-v-uvodni-etape-gracie-druha-156531",
+      "dt": "2026-04-30T18:44:41Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "dospurtovala",
+        "druhá",
+        "etapě",
+        "gracie",
+        "kristýna",
+        "zemanová",
+        "úvodní"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Volejbalistka roku Brancuská míří do Itálie",
       "url": "https://sport.ceskatelevize.cz/clanek/volejbal/volejbalistka-roku-brancuska-miri-do-italie-156530",
       "dt": "2026-04-30T17:56:30Z",
@@ -845,17 +869,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Euro Hockey Tour Finsko – Česko 2:2",
+      "title": "Úspěšný vstup do domácího turnaje. Výhru nad Finskem vystřelil Filip",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-finsko-cesko-156522",
       "dt": "2026-04-30T15:30:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
-        "euro",
-        "finsko",
-        "hockey",
-        "tour",
-        "česko"
+        "domácího",
+        "filip",
+        "finskem",
+        "turnaje",
+        "vstup",
+        "vystřelil",
+        "výhru",
+        "úspěšný"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -1489,33 +1516,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ofenzivní festival v Parku princů vyšel lépe PSG, Bayern si odvezl porážku 4:5",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ofenzivni-festival-v-parku-princu-vysel-lepe-psg-bayern-si-odvezl-porazku-45-156500",
-      "dt": "2026-04-28T21:15:22Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bayern",
-        "festival",
-        "lépe",
-        "odvezl",
-        "ofenzivní",
-        "parku",
-        "porážku",
-        "princů",
-        "psg",
-        "vyšel"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1645,7 +1645,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38094,
+      "bytes": 37556,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1682,7 +1682,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T17:56:30Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T18:44:41Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1698,6 +1698,10 @@
         },
         "sample_titles": [
           {
+            "title": "Kristýna Zemanová dospurtovala v úvodní etapě Gracie druhá",
+            "publishedAt": "2026-04-30T18:44:41Z"
+          },
+          {
             "title": "Volejbalistka roku Brancuská míří do Itálie",
             "publishedAt": "2026-04-30T17:56:30Z"
           },
@@ -1710,7 +1714,7 @@
             "publishedAt": "2026-04-30T16:32:26Z"
           },
           {
-            "title": "Euro Hockey Tour Finsko – Česko 2:2",
+            "title": "Úspěšný vstup do domácího turnaje. Výhru nad Finskem vystřelil Filip",
             "publishedAt": "2026-04-30T15:30:00Z"
           },
           {
@@ -1724,10 +1728,6 @@
           {
             "title": "Ruud titul na Masters v Madridu neobhájí, životní postup oslavuje Blockx",
             "publishedAt": "2026-04-30T13:32:31Z"
-          },
-          {
-            "title": "Už jsem byl hladový po každodenní práci, přiznal Augusta",
-            "publishedAt": "2026-04-30T13:00:00Z"
           }
         ]
       }
@@ -1739,7 +1739,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77085,
+      "bytes": 77083,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

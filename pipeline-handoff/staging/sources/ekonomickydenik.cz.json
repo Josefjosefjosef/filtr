@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-30T18:29:57.557047Z",
+  "ingestedAt": "2026-04-30T18:59:47.464192Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
+      "url": "https://ekonomickydenik.cz/konec-nadvlady-usa-a-ciny-nova-pravidla-fuzi/",
+      "dt": "2026-04-30T18:35:55Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "fúzí",
+        "konec",
+        "konkurenceschopnost",
+        "mají",
+        "nadvlády",
+        "nakopnout",
+        "nová",
+        "pravidla",
+        "usa",
+        "číny"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -753,34 +780,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Jsme jen kruhový objezd Evropy. Pavel na summitu zkritizoval dopravní zaostalost Česka",
-      "url": "https://ekonomickydenik.cz/jsme-jen-kruhovy-objezd-evropy-pavel-zkritizoval-dopravu/",
-      "dt": "2026-04-29T10:32:37Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dopravní",
-        "evropy",
-        "jen",
-        "jsme",
-        "kruhový",
-        "objezd",
-        "pavel",
-        "summitu",
-        "zaostalost",
-        "zkritizoval",
-        "česka"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75464,
+      "bytes": 75298,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T17:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T18:35:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -845,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
+            "publishedAt": "2026-04-30T18:35:55Z"
+          },
           {
             "title": "Z Prahy do Kodaně za 12 hodin, do Hamburku za šest. České dráhy rozšířily síť",
             "publishedAt": "2026-04-30T17:05:00Z"
@@ -872,10 +875,6 @@
           {
             "title": "„Zklamání“. Česká ekonomika roste jen pomalu. Dopady války teprve přijdou",
             "publishedAt": "2026-04-30T11:28:53Z"
-          },
-          {
-            "title": "Hádka europoslanců: Španělé platí Putinovi za plyn a my dáváme peníze Ukrajině",
-            "publishedAt": "2026-04-30T11:17:57Z"
           }
         ]
       }

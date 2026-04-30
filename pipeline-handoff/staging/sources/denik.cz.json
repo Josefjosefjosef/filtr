@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T18:29:57.557047Z",
+  "ingestedAt": "2026-04-30T18:59:47.464192Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Bavorsku zemřel člověk po vzácné nákaze bornavirem",
+      "url": "https://www.denik.cz/staty-eu/bornavir-nakaza-bavorsko-rejsek-belozubka-belobricha.html",
+      "dt": "2026-04-30T18:34:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bavorsku",
+        "bornavirem",
+        "nákaze",
+        "vzácné",
+        "zemřel",
+        "člověk"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kongres schválil peníze na vnitřní bezpečnost. Spor kolem služby ICE trvá",
+      "url": "https://www.denik.cz/ze_sveta/spojene-staty-kongres-penize-ministerstvo-vnitrni-bezpecnosti-spor-ice.html",
+      "dt": "2026-04-30T18:30:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "bezpečnost",
+        "ice",
+        "kolem",
+        "kongres",
+        "peníze",
+        "schválil",
+        "služby",
+        "spor",
+        "trvá",
+        "vnitřní"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -589,59 +639,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "William a Kate sdíleli fotkou k 15. výročí svatby. Nechybí pes s utajeným jménem",
-      "url": "https://www.denik.cz/staty-mimo-eu/princ-princezna-william-kate-vyroci-svatby-fotka-rodina-mazlicci.html",
-      "dt": "2026-04-30T07:33:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fotkou",
-        "jménem",
-        "kate",
-        "nechybí",
-        "pes",
-        "sdíleli",
-        "svatby",
-        "utajeným",
-        "výročí",
-        "william"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Ovocnáře v noci na čtvrtek potrápily mrazy. Způsobily škody za stovky milionů",
-      "url": "https://www.denik.cz/ekonomika/ovocnare-v-noci-na-dnesek-potrapily-mrazy-zpusobily-skody-za-stovky-milionu-2026.html",
-      "dt": "2026-04-30T07:29:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "milionů",
-        "mrazy",
-        "noci",
-        "ovocnáře",
-        "potrápily",
-        "stovky",
-        "způsobily",
-        "čtvrtek",
-        "škody"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -652,7 +649,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29954,
+      "bytes": 29937,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -689,11 +686,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T17:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T18:34:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -705,6 +701,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Bavorsku zemřel člověk po vzácné nákaze bornavirem",
+            "publishedAt": "2026-04-30T18:34:00Z"
+          },
+          {
+            "title": "Kongres schválil peníze na vnitřní bezpečnost. Spor kolem služby ICE trvá",
+            "publishedAt": "2026-04-30T18:30:00Z"
+          },
           {
             "title": "Rakouská policie dál hledá otrávenou dětskou výživu. Pátrá po jedné skleničce",
             "publishedAt": "2026-04-30T17:28:00Z"
@@ -728,14 +732,6 @@
           {
             "title": "V Ostravě při tankování explodovalo auto na stlačený plyn. Řidič se zranil",
             "publishedAt": "2026-04-30T14:00:00Z"
-          },
-          {
-            "title": "Česko odmítlo přelet letadla tchajwanského prezidenta, napsal TaiwanNews",
-            "publishedAt": "2026-04-30T13:55:00Z"
-          },
-          {
-            "title": "Přerov hodlá řešit hluk z dálnice D1. V Dluhonicích prokazatelně vzniká, zaznívá",
-            "publishedAt": "2026-04-30T13:40:00Z"
           }
         ]
       }

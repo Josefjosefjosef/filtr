@@ -1,25 +1,77 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-30T18:29:57.557047Z",
+  "ingestedAt": "2026-04-30T18:59:47.464192Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko - Finsko 2:2. Srovnává Lammikko, pokus Fleka chytá gólman",
+      "title": "Česko - Finsko 3:2. Dorážkou rozhodl Filip, zraněný Špaček zápas nedohrál",
       "url": "https://www.idnes.cz/hokej/ms-2026/fortuna-hockey-games-cesko-finsko-online-zpravodajstvi.A260430_132800_ms-hokej-2026_drev",
-      "dt": "2026-04-30T18:18:48Z",
+      "dt": "2026-04-30T18:48:52Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "chytá",
+        "dorážkou",
+        "filip",
         "finsko",
-        "fleka",
-        "gólman",
-        "lammikko",
-        "pokus",
-        "srovnává",
-        "česko"
+        "nedohrál",
+        "rozhodl",
+        "zraněný",
+        "zápas",
+        "česko",
+        "špaček"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šéf FIFA potvrdil: Írán na fotbalovém mistrovství světa v USA hrát bude",
+      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/iransti-fotbaliste-se-zucastni-ms-v-usa-potvrdil-na-kongresu-sef-fifa-infantino.A260430_203143_ms-fotbal_tit",
+      "dt": "2026-04-30T18:36:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "fifa",
+        "fotbalovém",
+        "hrát",
+        "mistrovství",
+        "potvrdil",
+        "světa",
+        "usa",
+        "írán",
+        "šéf"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nymburk deklasoval Ostravu, Písek nestačil na Pardubice a přišel o Sýkoru",
+      "url": "https://www.idnes.cz/sport/basket/nymburk-deklasoval-ostravu-pisek-nestacil-na-pardubice-a-prisel-o-sykoru.A260430_201755_sport-basket_tit",
+      "dt": "2026-04-30T18:26:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "deklasoval",
+        "nestačil",
+        "nymburk",
+        "ostravu",
+        "pardubice",
+        "písek",
+        "přišel",
+        "sýkoru"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -740,58 +792,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "K míči patří i kniha. Slavia ocenila nejlepší čtenáře z dětských domovů",
-      "url": "https://www.idnes.cz/sport/trendy/slavia-k-mici-patri-kniha-projekt.A260429_211702_trendy_malu",
-      "dt": "2026-04-30T09:55:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "domovů",
-        "dětských",
-        "kniha",
-        "míči",
-        "nejlepší",
-        "ocenila",
-        "patří",
-        "slavia",
-        "čtenáře"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Poborský o Dynamu: Jsem z toho nervózní. Spory těžko dopadnou dobře",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/karel-poborsky-dynamo-budejovice-spor-klubu-s-mestem.A260430_084941_budejovice-zpravy_pkr",
-      "dt": "2026-04-30T09:51:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dobře",
-        "dopadnou",
-        "dynamu",
-        "jsem",
-        "nervózní",
-        "poborský",
-        "spory",
-        "toho",
-        "těžko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 48301,
+      "bytes": 48792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T18:18:48Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T18:48:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -855,8 +855,16 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko - Finsko 2:2. Srovnává Lammikko, pokus Fleka chytá gólman",
-            "publishedAt": "2026-04-30T18:18:48Z"
+            "title": "Česko - Finsko 3:2. Dorážkou rozhodl Filip, zraněný Špaček zápas nedohrál",
+            "publishedAt": "2026-04-30T18:48:52Z"
+          },
+          {
+            "title": "Šéf FIFA potvrdil: Írán na fotbalovém mistrovství světa v USA hrát bude",
+            "publishedAt": "2026-04-30T18:36:00Z"
+          },
+          {
+            "title": "Nymburk deklasoval Ostravu, Písek nestačil na Pardubice a přišel o Sýkoru",
+            "publishedAt": "2026-04-30T18:26:00Z"
           },
           {
             "title": "Dynamo slavilo s fanoušky. Jsem šťastný, že jsme vám vrátili titul, vzkázal Dědek",
@@ -877,14 +885,6 @@
           {
             "title": "Velká cena Miami formule 1 2026: program, výsledky, kde závod sledovat",
             "publishedAt": "2026-04-30T15:59:00Z"
-          },
-          {
-            "title": "Drama v Lize mistrů: Simeone se pustil do obránce Arsenalu, zasahovala ochranka",
-            "publishedAt": "2026-04-30T15:17:00Z"
-          },
-          {
-            "title": "Je Augustův štáb pro Spartu ten pravý? Těžko říct, míní experti. Klub ale ulovil eso",
-            "publishedAt": "2026-04-30T15:07:00Z"
           }
         ]
       }
