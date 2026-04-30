@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="iu-build" content="ff57115" />
+    <meta name="iu-build" content="cls-p0-silver-meta-20260430" />
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
-    <!-- iu-build: ff57115 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
+    <!-- iu-build: cls-p0-silver-meta-20260430 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
     <title>infoUzel.cz</title>
     <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
     <link rel="canonical" href="https://infouzel.cz/projects/" />
@@ -210,6 +210,17 @@ style-src 'self' 'unsafe-inline' https:;
       /* P0: Kalendář+Úkoly 2 karty ≤1023 (počasí mimo wrapper); desktop ≥1024 display:contents beze změny. */
       @media(min-width:1024px){#silver-slot .iu-info-cards-mobile-tablet{display:contents}}
       @media(max-width:1023px){
+        /* P0 CLS: reserve Silver meta + firstVisit weather stack height before JS hydrates (avoids ~0.02 shift on hero/weather/parcel stack). */
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWelcomeMeta{
+          min-height:44px;
+          box-sizing:border-box;
+          align-items:center;
+        }
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase=firstVisit] .iu-weather-compact-stack,
+        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverWeatherCard[data-iu-silver-wx-phase=setup] .iu-weather-compact-stack{
+          min-height:76px;
+          box-sizing:border-box;
+        }
         #silver-slot .iu-info-cards-mobile-tablet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(118px,auto);gap:8px;padding:0 10px;box-sizing:border-box;margin-top:12px;margin-bottom:0;min-width:0;width:100%;max-width:100%}
         #silver-slot .iu-info-cards-mobile-tablet>.silver-welcome-stack__separator{display:none!important}
         #silver-slot .iu-info-cards-mobile-tablet .iu-info-card{min-width:0;min-height:0;border-radius:16px!important;font-size:13px;line-height:1.3;padding:5px 8px!important;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;margin:0!important;align-self:stretch}
