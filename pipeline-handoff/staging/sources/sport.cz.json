@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
     {
       "section": "sport",
@@ -22,6 +22,31 @@
         "vladař",
         "vychytal",
         "výhry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Cunningham 45 body odvrátil vyřazení Detroitu z play off NBA",
+      "url": "https://www.sport.cz/clanek/basketbal-cunningham-45-body-odvratil-vyrazeni-detroitu-z-play-off-nba-5446170",
+      "dt": "2026-04-30T05:48:07Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "body",
+        "cunningham",
+        "detroitu",
+        "nba",
+        "odvrátil",
+        "off",
+        "play",
+        "vyřazení"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -761,30 +786,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejsem šampionka, prohraju. Andrejevová znovu nezvládla emoce",
-      "url": "https://www.sport.cz/clanek/tenis-nejsem-sampionka-prohraju-andrejevova-znovu-nezvladla-emoce-5445449",
-      "dt": "2026-04-29T10:09:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "andrejevová",
-        "emoce",
-        "nejsem",
-        "nezvládla",
-        "prohraju",
-        "znovu",
-        "šampionka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44096,
+      "bytes": 44381,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:22:54Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:48:07Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -851,6 +852,10 @@
           {
             "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval také Dobeš",
             "publishedAt": "2026-04-30T03:51:56Z"
+          },
+          {
+            "title": "Cunningham 45 body odvrátil vyřazení Detroitu z play off NBA",
+            "publishedAt": "2026-04-30T05:48:07Z"
           },
           {
             "title": "Arsenal byl okraden! Anglie spílá rozhodčím kvůli penaltám v Madridu",
@@ -875,10 +880,6 @@
           {
             "title": "Arsenal remizoval s Atlétikem, exsparťan Hancko zavinil penaltu",
             "publishedAt": "2026-04-29T07:51:58Z"
-          },
-          {
-            "title": "Most jako české Los Angeles. Češi zabojují o hry v pěti nových olympijských sportech",
-            "publishedAt": "2026-04-29T18:34:47Z"
           }
         ]
       }

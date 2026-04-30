@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Renáta Váchová v čele Alfa Laval pro střední a východní Evropu",
+      "url": "https://profitonline.cz/renata-vachova-v-cele-alfa-laval-pro-stredni-a-vychodni-evropu/",
+      "dt": "2026-04-30T06:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "alfa",
+        "evropu",
+        "laval",
+        "renáta",
+        "střední",
+        "váchová",
+        "východní",
+        "čele"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -273,29 +298,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Průzkum: Umělá inteligence rozevírá nůžky mezi pracovníky",
-      "url": "https://profitonline.cz/pruzkum-umela-inteligence-rozevira-nuzky-mezi-pracovniky/",
-      "dt": "2026-04-27T08:00:12Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "inteligence",
-        "nůžky",
-        "pracovníky",
-        "průzkum",
-        "rozevírá",
-        "umělá"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +308,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18948,
+      "bytes": 18988,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +345,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-29T21:20:27Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 12
@@ -358,6 +360,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Renáta Váchová v čele Alfa Laval pro střední a východní Evropu",
+            "publishedAt": "2026-04-30T06:00:21Z"
+          },
           {
             "title": "Polsko chystá mimořádnou daň na Orlen a další firmy",
             "publishedAt": "2026-04-29T21:20:27Z"
@@ -385,10 +391,6 @@
           {
             "title": "Standard & Poor’s varuje, že společnosti ČEZ zhorší rating",
             "publishedAt": "2026-04-28T20:10:45Z"
-          },
-          {
-            "title": "Hrozí vám energetická chudoba? Ukáže to unikátní interaktivní mapa",
-            "publishedAt": "2026-04-28T10:00:34Z"
           }
         ]
       }

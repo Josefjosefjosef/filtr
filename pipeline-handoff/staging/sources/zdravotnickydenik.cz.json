@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rohy a kopyta nám nenarostou. Diskuse o očkování je jako z 18. století, nechápe Philipp",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/ockovani-zdravotnicky-vybor/",
+      "dt": "2026-04-30T06:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "diskuse",
+        "jako",
+        "kopyta",
+        "nechápe",
+        "nenarostou",
+        "nám",
+        "očkování",
+        "philipp",
+        "rohy",
+        "století"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -241,36 +268,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Doktory nebudou obíhat pacienti, ale jejich data. VZP testuje nový model zdravotní péče",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pilot-vzp-nemoci-ledvin/",
-      "dt": "2026-04-29T09:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "data",
-        "doktory",
-        "jejich",
-        "model",
-        "nebudou",
-        "nový",
-        "obíhat",
-        "pacienti",
-        "péče",
-        "testuje",
-        "vzp",
-        "zdravotní"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 71241,
+      "bytes": 74312,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -333,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rohy a kopyta nám nenarostou. Diskuse o očkování je jako z 18. století, nechápe Philipp",
+            "publishedAt": "2026-04-30T06:00:00Z"
+          },
           {
             "title": "Za co si ve zdravotnictví připlatíme? Soukromí poskytovatelé nastiňují možnosti",
             "publishedAt": "2026-04-30T05:00:00Z"
@@ -360,10 +361,6 @@
           {
             "title": "Nevídaná záchrana života: Lékař zašil pobodanému muži srdce přímo na ulici",
             "publishedAt": "2026-04-29T12:20:45Z"
-          },
-          {
-            "title": "Německo schválilo historickou reformu zdravotního pojištění. Čekají se vyšší doplatky",
-            "publishedAt": "2026-04-29T10:54:51Z"
           }
         ]
       }

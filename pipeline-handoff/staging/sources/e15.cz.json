@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-bance-klesl-ctvrtletni-zisk-uvery-i-vklady-dal-rostou-1432494",
+      "dt": "2026-04-30T06:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bance",
+        "klesl",
+        "komerční",
+        "rostou",
+        "vklady",
+        "zisk",
+        "úvěry",
+        "čtvrtletní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1073,34 +1098,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zisk Net4Gas vyletěl na dvě miliardy. Státnímu správci plynovodů pomohl restart tranzitu",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/zisk-net4gas-vyletel-na-dve-miliardy-statnimu-spravci-plynovodu-pomohl-restart-tranzitu-1432439",
-      "dt": "2026-04-28T09:50:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dvě",
-        "miliardy",
-        "net4gas",
-        "plynovodů",
-        "pomohl",
-        "restart",
-        "správci",
-        "státnímu",
-        "tranzitu",
-        "vyletěl",
-        "zisk"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1111,7 +1108,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52612,
+      "bytes": 52662,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1148,7 +1145,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 38,
@@ -1164,6 +1161,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
+            "publishedAt": "2026-04-30T06:00:00Z"
+          },
           {
             "title": "INVESTIČNÍ ONLINE: Američtí technologičtí giganti hlásí silné výsledky. Meta, Alphabet i Microsoft překonaly očekávání",
             "publishedAt": "2026-04-30T05:15:00Z"
@@ -1191,10 +1192,6 @@
           {
             "title": "Nová zelená úsporám: MŽP spouští renovační pasy. K čemu slouží a jaká je cena?",
             "publishedAt": "2026-04-29T16:13:00Z"
-          },
-          {
-            "title": "Zdaňme roboty a rozdejme lidem peníze. Patrik Tkáč na SHIFTS představil svět bez existenčního strachu",
-            "publishedAt": "2026-04-29T16:00:00Z"
           }
         ]
       }

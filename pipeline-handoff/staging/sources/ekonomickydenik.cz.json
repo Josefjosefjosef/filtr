@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi můžou žádat o renovační pasy. Jak fungují a k čemu budou potřeba?",
+      "url": "https://ekonomickydenik.cz/renovacni-pas-k-cemu-potreba/",
+      "dt": "2026-04-30T05:59:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "fungují",
+        "můžou",
+        "pasy",
+        "potřeba",
+        "renovační",
+        "čemu",
+        "češi",
+        "žádat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -761,33 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rozdělit ČEZ je chyba. Ratingová agentura varuje před poklesem zisku i vyšším zadlužením",
-      "url": "https://ekonomickydenik.cz/rozdelit-cez-chyba-ratingova-agentura-varuje/",
-      "dt": "2026-04-28T13:48:17Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "agentura",
-        "chyba",
-        "poklesem",
-        "ratingová",
-        "rozdělit",
-        "varuje",
-        "vyšším",
-        "zadlužením",
-        "zisku",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 76163,
+      "bytes": 76469,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:55:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:59:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -852,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi můžou žádat o renovační pasy. Jak fungují a k čemu budou potřeba?",
+            "publishedAt": "2026-04-30T05:59:56Z"
+          },
           {
             "title": "Strop pro dotace? Malí farmáři hranici vítají, ministerstvo ale varuje",
             "publishedAt": "2026-04-30T04:55:00Z"
@@ -879,10 +881,6 @@
           {
             "title": "Aliance propojí Černé a Kaspické moře. Vítězství pro Brusel, prohra pro Kreml",
             "publishedAt": "2026-04-29T14:39:35Z"
-          },
-          {
-            "title": "Bez souhlasu je to znásilnění. Pravidla proti agresorům se mají sjednotit",
-            "publishedAt": "2026-04-29T13:29:39Z"
           }
         ]
       }

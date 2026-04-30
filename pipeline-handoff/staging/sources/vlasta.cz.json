@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-30T05:50:20.598339Z",
+  "ingestedAt": "2026-04-30T06:19:59.179244Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Počasí na prvomájový víkend: Česko zasáhne vlna veder! Teploty přesáhnou 25 °C, ale pozor na večer",
+      "url": "https://www.vlasta.cz/inspirace/predpoved-pocasi-1-kveten-2026-teplo-zima-letni-dny-chladne-noci/",
+      "dt": "2026-04-30T06:00:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "ale",
+        "pozor",
+        "počasí",
+        "prvomájový",
+        "přesáhnou",
+        "teploty",
+        "veder",
+        "večer",
+        "vlna",
+        "víkend",
+        "zasáhne",
+        "česko"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1100,34 +1129,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "To v televizi nebylo! Martin z Výměny manželek skončil ve vězení, Diana je sama se třemi dětmi",
-      "url": "https://www.vlasta.cz/inspirace/vymena-manzelek-jak-dnes-ziji-diana-martin-vezeni/",
-      "dt": "2026-04-24T07:29:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "diana",
-        "dětmi",
-        "manželek",
-        "martin",
-        "nebylo",
-        "sama",
-        "skončil",
-        "televizi",
-        "třemi",
-        "výměny",
-        "vězení"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1138,7 +1139,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62009,
+      "bytes": 61948,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1175,7 +1176,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1191,6 +1192,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Počasí na prvomájový víkend: Česko zasáhne vlna veder! Teploty přesáhnou 25 °C, ale pozor na večer",
+            "publishedAt": "2026-04-30T06:00:00Z"
+          },
           {
             "title": "Tahle kráska je dcera Pavola Habery. Žije s chirurgem, zpěvák je díky ní dvojnásobným dědečkem",
             "publishedAt": "2026-04-30T05:32:00Z"
@@ -1218,10 +1223,6 @@
           {
             "title": "7 běžných potravin, které nikdy nejezte syrové. Jsou jedovaté, hrozí otrava i salmonela",
             "publishedAt": "2026-04-29T07:02:00Z"
-          },
-          {
-            "title": "Denně vypil litr vodky, peníze prohrával v kartách. Slovenský Karel Gott se trápil a toužil po lásce",
-            "publishedAt": "2026-04-29T06:32:00Z"
           }
         ]
       }
