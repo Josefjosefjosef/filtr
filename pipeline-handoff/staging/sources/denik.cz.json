@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-04-30T18:59:47.464192Z",
+  "ingestedAt": "2026-04-30T20:10:35.228945Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V centru Londýna byla vztyčena socha, k níž se přihlásil Banksy",
+      "url": "https://www.denik.cz/staty-mimo-eu/londyn-socha-banksy.html",
+      "dt": "2026-04-30T19:18:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "banksy",
+        "centru",
+        "londýna",
+        "níž",
+        "přihlásil",
+        "socha",
+        "vztyčena"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -613,32 +637,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ministryně Mrázová má na pozemku v Bílině černé stavby. Nevěděla jsem to, tvrdí",
-      "url": "https://www.denik.cz/regiony/ministryne-mrazova-cerne-stavby-bilina-20260430.html",
-      "dt": "2026-04-30T08:20:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bílině",
-        "jsem",
-        "ministryně",
-        "mrázová",
-        "nevěděla",
-        "pozemku",
-        "stavby",
-        "tvrdí",
-        "černé"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +647,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29937,
+      "bytes": 29734,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,7 +684,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-04-30T18:34:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T19:18:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -701,6 +699,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V centru Londýna byla vztyčena socha, k níž se přihlásil Banksy",
+            "publishedAt": "2026-04-30T19:18:00Z"
+          },
           {
             "title": "V Bavorsku zemřel člověk po vzácné nákaze bornavirem",
             "publishedAt": "2026-04-30T18:34:00Z"
@@ -728,10 +730,6 @@
           {
             "title": "Elektrokola v bytech jsou jako tikající bomba. Požárů přibývá, varují hasiči",
             "publishedAt": "2026-04-30T14:03:00Z"
-          },
-          {
-            "title": "V Ostravě při tankování explodovalo auto na stlačený plyn. Řidič se zranil",
-            "publishedAt": "2026-04-30T14:00:00Z"
           }
         ]
       }
