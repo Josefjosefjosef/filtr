@@ -7,9 +7,11 @@
     <meta name="iu-data-ver" content="iu-data-ver-placeholder" />
     <!-- iu-build: ff57115 — on prod, Pages rewrites CSS to /assets/app.HASH.css; compare that hash to git short hash for deploy forensics -->
     <title>infoUzel.cz</title>
+    <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Veřejná sekce /projects/ s rychlými odkazy a přehledem obsahu." />
+    <link rel="canonical" href="https://infouzel.cz/projects/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
 
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="index,follow" />
 
     <meta http-equiv="Content-Security-Policy"
     content="
@@ -139,7 +141,8 @@ style-src 'self' 'unsafe-inline' https:;
         .iu-hero-silver-premiumMain{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
         .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:start;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0}
         #iuSilverHeroPremium .iu-hero-copy{min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start!important;gap:6px;box-sizing:border-box;margin:0;padding:6px 0 0!important;align-self:start!important}
-        .iu-hero-figure{min-width:0;margin:0!important;padding:0;width:100%;max-width:100%;display:flex;align-items:flex-start!important;justify-content:flex-start;box-sizing:border-box;height:auto;max-height:none;position:relative;align-self:start!important}
+        .iu-hero-figure{min-width:0;min-height:140px;margin:0!important;padding:0;width:100%;max-width:100%;display:flex;align-items:flex-start!important;justify-content:flex-start;box-sizing:border-box;height:auto;max-height:none;position:relative;align-self:start!important}
+        #iuSilverHeroPremium .iu-hero-figure picture{display:block;max-width:100%;line-height:0}
         .iu-hero-figure::after{content:none!important;display:none!important}
         #iuSilverHeroPremium .iu-hero-figureImg{position:relative;z-index:1;display:block;width:auto!important;height:140px!important;max-height:none!important;max-width:100%;margin:0;padding:0;object-fit:contain;object-position:left bottom;box-sizing:border-box;filter:drop-shadow(0 0 20px rgba(99,102,241,.35))}
         #iuSilverHeroPremium .iu-hero-silverTitle{margin:0!important;padding:0!important;font-size:clamp(1.14rem, calc(1.02rem + 1.65vw), 1.68rem)!important;font-weight:800!important;letter-spacing:-.03em!important;line-height:1.12!important;color:rgba(248,250,252,.98)!important}
@@ -347,6 +350,7 @@ style-src 'self' 'unsafe-inline' https:;
         #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figure {
           align-items: flex-start !important;
           align-self: start !important;
+          min-height: 140px !important;
         }
         #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figureImg,
         #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figureImg {
@@ -766,7 +770,7 @@ style-src 'self' 'unsafe-inline' https:;
                   </button>
                   </header>
                 </div>
-                <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" aria-label="Silver horní boxy">
+                <div id="iuSilverTopCardsStack" class="iuSilverTopCardsStack" role="region" aria-label="Silver horní boxy">
                   <section id="silver-slot" class="silver-slot" aria-label="Silver">
                     <script>
                     (function(){
@@ -889,7 +893,11 @@ style-src 'self' 'unsafe-inline' https:;
                             <div class="iu-hero-silver-premiumMain">
                               <div class="iu-hero-topRow">
                                 <div class="iu-hero-figure" aria-hidden="true">
-                                  <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="Silver" width="1085" height="1135" decoding="async" fetchpriority="high" />
+                                  <picture>
+                                    <source type="image/webp" media="(max-width: 1024px)" srcset="/assets/images/silver-hero-sm.webp" />
+                                    <source type="image/webp" srcset="/assets/images/silver-hero-lg.webp" />
+                                    <img class="iu-hero-figureImg" src="/assets/images/silver-hero.png" alt="Silver" width="134" height="140" decoding="async" fetchpriority="high" />
+                                  </picture>
                                 </div>
                                 <div class="iu-hero-copy">
                                   <h2 class="iu-hero-silverTitle iu-hero-line--1">Jsem Silver.</h2>
@@ -1038,7 +1046,10 @@ style-src 'self' 'unsafe-inline' https:;
                                 <div class="iu-mobileSilverFloatMount" aria-hidden="true">
                                   <div class="iu-mobileSilverFloatDecor" role="presentation">
                                     <span class="iu-mobileSilverFloatDecorCircle">
-                                      <img class="iu-mobileSilverFloatDecorImg" src="/assets/images/iu-silver-button.png" alt="" width="84" height="84" decoding="async" />
+                                      <picture>
+                                        <source type="image/webp" srcset="/assets/images/iu-silver-button.webp" />
+                                        <img class="iu-mobileSilverFloatDecorImg" src="/assets/images/iu-silver-button.png" alt="" width="84" height="84" decoding="async" />
+                                      </picture>
                                     </span>
                                   </div>
                                 </div>
@@ -1113,7 +1124,10 @@ style-src 'self' 'unsafe-inline' https:;
                   </button>
                   <button type="button" class="iu-mobileBottomNav__btn iu-mobileBottomNav__btn--silver" data-iu-bottom-nav="silver" aria-label="Silver">
                     <span class="iu-mobileBottomNav__silverRing" aria-hidden="true">
-                      <img class="iu-mobileBottomNav__silverImg" src="/assets/images/iu-silver-button.png" alt="" width="44" height="44" decoding="async" />
+                      <picture>
+                        <source type="image/webp" srcset="/assets/images/iu-silver-button.webp" />
+                        <img class="iu-mobileBottomNav__silverImg" src="/assets/images/iu-silver-button.png" alt="" width="44" height="44" decoding="async" />
+                      </picture>
                     </span>
                   </button>
                   <button type="button" class="iu-mobileBottomNav__btn" data-iu-bottom-nav="mindmenu" aria-label="MindMenu">
@@ -2284,14 +2298,20 @@ style-src 'self' 'unsafe-inline' https:;
                       <div class="iu-mmTopToolHoverHost iu-hover-summary-host" id="iuMmHoverSummaryHostNotes">
                         <button type="button" class="iu-mmTopTool iu-mmTopTool--notes iu-mmTopTool--imageTile" aria-label="Poznámky">
                           <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
-                            <img class="iu-mmTopToolImageTile" src="/assets/images/notes-tile.jpg" alt="" decoding="async" />
+                            <picture>
+                              <source type="image/webp" srcset="/assets/images/notes-tile.webp" />
+                              <img class="iu-mmTopToolImageTile" src="/assets/images/notes-tile.jpg" alt="" decoding="async" />
+                            </picture>
                           </span>
                         </button>
                       </div>
                       <div class="iu-mmTopToolHoverHost iu-hover-summary-host" id="iuMmHoverSummaryHostTasks">
                         <button type="button" class="iu-mmTopTool iu-mmTopTool--tasks iuMindMenuTasksBtn iu-mmTopTool--imageTile" aria-label="Úkoly" data-iu-tasks-trigger="1">
                           <span class="iu-mmTopToolImageTileWrap" aria-hidden="true">
-                            <img class="iu-mmTopToolImageTile" src="/assets/images/tasks-tile.jpg" alt="" decoding="async" />
+                            <picture>
+                              <source type="image/webp" srcset="/assets/images/tasks-tile.webp" />
+                              <img class="iu-mmTopToolImageTile" src="/assets/images/tasks-tile.jpg" alt="" decoding="async" />
+                            </picture>
                           </span>
                         </button>
                         <div class="iu-mmHoverSummaryBridge" id="iuMmHoverSummaryBridgeTasks" hidden aria-hidden="true"></div>
@@ -2316,7 +2336,7 @@ style-src 'self' 'unsafe-inline' https:;
                         <div class="iuTile" role="listitem" data-quicktool-id="zasilky" data-iu-ql="zasilky-a-sledovani"><button class="iuTileLink" type="button" data-iuq="baliky" data-ql="zasilky" aria-label="Zásilky a sledování" data-iu-action="parcels" id="iuParcelsBtn"><span class="iuTileText">Zásilky a sledování</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="ai_asistenti" data-iu-ql="ai-asistenti"><button class="iuTileLink" type="button" data-iuq="ai" data-ql="ai" aria-label="AI asistenti"><span class="iuTileText">AI asistenti</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="prekladac" data-iu-ql="prekladac"><a class="iuTileLink" href="https://www.deepl.com/" target="_blank" rel="noopener noreferrer" aria-label="Překladač"><span class="iuTileText">Překladač</span></a></div>
-                        <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" role="listitem" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
+                        <div class="iuTile" role="listitem" data-quicktool-id="word_pdf" data-iu-ql="prevod-word-pdf"><a class="iuTileLink" data-iuq="convert" data-ql="convert" href="https://www.ilovepdf.com" target="_blank" rel="noopener" aria-label="Převod Word / PDF"><span class="iuTileText">Převod Word / PDF</span></a></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="financni_kalkulacky" data-iu-ql="financni-kalkulacky"><button type="button" class="iuTileLink" data-iuq="fincalc" aria-label="Finanční kalkulačky"><span class="iuTileText">Finanční kalkulačky</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vzory_smluv" data-iu-ql="vzory-smluv-plne-moci"><button type="button" class="iuTileLink" role="listitem" data-iuq="legaldocs" aria-label="Vzory smluv a plné moci"><span class="iuTileText">Vzory smluv a plné moci</span></button></div>
                         <div class="iuTile" role="listitem" data-quicktool-id="vytvorit_fakturu" data-iu-ql="vytvorit-fakturu"><button type="button" class="iuTileLink" data-iuq="faktura" aria-label="Vytvořit fakturu"><span class="iuTileText">Vytvořit fakturu</span></button></div>
@@ -4084,6 +4104,7 @@ style-src 'self' 'unsafe-inline' https:;
         html body #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figure {
           align-items: flex-start !important;
           align-self: start !important;
+          min-height: 140px !important;
         }
         html body #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figureImg,
         html body #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-figureImg {

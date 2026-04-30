@@ -2174,6 +2174,42 @@ try {
     };
   }
 
+  /** Single-flight + memory cache for primary articles.json + videos.json GET (initial load /projects/). */
+  let __iuFeedPrimaryPairInflight = null;
+  let __iuFeedPrimaryPairLast = null;
+
+  function __iuInvalidateFeedPrimaryJsonCache() {
+    __iuFeedPrimaryPairLast = null;
+  }
+
+  async function __iuFetchArticlesVideosPrimaryPair() {
+    if (__iuFeedPrimaryPairLast) {
+      return __iuFeedPrimaryPairLast;
+    }
+    if (__iuFeedPrimaryPairInflight) {
+      return await __iuFeedPrimaryPairInflight;
+    }
+    const articlesUrl = iuDataUrl("articles.json");
+    const videosUrl = iuDataUrl("videos.json");
+    const p = (async () => {
+      const [articlesData, videosData] = await Promise.all([
+        fetchDiag(articlesUrl, "articles"),
+        fetchDiag(videosUrl, "videos"),
+      ]);
+      const out = { articlesData, videosData };
+      if (articlesData || videosData) {
+        __iuFeedPrimaryPairLast = out;
+      }
+      return out;
+    })();
+    __iuFeedPrimaryPairInflight = p;
+    try {
+      return await p;
+    } finally {
+      __iuFeedPrimaryPairInflight = null;
+    }
+  }
+
   // === DATA ENDPOINT OVERRIDE (maintenance-safe) ===
   (function(){
     const ARTICLES_ENDPOINT = iuDataUrl("articles.json");
@@ -2191,25 +2227,6 @@ try {
         }
         return _makeDataUrl.call(this, type, ...rest);
       };
-    }
-  })();
-
-  // === PREFLIGHT CHECK FOR DATA ENDPOINTS ===
-  (async function preflightDataEndpoints(){
-    const endpoints = [
-      iuDataUrl("articles.json"),
-      iuDataUrl("videos.json")
-    ];
-
-    for (const url of endpoints) {
-      try {
-        const res = await fetch(url, { method: "GET", credentials: "same-origin", cache: "no-store" });
-        if (!res.ok && typeof window.persistLastError === "function") {
-          window.persistLastError(`Preflight ${url} → ${res.status}`);
-        }
-      } catch {
-        // Preflight: do not call persistLastError (avoids console.error); fail silently.
-      }
     }
   })();
 
@@ -4754,6 +4771,8 @@ try {
   }
 
   /** Feed-only: sekční obrázek nad prvním článkem (mapování podle URL / mediaTopicKey / hash sekcí — ne podle titulku). */
+  const IU_FEED_SECTION_HEADER_WEBP = new Set(["section-prehled-dne.jpg"]);
+
   const IU_FEED_SECTION_HEADER_ASSETS = Object.freeze({
     hub: "section-prehled-dne.jpg",
     zpravy: "section-zpravy.jpg",
@@ -4799,6 +4818,16 @@ try {
   function iuBuildFeedSectionHeaderElement() {
     const file = iuFeedSectionHeaderResolveAssetFile();
     if (!file) return null;
+    const base = "/assets/images/";
+    const picture = document.createElement("picture");
+    picture.className = "iu-feed-section-header-picture";
+    if (IU_FEED_SECTION_HEADER_WEBP.has(file)) {
+      const srcWebp = base + file.replace(/\.jpe?g$/i, ".webp");
+      const srcWebpEl = document.createElement("source");
+      srcWebpEl.type = "image/webp";
+      srcWebpEl.srcset = srcWebp;
+      picture.appendChild(srcWebpEl);
+    }
     const img = document.createElement("img");
     img.className = "iu-feed-section-header-img";
     img.setAttribute("role", "presentation");
@@ -4806,17 +4835,18 @@ try {
     img.decoding = "async";
     img.loading = "eager";
     img.alt = "";
-    img.setAttribute("src", "/assets/images/" + file);
+    img.setAttribute("src", base + file);
     img.addEventListener(
       "error",
       function () {
         try {
-          img.remove();
+          picture.remove();
         } catch (_) {}
       },
       { once: true }
     );
-    return img;
+    picture.appendChild(img);
+    return picture;
   }
 
   function iuFeedSectionHeaderEnsureAppended(safeTargetEl, headerEl) {
@@ -13827,7 +13857,6 @@ function buildVideoAsArticleCard(it) {
     refreshInProgress = true;
     debugLog("[REFRESH] start");
     try {
-      await Promise.all([fetchArticlesStatus(), fetchVideosStatus()]);
       await loadData();
     } catch (error) {
       debugWarn("[REFRESH] error", error && error.message ? error.message : error);
@@ -14139,15 +14168,24 @@ function buildVideoAsArticleCard(it) {
     const el = document.getElementById("dataStatusArticles");
     if (!el) return;
     try {
-      const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
-      if (!res.ok) {
-        el.textContent = `Články: chyba (${res.status})`;
-        selfDiag.articlesState = "FAIL";
-        selfDiag.articlesCount = "-";
-        logSelfStatus();
-        return;
+      let data = null;
+      if (state.hasLoadedData && state.articlesRaw && !state.isLoadingData) {
+        data = state.articlesRaw;
+      } else {
+        const pair = await __iuFetchArticlesVideosPrimaryPair();
+        data = pair.articlesData;
       }
-      const data = await res.json();
+      if (!data) {
+        const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
+        if (!res.ok) {
+          el.textContent = `Články: chyba (${res.status})`;
+          selfDiag.articlesState = "FAIL";
+          selfDiag.articlesCount = "-";
+          logSelfStatus();
+          return;
+        }
+        data = await res.json();
+      }
       const size = safeStringify(data).length;
       debugLog("[DATA] size=", size);
       const items = resolveArray(data, ["items", "articles"]);
@@ -14654,6 +14692,8 @@ function buildVideoAsArticleCard(it) {
         `iu debug: fetching…\nhref=${location.href}\narticlesUrl=${articlesUrl}\nvideosUrl=${videosUrl}`
       );
 
+      __iuInvalidateFeedPrimaryJsonCache();
+
       const probePromise = fetch(withTs(probeUrl), {
         cache: "no-store",
         headers: { "cache-control": "no-cache" },
@@ -14666,10 +14706,12 @@ function buildVideoAsArticleCard(it) {
 
       iuPreviewFeedProbeTick("fetchStart", { articlesUrl, videosUrl });
       /* Perf: probe + articles + videos in parallel — was sequential probe then fetch (extra RTT on critical path). */
-      const [[articlesData, videosData], probeText] = await Promise.all([
-        Promise.all([fetchDiag(articlesUrl, "articles"), fetchDiag(videosUrl, "videos")]),
+      const [pair, probeText] = await Promise.all([
+        __iuFetchArticlesVideosPrimaryPair(),
         probePromise,
       ]);
+      const articlesData = pair.articlesData;
+      const videosData = pair.videosData;
       state.lastProbe = probeText;
       iuPreviewFeedProbeTick("probeDone");
       iuPreviewFeedProbeTick("fetchDone", {
@@ -19747,8 +19789,6 @@ function buildVideoAsArticleCard(it) {
     const retryBtn = document.getElementById("dataRetryBtn");
     if (retryBtn) {
       retryBtn.addEventListener("click", () => {
-        fetchArticlesStatus();
-        fetchVideosStatus();
         loadData();
       });
     }
@@ -19801,7 +19841,7 @@ function buildVideoAsArticleCard(it) {
     }catch{}
 
     /* P0 first paint / reload: loadData() already GET+parse articles.json+videos.json on the critical path.
-       fetchArticlesStatus + fetchVideosStatus duplicated the same payloads concurrently (CPU+connection contention).
+       __iuFetchArticlesVideosPrimaryPair dedupes parallel consumers; preflight GET removed.
        feed_health + audit snapshots are non-critical → idle after first frames. */
     const iuDeferNonCriticalInit =
       typeof requestIdleCallback !== "undefined"
@@ -19815,12 +19855,6 @@ function buildVideoAsArticleCard(it) {
           };
     iuDeferNonCriticalInit(
       function () {
-        try {
-          fetchArticlesStatus();
-        } catch (_) {}
-        try {
-          fetchVideosStatus();
-        } catch (_) {}
         try {
           fetchFeedHealth();
         } catch (_) {}
