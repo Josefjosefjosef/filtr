@@ -6,9 +6,7 @@ import {
   dedupeCanonicalUrl,
   pickPublicationKeptUrlKeys,
 } from "./cluster_engine.js";
-import { initIuFinancialCalculatorsOverlay } from "./iu-financial-calculators-module.js";
-import { initIuLegalDocumentsOverlay } from "./iu-legal-documents-module.js";
-import { initIuInvoiceOverlay } from "./iu-invoice-module.js";
+/* P0.5: financial / legal / invoice tool overlays load via dynamic import (see iuBootDeferredToolOverlays) — reduces initial parse + main-thread work. */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -24372,16 +24370,45 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       }
       if (t === "financial") {
-        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
-        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
+        var openFinancialSurface = function () {
+          if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+          if (typeof window.iuFinancialCalcOpenSurface === "function") {
+            window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
+          }
+        };
+        if (typeof window.iuFinancialCalcOpenSurface === "function") {
+          openFinancialSurface();
+        } else if (typeof window.iuEnsureFinancialCalcOverlayBoot === "function") {
+          void window.iuEnsureFinancialCalcOverlayBoot().then(openFinancialSurface);
+        } else {
+          openFinancialSurface();
+        }
       }
       if (t === "legal") {
-        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
-        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        var openLegalSurface = function () {
+          if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+          if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        };
+        if (typeof window.iuLegalDocsOpenSurface === "function") {
+          openLegalSurface();
+        } else if (typeof window.iuEnsureLegalDocsOverlayBoot === "function") {
+          void window.iuEnsureLegalDocsOverlayBoot().then(openLegalSurface);
+        } else {
+          openLegalSurface();
+        }
       }
       if (t === "invoice") {
-        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
-        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        var openInvoiceSurface = function () {
+          if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+          if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        };
+        if (typeof window.iuInvoiceOpenSurface === "function") {
+          openInvoiceSurface();
+        } else if (typeof window.iuEnsureInvoiceOverlayBoot === "function") {
+          void window.iuEnsureInvoiceOverlayBoot().then(openInvoiceSurface);
+        } else {
+          openInvoiceSurface();
+        }
       }
     } finally {
       try {
@@ -24422,14 +24449,41 @@ function buildVideoAsArticleCard(it) {
       } else if (last === "datovka") {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       } else if (last === "financial") {
-        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
-        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
+        var reopenFin = function () {
+          if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+          if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
+        };
+        if (typeof window.iuFinancialCalcOpenSurface === "function") {
+          reopenFin();
+        } else if (typeof window.iuEnsureFinancialCalcOverlayBoot === "function") {
+          void window.iuEnsureFinancialCalcOverlayBoot().then(reopenFin);
+        } else {
+          reopenFin();
+        }
       } else if (last === "legal") {
-        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
-        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        var reopenLeg = function () {
+          if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+          if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        };
+        if (typeof window.iuLegalDocsOpenSurface === "function") {
+          reopenLeg();
+        } else if (typeof window.iuEnsureLegalDocsOverlayBoot === "function") {
+          void window.iuEnsureLegalDocsOverlayBoot().then(reopenLeg);
+        } else {
+          reopenLeg();
+        }
       } else if (last === "invoice") {
-        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
-        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        var reopenInv = function () {
+          if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+          if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        };
+        if (typeof window.iuInvoiceOpenSurface === "function") {
+          reopenInv();
+        } else if (typeof window.iuEnsureInvoiceOverlayBoot === "function") {
+          void window.iuEnsureInvoiceOverlayBoot().then(reopenInv);
+        } else {
+          reopenInv();
+        }
       }
     } catch (_) {}
   }
@@ -35291,46 +35345,157 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   else boot();
 })();
 
-(function iuBootFinancialCalculatorsOverlay() {
-  function run() {
-    try {
-      initIuFinancialCalculatorsOverlay({});
-    } catch (e) {
-      try {
-        console.warn("[iu] financial calculators overlay init failed", e);
-      } catch (_) {}
-    }
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
-})();
+(function iuBootDeferredToolOverlays() {
+  "use strict";
+  var finPromise = null;
+  var legalPromise = null;
+  var invPromise = null;
 
-(function iuBootLegalDocumentsOverlay() {
-  function run() {
+  function scheduleIdle(cb) {
     try {
-      initIuLegalDocumentsOverlay({});
-    } catch (e) {
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(
+          function () {
+            try {
+              cb();
+            } catch (_) {}
+          },
+          { timeout: 2500 }
+        );
+      } else {
+        setTimeout(function () {
+          try {
+            cb();
+          } catch (_) {}
+        }, 1);
+      }
+    } catch (_) {
       try {
-        console.warn("[iu] legal documents overlay init failed", e);
-      } catch (_) {}
+        setTimeout(function () {
+          try {
+            cb();
+          } catch (__) {}
+        }, 1);
+      } catch (___) {}
     }
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
-})();
 
-(function iuBootInvoiceOverlay() {
-  function run() {
+  function ensureFin() {
     try {
-      initIuInvoiceOverlay({});
-    } catch (e) {
-      try {
-        console.warn("[iu] invoice overlay init failed", e);
-      } catch (_) {}
-    }
+      if (typeof window.iuFinancialCalcOpenSurface === "function") return Promise.resolve();
+    } catch (_) {}
+    if (finPromise) return finPromise;
+    finPromise = import("./iu-financial-calculators-module.js")
+      .then(function (m) {
+        try {
+          m.initIuFinancialCalculatorsOverlay({});
+        } catch (e) {
+          try {
+            console.warn("[iu] financial calculators overlay init failed", e);
+          } catch (_) {}
+        }
+      })
+      .catch(function (e) {
+        finPromise = null;
+        try {
+          console.warn("[iu] financial calculators overlay import failed", e);
+        } catch (_) {}
+      });
+    return finPromise;
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
+
+  function ensureLegal() {
+    try {
+      if (typeof window.iuLegalDocsOpenSurface === "function") return Promise.resolve();
+    } catch (_) {}
+    if (legalPromise) return legalPromise;
+    legalPromise = import("./iu-legal-documents-module.js")
+      .then(function (m) {
+        try {
+          m.initIuLegalDocumentsOverlay({});
+        } catch (e) {
+          try {
+            console.warn("[iu] legal documents overlay init failed", e);
+          } catch (_) {}
+        }
+      })
+      .catch(function (e) {
+        legalPromise = null;
+        try {
+          console.warn("[iu] legal documents overlay import failed", e);
+        } catch (_) {}
+      });
+    return legalPromise;
+  }
+
+  function ensureInv() {
+    try {
+      if (typeof window.iuInvoiceOpenSurface === "function") return Promise.resolve();
+    } catch (_) {}
+    if (invPromise) return invPromise;
+    invPromise = import("./iu-invoice-module.js")
+      .then(function (m) {
+        try {
+          m.initIuInvoiceOverlay({});
+        } catch (e) {
+          try {
+            console.warn("[iu] invoice overlay init failed", e);
+          } catch (_) {}
+        }
+      })
+      .catch(function (e) {
+        invPromise = null;
+        try {
+          console.warn("[iu] invoice overlay import failed", e);
+        } catch (_) {}
+      });
+    return invPromise;
+  }
+
+  try {
+    window.iuEnsureFinancialCalcOverlayBoot = ensureFin;
+    window.iuEnsureLegalDocsOverlayBoot = ensureLegal;
+    window.iuEnsureInvoiceOverlayBoot = ensureInv;
+  } catch (_) {}
+
+  function prefetchFromDataIuq(el) {
+    var key = String((el && el.getAttribute && el.getAttribute("data-iuq")) || "")
+      .trim()
+      .toLowerCase();
+    if (key === "fincalc") void ensureFin();
+    else if (key === "legaldocs") void ensureLegal();
+    else if (key === "faktura") void ensureInv();
+  }
+
+  document.addEventListener(
+    "pointerdown",
+    function (e) {
+      try {
+        var t = e.target;
+        if (t && t.nodeType === 3) t = t.parentElement;
+        if (!t || typeof t.closest !== "function") return;
+        var el = t.closest("[data-iuq]");
+        if (!el) return;
+        prefetchFromDataIuq(el);
+      } catch (_) {}
+    },
+    true
+  );
+
+  function idleBootAll() {
+    void ensureFin();
+    void ensureLegal();
+    void ensureInv();
+  }
+
+  function armIdle() {
+    scheduleIdle(idleBootAll);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", armIdle, { once: true });
+  } else {
+    armIdle();
+  }
 })();
 
 /**
