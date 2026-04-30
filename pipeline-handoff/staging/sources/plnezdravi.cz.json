@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-04-30T06:49:41.116259Z",
+  "ingestedAt": "2026-04-30T07:59:59.735646Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Jaro je pro alergiky těžkým obdobím, kuřáci jsou na tom hůř",
+      "url": "https://www.plnezdravi.cz/jaro-je-pro-alergiky-tezkym-obdobim-kuraci-jsou-na-tom-hur/",
+      "dt": "2026-04-30T07:00:27Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "alergiky",
+        "hůř",
+        "jaro",
+        "kuřáci",
+        "obdobím",
+        "tom",
+        "těžkým"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -495,30 +519,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nevěra? Kdepak! Aneb 5 nejčastějších mýtů o viru HPV",
-      "url": "https://www.plnezdravi.cz/nevera-kdepak-aneb-5-nejcastejsich-mytu-o-viru-hpv/",
-      "dt": "2026-04-14T07:00:52Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "aneb",
-        "hpv",
-        "kdepak",
-        "mýtů",
-        "nejčastějších",
-        "nevěra",
-        "viru"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 141633,
+      "bytes": 139054,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,7 +566,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T07:00:07Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T07:00:27Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -581,6 +581,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaro je pro alergiky těžkým obdobím, kuřáci jsou na tom hůř",
+            "publishedAt": "2026-04-30T07:00:27Z"
+          },
           {
             "title": "Alkohol u mladých ustupuje, nahrazují ho však jiné látky",
             "publishedAt": "2026-04-29T07:00:07Z"
@@ -608,10 +612,6 @@
           {
             "title": "Hubnete, ale cholesterol letí nahoru? Studie popisují paradox některých diet. Co jíst, abyste cholesterol „zlepšili“?",
             "publishedAt": "2026-04-23T07:00:24Z"
-          },
-          {
-            "title": "Jak se starat o pigmentové skvrny na jaře v létě? Slunci se vyhněte",
-            "publishedAt": "2026-04-22T23:00:11Z"
           }
         ]
       }

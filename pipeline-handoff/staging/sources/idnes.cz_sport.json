@@ -1,14 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-30T06:49:41.116259Z",
+  "ingestedAt": "2026-04-30T07:59:59.735646Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Petružálek o harmonii s Reichelem: Říkali jsme věci na rovinu, to dnes už mizí",
+      "url": "https://www.idnes.cz/hokej/extraliga/litvinov-jakub-petruzalek-baraz-robert-reichel-rozhovor-trener.A260428_135908_hokej_pbi",
+      "dt": "2026-04-30T07:27:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "harmonii",
+        "jsme",
+        "mizí",
+        "petružálek",
+        "reichelem",
+        "rovinu",
+        "věci",
+        "říkali"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
       "title": "Vladař vychytal postup čistým kontem, krok od druhého kola je i Dobeš",
       "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dobes-vejmelka-hertl.A260430_072821_nhl_mkr",
-      "dt": "2026-04-30T06:33:18Z",
+      "dt": "2026-04-30T07:11:51Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -34,7 +59,7 @@
       "contentType": "article",
       "title": "Nic nekončí. Lakers se trápí s Houstonem, Cunninghamův rekord zachránil Detroit",
       "url": "https://www.idnes.cz/sport/basket/prvni-kolo-play-off-nba-detroit-orlando-116-109-cleveland-toronto-125-120-la-lakers-houston-93-99.A260430_071408_sport-basket_ten",
-      "dt": "2026-04-30T06:29:00Z",
+      "dt": "2026-04-30T06:51:57Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
@@ -762,32 +787,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Žabka dostal ke stříbru i novou smlouvu: Bez kluků by to nešlo, smekám před nimi",
-      "url": "https://www.idnes.cz/hokej/extraliga/boris-zabka-ocelari-trinec-rozhovor-stribro-po-finale.A260429_115029_hokej_jsl",
-      "dt": "2026-04-29T10:39:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dostal",
-        "kluků",
-        "nešlo",
-        "nimi",
-        "novou",
-        "smekám",
-        "smlouvu",
-        "stříbru",
-        "žabka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49614,
+      "bytes": 49610,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T06:33:18Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T07:27:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,12 +850,16 @@
         },
         "sample_titles": [
           {
+            "title": "Petružálek o harmonii s Reichelem: Říkali jsme věci na rovinu, to dnes už mizí",
+            "publishedAt": "2026-04-30T07:27:00Z"
+          },
+          {
             "title": "Vladař vychytal postup čistým kontem, krok od druhého kola je i Dobeš",
-            "publishedAt": "2026-04-30T06:33:18Z"
+            "publishedAt": "2026-04-30T07:11:51Z"
           },
           {
             "title": "Nic nekončí. Lakers se trápí s Houstonem, Cunninghamův rekord zachránil Detroit",
-            "publishedAt": "2026-04-30T06:29:00Z"
+            "publishedAt": "2026-04-30T06:51:57Z"
           },
           {
             "title": "Pavouk Ligy mistrů 2025/26: program a výsledky od semifinále po finále",
@@ -877,10 +880,6 @@
           {
             "title": "Írán se nezúčastní kongresu FIFA v Kanadě, po potížích na letišti delegace odcestovala",
             "publishedAt": "2026-04-29T21:29:00Z"
-          },
-          {
-            "title": "Druhý den stolním tenistům nevyšel. Na MS prohrálo české družstvo mužů i žen",
-            "publishedAt": "2026-04-29T19:38:43Z"
           }
         ]
       }

@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-04-30T06:49:41.116259Z",
+  "ingestedAt": "2026-04-30T07:59:59.735646Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Neuvěřitelný Turek: Smlouvu jen našel, asi někomu na ministerstvu vypadla",
+      "url": "https://www.epenize.eu/neuveritelny-turek-smlouvu-jen-nasel-asi-nekomu-na-ministerstvu-vypadla/",
+      "dt": "2026-04-30T07:00:59Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "asi",
+        "jen",
+        "ministerstvu",
+        "našel",
+        "neuvěřitelný",
+        "někomu",
+        "smlouvu",
+        "turek",
+        "vypadla"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -475,30 +501,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Němcová na síti: Babiš nastoluje zrůdné bolševické manýry",
-      "url": "https://www.epenize.eu/nemcova-na-siti-babis-nastoluje-zrudne-bolsevicke-manyry/",
-      "dt": "2026-04-21T07:16:52Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "babiš",
-        "bolševické",
-        "manýry",
-        "nastoluje",
-        "němcová",
-        "síti",
-        "zrůdné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +511,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 109005,
+      "bytes": 108999,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,11 +548,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T23:00:38Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T07:00:59Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 18
+          "finance": 18,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -562,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Neuvěřitelný Turek: Smlouvu jen našel, asi někomu na ministerstvu vypadla",
+            "publishedAt": "2026-04-30T07:00:59Z"
+          },
           {
             "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
             "publishedAt": "2026-04-29T23:00:38Z"
@@ -589,10 +595,6 @@
           {
             "title": "Střelba jako jednoduchý marketing na pozlacený Trumpův sál",
             "publishedAt": "2026-04-26T23:00:59Z"
-          },
-          {
-            "title": "Fotografování škol: Nekonečný byznys na dětech i rodičích",
-            "publishedAt": "2026-04-26T07:00:31Z"
           }
         ]
       }

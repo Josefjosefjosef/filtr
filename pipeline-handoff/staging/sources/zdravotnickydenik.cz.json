@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-04-30T06:49:41.116259Z",
+  "ingestedAt": "2026-04-30T07:59:59.735646Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Rakovina u mladých na vzestupu. Důvodem může být jeden znepokojivý civilizační trend",
+      "url": "https://www.zdravotnickydenik.cz/2026/04/rakovina-u-mladych-narusta-pricina/",
+      "dt": "2026-04-30T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "být",
+        "civilizační",
+        "důvodem",
+        "jeden",
+        "mladých",
+        "rakovina",
+        "trend",
+        "vzestupu",
+        "znepokojivý"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -240,34 +266,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Soud opět uznal psychiatra Cimického vinným ze sexuálních útoků. Případ ale nekončí",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/cimicky-soud-znasilneni-rozsudek/",
-      "dt": "2026-04-29T10:00:56Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "ale",
-        "cimického",
-        "nekončí",
-        "opět",
-        "psychiatra",
-        "případ",
-        "sexuálních",
-        "soud",
-        "uznal",
-        "vinným",
-        "útoků"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +276,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 74312,
+      "bytes": 74275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +313,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -330,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakovina u mladých na vzestupu. Důvodem může být jeden znepokojivý civilizační trend",
+            "publishedAt": "2026-04-30T07:00:00Z"
+          },
           {
             "title": "Rohy a kopyta nám nenarostou. Diskuse o očkování je jako z 18. století, nechápe Philipp",
             "publishedAt": "2026-04-30T06:00:00Z"
@@ -357,10 +359,6 @@
           {
             "title": "Přesun miliard z VZP visí ve vzduchu: Senátní výbory se neshodly",
             "publishedAt": "2026-04-29T13:07:50Z"
-          },
-          {
-            "title": "Nevídaná záchrana života: Lékař zašil pobodanému muži srdce přímo na ulici",
-            "publishedAt": "2026-04-29T12:20:45Z"
           }
         ]
       }
