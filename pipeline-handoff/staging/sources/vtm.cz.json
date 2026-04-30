@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-04-30T16:50:09.156569Z",
+  "ingestedAt": "2026-04-30T17:20:08.466339Z",
   "items": [
     {
       "section": "veda",
@@ -23,6 +23,35 @@
         "stane",
         "význam",
         "změní"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
+      "url": "https://www.zive.cz/clanky/na-slovensku-zitra-startuje-era-bez-hotovosti-obchody-a-sluzby-budou-muset-brat-karty-nebo-qr-kody/sc-3-a-240957/default.aspx",
+      "dt": "2026-04-30T16:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "brát",
+        "hotovosti",
+        "karty",
+        "kódy",
+        "muset",
+        "nebo",
+        "obchody",
+        "slovensku",
+        "služby",
+        "startuje",
+        "zítra",
+        "éra"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -931,33 +960,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Populární textový editor z Windows vyšel i na macOS. Notepad++ to ale bude mít těžké",
-      "url": "https://www.zive.cz/clanky/popularni-textovy-editor-z-windows-vysel-i-na-macos-notepad-to-ale-bude-mit-tezke/sc-3-a-240886/default.aspx",
-      "dt": "2026-04-27T08:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "ale",
-        "editor",
-        "macos",
-        "mít",
-        "notepad",
-        "populární",
-        "textový",
-        "těžké",
-        "vyšel",
-        "windows"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -968,7 +970,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23075,
+      "bytes": 23119,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1005,7 +1007,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T16:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1023,6 +1025,10 @@
           {
             "title": "Liquid Glass změní význam. Z designového průšvihu se stane jedinečný displej pro jubilejní iPhone",
             "publishedAt": "2026-04-30T14:45:00Z"
+          },
+          {
+            "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
+            "publishedAt": "2026-04-30T16:45:00Z"
           },
           {
             "title": "Polohovatelný stůl jen za 2590 Kč. Tenhle má paměť, užitečné příslušenství a v ceně je i deska",
@@ -1047,10 +1053,6 @@
           {
             "title": "Vybrali jsme nejlepší Wi-Fi routery do domácnosti. Kvalitní lze koupit i za méně než tisíc korun",
             "publishedAt": "2026-04-29T16:45:00Z"
-          },
-          {
-            "title": "První velké rozhodnutí nového šéfa Applu. Kvůli čtyřnásobnému zdražení pamětí mohou jít nahoru i ceny iPhonů",
-            "publishedAt": "2026-04-30T06:45:00Z"
           }
         ]
       }
