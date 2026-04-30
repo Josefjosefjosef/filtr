@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vlasta.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Tahle kráska je dcera Pavola Habery. Žije s chirurgem, zpěvák je díky ní dvojnásobným dědečkem",
+      "url": "https://www.vlasta.cz/celebrity/pavol-habera-dnes-dcera-zuzana-daniela-pestova-bydleni/",
+      "dt": "2026-04-30T05:32:00Z",
+      "media_raw": "Vlasta",
+      "media_norm": "Vlasta",
+      "tokens": [
+        "chirurgem",
+        "dcera",
+        "dvojnásobným",
+        "díky",
+        "dědečkem",
+        "habery",
+        "kráska",
+        "pavola",
+        "tahle",
+        "zpěvák",
+        "žije"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vlasta",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "vlasta.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -1100,37 +1128,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "vlasta.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Jak dnes žije Marek z Extrémních proměn: Denně cvičí, nabral svaly, ale holku nemá. Musí mě ulovit, říká",
-      "url": "https://www.vlasta.cz/inspirace/marek-vala-dnes-extremni-promeny/",
-      "dt": "2026-04-24T07:02:00Z",
-      "media_raw": "Vlasta",
-      "media_norm": "Vlasta",
-      "tokens": [
-        "ale",
-        "cvičí",
-        "denně",
-        "extrémních",
-        "holku",
-        "marek",
-        "musí",
-        "nabral",
-        "nemá",
-        "proměn",
-        "svaly",
-        "ulovit",
-        "říká",
-        "žije"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vlasta",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "vlasta.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1141,7 +1138,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.vlasta.cz/rss/vse.xml",
-      "bytes": 62175,
+      "bytes": 62009,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1178,7 +1175,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:32:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1194,6 +1191,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tahle kráska je dcera Pavola Habery. Žije s chirurgem, zpěvák je díky ní dvojnásobným dědečkem",
+            "publishedAt": "2026-04-30T05:32:00Z"
+          },
           {
             "title": "Myčka není jen na mytí, vynalézaví Češi v ní začali i vařit. Takto v ní připravíte oběd pro celou rodinu",
             "publishedAt": "2026-04-30T05:02:00Z"
@@ -1221,10 +1222,6 @@
           {
             "title": "Denně vypil litr vodky, peníze prohrával v kartách. Slovenský Karel Gott se trápil a toužil po lásce",
             "publishedAt": "2026-04-29T06:32:00Z"
-          },
-          {
-            "title": "Jak bydlí Sandra Nováková z Ulice: Zimní zahrada s luxusní kuchyní a dům na stromě jako splněný sen",
-            "publishedAt": "2026-04-29T06:02:00Z"
           }
         ]
       }

@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Nic nekončí. Lakers se trápí s Houstonem, Cunninghamův rekord zachránil Detroit",
+      "url": "https://www.idnes.cz/sport/basket/prvni-kolo-play-off-nba-detroit-orlando-116-109-cleveland-toronto-125-120-la-lakers-houston-93-99.A260430_071408_sport-basket_ten",
+      "dt": "2026-04-30T05:37:22Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "cunninghamův",
+        "detroit",
+        "houstonem",
+        "lakers",
+        "nekončí",
+        "nic",
+        "rekord",
+        "trápí",
+        "zachránil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař vychytal postup čistým kontem, krok od druhého kola je i Dobeš",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-vladar-dobes.A260430_072821_nhl_mkr",
+      "dt": "2026-04-30T05:28:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dobeš",
+        "druhého",
+        "kola",
+        "kontem",
+        "krok",
+        "postup",
+        "vladař",
+        "vychytal",
+        "čistým"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -165,19 +217,20 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Ústecká úleva. Domácí proti Opavě zvrátili druhé čtvrtfinále a vyrovnali sérii",
+      "title": "Ústecká úleva, Sluneta proti Opavě zvrátila druhé čtvrtfinále. Hradec slaví záchranu",
       "url": "https://www.idnes.cz/sport/basket/usti-nad-labem-opava-basketbal-playoff-serie-nbl.A260429_211829_sport-basket_kazdt",
       "dt": "2026-04-29T19:29:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "domácí",
         "druhé",
+        "hradec",
         "opavě",
         "proti",
-        "sérii",
-        "vyrovnali",
-        "zvrátili",
+        "slaví",
+        "sluneta",
+        "zvrátila",
+        "záchranu",
         "úleva",
         "ústecká",
         "čtvrtfinále"
@@ -735,61 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Děčín zvrátil duel v Brně, střelecký souboj potěšil víc Dawese. Opava zaskočila Ústí",
-      "url": "https://www.idnes.cz/sport/basket/ctvrtfinale-basketbal.A260428_210509_sport-basket_kazdt",
-      "dt": "2026-04-29T10:07:59Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brně",
-        "dawese",
-        "duel",
-        "děčín",
-        "opava",
-        "potěšil",
-        "souboj",
-        "střelecký",
-        "víc",
-        "zaskočila",
-        "zvrátil",
-        "ústí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "New York? Párty jsou tu i na ulici, říká Chmelař. Rulíkovi dá vybrat z „meníčka“",
-      "url": "https://www.idnes.cz/hokej/nhl/jaroslav-chmelar-new-york-rangers-reprezentace.A260428_161531_nhl_kazdt",
-      "dt": "2026-04-29T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chmelař",
-        "meníčka",
-        "new",
-        "párty",
-        "rulíkovi",
-        "ulici",
-        "vybrat",
-        "york",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -800,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 49421,
+      "bytes": 49250,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -837,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T22:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:37:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -852,6 +850,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nic nekončí. Lakers se trápí s Houstonem, Cunninghamův rekord zachránil Detroit",
+            "publishedAt": "2026-04-30T05:37:22Z"
+          },
+          {
+            "title": "Vladař vychytal postup čistým kontem, krok od druhého kola je i Dobeš",
+            "publishedAt": "2026-04-30T05:28:00Z"
+          },
           {
             "title": "Pavouk Ligy mistrů 2025/26: program a výsledky od semifinále po finále",
             "publishedAt": "2026-04-29T22:40:00Z"
@@ -875,14 +881,6 @@
           {
             "title": "Druhý den stolním tenistům nevyšel. Na MS prohrálo české družstvo mužů i žen",
             "publishedAt": "2026-04-29T19:38:43Z"
-          },
-          {
-            "title": "Ústecká úleva. Domácí proti Opavě zvrátili druhé čtvrtfinále a vyrovnali sérii",
-            "publishedAt": "2026-04-29T19:29:00Z"
-          },
-          {
-            "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-            "publishedAt": "2026-04-29T18:54:00Z"
           }
         ]
       }

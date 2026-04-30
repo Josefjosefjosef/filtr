@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "„Rodiče stále volají.“ Hrozba otravy kojenců trvá. Poslanci si dupli na Babišovy ministry",
+      "url": "https://zpravy.aktualne.cz/domaci/zdravotnictvi-22850dba-908b-4192-badc-0e7f1c003a00/rodice-stale-volaji-hrozba-otravy-kojencu-trva-poslanci-si-dupli-na-babisovy-ministry/r~aaa2991e5a26b3a7ffd2d87f09ef56b9/",
+      "dt": "2026-04-30T05:33:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "babišovy",
+        "dupli",
+        "hrozba",
+        "kojenců",
+        "ministry",
+        "otravy",
+        "poslanci",
+        "rodiče",
+        "stále",
+        "trvá",
+        "volají"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -516,33 +544,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Na Mlýnici jako při Tour de France. Drsňáky zase přivítá Král Šumavy",
-      "url": "https://sport.aktualne.cz/ostatni-sporty/na-mlynici-jako-pri-tour-de-france-drsnaky-zase-privita-kral-sumavy/r~aaa29ac6a6906461aaa458407568180f/",
-      "dt": "2026-04-29T18:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "drsňáky",
-        "france",
-        "jako",
-        "král",
-        "mlýnici",
-        "při",
-        "přivítá",
-        "tour",
-        "zase",
-        "šumavy"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -553,7 +554,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 23098,
+      "bytes": 23350,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -590,13 +591,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:33:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "other": 2,
           "zpravy": 9,
-          "sport": 6,
-          "zdravi": 1,
+          "sport": 5,
           "finance": 2
         },
         "drop_counts": {
@@ -609,6 +610,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Rodiče stále volají.“ Hrozba otravy kojenců trvá. Poslanci si dupli na Babišovy ministry",
+            "publishedAt": "2026-04-30T05:33:00Z"
+          },
           {
             "title": "Odmítli mu vydat album, protože zněl příliš jako Jackson. Teď svého strýce hraje",
             "publishedAt": "2026-04-30T05:00:00Z"
@@ -636,10 +641,6 @@
           {
             "title": "Velký kombík za nečekaně málo peněz. Kia vysílá do Česka novou zbraň proti Octavii",
             "publishedAt": "2026-04-30T03:40:00Z"
-          },
-          {
-            "title": "Mohl zabít kozu, ale vybral si malého chlapce. Případ lidožravého levharta budí otázky dodnes",
-            "publishedAt": "2026-04-30T03:30:00Z"
           }
         ]
       }

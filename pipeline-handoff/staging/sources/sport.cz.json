@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radovali také Dobeš a Vejmelka",
+      "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval také Dobeš",
       "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-vychytal-nulu-a-philadelphia-slavi-postup-z-vyhry-se-radoval-i-dobes-s-montrealem-5446159",
       "dt": "2026-04-30T03:51:56Z",
       "media_raw": "Sport.cz",
@@ -16,13 +16,37 @@
         "nulu",
         "philadelphia",
         "postup",
-        "radovali",
+        "radoval",
         "slaví",
         "také",
-        "vejmelka",
         "vladař",
         "vychytal",
         "výhry"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Arsenal byl okraden! Anglie spílá rozhodčím kvůli penaltám v Madridu",
+      "url": "https://www.sport.cz/clanek/fotbal-liga-mistru-arsenal-byl-okraden-anglie-spila-rozhodcim-kvuli-penaltam-v-madridu-5446167",
+      "dt": "2026-04-30T05:22:54Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "anglie",
+        "arsenal",
+        "kvůli",
+        "madridu",
+        "okraden",
+        "penaltám",
+        "rozhodčím",
+        "spílá"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -761,30 +785,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šílenství v ringu. Hromadná rvačka, Rus byl surově zbit",
-      "url": "https://www.sport.cz/clanek/bojove-sporty-silenstvi-v-ringu-hromadna-rvacka-rus-byl-surove-zbit-5445453",
-      "dt": "2026-04-29T10:06:23Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hromadná",
-        "ringu",
-        "rus",
-        "rvačka",
-        "surově",
-        "zbit",
-        "šílenství"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -795,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43414,
+      "bytes": 44096,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -832,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:22:55Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:22:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -849,8 +849,12 @@
         },
         "sample_titles": [
           {
-            "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radovali také Dobeš a Vejmelka",
+            "title": "Vladař vychytal nulu a Philadelphia slaví postup. Z výhry se radoval také Dobeš",
             "publishedAt": "2026-04-30T03:51:56Z"
+          },
+          {
+            "title": "Arsenal byl okraden! Anglie spílá rozhodčím kvůli penaltám v Madridu",
+            "publishedAt": "2026-04-30T05:22:54Z"
           },
           {
             "title": "Usadil se v NHL, teď chce dlouhán Klapka o důležité roli přesvědčit i Rulíka",
@@ -875,10 +879,6 @@
           {
             "title": "Most jako české Los Angeles. Češi zabojují o hry v pěti nových olympijských sportech",
             "publishedAt": "2026-04-29T18:34:47Z"
-          },
-          {
-            "title": "SESTŘIH: Čeští mladíci si na MS zahrají po čtyřech letech o medaile! Panují ale obavy o Tomka",
-            "publishedAt": "2026-04-29T06:00:55Z"
           }
         ]
       }

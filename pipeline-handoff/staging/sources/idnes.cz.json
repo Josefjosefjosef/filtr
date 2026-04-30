@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Soud zamítl odvolání muže, který v mešitách na Novém Zélandu zabil 51 lidí",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/novy-zeland-soud-vrazda-vysetrovani.A260430_065554_zahranicni_pluh",
+      "dt": "2026-04-30T05:20:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "lidí",
+        "mešitách",
+        "muže",
+        "novém",
+        "odvolání",
+        "soud",
+        "zabil",
+        "zamítl",
+        "zélandu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -505,22 +531,22 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Víc studentů, víc vojáků, lepší armáda. Ministr Zůna zadal audit Univerzity obrany",
+      "title": "Zůna zadal audit Univerzity obrany. Chystá velké změny, aby nalákal mladé do armády",
       "url": "https://www.idnes.cz/zpravy/domaci/ministr-zuna-univerzita-obrany-vojaci-studenti-armada.A260429_185609_domaci_varg",
       "dt": "2026-04-29T18:00:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "armáda",
+        "armády",
         "audit",
-        "lepší",
-        "ministr",
+        "chystá",
+        "mladé",
+        "nalákal",
         "obrany",
-        "studentů",
         "univerzity",
-        "vojáků",
-        "víc",
+        "velké",
         "zadal",
+        "změny",
         "zůna"
       ],
       "feedCategory": "zpravy",
@@ -760,32 +786,6 @@
         "ukazuje",
         "čím",
         "šavli"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hegseth: Největší protivníci ve válce jsou poslanci. Pentagon ukázal horentní výdaje",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-iran-valka-dolar-miliarda.A260429_172042_zahranicni_votr",
-      "dt": "2026-04-29T15:59:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "hegseth",
-        "horentní",
-        "největší",
-        "pentagon",
-        "poslanci",
-        "protivníci",
-        "ukázal",
-        "válce",
-        "výdaje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47939,
+      "bytes": 47685,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:20:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1642,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Soud zamítl odvolání muže, který v mešitách na Novém Zélandu zabil 51 lidí",
+            "publishedAt": "2026-04-30T05:20:00Z"
+          },
           {
             "title": "Starostka Berouna odchází z ODS. Už není pravicová, vysvětluje Chalupová",
             "publishedAt": "2026-04-30T05:00:00Z"
@@ -1669,10 +1673,6 @@
           {
             "title": "Trump zvažuje snížení počtu vojáků v Německu, reaguje tak na kritiku z Berlína",
             "publishedAt": "2026-04-29T23:17:51Z"
-          },
-          {
-            "title": "Bývalá telefonní ústředna na Žižkově ožije. Promění se v luxusní bydlení",
-            "publishedAt": "2026-04-29T22:00:00Z"
           }
         ]
       }

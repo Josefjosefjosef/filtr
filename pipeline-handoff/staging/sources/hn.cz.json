@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Meta zvýšila zisk o 61 procent na 27 miliard dolarů, zisk i tržby překonaly očekávání",
+      "url": "https://byznys.hn.cz/c1-67872400-meta-zvysila-zisk-o-61-procent-na-27-miliard-dolaru-zisk-i-trzby-prekonaly-ocekavani",
+      "dt": "2026-04-30T05:34:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dolarů",
+        "meta",
+        "miliard",
+        "očekávání",
+        "procent",
+        "překonaly",
+        "tržby",
+        "zisk",
+        "zvýšila"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -784,23 +810,27 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Snížení DPH na pivo restaurační sektor nezachrání, svět se obrací k pivu i vínu zády",
+      "title": "&bdquo;Staré dobré časy&ldquo; jsou naštěstí pryč, už se s tím smiřme. Snížení DPH na pivo restaurační sektor nezachrání",
       "url": "https://archiv.hn.cz/c1-67872190-snizeni-dph-na-pivo-restauracni-sektor-nezachrani-svet-se-obraci-k-pivu-i-vinu-zady",
       "dt": "2026-04-29T11:41:00Z",
       "media_raw": "HN / Ekonomika",
       "media_norm": "HN / Ekonomika",
       "tokens": [
+        "bdquo",
+        "dobré",
         "dph",
+        "ldquo",
+        "naštěstí",
         "nezachrání",
-        "obrací",
         "pivo",
-        "pivu",
+        "pryč",
         "restaurační",
         "sektor",
+        "smiřme",
         "snížení",
-        "svět",
-        "vínu",
-        "zády"
+        "staré",
+        "tím",
+        "časy"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1128,36 +1158,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Britský král Karel III. v Kongresu apeloval na rozhodnou podporu Ukrajiny a partnerství v NATO. Sklidil potlesk",
-      "url": "https://zahranicni.hn.cz/c1-67871990-britsky-kral-karel-iii-v-kongresu-apeloval-na-rozhodnou-podporu-ukrajiny-a-partnerstvi-v-nato-sklidil-potlesk",
-      "dt": "2026-04-29T04:48:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "apeloval",
-        "britský",
-        "iii",
-        "karel",
-        "kongresu",
-        "král",
-        "nato",
-        "partnerství",
-        "podporu",
-        "potlesk",
-        "rozhodnou",
-        "sklidil",
-        "ukrajiny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1168,7 +1168,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184250,
+      "bytes": 184281,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1205,7 +1205,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:34:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 32,
@@ -1222,6 +1222,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Meta zvýšila zisk o 61 procent na 27 miliard dolarů, zisk i tržby překonaly očekávání",
+            "publishedAt": "2026-04-30T05:34:00Z"
+          },
           {
             "title": "Velký rozcestník chytrých hodinek: kde Apple ustrnul, v čem dominuje Garmin a které značky umí překvapit",
             "publishedAt": "2026-04-30T05:02:00Z"
@@ -1248,10 +1252,6 @@
           },
           {
             "title": "Finanční trhy (30. 4. 2026)",
-            "publishedAt": "2026-04-29T22:00:00Z"
-          },
-          {
-            "title": "Šachy odhalují rozmanitější a zábavnější středověk. Nová studie ukazuje, kde bouraly hranice a na čem záleželo",
             "publishedAt": "2026-04-29T22:00:00Z"
           }
         ]

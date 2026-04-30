@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "indian-tv.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Monopoly: Star Wars Heroes vs. Villains umožní zmrazit v karbonitu i Bobu Fetta - INDIAN",
+      "url": "https://indian-tv.cz/clanek/monopoly-star-wars-heroes-vs-villains-umozni-zmrazit-v-smucw4",
+      "dt": "2026-04-30T05:30:00Z",
+      "media_raw": "Indian",
+      "media_norm": "Indian",
+      "tokens": [
+        "bobu",
+        "fetta",
+        "heroes",
+        "indian",
+        "karbonitu",
+        "monopoly",
+        "star",
+        "umožní",
+        "villains",
+        "wars",
+        "zmrazit"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_indian",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "indian-tv.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -402,21 +430,20 @@
     {
       "section": "hry",
       "contentType": "article",
-      "title": "Konec studia Spiders? Autoři GreedFall údajně končí po 18 letech - INDIAN",
+      "title": "Tvůrci GreedFall, Technomancer nebo Steelrising opravdu skončili - INDIAN",
       "url": "https://indian-tv.cz/clanek/konec-studia-spiders-autori-greedfall-udajne-konci-v6qayc",
       "dt": "2026-04-28T15:50:08Z",
       "media_raw": "Indian",
       "media_norm": "Indian",
       "tokens": [
-        "autoři",
         "greedfall",
         "indian",
-        "konec",
-        "končí",
-        "letech",
-        "spiders",
-        "studia",
-        "údajně"
+        "nebo",
+        "opravdu",
+        "skončili",
+        "steelrising",
+        "technomancer",
+        "tvůrci"
       ],
       "feedCategory": "hry",
       "feedType": "rss",
@@ -1042,33 +1069,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "indian-tv.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Assassin’s Creed: Hexe prochází změnami. Tvůrci údajně škrtají magii - INDIAN",
-      "url": "https://indian-tv.cz/clanek/assassins-creed-hexe-prochazi-zmenami-8ntef6",
-      "dt": "2026-04-26T11:00:00Z",
-      "media_raw": "Indian",
-      "media_norm": "Indian",
-      "tokens": [
-        "assassin",
-        "creed",
-        "hexe",
-        "indian",
-        "magii",
-        "prochází",
-        "tvůrci",
-        "změnami",
-        "údajně",
-        "škrtají"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_indian",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "indian-tv.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1079,7 +1079,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://indian-tv.cz/atom.xml",
-      "bytes": 211707,
+      "bytes": 210032,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1116,7 +1116,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1132,6 +1132,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Monopoly: Star Wars Heroes vs. Villains umožní zmrazit v karbonitu i Bobu Fetta - INDIAN",
+            "publishedAt": "2026-04-30T05:30:00Z"
+          },
           {
             "title": "Asha Sharma reaguje na přání a připravuje dynamické pozadí s novým logem Xbox - INDIAN",
             "publishedAt": "2026-04-30T05:00:00Z"
@@ -1159,10 +1163,6 @@
           {
             "title": "Na Xboxu a Switchi 2 se objevila demoverze Final Fantasy 7: Rebirth - INDIAN",
             "publishedAt": "2026-04-29T11:44:12Z"
-          },
-          {
-            "title": "Postupně se vyjasňuje, jak funguje nová protipirátská ochrana PlayStationu - INDIAN",
-            "publishedAt": "2026-04-29T07:34:26Z"
           }
         ]
       }

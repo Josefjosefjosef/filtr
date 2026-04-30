@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T05:20:17.336119Z",
+  "ingestedAt": "2026-04-30T05:50:20.598339Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Gaza je zavalená troskami, OSN se snaží sutiny využít při obnově regionu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/gaza-je-zavalena-troskami-osn-se-snazi-sutiny-vyuzit-pri-obnove-regionu-372953",
+      "dt": "2026-04-30T05:30:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "gaza",
+        "obnově",
+        "osn",
+        "při",
+        "regionu",
+        "snaží",
+        "sutiny",
+        "troskami",
+        "využít",
+        "zavalená"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -744,24 +771,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Ukrajina oznámila, že drony zasáhla sankcionovaný tanker",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ukrajina-oznamila-ze-drony-zasahla-sankcionovany-tanker-372931",
-      "dt": "2026-04-29T10:20:35Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Vladař vynuloval Pittsburgh a podpořil postup Philadelphie, slavil i Dobeš",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-vynuloval-pittsburgh-a-podporil-postup-philadelphie-slavil-i-dobes-156519",
+      "dt": "2026-04-30T05:39:38Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "drony",
-        "oznámila",
-        "sankcionovaný",
-        "tanker",
-        "ukrajina",
-        "zasáhla"
+        "dobeš",
+        "philadelphie",
+        "pittsburgh",
+        "podpořil",
+        "postup",
+        "slavil",
+        "vladař",
+        "vynuloval"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1510,34 +1539,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař nezastavil Pittsburgh, Penguins si vynutili šestý zápas. Vegas srovnalo sérii s Utahem",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/vladar-nezastavil-pittsburgh-penguins-si-vynutili-sesty-zapas-vegas-srovnalo-serii-s-utahem-156490",
-      "dt": "2026-04-28T06:15:46Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "nezastavil",
-        "penguins",
-        "pittsburgh",
-        "srovnalo",
-        "sérii",
-        "utahem",
-        "vegas",
-        "vladař",
-        "vynutili",
-        "zápas",
-        "šestý"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1548,7 +1549,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41867,
+      "bytes": 42086,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1608,7 +1609,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T05:02:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1625,6 +1626,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Gaza je zavalená troskami, OSN se snaží sutiny využít při obnově regionu",
+            "publishedAt": "2026-04-30T05:30:00Z"
+          },
           {
             "title": "Polsko chce mít půlmilionovou armádu, už teď patří k největším v NATO",
             "publishedAt": "2026-04-30T05:02:00Z"
@@ -1652,10 +1657,6 @@
           {
             "title": "Florida schválila nový plán volebních obvodů, měl by posílit republikány",
             "publishedAt": "2026-04-29T21:17:38Z"
-          },
-          {
-            "title": "Putin a Trump si telefonovali, řešit měli příměří v rusko-ukrajinské válce",
-            "publishedAt": "2026-04-29T19:38:15Z"
           }
         ]
       }
@@ -1667,7 +1668,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39455,
+      "bytes": 39454,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1704,7 +1705,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T05:39:38Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1719,6 +1720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař vynuloval Pittsburgh a podpořil postup Philadelphie, slavil i Dobeš",
+            "publishedAt": "2026-04-30T05:39:38Z"
+          },
           {
             "title": "České Budějovice hostí předposlední turnaj EHT, národní tým změří síly s Finskem",
             "publishedAt": "2026-04-30T04:00:00Z"
@@ -1746,10 +1751,6 @@
           {
             "title": "Nosková ani Plíšková si madridské semifinále nezahrají. Vypadl také Lehečka",
             "publishedAt": "2026-04-29T13:45:02Z"
-          },
-          {
-            "title": "Statistikám play-off extraligy kralovali Červenka, Sedlák, Kovář a Machovský",
-            "publishedAt": "2026-04-29T11:23:02Z"
           }
         ]
       }
