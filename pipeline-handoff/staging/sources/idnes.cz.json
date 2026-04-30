@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-04-30T02:49:42.017098Z",
+  "ingestedAt": "2026-04-30T03:19:52.772503Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bezpečné dveře pro školy a školky: Kde končí strach z přiskřípnutých prstů?",
+      "url": "https://www.idnes.cz/magaziny/koktejl/bezpecne-dvere-pro-skoly-a-skolky-doornite-urazy-deti.A260427_090248_koktejl_vanky",
+      "dt": "2026-04-30T03:02:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bezpečné",
+        "dveře",
+        "končí",
+        "prstů",
+        "přiskřípnutých",
+        "strach",
+        "školky",
+        "školy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -761,33 +786,6 @@
         "zákona",
         "zásadní",
         "čro"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "VIDEO: Trefa do černého. Ukrajinské drony zasáhly ruský radar za dvě miliardy korun",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-ukrajinsky-konflikt-valka-belgorodska-oblast-drony.A260429_164856_zahranicni_tmps",
-      "dt": "2026-04-29T15:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "drony",
-        "dvě",
-        "korun",
-        "miliardy",
-        "radar",
-        "ruský",
-        "trefa",
-        "ukrajinské",
-        "zasáhly",
-        "černého"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1590,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48796,
+      "bytes": 49019,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1627,7 +1625,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-29T23:17:51Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T03:02:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1644,6 +1642,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bezpečné dveře pro školy a školky: Kde končí strach z přiskřípnutých prstů?",
+            "publishedAt": "2026-04-30T03:02:00Z"
+          },
           {
             "title": "Trump zvažuje snížení počtu amerických vojáků v Německu",
             "publishedAt": "2026-04-29T23:17:51Z"
@@ -1671,10 +1673,6 @@
           {
             "title": "Putin žije ve strachu, vládne z poloviny tajnými dekrety, uvádí bývalý oligarcha",
             "publishedAt": "2026-04-29T20:02:00Z"
-          },
-          {
-            "title": "Trump a Putin se shodli na příměří během květnových oslav, řešili také Írán",
-            "publishedAt": "2026-04-29T19:50:16Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-04-30T02:49:42.017098Z",
+  "ingestedAt": "2026-04-30T03:19:52.772503Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Dvě mouchy jednou ranou. Zápasník v zápalu boje složil soupeře i rozhodčího",
+      "url": "https://www.mmamag.cz/zapasnik-ko-rozhodci/",
+      "dt": "2026-04-30T03:05:00Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boje",
+        "dvě",
+        "jednou",
+        "mouchy",
+        "ranou",
+        "rozhodčího",
+        "složil",
+        "soupeře",
+        "zápalu",
+        "zápasník"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1080,36 +1107,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Posaď se, dám ti šanci až budu šampionka. Pudilová jednou větou usadila Dalaslan a přijala výzvu Szabové",
-      "url": "https://www.mmamag.cz/pudilova-szabova-dalaslan-oktagon/",
-      "dt": "2026-04-28T07:44:25Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "budu",
-        "dalaslan",
-        "dám",
-        "jednou",
-        "posaď",
-        "pudilová",
-        "přijala",
-        "szabové",
-        "usadila",
-        "výzvu",
-        "větou",
-        "šampionka",
-        "šanci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1120,7 +1117,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 74957,
+      "bytes": 75684,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1157,7 +1154,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-29T19:04:14Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T03:05:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1172,6 +1169,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dvě mouchy jednou ranou. Zápasník v zápalu boje složil soupeře i rozhodčího",
+            "publishedAt": "2026-04-30T03:05:00Z"
+          },
           {
             "title": "MMA zápasník zabil svého přítele. Věřil, že stojí stojí tváří v tvář samotnému Satanovi",
             "publishedAt": "2026-04-29T19:04:14Z"
@@ -1199,10 +1200,6 @@
           {
             "title": "Bojovník UFC se zbláznil. Před soubojem o titul vyhrožuje Chimaevovi, že ho zastřelí",
             "publishedAt": "2026-04-29T10:51:50Z"
-          },
-          {
-            "title": "RFA leze OKTAGONu do revíru. Chce si ukousnout kousek německého koláče",
-            "publishedAt": "2026-04-29T10:02:08Z"
           }
         ]
       }
