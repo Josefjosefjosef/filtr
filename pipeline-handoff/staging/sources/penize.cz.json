@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-04-29T23:49:23.829942Z",
+  "ingestedAt": "2026-04-30T00:19:53.704037Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Důstojné stáří vyžaduje plán: Češi se učí nespoléhat jen na stát",
+      "url": "https://www.penize.cz/zajisteni-na-duchod/488275-dustojne-stari-vyzaduje-plan-cesi-se-uci-nespolehat-jen-na-stat",
+      "dt": "2026-04-30T02:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "důstojné",
+        "jen",
+        "nespoléhat",
+        "plán",
+        "stát",
+        "stáří",
+        "učí",
+        "vyžaduje",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -476,31 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Zdražení na víkend. Tady jsou nové maximální ceny benzinu a nafty",
-      "url": "https://www.penize.cz/doprava/488813-maximalni-ceny-benzinu-a-nafty-na-vikend-a-pondeli",
-      "dt": "2026-04-24T13:58:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "benzinu",
-        "ceny",
-        "maximální",
-        "nafty",
-        "nové",
-        "tady",
-        "víkend",
-        "zdražení"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -511,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18617,
+      "bytes": 18821,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -548,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-29T14:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T02:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 7,
-          "finance": 10,
+          "finance": 11,
+          "zpravy": 6,
           "cestovani": 1,
           "sport": 1,
           "zdravi": 1
@@ -567,6 +568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Důstojné stáří vyžaduje plán: Češi se učí nespoléhat jen na stát",
+            "publishedAt": "2026-04-30T02:00:00Z"
+          },
           {
             "title": "Do Kodaně za 12 hodin. První přímý vlak z Prahy vyjede už brzy",
             "publishedAt": "2026-04-29T14:47:00Z"
@@ -594,10 +599,6 @@
           {
             "title": "Další zdražení. Maximální ceny benzinu a nafty na středu 29. dubna",
             "publishedAt": "2026-04-28T13:59:00Z"
-          },
-          {
-            "title": "IKEA zavádí věrnostní body. Za nákupy i aktivitu nabídne lidem odměny",
-            "publishedAt": "2026-04-28T10:06:00Z"
           }
         ]
       }
