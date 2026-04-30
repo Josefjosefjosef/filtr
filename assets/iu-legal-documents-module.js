@@ -223,6 +223,12 @@ function renderDocumentForm(doc) {
 }
 
 export function initIuLegalDocumentsOverlay(deps) {
+  try {
+    if (typeof window !== "undefined" && window.__iuLegalDocumentsOverlayInitialized) {
+      return null;
+    }
+  } catch (_) {}
+
   const getLock = (deps && deps.iuSetViewportLock) || (typeof window !== "undefined" ? window.iuSetViewportLock : null);
 
   const backdrop = document.getElementById("iuLegalDocsBackdrop");
@@ -235,6 +241,10 @@ export function initIuLegalDocumentsOverlay(deps) {
   const closeBtn = document.getElementById("iuLegalDocsClose");
 
   if (!backdrop || !panel || !scrollHost || !views || !titleEl) return null;
+
+  try {
+    if (typeof window !== "undefined") window.__iuLegalDocumentsOverlayInitialized = true;
+  } catch (_) {}
 
   const ui = {
     level: "hub",

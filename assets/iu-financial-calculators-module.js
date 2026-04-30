@@ -968,6 +968,12 @@ function byId(id) {
 }
 
 export function initIuFinancialCalculatorsOverlay(deps) {
+  try {
+    if (typeof window !== "undefined" && window.__iuFinancialCalculatorsOverlayInitialized) {
+      return null;
+    }
+  } catch (_) {}
+
   const getLock = (deps && deps.iuSetViewportLock) || (typeof window !== "undefined" ? window.iuSetViewportLock : null);
 
   const backdrop = document.getElementById("iuFinancialCalcBackdrop");
@@ -980,6 +986,10 @@ export function initIuFinancialCalculatorsOverlay(deps) {
   const closeBtn = document.getElementById("iuFinancialCalcClose");
 
   if (!backdrop || !panel || !scrollHost || !views || !titleEl) return null;
+
+  try {
+    if (typeof window !== "undefined") window.__iuFinancialCalculatorsOverlayInitialized = true;
+  } catch (_) {}
 
   const state = {
     view: "hub",

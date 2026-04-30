@@ -480,6 +480,12 @@ function copySupplierBankToInvoiceIfEmpty(st) {
 }
 
 export function initIuInvoiceOverlay(deps) {
+  try {
+    if (typeof window !== "undefined" && window.__iuInvoiceOverlayInitialized) {
+      return null;
+    }
+  } catch (_) {}
+
   const getLock = (deps && deps.iuSetViewportLock) || (typeof window !== "undefined" ? window.iuSetViewportLock : null);
 
   const backdrop = document.getElementById("iuInvoiceBackdrop");
@@ -489,6 +495,10 @@ export function initIuInvoiceOverlay(deps) {
   const closeBtn = document.getElementById("iuInvoiceClose");
 
   if (!backdrop || !panel || !scrollHost || !mount) return null;
+
+  try {
+    if (typeof window !== "undefined") window.__iuInvoiceOverlayInitialized = true;
+  } catch (_) {}
 
   let state = loadFormState() || defaultFormState();
   let saveTimer = 0;
