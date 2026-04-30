@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-04-30T17:20:08.466339Z",
+  "ingestedAt": "2026-04-30T17:55:37.496612Z",
   "items": [
     {
       "section": "finance",
@@ -121,6 +121,38 @@
         "zálivu",
         "zářná",
         "čeká"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nájmy ve většině krajských měst letos opět podražily. Nejvíce si lidé připlatí v Liberci, v Praze i Brně tempo zvolnilo",
+      "url": "https://byznys.hn.cz/c1-67872710-najmy-ve-vetsine-krajskych-mest-letos-opet-podrazily-nejvice-si-lide-priplati-v-liberci-v-praze-i-brne-tempo-zvolnilo",
+      "dt": "2026-04-30T13:48:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "brně",
+        "krajských",
+        "letos",
+        "liberci",
+        "lidé",
+        "měst",
+        "nejvíce",
+        "nájmy",
+        "opět",
+        "podražily",
+        "praze",
+        "připlatí",
+        "tempo",
+        "většině",
+        "zvolnilo"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1142,35 +1174,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Škola úspěšného byznysmena je v mezinárodních testech nejlepší v Česku. Na jakou dovednost žáků klade důraz?",
-      "url": "https://archiv.hn.cz/c1-67871910-skola-uspesneho-byznysmena-je-v-mezinarodnich-testech-nejlepsi-v-cesku-na-jakou-dovednost-zaku-klade-duraz",
-      "dt": "2026-04-29T14:51:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "byznysmena",
-        "dovednost",
-        "důraz",
-        "jakou",
-        "klade",
-        "mezinárodních",
-        "nejlepší",
-        "testech",
-        "úspěšného",
-        "česku",
-        "škola",
-        "žáků"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1181,7 +1184,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184512,
+      "bytes": 184399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1253,6 +1256,10 @@
             "publishedAt": "2026-04-30T14:10:00Z"
           },
           {
+            "title": "Nájmy ve většině krajských měst letos opět podražily. Nejvíce si lidé připlatí v Liberci, v Praze i Brně tempo zvolnilo",
+            "publishedAt": "2026-04-30T13:48:00Z"
+          },
+          {
             "title": "Růst americké ekonomiky v prvním čtvrtletí zrychlil, pomohlo oživení vládních výdajů",
             "publishedAt": "2026-04-30T13:24:00Z"
           },
@@ -1263,10 +1270,6 @@
           {
             "title": "Biotech &bdquo;olympiáda&ldquo; míří do Prahy. Sjedou se na ni globální investoři, mezi nimi i fondy ze skupiny Novo Nordisk nebo Novartis",
             "publishedAt": "2026-04-30T13:00:00Z"
-          },
-          {
-            "title": "České dráhy loni hospodařily se ziskem téměř dvě miliardy korun. Nedařilo se nákladní dopravě",
-            "publishedAt": "2026-04-30T12:32:00Z"
           }
         ]
       }
