@@ -16944,7 +16944,12 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   
   #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
   #iuSilverTasksSummaryCard.silver-calendar-summary-card{
-    min-height: 155px;
+    min-height: 168px;
+  }
+
+  #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block{
+    min-height: 3.25em;
+    box-sizing: border-box;
   }
   
   #silver-slot #iuSilverWelcomeStackSeparatorTallBefore.silver-welcome-stack__separator{

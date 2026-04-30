@@ -6,9 +6,7 @@ import {
   dedupeCanonicalUrl,
   pickPublicationKeptUrlKeys,
 } from "./cluster_engine.js";
-import { initIuFinancialCalculatorsOverlay } from "./iu-financial-calculators-module.js";
-import { initIuLegalDocumentsOverlay } from "./iu-legal-documents-module.js";
-import { initIuInvoiceOverlay } from "./iu-invoice-module.js";
+/* P0.5: financial / legal / invoice overlays load via dynamic import on first open (see __iuEnsure* near iuOpenOverlay). */
 /* SEV1: iuIsProjectsRoute — global + window for safe scope (module/global) */
 var iuIsProjectsRoute = function iuIsProjectsRoute(){
   try{
@@ -1946,6 +1944,16 @@ try {
   }
 
   function withTs(url) {
+    const candidate = String(url || "");
+    try {
+      const pathLower = new URL(candidate, location.href).pathname.toLowerCase();
+      if (/(articles|videos)\.json$/i.test(pathLower)) {
+        const u0 = new URL(candidate, location.href);
+        if (u0.searchParams.has("v")) {
+          return candidate;
+        }
+      }
+    } catch (_) {}
     const u = new URL(url, location.href);
     u.searchParams.set("ts", String(Date.now()));
     return `${u.pathname}?${u.searchParams.toString()}`;
@@ -14175,16 +14183,39 @@ function buildVideoAsArticleCard(it) {
         const pair = await __iuFetchArticlesVideosPrimaryPair();
         data = pair.articlesData;
       }
+      if (!data && state.isLoadingData) {
+        await new Promise((resolve) => {
+          const deadline = Date.now() + 14000;
+          const tick = () => {
+            try {
+              if (state.articlesRaw && state.hasLoadedData) {
+                resolve();
+                return;
+              }
+              if (!state.isLoadingData) {
+                resolve();
+                return;
+              }
+            } catch (_) {
+              resolve();
+              return;
+            }
+            if (Date.now() >= deadline) {
+              resolve();
+              return;
+            }
+            setTimeout(tick, 40);
+          };
+          tick();
+        });
+        data = state.articlesRaw;
+      }
       if (!data) {
-        const res = await timeoutFetch(iuDataUrl("articles.json"), { cache: "no-store" }, 9000);
-        if (!res.ok) {
-          el.textContent = `Články: chyba (${res.status})`;
-          selfDiag.articlesState = "FAIL";
-          selfDiag.articlesCount = "-";
-          logSelfStatus();
-          return;
-        }
-        data = await res.json();
+        el.textContent = "Články: chyba";
+        selfDiag.articlesState = "FAIL";
+        selfDiag.articlesCount = "-";
+        logSelfStatus();
+        return;
       }
       const size = safeStringify(data).length;
       debugLog("[DATA] size=", size);
@@ -24316,6 +24347,55 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  let __iuLazyFinOverlay = null;
+  let __iuLazyLegalOverlay = null;
+  let __iuLazyInvOverlay = null;
+
+  async function __iuEnsureFinancialOverlayModule() {
+    if (typeof window.ensureFinancialModalInBody === "function" && typeof window.iuFinancialCalcOpenSurface === "function") return;
+    if (!__iuLazyFinOverlay) {
+      __iuLazyFinOverlay = import("./iu-financial-calculators-module.js")
+        .then((m) => {
+          m.initIuFinancialCalculatorsOverlay({});
+        })
+        .catch((e) => {
+          __iuLazyFinOverlay = null;
+          throw e;
+        });
+    }
+    await __iuLazyFinOverlay;
+  }
+
+  async function __iuEnsureLegalOverlayModule() {
+    if (typeof window.ensureLegalDocsModalInBody === "function" && typeof window.iuLegalDocsOpenSurface === "function") return;
+    if (!__iuLazyLegalOverlay) {
+      __iuLazyLegalOverlay = import("./iu-legal-documents-module.js")
+        .then((m) => {
+          m.initIuLegalDocumentsOverlay({});
+        })
+        .catch((e) => {
+          __iuLazyLegalOverlay = null;
+          throw e;
+        });
+    }
+    await __iuLazyLegalOverlay;
+  }
+
+  async function __iuEnsureInvoiceOverlayModule() {
+    if (typeof window.ensureInvoiceModalInBody === "function" && typeof window.iuInvoiceOpenSurface === "function") return;
+    if (!__iuLazyInvOverlay) {
+      __iuLazyInvOverlay = import("./iu-invoice-module.js")
+        .then((m) => {
+          m.initIuInvoiceOverlay({});
+        })
+        .catch((e) => {
+          __iuLazyInvOverlay = null;
+          throw e;
+        });
+    }
+    await __iuLazyInvOverlay;
+  }
+
   function iuOpenOverlay(targetId, extra) {
     const t = String(targetId || "").trim().toLowerCase();
     iuForceCloseAllOverlays();
@@ -24340,16 +24420,48 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       }
       if (t === "financial") {
-        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
-        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
+        void (async () => {
+          try {
+            await __iuEnsureFinancialOverlayModule();
+            if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+            if (typeof window.iuFinancialCalcOpenSurface === "function") {
+              window.iuFinancialCalcOpenSurface(extra && typeof extra === "object" ? extra : null);
+            }
+          } catch (e) {
+            try {
+              console.warn("[iu] financial overlay lazy open failed", e);
+            } catch (_) {}
+          }
+        })();
+        return;
       }
       if (t === "legal") {
-        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
-        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        void (async () => {
+          try {
+            await __iuEnsureLegalOverlayModule();
+            if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+            if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+          } catch (e) {
+            try {
+              console.warn("[iu] legal overlay lazy open failed", e);
+            } catch (_) {}
+          }
+        })();
+        return;
       }
       if (t === "invoice") {
-        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
-        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        void (async () => {
+          try {
+            await __iuEnsureInvoiceOverlayModule();
+            if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+            if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+          } catch (e) {
+            try {
+              console.warn("[iu] invoice overlay lazy open failed", e);
+            } catch (_) {}
+          }
+        })();
+        return;
       }
     } finally {
       try {
@@ -24390,14 +24502,29 @@ function buildVideoAsArticleCard(it) {
       } else if (last === "datovka") {
         if (typeof window.iuDatovkaOpenSurface === "function") window.iuDatovkaOpenSurface();
       } else if (last === "financial") {
-        if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
-        if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
+        void (async () => {
+          try {
+            await __iuEnsureFinancialOverlayModule();
+            if (typeof window.ensureFinancialModalInBody === "function") window.ensureFinancialModalInBody();
+            if (typeof window.iuFinancialCalcOpenSurface === "function") window.iuFinancialCalcOpenSurface(null);
+          } catch (_) {}
+        })();
       } else if (last === "legal") {
-        if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
-        if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+        void (async () => {
+          try {
+            await __iuEnsureLegalOverlayModule();
+            if (typeof window.ensureLegalDocsModalInBody === "function") window.ensureLegalDocsModalInBody();
+            if (typeof window.iuLegalDocsOpenSurface === "function") window.iuLegalDocsOpenSurface();
+          } catch (_) {}
+        })();
       } else if (last === "invoice") {
-        if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
-        if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+        void (async () => {
+          try {
+            await __iuEnsureInvoiceOverlayModule();
+            if (typeof window.ensureInvoiceModalInBody === "function") window.ensureInvoiceModalInBody();
+            if (typeof window.iuInvoiceOpenSurface === "function") window.iuInvoiceOpenSurface();
+          } catch (_) {}
+        })();
       }
     } catch (_) {}
   }
@@ -35257,48 +35384,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
-})();
-
-(function iuBootFinancialCalculatorsOverlay() {
-  function run() {
-    try {
-      initIuFinancialCalculatorsOverlay({});
-    } catch (e) {
-      try {
-        console.warn("[iu] financial calculators overlay init failed", e);
-      } catch (_) {}
-    }
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
-})();
-
-(function iuBootLegalDocumentsOverlay() {
-  function run() {
-    try {
-      initIuLegalDocumentsOverlay({});
-    } catch (e) {
-      try {
-        console.warn("[iu] legal documents overlay init failed", e);
-      } catch (_) {}
-    }
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
-})();
-
-(function iuBootInvoiceOverlay() {
-  function run() {
-    try {
-      initIuInvoiceOverlay({});
-    } catch (e) {
-      try {
-        console.warn("[iu] invoice overlay init failed", e);
-      } catch (_) {}
-    }
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
-  else run();
 })();
 
 /**

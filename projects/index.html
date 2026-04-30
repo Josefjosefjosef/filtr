@@ -2702,6 +2702,23 @@ style-src 'self' 'unsafe-inline' https:;
         return derived;
       }
 
+      async function runDataProbeLight(){
+        var out = document.getElementById("iuDataProbeOut");
+        function write(t){ if(out) { out.textContent = t; } }
+        try{
+          write("Light probe…");
+          var dataVer = (document.querySelector('meta[name="iu-data-ver"]')?.getAttribute('content') || '').trim();
+          var q = (dataVer && dataVer !== "iu-data-ver-placeholder") ? ("?v=" + dataVer) : "";
+          var probeUrl = "/projects/data/_probe.txt" + q;
+          var rp = await fetch(probeUrl, { cache: "no-store" });
+          var txt = await rp.text();
+          var head = String(txt || "").replace(/\s+/g, " ").slice(0, 140);
+          write("PROBE status=" + rp.status + " ok=" + rp.ok + " len=" + (txt ? txt.length : 0) + "\n" + head + "\nNOTE: Celý JSON jen po kliknutí „Data probe“.");
+        }catch(e){
+          write("PROBE ERROR: " + (e && (e.message || String(e))));
+        }
+      }
+
       async function runDataProbe(){
         var out = document.getElementById("iuDataProbeOut");
         function write(t){ if(out) { out.textContent = t; } }
@@ -2806,9 +2823,9 @@ style-src 'self' 'unsafe-inline' https:;
       bindCopy2Lines();
       bindDataProbe();
       bindDataProbeCopy();
-      // AUTO RUN (no-click) — safe HTML-only probe
-      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 50);
-      setTimeout(function(){ try{ runDataProbe(); }catch(e){} }, 3600);
+      // AUTO RUN: lightweight _probe.txt only (no full articles.json — avoids duplicate multi-MB GET with app.js loadData)
+      setTimeout(function(){ try{ runDataProbeLight(); }catch(e){} }, 50);
+      setTimeout(function(){ try{ runDataProbeLight(); }catch(e){} }, 3600);
 
       setTimeout(function(){
         var htmlFlag2 = document.documentElement.getAttribute("data-iu-js") || "MISSING";
@@ -3621,7 +3638,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=fix-global-click-latency-20260430"></script>
+    <script type="module" src="/assets/app.js?v=p05-perf-initial-load-20260430"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
