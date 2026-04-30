@@ -42,6 +42,7 @@ jobs:
           python -m py_compile scripts/weather_pocasicko_guard.py
           python -m py_compile scripts/iu_feed_classification.py
           python -m py_compile scripts/validate_feed_classification.py
+          python -m py_compile scripts/validate_articles_bootstrap.py
 
       - name: Počasíčko / pocasicko export guard
         run: python scripts/weather_pocasicko_guard.py

@@ -9,7 +9,7 @@ import hashlib
 import sys
 import time
 import unicodedata
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
@@ -91,6 +91,9 @@ INGEST_TELEMETRY_PATH = os.path.join(OUTPUT_DIR, "ingest_telemetry", "latest.jso
 # ✅ Retention storage (sharded by day; append-only with dedup)
 ARTICLES_SHARD_DIR = os.path.join(OUTPUT_DIR, "articles")
 ARTICLES_INDEX_PATH = os.path.join(ARTICLES_SHARD_DIR, "index.json")
+ARTICLES_BOOTSTRAP_PATH = os.path.join(ARTICLES_SHARD_DIR, "bootstrap.json")
+BOOTSTRAP_MAX_ARTICLES = 1000
+BOOTSTRAP_HARD_CAP = 1100
 
 # ✅ NOVĚ: výstup videí (pro assets/app.js)
 VIDEOS_OUT_PATH = os.path.join(OUTPUT_DIR, "videos.json")
@@ -828,6 +831,147 @@ def _retention_key(it: dict) -> str:
         return "h:" + hashlib.sha1(raw).hexdigest()
     except Exception:
         return "h:" + hashlib.sha1(repr(it).encode("utf-8", errors="ignore")).hexdigest()
+
+
+def _bootstrap_time_key(it: dict) -> str:
+    """Same temporal fields as runtime feed sort (assets/app.js enriched items)."""
+    return str(
+        it.get("publishedAt")
+        or it.get("published")
+        or it.get("date")
+        or it.get("createdAt")
+        or it.get("uploadedAt")
+        or it.get("time")
+        or ""
+    ).strip()
+
+
+def _bootstrap_sort_tuple(it: dict) -> tuple:
+    return (_bootstrap_time_key(it), str(it.get("url") or "").strip())
+
+
+def _articles_dict_list(final) -> list:
+    return [x for x in (final or []) if isinstance(x, dict)]
+
+
+def _trim_bootstrap_past_hard_cap(combined: list, hard_cap: int) -> list:
+    """Drop oldest items (after global desc sort) only if their section still has ≥2 rows."""
+    if len(combined) <= hard_cap:
+        return combined
+    out = list(combined)
+    out.sort(key=_bootstrap_sort_tuple, reverse=True)
+    while len(out) > hard_cap:
+        cnt = Counter()
+        for it in out:
+            s = str(it.get("section") or "").strip()
+            if s:
+                cnt[s] += 1
+        victim_idx = None
+        for i in range(len(out) - 1, -1, -1):
+            it = out[i]
+            s = str(it.get("section") or "").strip()
+            if not s or cnt.get(s, 0) > 1:
+                victim_idx = i
+                break
+        if victim_idx is None:
+            break
+        out.pop(victim_idx)
+    return out
+
+
+def _build_bootstrap_entries(final: list) -> list:
+    """
+    Narrow parallel dataset for future windowing (Phase 1): prefix of articles.json order
+    plus mandatory per-section coverage. Dedup = _retention_key (matches retention shards).
+    """
+    linear = _articles_dict_list(final)
+    if not linear:
+        return []
+    sections_present: set[str] = set()
+    for it in linear:
+        s = str(it.get("section") or "").strip()
+        if s:
+            sections_present.add(s)
+
+    prefix_len = min(BOOTSTRAP_MAX_ARTICLES, len(linear))
+    extras: list = []
+    while prefix_len >= 0:
+        prefix = linear[:prefix_len]
+        keys = {_retention_key(x) for x in prefix}
+        extras = []
+        for s in sorted(sections_present):
+            if any(str(x.get("section") or "").strip() == s for x in prefix):
+                continue
+            picked = None
+            for it in linear[prefix_len:]:
+                if str(it.get("section") or "").strip() != s:
+                    continue
+                k = _retention_key(it)
+                if k in keys:
+                    continue
+                picked = it
+                break
+            if picked is None:
+                for it in linear:
+                    if str(it.get("section") or "").strip() != s:
+                        continue
+                    k = _retention_key(it)
+                    if k in keys:
+                        continue
+                    picked = it
+                    break
+            if picked is not None:
+                extras.append(picked)
+                keys.add(_retention_key(picked))
+        if prefix_len + len(extras) <= BOOTSTRAP_HARD_CAP:
+            break
+        prefix_len -= 1
+
+    combined = linear[: max(0, prefix_len)] + extras
+    seen_k: set[str] = set()
+    deduped: list = []
+    for it in combined:
+        k = _retention_key(it)
+        if k in seen_k:
+            continue
+        seen_k.add(k)
+        deduped.append(it)
+    deduped.sort(key=_bootstrap_sort_tuple, reverse=True)
+    deduped = _trim_bootstrap_past_hard_cap(deduped, BOOTSTRAP_HARD_CAP)
+    deduped.sort(key=_bootstrap_sort_tuple, reverse=True)
+    return deduped
+
+
+def _emit_bootstrap_json(final: list, generated_at: str) -> None:
+    """Write projects/data/articles/bootstrap.json (build-only; frontend unchanged)."""
+    try:
+        os.makedirs(ARTICLES_SHARD_DIR, exist_ok=True)
+        articles = _build_bootstrap_entries(final)
+        sec_counts: dict[str, int] = {}
+        for it in articles:
+            s = str(it.get("section") or "").strip()
+            if not s:
+                continue
+            sec_counts[s] = sec_counts.get(s, 0) + 1
+        payload = {
+            "schemaVersion": 1,
+            "generatedAt": generated_at,
+            "articles": articles,
+            "bootstrapMeta": {
+                "canonicalBuildId": None,
+                "articleCount": len(articles),
+                "sectionCounts": sec_counts,
+                "sort": "publishedAt_desc",
+                "dedup": "url_canonical_v1",
+            },
+        }
+        _atomic_write_json(ARTICLES_BOOTSTRAP_PATH, payload)
+        print(
+            f"=== OUTPUT === wrote {len(articles)} bootstrap items to {ARTICLES_BOOTSTRAP_PATH}",
+            flush=True,
+        )
+    except Exception as e:
+        print("WARN: articles bootstrap.json failed:", str(e), flush=True)
 
 
 def normalize_media_name(name: str) -> str:
@@ -2780,6 +2924,7 @@ def _publish_article_outputs(bundle: dict) -> int:
     }
 
     _atomic_write_json(OUT_PATH, payload)
+    _emit_bootstrap_json(final, generated_at)
 
     health_payload = {
         "updatedAt": generated_at,
@@ -3681,6 +3826,7 @@ def _legacy_main_removed_placeholder():
 
     # articles.json
     _atomic_write_json(OUT_PATH, payload)
+    _emit_bootstrap_json(final, generated_at)
 
     # feed_health.json (zachováváme kompatibilitu, ale přidáváme nové klíče)
     health_payload = {
