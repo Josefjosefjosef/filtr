@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-04-30T15:04:53.745262Z",
+  "ingestedAt": "2026-04-30T15:42:12.500404Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Slabé oslavy 1. Máje i Květnové povstání za ČT. Lidi zajímá současnost, nikoli historie",
+      "url": "https://www.ceska-justice.cz/2026/04/slabe-oslavy-1-maje-i-kvetnove-povstani-za-ct-lidi-zajima-soucasnost-nikoli-historie/",
+      "dt": "2026-04-30T15:07:07Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "historie",
+        "květnové",
+        "lidi",
+        "máje",
+        "nikoli",
+        "oslavy",
+        "povstání",
+        "slabé",
+        "současnost",
+        "zajímá"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,34 +268,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Proč chtěl Filip Turek omluvu? Nadávky v baru zazněly jinak, tvrdí advokát",
-      "url": "https://www.ceska-justice.cz/2026/04/proc-chtel-filip-turek-omluvu-nadavky-v-baru-zaznely-jinak-tvrdi-advokat/",
-      "dt": "2026-04-29T06:39:45Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "advokát",
-        "baru",
-        "chtěl",
-        "filip",
-        "jinak",
-        "nadávky",
-        "omluvu",
-        "proč",
-        "turek",
-        "tvrdí",
-        "zazněly"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,8 +278,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 95581,
-      "reason": "",
+      "bytes": 94269,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -316,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T08:18:29Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T15:07:07Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Slabé oslavy 1. Máje i Květnové povstání za ČT. Lidi zajímá současnost, nikoli historie",
+            "publishedAt": "2026-04-30T15:07:07Z"
+          },
           {
             "title": "Žena nemohla ani na záchod. Nejvyšší soud uzavřel případ dozorců jako mučení",
             "publishedAt": "2026-04-30T08:18:29Z"
@@ -358,10 +361,6 @@
           {
             "title": "Právo a stavebnictví. Co skutečně brzdí výstavbu? Odpoví Filip Endal a další experti",
             "publishedAt": "2026-04-29T11:02:23Z"
-          },
-          {
-            "title": "Konec byrokratického pekla? Komise slíbila očistu a pravidla s „datem spotřeby“",
-            "publishedAt": "2026-04-29T09:53:04Z"
           }
         ]
       }

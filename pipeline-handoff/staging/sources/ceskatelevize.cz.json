@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-04-30T15:04:53.745262Z",
+  "ingestedAt": "2026-04-30T15:42:12.500404Z",
   "items": [
     {
       "section": "aktualne",
@@ -782,6 +782,52 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Euro Hockey Tour Finsko – Česko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-finsko-cesko-156522",
+      "dt": "2026-04-30T15:30:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "euro",
+        "finsko",
+        "hockey",
+        "tour",
+        "česko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Stolní tenisté podlehli Španělům a na MS družstev skončili už ve skupině",
+      "url": "https://sport.ceskatelevize.cz/clanek/stolni-tenis/stolni-teniste-podlehli-spanelum-a-na-ms-druzstev-skoncili-uz-ve-skupine-156527",
+      "dt": "2026-04-30T15:01:34Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "družstev",
+        "podlehli",
+        "skončili",
+        "skupině",
+        "stolní",
+        "tenisté",
+        "španělům"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Co jsem si mohl přát, se splnilo, říká útočník Chmelař",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/co-jsem-si-mohl-prat-se-splnilo-rika-utocnik-chmelar-156526",
       "dt": "2026-04-30T14:17:05Z",
@@ -1484,57 +1530,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Reprezentaci se omluvili Ondřej Kaše a Filip Chlapík, s týmem už trénuje Hronek",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentaci-se-pro-hokejove-ms-omluvili-utocnici-ondrej-kase-a-chlapik-156496",
-      "dt": "2026-04-28T18:09:14Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chlapík",
-        "filip",
-        "hronek",
-        "kaše",
-        "omluvili",
-        "ondřej",
-        "reprezentaci",
-        "trénuje",
-        "týmem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pardubice se vrací na trůn po 14 letech, finále s Třincem rozhodl Červenka",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/pardubice-se-vraci-na-trun-po-14-letech-finale-s-trincem-rozhodl-cervenka-156495",
-      "dt": "2026-04-28T18:05:05Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "finále",
-        "letech",
-        "pardubice",
-        "rozhodl",
-        "trůn",
-        "třincem",
-        "vrací",
-        "červenka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1545,7 +1540,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43527,
+      "bytes": 43547,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1664,7 +1659,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 38702,
+      "bytes": 38458,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1701,7 +1696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:17:05Z",
+        "raw_feed_latest_publishedAt": "2026-04-30T15:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1716,6 +1711,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Euro Hockey Tour Finsko – Česko",
+            "publishedAt": "2026-04-30T15:30:00Z"
+          },
+          {
+            "title": "Stolní tenisté podlehli Španělům a na MS družstev skončili už ve skupině",
+            "publishedAt": "2026-04-30T15:01:34Z"
+          },
           {
             "title": "Co jsem si mohl přát, se splnilo, říká útočník Chmelař",
             "publishedAt": "2026-04-30T14:17:05Z"
@@ -1739,14 +1742,6 @@
           {
             "title": "Vladař vynuloval Pittsburgh a podpořil postup Philadelphie, slavil i Dobeš",
             "publishedAt": "2026-04-30T05:39:38Z"
-          },
-          {
-            "title": "České Budějovice hostí předposlední turnaj EHT, národní tým změří síly s Finskem",
-            "publishedAt": "2026-04-30T04:00:00Z"
-          },
-          {
-            "title": "Semifinále LM mezi Atléticem a Arsenalem vítěze nemělo",
-            "publishedAt": "2026-04-29T21:10:42Z"
           }
         ]
       }
