@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T15:29:24.790128Z",
+  "ingestedAt": "2026-05-01T16:44:52.614821Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Ovládla to tu pravicová dominance, tvrdí Špidla a přichází s Novou sociální demokracií",
+      "url": "https://ekonomickydenik.cz/ovladla-to-tu-pravicova-dominance-tvrdi-expremier-spidla/",
+      "dt": "2026-05-01T15:55:54Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "demokracií",
+        "dominance",
+        "novou",
+        "ovládla",
+        "pravicová",
+        "přichází",
+        "sociální",
+        "tvrdí",
+        "špidla"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,30 +789,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Bez souhlasu je to znásilnění. Pravidla proti agresorům se mají sjednotit",
-      "url": "https://ekonomickydenik.cz/bez-souhlasu-znasilneni/",
-      "dt": "2026-04-29T13:29:39Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "agresorům",
-        "mají",
-        "pravidla",
-        "proti",
-        "sjednotit",
-        "souhlasu",
-        "znásilnění"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -797,7 +799,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 72492,
+      "bytes": 71997,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -834,11 +836,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T11:12:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T15:55:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 25,
-          "zpravy": 4,
+          "finance": 26,
+          "zpravy": 3,
           "zdravi": 1
         },
         "drop_counts": {
@@ -851,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ovládla to tu pravicová dominance, tvrdí Špidla a přichází s Novou sociální demokracií",
+            "publishedAt": "2026-05-01T15:55:54Z"
+          },
           {
             "title": "Varování pro Moskvu. Nová německá doktrína počítá se vším",
             "publishedAt": "2026-05-01T11:12:00Z"
@@ -878,10 +884,6 @@
           {
             "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
             "publishedAt": "2026-04-30T18:35:55Z"
-          },
-          {
-            "title": "Z Prahy do Kodaně za 12 hodin, do Hamburku za šest. České dráhy rozšířily síť",
-            "publishedAt": "2026-04-30T17:05:00Z"
           }
         ]
       }

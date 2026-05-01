@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-01T15:29:24.790128Z",
+  "ingestedAt": "2026-05-01T16:44:52.614821Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/babis-chce-zdravotni-sestry-z-uzbekistanu/",
+      "dt": "2026-05-01T16:32:02Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babiš",
+        "chce",
+        "nás",
+        "německu",
+        "proč",
+        "práci",
+        "ptá",
+        "připravují",
+        "sestry",
+        "tak",
+        "uzbekistánu"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -242,33 +270,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rohy a kopyta nám nenarostou. Diskuse o očkování je jako z 18. století, nechápe Philipp",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/ockovani-zdravotnicky-vybor/",
-      "dt": "2026-04-30T06:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "diskuse",
-        "jako",
-        "kopyta",
-        "nechápe",
-        "nenarostou",
-        "nám",
-        "očkování",
-        "philipp",
-        "rohy",
-        "století"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +280,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 91892,
+      "bytes": 88646,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +317,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T12:45:29Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T16:32:02Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -332,6 +333,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
+            "publishedAt": "2026-05-01T16:32:02Z"
+          },
           {
             "title": "Zatýkání v Příbrami i škrty lůžek na Vysočině: Velký souhrn novinek z českého zdravotnictví",
             "publishedAt": "2026-05-01T12:45:29Z"
@@ -359,10 +364,6 @@
           {
             "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
             "publishedAt": "2026-04-30T09:01:59Z"
-          },
-          {
-            "title": "Posun v kauze příbramské nemocnice: Policie stíhá několik lidí a firem",
-            "publishedAt": "2026-04-30T08:19:00Z"
           }
         ]
       }
