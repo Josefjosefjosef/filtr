@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-01T11:54:37.721803Z",
+  "ingestedAt": "2026-05-01T12:25:39.316227Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Váš syn je zadržený po nehodě, pošlete peníze. Policie obvinila Čechy z podvodu za stovky tisíc",
+      "url": "https://www.ceska-justice.cz/2026/05/vas-syn-je-zadrzeny-po-nehode-policie-podvod/",
+      "dt": "2026-05-01T11:58:39Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "nehodě",
+        "obvinila",
+        "peníze",
+        "podvodu",
+        "policie",
+        "pošlete",
+        "stovky",
+        "syn",
+        "tisíc",
+        "váš",
+        "zadržený",
+        "čechy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,33 +269,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Evropská komise žene Česko a Maďarsko před soud: Problémem je evropský zatýkací rozkaz",
-      "url": "https://www.ceska-justice.cz/2026/04/evropska-komise-cesko-soud-problemem-je-evropsky-zatykaci-rozkaz/",
-      "dt": "2026-04-29T11:39:20Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "evropská",
-        "evropský",
-        "komise",
-        "maďarsko",
-        "problémem",
-        "rozkaz",
-        "soud",
-        "zatýkací",
-        "česko",
-        "žene"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -277,7 +279,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 104635,
+      "bytes": 102033,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -314,7 +316,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T08:34:06Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T11:58:39Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -329,6 +331,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Váš syn je zadržený po nehodě, pošlete peníze. Policie obvinila Čechy z podvodu za stovky tisíc",
+            "publishedAt": "2026-05-01T11:58:39Z"
+          },
           {
             "title": "„Kdo to mohl celé přečíst?“ Opozice chtěla zastavit nový stavební zákon. I kvůli černým stavbám",
             "publishedAt": "2026-05-01T08:34:06Z"
@@ -356,10 +362,6 @@
           {
             "title": "Fiasko za miliony? Ministerstvo předčasně ukončilo audit Deloitte na českých soudech",
             "publishedAt": "2026-04-30T04:30:00Z"
-          },
-          {
-            "title": "Právní stát i dostupné bydlení. Advokátka Šípová chce obhajovat senátorský post",
-            "publishedAt": "2026-04-29T16:01:00Z"
           }
         ]
       }
