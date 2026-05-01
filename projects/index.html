@@ -294,6 +294,7 @@ style-src 'self' 'unsafe-inline' https:;
         :root{
           --iu-mobile-bottom-nav-h:56px;
           --iu-mobile-bottom-safe:env(safe-area-inset-bottom,0px);
+          --bottom-nav-height:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 26px);
         }
         @media(max-width:767px){
           :root{
@@ -504,6 +505,24 @@ style-src 'self' 'unsafe-inline' https:;
       }
       .iuSilverHomeChips--titleDone{
         grid-template-columns: minmax(0, 1fr);
+      }
+      /* P0 Silver: Kalendář entry — max 2 řádky, 2 sloupce, žádný horizontální overflow */
+      .iuSilverHomeChips.iuSilverHomeChips--calActionRow{
+        display:flex!important;
+        flex-wrap:wrap!important;
+        gap:6px!important;
+        grid-template-columns:unset!important;
+        width:100%!important;
+        max-width:100%!important;
+        min-width:0!important;
+        box-sizing:border-box!important;
+        overflow-x:hidden!important;
+      }
+      .iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip{
+        flex:1 1 calc(50% - 6px)!important;
+        min-width:0!important;
+        max-width:calc(50% - 6px)!important;
+        width:auto!important;
       }
       .iuSilverHomeChip,
       button.iuSilverHomeChip{
@@ -1507,6 +1526,10 @@ style-src 'self' 'unsafe-inline' https:;
                                         <div id="iuSilverGuidedSheetText" class="iuSilverGuidedSheetBlock" hidden>
                                           <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedTextInput" id="iuSilverGuidedTextLab">Text</label>
                                           <input type="text" id="iuSilverGuidedTextInput" class="iuSilverGuidedSheetText" maxlength="500" autocomplete="off" />
+                                        </div>
+                                        <div id="iuSilverGuidedSheetDate" class="iuSilverGuidedSheetBlock" hidden>
+                                          <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedDateInput">Datum</label>
+                                          <input type="date" id="iuSilverGuidedDateInput" class="iuSilverGuidedSheetTime" autocomplete="off" />
                                         </div>
                                         <div class="iuSilverGuidedSheetBtns">
                                           <button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" id="iuSilverGuidedSheetOk">OK</button>
@@ -4734,6 +4757,7 @@ style-src 'self' 'unsafe-inline' https:;
       <div class="iu-calendarOverlay__backdrop" data-iu-calendar-close="backdrop"></div>
       <section class="iu-calendarOverlay__dialog" role="dialog" aria-modal="true" aria-labelledby="iuCalendarTitle">
         <header class="iu-calendarOverlay__header">
+          <button type="button" class="iu-calendarOverlay__backMob" data-iu-calendar-close="button" aria-label="Zpět z kalendáře">Zpět</button>
           <h2 id="iuCalendarTitle">Kalendář</h2>
           <div class="iu-calendarOverlay__headerRight">
             <div class="iu-calendarOverlay__controls">
@@ -4912,6 +4936,71 @@ style-src 'self' 'unsafe-inline' https:;
         html body #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions,
         html body #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions {
           margin-top: 0 !important;
+        }
+      }
+    </style>
+    <style id="iuCalendarOverlaySilverMobileNavP0">
+      @media (max-width: 1024px) {
+        #iuCalendarOverlay .iu-calendarOverlay__form input,
+        #iuCalendarOverlay .iu-calendarOverlay__form textarea,
+        #iuCalendarOverlay .iu-calendarOverlay__form select {
+          font-size: 16px !important;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__header {
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 8px;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__backMob {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0;
+          padding: 6px 12px;
+          min-height: 36px;
+          border-radius: 8px;
+          border: 1px solid #c6d2e5;
+          background: #eef3fb;
+          color: #203a59;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          touch-action: manipulation;
+          flex: 0 0 auto;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__header h2 {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+      }
+      @media (min-width: 1025px) {
+        #iuCalendarOverlay .iu-calendarOverlay__backMob {
+          display: none !important;
+        }
+      }
+      @media (max-width: 900px) {
+        #iuCalendarOverlay.iu-calendarOverlay:not([hidden]) {
+          align-items: stretch;
+          justify-content: flex-start;
+          padding: 0;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__dialog {
+          position: fixed !important;
+          left: 0 !important;
+          right: 0 !important;
+          top: 0 !important;
+          bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 26px)) !important;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          min-height: 0 !important;
+          height: auto !important;
+          max-height: calc(100dvh - var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 26px))) !important;
+          margin: 0 !important;
+          border-radius: 0 !important;
+          overflow: hidden !important;
+          display: flex !important;
+          flex-direction: column !important;
+          box-sizing: border-box !important;
         }
       }
     </style>
