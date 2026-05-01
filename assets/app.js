@@ -33460,6 +33460,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function pad2(n) {
       return String(n).padStart(2, "0");
     }
+    /** 24h HH:MM for Silver guided composer + native time input (P0 mobile/tablet). */
+    function normalizeDraftTimeHm(s) {
+      var m = String(s || "")
+        .trim()
+        .match(/^(\d{1,2}):(\d{2})$/);
+      if (!m) return "";
+      var h = Number(m[1]);
+      var mi = Number(m[2]);
+      if (!Number.isFinite(h) || !Number.isFinite(mi) || h < 0 || h > 23 || mi < 0 || mi > 59) return "";
+      return pad2(h) + ":" + pad2(mi);
+    }
+    var IU_SILVER_GUIDED_RE_TIME = /\b([01]?\d|2[0-3]):[0-5]\d\b/;
+    /** Append " v HH:MM" or replace first HH:MM (24h); does not corrupt weekday phrases. */
+    function applyTimeHHMMToSentence(text, hhmm) {
+      var norm = normalizeDraftTimeHm(hhmm);
+      if (!norm) return String(text || "");
+      var s = String(text || "");
+      if (IU_SILVER_GUIDED_RE_TIME.test(s)) {
+        return s.replace(IU_SILVER_GUIDED_RE_TIME, norm);
+      }
+      var t = s.trimEnd();
+      if (!t) return "v " + norm;
+      return (t + " v " + norm).replace(/\s+/g, " ").trim();
+    }
     function toIsoFromDate(d) {
       return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
     }
@@ -33631,6 +33655,68 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.innerHTML = html;
     }
 
+    var silverGuidedNativeTimeInp = null;
+    function getSilverGuidedNativeTimeInput() {
+      if (silverGuidedNativeTimeInp && silverGuidedNativeTimeInp.parentNode) return silverGuidedNativeTimeInp;
+      var existing = document.getElementById("iuSilverGuidedNativeTime");
+      if (existing) {
+        silverGuidedNativeTimeInp = existing;
+        return existing;
+      }
+      var el = document.createElement("input");
+      el.type = "time";
+      el.step = 60;
+      el.id = "iuSilverGuidedNativeTime";
+      el.className = "iuSilverHomeDatePick";
+      el.setAttribute("aria-hidden", "true");
+      el.setAttribute("tabindex", "-1");
+      el.setAttribute("autocomplete", "off");
+      try {
+        document.body.appendChild(el);
+      } catch (_) {
+        return el;
+      }
+      silverGuidedNativeTimeInp = el;
+      return el;
+    }
+    function onSilverGuidedNativeTimeChange() {
+      if (!narrow()) return;
+      var el = getSilverGuidedNativeTimeInput();
+      var raw = String(el.value || "").trim();
+      if (!raw) return;
+      var hhmm = normalizeDraftTimeHm(raw);
+      if (!hhmm) return;
+      if (GC.savePhase === "title" && normalizeDraftTimeHm(String(silverCalendarDraft.time || "")) === hhmm) return;
+      applyTime(hhmm);
+    }
+    function wireSilverGuidedNativeTimeInputOnce() {
+      var el = getSilverGuidedNativeTimeInput();
+      if (!el || el.__iuSilverGuidedTimeWired) return;
+      el.__iuSilverGuidedTimeWired = 1;
+      el.addEventListener("change", onSilverGuidedNativeTimeChange, false);
+    }
+    function openSilverGuidedNativeTimePicker() {
+      if (!narrow()) return;
+      wireSilverGuidedNativeTimeInputOnce();
+      var el = getSilverGuidedNativeTimeInput();
+      var seed = normalizeDraftTimeHm(String(silverCalendarDraft.time || ""));
+      if (!seed) seed = "09:00";
+      try {
+        el.value = seed;
+      } catch (_) {}
+      try {
+        if (typeof el.showPicker === "function") {
+          el.showPicker();
+        } else {
+          el.focus();
+        }
+      } catch (_) {
+        try {
+          el.focus();
+        } catch (_) {}
+      }
+    }
+
     function renderCustomHourGrid() {
       var c = chipsEl();
       if (!c) return;
@@ -33743,15 +33829,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.innerHTML = html;
     }
 
-    function formatTimeCsHod(hhmm) {
-      var s = String(hhmm || "").trim();
-      var m = s.match(/^(\d{1,2}):(\d{2})$/);
-      if (!m) return s;
-      var mm = Number(m[2]);
-      if (mm === 0) return Number(m[1]) + " hod.";
-      return m[1] + ":" + m[2];
-    }
-
     function rebuildSilverCalendarInput() {
       var inp = document.getElementById("iuSilverHomeInput");
       if (!inp) return;
@@ -33763,13 +33840,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } else if (d.date) {
         parts.push(fmtDotCs(d.date));
       }
+      var head = parts.filter(Boolean).join(" ");
       if (d.time) {
-        parts.push("v " + formatTimeCsHod(d.time));
+        var nt = normalizeDraftTimeHm(d.time);
+        if (nt) head = applyTimeHHMMToSentence(head, nt);
       }
-      if (d.title) parts.push(String(d.title).trim());
-      if (d.note) parts.push(String(d.note).trim());
-      if (d.reminder) parts.push(String(d.reminder).trim());
-      inp.value = parts.filter(Boolean).join(" ");
+      var tail = [];
+      if (d.title) tail.push(String(d.title).trim());
+      if (d.note) tail.push(String(d.note).trim());
+      if (d.reminder) tail.push(String(d.reminder).trim());
+      inp.value = tail.length ? head + " " + tail.filter(Boolean).join(" ") : head;
       try {
         window.silverCalendarHasNavigation = !!String(d.address || "").trim();
       } catch (_) {}
@@ -33882,7 +33962,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-time-open") {
         ev.preventDefault();
-        renderTimeMenu();
+        openSilverGuidedNativeTimePicker();
         return;
       }
       if (act === "gd-timefix") {
