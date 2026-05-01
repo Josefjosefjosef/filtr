@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T06:20:03.082799Z",
+  "ingestedAt": "2026-05-01T06:50:27.862905Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "O filipojakubské noci bylo 160 požárů, ale jen 10 souviselo s pálením čarodějnic",
+      "url": "https://zpravy.aktualne.cz/domaci/o-filipojakubske-noci-bylo-160-pozaru-ale-jen-10-souviselo-s-palenim-carodejnic/r~aaa294f1e01f240145a4707c7fa41b48/",
+      "dt": "2026-05-01T06:31:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "160",
+        "ale",
+        "filipojakubské",
+        "jen",
+        "noci",
+        "požárů",
+        "pálením",
+        "souviselo",
+        "čarodějnic"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -504,31 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Češi válí, před MS jsou i nadále stoprocentní. Klapka rozbil s Finem mantinel",
-      "url": "https://sport.aktualne.cz/hokej/cesi-vali-pred-ms-jsou-i-nadale-stoprocentni-klapka-rozbil-s-finem-mantinel/r~aaa296bacf630d4dbe1bd7da91baa3df/",
-      "dt": "2026-04-30T19:04:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "finem",
-        "klapka",
-        "mantinel",
-        "nadále",
-        "rozbil",
-        "stoprocentní",
-        "válí",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22026,
+      "bytes": 22212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,11 +577,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T06:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T06:31:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 6,
+          "zpravy": 12,
+          "sport": 5,
           "other": 2,
           "finance": 1
         },
@@ -594,6 +595,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "O filipojakubské noci bylo 160 požárů, ale jen 10 souviselo s pálením čarodějnic",
+            "publishedAt": "2026-05-01T06:31:00Z"
+          },
           {
             "title": "Kde končí Mléčná dráha? Astronomové konečně znají odpověď",
             "publishedAt": "2026-05-01T06:15:00Z"
@@ -621,10 +626,6 @@
           {
             "title": "Sedm výrazných rolí Jiřiny Bohdalové. Jak se měnila herečka, která slaví 95 let?",
             "publishedAt": "2026-05-01T04:00:00Z"
-          },
-          {
-            "title": "Vyšel nový seznam spolehlivých aut. Je v něm sedm škodovek, většinou byste je netipli",
-            "publishedAt": "2026-05-01T03:40:00Z"
           }
         ]
       }

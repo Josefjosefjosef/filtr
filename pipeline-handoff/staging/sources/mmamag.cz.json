@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-01T06:20:03.082799Z",
+  "ingestedAt": "2026-05-01T06:50:27.862905Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "video",
+      "title": "Boxera napadl medvěd. Krvavý souboj v ruské divočině skončil tragicky, zvíře nepřežilo",
+      "url": "https://www.mmamag.cz/boxer-rusko-boj-medved/",
+      "dt": "2026-05-01T06:20:59Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "boxera",
+        "divočině",
+        "krvavý",
+        "medvěd",
+        "napadl",
+        "nepřežilo",
+        "ruské",
+        "skončil",
+        "souboj",
+        "tragicky",
+        "zvíře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1062,31 +1090,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Polský bojovník přepálil nástup. Přišlo ukončení jako z grotesky",
-      "url": "https://www.mmamag.cz/bojovnik-ko-kotoul-groteska/",
-      "dt": "2026-04-29T09:27:33Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "bojovník",
-        "grotesky",
-        "jako",
-        "nástup",
-        "polský",
-        "přepálil",
-        "přišlo",
-        "ukončení"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1097,7 +1100,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 75648,
+      "bytes": 76185,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1134,7 +1137,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:54:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T06:20:59Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1149,6 +1152,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Boxera napadl medvěd. Krvavý souboj v ruské divočině skončil tragicky, zvíře nepřežilo",
+            "publishedAt": "2026-05-01T06:20:59Z"
+          },
           {
             "title": "Brittney Palmer – nejhezčí žena, která se kdy objevila v kleci UFC",
             "publishedAt": "2026-05-01T05:54:30Z"
@@ -1176,10 +1183,6 @@
           {
             "title": "Před UFC soubojem Chimaev vs. Strickland se může stát něco zlého. Známý novinář bije na poplach",
             "publishedAt": "2026-04-30T18:44:11Z"
-          },
-          {
-            "title": "KO měsíce v UFC jde na účet Jiřího Procházky",
-            "publishedAt": "2026-04-30T17:58:36Z"
           }
         ]
       }
