@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-01T05:50:20.770249Z",
+  "ingestedAt": "2026-05-01T06:20:03.082799Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Američtí vojáci se už nemusí očkovat proti chřipce. Vojenští lékaři vidí rizika",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/americti-vojaci-se-uz-nemusi-ockovat-proti-chripce-vojensti-lekari-vidi-rizika-372885",
+      "dt": "2026-05-01T06:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "američtí",
+        "chřipce",
+        "lékaři",
+        "nemusí",
+        "očkovat",
+        "proti",
+        "rizika",
+        "vidí",
+        "vojenští",
+        "vojáci"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -56,7 +83,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Kandidátů na Nobelovu cenu za mír je 287, spekuluje se o papeži i o Trumpovi",
+      "title": "Kandidátů na Nobelovu cenu za mír je 287, spekuluje se o papeži i Trumpovi",
       "url": "https://ct24.ceskatelevize.cz/clanek/svet/kandidatu-na-nobelovu-cenu-za-mir-je-287-spekuluje-se-o-papezi-i-o-trumpovi-372995",
       "dt": "2026-04-30T23:08:52Z",
       "media_raw": "ČT24 / Domácí",
@@ -735,34 +762,6 @@
         "zůstávají",
         "útoku",
         "čtyři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Večerní mrazy potrápily ovocnáře, víkend však přinese první letní den roku",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/vikend-prinese-prvni-letni-den-roku-372963",
-      "dt": "2026-04-30T06:05:41Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "den",
-        "letní",
-        "mrazy",
-        "ovocnáře",
-        "potrápily",
-        "první",
-        "přinese",
-        "roku",
-        "večerní",
-        "víkend",
-        "však"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1506,7 +1505,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42968,
+      "bytes": 42792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1566,12 +1565,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 25,
-          "finance": 3,
-          "other": 2
+          "other": 3,
+          "zpravy": 24,
+          "finance": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1584,6 +1583,10 @@
         },
         "sample_titles": [
           {
+            "title": "Američtí vojáci se už nemusí očkovat proti chřipce. Vojenští lékaři vidí rizika",
+            "publishedAt": "2026-05-01T06:00:00Z"
+          },
+          {
             "title": "Potřebujeme naučit mladé lidi jezdit veřejnou dopravou, míní Bednárik",
             "publishedAt": "2026-05-01T05:00:00Z"
           },
@@ -1592,7 +1595,7 @@
             "publishedAt": "2026-05-01T04:57:06Z"
           },
           {
-            "title": "Kandidátů na Nobelovu cenu za mír je 287, spekuluje se o papeži i o Trumpovi",
+            "title": "Kandidátů na Nobelovu cenu za mír je 287, spekuluje se o papeži i Trumpovi",
             "publishedAt": "2026-04-30T23:08:52Z"
           },
           {
@@ -1610,10 +1613,6 @@
           {
             "title": "Že chtěl útočit na Trumpa, je spekulace, tvrdí obhajoba obviněného muže",
             "publishedAt": "2026-04-30T17:34:22Z"
-          },
-          {
-            "title": "EK chce změnit pravidla fúzí, aby vznikali silní konkurenti firem z USA a Číny",
-            "publishedAt": "2026-04-30T17:21:55Z"
           }
         ]
       }
@@ -1719,7 +1718,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76850,
+      "bytes": 76837,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

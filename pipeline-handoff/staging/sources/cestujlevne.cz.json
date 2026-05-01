@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "cestujlevne.cz",
-  "ingestedAt": "2026-05-01T05:50:20.770249Z",
+  "ingestedAt": "2026-05-01T06:20:03.082799Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Málaga z Pardubic v červnu. Letenky od 1 308 Kč",
+      "url": "https://www.cestujlevne.com/akcni-letenky/malaga-z-pardubic-v-cervnu",
+      "dt": "2026-05-01T06:00:37Z",
+      "media_raw": "Cestujlevně",
+      "media_norm": "Cestujlevně",
+      "tokens": [
+        "308",
+        "letenky",
+        "málaga",
+        "pardubic",
+        "červnu"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_cestujlevne",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "cestujlevne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -480,29 +502,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "cestujlevne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Kos z Prahy na týden se snídaní. Zájezd od 6 664 Kč",
-      "url": "https://www.cestujlevne.com/akcni-letenky/kos-z-prahy-na-tyden-se-snidani",
-      "dt": "2026-04-24T19:12:28Z",
-      "media_raw": "Cestujlevně",
-      "media_norm": "Cestujlevně",
-      "tokens": [
-        "664",
-        "kos",
-        "prahy",
-        "snídaní",
-        "týden",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_cestujlevne",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "cestujlevne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.cestujlevne.com/feed",
-      "bytes": 41363,
+      "bytes": 40348,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +549,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:37:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T06:00:37Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -565,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Málaga z Pardubic v červnu. Letenky od 1 308 Kč",
+            "publishedAt": "2026-05-01T06:00:37Z"
+          },
           {
             "title": "Týden v Marsa Matrouh ve 4* hotelu přímo u pláže z Ostravy. Zájezd od 10 990 Kč",
             "publishedAt": "2026-04-30T14:37:23Z"
@@ -592,10 +595,6 @@
           {
             "title": "Květnová Madeira z Prahy i Brna do 4* hotelu se snídaní. Zájezd od 11 290 Kč",
             "publishedAt": "2026-04-29T11:55:57Z"
-          },
-          {
-            "title": "First minute letenky z Prahy na Sicílii v zimě 2027. Letenky od 1 267 Kč",
-            "publishedAt": "2026-04-29T09:56:48Z"
           }
         ]
       }
