@@ -13502,12 +13502,13 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
-  function iuPublicationWritePrevFromItems(articles, maxN) {
+  function iuPublicationWritePrevFromItems(articles, maxN, keyFn) {
     const lim = Number(maxN) > 0 ? Number(maxN) : 120;
+    const keyFnUse = typeof keyFn === "function" ? keyFn : canonicalArticleUrlKey;
     const keys = [];
     for (let i = 0; i < articles.length; i++) {
       const it = articles[i];
-      const k = canonicalArticleUrlKey(it);
+      const k = keyFnUse(it);
       if (k) keys.push(k);
       if (keys.length >= lim) break;
     }
@@ -13708,15 +13709,40 @@ function buildVideoAsArticleCard(it) {
 
     const prevSet = iuPublicationReadPrevSet();
 
+    const canonKeyCache = new WeakMap();
+    function cachedCanonKey(obj) {
+      try {
+        if (obj && typeof obj === "object") {
+          if (canonKeyCache.has(obj)) return canonKeyCache.get(obj);
+          const v = canonicalArticleUrlKey(obj);
+          canonKeyCache.set(obj, v);
+          return v;
+        }
+      } catch (_) {}
+      return canonicalArticleUrlKey(obj);
+    }
+    const pubMsCache = new WeakMap();
+    function cachedPubMs(obj) {
+      try {
+        if (obj && typeof obj === "object") {
+          if (pubMsCache.has(obj)) return pubMsCache.get(obj);
+          const v = iuItemBestPublishedMs(obj) || 0;
+          pubMsCache.set(obj, v);
+          return v;
+        }
+      } catch (_) {}
+      return iuItemBestPublishedMs(obj) || 0;
+    }
+
     const tSort0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
     const sortedArts = [...urlDedupedArts].sort((a, b) => {
-      const ka = canonicalArticleUrlKey(a);
-      const kb = canonicalArticleUrlKey(b);
+      const ka = cachedCanonKey(a);
+      const kb = cachedCanonKey(b);
       const pa = ka && prevSet.has(ka) ? 1 : 0;
       const pb = kb && prevSet.has(kb) ? 1 : 0;
       if (pa !== pb) return pa - pb;
-      const ta = iuItemBestPublishedMs(a) || 0;
-      const tb = iuItemBestPublishedMs(b) || 0;
+      const ta = cachedPubMs(a);
+      const tb = cachedPubMs(b);
       return tb - ta;
     });
     if (audit) {
@@ -13732,24 +13758,31 @@ function buildVideoAsArticleCard(it) {
     }
 
     const tOut0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
-    const out = items.filter((it) => {
-      if (!isArticle(it)) return true;
-      const k = canonicalArticleUrlKey(it);
-      if (!k) return true;
-      return keptKeys.has(k);
-    });
+    const out = [];
+    const keptInFeedOrder = [];
+    for (let oi = 0; oi < items.length; oi++) {
+      const it = items[oi];
+      if (!isArticle(it)) {
+        out.push(it);
+        continue;
+      }
+      const k = cachedCanonKey(it);
+      if (!k) {
+        out.push(it);
+        continue;
+      }
+      if (keptKeys.has(k)) {
+        out.push(it);
+        keptInFeedOrder.push(it);
+      }
+    }
     if (audit) {
       audit.publication.outFilterMs =
         (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tOut0;
     }
 
     try {
-      const keptInFeedOrder = items.filter((it) => {
-        if (!isArticle(it)) return false;
-        const kk = canonicalArticleUrlKey(it);
-        return kk && keptKeys.has(kk);
-      });
-      iuPublicationWritePrevFromItems(keptInFeedOrder, 120);
+      iuPublicationWritePrevFromItems(keptInFeedOrder, 120, cachedCanonKey);
     } catch (_) {}
 
     try {
@@ -13911,8 +13944,8 @@ function buildVideoAsArticleCard(it) {
     if (state.mediaTopicKey) {
       sectionsToUse = ["vse"];
     }
-    let filtered = state.cachedItems.filter((item) => matchesSections(item, sectionsToUse));
-    filtered = filtered.filter((item) => {
+    let filtered = state.cachedItems.filter((item) => {
+      if (!matchesSections(item, sectionsToUse)) return false;
       if (iuArticleIsHardBlocked(item)) {
         __iuBlockedRenderDrops++;
         try {
