@@ -524,6 +524,24 @@ style-src 'self' 'unsafe-inline' https:;
         max-width:calc(50% - 6px)!important;
         width:auto!important;
       }
+      .iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:nth-child(3){
+        flex:1 1 100%!important;
+        max-width:100%!important;
+        text-align:center!important;
+      }
+      .iuSilverHomeChips--timeChoiceRow{
+        display:flex!important;
+        justify-content:center!important;
+        width:100%!important;
+        max-width:100%!important;
+        overflow-x:hidden!important;
+      }
+      .iuSilverHomeChips--finalSave{
+        display:flex!important;
+        justify-content:center!important;
+        width:100%!important;
+        max-width:100%!important;
+      }
       .iuSilverHomeChip,
       button.iuSilverHomeChip{
         min-height: 44px;
@@ -629,7 +647,7 @@ style-src 'self' 'unsafe-inline' https:;
         min-height: 4.6em;
         max-height: 7.2em;
         resize: none;
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.3;
         padding: 8px 10px;
         margin: 0;
@@ -699,6 +717,10 @@ style-src 'self' 'unsafe-inline' https:;
       @media (max-width: 1024px){
         .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeSend{
           display: inline-flex;
+        }
+        #iuSilverHomeChips .iuSilverHomeChip,
+        #iuSilverHomeChips button.iuSilverHomeChip{
+          font-size: 16px;
         }
       }
       @media (min-width: 1025px){
@@ -1519,17 +1541,9 @@ style-src 'self' 'unsafe-inline' https:;
                                       </div>
                                       <div id="iuSilverHomeChips" class="iuSilverHomeChips" data-iu-silver-home-chips="1" hidden></div>
                                       <div id="iuSilverGuidedSheetRoot" class="iuSilverGuidedSheetRoot" hidden>
-                                        <div id="iuSilverGuidedSheetTime" class="iuSilverGuidedSheetBlock" hidden>
-                                          <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedTimeInput">Čas</label>
-                                          <input type="time" id="iuSilverGuidedTimeInput" class="iuSilverGuidedSheetTime" step="300" value="15:00" />
-                                        </div>
                                         <div id="iuSilverGuidedSheetText" class="iuSilverGuidedSheetBlock" hidden>
                                           <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedTextInput" id="iuSilverGuidedTextLab">Text</label>
                                           <input type="text" id="iuSilverGuidedTextInput" class="iuSilverGuidedSheetText" maxlength="500" autocomplete="off" />
-                                        </div>
-                                        <div id="iuSilverGuidedSheetDate" class="iuSilverGuidedSheetBlock" hidden>
-                                          <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedDateInput">Datum</label>
-                                          <input type="date" id="iuSilverGuidedDateInput" class="iuSilverGuidedSheetTime" autocomplete="off" />
                                         </div>
                                         <div class="iuSilverGuidedSheetBtns">
                                           <button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" id="iuSilverGuidedSheetOk">OK</button>
