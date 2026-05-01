@@ -1017,7 +1017,10 @@ style-src 'self' 'unsafe-inline' https:;
                                   </div>
                                   <div class="iuNewsPreviewBody">
                                     <div class="iuNewsPreviewImgWrap" aria-hidden="true">
-                                      <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" width="112" height="84" loading="eager" decoding="sync" alt=""/>
+                                      <picture>
+                                        <source type="image/webp" srcset="/assets/images/news-default-120w.webp 120w, /assets/images/news-default-240w.webp 240w" sizes="112px" />
+                                        <img class="iuNewsPreviewImg" src="/assets/images/news-default.jpg" srcset="/assets/images/news-default-120w.jpg 120w, /assets/images/news-default-240w.jpg 240w" sizes="112px" width="112" height="84" loading="eager" decoding="sync" alt="" />
+                                      </picture>
                                     </div>
                                     <div class="iuNewsPreviewText">
                                       <p class="iuNewsPreviewHeadline" data-iu-news-preview-title-1>Zprávy se načítají</p>
