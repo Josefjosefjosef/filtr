@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T22:24:54.709267Z",
+  "ingestedAt": "2026-05-01T22:54:52.853365Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Hamzová bojuje o WNBA: Musíte být víc sobec. Soupeřky jsou i spoluhráčky",
+      "url": "https://www.idnes.cz/sport/basket/eliska-hamzova-rozhovor-wnba.A260429_185115_sport-basket_ikuc",
+      "dt": "2026-05-01T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bojuje",
+        "být",
+        "hamzová",
+        "musíte",
+        "sobec",
+        "soupeřky",
+        "spoluhráčky",
+        "víc",
+        "wnba"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,34 +782,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Jokič končí v play off, Denver opět zklamal s Minnesotou. Knicks postupují o padesát",
-      "url": "https://www.idnes.cz/sport/basket/play-off-nba-seste-zapasy-prvni-kolo.A260501_082500_sport-basket_kazdt",
-      "dt": "2026-05-01T06:36:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "denver",
-        "jokič",
-        "knicks",
-        "končí",
-        "minnesotou",
-        "off",
-        "opět",
-        "padesát",
-        "play",
-        "postupují",
-        "zklamal"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46280,
+      "bytes": 46292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T21:49:18Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +844,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hamzová bojuje o WNBA: Musíte být víc sobec. Soupeřky jsou i spoluhráčky",
+            "publishedAt": "2026-05-01T22:00:00Z"
+          },
           {
             "title": "Sinner může v Madridu překonat legendy, Siniakovou čeká finále čtyřhry",
             "publishedAt": "2026-05-01T21:49:18Z"
@@ -873,10 +875,6 @@
           {
             "title": "Pogačar ve žlutém spurtoval o vítězství. Dojezd třetí etapy Romandie ovládl Godon",
             "publishedAt": "2026-05-01T17:45:00Z"
-          },
-          {
-            "title": "Artis jen remizoval v Prostějově, Příbram doma přehrála Budějovice",
-            "publishedAt": "2026-05-01T17:14:00Z"
           }
         ]
       }
