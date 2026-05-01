@@ -33368,24 +33368,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         silverCalendarDraft.address = String((z.textInp && z.textInp.value) || "").trim();
         rebuildSilverCalendarInput();
         closeGuidedSheet();
-        openGuidedTextSheet("note");
+        renderOptionalStepButtons();
         return;
       }
       if (SHEET_KIND === "title") {
         var titOk = String((z.textInp && z.textInp.value) || "").trim();
         if (!titOk) return;
         silverCalendarDraft.title = titOk;
-        GC.savePhase = "addr";
+        GC.savePhase = "optional";
         rebuildSilverCalendarInput();
         closeGuidedSheet();
-        openGuidedTextSheet("addr");
+        renderOptionalStepButtons();
         return;
       }
       if (SHEET_KIND === "note") {
         silverCalendarDraft.note = String((z.textInp && z.textInp.value) || "").trim();
         rebuildSilverCalendarInput();
         closeGuidedSheet();
-        renderRemMenu();
+        renderOptionalStepButtons();
         return;
       }
     }
@@ -33400,6 +33400,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         m.textContent = "";
       }
       if (c) {
+        clearChipsScrollStyle();
         c.hidden = true;
         c.innerHTML = "";
         c.removeAttribute("data-iu-guided-open");
@@ -33545,6 +33546,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         m.textContent = "";
       }
       if (!c) return;
+      clearChipsScrollStyle();
       c.hidden = false;
       c.className = "iuSilverHomeChips iuSilverHomeChips--dayRow";
       var isoDyn = addDaysIso(todayIso(), 2);
@@ -33593,6 +33595,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
+      clearChipsScrollStyle();
       c.className = "iuSilverHomeChips iuSilverHomeChips--timeChoiceRow";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-time-open">vybrat \u010das</button>';
@@ -33621,6 +33624,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function renderCustomHourGrid() {
       var c = chipsEl();
       if (!c) return;
+      applyTimeChipsScroll();
       c.hidden = false;
       c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
       var html = "";
@@ -33637,9 +33641,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.innerHTML = html;
     }
 
+    function clearChipsScrollStyle() {
+      var c = chipsEl();
+      if (!c) return;
+      try {
+        c.style.maxHeight = "";
+        c.style.overflowY = "";
+      } catch (_) {}
+    }
+
+    function applyTimeChipsScroll() {
+      var c = chipsEl();
+      if (!c) return;
+      try {
+        c.style.maxHeight = "min(52vh, 280px)";
+        c.style.overflowY = "auto";
+      } catch (_) {}
+    }
+
     function renderTimeMenu() {
       var c = chipsEl();
       if (!c) return;
+      applyTimeChipsScroll();
       c.hidden = false;
       c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
       var times = ["08:00", "09:00", "10:00", "12:00", "15:00", "18:00"];
@@ -33657,6 +33680,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     function applyTime(t) {
+      closeGuidedSheet();
       silverCalendarDraft.time = t;
       GC.savePhase = "title";
       silverCalendarDraft.title = null;
@@ -33668,6 +33692,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       var c = chipsEl();
       if (c) {
+        clearChipsScrollStyle();
         c.hidden = true;
         c.innerHTML = "";
         c.className = "iuSilverHomeChips";
@@ -33675,16 +33700,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       openGuidedTextSheet("title");
     }
 
-    function renderFinalSaveOnly() {
+    /** Volitelné kroky až po potvrzení názvu (neřetězit modály). */
+    function renderOptionalStepButtons() {
+      clearChipsScrollStyle();
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--finalSave";
+      c.className = "iuSilverHomeChips iuSilverHomeChips--afterTitle";
       c.innerHTML =
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-addr">p\u0159idat adresu</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-note">p\u0159idat pozn\xe1mku</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-menu">p\u0159idat upozorn\u011bn\xed</button>' +
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--save" data-iu-silver-guided="gd-final-save">ULO\u017dIT</button>';
     }
 
     function renderRemMenu() {
+      clearChipsScrollStyle();
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
@@ -33866,7 +33897,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         var ri = Number(x.getAttribute("data-iu-silver-guided-ridx") || 0);
         silverCalendarDraft.reminder = opts2[ri] || "";
         rebuildSilverCalendarInput();
-        renderFinalSaveOnly();
+        renderOptionalStepButtons();
+        return;
+      }
+      if (act === "gd-addr") {
+        ev.preventDefault();
+        openGuidedTextSheet("addr");
+        return;
+      }
+      if (act === "gd-note") {
+        ev.preventDefault();
+        openGuidedTextSheet("note");
+        return;
+      }
+      if (act === "gd-rem-menu") {
+        ev.preventDefault();
+        renderRemMenu();
         return;
       }
       if (act === "gd-final-save") {
