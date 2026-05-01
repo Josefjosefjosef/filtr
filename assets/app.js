@@ -629,7 +629,7 @@ try {
     searchQuery: "",
     sections: new Set(activeSections),
     // FEED pagination (render-only; no pipeline touch)
-    pageSize: 200,
+    pageSize: 100,
     page: 1,
     /** Hub topic filter (?topic=zpravy|sport|…). null = globální feed (všechny aktivní sekce), ne jen Zprávy. */
     mediaTopicKey: null,
@@ -4731,7 +4731,7 @@ try {
   /**
    * Článkový hub (?section=feed&topic=…): 100 článků na obrazovku + tlačítko „Další“ (render-only, data už v cache).
    * Zprávy, Sport, Finance, Zdraví, Cestování, Hry, Kultura / Akce, Věda & Historie, Vzdělávání: stejné chování.
-   * Ostatní témata a ostatní sekce: pageSize 200.
+   * Ostatní témata a ostatní sekce: výchozí pageSize 100 (+ stejný krok „další stránka“ jako dřív u hubu 100).
    */
   function iuIsMediaHubFullFeedPaging() {
     try {
@@ -4958,7 +4958,7 @@ try {
 
     // Render-only paging: show at most pageSize*page items, no other slicing elsewhere
     const mediaHub100 = iuIsMediaHubFullFeedPaging();
-    const pageSize = mediaHub100 ? 100 : Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+    const pageSize = mediaHub100 ? 100 : Number(state.pageSize) > 0 ? Number(state.pageSize) : 100;
     const page = Number(state.page) >= 1 ? Number(state.page) : 1;
     const articleBudget = page * pageSize;
     const totalArticlesInFeed = iuCountFeedArticles(items);
@@ -13963,7 +13963,10 @@ function buildVideoAsArticleCard(it) {
     state.filteredItems = filtered;
 
     if (iuArticlesBootstrapOptIn() && !query) {
-      const pageCap = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+      const pageCap = Math.max(
+        200,
+        Number(state.pageSize) > 0 ? Number(state.pageSize) : 100,
+      );
       const narrow = !!(
         (state.mediaTopicKey &&
           String(state.mediaTopicKey).trim() !== "" &&
@@ -14004,7 +14007,9 @@ function buildVideoAsArticleCard(it) {
           state.__iuApplyFilterBusy = false;
           try {
             await initRetentionIndex();
-            await loadRetentionUntilVisibleCount(Math.max(Number(state.pageSize) || 200, 160));
+            await loadRetentionUntilVisibleCount(
+              Math.max(200, Number(state.pageSize) > 0 ? Number(state.pageSize) : 100, 160),
+            );
           } catch (_) {}
           if (state.cachedItems.length > nBefore0) {
             try {
@@ -15514,7 +15519,10 @@ function buildVideoAsArticleCard(it) {
         else if (iuArticleHubSectionP(sec) && topic && topic !== "all") state.mediaTopicKey = topic;
         else if (["hry", "kultura", "veda", "vzdelavani"].indexOf(sec) !== -1) state.mediaTopicKey = sec;
       } catch (_) {}
-      const pageSizeNav = Number(state.pageSize) > 0 ? Number(state.pageSize) : 200;
+      const pageSizeNav = Math.max(
+        200,
+        Number(state.pageSize) > 0 ? Number(state.pageSize) : 100,
+      );
       const mediaTopicActive = !!(state.mediaTopicKey && String(state.mediaTopicKey).trim() && state.mediaTopicKey !== "all");
       const hashSectionsActive =
         Array.isArray(activeSections) && activeSections.length > 0 && !activeSections.includes("vse");
