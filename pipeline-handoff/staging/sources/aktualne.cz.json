@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T11:24:27.462811Z",
+  "ingestedAt": "2026-05-01T11:54:37.721803Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Prahou protančil průvod majálesu, vyvrcholí festivalem na Letňanech",
+      "url": "https://zpravy.aktualne.cz/domaci/prahou-protancil-pruvod-majalesu-vyvrcholi-festivalem-na-letnanech/r~aaa29887934545f0b71a8466067f6d55/",
+      "dt": "2026-05-01T11:16:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "festivalem",
+        "letňanech",
+        "majálesu",
+        "prahou",
+        "protančil",
+        "průvod",
+        "vyvrcholí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -503,32 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Sedm výrazných rolí Jiřiny Bohdalové. Jak se měnila herečka, která slaví 95 let?",
-      "url": "https://magazin.aktualne.cz/kultura/film/sedm-vyraznych-roli-jiriny-bohdalove-jak-se-menila-herecka-ktera-slavi-95-let/r~aaa2923f7f2a321f3adb39d7d0bf610b/",
-      "dt": "2026-05-01T04:00:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "bohdalové",
-        "herečka",
-        "jiřiny",
-        "let",
-        "měnila",
-        "rolí",
-        "sedm",
-        "slaví",
-        "výrazných"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -539,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22122,
+      "bytes": 22098,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -576,11 +574,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T10:43:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T11:16:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 12,
-          "other": 3,
+          "zpravy": 13,
+          "other": 2,
           "sport": 5
         },
         "drop_counts": {
@@ -593,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Prahou protančil průvod majálesu, vyvrcholí festivalem na Letňanech",
+            "publishedAt": "2026-05-01T11:16:00Z"
+          },
           {
             "title": "Jaké příměří dojednal Trump s Putinem? Ukrajinci věří Američanům stále méně",
             "publishedAt": "2026-01-21T06:45:00Z"
@@ -620,10 +622,6 @@
           {
             "title": "KVÍZ: Myslíte, že Bohdalku znáte? Některé otázky potrápí i skalní fanoušky, odpověď zná málokdo",
             "publishedAt": "2026-05-01T09:45:00Z"
-          },
-          {
-            "title": "Letadlová loď USS Gerald R. Ford opustí Blízký východ, vydá se zpět do USA",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }

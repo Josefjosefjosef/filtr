@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-01T11:24:27.462811Z",
+  "ingestedAt": "2026-05-01T11:54:37.721803Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Další obavy pro reprezentaci, Hronek dnes netrénoval",
+      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-dalsi-obavy-pro-reprezentaci-hronek-dnes-netrenoval-5446523",
+      "dt": "2026-05-01T11:36:25Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "další",
+        "hronek",
+        "netrénoval",
+        "obavy",
+        "reprezentaci"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -750,30 +772,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Infantino bude příští rok usilovat o znovuzvolení do čela FIFA",
-      "url": "https://www.sport.cz/clanek/fotbal-infantino-bude-pristi-rok-usilovat-o-znovuzvoleni-do-cela-fifa-5446457",
-      "dt": "2026-04-30T20:36:35Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "fifa",
-        "infantino",
-        "příští",
-        "rok",
-        "usilovat",
-        "znovuzvolení",
-        "čela"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +782,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40753,
+      "bytes": 40895,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +819,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T11:13:37Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T11:36:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +834,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další obavy pro reprezentaci, Hronek dnes netrénoval",
+            "publishedAt": "2026-05-01T11:36:25Z"
+          },
           {
             "title": "Haaland to v Norsku schytal kvůli pivu",
             "publishedAt": "2026-05-01T11:13:37Z"
@@ -863,10 +865,6 @@
           {
             "title": "České čtvrtkařky v čele s šampionkou Manuel budou ve štafetě bojovat o MS 2027",
             "publishedAt": "2026-05-01T09:56:08Z"
-          },
-          {
-            "title": "Šaškárna?! FIFA oznámila novinku pro finále MS, fanoušci se bouří",
-            "publishedAt": "2026-05-01T09:24:06Z"
           }
         ]
       }
