@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-01T13:00:10.235958Z",
+  "ingestedAt": "2026-05-01T13:29:31.267214Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Košťata, elán, slunce. Jak vypadá příprava koupaliště před začátkem sezony",
+      "url": "https://www.denik.cz/ctenar-reporter/koupaliste-v-klenci-pod-cerchovem-se-probouzi-do-nove-sezony-20260429.html",
+      "dt": "2026-05-01T13:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "elán",
+        "koupaliště",
+        "košťata",
+        "příprava",
+        "sezony",
+        "slunce",
+        "vypadá",
+        "začátkem"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -617,34 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dojemné setkání: Díky za záchranu života, řekla Dagmar své dárkyni kostní dřeně",
-      "url": "https://www.denik.cz/zdravotnictvi/dojemne-setkani-diky-za-zachranu-zivota-rekla-prijemkyne-kostni-drene-darkyni-20.html",
-      "dt": "2026-05-01T02:30:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dagmar",
-        "dojemné",
-        "dárkyni",
-        "díky",
-        "dřeně",
-        "kostní",
-        "setkání",
-        "své",
-        "záchranu",
-        "řekla",
-        "života"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29997,
+      "bytes": 30012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,11 +689,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-01T11:48:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T13:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "zdravi": 1
+          "zpravy": 25
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -708,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Košťata, elán, slunce. Jak vypadá příprava koupaliště před začátkem sezony",
+            "publishedAt": "2026-05-01T13:00:00Z"
+          },
           {
             "title": "Peníze a šperky. Slovenská policie zadržela dva Čechy podezřelé z podvodu",
             "publishedAt": "2026-05-01T11:48:00Z"
@@ -735,10 +735,6 @@
           {
             "title": "Španělsko se chystá na extrémní horko. Omezení se dotknou barů i restaurací",
             "publishedAt": "2026-05-01T10:15:00Z"
-          },
-          {
-            "title": "Vražda mladé brigádnice na statku u Brodu: Vrah nechal tělo v traktoru",
-            "publishedAt": "2026-05-01T09:00:00Z"
           }
         ]
       }

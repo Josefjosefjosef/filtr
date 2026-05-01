@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-01T13:00:10.235958Z",
+  "ingestedAt": "2026-05-01T13:29:31.267214Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bosenskosrbský válečný zločinec Mladić chce z vězení. Blíží se jeho smrt, tvrdí právníci",
+      "url": "https://www.ceska-justice.cz/2026/05/mladic-chce-z-vezeni-blizi-se-jeho-smrt-tvrdi-pravnici/",
+      "dt": "2026-05-01T13:07:43Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "blíží",
+        "bosenskosrbský",
+        "chce",
+        "jeho",
+        "mladić",
+        "právníci",
+        "smrt",
+        "tvrdí",
+        "válečný",
+        "vězení",
+        "zločinec"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -244,31 +272,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Omezí poslanci prezidenta? Benda varuje před fiaskem u Ústavního soudu",
-      "url": "https://www.ceska-justice.cz/2026/04/mstite-se-prezidentovi-ustavni-soud/",
-      "dt": "2026-04-29T12:01:05Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "benda",
-        "fiaskem",
-        "omezí",
-        "poslanci",
-        "prezidenta",
-        "soudu",
-        "varuje",
-        "ústavního"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -279,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 102033,
+      "bytes": 98451,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -316,7 +319,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T11:58:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T13:07:43Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -331,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bosenskosrbský válečný zločinec Mladić chce z vězení. Blíží se jeho smrt, tvrdí právníci",
+            "publishedAt": "2026-05-01T13:07:43Z"
+          },
           {
             "title": "Váš syn je zadržený po nehodě, pošlete peníze. Policie obvinila Čechy z podvodu za stovky tisíc",
             "publishedAt": "2026-05-01T11:58:39Z"
@@ -358,10 +365,6 @@
           {
             "title": "Dva posudky k dotacím Agrofertu. Proč právníci došli k odlišným závěrům?",
             "publishedAt": "2026-04-30T06:41:45Z"
-          },
-          {
-            "title": "Fiasko za miliony? Ministerstvo předčasně ukončilo audit Deloitte na českých soudech",
-            "publishedAt": "2026-04-30T04:30:00Z"
           }
         ]
       }
