@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-01T14:59:55.551006Z",
+  "ingestedAt": "2026-05-01T15:29:24.790128Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Charitativní pochod přerušil hrůzný náraz. Mladíka v přímém přenosu srazilo auto",
+      "url": "https://www.denik.cz/ze_sveta/streamera-srazilo-auto-v-zivem-prenosu-usa.html",
+      "dt": "2026-05-01T14:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "auto",
+        "charitativní",
+        "hrůzný",
+        "mladíka",
+        "náraz",
+        "pochod",
+        "přenosu",
+        "přerušil",
+        "přímém",
+        "srazilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -619,32 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Obnova Zlaté stezky navazuje na historii, projekt posílil vztahy s Bavorskem",
-      "url": "https://www.denik.cz/cesko-a-eu/kubova-hut-zlata-stezka-mmr-eu-dotace.html",
-      "dt": "2026-05-01T03:55:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bavorskem",
-        "historii",
-        "navazuje",
-        "obnova",
-        "posílil",
-        "projekt",
-        "stezky",
-        "vztahy",
-        "zlaté"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -655,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29381,
+      "bytes": 29387,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -692,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-01T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T14:36:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -707,6 +708,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Charitativní pochod přerušil hrůzný náraz. Mladíka v přímém přenosu srazilo auto",
+            "publishedAt": "2026-05-01T14:36:00Z"
+          },
           {
             "title": "Hurvínek oslaví stovku premiérou Kabaretu Hurvajz. Přijde i zlý Kašpárek",
             "publishedAt": "2026-05-01T14:30:00Z"
@@ -734,10 +739,6 @@
           {
             "title": "Fontána v Mariánských Lázních letos poprvé zazpívala. Show sledovaly stovky lidí",
             "publishedAt": "2026-05-01T11:15:00Z"
-          },
-          {
-            "title": "Trump naznačil další stažení vojsk. Zvažuje odchod z Itálie a Španělska",
-            "publishedAt": "2026-05-01T11:11:00Z"
           }
         ]
       }

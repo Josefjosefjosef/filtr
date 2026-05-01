@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-01T14:59:55.551006Z",
+  "ingestedAt": "2026-05-01T15:29:24.790128Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nesahejte na První máj! Na Svátek práce bouřily ulice ve Francii, Turecku i Moskvě",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/svatek-prace-sve-oslavy-1-maj-nemecko-francie-korea.A260501_152940_zahranicni_berr/foto",
+      "dt": "2026-05-01T15:04:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bouřily",
+        "francii",
+        "moskvě",
+        "máj",
+        "nesahejte",
+        "první",
+        "práce",
+        "svátek",
+        "turecku",
+        "ulice"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -757,31 +784,6 @@
         "manhattanu",
         "minut",
         "přelomové"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pálení čarodějnic zachytila i družice. Ukázala, kde hořelo nejvíc ohňů",
-      "url": "https://www.idnes.cz/zpravy/domaci/o-filipojakubske-noci-bylo-160-pozaru-ale-jen-10-souviselo-s-palenim-carodejnic.A260501_083122_domaci_jan",
-      "dt": "2026-05-01T06:44:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "družice",
-        "hořelo",
-        "nejvíc",
-        "ohňů",
-        "pálení",
-        "ukázala",
-        "zachytila",
-        "čarodějnic"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48965,
+      "bytes": 48827,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1623,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T14:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T15:04:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1638,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nesahejte na První máj! Na Svátek práce bouřily ulice ve Francii, Turecku i Moskvě",
+            "publishedAt": "2026-05-01T15:04:00Z"
+          },
           {
             "title": "Portlík chce udělat z Prahy vzor pro jiné metropole. ODS půjde do voleb s TOP 09",
             "publishedAt": "2026-05-01T14:27:00Z"
@@ -1665,10 +1671,6 @@
           {
             "title": "Českou aplikaci Rouvy pro cyklistické trenažery pohltil americký obr Zwift",
             "publishedAt": "2026-05-01T13:00:00Z"
-          },
-          {
-            "title": "Izrael si láme hlavy s drony Hizballáhu. Varovali jsme vás, zní z Kyjeva",
-            "publishedAt": "2026-05-01T12:55:00Z"
           }
         ]
       }
