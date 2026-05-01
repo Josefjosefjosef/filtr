@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T21:54:27.093717Z",
+  "ingestedAt": "2026-05-01T22:24:54.709267Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Siniaková s Townsendovou natáhly famózní sérii. A v Madridu zabojují o titul",
+      "url": "https://sport.aktualne.cz/tenis/siniakova-s-townsendovou-natahly-famozni-serii-a-v-madridu-zabojuji-o-titul/r~aaa29fe21fea4a4d04de736780694b84/",
+      "dt": "2026-05-01T22:16:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "famózní",
+        "madridu",
+        "natáhly",
+        "siniaková",
+        "sérii",
+        "titul",
+        "townsendovou",
+        "zabojují"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -507,34 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "\"Naprosto příšerné Španělsko.\" Trumpův vztek trvá, zvažuje stažení dalších vojáků z Evropy",
-      "url": "https://zpravy.aktualne.cz/zahranici/trump-se-opet-pustil-do-spojencu-zvazuje-stazeni-americkych-vojaku-z-italie-a-spanelska/r~aaa29d7326089782de64a0d2f60eb889/",
-      "dt": "2026-05-01T10:19:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dalších",
-        "evropy",
-        "naprosto",
-        "příšerné",
-        "stažení",
-        "trumpův",
-        "trvá",
-        "vojáků",
-        "vztek",
-        "zvažuje",
-        "španělsko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -545,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22244,
+      "bytes": 22072,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -582,12 +579,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T19:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T22:16:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 4,
           "finance": 2,
-          "zpravy": 14,
-          "sport": 3,
+          "zpravy": 13,
           "other": 1
         },
         "drop_counts": {
@@ -600,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Siniaková s Townsendovou natáhly famózní sérii. A v Madridu zabojují o titul",
+            "publishedAt": "2026-05-01T22:16:00Z"
+          },
           {
             "title": "Zvýšíme cla na dovoz aut z EU, oznámil \"s potěšením\" prezident Trump",
             "publishedAt": "2026-05-01T16:25:00Z"
@@ -627,10 +628,6 @@
           {
             "title": "Armáda bojlerů. Česko má v rezervě druhý Temelín, ale zatím ho neumí zapojit, říká šéf energetiků",
             "publishedAt": "2026-05-01T17:44:00Z"
-          },
-          {
-            "title": "Írán nabízí Trumpovi další jednání, prezident není s návrhem spokojen",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }

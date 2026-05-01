@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-01T21:54:27.093717Z",
+  "ingestedAt": "2026-05-01T22:24:54.709267Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Problémy se skafandry i raketou New Glenn mohou ohrozit přistání na Měsíci",
+      "url": "https://www.idnes.cz/technet/vesmir/vesmir-zeme-mesic-artemis-iii-test-let-start-skafandr-mise.A260424_112530_tec_vesmir_vse",
+      "dt": "2026-05-01T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "glenn",
+        "měsíci",
+        "new",
+        "ohrozit",
+        "problémy",
+        "přistání",
+        "raketou",
+        "skafandry"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -510,7 +535,7 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "aktualne",
       "contentType": "article",
       "title": "Roste zájem o mrtvý produkt od Applu. Proč ho lidé oprašují?",
       "url": "https://www.idnes.cz/technet/audio-foto-video/apple-ipod-hudebni-prehravac-vzkriseni-classic-touch-mini-nano-shuffle.A260414_114249_audio-foto-video_vse",
@@ -737,33 +762,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Předpověděl jsem AI, znechutila mi psaní, přiznává Neff. Neviditelný pes slaví 30 let",
-      "url": "https://www.lidovky.cz/nazory/stari-bili-muzi-ondrej-neff-internet-historie.A260422_131740_ln_nazory_ljpl",
-      "dt": "2026-04-22T14:32:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "jsem",
-        "let",
-        "neff",
-        "neviditelný",
-        "pes",
-        "psaní",
-        "předpověděl",
-        "přiznává",
-        "slaví",
-        "znechutila"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +772,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45980,
+      "bytes": 46462,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,7 +809,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T08:32:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "other": 20,
@@ -827,6 +825,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Problémy se skafandry i raketou New Glenn mohou ohrozit přistání na Měsíci",
+            "publishedAt": "2026-05-01T22:00:00Z"
+          },
           {
             "title": "Obří chobotnice z období křídy mohla měřit až devatenáct metrů. Byla pravák",
             "publishedAt": "2026-05-01T08:32:00Z"
@@ -853,10 +855,6 @@
           },
           {
             "title": "Tragédie sovětských výsadkářů. Cvičení v Mongolsku se změnilo v peklo",
-            "publishedAt": "2026-04-28T22:00:00Z"
-          },
-          {
-            "title": "POZOR VLAK: V Česku jsme objevili chátrající Orient Express",
             "publishedAt": "2026-04-28T22:00:00Z"
           }
         ]
