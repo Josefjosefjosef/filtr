@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T14:29:27.777511Z",
+  "ingestedAt": "2026-05-01T14:59:55.551006Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "První nadhoz v podání Malinina a jeho kolegů. Místo show přišel chaos",
+      "url": "https://www.idnes.cz/sport/trendy/prvni-nadhoz-v-podani-malinina-a-jeho-kolegu-misto-show-prisel-chaos.A260501_102618_trendy_subt",
+      "dt": "2026-05-01T14:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "chaos",
+        "jeho",
+        "kolegů",
+        "malinina",
+        "místo",
+        "nadhoz",
+        "podání",
+        "první",
+        "přišel",
+        "show"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -764,30 +791,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Stolní tenisté i tenistky na MS družstev končí, ze skupin nepostoupí",
-      "url": "https://www.idnes.cz/sport/ostatni/stolni-teniste-po-porazce-od-spanelu-na-ms-druzstev-skoncili.A260430_163812_sporty_tit",
-      "dt": "2026-04-30T20:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "družstev",
-        "končí",
-        "nepostoupí",
-        "skupin",
-        "stolní",
-        "tenistky",
-        "tenisté"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +801,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45042,
+      "bytes": 45402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +838,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T13:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T14:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +853,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "První nadhoz v podání Malinina a jeho kolegů. Místo show přišel chaos",
+            "publishedAt": "2026-05-01T14:00:00Z"
+          },
           {
             "title": "Šimon Stránský znovu vítkovický. Vrací se po více než šesti letech",
             "publishedAt": "2026-05-01T13:31:00Z"
@@ -877,10 +884,6 @@
           {
             "title": "Kousal opouští Pardubice. Je to klubová ikona, patří mu respekt, loučí se Sýkora",
             "publishedAt": "2026-05-01T10:43:00Z"
-          },
-          {
-            "title": "Nejradši chodím nahý. Pogačar svou odpovědí odzbrojil moderátora",
-            "publishedAt": "2026-05-01T10:33:00Z"
           }
         ]
       }

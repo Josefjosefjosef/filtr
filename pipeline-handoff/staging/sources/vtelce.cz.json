@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-01T14:29:27.777511Z",
+  "ingestedAt": "2026-05-01T14:59:55.551006Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Třetí princ: Skrytý muž za stromem, nečekaná výměna princezny a cizí hlas Libuše Šafránkové",
+      "url": "https://www.vtelce.cz/treti-princ-skryty-muz-za-stromem-necekana-vymena-princezny-a-cizi-hlas-libuse-safrankove/",
+      "dt": "2026-05-01T14:28:09Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "cizí",
+        "hlas",
+        "libuše",
+        "muž",
+        "nečekaná",
+        "princ",
+        "princezny",
+        "skrytý",
+        "stromem",
+        "třetí",
+        "výměna",
+        "šafránkové"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -259,34 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Květen na Primě: Májové komedie, tradiční pohádky, úspěšný Anthropoid i mrazivé Dětství v řetězech",
-      "url": "https://www.vtelce.cz/kveten-na-prime-majove-komedie-tradicni-pohadky-uspesny-anthropoid-i-mrazive-detstvi-v-retezech/",
-      "dt": "2026-04-30T05:55:17Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "anthropoid",
-        "dětství",
-        "komedie",
-        "květen",
-        "mrazivé",
-        "májové",
-        "pohádky",
-        "primě",
-        "tradiční",
-        "úspěšný",
-        "řetězech"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -297,8 +298,8 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 82772,
-      "reason": "",
+      "bytes": 85910,
+      "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
       "itemsParsed": 10,
@@ -334,7 +335,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T14:11:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T14:28:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 9,
@@ -350,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Třetí princ: Skrytý muž za stromem, nečekaná výměna princezny a cizí hlas Libuše Šafránkové",
+            "publishedAt": "2026-05-01T14:28:09Z"
+          },
           {
             "title": "Byl jednou jeden král: Utajené zranění v bažině, skutečný alkohol před kamerou a riskantní vtip",
             "publishedAt": "2026-05-01T14:11:31Z"
@@ -377,10 +382,6 @@
           {
             "title": "Léto s kovbojem: Daniela Kolářová s dvojnicí, krávy bez scénáře a zklamaný Oldřich Vízner",
             "publishedAt": "2026-04-30T16:55:03Z"
-          },
-          {
-            "title": "Na samotě u lesa: Falešný věk hlavní hvězdy, skrytá zpráva v dialozích a lstivý trik režiséra Menzela",
-            "publishedAt": "2026-04-30T16:28:00Z"
           }
         ]
       }
