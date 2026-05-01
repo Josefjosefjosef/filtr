@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-01T13:29:31.267214Z",
+  "ingestedAt": "2026-05-01T13:59:16.350642Z",
   "items": [
     {
       "section": "veda",
@@ -53,6 +53,30 @@
         "tarify",
         "většina",
         "zákazníky"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Nejpirátěnější filmy: Co se teď nejvíc stahuje (aktualizace květen 2026)",
+      "url": "https://avmania.zive.cz/nejpiratenejsi-filmy",
+      "dt": "2026-05-01T10:35:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "2026",
+        "aktualizace",
+        "filmy",
+        "květen",
+        "nejpirátěnější",
+        "nejvíc",
+        "stahuje"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -930,34 +954,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Digitální gramotnost v Česku. Jsme nad evropským průměrem, v bankovních online službách patříme ke špičce",
-      "url": "https://www.zive.cz/clanky/digitalni-gramotnost-v-cesku-jsme-nad-evropskym-prumerem-v-bankovnich-online-sluzbach-patrime-ke-spicce/sc-3-a-240688/default.aspx",
-      "dt": "2026-04-28T17:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "bankovních",
-        "digitální",
-        "evropským",
-        "gramotnost",
-        "jsme",
-        "online",
-        "patříme",
-        "průměrem",
-        "službách",
-        "česku",
-        "špičce"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -968,7 +964,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23124,
+      "bytes": 22973,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1005,7 +1001,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-01T08:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:35:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1029,6 +1025,10 @@
             "publishedAt": "2026-05-01T08:45:00Z"
           },
           {
+            "title": "Nejpirátěnější filmy: Co se teď nejvíc stahuje (aktualizace květen 2026)",
+            "publishedAt": "2026-05-01T10:35:00Z"
+          },
+          {
             "title": "Vznikl další potenciální investiční hit spojený s AI. Nvidii začínají doplňovat nenápadní hráči",
             "publishedAt": "2026-05-01T07:45:00Z"
           },
@@ -1047,10 +1047,6 @@
           {
             "title": "Polohovatelný stůl jen za 2590 Kč. Tenhle má paměť, užitečné příslušenství a v ceně je i deska",
             "publishedAt": "2026-04-30T12:45:00Z"
-          },
-          {
-            "title": "iPhony 17 trápí zvláštní problém. Po úplném vybití se nezapnou ani po připojení k nabíječce",
-            "publishedAt": "2026-04-30T11:45:00Z"
           }
         ]
       }
