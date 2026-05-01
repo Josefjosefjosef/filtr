@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-01T05:20:26.440469Z",
+  "ingestedAt": "2026-05-01T05:50:20.770249Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "České dráhy spustily novou linku z Prahy do Kodaně. Cesta zatím potrvá o něco déle",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/ceske-drahy-spustily-novou-linku-z-prahy-do-kodane-cesta-zatim-potrva-o-neco-dele-1432527",
+      "dt": "2026-05-01T05:10:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "cesta",
+        "dráhy",
+        "déle",
+        "kodaně",
+        "linku",
+        "novou",
+        "něco",
+        "potrvá",
+        "prahy",
+        "spustily",
+        "zatím",
+        "české"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -561,31 +590,6 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Daň z nemovitosti 2026: Termín platby se blíží. Jak na výpočet a kdo je osvobozen?",
-      "url": "https://www.e15.cz/dan-z-nemovitosti-2026",
-      "dt": "2026-04-30T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "blíží",
-        "daň",
-        "nemovitosti",
-        "osvobozen",
-        "platby",
-        "termín",
-        "výpočet"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
       "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
       "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-bance-klesl-ctvrtletni-zisk-uvery-i-vklady-dal-rostou-1432494",
       "dt": "2026-04-30T06:00:00Z",
@@ -600,6 +604,31 @@
         "zisk",
         "úvěry",
         "čtvrtletní"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Daň z nemovitosti 2026: Termín platby se blíží. Jak na výpočet a kdo je osvobozen?",
+      "url": "https://www.e15.cz/dan-z-nemovitosti-2026",
+      "dt": "2026-04-30T06:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "2026",
+        "blíží",
+        "daň",
+        "nemovitosti",
+        "osvobozen",
+        "platby",
+        "termín",
+        "výpočet"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1049,34 +1078,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Každá třetí deska je od GZ Media. Český výrobce vinylů zvýšil tržby a míří do Asie",
-      "url": "https://www.e15.cz/byznys/kazda-treti-deska-je-od-gz-media-cesky-vyrobce-vinylu-zvysil-trzby-a-miri-do-asie-1432471",
-      "dt": "2026-04-29T10:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "asie",
-        "deska",
-        "každá",
-        "media",
-        "míří",
-        "tržby",
-        "třetí",
-        "vinylů",
-        "výrobce",
-        "zvýšil",
-        "český"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1087,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52671,
+      "bytes": 52755,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1124,11 +1125,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T05:10:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 37,
-          "zpravy": 3
+          "zpravy": 4,
+          "finance": 36
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1140,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "České dráhy spustily novou linku z Prahy do Kodaně. Cesta zatím potrvá o něco déle",
+            "publishedAt": "2026-05-01T05:10:00Z"
+          },
           {
             "title": "Vdovský důchod 2026: Kdo má letos nárok, jaká je výše a kdy ho získáte natrvalo?",
             "publishedAt": "2026-05-01T04:30:00Z"
@@ -1167,10 +1172,6 @@
           {
             "title": "ECB by měla ponechat úrokové sazby beze změny. Prozatím",
             "publishedAt": "2026-04-30T14:00:00Z"
-          },
-          {
-            "title": "Tchajwanský prezident chtěl letět do Afriky přes Evropu, Česko a Německo mu zablokovaly cestu",
-            "publishedAt": "2026-04-30T13:37:00Z"
           }
         ]
       }

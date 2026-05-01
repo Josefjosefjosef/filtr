@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T05:20:26.440469Z",
+  "ingestedAt": "2026-05-01T05:50:20.770249Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dostál vychytal Anaheimu senzační postup, dál jde i Faksova Minnesota",
+      "url": "https://sport.aktualne.cz/hokej/dostal-vychytal-anaheimu-senzacni-postup-dal-jde-i-faksova-minnesota/r~aaa298ae990f8d9c293112b5ea38b145/",
+      "dt": "2026-05-01T05:25:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "anaheimu",
+        "dostál",
+        "faksova",
+        "jde",
+        "minnesota",
+        "postup",
+        "senzační",
+        "vychytal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Má pivo nečekaný přínos pro zdraví? Vědci zkoumali více druhů, jeden opravdu překvapil",
+      "url": "https://magazin.aktualne.cz/ma-pivo-necekany-prinos-pro-zdravi-vedci-zkoumali-vice-druhu-jeden-opravdu-prekvapil/r~aaa29e731b0be1c95e03b536759f56c7/",
+      "dt": "2026-05-01T05:29:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "druhů",
+        "jeden",
+        "nečekaný",
+        "opravdu",
+        "pivo",
+        "překvapil",
+        "přínos",
+        "vědci",
+        "zdraví",
+        "zkoumali"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -478,60 +530,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Izrael u Řecka zasáhl proti flotile plující do Gazy, zadržel asi 175 lidí",
-      "url": "https://zpravy.aktualne.cz/zahranici/izrael-u-recka-zasahl-proti-flotile-plujici-do-gazy-zadrzel-asi-175-lidi/r~aaa298e263947fd45bd2ed230314d087/",
-      "dt": "2026-04-30T07:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "175",
-        "asi",
-        "flotile",
-        "gazy",
-        "izrael",
-        "lidí",
-        "plující",
-        "proti",
-        "zadržel",
-        "zasáhl",
-        "řecka"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "„Čisté týrání zvířat.“ Má po vyproštění velryba Timmy vůbec naději na přežití?",
-      "url": "https://zpravy.aktualne.cz/zahranici/ciste-tyrani-zvirat-ma-po-vyprosteni-velryba-timmy-vubec-nadeji-na-preziti/r~aaa2991f4703515d8970b16777c38972/",
-      "dt": "2026-04-30T16:21:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "naději",
-        "přežití",
-        "timmy",
-        "týrání",
-        "velryba",
-        "vyproštění",
-        "vůbec",
-        "zvířat",
-        "čisté"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +540,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21958,
+      "bytes": 22002,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,13 +577,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:15:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T05:29:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 7,
+          "zpravy": 10,
           "other": 2,
-          "sport": 6,
-          "finance": 1,
-          "zpravy": 11
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,6 +595,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dostál vychytal Anaheimu senzační postup, dál jde i Faksova Minnesota",
+            "publishedAt": "2026-05-01T05:25:00Z"
+          },
+          {
+            "title": "Má pivo nečekaný přínos pro zdraví? Vědci zkoumali více druhů, jeden opravdu překvapil",
+            "publishedAt": "2026-05-01T05:29:00Z"
+          },
           {
             "title": "Nenechte si ujít: Hravá reality show ze zahrady či oceněný španělský film Neděle",
             "publishedAt": "2026-05-01T05:15:00Z"
@@ -620,14 +626,6 @@
           {
             "title": "První máj 1986 pod děsivým mrakem z Černobylu. Proklikejte si mapu všech českých obcí",
             "publishedAt": "2026-05-01T03:30:00Z"
-          },
-          {
-            "title": "„Trump stál opakovaně na Putinově straně.“ Další diplomatka USA podivně rychle končí na Ukrajině",
-            "publishedAt": "2026-05-01T03:30:00Z"
-          },
-          {
-            "title": "Jediný zbývající Čech nakročil do finále Evropské ligy. Anglický duel pro Nottingham",
-            "publishedAt": "2026-04-30T21:42:00Z"
           }
         ]
       }
