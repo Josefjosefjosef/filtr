@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-01T12:25:39.316227Z",
+  "ingestedAt": "2026-05-01T13:00:10.235958Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vaclíkův bývalý klub klesl až na dno. O stadion nemá zájem ani město",
+      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-vaclikuv-byvaly-klub-klesl-az-na-dno-o-stadion-nema-zajem-ani-mesto-5445110",
+      "dt": "2026-05-01T12:25:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bývalý",
+        "dno",
+        "klesl",
+        "klub",
+        "město",
+        "nemá",
+        "stadion",
+        "vaclíkův",
+        "zájem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -748,32 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Horníček v euforii! Braga má po divokém závěru nakročeno do finále Evropské ligy",
-      "url": "https://www.sport.cz/clanek/fotbal-evropska-liga-hornickova-braga-hosti-freiburg-bude-bojovat-o-postup-do-finale-evropske-ligy-5445555",
-      "dt": "2026-04-30T07:13:29Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "braga",
-        "divokém",
-        "euforii",
-        "evropské",
-        "finále",
-        "horníček",
-        "ligy",
-        "nakročeno",
-        "závěru"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -784,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40926,
+      "bytes": 40873,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -821,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T11:36:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T12:25:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -836,6 +836,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vaclíkův bývalý klub klesl až na dno. O stadion nemá zájem ani město",
+            "publishedAt": "2026-05-01T12:25:47Z"
+          },
           {
             "title": "Legenda se loučí. Pardubice opouští majitel tří extraligových titulů",
             "publishedAt": "2026-05-01T10:25:37Z"
@@ -863,10 +867,6 @@
           {
             "title": "Průměrný tým s velkými ambicemi. McDavidovi hrozí, že v Edmontonu promarní i zbytek nejlepších let",
             "publishedAt": "2026-05-01T10:08:55Z"
-          },
-          {
-            "title": "České čtvrtkařky v čele s šampionkou Manuel budou ve štafetě bojovat o MS 2027",
-            "publishedAt": "2026-05-01T09:56:08Z"
           }
         ]
       }
