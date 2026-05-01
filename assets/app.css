@@ -17103,6 +17103,165 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   width: 100%;
   box-sizing: border-box;
 }
+
+/* P0 Silver mobile/tablet: extended composer (mode line + chips + mic + send) */
+.iuSilverHomeDatePick{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"]{
+  position: relative;
+  flex-wrap: wrap;
+}
+.iuSilverHomeMobileComposerGrid{
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.iuSilverHomeMobileComposerMain{
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+}
+.iuSilverHomeModeLine{
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.25;
+  color: rgba(15, 23, 42, 0.88);
+  min-height: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+#silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeModeLine,
+#iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeModeLine{
+  color: rgba(248, 250, 252, 0.94);
+}
+.iuSilverHomeChips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+.iuSilverHomeChip,
+button.iuSilverHomeChip{
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(248, 250, 252, 0.95);
+  color: rgba(15, 23, 42, 0.92);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+#silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip,
+#iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip{
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(148, 163, 184, 0.28);
+  color: rgba(248, 250, 252, 0.95);
+}
+.iuSilverHomeChip--primary{
+  border-color: rgba(22, 163, 74, 0.45);
+  background: linear-gradient(145deg, #e8fff0, #d1fae5);
+}
+#silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip--primary{
+  background: linear-gradient(145deg, rgba(22, 163, 74, 0.35), rgba(16, 185, 129, 0.22));
+  border-color: rgba(52, 211, 153, 0.45);
+}
+.iuSilverHomeChip--save{
+  border-color: rgba(22, 163, 74, 0.55);
+  background: linear-gradient(145deg, #1fa85a, #178a4a);
+  color: #fff;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+.iuSilverHomeInlineToast{
+  font-size: 14px;
+  font-weight: 650;
+  color: #15803d;
+  padding: 6px 0 2px;
+}
+#silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeInlineToast{
+  color: #86efac;
+}
+.iuSilverHomeMobileComposerActions{
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  justify-content: flex-start;
+}
+.iuSilverHomeMic{
+  flex: 0 0 auto;
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 14px;
+  border: none;
+  box-sizing: border-box;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1fa85a, #178a4a);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(23, 138, 74, 0.35);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.iuSilverHomeMicIcon{
+  display: block;
+}
+@media (max-width: 1024px){
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] .iuSilverHomeMobileComposerGrid{
+    align-items: flex-start;
+  }
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] .iuSilverHomeInput.iuSilverHomeInput{
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] .iuSilverHomeMic{
+    display: inline-flex;
+  }
+}
+@media (min-width: 1025px){
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] #iuSilverHomeModeLine,
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] #iuSilverHomeChips,
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] #iuSilverHomeInlineToast{
+    display: none !important;
+  }
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] .iuSilverHomeMic{
+    display: none !important;
+  }
+  .iuSilverHomeComposerShell[data-iu-silver-home-composer-shell="1"] .iuSilverHomeMobileComposerActions{
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
 .iuSilverHomeInput.iuSilverHomeInput{
   flex: 1 1 auto;
   min-width: 0;
@@ -17192,6 +17351,48 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   #silver-slot .silver-weather-card[data-iu-silver-wx-phase="data"]:hover .iu-silver-actionRow[data-iu-action-indicator="chevron"]::after{
     transform: translateY(1px) !important;
   }
+}
+
+.iu-calendarOverlay__eventDetail{
+  margin: 10px 0 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  font-size: 14px;
+  line-height: 1.35;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.iu-calEventDetailTitle{
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: rgba(15, 23, 42, 0.95);
+}
+.iu-calEventDetailMeta{
+  margin: 0 0 6px;
+  color: rgba(15, 23, 42, 0.72);
+}
+.iu-calEventDetailAddrWrap{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+.iu-calEventDetailNav{
+  font-weight: 750;
+  color: #15803d;
+  text-decoration: none;
+  border: 1px solid rgba(22, 163, 74, 0.35);
+  padding: 6px 12px;
+  border-radius: 10px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  touch-action: manipulation;
 }
 
 .iuSilverChatOverlay{

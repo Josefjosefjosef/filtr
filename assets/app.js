@@ -12009,11 +12009,21 @@ function buildVideoAsArticleCard(it) {
       if (window.__iuSilverHeroQuickActionsInit) return;
       window.__iuSilverHeroQuickActionsInit = 1;
     } catch (_) {}
-    function clickMindTool(sel) {
+    function clickMindTool(sel, opts) {
       try {
         var root = document.querySelector(".mindMenu");
         var btn = root ? root.querySelector(sel) : null;
-        if (btn && typeof btn.click === "function") btn.click();
+        if (btn && typeof btn.click === "function") {
+          if (opts && opts.syntheticCal) {
+            try {
+              btn.setAttribute("data-iu-cal-synth", "1");
+            } catch (_) {}
+            btn.click();
+            try {
+              btn.removeAttribute("data-iu-cal-synth");
+            } catch (_) {}
+          } else btn.click();
+        }
       } catch (_) {}
     }
     document.addEventListener(
@@ -12029,7 +12039,10 @@ function buildVideoAsArticleCard(it) {
           var k = String(b.getAttribute("data-iu-hero-quick") || "");
           if (k === "cal") {
             e.preventDefault();
-            clickMindTool(".iu-mmTopTool--cal");
+            try {
+              if (typeof window.iuSilverCalEntryQuick === "function" && window.iuSilverCalEntryQuick(e, "hero")) return;
+            } catch (_) {}
+            clickMindTool(".iu-mmTopTool--cal", { syntheticCal: true });
             return;
           }
           if (k === "tasks") {
@@ -13228,6 +13241,9 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     try {
       iuSilverHeroMobileInputDockApply();
+    } catch (_) {}
+    try {
+      if (typeof window.iuSilverCalendarGuidedFlowInit === "function") window.iuSilverCalendarGuidedFlowInit();
     } catch (_) {}
   }
   try { window.iuMobileLayoutReorder = iuMobileLayoutReorder; } catch (_) {}
@@ -32605,12 +32621,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function sanitizeEvent(evt){
     if (!evt || typeof evt !== "object") return null;
+    const addr = String(evt.address || "").trim().slice(0, 240);
+    const rem = String(evt.reminder || "").trim().slice(0, 80);
     const safe = {
       id: String(evt.id || uid("evt")),
       date: /^\d{4}-\d{2}-\d{2}$/.test(String(evt.date || "")) ? String(evt.date) : toDateOnly(new Date()),
       time: /^\d{2}:\d{2}$/.test(String(evt.time || "")) ? String(evt.time) : "09:00",
       title: String(evt.title || "").trim().slice(0, 120),
       note: String(evt.note || "").trim().slice(0, 1000),
+      address: addr,
+      reminder: rem,
       type: ["personal", "work", "health", "other"].includes(String(evt.type || "")) ? String(evt.type) : "personal",
       attachments: Array.isArray(evt.attachments) ? evt.attachments.filter(sanitizeAttachment).slice(0, MAX_ATTACHMENTS) : [],
       createdAt: Number.isFinite(Number(evt.createdAt)) ? Number(evt.createdAt) : Date.now(),
@@ -32909,6 +32929,46 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     list.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
   }
 
+  function renderCalendarEventDetailPanel(evt){
+    const host = document.getElementById("iuCalendarEventDetail");
+    if (!host) return;
+    if (!evt){
+      host.hidden = true;
+      host.innerHTML = "";
+      return;
+    }
+    const todayStr = toDateOnly(new Date());
+    let dayHuman = String(evt.date || "");
+    try {
+      const ds = String(evt.date || "").slice(0, 10);
+      if (ds === todayStr) dayHuman = "dnes";
+      else if (ds === addDays(todayStr, 1)) dayHuman = "zítra";
+      else {
+        const dx = new Date(ds + "T12:00:00");
+        dayHuman = dx.toLocaleDateString("cs-CZ", { weekday: "long", day: "numeric", month: "long" });
+      }
+    } catch (_) {}
+    const addr = String(evt.address || "").trim();
+    const rem = String(evt.reminder || "").trim();
+    const note = String(evt.note || "").trim();
+    let html = '<div class="iu-calEventDetailTitle">' + esc(evt.title) + "</div>";
+    html += '<div class="iu-calEventDetailMeta">' + esc(dayHuman) + " v " + esc(evt.time) + "</div>";
+    if (addr){
+      const enc = encodeURIComponent(addr);
+      const mapyHref = "https://mapy.cz/z?q=" + enc;
+      html +=
+        '<div class="iu-calEventDetailAddrWrap"><span class="iu-calEventDetailAddr" aria-label="Adresa">📍 ' +
+        esc(addr) +
+        '</span> <a class="iu-calEventDetailNav" href="' +
+        mapyHref +
+        '" target="_blank" rel="noopener noreferrer">NAVIGOVAT</a></div>';
+    }
+    if (note) html += '<div class="iu-calEventDetailNote">Poznámka: ' + esc(note) + "</div>";
+    if (rem) html += '<div class="iu-calEventDetailRem">Připomenutí: ' + esc(rem) + "</div>";
+    host.innerHTML = html;
+    host.hidden = false;
+  }
+
   function hydrateFormFromCurrent(){
     const form = document.getElementById("iuCalendarEventForm");
     if (!form) return;
@@ -32920,6 +32980,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     form.elements.note.value = evt ? evt.note : "";
     form.elements.type.value = evt ? evt.type : "personal";
     renderAttachmentChips(evt ? evt.attachments : []);
+    renderCalendarEventDetailPanel(evt);
   }
 
   function renderAttachmentChips(atts){
@@ -32945,6 +33006,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const form = document.getElementById("iuCalendarEventForm");
     if (!form) return;
     const id = String(form.elements.id.value || "");
+    const prevEv = id ? state.data.events.find((e)=>e.id === id) : null;
     const base = sanitizeEvent({
       id: id || uid("evt"),
       date: form.elements.date.value,
@@ -32952,6 +33014,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       title: form.elements.title.value,
       note: form.elements.note.value,
       type: form.elements.type.value,
+      address: prevEv && prevEv.address ? String(prevEv.address) : "",
+      reminder: prevEv && prevEv.reminder ? String(prevEv.reminder) : "",
       attachments: id ? (state.data.events.find((e)=>e.id === id)?.attachments || []) : [],
       createdAt: id ? (state.data.events.find((e)=>e.id === id)?.createdAt || Date.now()) : Date.now(),
       updatedAt: Date.now()
@@ -33098,7 +33162,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
       },
       calendarCreateEvent: async function(payload){
-        const ev = sanitizeEvent({ ...payload, id: uid("evt"), createdAt: Date.now(), updatedAt: Date.now(), attachments: Array.isArray(payload?.attachments) ? payload.attachments : [] });
+        const ev = sanitizeEvent({
+          ...payload,
+          id: uid("evt"),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          address: payload && payload.address != null ? String(payload.address) : "",
+          reminder: payload && payload.reminder != null ? String(payload.reminder) : "",
+          attachments: Array.isArray(payload?.attachments) ? payload.attachments : []
+        });
         if (!ev) return { ok: false, reason: "validation_failed" };
         state.data.events.push(ev);
         state.data.events.sort(compareEvents);
@@ -33125,7 +33197,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (d.note) noteParts.push(d.note);
         if (d.location) noteParts.push("Místo: " + d.location);
         const noteJoined = noteParts.join("\n\n").slice(0, 1000);
-        return this.calendarCreateEvent({ date: d.date, time: d.time, title: d.title, note: noteJoined, type: "personal", attachments: [] });
+        const addrDraft = String(d.address || "").trim() || String(d.location || "").trim();
+        const remDraft = String(d.reminder || "").trim();
+        return this.calendarCreateEvent({
+          date: d.date,
+          time: d.time,
+          title: d.title,
+          note: noteJoined,
+          address: addrDraft,
+          reminder: remDraft,
+          type: "personal",
+          attachments: []
+        });
       },
       openOverlay: function(){ openOverlay(document.activeElement); },
       closeOverlay: function(){ closeOverlay(); }
@@ -33138,6 +33221,604 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 })();
 
 
+/* IU_SILVER_CALENDAR_GUIDED_HOST */
+  (function iuSilverCalendarGuidedHost() {
+    "use strict";
+    var CAL_SEQ = 0;
+    var GC = {
+      mode: "idle",
+      savePhase: "",
+      dateIso: "",
+      datePhrase: "",
+      time: "",
+      title: "",
+      address: "",
+      note: "",
+      reminder: "",
+      searchMode: false
+    };
+
+    function narrow() {
+      try {
+        return window.matchMedia("(max-width: 1024px)").matches;
+      } catch (_) {
+        return (window.innerWidth || 0) <= 1024;
+      }
+    }
+    function modeEl() {
+      return document.getElementById("iuSilverHomeModeLine");
+    }
+    function chipsEl() {
+      return document.getElementById("iuSilverHomeChips");
+    }
+    function toastEl() {
+      return document.getElementById("iuSilverHomeInlineToast");
+    }
+    function datePickEl() {
+      return document.getElementById("iuSilverHomeDatePick");
+    }
+
+    function hideGuidedChrome() {
+      var m = modeEl(),
+        c = chipsEl(),
+        t = toastEl();
+      if (m) {
+        m.hidden = true;
+        m.textContent = "";
+      }
+      if (c) {
+        c.hidden = true;
+        c.innerHTML = "";
+        c.removeAttribute("data-iu-guided-open");
+      }
+      if (t) {
+        t.hidden = true;
+        t.textContent = "";
+      }
+      GC.mode = "idle";
+      GC.savePhase = "";
+      GC.searchMode = false;
+    }
+
+    window.iuSilverGuidedResetFromNav = function () {
+      try {
+        resetGcSave();
+      } catch (_) {}
+      try {
+        CAL_SEQ = 0;
+      } catch (_) {}
+      try {
+        hideGuidedChrome();
+      } catch (_) {}
+    };
+
+    function resetGcSave() {
+      GC.savePhase = "";
+      GC.dateIso = "";
+      GC.datePhrase = "";
+      GC.time = "";
+      GC.title = "";
+      GC.address = "";
+      GC.note = "";
+      GC.reminder = "";
+    }
+
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+    function toIsoFromDate(d) {
+      return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+    }
+    function addDaysIso(iso, n) {
+      var p = String(iso || "").split("-");
+      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      d.setDate(d.getDate() + n);
+      return toIsoFromDate(d);
+    }
+    function todayIso() {
+      return toIsoFromDate(new Date());
+    }
+
+    function weekdayV(d) {
+      var map = { 0: "v neděli", 1: "v pondělí", 2: "v úterý", 3: "ve středu", 4: "ve čtvrtek", 5: "v pátek", 6: "v sobotu" };
+      return map[d.getDay()] || "";
+    }
+    function weekdayNameList(d) {
+      var names = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+      var out = [];
+      for (var i = 0; i < 7; i++) {
+        var x = new Date(d.getTime());
+        x.setDate(d.getDate() + i);
+        out.push(names[x.getDay()]);
+      }
+      return out;
+    }
+
+    function fmtLongCs(dateIso) {
+      try {
+        var p = String(dateIso).split("-");
+        var dt = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+        return dt.toLocaleDateString("cs-CZ", { day: "numeric", month: "long" });
+      } catch (_) {
+        return dateIso;
+      }
+    }
+
+    function showCalChoice() {
+      GC.mode = "cal_choice";
+      var c = chipsEl(),
+        m = modeEl();
+      if (m) m.hidden = true;
+      if (!c) return;
+      c.hidden = false;
+      c.innerHTML =
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="save">uložit do kalendáře</button>' +
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="search">vyhledat v kalendáři</button>';
+      c.setAttribute("data-iu-guided-open", "1");
+    }
+
+    function renderSaveDayRow() {
+      var c = chipsEl(),
+        m = modeEl();
+      if (m) {
+        m.hidden = false;
+        m.textContent = "Ulož do kalendáře";
+      }
+      if (!c) return;
+      c.hidden = false;
+      var isoDyn = addDaysIso(todayIso(), 2);
+      var dDyn = new Date(isoDyn + "T12:00:00");
+      var dynLabel = weekdayV(dDyn) + " \u25be";
+      c.innerHTML =
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-dnes">dnes</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-zitra">zítra</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
+        isoDyn +
+        '">' +
+        dynLabel +
+        "</button>" +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-date">datum \u25be</button>';
+    }
+
+    function renderDynamicDayMenu(isoStart) {
+      var c = chipsEl();
+      if (!c) return;
+      var d0 = new Date(String(isoStart) + "T12:00:00");
+      var names = weekdayNameList(d0);
+      var html = "";
+      for (var i = 0; i < names.length; i++) {
+        var iso = toIsoFromDate(new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i));
+        html +=
+          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-pickday" data-iu-silver-guided-iso="' +
+          iso +
+          '">' +
+          names[i] +
+          "</button>";
+      }
+      c.innerHTML = html;
+    }
+
+    function applyDayPhrase(iso, phraseIn) {
+      GC.dateIso = iso;
+      GC.datePhrase = phraseIn || "";
+      GC.savePhase = "time";
+      var m = modeEl();
+      if (m) {
+        m.hidden = false;
+        m.textContent = "Ulož do kalendáře " + GC.datePhrase;
+      }
+      var c = chipsEl();
+      if (!c) return;
+      c.hidden = false;
+      c.innerHTML =
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timepick">\u010cas \u25be</button>';
+    }
+
+    function renderTimeMenu() {
+      var c = chipsEl();
+      if (!c) return;
+      var times = ["08:00", "09:00", "10:00", "12:00", "15:00", "18:00"];
+      var html = "";
+      for (var i = 0; i < times.length; i++) {
+        html +=
+          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timefix" data-iu-silver-guided-t="' +
+          times[i] +
+          '">' +
+          times[i] +
+          "</button>";
+      }
+      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timecustom">vlastní čas</button>';
+      c.innerHTML = html;
+    }
+
+    function applyTime(t) {
+      GC.time = t;
+      GC.savePhase = "title";
+      GC.title = "";
+      var m = modeEl();
+      if (m) {
+        m.hidden = false;
+        m.textContent = "Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " — potvrď název Enterem";
+      }
+      var c = chipsEl();
+      if (!c) return;
+      c.hidden = false;
+      c.innerHTML =
+        '<span class="iuSilverHomeChip iuSilverHomeChip--primary" role="note" data-iu-silver-guided="gd-event-hint">zadej název události</span>';
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (inp) {
+        inp.value = "";
+        try {
+          inp.placeholder = "zadej název události";
+        } catch (_) {}
+        try {
+          inp.focus();
+        } catch (_) {}
+      }
+    }
+
+    function renderAfterTitle() {
+      var c = chipsEl();
+      if (!c) return;
+      c.innerHTML =
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-addr">přidat adresu</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-note">přidat poznámku</button>' +
+        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-open">připomenutí \u25be</button>' +
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--save" data-iu-silver-guided="gd-final-save">ULOŽIT</button>';
+    }
+
+    function renderRemMenu() {
+      var c = chipsEl();
+      if (!c) return;
+      var opts = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
+      var html = "";
+      for (var i = 0; i < opts.length; i++) {
+        html +=
+          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-pick" data-iu-silver-guided-ridx="' +
+          i +
+          '">' +
+          opts[i] +
+          "</button>";
+      }
+      c.innerHTML = html;
+    }
+
+    function syncInputFromGc() {
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (!inp) return;
+      var lines = [];
+      var head = "Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " " + String(GC.title || "").trim();
+      lines.push(head.trim());
+      if (GC.address) lines.push("Adresa: " + GC.address);
+      if (GC.note) lines.push("Poznámka: " + GC.note);
+      if (GC.reminder) lines.push("Připomenutí: " + GC.reminder);
+      inp.value = lines.join("\n");
+    }
+
+    function startSearchFlow() {
+      hideGuidedChrome();
+      GC.mode = "guided_search";
+      GC.searchMode = true;
+      var m = modeEl();
+      if (m) {
+        m.hidden = false;
+        m.textContent = "Vyhledat v kalendáři";
+      }
+      var c = chipsEl();
+      if (c) {
+        c.hidden = false;
+        c.innerHTML =
+          '<span class="iuSilverHomeChip" role="text" data-iu-silver-guided="gd-search-hint">zadej co hledáš</span>';
+      }
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (inp) {
+        inp.value = "";
+        inp.placeholder = "zadej co hledáš";
+        try {
+          inp.focus();
+        } catch (_) {}
+      }
+    }
+
+    function startSaveFlow() {
+      hideGuidedChrome();
+      GC.mode = "guided_save";
+      resetGcSave();
+      GC.savePhase = "day";
+      renderSaveDayRow();
+    }
+
+    function onGuidedClick(ev) {
+      if (!narrow()) return;
+      var x = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-guided]") : null;
+      if (!x) return;
+      var act = String(x.getAttribute("data-iu-silver-guided") || "");
+      if (act === "save") {
+        ev.preventDefault();
+        startSaveFlow();
+        return;
+      }
+      if (act === "search") {
+        ev.preventDefault();
+        startSearchFlow();
+        return;
+      }
+      if (act.indexOf("gd-") === 0 && GC.mode !== "guided_save") return;
+      if (GC.mode !== "guided_save" && GC.mode !== "cal_choice") return;
+      if (act === "gd-dnes") {
+        ev.preventDefault();
+        applyDayPhrase(todayIso(), "dnes");
+        return;
+      }
+      if (act === "gd-zitra") {
+        ev.preventDefault();
+        applyDayPhrase(addDaysIso(todayIso(), 1), "zítra");
+        return;
+      }
+      if (act === "gd-dynamic") {
+        ev.preventDefault();
+        var iso0 = String(x.getAttribute("data-iu-silver-guided-dyn") || addDaysIso(todayIso(), 2));
+        renderDynamicDayMenu(iso0);
+        return;
+      }
+      if (act === "gd-date") {
+        ev.preventDefault();
+        var dp = datePickEl();
+        if (dp && typeof dp.showPicker === "function") {
+          try {
+            dp.showPicker();
+          } catch (_) {
+            try {
+              dp.click();
+            } catch (_) {}
+          }
+        } else if (dp) {
+          try {
+            dp.click();
+          } catch (_) {}
+        }
+        return;
+      }
+      if (act === "gd-pickday") {
+        ev.preventDefault();
+        var iso = String(x.getAttribute("data-iu-silver-guided-iso") || "");
+        if (!iso) return;
+        var ph = fmtLongCs(iso);
+        applyDayPhrase(iso, ph);
+        return;
+      }
+      if (act === "gd-timepick") {
+        ev.preventDefault();
+        renderTimeMenu();
+        return;
+      }
+      if (act === "gd-timefix") {
+        ev.preventDefault();
+        var tf = String(x.getAttribute("data-iu-silver-guided-t") || "");
+        applyTime(tf);
+        return;
+      }
+      if (act === "gd-timecustom") {
+        ev.preventDefault();
+        var raw = window.prompt("Čas (HH:MM)", "15:00");
+        var tm = String(raw || "").trim();
+        if (!/^\d{1,2}:\d{2}$/.test(tm)) return;
+        var pa = tm.split(":");
+        applyTime(pad2(Number(pa[0])) + ":" + pad2(Number(pa[1])));
+        return;
+      }
+      if (act === "gd-rem-open") {
+        ev.preventDefault();
+        renderRemMenu();
+        return;
+      }
+      if (act === "gd-rem-pick") {
+        ev.preventDefault();
+        var opts2 = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
+        var ri = Number(x.getAttribute("data-iu-silver-guided-ridx") || 0);
+        GC.reminder = opts2[ri] || "";
+        renderAfterTitle();
+        syncInputFromGc();
+        return;
+      }
+      if (act === "gd-addr") {
+        ev.preventDefault();
+        var a = window.prompt("Adresa:", "");
+        GC.address = String(a || "").trim();
+        renderAfterTitle();
+        syncInputFromGc();
+        return;
+      }
+      if (act === "gd-note") {
+        ev.preventDefault();
+        var n = window.prompt("Poznámka:", "");
+        GC.note = String(n || "").trim();
+        renderAfterTitle();
+        syncInputFromGc();
+        return;
+      }
+      if (act === "gd-final-save") {
+        ev.preventDefault();
+        void guidedPersistSave();
+        return;
+      }
+    }
+
+    function syncTitleFromInputLine() {
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (!inp) return;
+      var line0 = String(inp.value || "").split("\n")[0].trim();
+      var prefix = ("Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " ").trim();
+      if (line0.toLowerCase().indexOf("ulož do kalendáře") === 0 && line0.length > prefix.length) {
+        GC.title = line0.slice(prefix.length).trim();
+      } else {
+        GC.title = String(inp.value || "").split("\n")[0].trim();
+      }
+    }
+
+    async function guidedPersistSave() {
+      var svc = window.iuCalendarService;
+      if (!svc || typeof svc.calendarCreateEvent !== "function") return;
+      syncTitleFromInputLine();
+      var title = String(GC.title || "").trim();
+      if (!GC.dateIso || !GC.time || !title) return;
+      var noteJoined = GC.note ? String(GC.note).trim() : "";
+      if (GC.reminder) {
+        noteJoined = noteJoined ? noteJoined + "\n\nPřipomenutí: " + GC.reminder : "Připomenutí: " + GC.reminder;
+      }
+      try {
+        var res = await svc.calendarCreateEvent({
+          date: GC.dateIso,
+          time: GC.time,
+          title: title.slice(0, 120),
+          note: noteJoined.slice(0, 1000),
+          address: String(GC.address || "").trim().slice(0, 240),
+          reminder: String(GC.reminder || "").trim().slice(0, 80),
+          type: "personal",
+          attachments: []
+        });
+        if (res && res.ok) {
+          hideGuidedChrome();
+          var inp = document.getElementById("iuSilverHomeInput");
+          if (inp) {
+            inp.value = "";
+            inp.placeholder = "Napiš Silverovi…";
+          }
+          var t = toastEl();
+          if (t) {
+            t.hidden = false;
+            t.textContent = "\u2714 Uloženo do kalendáře";
+            setTimeout(function () {
+              try {
+                t.hidden = true;
+                t.textContent = "";
+              } catch (_) {}
+            }, 3200);
+          }
+        }
+      } catch (_) {}
+      resetGcSave();
+    }
+
+    function onDatePicked() {
+      var dp = datePickEl();
+      if (!dp || !dp.value) return;
+      var ph = fmtLongCs(dp.value);
+      applyDayPhrase(dp.value, ph);
+    }
+
+    function onMindMenuCapture(ev) {
+      if (!narrow()) return;
+      var b = ev.target && ev.target.closest ? ev.target.closest(".iu-mmTopTool--cal") : null;
+      if (!b) return;
+      try {
+        if (b.getAttribute("data-iu-cal-synth") === "1") return;
+      } catch (_) {}
+      CAL_SEQ++;
+      if (CAL_SEQ % 2 === 1) {
+        try {
+          ev.preventDefault();
+        } catch (_) {}
+        try {
+          ev.stopPropagation();
+        } catch (_) {}
+        showCalChoice();
+      }
+    }
+
+    window.iuSilverCalEntryQuick = function () {
+      if (!narrow()) return false;
+      CAL_SEQ++;
+      if (CAL_SEQ % 2 === 1) {
+        showCalChoice();
+        return true;
+      }
+      return false;
+    };
+
+    window.iuSilverGuidedOnHomeSendBefore = function (inp) {
+      try {
+        if (GC.searchMode && inp) {
+          var v = String(inp.value || "").trim();
+          if (v) inp.value = "Vyhledat v kalendáři " + v;
+          GC.searchMode = false;
+        }
+      } catch (_) {}
+      hideGuidedChrome();
+      var inp2 = document.getElementById("iuSilverHomeInput");
+      if (inp2) {
+        try {
+          inp2.placeholder = "Napiš Silverovi…";
+        } catch (_) {}
+      }
+    };
+
+    window.iuSilverGuidedConsumeEnter = function (ev, hi) {
+      if (GC.savePhase !== "title") return false;
+      if (!ev || ev.key !== "Enter") return false;
+      try {
+        ev.preventDefault();
+      } catch (_) {}
+      var t = String(hi.value || "").trim();
+      if (!t) return true;
+      GC.title = t;
+      GC.savePhase = "optional";
+      if (modeEl()) modeEl().textContent = "Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " " + GC.title;
+      renderAfterTitle();
+      syncInputFromGc();
+      return true;
+    };
+
+    window.iuSilverCalendarGuidedFlowInit = function () {
+      try {
+        if (!window.__iuSilverGuidedDocClick) {
+          window.__iuSilverGuidedDocClick = 1;
+          document.addEventListener("click", onGuidedClick, false);
+        }
+      } catch (_) {}
+      var mm = document.querySelector(".mindMenu");
+      if (mm && !mm.__iuCalGuidedCap) {
+        mm.__iuCalGuidedCap = 1;
+        mm.addEventListener("click", onMindMenuCapture, true);
+      }
+      var dp = datePickEl();
+      if (dp && !dp.__iuCalDateHook) {
+        dp.__iuCalDateHook = 1;
+        dp.addEventListener("change", onDatePicked);
+      }
+      var mic = document.getElementById("iuSilverHomeMic");
+      if (mic && !mic.__iuCalMicHook) {
+        mic.__iuCalMicHook = 1;
+        mic.addEventListener("click", function (e) {
+          try {
+            e.preventDefault();
+          } catch (_) {}
+          var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SR) {
+            try {
+              alert("Hlasové zadání není v tomto prohlížeči dostupné.");
+            } catch (_) {}
+            return;
+          }
+          var r = new SR();
+          r.lang = "cs-CZ";
+          r.interimResults = false;
+          r.maxAlternatives = 1;
+          r.onresult = function (ev2) {
+            try {
+              var t = ev2.results[0][0].transcript;
+              var inp = document.getElementById("iuSilverHomeInput");
+              if (inp && t) inp.value = String(inp.value || "") + (inp.value ? " " : "") + String(t).trim();
+            } catch (_) {}
+          };
+          try {
+            r.start();
+          } catch (_) {}
+        });
+      }
+    };
+  })();
+
 /* IU_SILVER_P0_ENGINE_START */
 /**
  * iuSilver P0: deterministic calendar intent + homepage → fullscreen chat.
@@ -33147,7 +33828,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   "use strict";
 
   const PENDING_KEY = "iuSilver.pendingFirstMessage.v1";
-  const SILVER_HOME_INPUT_MAX = 150;
+  const SILVER_HOME_INPUT_MAX = 450;
   /** Musí odpovídat scripts/test_salutation_intent.js (grep guard). */
   const IU_SILVER_SALUTATION_SYNC_TAG = "IU_SILVER_SALUTATION_SYNC_V1=2026-04-12c";
   /** JSON: { mode: "none"|"formal"|"informal"|"name", at?: number } — doplnění k iu_user_address pro tón. */
@@ -33454,6 +34135,20 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = foldCs(r);
     if (!r) return null;
     if (iuSilverCalendarReadSuppressedForWriteIntent(f)) return null;
+
+    if (/^vyhledat\s+v\s+kalend[aá]ři\s+/i.test(r) || /^vyhledat\s+v\s+kalendari\s+/i.test(r)) {
+      const rest = r.replace(/^\s*vyhledat\s+v\s+kalend[aá]ři\s+/i, "").replace(/^\s*vyhledat\s+v\s+kalendari\s+/i, "").replace(/\s*[?.!]+\s*$/g, "").trim();
+      if (rest && rest.length > 0) {
+        const qFold = foldCs(rest);
+        return {
+          intent: "find_by_title",
+          query: rest,
+          normalizedQuery: rest,
+          diacriticInsensitive: true,
+          queryFolded: qFold
+        };
+      }
+    }
 
     const coMam = /\bco\s+m[aá]m\b/.test(f);
     const kdyMam = /^\s*kdy\s+m[aá]m\s+/i.test(r) || /^\s*kdy\s+m[aá]m\s+/i.test(f);
@@ -33782,6 +34477,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       title: d.title || "",
       note: d.note || "",
       location: d.location || "",
+      address: d.address || "",
+      reminder: d.reminder || "",
       durationMinutes: d.durationMinutes == null ? null : d.durationMinutes,
       meta: {
         date: d.meta.date,
@@ -33803,6 +34500,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       title: "",
       note: "",
       location: "",
+      address: "",
+      reminder: "",
       durationMinutes: null,
       meta: {
         date: "missing",
@@ -35219,6 +35918,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         .trim()
         .slice(0, 200);
       d.meta.location = d.location ? "certain" : "optional";
+      d.address = String(d.location || "").trim();
     }
     const durIn = cardEl.querySelector('[data-iu-silver-field="duration"]');
     if (durIn) {
@@ -35295,6 +35995,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const ov = document.getElementById("iuSilverChatOverlay");
     if (!ov) return;
     try {
+      if (typeof window.iuSilverGuidedResetFromNav === "function") window.iuSilverGuidedResetFromNav();
+    } catch (_) {}
+    try {
       window.__iuSilverLastSaveResult = null;
     } catch {}
     chatState.returnFocus = fromEl || document.activeElement;
@@ -35318,6 +36021,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function closeChatOverlay() {
     const ov = document.getElementById("iuSilverChatOverlay");
     if (!ov) return;
+    try {
+      if (typeof window.iuSilverGuidedResetFromNav === "function") window.iuSilverGuidedResetFromNav();
+    } catch (_) {}
     clearPendingStorageDisambiguation();
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
@@ -35459,6 +36165,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function handleHomeSubmit() {
     const input = document.getElementById("iuSilverHomeInput") || document.querySelector("#silver-slot .silver-input");
     if (!input) return;
+    try {
+      if (typeof window.iuSilverGuidedOnHomeSendBefore === "function") window.iuSilverGuidedOnHomeSendBefore(input);
+    } catch (_) {}
     clampSilverHomeInput(input);
     const text = String(input.value || "").trim().slice(0, SILVER_HOME_INPUT_MAX);
     if (!text) return;
@@ -35621,7 +36330,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     chatState.saveBusy = true;
     const noteParts = [];
     if (d.note) noteParts.push(d.note);
-    if (d.location) noteParts.push("Místo: " + d.location);
+    const addrDraft = String(d.address || "").trim() || String(d.location || "").trim();
+    const remDraft = String(d.reminder || "").trim();
+    if (remDraft) noteParts.push("Připomenutí: " + remDraft);
     const noteJoined = noteParts.join("\n\n").slice(0, 1000);
     try {
       const res = await svc.calendarCreateEvent({
@@ -35629,6 +36340,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         time: d.time,
         title: d.title,
         note: noteJoined,
+        address: addrDraft,
+        reminder: remDraft,
         type: "personal",
         attachments: []
       });
@@ -35696,6 +36409,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function boot() {
+    try {
+      if (typeof window.iuSilverCalendarGuidedFlowInit === "function") window.iuSilverCalendarGuidedFlowInit();
+    } catch (_) {}
     const homeIn = document.getElementById("iuSilverHomeInput");
     const homeSend = document.getElementById("iuSilverHomeSend");
     const cIn = document.getElementById("iuSilverChatInput");
@@ -35722,6 +36438,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       });
       homeIn.addEventListener("keydown", (e) => {
         if (e.key !== "Enter") return;
+        try {
+          if (typeof window.iuSilverGuidedConsumeEnter === "function" && window.iuSilverGuidedConsumeEnter(e, homeIn)) return;
+        } catch (_) {}
         e.preventDefault();
         handleHomeSubmit();
       });
@@ -35750,6 +36469,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();
+
+/* IU_SILVER_P0_ENGINE_END */
 
 (function iuBootDeferredToolOverlays() {
   "use strict";
@@ -35987,5 +36708,3 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   };
 })();
-
-/* IU_SILVER_P0_ENGINE_END */
