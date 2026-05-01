@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-01T17:54:38.977209Z",
+  "ingestedAt": "2026-05-01T18:29:21.422559Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Vyzkoušejte si zdarma na Steamu tři žánrově pestré hry",
+      "url": "https://zing.cz/article/vyzkousejte-si-zdarma-na-steamu-tri-zanrove-pestre-hry",
+      "dt": "2026-05-01T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hry",
+        "pestré",
+        "steamu",
+        "tři",
+        "vyzkoušejte",
+        "zdarma",
+        "žánrově"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -977,32 +1001,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Fanoušci hardcore stříleček se dočkali nové hry zasazené do studené války",
-      "url": "https://zing.cz/article/fanousci-hardcore-strilecek-se-dockali-nove-hry-zasazene-do-studene-valky",
-      "dt": "2026-04-27T14:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "dočkali",
-        "fanoušci",
-        "hardcore",
-        "hry",
-        "nové",
-        "studené",
-        "stříleček",
-        "války",
-        "zasazené"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1013,7 +1011,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125363,
+      "bytes": 125212,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1050,7 +1048,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 38,
@@ -1066,6 +1064,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vyzkoušejte si zdarma na Steamu tři žánrově pestré hry",
+            "publishedAt": "2026-05-01T18:00:00Z"
+          },
           {
             "title": "Recenze Aphelion – mrazivé sci-fi naráží na průměrnou hratelnost",
             "publishedAt": "2026-05-01T17:00:00Z"
@@ -1093,10 +1095,6 @@
           {
             "title": "Nová hra s Batmanem se blíží. LEGO Batman: Legacy of the Dark Knight hlásí hotovo",
             "publishedAt": "2026-05-01T06:00:00Z"
-          },
-          {
-            "title": "Hogwarts Legacy je na PC k dispozici zdarma",
-            "publishedAt": "2026-05-01T04:00:00Z"
           }
         ]
       }

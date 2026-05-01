@@ -1,25 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T17:54:38.977209Z",
+  "ingestedAt": "2026-05-01T18:29:21.422559Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Česko – Švédsko 2:1. Tománek z přesilovky vrací národnímu týmu vedení",
+      "title": "ONLINE: Česko – Švédsko 3:2. Command snížil, osmnáctka ubránila přesilovku",
       "url": "https://www.idnes.cz/hokej/reprezentace/ms-do-18-let-cesko-svedsko-semifinale-online-zpravodajstvi.A260501_151010_reprezentace_ivt",
-      "dt": "2026-05-01T17:36:28Z",
+      "dt": "2026-05-01T18:23:20Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "národnímu",
-        "přesilovky",
-        "tománek",
-        "týmu",
-        "vedení",
-        "vrací",
+        "command",
+        "osmnáctka",
+        "přesilovku",
+        "snížil",
+        "ubránila",
         "česko",
         "švédsko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pogačar na Romandii poprvé poražen. Spurtu třetí etapy vládl Francouz Godon",
+      "url": "https://www.idnes.cz/sport/cyklistika/pogacar-na-romandii-poprve-porazen.A260501_190701_cyklistika_mrg",
+      "dt": "2026-05-01T17:45:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "etapy",
+        "francouz",
+        "godon",
+        "pogačar",
+        "poprvé",
+        "poražen",
+        "romandii",
+        "spurtu",
+        "třetí",
+        "vládl"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -759,33 +785,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Horníček pomohl Braze na úvod semifinále Evropské ligy k výhře, slavil i Nottingham",
-      "url": "https://www.idnes.cz/fotbal/pohary/hornicek-pomohl-braze-v-semifinale-evropke-ligy-k-vyhre-2-1-nad-freiburgem.A260430_233710_fot_pohary_pls",
-      "dt": "2026-04-30T21:40:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "braze",
-        "evropské",
-        "horníček",
-        "ligy",
-        "nottingham",
-        "pomohl",
-        "semifinále",
-        "slavil",
-        "výhře",
-        "úvod"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +795,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45356,
+      "bytes": 45062,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +832,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T17:36:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T18:23:20Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -849,8 +848,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Česko – Švédsko 2:1. Tománek z přesilovky vrací národnímu týmu vedení",
-            "publishedAt": "2026-05-01T17:36:28Z"
+            "title": "ONLINE: Česko – Švédsko 3:2. Command snížil, osmnáctka ubránila přesilovku",
+            "publishedAt": "2026-05-01T18:23:20Z"
+          },
+          {
+            "title": "Pogačar na Romandii poprvé poražen. Spurtu třetí etapy vládl Francouz Godon",
+            "publishedAt": "2026-05-01T17:45:00Z"
           },
           {
             "title": "Nymburk pokořil stovku i ve druhém čtvrtfinále, Ostrava se nechytala",
@@ -875,10 +878,6 @@
           {
             "title": "První nadhoz v podání Malinina a jeho kolegů. Místo show přišel chaos",
             "publishedAt": "2026-05-01T14:00:00Z"
-          },
-          {
-            "title": "Šimon Stránský znovu vítkovický. Vrací se po více než šesti letech",
-            "publishedAt": "2026-05-01T13:31:00Z"
           }
         ]
       }
