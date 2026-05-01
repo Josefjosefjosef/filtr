@@ -736,9 +736,24 @@ style-src 'self' 'unsafe-inline' https:;
           -webkit-tap-highlight-color: transparent !important;
           text-align: center !important;
         }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:hover,
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:active{
-          filter: brightness(1.07) !important;
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn:hover,
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn:hover{
+          filter: brightness(1.05) !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn:hover{
+          filter: none !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn:active{
+          transform: scale(0.97) !important;
+          filter: none !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn:active{
+          background: rgba(255, 122, 0, 0.08) !important;
+          filter: none !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn:active{
+          color: #ffffff !important;
+          filter: none !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip__svg{
           flex: 0 0 auto !important;
@@ -757,17 +772,26 @@ style-src 'self' 'unsafe-inline' https:;
           flex: 0 1 auto !important;
           max-width: 100% !important;
         }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSave{
-          border: 1px solid rgba(255, 255, 255, 0.22) !important;
-          background: linear-gradient(135deg, #22c55e, #10b981) !important;
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn{
+          background: linear-gradient(135deg, #ff8a00, #ff6a00) !important;
+          color: #fff !important;
+          border: none !important;
+          font-weight: 600 !important;
+          box-shadow: 0 6px 18px rgba(255, 122, 0, 0.35) !important;
         }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSearch{
-          border: 1px solid rgba(255, 255, 255, 0.22) !important;
-          background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn{
+          background: transparent !important;
+          color: #ff7a00 !important;
+          border: 2px solid #ff7a00 !important;
+          font-weight: 500 !important;
+          box-shadow: none !important;
         }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel{
-          border: 1px solid rgba(15, 23, 42, 0.35) !important;
-          background: linear-gradient(135deg, #334155, #1e293b) !important;
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn{
+          background: transparent !important;
+          border: none !important;
+          color: rgba(255, 255, 255, 0.7) !important;
+          font-weight: 500 !important;
+          box-shadow: none !important;
         }
       }
       @media (min-width: 1025px){
