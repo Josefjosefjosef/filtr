@@ -32589,6 +32589,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           "#iuCalendarOverlay .iu-calendarOverlay__dialog{position:fixed!important;left:0!important;right:0!important;top:0!important;" +
           "bottom:var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 32px))!important;" +
           "width:100vw!important;max-width:100vw!important;min-height:0!important;height:auto!important;" +
+          "max-height:calc(100vh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 32px)))!important;" +
           "max-height:calc(100dvh - var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 32px)))!important;" +
           "margin:0!important;border-radius:0!important;overflow:hidden!important;display:flex!important;" +
           "flex-direction:column!important;box-sizing:border-box!important}" +
@@ -33255,6 +33256,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     var SILVER_CAL_UI_DEFAULT = "DEFAULT";
     var SILVER_CAL_UI_ACTION = "ACTION_STATE";
     var SILVER_CAL_UI_CAL_OPEN = "CALENDAR_OPEN";
+    var SILVER_CAL_UI_GUIDED_SAVE = "GUIDED_SAVE_FLOW";
     var silverCalUiState = SILVER_CAL_UI_DEFAULT;
     var silverCalendarDraft = {
       intent: "uložit do kalendáře",
@@ -33308,13 +33310,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function guidedSheetParts() {
       return {
         root: document.getElementById("iuSilverGuidedSheetRoot"),
-        timeBlock: document.getElementById("iuSilverGuidedSheetTime"),
         textBlock: document.getElementById("iuSilverGuidedSheetText"),
-        dateBlock: document.getElementById("iuSilverGuidedSheetDate"),
-        timeInp: document.getElementById("iuSilverGuidedTimeInput"),
         textInp: document.getElementById("iuSilverGuidedTextInput"),
-        textLab: document.getElementById("iuSilverGuidedTextLab"),
-        dateInp: document.getElementById("iuSilverGuidedDateInput")
+        textLab: document.getElementById("iuSilverGuidedTextLab")
       };
     }
 
@@ -33322,31 +33320,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       SHEET_KIND = "";
       var z = guidedSheetParts();
       if (z.root) z.root.hidden = true;
-      if (z.timeBlock) z.timeBlock.hidden = true;
       if (z.textBlock) z.textBlock.hidden = true;
-      if (z.dateBlock) z.dateBlock.hidden = true;
-    }
-
-    function openGuidedTimeSheet() {
-      try {
-        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
-      } catch (_) {}
-      try {
-        if (typeof window.__iuSilverForceHomeSendArrow === "function") window.__iuSilverForceHomeSendArrow();
-      } catch (_) {}
-      SHEET_KIND = "time";
-      var z = guidedSheetParts();
-      if (!z.root || !z.timeBlock || !z.timeInp) return;
-      z.root.hidden = false;
-      z.timeBlock.hidden = false;
-      if (z.textBlock) z.textBlock.hidden = true;
-      if (z.dateBlock) z.dateBlock.hidden = true;
-      try {
-        z.timeInp.value = "15:00";
-      } catch (_) {}
-      try {
-        z.timeInp.focus();
-      } catch (_) {}
     }
 
     function openGuidedTextSheet(kind) {
@@ -33360,8 +33334,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var z = guidedSheetParts();
       if (!z.root || !z.textBlock || !z.textInp || !z.textLab) return;
       z.root.hidden = false;
-      if (z.timeBlock) z.timeBlock.hidden = true;
-      if (z.dateBlock) z.dateBlock.hidden = true;
       z.textBlock.hidden = false;
       if (SHEET_KIND === "note") {
         try {
@@ -33390,72 +33362,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch (_) {}
     }
 
-    function openGuidedDateSheet() {
-      try {
-        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
-      } catch (_) {}
-      try {
-        if (typeof window.__iuSilverForceHomeSendArrow === "function") window.__iuSilverForceHomeSendArrow();
-      } catch (_) {}
-      SHEET_KIND = "date";
-      var z = guidedSheetParts();
-      if (!z.root || !z.dateBlock || !z.dateInp) return;
-      z.root.hidden = false;
-      z.dateBlock.hidden = false;
-      if (z.timeBlock) z.timeBlock.hidden = true;
-      if (z.textBlock) z.textBlock.hidden = true;
-      try {
-        z.dateInp.value = String(silverCalendarDraft.date || todayIso());
-      } catch (_) {}
-      try {
-        z.dateInp.focus();
-      } catch (_) {}
-    }
-
     function onGuidedSheetOk() {
       var z = guidedSheetParts();
-      if (SHEET_KIND === "time") {
-        var raw = String((z.timeInp && z.timeInp.value) || "").trim();
-        if (!/^\d{1,2}:\d{2}$/.test(raw)) {
-          closeGuidedSheet();
-          return;
-        }
-        var pa = raw.split(":");
-        applyTime(pad2(Number(pa[0])) + ":" + pad2(Number(pa[1])));
-        return;
-      }
-      if (SHEET_KIND === "date") {
-        var rawD = String((z.dateInp && z.dateInp.value) || "").trim();
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(rawD)) {
-          closeGuidedSheet();
-          return;
-        }
-        applyDayPhrase(rawD, fmtLongCs(rawD));
-        closeGuidedSheet();
-        return;
-      }
       if (SHEET_KIND === "addr") {
         silverCalendarDraft.address = String((z.textInp && z.textInp.value) || "").trim();
-        renderAfterTitle();
         rebuildSilverCalendarInput();
         closeGuidedSheet();
+        openGuidedTextSheet("note");
         return;
       }
       if (SHEET_KIND === "title") {
         var titOk = String((z.textInp && z.textInp.value) || "").trim();
         if (!titOk) return;
         silverCalendarDraft.title = titOk;
-        GC.savePhase = "optional";
-        renderAfterTitle();
+        GC.savePhase = "addr";
         rebuildSilverCalendarInput();
         closeGuidedSheet();
+        openGuidedTextSheet("addr");
         return;
       }
       if (SHEET_KIND === "note") {
         silverCalendarDraft.note = String((z.textInp && z.textInp.value) || "").trim();
-        renderAfterTitle();
         rebuildSilverCalendarInput();
         closeGuidedSheet();
+        renderRemMenu();
+        return;
       }
     }
 
@@ -33556,13 +33487,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return out;
     }
 
-    function fmtLongCs(dateIso) {
+    /** Kompaktní datum do input builderu (např. 3.5.). */
+    function fmtDotCs(dateIso) {
       try {
         var p = String(dateIso).split("-");
         var dt = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
-        return dt.toLocaleDateString("cs-CZ", { day: "numeric", month: "long" });
+        return dt.getDate() + "." + (dt.getMonth() + 1) + ".";
       } catch (_) {
-        return dateIso;
+        return String(dateIso || "");
       }
     }
 
@@ -33648,10 +33580,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.innerHTML = html;
     }
 
-    function applyDayPhrase(iso, phraseIn) {
-      silverCalendarDraft.date = iso;
-      silverCalendarDraft.day = phraseIn || null;
-      GC.savePhase = "time";
+    function applyDaySelection(iso, dayLabel) {
+      silverCalendarDraft.date = iso || null;
+      silverCalendarDraft.day = dayLabel != null && String(dayLabel).trim() ? String(dayLabel).trim() : null;
+      GC.savePhase = "time_btn";
       rebuildSilverCalendarInput();
       var m = modeEl();
       if (m) {
@@ -33661,9 +33593,48 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
-      c.className = "iuSilverHomeChips";
+      c.className = "iuSilverHomeChips iuSilverHomeChips--timeChoiceRow";
       c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timepick">\u010cas \u25be</button>';
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-time-open">vybrat \u010das</button>';
+    }
+
+    function renderMiniDatePicker() {
+      var c = chipsEl();
+      if (!c) return;
+      c.hidden = false;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--pickGrid iuSilverHomeChips--miniDatePick";
+      var base = todayIso();
+      var html = "";
+      for (var i = 0; i < 21; i++) {
+        var iso = addDaysIso(base, i);
+        html +=
+          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-minical" data-iu-silver-guided-iso="' +
+          iso +
+          '">' +
+          fmtDotCs(iso) +
+          "</button>";
+      }
+      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-minical-back">zp\u011bt</button>';
+      c.innerHTML = html;
+    }
+
+    function renderCustomHourGrid() {
+      var c = chipsEl();
+      if (!c) return;
+      c.hidden = false;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
+      var html = "";
+      for (var h = 6; h <= 22; h++) {
+        var t = pad2(h) + ":00";
+        html +=
+          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timefix" data-iu-silver-guided-t="' +
+          t +
+          '">' +
+          h +
+          ":00</button>";
+      }
+      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-time-back">zp\u011bt</button>';
+      c.innerHTML = html;
     }
 
     function renderTimeMenu() {
@@ -33704,16 +33675,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       openGuidedTextSheet("title");
     }
 
-    function renderAfterTitle() {
+    function renderFinalSaveOnly() {
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--afterTitle";
+      c.className = "iuSilverHomeChips iuSilverHomeChips--finalSave";
       c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-addr">přidat adresu</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-note">přidat poznámku</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-open">připomenutí \u25be</button>' +
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--save" data-iu-silver-guided="gd-final-save">ULOŽIT</button>';
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--save" data-iu-silver-guided="gd-final-save">ULO\u017dIT</button>';
     }
 
     function renderRemMenu() {
@@ -33752,7 +33720,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (d.day) {
         parts.push(String(d.day).trim());
       } else if (d.date) {
-        parts.push(fmtLongCs(d.date));
+        parts.push(fmtDotCs(d.date));
       }
       if (d.time) {
         parts.push("v " + formatTimeCsHod(d.time));
@@ -33797,6 +33765,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function startSaveFlow() {
       closeGuidedSheet();
+      silverCalUiState = SILVER_CAL_UI_GUIDED_SAVE;
+      setSilverCalUiAttr();
       GC.mode = "guided_save";
       GC.savePhase = "day";
       emptySilverCalendarDraft();
@@ -33830,12 +33800,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (GC.mode !== "guided_save" && GC.mode !== "cal_choice") return;
       if (act === "gd-dnes") {
         ev.preventDefault();
-        applyDayPhrase(todayIso(), "dnes");
+        applyDaySelection(todayIso(), "dnes");
         return;
       }
       if (act === "gd-zitra") {
         ev.preventDefault();
-        applyDayPhrase(addDaysIso(todayIso(), 1), "zítra");
+        applyDaySelection(addDaysIso(todayIso(), 1), "zítra");
         return;
       }
       if (act === "gd-dynamic") {
@@ -33846,18 +33816,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-date") {
         ev.preventDefault();
-        openGuidedDateSheet();
+        renderMiniDatePicker();
+        return;
+      }
+      if (act === "gd-minical") {
+        ev.preventDefault();
+        var isoMc = String(x.getAttribute("data-iu-silver-guided-iso") || "");
+        if (!isoMc) return;
+        applyDaySelection(isoMc, null);
+        return;
+      }
+      if (act === "gd-minical-back") {
+        ev.preventDefault();
+        renderSaveDayRow();
         return;
       }
       if (act === "gd-pickday") {
         ev.preventDefault();
         var iso = String(x.getAttribute("data-iu-silver-guided-iso") || "");
         if (!iso) return;
-        var ph = fmtLongCs(iso);
-        applyDayPhrase(iso, ph);
+        var ph = weekdayV(new Date(iso + "T12:00:00"));
+        applyDaySelection(iso, ph);
         return;
       }
-      if (act === "gd-timepick") {
+      if (act === "gd-time-open") {
         ev.preventDefault();
         renderTimeMenu();
         return;
@@ -33870,12 +33852,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-timecustom") {
         ev.preventDefault();
-        openGuidedTimeSheet();
+        renderCustomHourGrid();
         return;
       }
-      if (act === "gd-rem-open") {
+      if (act === "gd-time-back") {
         ev.preventDefault();
-        renderRemMenu();
+        renderTimeMenu();
         return;
       }
       if (act === "gd-rem-pick") {
@@ -33883,18 +33865,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         var opts2 = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
         var ri = Number(x.getAttribute("data-iu-silver-guided-ridx") || 0);
         silverCalendarDraft.reminder = opts2[ri] || "";
-        renderAfterTitle();
         rebuildSilverCalendarInput();
-        return;
-      }
-      if (act === "gd-addr") {
-        ev.preventDefault();
-        openGuidedTextSheet("addr");
-        return;
-      }
-      if (act === "gd-note") {
-        ev.preventDefault();
-        openGuidedTextSheet("note");
+        renderFinalSaveOnly();
         return;
       }
       if (act === "gd-final-save") {
@@ -33954,8 +33926,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function onDatePicked() {
       var dp = datePickEl();
       if (!dp || !dp.value) return;
-      var ph = fmtLongCs(dp.value);
-      applyDayPhrase(dp.value, ph);
+      if (GC.mode !== "guided_save") return;
+      applyDaySelection(dp.value, null);
     }
 
     function onMindMenuCapture(ev) {
