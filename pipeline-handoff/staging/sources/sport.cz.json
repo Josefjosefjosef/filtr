@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-01T04:15:08.160146Z",
+  "ingestedAt": "2026-05-01T04:50:07.508316Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Faksův Dallas vypadl v prvním kole s Minnesotou, o postup bojuje Dostál",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-faksuv-dallas-vypadl-v-prvnim-kole-s-minnesotou-o-postup-bojuje-dostal-5446496",
+      "dt": "2026-05-01T04:25:56Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bojuje",
+        "dallas",
+        "dostál",
+        "faksův",
+        "kole",
+        "minnesotou",
+        "postup",
+        "prvním",
+        "vypadl"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -737,29 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kádr Sparty není na házení bomby, říká Augusta",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-augusta-prirovnal-spartu-k-montrealu-je-to-kolos-budu-malinko-prisny-ale-bombu-do-kadru-nehodim-5446202",
-      "dt": "2026-04-30T13:21:07Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "augusta",
-        "bomby",
-        "házení",
-        "kádr",
-        "sparty",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -770,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41226,
+      "bytes": 41245,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -807,7 +810,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T21:36:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:25:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -823,6 +826,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Faksův Dallas vypadl v prvním kole s Minnesotou, o postup bojuje Dostál",
+            "publishedAt": "2026-05-01T04:25:56Z"
+          },
           {
             "title": "Turnaj v Madridu má senzačního semifinalistu. Obhájce titulu končí",
             "publishedAt": "2026-04-30T12:57:17Z"
@@ -850,10 +857,6 @@
           {
             "title": "Obr Klapka zničil mantinel a přerušil zápas. To si mohl odpustit, dobírali si ho spoluhráči",
             "publishedAt": "2026-04-30T20:34:38Z"
-          },
-          {
-            "title": "Zemanová dospurtovala v úvodní etapě závodu Gracia na druhém místě",
-            "publishedAt": "2026-04-30T20:26:18Z"
           }
         ]
       }

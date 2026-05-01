@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T04:15:08.160146Z",
+  "ingestedAt": "2026-05-01T04:50:07.508316Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Naděje pro trh s ropou? Emiráty opouštějí OPEC a plánují rozjet těžbu naplno",
+      "url": "https://ekonomickydenik.cz/emiraty-opousteji-opec-planuji-rozjet-tezbu/",
+      "dt": "2026-05-01T04:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "emiráty",
+        "naděje",
+        "naplno",
+        "opec",
+        "opouštějí",
+        "plánují",
+        "ropou",
+        "rozjet",
+        "trh",
+        "těžbu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -755,31 +782,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ČEZ odtajnil, kolik si vydělali šéfové i jakou navrhuje dividendu",
-      "url": "https://ekonomickydenik.cz/cez-odtajnil-vydelali-sefove-dividenda/",
-      "dt": "2026-04-29T10:48:52Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dividendu",
-        "jakou",
-        "kolik",
-        "navrhuje",
-        "odtajnil",
-        "vydělali",
-        "čez",
-        "šéfové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 75298,
+      "bytes": 74744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T18:35:55Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 24,
@@ -844,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Naděje pro trh s ropou? Emiráty opouštějí OPEC a plánují rozjet těžbu naplno",
+            "publishedAt": "2026-05-01T04:15:00Z"
+          },
           {
             "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
             "publishedAt": "2026-04-30T18:35:55Z"
@@ -871,10 +877,6 @@
           {
             "title": "Umělá inteligence pod kontrolou sněmovního výboru? Projekt tvrdě narazil",
             "publishedAt": "2026-04-30T12:05:08Z"
-          },
-          {
-            "title": "„Zklamání“. Česká ekonomika roste jen pomalu. Dopady války teprve přijdou",
-            "publishedAt": "2026-04-30T11:28:53Z"
           }
         ]
       }

@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-01T04:15:08.160146Z",
+  "ingestedAt": "2026-05-01T04:50:07.508316Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Exministr Kavan neuspěl jako bojovník proti komunismu. I nevědomá spolupráce s StB stačí",
+      "url": "https://www.ceska-justice.cz/2026/05/kavan-neuspel-bojovnik-proti-komunismu/",
+      "dt": "2026-05-01T04:30:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "bojovník",
+        "exministr",
+        "jako",
+        "kavan",
+        "komunismu",
+        "neuspěl",
+        "nevědomá",
+        "proti",
+        "spolupráce",
+        "stačí",
+        "stb"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -240,34 +268,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trend skrývání majetků. Česko musí opět přitlačit v prevenci korupce u soudců a poslanců",
-      "url": "https://www.ceska-justice.cz/2026/04/trend-skryvani-majetku-cesko-musi-pritlacit-v-prevenci-korupce/",
-      "dt": "2026-04-29T08:48:31Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "korupce",
-        "majetků",
-        "musí",
-        "opět",
-        "poslanců",
-        "prevenci",
-        "přitlačit",
-        "skrývání",
-        "soudců",
-        "trend",
-        "česko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -278,7 +278,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 94248,
+      "bytes": 98487,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -315,7 +315,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T15:07:07Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -330,6 +330,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Exministr Kavan neuspěl jako bojovník proti komunismu. I nevědomá spolupráce s StB stačí",
+            "publishedAt": "2026-05-01T04:30:00Z"
+          },
           {
             "title": "Slabé oslavy 1. Máje i Květnové povstání za ČT. Lidi zajímá současnost, nikoli historie",
             "publishedAt": "2026-04-30T15:07:07Z"
@@ -357,10 +361,6 @@
           {
             "title": "Evropská komise žene Česko a Maďarsko před soud: Problémem je evropský zatýkací rozkaz",
             "publishedAt": "2026-04-29T11:39:20Z"
-          },
-          {
-            "title": "Právo a stavebnictví. Co skutečně brzdí výstavbu? Odpoví Filip Endal a další experti",
-            "publishedAt": "2026-04-29T11:02:23Z"
           }
         ]
       }
