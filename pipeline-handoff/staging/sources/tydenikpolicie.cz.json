@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-01T09:09:54.410033Z",
+  "ingestedAt": "2026-05-01T10:25:20.254182Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté v Dolní Lutyni zadrželi dva podezřelé z vloupání",
+      "url": "https://tydenikpolicie.cz/policiste-v-dolni-lutyni-zadrzeli-dva-podezrele-z-vloupani/",
+      "dt": "2026-05-01T10:02:04Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dolní",
+        "dva",
+        "lutyni",
+        "podezřelé",
+        "policisté",
+        "vloupání",
+        "zadrželi"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,32 +261,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Cizinec sebral v brněnském květinářství růžový věneček, dal si ho na hlavu a odešel",
-      "url": "https://tydenikpolicie.cz/cizinec-sebral-v-brnenskem-kvetinarstvi-ruzovy-venecek-dal-si-ho-na-hlavu-a-odesel/",
-      "dt": "2026-04-30T06:43:19Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "brněnském",
-        "cizinec",
-        "dal",
-        "hlavu",
-        "květinářství",
-        "odešel",
-        "růžový",
-        "sebral",
-        "věneček"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +271,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16041,
+      "bytes": 16094,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +308,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:34:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:02:04Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +323,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté v Dolní Lutyni zadrželi dva podezřelé z vloupání",
+            "publishedAt": "2026-05-01T10:02:04Z"
+          },
           {
             "title": "Policisté na jižní Moravě zadrželi další Ukrajince, kteří zneužívali humanitární dávky",
             "publishedAt": "2026-05-01T05:34:26Z"
@@ -352,10 +354,6 @@
           {
             "title": "Žena si myslela, že si píše s americkým vojákem. Naletěla a přišla o dva miliony korun",
             "publishedAt": "2026-04-30T07:44:09Z"
-          },
-          {
-            "title": "V Lovosicích někdo ukradl čarodějnici. Pomohly kamery a také magie policistů",
-            "publishedAt": "2026-04-30T07:33:34Z"
           }
         ]
       }

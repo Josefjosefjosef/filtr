@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-01T09:09:54.410033Z",
+  "ingestedAt": "2026-05-01T10:25:20.254182Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
+      "url": "https://profitonline.cz/paradox-za-umrzani-ceskych-ovocnych-stromu-muze-globalni-oteplovani/",
+      "dt": "2026-05-01T10:00:51Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "globální",
+        "oteplování",
+        "ovocných",
+        "paradox",
+        "stromů",
+        "umrzání",
+        "českých"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -275,30 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Fed i ECB ponechají úrokové sazby beze změny",
-      "url": "https://profitonline.cz/fed-i-ecb-ponechaji-urokove-sazby-beze-zmeny/",
-      "dt": "2026-04-29T06:00:52Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "beze",
-        "ecb",
-        "fed",
-        "ponechají",
-        "sazby",
-        "změny",
-        "úrokové"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -309,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18962,
+      "bytes": 18905,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -346,7 +346,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-01T07:00:03Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:00:51Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -362,6 +362,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
+            "publishedAt": "2026-05-01T10:00:51Z"
+          },
           {
             "title": "Blízkovýchodní konflikt zvyšuje inflaci. Nejen v Evropě",
             "publishedAt": "2026-05-01T07:00:03Z"
@@ -389,10 +393,6 @@
           {
             "title": "Renáta Váchová v čele Alfa Laval pro východní Evropu",
             "publishedAt": "2026-04-30T06:00:21Z"
-          },
-          {
-            "title": "Polsko chystá mimořádnou daň na Orlen a další firmy",
-            "publishedAt": "2026-04-29T21:20:27Z"
           }
         ]
       }

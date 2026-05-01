@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-01T09:09:54.410033Z",
+  "ingestedAt": "2026-05-01T10:25:20.254182Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Láska, která voní zradou. Oženil se Brad Pitt s nacistickou špionku?",
+      "url": "https://www.kinobox.cz/clanky/daily/53233-kinobox-daily-laska-ktera-voni-zradou-ozenil-se-brad-pitt-s-nacistickou-spionkou",
+      "dt": "2026-05-01T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "brad",
+        "daily",
+        "kinobox",
+        "láska",
+        "nacistickou",
+        "oženil",
+        "pitt",
+        "voní",
+        "zradou",
+        "špionku"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -533,33 +560,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Za 25 let se nepoučili. Šílenci z Jackass v traileru na poslední film ždímají arzenál nesmyslů",
-      "url": "https://www.kinobox.cz/clanky/filmy/53131-za-25-let-se-nepoucili-silenci-a-prasaci-z-jackass-v-traileru-na-posledni-film-zdimaji-arzenal-nesmyslu",
-      "dt": "2026-04-29T07:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "arzenál",
-        "film",
-        "jackass",
-        "let",
-        "nepoučili",
-        "nesmyslů",
-        "poslední",
-        "traileru",
-        "šílenci",
-        "ždímají"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -570,7 +570,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29363,
+      "bytes": 29232,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -607,7 +607,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -622,6 +622,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Láska, která voní zradou. Oženil se Brad Pitt s nacistickou špionku?",
+            "publishedAt": "2026-05-01T10:00:00Z"
+          },
           {
             "title": "Neprovokativnější film roku dorazil na stream. Bouřlivé výšiny otestují hranice vašeho vkusu",
             "publishedAt": "2026-05-01T09:00:00Z"
@@ -649,10 +653,6 @@
           {
             "title": "Nejlepší komediální seriál dekády se vrací. První trailer vás pobaví i dojme",
             "publishedAt": "2026-04-30T12:00:00Z"
-          },
-          {
-            "title": "Jiřina Bohdalová jede furt dál. Unikátní film ukazuje hereckou legendu bez příkras",
-            "publishedAt": "2026-04-30T11:00:00Z"
           }
         ]
       }

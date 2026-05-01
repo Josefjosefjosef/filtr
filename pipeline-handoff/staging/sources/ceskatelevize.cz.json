@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-01T09:09:54.410033Z",
+  "ingestedAt": "2026-05-01T10:25:20.254182Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Desítky účastníků flotily zadržené Izraelem dorazily na Krétu, píše AFP",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/desitky-ucastniku-flotily-zadrzene-izraelem-dorazily-na-kretu-pise-afp-373002",
+      "dt": "2026-05-01T09:37:15Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "afp",
+        "desítky",
+        "dorazily",
+        "flotily",
+        "izraelem",
+        "krétu",
+        "píše",
+        "zadržené",
+        "účastníků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -737,26 +763,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "„Smrt libanonské vesnice“. Reuters přiblížila následky izraelských úderů",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/smrt-libanonske-vesnice-reuters-priblizila-nasledky-izraelskych-uderu-372972",
-      "dt": "2026-04-30T09:17:39Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Čtvrtkařky v čele s šampionkou Manuel budou ve štafetě bojovat o MS 2027",
+      "url": "https://sport.ceskatelevize.cz/clanek/atletika/ctvrtkarky-v-cele-s-sampionkou-manuel-budou-ve-stafete-bojovat-o-ms-2027-156542",
+      "dt": "2026-05-01T09:45:24Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "izraelských",
-        "libanonské",
-        "následky",
-        "přiblížila",
-        "reuters",
-        "smrt",
-        "vesnice",
-        "úderů"
+        "2027",
+        "bojovat",
+        "manuel",
+        "čele",
+        "čtvrtkařky",
+        "šampionkou",
+        "štafetě"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1459,31 +1484,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nosková ani Plíšková si madridské semifinále nezahrají. Vypadl také Lehečka",
-      "url": "https://sport.ceskatelevize.cz/clanek/tenis/pliskova-si-madridske-semifinale-nezahraje-156512",
-      "dt": "2026-04-29T13:45:02Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "lehečka",
-        "madridské",
-        "nezahrají",
-        "nosková",
-        "plíšková",
-        "semifinále",
-        "také",
-        "vypadl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1494,7 +1494,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41712,
+      "bytes": 41648,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1554,7 +1554,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T09:00:38Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T09:37:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1571,6 +1571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Desítky účastníků flotily zadržené Izraelem dorazily na Krétu, píše AFP",
+            "publishedAt": "2026-05-01T09:37:15Z"
+          },
           {
             "title": "Mezinárodní porota Benátského bienále podala demisi, píší média",
             "publishedAt": "2026-05-01T09:00:38Z"
@@ -1598,10 +1602,6 @@
           {
             "title": "Američtí vojáci se už nemusí očkovat proti chřipce. Vojenští lékaři vidí rizika",
             "publishedAt": "2026-05-01T06:00:00Z"
-          },
-          {
-            "title": "Potřebujeme naučit mladé lidi jezdit veřejnou dopravou, míní Bednárik",
-            "publishedAt": "2026-05-01T05:00:00Z"
           }
         ]
       }
@@ -1613,7 +1613,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36617,
+      "bytes": 36585,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1650,7 +1650,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T08:46:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T09:45:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1665,6 +1665,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Čtvrtkařky v čele s šampionkou Manuel budou ve štafetě bojovat o MS 2027",
+            "publishedAt": "2026-05-01T09:45:24Z"
+          },
           {
             "title": "Kometu bude znovu trénovat majitel Zábranský",
             "publishedAt": "2026-05-01T08:46:46Z"
@@ -1692,10 +1696,6 @@
           {
             "title": "Anglický duel v EL zvládl lépe Nottingham, Horníček přispěl k vítězství Bragy",
             "publishedAt": "2026-04-30T21:44:33Z"
-          },
-          {
-            "title": "V Konferenční lize mají do finále blíž Crystal Palace a Vallecano",
-            "publishedAt": "2026-04-30T21:27:20Z"
           }
         ]
       }
@@ -1707,7 +1707,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 76830,
+      "bytes": 77072,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
