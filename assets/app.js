@@ -33258,7 +33258,111 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return document.getElementById("iuSilverHomeDatePick");
     }
 
+    var SHEET_KIND = "";
+
+    function guidedSheetParts() {
+      return {
+        root: document.getElementById("iuSilverGuidedSheetRoot"),
+        timeBlock: document.getElementById("iuSilverGuidedSheetTime"),
+        textBlock: document.getElementById("iuSilverGuidedSheetText"),
+        timeInp: document.getElementById("iuSilverGuidedTimeInput"),
+        textInp: document.getElementById("iuSilverGuidedTextInput"),
+        textLab: document.getElementById("iuSilverGuidedTextLab")
+      };
+    }
+
+    function closeGuidedSheet() {
+      SHEET_KIND = "";
+      var z = guidedSheetParts();
+      if (z.root) z.root.hidden = true;
+      if (z.timeBlock) z.timeBlock.hidden = true;
+      if (z.textBlock) z.textBlock.hidden = true;
+    }
+
+    function openGuidedTimeSheet() {
+      try {
+        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverForceHomeSendArrow === "function") window.__iuSilverForceHomeSendArrow();
+      } catch (_) {}
+      SHEET_KIND = "time";
+      var z = guidedSheetParts();
+      if (!z.root || !z.timeBlock || !z.timeInp) return;
+      z.root.hidden = false;
+      z.timeBlock.hidden = false;
+      if (z.textBlock) z.textBlock.hidden = true;
+      try {
+        z.timeInp.value = "15:00";
+      } catch (_) {}
+      try {
+        z.timeInp.focus();
+      } catch (_) {}
+    }
+
+    function openGuidedTextSheet(kind) {
+      try {
+        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverForceHomeSendArrow === "function") window.__iuSilverForceHomeSendArrow();
+      } catch (_) {}
+      SHEET_KIND = kind === "note" ? "note" : "addr";
+      var z = guidedSheetParts();
+      if (!z.root || !z.textBlock || !z.textInp || !z.textLab) return;
+      z.root.hidden = false;
+      if (z.timeBlock) z.timeBlock.hidden = true;
+      z.textBlock.hidden = false;
+      if (SHEET_KIND === "note") {
+        try {
+          z.textLab.textContent = "Poznámka";
+        } catch (_) {}
+        try {
+          z.textInp.value = String(GC.note || "");
+        } catch (_) {}
+      } else {
+        try {
+          z.textLab.textContent = "Adresa";
+        } catch (_) {}
+        try {
+          z.textInp.value = String(GC.address || "");
+        } catch (_) {}
+      }
+      try {
+        z.textInp.focus();
+      } catch (_) {}
+    }
+
+    function onGuidedSheetOk() {
+      var z = guidedSheetParts();
+      if (SHEET_KIND === "time") {
+        var raw = String((z.timeInp && z.timeInp.value) || "").trim();
+        if (!/^\d{1,2}:\d{2}$/.test(raw)) {
+          closeGuidedSheet();
+          return;
+        }
+        var pa = raw.split(":");
+        applyTime(pad2(Number(pa[0])) + ":" + pad2(Number(pa[1])));
+        closeGuidedSheet();
+        return;
+      }
+      if (SHEET_KIND === "addr") {
+        GC.address = String((z.textInp && z.textInp.value) || "").trim();
+        renderAfterTitle();
+        syncInputFromGc();
+        closeGuidedSheet();
+        return;
+      }
+      if (SHEET_KIND === "note") {
+        GC.note = String((z.textInp && z.textInp.value) || "").trim();
+        renderAfterTitle();
+        syncInputFromGc();
+        closeGuidedSheet();
+      }
+    }
+
     function hideGuidedChrome() {
+      closeGuidedSheet();
       var m = modeEl(),
         c = chipsEl(),
         t = toastEl();
@@ -33270,6 +33374,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         c.hidden = true;
         c.innerHTML = "";
         c.removeAttribute("data-iu-guided-open");
+        c.className = "iuSilverHomeChips";
       }
       if (t) {
         t.hidden = true;
@@ -33281,6 +33386,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     window.iuSilverGuidedResetFromNav = function () {
+      try {
+        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
+      } catch (_) {}
       try {
         resetGcSave();
       } catch (_) {}
@@ -33348,9 +33456,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       GC.mode = "cal_choice";
       var c = chipsEl(),
         m = modeEl();
-      if (m) m.hidden = true;
+      if (m) {
+        m.hidden = true;
+        m.textContent = "";
+      }
       if (!c) return;
       c.hidden = false;
+      c.className = "iuSilverHomeChips";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="save">uložit do kalendáře</button>' +
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="search">vyhledat v kalendáři</button>';
@@ -33361,11 +33473,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var c = chipsEl(),
         m = modeEl();
       if (m) {
-        m.hidden = false;
-        m.textContent = "Ulož do kalendáře";
+        m.hidden = true;
+        m.textContent = "";
       }
       if (!c) return;
       c.hidden = false;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--dayRow";
       var isoDyn = addDaysIso(todayIso(), 2);
       var dDyn = new Date(isoDyn + "T12:00:00");
       var dynLabel = weekdayV(dDyn) + " \u25be";
@@ -33383,6 +33496,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function renderDynamicDayMenu(isoStart) {
       var c = chipsEl();
       if (!c) return;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--pickGrid";
       var d0 = new Date(String(isoStart) + "T12:00:00");
       var names = weekdayNameList(d0);
       var html = "";
@@ -33404,12 +33518,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       GC.savePhase = "time";
       var m = modeEl();
       if (m) {
-        m.hidden = false;
-        m.textContent = "Ulož do kalendáře " + GC.datePhrase;
+        m.hidden = true;
+        m.textContent = "";
       }
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
+      c.className = "iuSilverHomeChips";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timepick">\u010cas \u25be</button>';
     }
@@ -33417,6 +33532,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function renderTimeMenu() {
       var c = chipsEl();
       if (!c) return;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
       var times = ["08:00", "09:00", "10:00", "12:00", "15:00", "18:00"];
       var html = "";
       for (var i = 0; i < times.length; i++) {
@@ -33437,14 +33553,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       GC.title = "";
       var m = modeEl();
       if (m) {
-        m.hidden = false;
-        m.textContent = "Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " — potvrď název Enterem";
+        m.hidden = true;
+        m.textContent = "";
       }
       var c = chipsEl();
       if (!c) return;
       c.hidden = false;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--titleDone";
       c.innerHTML =
-        '<span class="iuSilverHomeChip iuSilverHomeChip--primary" role="note" data-iu-silver-guided="gd-event-hint">zadej název události</span>';
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-title-done">HOTOVO</button>';
       var inp = document.getElementById("iuSilverHomeInput");
       if (inp) {
         inp.value = "";
@@ -33460,6 +33577,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function renderAfterTitle() {
       var c = chipsEl();
       if (!c) return;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--afterTitle";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-addr">přidat adresu</button>' +
         '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-note">přidat poznámku</button>' +
@@ -33470,6 +33588,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function renderRemMenu() {
       var c = chipsEl();
       if (!c) return;
+      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
       var opts = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
       var html = "";
       for (var i = 0; i < opts.length; i++) {
@@ -33501,14 +33620,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       GC.searchMode = true;
       var m = modeEl();
       if (m) {
-        m.hidden = false;
-        m.textContent = "Vyhledat v kalendáři";
+        m.hidden = true;
+        m.textContent = "";
       }
       var c = chipsEl();
       if (c) {
-        c.hidden = false;
-        c.innerHTML =
-          '<span class="iuSilverHomeChip" role="text" data-iu-silver-guided="gd-search-hint">zadej co hledáš</span>';
+        c.hidden = true;
+        c.innerHTML = "";
+        c.className = "iuSilverHomeChips";
       }
       var inp = document.getElementById("iuSilverHomeInput");
       if (inp) {
@@ -33600,11 +33719,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-timecustom") {
         ev.preventDefault();
-        var raw = window.prompt("Čas (HH:MM)", "15:00");
-        var tm = String(raw || "").trim();
-        if (!/^\d{1,2}:\d{2}$/.test(tm)) return;
-        var pa = tm.split(":");
-        applyTime(pad2(Number(pa[0])) + ":" + pad2(Number(pa[1])));
+        openGuidedTimeSheet();
+        return;
+      }
+      if (act === "gd-title-done") {
+        ev.preventDefault();
+        var inpTitle = document.getElementById("iuSilverHomeInput");
+        if (!inpTitle || GC.savePhase !== "title") return;
+        var tDone = String(inpTitle.value || "").trim().split("\n")[0];
+        if (!tDone) return;
+        GC.title = tDone;
+        GC.savePhase = "optional";
+        renderAfterTitle();
+        syncInputFromGc();
         return;
       }
       if (act === "gd-rem-open") {
@@ -33623,18 +33750,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-addr") {
         ev.preventDefault();
-        var a = window.prompt("Adresa:", "");
-        GC.address = String(a || "").trim();
-        renderAfterTitle();
-        syncInputFromGc();
+        openGuidedTextSheet("addr");
         return;
       }
       if (act === "gd-note") {
         ev.preventDefault();
-        var n = window.prompt("Poznámka:", "");
-        GC.note = String(n || "").trim();
-        renderAfterTitle();
-        syncInputFromGc();
+        openGuidedTextSheet("note");
         return;
       }
       if (act === "gd-final-save") {
@@ -33755,15 +33876,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     window.iuSilverGuidedConsumeEnter = function (ev, hi) {
       if (GC.savePhase !== "title") return false;
-      if (!ev || ev.key !== "Enter") return false;
+      if (!ev || ev.key !== "Enter" || ev.shiftKey) return false;
       try {
         ev.preventDefault();
       } catch (_) {}
-      var t = String(hi.value || "").trim();
+      var t = String(hi.value || "").trim().split("\n")[0];
       if (!t) return true;
       GC.title = t;
       GC.savePhase = "optional";
-      if (modeEl()) modeEl().textContent = "Ulož do kalendáře " + GC.datePhrase + " v " + GC.time + " " + GC.title;
+      if (modeEl()) {
+        modeEl().hidden = true;
+        modeEl().textContent = "";
+      }
       renderAfterTitle();
       syncInputFromGc();
       return true;
@@ -33786,36 +33910,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         dp.__iuCalDateHook = 1;
         dp.addEventListener("change", onDatePicked);
       }
-      var mic = document.getElementById("iuSilverHomeMic");
-      if (mic && !mic.__iuCalMicHook) {
-        mic.__iuCalMicHook = 1;
-        mic.addEventListener("click", function (e) {
-          try {
-            e.preventDefault();
-          } catch (_) {}
-          var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-          if (!SR) {
+      var guidedSheetUiWired = 0;
+      function wireGuidedSheetUi() {
+        if (guidedSheetUiWired) return;
+        guidedSheetUiWired = 1;
+        var okBtn = document.getElementById("iuSilverGuidedSheetOk");
+        var caBtn = document.getElementById("iuSilverGuidedSheetCancel");
+        if (okBtn && !okBtn.__iuGuidedSheetOk) {
+          okBtn.__iuGuidedSheetOk = 1;
+          okBtn.addEventListener("click", function (e) {
             try {
-              alert("Hlasové zadání není v tomto prohlížeči dostupné.");
+              e.preventDefault();
             } catch (_) {}
-            return;
-          }
-          var r = new SR();
-          r.lang = "cs-CZ";
-          r.interimResults = false;
-          r.maxAlternatives = 1;
-          r.onresult = function (ev2) {
+            onGuidedSheetOk();
+          });
+        }
+        if (caBtn && !caBtn.__iuGuidedSheetCancel) {
+          caBtn.__iuGuidedSheetCancel = 1;
+          caBtn.addEventListener("click", function (e) {
             try {
-              var t = ev2.results[0][0].transcript;
-              var inp = document.getElementById("iuSilverHomeInput");
-              if (inp && t) inp.value = String(inp.value || "") + (inp.value ? " " : "") + String(t).trim();
+              e.preventDefault();
             } catch (_) {}
-          };
-          try {
-            r.start();
-          } catch (_) {}
-        });
+            closeGuidedSheet();
+          });
+        }
       }
+      wireGuidedSheetUi();
     };
   })();
 
@@ -36175,6 +36295,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       sessionStorage.setItem(PENDING_KEY, text);
     } catch {}
     input.value = "";
+    try {
+      if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
+    } catch (_) {}
+    try {
+      const hs0 = document.getElementById("iuSilverHomeSend");
+      if (hs0 && window.matchMedia("(max-width: 1024px)").matches) {
+        hs0.classList.remove("iuSilverHomeSend--arrow");
+        hs0.setAttribute("aria-label", "Hlasové zadání");
+      }
+    } catch (_) {}
     const out = document.querySelector("#silver-slot .silver-output");
     if (out) out.innerHTML = "";
     const msgHost = document.getElementById("iuSilverChatMessages");
@@ -36418,12 +36548,169 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const cSend = document.getElementById("iuSilverChatSend");
     const overlay = document.getElementById("iuSilverChatOverlay");
 
+    let silverRec = null;
+
+    function silverNarrowComposer() {
+      try {
+        return window.matchMedia("(max-width: 1024px)").matches;
+      } catch (_) {
+        return (window.innerWidth || 0) <= 1024;
+      }
+    }
+
+    function stopSilverSpeech() {
+      if (!silverRec) return;
+      try {
+        silverRec.stop();
+      } catch (_) {}
+      try {
+        if (typeof silverRec.abort === "function") silverRec.abort();
+      } catch (_) {}
+      silverRec = null;
+    }
+
+    function syncHomeSendLayoutForViewport() {
+      if (!homeSend) return;
+      if (!silverNarrowComposer()) {
+        stopSilverSpeech();
+        try {
+          homeSend.classList.add("iuSilverHomeSend--arrow");
+        } catch (_) {}
+        try {
+          homeSend.setAttribute("aria-label", "Odeslat");
+        } catch (_) {}
+      } else {
+        try {
+          homeSend.classList.remove("iuSilverHomeSend--arrow");
+        } catch (_) {}
+        try {
+          homeSend.setAttribute("aria-label", "Hlasové zadání");
+        } catch (_) {}
+      }
+    }
+
+    try {
+      window.__iuSilverStopHomeSpeech = stopSilverSpeech;
+    } catch (_) {}
+    try {
+      window.__iuSilverForceHomeSendArrow = function () {
+        stopSilverSpeech();
+        if (homeSend && silverNarrowComposer()) {
+          try {
+            homeSend.classList.add("iuSilverHomeSend--arrow");
+          } catch (_) {}
+          try {
+            homeSend.setAttribute("aria-label", "Odeslat");
+          } catch (_) {}
+        }
+      };
+    } catch (_) {}
+    try {
+      window.__iuSilverTriggerHomeSubmit = handleHomeSubmit;
+    } catch (_) {}
+
+    try {
+      const mq = window.matchMedia("(max-width: 1024px)");
+      const onMq = function () {
+        syncHomeSendLayoutForViewport();
+      };
+      if (typeof mq.addEventListener === "function") mq.addEventListener("change", onMq);
+      else if (typeof mq.addListener === "function") mq.addListener(onMq);
+    } catch (_) {}
+    syncHomeSendLayoutForViewport();
+
     if (homeSend) {
       homeSend.addEventListener("click", (e) => {
         e.preventDefault();
-        handleHomeSubmit();
+        if (!silverNarrowComposer() || homeSend.classList.contains("iuSilverHomeSend--arrow")) {
+          handleHomeSubmit();
+          return;
+        }
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) return;
+        if (silverRec) {
+          stopSilverSpeech();
+          try {
+            homeSend.classList.add("iuSilverHomeSend--arrow");
+          } catch (_) {}
+          try {
+            homeSend.setAttribute("aria-label", "Odeslat");
+          } catch (_) {}
+          return;
+        }
+        const inpSpeech = document.getElementById("iuSilverHomeInput");
+        const speechPrefix = inpSpeech ? String(inpSpeech.value || "") : "";
+        let accFinal = "";
+        const r = new SR();
+        silverRec = r;
+        r.lang = "cs-CZ";
+        r.interimResults = true;
+        r.continuous = false;
+        r.maxAlternatives = 1;
+        r.onresult = function (ev2) {
+          const inp = document.getElementById("iuSilverHomeInput");
+          if (!inp) return;
+          let interim = "";
+          try {
+            for (let i = ev2.resultIndex; i < ev2.results.length; i++) {
+              const row = ev2.results[i];
+              const piece = String(row[0].transcript || "");
+              if (row.isFinal) accFinal += piece;
+              else interim += piece;
+            }
+          } catch (_) {}
+          inp.value = speechPrefix + accFinal + interim;
+          try {
+            clampSilverHomeInput(inp);
+          } catch (_) {}
+        };
+        r.onerror = function () {
+          silverRec = null;
+          if (silverNarrowComposer() && homeSend) {
+            try {
+              homeSend.classList.add("iuSilverHomeSend--arrow");
+            } catch (_) {}
+            try {
+              homeSend.setAttribute("aria-label", "Odeslat");
+            } catch (_) {}
+          }
+        };
+        r.onend = function () {
+          silverRec = null;
+          if (silverNarrowComposer() && homeSend) {
+            try {
+              homeSend.classList.add("iuSilverHomeSend--arrow");
+            } catch (_) {}
+            try {
+              homeSend.setAttribute("aria-label", "Odeslat");
+            } catch (_) {}
+          }
+        };
+        try {
+          r.start();
+        } catch (_) {
+          silverRec = null;
+        }
       });
     }
+
+    const onInputMicToArrow = function () {
+      if (!silverNarrowComposer()) return;
+      stopSilverSpeech();
+      if (homeSend) {
+        try {
+          homeSend.classList.add("iuSilverHomeSend--arrow");
+        } catch (_) {}
+        try {
+          homeSend.setAttribute("aria-label", "Odeslat");
+        } catch (_) {}
+      }
+    };
+    if (homeIn) {
+      homeIn.addEventListener("pointerdown", onInputMicToArrow, true);
+      homeIn.addEventListener("focus", onInputMicToArrow, true);
+    }
+
     if (homeIn) {
       try {
         homeIn.setAttribute("maxlength", String(SILVER_HOME_INPUT_MAX));
@@ -36438,6 +36725,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       });
       homeIn.addEventListener("keydown", (e) => {
         if (e.key !== "Enter") return;
+        if (e.shiftKey) return;
         try {
           if (typeof window.iuSilverGuidedConsumeEnter === "function" && window.iuSilverGuidedConsumeEnter(e, homeIn)) return;
         } catch (_) {}
