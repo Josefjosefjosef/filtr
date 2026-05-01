@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-01T08:35:58.699764Z",
+  "ingestedAt": "2026-05-01T09:09:54.410033Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Rusko vyslalo proti Ukrajině nejvíce dronů od začátku invaze",
+      "url": "https://www.e15.cz/valka-na-ukrajine/rusko-vyslalo-proti-ukrajine-nejvice-dronu-od-zacatku-invaze-1432530",
+      "dt": "2026-05-01T08:39:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "dronů",
+        "invaze",
+        "nejvíce",
+        "proti",
+        "rusko",
+        "ukrajině",
+        "vyslalo",
+        "začátku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -116,6 +141,33 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
+      "url": "https://www.e15.cz/byznys/operace-cisty-rez-aneb-jak-ovladnout-cez-bez-pravnich-valek-a-s-miliardami-v-kapse-1432512",
+      "dt": "2026-05-01T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aneb",
+        "kapse",
+        "miliardami",
+        "operace",
+        "ovládnout",
+        "právních",
+        "válek",
+        "čez",
+        "čistý",
+        "řez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Oblíbený diskont v Česku zavírá prodejny. První obchod oznámil konec velkým výprodejem",
       "url": "https://www.e15.cz/byznys/obchod-a-sluzby/oblibeny-diskont-v-cesku-zavira-prodejny-prvni-obchod-oznamil-konec-velkym-vyprodejem-1432467",
       "dt": "2026-05-01T03:30:00Z",
@@ -133,33 +185,6 @@
         "výprodejem",
         "zavírá",
         "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
-      "url": "https://www.e15.cz/byznys/operace-cisty-rez-aneb-jak-ovladnout-cez-bez-pravnich-valek-a-s-miliardami-v-kapse-1432512",
-      "dt": "2026-05-01T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aneb",
-        "kapse",
-        "miliardami",
-        "operace",
-        "ovládnout",
-        "právních",
-        "válek",
-        "čez",
-        "čistý",
-        "řez"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1053,33 +1078,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Další Čuprův německý zásek. Vytáhl do černých čísel tamní krachující firmu",
-      "url": "https://www.e15.cz/byznys/potraviny/dalsi-cupruv-nemecky-zasek-vytahl-do-cernych-cisel-tamni-krachujici-firmu-1432476",
-      "dt": "2026-04-29T12:05:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "další",
-        "firmu",
-        "krachující",
-        "německý",
-        "tamní",
-        "vytáhl",
-        "zásek",
-        "černých",
-        "čuprův",
-        "čísel"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52560,
+      "bytes": 52413,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,11 +1125,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T08:39:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 5,
-          "finance": 35
+          "finance": 35,
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1143,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rusko vyslalo proti Ukrajině nejvíce dronů od začátku invaze",
+            "publishedAt": "2026-05-01T08:39:00Z"
+          },
           {
             "title": "Jak na levné letenky do exotiky? Aerolinky bojují o zákazníky na trasách, kde jejich důvěru narušila válka",
             "publishedAt": "2026-05-01T05:40:00Z"
@@ -1160,20 +1162,16 @@
             "publishedAt": "2026-05-01T04:00:00Z"
           },
           {
-            "title": "Oblíbený diskont v Česku zavírá prodejny. První obchod oznámil konec velkým výprodejem",
+            "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
             "publishedAt": "2026-05-01T03:30:00Z"
           },
           {
-            "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
+            "title": "Oblíbený diskont v Česku zavírá prodejny. První obchod oznámil konec velkým výprodejem",
             "publishedAt": "2026-05-01T03:30:00Z"
           },
           {
             "title": "Jančura se v našich vlacích učí, jak dělat věci správně, říká šéf Českých drah",
             "publishedAt": "2026-05-01T03:00:00Z"
-          },
-          {
-            "title": "Akcie Allwynu po měsíci na burze oslabují. Možných pozitivních impulsů je přitom hned několik",
-            "publishedAt": "2026-04-30T16:05:00Z"
           }
         ]
       }

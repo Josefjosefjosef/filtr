@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T08:35:58.699764Z",
+  "ingestedAt": "2026-05-01T09:09:54.410033Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jaderná matematika Pchjongjangu: Scénář, ve kterém Kimovy rakety přečíslí americký štít",
+      "url": "https://ekonomickydenik.cz/jaderna-matematika-pchjongjangu-rakety-stit-usa/",
+      "dt": "2026-05-01T08:46:58Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "americký",
+        "jaderná",
+        "kimovy",
+        "kterém",
+        "matematika",
+        "pchjongjangu",
+        "přečíslí",
+        "rakety",
+        "scénář",
+        "štít"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -760,29 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Připlatíme si za dovolené? Booking hledí do budoucna s obavami",
-      "url": "https://ekonomickydenik.cz/priplatime-dovolene-booking-obavy/",
-      "dt": "2026-04-29T12:03:40Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "booking",
-        "budoucna",
-        "dovolené",
-        "hledí",
-        "obavami",
-        "připlatíme"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74461,
+      "bytes": 74398,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T07:38:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T08:46:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -847,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jaderná matematika Pchjongjangu: Scénář, ve kterém Kimovy rakety přečíslí americký štít",
+            "publishedAt": "2026-05-01T08:46:58Z"
+          },
           {
             "title": "Peníze za americkou válku s Íránem? Stačily by na pomoc pro téměř 90 milionů lidí, tvrdí OSN",
             "publishedAt": "2026-05-01T07:38:35Z"
@@ -874,10 +882,6 @@
           {
             "title": "\"Taková hanba\". Česko odmítlo přelet letadla tchajwanského prezidenta",
             "publishedAt": "2026-04-30T12:56:31Z"
-          },
-          {
-            "title": "České dráhy navyšují zisk. Mají nejlepší hodnocení v historii",
-            "publishedAt": "2026-04-30T12:09:34Z"
           }
         ]
       }

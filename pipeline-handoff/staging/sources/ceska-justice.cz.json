@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-01T08:35:58.699764Z",
+  "ingestedAt": "2026-05-01T09:09:54.410033Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Kdo to mohl celé přečíst?“ Opozice chtěla zastavit nový stavební zákon. I kvůli černým stavbám",
+      "url": "https://www.ceska-justice.cz/2026/05/kdo-to-mohl-cele-precist-stavebni-zakon/",
+      "dt": "2026-05-01T08:34:06Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "celé",
+        "chtěla",
+        "kvůli",
+        "nový",
+        "opozice",
+        "přečíst",
+        "stavbám",
+        "stavební",
+        "zastavit",
+        "zákon",
+        "černým"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -239,33 +267,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Právo a stavebnictví. Co skutečně brzdí výstavbu? Odpoví Filip Endal a další experti",
-      "url": "https://www.ceska-justice.cz/2026/04/pravo-a-stavebnictvi-co-brzdi-vystavbu/",
-      "dt": "2026-04-29T11:02:23Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "brzdí",
-        "další",
-        "endal",
-        "experti",
-        "filip",
-        "odpoví",
-        "právo",
-        "skutečně",
-        "stavebnictví",
-        "výstavbu"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -276,7 +277,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 98259,
+      "bytes": 104635,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -313,7 +314,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T04:51:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T08:34:06Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -328,6 +329,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Kdo to mohl celé přečíst?“ Opozice chtěla zastavit nový stavební zákon. I kvůli černým stavbám",
+            "publishedAt": "2026-05-01T08:34:06Z"
+          },
           {
             "title": "Totální suterén. Rychetský promluvil o chování Macinky a Turka",
             "publishedAt": "2026-05-01T04:51:34Z"
@@ -355,10 +360,6 @@
           {
             "title": "Právní stát i dostupné bydlení. Advokátka Šípová chce obhajovat senátorský post",
             "publishedAt": "2026-04-29T16:01:00Z"
-          },
-          {
-            "title": "Omezí poslanci prezidenta? Benda varuje před fiaskem u Ústavního soudu",
-            "publishedAt": "2026-04-29T12:01:05Z"
           }
         ]
       }

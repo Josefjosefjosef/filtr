@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-01T08:35:58.699764Z",
+  "ingestedAt": "2026-05-01T09:09:54.410033Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,35 @@
         "startuje",
         "zítra",
         "éra"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "T-Mobile ruší staré mobilní tarify. Zákazníky převede na aktuální portfolio Next, většina si připlatí",
+      "url": "https://mobilmania.zive.cz/clanky/t-mobile-rusi-stare-mobilni-tarify-zakazniky-prevede-na-aktualni-portfolio-next-vetsina-si-priplati/sc-3-a-1364657/default.aspx",
+      "dt": "2026-05-01T08:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "aktuální",
+        "mobile",
+        "mobilní",
+        "next",
+        "portfolio",
+        "převede",
+        "připlatí",
+        "ruší",
+        "staré",
+        "tarify",
+        "většina",
+        "zákazníky"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -929,34 +958,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "ChatGPT už nepoběží jen na serverech Microsoftu. Firmy upravují smlouvu, OpenAI má volnější ruce",
-      "url": "https://www.zive.cz/clanky/chatgpt-uz-nepobezi-jen-na-serverech-microsoftu-firmy-upravuji-smlouvu-openai-ma-volnejsi-ruce/sc-3-a-240907/default.aspx",
-      "dt": "2026-04-28T10:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "chatgpt",
-        "firmy",
-        "jen",
-        "microsoftu",
-        "nepoběží",
-        "openai",
-        "ruce",
-        "serverech",
-        "smlouvu",
-        "upravují",
-        "volnější"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -967,7 +968,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23292,
+      "bytes": 23124,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1004,7 +1005,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-01T07:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T08:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1022,6 +1023,10 @@
           {
             "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
             "publishedAt": "2026-04-30T16:45:00Z"
+          },
+          {
+            "title": "T-Mobile ruší staré mobilní tarify. Zákazníky převede na aktuální portfolio Next, většina si připlatí",
+            "publishedAt": "2026-05-01T08:45:00Z"
           },
           {
             "title": "Vznikl další potenciální investiční hit spojený s AI. Nvidii začínají doplňovat nenápadní hráči",
@@ -1046,10 +1051,6 @@
           {
             "title": "iPhony 17 trápí zvláštní problém. Po úplném vybití se nezapnou ani po připojení k nabíječce",
             "publishedAt": "2026-04-30T11:45:00Z"
-          },
-          {
-            "title": "AirPods už s Androidy fungují skoro jako s iPhony. Google konečně opravil dlouholetou chybu",
-            "publishedAt": "2026-04-30T08:45:00Z"
           }
         ]
       }

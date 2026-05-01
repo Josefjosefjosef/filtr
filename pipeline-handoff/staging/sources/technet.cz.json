@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-01T08:35:58.699764Z",
+  "ingestedAt": "2026-05-01T09:09:54.410033Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Obří chobotnice z období křídy mohla měřit až devatenáct metrů. Byla pravák",
+      "url": "https://www.lidovky.cz/orientace/obri-chobotnice-z-obdobi-kridy-mohla-merit-az-devatenact-metru-byla-pravak.A260428_123947_ln-orientace_lrj",
+      "dt": "2026-05-01T08:32:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "chobotnice",
+        "devatenáct",
+        "křídy",
+        "metrů",
+        "měřit",
+        "období",
+        "obří",
+        "pravák"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -739,30 +764,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jak vznikl Den Země, jak a proč ho slaví celý svět",
-      "url": "https://www.lidovky.cz/magazin/den-zeme-oslava-proc-slavime.A260422_095914_ln-magazin_ljpl",
-      "dt": "2026-04-22T08:17:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "celý",
-        "den",
-        "proč",
-        "slaví",
-        "svět",
-        "vznikl",
-        "země"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +774,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 45879,
+      "bytes": 45980,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +811,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-04-30T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T08:32:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 20,
-          "zpravy": 10
+          "other": 21,
+          "zpravy": 9
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -826,6 +827,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obří chobotnice z období křídy mohla měřit až devatenáct metrů. Byla pravák",
+            "publishedAt": "2026-05-01T08:32:00Z"
+          },
           {
             "title": "Celebrity a láska k létání: 21 příběhů, které vás možná překvapí",
             "publishedAt": "2026-04-30T22:00:00Z"
@@ -853,10 +858,6 @@
           {
             "title": "POZOR VLAK: V Česku jsme objevili chátrající Orient Express",
             "publishedAt": "2026-04-28T22:00:00Z"
-          },
-          {
-            "title": "Superpřesná léčba rakoviny. Protony nádor obkreslí, říká vedoucí fyzik centra",
-            "publishedAt": "2026-04-28T08:00:00Z"
           }
         ]
       }
