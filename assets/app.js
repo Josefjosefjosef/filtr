@@ -36575,9 +36575,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       silverRec = null;
     }
 
+    function iuSilverHomeSendInHeroPremium() {
+      try {
+        var hh = document.getElementById("iuSilverHeroInputHost");
+        return !!(hh && homeSend && hh.contains(homeSend));
+      } catch (_) {
+        return false;
+      }
+    }
+
     function syncHomeSendLayoutForViewport() {
       if (!homeSend) return;
       if (!silverNarrowComposer()) {
+        stopSilverSpeech();
+        try {
+          homeSend.classList.add("iuSilverHomeSend--arrow");
+        } catch (_) {}
+        try {
+          homeSend.setAttribute("aria-label", "Odeslat");
+        } catch (_) {}
+        try {
+          homeSend.classList.remove("is-recording");
+          homeSend.classList.remove("has-text");
+        } catch (_) {}
+        return;
+      }
+      if (iuSilverHomeSendInHeroPremium()) {
         stopSilverSpeech();
         try {
           homeSend.classList.add("iuSilverHomeSend--arrow");
@@ -36599,6 +36622,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     try {
       window.__iuSilverSyncHomeMicSend = function () {
         if (!homeSend || !silverNarrowComposer()) return;
+        if (iuSilverHomeSendInHeroPremium()) {
+          try {
+            homeSend.classList.add("iuSilverHomeSend--arrow");
+          } catch (_) {}
+          try {
+            homeSend.setAttribute("aria-label", "Odeslat");
+          } catch (_) {}
+          try {
+            homeSend.classList.remove("is-recording");
+            homeSend.classList.remove("has-text");
+          } catch (_) {}
+          return;
+        }
         var has = !!(homeIn && String(homeIn.value || "").trim());
         var rec = !!silverRec;
         try {
@@ -36652,6 +36688,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (homeSend) {
       homeSend.addEventListener("click", (e) => {
         e.preventDefault();
+        if (silverNarrowComposer() && iuSilverHomeSendInHeroPremium()) {
+          handleHomeSubmit();
+          return;
+        }
         if (!silverNarrowComposer() || homeSend.classList.contains("iuSilverHomeSend--arrow")) {
           handleHomeSubmit();
           return;
