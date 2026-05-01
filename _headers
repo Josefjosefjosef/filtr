@@ -1,3 +1,18 @@
+# Fingerprinted main bundles only (deploy: assets/app.js → assets/app.<shortSha>.js).
+# GitHub Pages does not apply _headers to HTTP responses (file is served as static content).
+# Mirror these rules on your CDN (e.g. Cloudflare Transform Rules) for browser-visible Cache-Control.
+#
 /*
   X-Frame-Options: SAMEORIGIN
 
+/assets/app.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/app.*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/filtr/assets/app.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/filtr/assets/app.*.css
+  Cache-Control: public, max-age=31536000, immutable
