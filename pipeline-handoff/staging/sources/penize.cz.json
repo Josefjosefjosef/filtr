@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-01T04:50:07.508316Z",
+  "ingestedAt": "2026-05-01T05:20:26.440469Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Michl prodával v Las Vegas bitcoiny. Zakladatel burzy zmizel s klíči k bitcoinům za miliardu",
+      "url": "https://www.penize.cz/kryptomeny/489196-michl-prodaval-v-las-vegas-bitcoiny-zakladatel-burzy-zmizel-s-klici-k-bitcoinum-za-miliardu",
+      "dt": "2026-05-01T07:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "bitcoiny",
+        "bitcoinům",
+        "burzy",
+        "klíči",
+        "las",
+        "michl",
+        "miliardu",
+        "prodával",
+        "vegas",
+        "zakladatel",
+        "zmizel"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -476,32 +504,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Globus rozveze nákup do dalšího města. V květnu přidá i novinku v aplikaci",
-      "url": "https://www.penize.cz/nakupy/488880-globus-rozveze-nakup-do-dalsiho-mesta-v-kvetnu-prida-novinku-v-aplikaci",
-      "dt": "2026-04-27T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aplikaci",
-        "dalšího",
-        "globus",
-        "květnu",
-        "města",
-        "novinku",
-        "nákup",
-        "přidá",
-        "rozveze"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +514,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19026,
+      "bytes": 19200,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 11,
@@ -567,6 +569,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Michl prodával v Las Vegas bitcoiny. Zakladatel burzy zmizel s klíči k bitcoinům za miliardu",
+            "publishedAt": "2026-05-01T07:00:00Z"
+          },
           {
             "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
             "publishedAt": "2026-04-30T14:30:00Z"
@@ -594,10 +600,6 @@
           {
             "title": "Do Kodaně za 12 hodin. První přímý vlak z Prahy vyjede už brzy",
             "publishedAt": "2026-04-29T14:47:00Z"
-          },
-          {
-            "title": "Maximální ceny benzinu a nafty na čtvrtek 30. dubna",
-            "publishedAt": "2026-04-29T13:58:00Z"
           }
         ]
       }

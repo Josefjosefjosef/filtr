@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-01T04:50:07.508316Z",
+  "ingestedAt": "2026-05-01T05:20:26.440469Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Chcete moderní lék na rakovinu? Musíte do USA, v Evropě se ho prodávat nevyplatí, upozorňuje firma",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/moderni-lek-rakovina-usa-evropa-firma/",
+      "dt": "2026-05-01T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "chcete",
+        "evropě",
+        "firma",
+        "lék",
+        "moderní",
+        "musíte",
+        "nevyplatí",
+        "prodávat",
+        "rakovinu",
+        "upozorňuje",
+        "usa"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -237,34 +265,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Toxin v kojenecké výživě: Přišlo varování rodičům příliš pozdě? Hygienička přiznala nedostatky",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/toxin-kojenecka-vyziva-varovani-hygienicka-nedostatky/",
-      "dt": "2026-04-29T17:29:01Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "hygienička",
-        "kojenecké",
-        "nedostatky",
-        "pozdě",
-        "přiznala",
-        "přišlo",
-        "příliš",
-        "rodičům",
-        "toxin",
-        "varování",
-        "výživě"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -275,7 +275,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 75811,
+      "bytes": 76016,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -312,7 +312,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T14:54:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -328,6 +328,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Chcete moderní lék na rakovinu? Musíte do USA, v Evropě se ho prodávat nevyplatí, upozorňuje firma",
+            "publishedAt": "2026-05-01T05:00:00Z"
+          },
           {
             "title": "Nos odhalí Alzheimera dříve než mozek. Překvapivý objev může změnit léčbu",
             "publishedAt": "2026-04-30T14:54:25Z"
@@ -355,10 +359,6 @@
           {
             "title": "Rakovina u mladých na vzestupu. Důvodem může být jeden znepokojivý civilizační trend",
             "publishedAt": "2026-04-30T07:00:00Z"
-          },
-          {
-            "title": "Rohy a kopyta nám nenarostou. Diskuse o očkování je jako z 18. století, nechápe Philipp",
-            "publishedAt": "2026-04-30T06:00:00Z"
           }
         ]
       }

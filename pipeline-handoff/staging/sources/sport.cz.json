@@ -1,26 +1,52 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-01T04:50:07.508316Z",
+  "ingestedAt": "2026-05-01T05:20:26.440469Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Faksův Dallas vypadl v prvním kole s Minnesotou, o postup bojuje Dostál",
+      "title": "Snový debut v reprezentaci pro českého mladíka: Lepší jsem si ani nemohl představit",
+      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-snovy-debut-v-reprezentaci-pro-ceskeho-mladika-lepsi-jsem-si-ani-nemohl-predstavit-5446462",
+      "dt": "2026-05-01T05:15:35Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "debut",
+        "jsem",
+        "lepší",
+        "mladíka",
+        "nemohl",
+        "představit",
+        "reprezentaci",
+        "snový",
+        "českého"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Dostál s Anaheimem vyřadili favorita z Edmontonu, Faksově Dallasu sezona končí",
       "url": "https://www.sport.cz/clanek/hokej-nhl-faksuv-dallas-vypadl-v-prvnim-kole-s-minnesotou-o-postup-bojuje-dostal-5446496",
       "dt": "2026-05-01T04:25:56Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bojuje",
-        "dallas",
+        "anaheimem",
+        "dallasu",
         "dostál",
-        "faksův",
-        "kole",
-        "minnesotou",
-        "postup",
-        "prvním",
-        "vypadl"
+        "edmontonu",
+        "faksově",
+        "favorita",
+        "končí",
+        "sezona",
+        "vyřadili"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -739,30 +765,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Bývalý šampion Carapaz po operaci nestihne Giro d'Italia",
-      "url": "https://www.sport.cz/clanek/cyklistika-byvaly-sampion-carapaz-po-operaci-nestihne-giro-d-italia-5446212",
-      "dt": "2026-04-30T14:14:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "bývalý",
-        "carapaz",
-        "giro",
-        "italia",
-        "nestihne",
-        "operaci",
-        "šampion"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -773,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41245,
+      "bytes": 42077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -810,11 +812,10 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T04:25:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T05:15:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "sport": 29,
-          "zdravi": 1
+          "sport": 30
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,7 +828,11 @@
         },
         "sample_titles": [
           {
-            "title": "Faksův Dallas vypadl v prvním kole s Minnesotou, o postup bojuje Dostál",
+            "title": "Snový debut v reprezentaci pro českého mladíka: Lepší jsem si ani nemohl představit",
+            "publishedAt": "2026-05-01T05:15:35Z"
+          },
+          {
+            "title": "Dostál s Anaheimem vyřadili favorita z Edmontonu, Faksově Dallasu sezona končí",
             "publishedAt": "2026-05-01T04:25:56Z"
           },
           {
@@ -853,10 +858,6 @@
           {
             "title": "Infantino bude příští rok usilovat o znovuzvolení do čela FIFA",
             "publishedAt": "2026-04-30T20:36:35Z"
-          },
-          {
-            "title": "Obr Klapka zničil mantinel a přerušil zápas. To si mohl odpustit, dobírali si ho spoluhráči",
-            "publishedAt": "2026-04-30T20:34:38Z"
           }
         ]
       }
