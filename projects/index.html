@@ -337,6 +337,272 @@ style-src 'self' 'unsafe-inline' https:;
     </style>
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=fix-mapy-navigace-cls-tool-cold-url-20260428" />
+    <style id="iuSilverGuidedComposerCssGuard">
+      /* P0 Silver mobile/tablet: extended composer — post app.css (css_debt_guard). */
+      .iuSilverHomeDatePick{
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+      .iuSilverHomeComposerShell.iuSilverComposerP0{
+        position: relative;
+        flex-wrap: wrap;
+      }
+      .iuSilverHomeMobileComposerGrid{
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+      .iuSilverHomeMobileComposerMain{
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        box-sizing: border-box;
+      }
+      .iuSilverHomeModeLine{
+        font-size: 13px;
+        font-weight: 650;
+        line-height: 1.25;
+        color: rgba(15, 23, 42, 0.88);
+        min-height: 0;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeModeLine,
+      #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeModeLine{
+        color: rgba(248, 250, 252, 0.94);
+      }
+      .iuSilverHomeChips{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        min-width: 0;
+      }
+      .iuSilverHomeChip,
+      button.iuSilverHomeChip{
+        min-height: 44px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        background: rgba(248, 250, 252, 0.95);
+        color: rgba(15, 23, 42, 0.92);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.15;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip,
+      #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip{
+        background: rgba(15, 23, 42, 0.35);
+        border-color: rgba(148, 163, 184, 0.28);
+        color: rgba(248, 250, 252, 0.95);
+      }
+      .iuSilverHomeChip--primary{
+        border-color: rgba(22, 163, 74, 0.45);
+        background: linear-gradient(145deg, #e8fff0, #d1fae5);
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeChip--primary{
+        background: linear-gradient(145deg, rgba(22, 163, 74, 0.35), rgba(16, 185, 129, 0.22));
+        border-color: rgba(52, 211, 153, 0.45);
+      }
+      .iuSilverHomeChip--save{
+        border-color: rgba(22, 163, 74, 0.55);
+        background: linear-gradient(145deg, #1fa85a, #178a4a);
+        color: #fff;
+        font-weight: 750;
+        letter-spacing: 0.02em;
+      }
+      .iuSilverHomeInlineToast{
+        font-size: 14px;
+        font-weight: 650;
+        color: #15803d;
+        padding: 6px 0 2px;
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeInlineToast{
+        color: #86efac;
+      }
+      .iuSilverHomeMobileComposerActions{
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+        justify-content: flex-start;
+      }
+      .iuSilverHomeMic{
+        flex: 0 0 auto;
+        width: 52px;
+        min-width: 52px;
+        height: 52px;
+        padding: 0;
+        border-radius: 14px;
+        border: none;
+        box-sizing: border-box;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, #1fa85a, #178a4a);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(23, 138, 74, 0.35);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .iuSilverHomeMicIcon{
+        display: block;
+      }
+      @media (max-width: 1024px){
+        .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeMobileComposerGrid{
+          align-items: flex-start;
+        }
+        .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeInput.iuSilverHomeInput{
+          min-height: 44px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+        .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeMic{
+          display: inline-flex;
+        }
+      }
+      @media (min-width: 1025px){
+        .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverHomeModeLine,
+        .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverHomeChips,
+        .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverHomeInlineToast{
+          display: none !important;
+        }
+        .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeMic{
+          display: none !important;
+        }
+        .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeMobileComposerActions{
+          flex-direction: row;
+          align-items: stretch;
+        }
+      }
+      .iuSilverHomeInput.iuSilverHomeInput{
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+        font-size: max(16px, 1em);
+        -webkit-text-size-adjust: 100%;
+      }
+      #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+      #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+        background: #ffffff !important;
+        color: rgba(15, 35, 55, 0.95) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      }
+      #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder,
+      #iuMobileSilverSlot #silver-slot .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput::placeholder{
+        color: rgba(15, 35, 55, 0.42) !important;
+        opacity: 1 !important;
+      }
+      .iuSilverHomeSend{
+        flex: 0 0 auto;
+        width: 52px;
+        min-width: 52px;
+        height: 52px;
+        padding: 0;
+        border-radius: 14px;
+        border: none;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, #1fa85a, #178a4a);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(23, 138, 74, 0.35);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .iuSilverHomeSend:hover{
+        filter: brightness(1.05);
+      }
+      .iuSilverHomeSend:focus{
+        outline: 2px solid #0d5c2e;
+        outline-offset: 2px;
+      }
+      .iuSilverHomeSend:active{
+        transform: scale(0.98);
+      }
+      .iuSilverHomeSendIcon{
+        display: block;
+      }
+      #silver-slot[data-iu-silver-welcome-variant="morning"] .iuSilverHomeSend{
+        box-shadow: 0 4px 16px color-mix(in srgb, rgba(23, 138, 74, 0.32) 78%, rgba(234, 88, 12, 0.22) 22%);
+      }
+      #silver-slot[data-iu-silver-welcome-variant="lateMorning"] .iuSilverHomeSend{
+        box-shadow: 0 4px 15px color-mix(in srgb, rgba(23, 138, 74, 0.34) 88%, rgba(37, 99, 235, 0.14) 12%);
+      }
+      #silver-slot[data-iu-silver-welcome-variant="afternoon"] .iuSilverHomeSend{
+        box-shadow: 0 4px 16px color-mix(in srgb, rgba(23, 138, 74, 0.32) 72%, rgba(234, 88, 12, 0.26) 28%);
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeSend{
+        box-shadow: 0 4px 16px color-mix(in srgb, rgba(23, 138, 74, 0.26) 52%, rgba(20, 45, 72, 0.38) 48%);
+      }
+      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverHomeSend:focus{
+        outline-color: rgba(165, 210, 245, 0.95);
+      }
+      .iu-calendarOverlay__eventDetail{
+        margin: 10px 0 6px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(248, 250, 252, 0.94);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        font-size: 14px;
+        line-height: 1.35;
+        box-sizing: border-box;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+      .iu-calEventDetailTitle{
+        font-weight: 800;
+        margin: 0 0 4px;
+        color: rgba(15, 23, 42, 0.95);
+      }
+      .iu-calEventDetailMeta{
+        margin: 0 0 6px;
+        color: rgba(15, 23, 42, 0.72);
+      }
+      .iu-calEventDetailAddrWrap{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin: 6px 0;
+      }
+      .iu-calEventDetailNav{
+        font-weight: 750;
+        color: #15803d;
+        text-decoration: none;
+        border: 1px solid rgba(22, 163, 74, 0.35);
+        padding: 6px 12px;
+        border-radius: 10px;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        touch-action: manipulation;
+      }
+    </style>
     <style id="iuMapyNavToolMainClsGuard">
       @media (max-width: 1024px) {
         #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium,
@@ -1051,11 +1317,24 @@ style-src 'self' 'unsafe-inline' https:;
                             </div>
                             <div class="silver-inputWrap iuSilverHomeInputWrap iuSilverStackChromaFrame iu-mobileSilverGateHost">
                               <div class="iu-mobileSilverGateStack iu-mobileSilverGateStack--floatingSilver">
-                                <div class="iuSilverHomeInputRow iuSilverHomeComposerShell">
-                                  <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" maxlength="150" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
-                                  <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
-                                    <svg class="iuSilverHomeSendIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 4 18 12h-4v8h-4v-8H6l6-8z"/></svg>
-                                  </button>
+                                <div class="iuSilverHomeInputRow iuSilverHomeComposerShell iuSilverComposerP0">
+                                  <input type="date" id="iuSilverHomeDatePick" class="iuSilverHomeDatePick" aria-hidden="true" tabindex="-1" title="" />
+                                  <div class="iuSilverHomeMobileComposerGrid" data-iu-silver-home-composer-grid="1">
+                                    <div class="iuSilverHomeMobileComposerMain" data-iu-silver-home-composer-main="1">
+                                      <div id="iuSilverHomeModeLine" class="iuSilverHomeModeLine" data-iu-silver-home-mode-line="1" hidden></div>
+                                      <input id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" type="text" inputmode="text" autocomplete="off" maxlength="450" placeholder="Napiš Silverovi…" aria-label="Napiš Silverovi">
+                                      <div id="iuSilverHomeChips" class="iuSilverHomeChips" data-iu-silver-home-chips="1" hidden></div>
+                                      <div id="iuSilverHomeInlineToast" class="iuSilverHomeInlineToast" data-iu-silver-home-inline-toast="1" hidden role="status"></div>
+                                    </div>
+                                    <div class="iuSilverHomeMobileComposerActions" data-iu-silver-home-composer-actions="1">
+                                      <button type="button" class="iuSilverHomeMic" id="iuSilverHomeMic" aria-label="Hlasové zadání">
+                                        <svg class="iuSilverHomeMicIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V20H7v2h10v-2h-4v-2.08A7 7 0 0119 11h-2z"/></svg>
+                                      </button>
+                                      <button type="button" class="iuSilverHomeSend" id="iuSilverHomeSend" aria-label="Odeslat zprávu Silverovi">
+                                        <svg class="iuSilverHomeSendIcon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 4 18 12h-4v8h-4v-8H6l6-8z"/></svg>
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div class="iu-mobileSilverFloatMount" aria-hidden="true">
                                   <div class="iu-mobileSilverFloatDecor" role="presentation">
@@ -4302,6 +4581,7 @@ style-src 'self' 'unsafe-inline' https:;
               <label>Čas <input type="time" name="time" required /></label>
               <label>Název <input type="text" name="title" maxlength="120" required /></label>
               <label>Poznámka <textarea name="note" rows="3" maxlength="1000"></textarea></label>
+              <div id="iuCalendarEventDetail" class="iu-calendarOverlay__eventDetail" hidden></div>
               <label>Typ
                 <select name="type">
                   <option value="personal">Osobní</option>
