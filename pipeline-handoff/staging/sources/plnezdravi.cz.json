@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "plnezdravi.cz",
-  "ingestedAt": "2026-05-01T07:19:39.458540Z",
+  "ingestedAt": "2026-05-01T08:35:58.699764Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Zimní deprese pod lupou: Jak se nenechat pohltit tmou",
+      "url": "https://www.plnezdravi.cz/zimni-deprese-pod-lupou-jak-se-nenechat-pohltit-tmou/",
+      "dt": "2026-05-01T07:00:01Z",
+      "media_raw": "Plné zdraví",
+      "media_norm": "Plné zdraví",
+      "tokens": [
+        "deprese",
+        "lupou",
+        "nenechat",
+        "pohltit",
+        "tmou",
+        "zimní"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_plnezdravi",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "plnezdravi.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -495,30 +518,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "plnezdravi.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Sacharidy nejsou špatné. Jen je třeba rozlišovat ty zdravé",
-      "url": "https://www.plnezdravi.cz/sacharidy-nejsou-spatne-jen-je-treba-rozlisovat-ty-zdrave/",
-      "dt": "2026-04-15T07:00:45Z",
-      "media_raw": "Plné zdraví",
-      "media_norm": "Plné zdraví",
-      "tokens": [
-        "jen",
-        "nejsou",
-        "rozlišovat",
-        "sacharidy",
-        "třeba",
-        "zdravé",
-        "špatné"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_plnezdravi",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "plnezdravi.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -529,7 +528,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.plnezdravi.cz/feed/",
-      "bytes": 142455,
+      "bytes": 144154,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -566,7 +565,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T12:34:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:00:01Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -581,6 +580,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Zimní deprese pod lupou: Jak se nenechat pohltit tmou",
+            "publishedAt": "2026-05-01T07:00:01Z"
+          },
           {
             "title": "Orgasmus nepotřebuji. Tak si lže 68 % žen, kterým chybí, tvrdí studie",
             "publishedAt": "2026-04-30T12:34:11Z"
@@ -608,10 +611,6 @@
           {
             "title": "Kolik stojí lidský život? Pozdní diagnóza rakoviny drtí pacienty a rodiny, ale i zdravotnictví",
             "publishedAt": "2026-04-24T12:46:19Z"
-          },
-          {
-            "title": "Češi cvičí nejraději sami. S udržením kondice jim pomáhají moderní technologie",
-            "publishedAt": "2026-04-24T07:00:47Z"
           }
         ]
       }

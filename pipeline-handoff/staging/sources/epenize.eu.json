@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-01T07:19:39.458540Z",
+  "ingestedAt": "2026-05-01T08:35:58.699764Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Miroslav Kalousek: Uzákonili jsme si rozežranost na úkor budoucnosti",
+      "url": "https://www.epenize.eu/miroslav-kalousek-uzakonili-jsme-si-rozezranost-na-ukor-budoucnosti/",
+      "dt": "2026-05-01T07:51:51Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "budoucnosti",
+        "jsme",
+        "kalousek",
+        "miroslav",
+        "rozežranost",
+        "uzákonili",
+        "úkor"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -475,30 +499,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Trump v CNBC: Válku ve Vietnamu bych vyhrál rychle",
-      "url": "https://www.epenize.eu/trump-v-cnbc-valku-ve-vietnamu-bych-vyhral-rychle/",
-      "dt": "2026-04-21T23:00:04Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "bych",
-        "cnbc",
-        "rychle",
-        "trump",
-        "vietnamu",
-        "vyhrál",
-        "válku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +509,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 104686,
+      "bytes": 106116,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +546,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-04-30T23:00:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:51:51Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -562,6 +562,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Miroslav Kalousek: Uzákonili jsme si rozežranost na úkor budoucnosti",
+            "publishedAt": "2026-05-01T07:51:51Z"
+          },
           {
             "title": "Tucker Carlson se omluvil, že Trumpa vůbec někdy podporoval",
             "publishedAt": "2026-04-30T23:00:10Z"
@@ -589,10 +593,6 @@
           {
             "title": "Trumpova válka s Kimmelem pokračuje: Další volání po vyhazovu",
             "publishedAt": "2026-04-27T23:00:47Z"
-          },
-          {
-            "title": "Dle Babiše nesplňujeme závazek vůči NATO. Omluví se Vondráček Řezníčkovi?",
-            "publishedAt": "2026-04-27T06:47:41Z"
           }
         ]
       }

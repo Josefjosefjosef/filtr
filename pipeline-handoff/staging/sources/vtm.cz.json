@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-01T07:19:39.458540Z",
+  "ingestedAt": "2026-05-01T08:35:58.699764Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,34 @@
         "startuje",
         "zítra",
         "éra"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Vznikl další potenciální investiční hit spojený s AI. Nvidii začínají doplňovat nenápadní hráči",
+      "url": "https://www.zive.cz/clanky/vznikl-dalsi-potencialni-investicni-hit-spojeny-s-ai-nvidii-zacinaji-doplnovat-nenapadni-hraci/sc-3-a-240926/default.aspx",
+      "dt": "2026-05-01T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "další",
+        "doplňovat",
+        "hit",
+        "hráči",
+        "investiční",
+        "nenápadní",
+        "nvidii",
+        "potenciální",
+        "spojený",
+        "vznikl",
+        "začínají"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -929,35 +957,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "OpenAI chce využít zaváhání Applu s umělou inteligencí. Chystá vlastní telefon pro éru AI agentů",
-      "url": "https://mobilmania.zive.cz/clanky/openai-chce-vyuzit-zavahani-applu-s-umelou-inteligenci-chysta-vlastni-telefon-pro-eru-ai-agentu/sc-3-a-1364637/default.aspx",
-      "dt": "2026-04-28T07:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "agentů",
-        "applu",
-        "chce",
-        "chystá",
-        "inteligencí",
-        "openai",
-        "telefon",
-        "umělou",
-        "vlastní",
-        "využít",
-        "zaváhání",
-        "éru"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -968,7 +967,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 23074,
+      "bytes": 23292,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1005,7 +1004,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:10:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1023,6 +1022,10 @@
           {
             "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
             "publishedAt": "2026-04-30T16:45:00Z"
+          },
+          {
+            "title": "Vznikl další potenciální investiční hit spojený s AI. Nvidii začínají doplňovat nenápadní hráči",
+            "publishedAt": "2026-05-01T07:45:00Z"
           },
           {
             "title": "Hry zadarmo, nebo se slevou: Výprodeje japonských her a automatizační strategie zdarma",
@@ -1047,10 +1050,6 @@
           {
             "title": "AirPods už s Androidy fungují skoro jako s iPhony. Google konečně opravil dlouholetou chybu",
             "publishedAt": "2026-04-30T08:45:00Z"
-          },
-          {
-            "title": "Velký český úspěch. Zwift koupil platformu Rouvy pro virtuální cyklistiku",
-            "publishedAt": "2026-04-30T07:45:00Z"
           }
         ]
       }
