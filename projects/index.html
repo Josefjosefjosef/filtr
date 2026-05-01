@@ -506,29 +506,7 @@ style-src 'self' 'unsafe-inline' https:;
       .iuSilverHomeChips--titleDone{
         grid-template-columns: minmax(0, 1fr);
       }
-      /* P0 Silver: Kalendář entry — max 2 řádky, 2 sloupce, žádný horizontální overflow */
-      .iuSilverHomeChips.iuSilverHomeChips--calActionRow{
-        display:flex!important;
-        flex-wrap:wrap!important;
-        gap:6px!important;
-        grid-template-columns:unset!important;
-        width:100%!important;
-        max-width:100%!important;
-        min-width:0!important;
-        box-sizing:border-box!important;
-        overflow-x:hidden!important;
-      }
-      .iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip{
-        flex:1 1 calc(50% - 6px)!important;
-        min-width:0!important;
-        max-width:calc(50% - 6px)!important;
-        width:auto!important;
-      }
-      .iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:nth-child(3){
-        flex:1 1 100%!important;
-        max-width:100%!important;
-        text-align:center!important;
-      }
+      /* P0 Silver: Kalendář entry row — layout + premium styl pouze ≤1024px (viz @media níže). */
       .iuSilverHomeChips--timeChoiceRow{
         display:flex!important;
         justify-content:center!important;
@@ -721,6 +699,75 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHomeChips .iuSilverHomeChip,
         #iuSilverHomeChips button.iuSilverHomeChip{
           font-size: 16px;
+        }
+        /* P0 Silver: dočasná kalendářová tlačítka — grid 2+1, ikony SVG, premium gradient (jen mobile/tablet). */
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow{
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 11px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          overflow-x: hidden !important;
+          align-items: stretch !important;
+          margin-top: 8px !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel{
+          grid-column: 1 / -1 !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip,
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iuSilverHomeChip{
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          min-height: 46px !important;
+          box-sizing: border-box !important;
+          font-size: 13px !important;
+          font-weight: 600 !important;
+          line-height: 1.2 !important;
+          border-radius: 15px !important;
+          color: rgba(255, 255, 255, 0.98) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(15, 23, 42, 0.12) !important;
+          -webkit-tap-highlight-color: transparent !important;
+          text-align: center !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:hover,
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip:active{
+          filter: brightness(1.07) !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip__svg{
+          flex: 0 0 auto !important;
+          width: 16px !important;
+          height: 16px !important;
+          display: block !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip__label{
+          min-width: 0 !important;
+          flex: 1 1 auto !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel .iuSilverHomeChip__label{
+          flex: 0 1 auto !important;
+          max-width: 100% !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSave{
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
+          background: linear-gradient(135deg, #22c55e, #10b981) !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSearch{
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
+          background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel{
+          border: 1px solid rgba(15, 23, 42, 0.35) !important;
+          background: linear-gradient(135deg, #334155, #1e293b) !important;
         }
       }
       @media (min-width: 1025px){
