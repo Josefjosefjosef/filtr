@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-01T02:50:12.269107Z",
+  "ingestedAt": "2026-05-01T03:15:15.663107Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Jančura se v našich vlacích učí, jak dělat věci správně, říká šéf Českých drah",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/jancura-se-v-nasich-vlacich-uci-jak-delat-veci-spravne-rika-sef-ceskych-drah-1432523",
+      "dt": "2026-05-01T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "drah",
+        "dělat",
+        "jančura",
+        "našich",
+        "správně",
+        "učí",
+        "vlacích",
+        "věci",
+        "českých",
+        "říká",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -425,31 +453,6 @@
     {
       "section": "finance",
       "contentType": "article",
-      "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
-      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-bance-klesl-ctvrtletni-zisk-uvery-i-vklady-dal-rostou-1432494",
-      "dt": "2026-04-30T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bance",
-        "klesl",
-        "komerční",
-        "rostou",
-        "vklady",
-        "zisk",
-        "úvěry",
-        "čtvrtletní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
       "title": "Daň z nemovitosti 2026: Termín platby se blíží. Jak na výpočet a kdo je osvobozen?",
       "url": "https://www.e15.cz/dan-z-nemovitosti-2026",
       "dt": "2026-04-30T06:00:00Z",
@@ -464,6 +467,31 @@
         "platby",
         "termín",
         "výpočet"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
+      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-bance-klesl-ctvrtletni-zisk-uvery-i-vklady-dal-rostou-1432494",
+      "dt": "2026-04-30T06:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "bance",
+        "klesl",
+        "komerční",
+        "rostou",
+        "vklady",
+        "zisk",
+        "úvěry",
+        "čtvrtletní"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1047,33 +1075,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komárkova MND rozjela baterii za čtvrt miliardy, pomáhat má síti i obchodu s elektřinou",
-      "url": "https://www.e15.cz/byznys/prumysl-a-energetika/komarkova-mnd-rozjela-baterii-za-ctvrt-miliardy-pomahat-ma-siti-i-obchodu-s-elektrinou-1432461",
-      "dt": "2026-04-29T06:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "baterii",
-        "elektřinou",
-        "komárkova",
-        "miliardy",
-        "mnd",
-        "obchodu",
-        "pomáhat",
-        "rozjela",
-        "síti",
-        "čtvrt"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1084,7 +1085,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53193,
+      "bytes": 53128,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1121,11 +1122,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 38,
-          "zpravy": 2
+          "zpravy": 3,
+          "finance": 37
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1137,6 +1138,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jančura se v našich vlacích učí, jak dělat věci správně, říká šéf Českých drah",
+            "publishedAt": "2026-05-01T03:00:00Z"
+          },
           {
             "title": "Akcie Allwynu po měsíci na burze oslabují. Možných pozitivních impulsů je přitom hned několik",
             "publishedAt": "2026-04-30T16:05:00Z"
@@ -1164,10 +1169,6 @@
           {
             "title": "České dráhy vydělaly 1,8 miliardy. Skupinu ale brzdí miliardová ztráta Carga",
             "publishedAt": "2026-04-30T09:20:00Z"
-          },
-          {
-            "title": "Air Bank má novinku v aplikaci. Ukáže, kam vám mizí peníze",
-            "publishedAt": "2026-04-30T09:03:00Z"
           }
         ]
       }
