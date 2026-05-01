@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-01T21:23:07.106140Z",
+  "ingestedAt": "2026-05-01T21:54:27.093717Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA stáhnou z Německa 5000 vojáků, oznámil Hegseth. Řekl i časový rámec",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/usa-stahnou-z-nemecka-5000-vojaku-behem-sesti-az-12-mesicu-naridil-hegseth.A260501_233335_zahranicni_air",
+      "dt": "2026-05-01T21:44:51Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "5000",
+        "hegseth",
+        "německa",
+        "oznámil",
+        "rámec",
+        "stáhnou",
+        "usa",
+        "vojáků",
+        "časový",
+        "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -757,32 +784,6 @@
         "uřízlý",
         "věnec",
         "zničené"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "To má být vzor pro děti? Spolupráce Haalanda s pivovarem budí v Norsku emoce",
-      "url": "https://www.idnes.cz/ekonomika/zahranicni/to-ma-byt-vzor-pro-deti-spoluprace-haalanda-s-pivovarem-budi-v-norsku-emoce.A260430_103500_eko-zahranicni_jadv",
-      "dt": "2026-05-01T10:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "budí",
-        "být",
-        "děti",
-        "emoce",
-        "haalanda",
-        "norsku",
-        "pivovarem",
-        "spolupráce",
-        "vzor"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1586,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49083,
+      "bytes": 49402,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,11 +1623,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T19:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T21:44:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 3,
-          "zpravy": 24,
+          "zpravy": 25,
+          "finance": 2,
           "other": 3
         },
         "drop_counts": {
@@ -1639,6 +1640,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA stáhnou z Německa 5000 vojáků, oznámil Hegseth. Řekl i časový rámec",
+            "publishedAt": "2026-05-01T21:44:51Z"
+          },
           {
             "title": "EU neplní dohodu, napsal Trump a ohlásil zvýšení cel na dovoz aut na 25 procent",
             "publishedAt": "2026-05-01T19:45:00Z"
@@ -1665,10 +1670,6 @@
           },
           {
             "title": "Babiš se setká se Zelenským. Po cestě po Střední Asii míří na summit do Jerevanu",
-            "publishedAt": "2026-05-01T18:00:00Z"
-          },
-          {
-            "title": "Bez včel bychom přežili, ale z krajiny by vymizelo vše pestré i ovoce, říká včelmistr",
             "publishedAt": "2026-05-01T18:00:00Z"
           }
         ]
