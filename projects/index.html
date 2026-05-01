@@ -439,6 +439,35 @@ style-src 'self' 'unsafe-inline' https:;
           position: relative;
           z-index: 1;
         }
+        /* P0: Silver guided day row — nowrap + composer overflow:hidden ořezával tlačítka na mobilu/tabletu. */
+        #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow {
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: wrap !important;
+          align-content: flex-start !important;
+          align-items: stretch !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+          overflow-x: hidden !important;
+          overflow-y: visible !important;
+          -webkit-overflow-scrolling: auto !important;
+          scrollbar-width: auto !important;
+        }
+        #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow .iuSilverHomeChip {
+          flex: 1 1 calc(50% - 3px) !important;
+          max-width: calc(50% - 3px) !important;
+          min-width: 0 !important;
+          width: auto !important;
+          white-space: normal !important;
+          overflow-wrap: anywhere !important;
+          word-break: normal !important;
+          text-align: center !important;
+          box-sizing: border-box !important;
+        }
       }
       .iuSilverHomeChips{
         display: grid;
