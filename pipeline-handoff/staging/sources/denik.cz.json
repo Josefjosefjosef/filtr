@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-01T10:25:20.254182Z",
+  "ingestedAt": "2026-05-01T10:55:03.250087Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Španělsko se chystá na extrémní horko. Omezení se dotknou barů i restaurací",
+      "url": "https://www.denik.cz/staty-eu/spanelsko-leto-dovolene-horka-zavrene-terasy-zahradky.html",
+      "dt": "2026-05-01T10:15:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "barů",
+        "chystá",
+        "dotknou",
+        "extrémní",
+        "horko",
+        "omezení",
+        "restaurací",
+        "španělsko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -616,30 +641,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na sedmdesát mrtvých. Přibylo obětí nehod bez zapnutých pásů",
-      "url": "https://www.denik.cz/z_domova/cesko-dopravni-mehody-nepripoutani.html",
-      "dt": "2026-04-30T16:03:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "mrtvých",
-        "nehod",
-        "obětí",
-        "pásů",
-        "přibylo",
-        "sedmdesát",
-        "zapnutých"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -650,7 +651,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30342,
+      "bytes": 30250,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -687,7 +688,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-01T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:15:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -703,6 +704,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Španělsko se chystá na extrémní horko. Omezení se dotknou barů i restaurací",
+            "publishedAt": "2026-05-01T10:15:00Z"
+          },
           {
             "title": "Vražda mladé brigádnice na statku u Brodu: Vrah nechal tělo v traktoru",
             "publishedAt": "2026-05-01T09:00:00Z"
@@ -730,10 +735,6 @@
           {
             "title": "Televizní tipy na víkend: Oslavenkyně Jiřina Bohdalová, Hitler a láska za války",
             "publishedAt": "2026-05-01T06:00:00Z"
-          },
-          {
-            "title": "Vážná nehoda na Přerovsku: Zranilo se pět lidí, jednoho museli z auta vystříhat",
-            "publishedAt": "2026-05-01T05:52:00Z"
           }
         ]
       }

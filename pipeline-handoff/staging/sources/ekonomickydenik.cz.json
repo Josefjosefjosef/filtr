@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T10:25:20.254182Z",
+  "ingestedAt": "2026-05-01T10:55:03.250087Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
+      "url": "https://ekonomickydenik.cz/sefove-berou-stale-vic-prijmy-zamestnancu-jsou-nizsi/",
+      "dt": "2026-05-01T10:48:24Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "ale",
+        "berou",
+        "lety",
+        "než",
+        "nižší",
+        "příjmy",
+        "stále",
+        "víc",
+        "zaměstnanců",
+        "šéfové"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -759,33 +786,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Propast v důvěře Čechů: Pavlovi většina věří, Babišova vláda výrazně ztrácí",
-      "url": "https://ekonomickydenik.cz/propast-duvera-pavel-babis/",
-      "dt": "2026-04-29T12:48:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "babišova",
-        "důvěře",
-        "pavlovi",
-        "propast",
-        "vláda",
-        "výrazně",
-        "většina",
-        "věří",
-        "ztrácí",
-        "čechů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +796,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 74291,
+      "bytes": 73564,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +833,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T09:14:27Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:48:24Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -850,6 +850,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
+            "publishedAt": "2026-05-01T10:48:24Z"
+          },
           {
             "title": "Velký personální lov: Hledá se nový Řehka. Kdo bude „tichou silou“?",
             "publishedAt": "2026-05-01T09:14:27Z"
@@ -877,10 +881,6 @@
           {
             "title": "700 paragrafů místo 200? Zákon má tvrdě zpřísnit dohled nad pohybem cizinců v Česku",
             "publishedAt": "2026-04-30T14:57:17Z"
-          },
-          {
-            "title": "„Má černou stavbu a mění zákon,“ zaútočil Hřib na Mrázovou. Poslanci ji vyzvali k rezignaci",
-            "publishedAt": "2026-04-30T13:40:47Z"
           }
         ]
       }

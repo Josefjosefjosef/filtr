@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-01T10:25:20.254182Z",
+  "ingestedAt": "2026-05-01T10:55:03.250087Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Pyšná princezna: Překlep s močícím králem Miroslavem, opilá Vránová na mokré kládě, pomsta zhrzeného manžela",
+      "url": "https://www.vtelce.cz/pysna-princezna-preklep-s-mocicim-kralem-miroslavem-opila-vranova-na-mokre-klade-pomsta-zhrzeneho-manzela/",
+      "dt": "2026-05-01T10:40:15Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "kládě",
+        "králem",
+        "manžela",
+        "miroslavem",
+        "mokré",
+        "močícím",
+        "opilá",
+        "pomsta",
+        "princezna",
+        "pyšná",
+        "překlep",
+        "vránová",
+        "zhrzeného"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -258,32 +288,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Zkrocení zlé ženy: Záchrana studia, přetáčení scén a reálná nenávist",
-      "url": "https://www.vtelce.cz/zkroceni-zle-zeny-zachrana-studia-pretaceni-scen-a-realna-nenavist/",
-      "dt": "2026-04-29T07:59:40Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "nenávist",
-        "přetáčení",
-        "reálná",
-        "scén",
-        "studia",
-        "zkrocení",
-        "zlé",
-        "záchrana",
-        "ženy"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +298,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 82432,
+      "bytes": 83338,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -331,11 +335,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T17:12:50Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:40:15Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 1,
-          "other": 9
+          "other": 9,
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -347,6 +351,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pyšná princezna: Překlep s močícím králem Miroslavem, opilá Vránová na mokré kládě, pomsta zhrzeného manžela",
+            "publishedAt": "2026-05-01T10:40:15Z"
+          },
           {
             "title": "Policie Modrava: Statisícové platy herců, smrt před premiérou a zmrzlý kůň na place",
             "publishedAt": "2026-04-30T17:12:50Z"
@@ -374,10 +382,6 @@
           {
             "title": "Pupendo: Skrytý vzkaz na dveřích, lest s obyčejnou pětikorunou a slavná scéna vzniklá náhodou",
             "publishedAt": "2026-04-29T17:14:26Z"
-          },
-          {
-            "title": "SkyShowtime v květnu: Na scénu se vrací záhadné zvonění černého telefonu i finále Panství Downtown",
-            "publishedAt": "2026-04-29T15:44:34Z"
           }
         ]
       }
