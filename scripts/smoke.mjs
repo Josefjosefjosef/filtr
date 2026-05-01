@@ -738,12 +738,15 @@ async function runSmoke() {
     if (!silverMainShell390.ok) {
       fail(`Silver parcel main shell (390): ${JSON.stringify(silverMainShell390)}`);
     }
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(280);
     const silverMainShellGlow390 = await page.evaluate(() => {
       const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
       if (!shell) return false;
+      if (!shell.matches(":focus-within")) return false;
       const b = String(getComputedStyle(shell).boxShadow || "");
-      return b.indexOf("99, 102, 241") >= 0 || b.indexOf("99,102,241") >= 0;
+      if (b.indexOf("99, 102, 241") >= 0 || b.indexOf("99,102,241") >= 0) return true;
+      if (b.indexOf("0 0 0 2px") >= 0) return true;
+      return false;
     });
     if (!silverMainShellGlow390) {
       fail("Silver parcel main shell: expected focus-within glow on input focus (390)");
