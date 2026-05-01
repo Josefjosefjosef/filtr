@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-01T19:05:00.015690Z",
+  "ingestedAt": "2026-05-01T19:40:46.570664Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš bude v Arménii o víkendu krátce jednat se Zelenským, píše iDnes",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/babis-bude-v-armenii-o-vikendu-kratce-jednat-se-zelenskym-pise-idnes-373017",
+      "dt": "2026-05-01T19:27:55Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "arménii",
+        "babiš",
+        "idnes",
+        "jednat",
+        "krátce",
+        "píše",
+        "víkendu",
+        "zelenským"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -732,28 +757,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "„Duch z Maginotovy linie.“ Občan na jihu Čech odevzdal policii pevnostní minomet",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/duch-z-maginotovy-linie-obcan-na-jihu-cech-odevzdal-policii-pevnostni-minomet-372985",
-      "dt": "2026-04-30T14:57:21Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Nymburk vyhrál suverénně ve čtvrtfinále i druhý duel s Ostravou",
+      "url": "https://sport.ceskatelevize.cz/clanek/basketbal/nymburk-vyhral-suverenne-ve-ctvrtfinale-i-druhy-duel-s-ostravou-156549",
+      "dt": "2026-05-01T19:09:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "duch",
-        "jihu",
-        "linie",
-        "maginotovy",
-        "minomet",
-        "občan",
-        "odevzdal",
-        "pevnostní",
-        "policii",
-        "čech"
+        "druhý",
+        "duel",
+        "nymburk",
+        "ostravou",
+        "suverénně",
+        "vyhrál",
+        "čtvrtfinále"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -785,14 +807,16 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Semifinále MS do 18 let Česko – Švédsko 3:2",
+      "title": "Semifinále MS do 18 let Česko – Švédsko. Za stavu 3:3 se prodlužuje",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/semifinale-ms-do-18-let-cesko-svedsko-156544",
       "dt": "2026-05-01T17:00:00Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "let",
+        "prodlužuje",
         "semifinále",
+        "stavu",
         "česko",
         "švédsko"
       ],
@@ -1457,28 +1481,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Semifinále LM mezi Atléticem a Arsenalem vítěze nemělo",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/semifinale-lm-mezi-atleticem-a-arsenalem-viteze-nemelo-156518",
-      "dt": "2026-04-29T21:10:42Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "arsenalem",
-        "atléticem",
-        "nemělo",
-        "semifinále",
-        "vítěze"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1489,7 +1491,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42686,
+      "bytes": 42853,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1549,7 +1551,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T18:20:56Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T19:27:55Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 28,
@@ -1566,6 +1568,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš bude v Arménii o víkendu krátce jednat se Zelenským, píše iDnes",
+            "publishedAt": "2026-05-01T19:27:55Z"
+          },
           {
             "title": "Těhotných s rakovinou přibývá. Expedice Dva životy nabízí podporu i informace",
             "publishedAt": "2026-05-01T18:20:56Z"
@@ -1593,10 +1599,6 @@
           {
             "title": "Turecká policie použila proti účastníkům prvomájových protestů slzný plyn",
             "publishedAt": "2026-05-01T13:01:53Z"
-          },
-          {
-            "title": "Začala prozatímně platit dohoda mezi EU a skupinou Mercosur",
-            "publishedAt": "2026-05-01T12:49:49Z"
           }
         ]
       }
@@ -1608,7 +1610,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 36831,
+      "bytes": 37126,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1645,7 +1647,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T17:05:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T19:09:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1661,11 +1663,15 @@
         },
         "sample_titles": [
           {
+            "title": "Nymburk vyhrál suverénně ve čtvrtfinále i druhý duel s Ostravou",
+            "publishedAt": "2026-05-01T19:09:45Z"
+          },
+          {
             "title": "Další zaváhání Artisu. Z Prostějova veze pouze remízu",
             "publishedAt": "2026-05-01T17:05:20Z"
           },
           {
-            "title": "Semifinále MS do 18 let Česko – Švédsko 3:2",
+            "title": "Semifinále MS do 18 let Česko – Švédsko. Za stavu 3:3 se prodlužuje",
             "publishedAt": "2026-05-01T17:00:00Z"
           },
           {
@@ -1687,10 +1693,6 @@
           {
             "title": "Denver s Jokičem končí, postoupily Minnesota a New York. Sixers si vynutili sedmý zápas",
             "publishedAt": "2026-05-01T07:00:05Z"
-          },
-          {
-            "title": "Dostál 25 zákroky pomohl Anaheimu vyřadit Edmonton, sezona skončila i Dallasu",
-            "publishedAt": "2026-05-01T06:51:00Z"
           }
         ]
       }
@@ -1702,7 +1704,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77073,
+      "bytes": 77069,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
