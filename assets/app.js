@@ -33392,6 +33392,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function hideGuidedChrome() {
       closeGuidedSheet();
+      try {
+        closeSilverGuidedTimeFallback();
+      } catch (_) {}
       var m = modeEl(),
         c = chipsEl(),
         t = toastEl();
@@ -33655,11 +33658,155 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.innerHTML = html;
     }
 
+    function closeSilverGuidedTimeFallback() {
+      var x = document.getElementById("iuSilverGuidedTimeFallback");
+      if (x && x.parentNode) {
+        try {
+          x.parentNode.removeChild(x);
+        } catch (_) {}
+      }
+      try {
+        if (window.__iuSilverGuidedTimeOpenProof) window.__iuSilverGuidedTimeOpenProof.fallbackVisible = false;
+      } catch (_) {}
+    }
+
+    function ensureSilverGuidedNativeTimeHost(el) {
+      if (!el) return;
+      try {
+        el.className = "iuSilverGuidedNativeTimeHost";
+        el.removeAttribute("hidden");
+      } catch (_) {}
+    }
+
+    function tryClickFocusNativeTime(el) {
+      if (!el) return;
+      try {
+        if (typeof el.click === "function") el.click();
+      } catch (_) {}
+      try {
+        if (typeof el.focus === "function") el.focus({ preventScroll: true });
+      } catch (_) {
+        try {
+          el.focus();
+        } catch (_) {}
+      }
+    }
+
+    function showSilverGuidedTimeFallback(timeInput) {
+      if (!narrow() || !timeInput) return;
+      if (document.getElementById("iuSilverGuidedTimeFallback")) return;
+      var cur = normalizeDraftTimeHm(String(timeInput.value || "")) || "09:00";
+      var p = String(cur).split(":");
+      var h0 = Number(p[0]);
+      var m0 = Number(p[1]);
+      if (!Number.isFinite(h0) || h0 < 0 || h0 > 23) h0 = 9;
+      if (!Number.isFinite(m0) || m0 < 0 || m0 > 59) m0 = 0;
+
+      var root = document.createElement("div");
+      root.id = "iuSilverGuidedTimeFallback";
+      root.className = "iuSilverGuidedTimeFallback";
+      root.setAttribute("role", "dialog");
+
+      var backdrop = document.createElement("button");
+      backdrop.type = "button";
+      backdrop.className = "iuSilverGuidedTimeFallback__backdrop";
+      backdrop.setAttribute("aria-label", "Zavřít výběr času");
+
+      var panel = document.createElement("div");
+      panel.className = "iuSilverGuidedTimeFallback__panel";
+
+      var row1 = document.createElement("div");
+      row1.className = "iuSilverGuidedTimeFallback__row";
+      var labH = document.createElement("label");
+      labH.className = "iuSilverGuidedTimeFallback__lab";
+      labH.setAttribute("for", "iuSilverGuidedTimeFbH");
+      labH.textContent = "Hodina";
+      var selH = document.createElement("select");
+      selH.id = "iuSilverGuidedTimeFbH";
+      selH.className = "iuSilverGuidedTimeFallback__sel";
+      var hi;
+      for (hi = 0; hi < 24; hi++) {
+        var optH = document.createElement("option");
+        optH.value = pad2(hi);
+        optH.textContent = pad2(hi);
+        if (hi === h0) optH.selected = true;
+        selH.appendChild(optH);
+      }
+      row1.appendChild(labH);
+      row1.appendChild(selH);
+
+      var row2 = document.createElement("div");
+      row2.className = "iuSilverGuidedTimeFallback__row";
+      var labM = document.createElement("label");
+      labM.className = "iuSilverGuidedTimeFallback__lab";
+      labM.setAttribute("for", "iuSilverGuidedTimeFbM");
+      labM.textContent = "Minuta";
+      var selM = document.createElement("select");
+      selM.id = "iuSilverGuidedTimeFbM";
+      selM.className = "iuSilverGuidedTimeFallback__sel";
+      var mi;
+      for (mi = 0; mi < 60; mi++) {
+        var optM = document.createElement("option");
+        optM.value = pad2(mi);
+        optM.textContent = pad2(mi);
+        if (mi === m0) optM.selected = true;
+        selM.appendChild(optM);
+      }
+      row2.appendChild(labM);
+      row2.appendChild(selM);
+
+      var ok = document.createElement("button");
+      ok.type = "button";
+      ok.className = "iuSilverGuidedTimeFallback__ok";
+      ok.textContent = "OK";
+      ok.addEventListener(
+        "click",
+        function () {
+          var hh = pad2(Number(selH.value) || 0);
+          var mm = pad2(Number(selM.value) || 0);
+          try {
+            timeInput.value = hh + ":" + mm;
+          } catch (_) {}
+          try {
+            timeInput.dispatchEvent(new Event("change", { bubbles: true }));
+          } catch (_) {}
+          closeSilverGuidedTimeFallback();
+        },
+        false
+      );
+
+      backdrop.addEventListener(
+        "click",
+        function () {
+          closeSilverGuidedTimeFallback();
+        },
+        false
+      );
+
+      panel.appendChild(row1);
+      panel.appendChild(row2);
+      panel.appendChild(ok);
+      root.appendChild(backdrop);
+      root.appendChild(panel);
+      try {
+        document.body.appendChild(root);
+      } catch (_) {
+        return;
+      }
+      try {
+        if (window.__iuSilverGuidedTimeOpenProof) window.__iuSilverGuidedTimeOpenProof.fallbackVisible = true;
+      } catch (_) {}
+    }
+
     var silverGuidedNativeTimeInp = null;
     function getSilverGuidedNativeTimeInput() {
-      if (silverGuidedNativeTimeInp && silverGuidedNativeTimeInp.parentNode) return silverGuidedNativeTimeInp;
+      if (silverGuidedNativeTimeInp && silverGuidedNativeTimeInp.parentNode) {
+        ensureSilverGuidedNativeTimeHost(silverGuidedNativeTimeInp);
+        return silverGuidedNativeTimeInp;
+      }
       var existing = document.getElementById("iuSilverGuidedNativeTime");
       if (existing) {
+        ensureSilverGuidedNativeTimeHost(existing);
         silverGuidedNativeTimeInp = existing;
         return existing;
       }
@@ -33667,7 +33814,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       el.type = "time";
       el.step = 60;
       el.id = "iuSilverGuidedNativeTime";
-      el.className = "iuSilverHomeDatePick";
+      ensureSilverGuidedNativeTimeHost(el);
       el.setAttribute("aria-hidden", "true");
       el.setAttribute("tabindex", "-1");
       el.setAttribute("autocomplete", "off");
@@ -33699,21 +33846,67 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!narrow()) return;
       wireSilverGuidedNativeTimeInputOnce();
       var el = getSilverGuidedNativeTimeInput();
+      if (!el || !el.parentNode) return;
+      ensureSilverGuidedNativeTimeHost(el);
       var seed = normalizeDraftTimeHm(String(silverCalendarDraft.time || ""));
       if (!seed) seed = "09:00";
       try {
         el.value = seed;
       } catch (_) {}
       try {
+        window.__iuSilverGuidedTimeOpenProof = {
+          attemptedAt: Date.now(),
+          showPickerAttempted: true,
+          showPickerResolved: false,
+          showPickerRejected: false,
+          fallbackVisible: false,
+          usedClick: false,
+          usedFocus: false
+        };
+      } catch (_) {}
+      var proof = window.__iuSilverGuidedTimeOpenProof;
+      function onNativePickerFailed() {
+        tryClickFocusNativeTime(el);
+        try {
+          if (proof) {
+            proof.usedClick = true;
+            proof.usedFocus = true;
+          }
+        } catch (_) {}
+        showSilverGuidedTimeFallback(el);
+      }
+      try {
         if (typeof el.showPicker === "function") {
-          el.showPicker();
+          var sp = el.showPicker();
+          if (sp && typeof sp.then === "function") {
+            sp.then(function () {
+              try {
+                if (proof) proof.showPickerResolved = true;
+              } catch (_) {}
+            }).catch(function () {
+              try {
+                if (proof) proof.showPickerRejected = true;
+              } catch (_) {}
+              onNativePickerFailed();
+            });
+          } else {
+            if (proof) proof.showPickerResolved = true;
+          }
         } else {
-          el.focus();
+          tryClickFocusNativeTime(el);
+          try {
+            if (proof) {
+              proof.usedClick = true;
+              proof.usedFocus = true;
+              proof.openedViaClickOnlyPath = true;
+            }
+          } catch (_) {}
         }
       } catch (_) {
         try {
-          el.focus();
+          if (proof) proof.showPickerRejected = true;
         } catch (_) {}
+        onNativePickerFailed();
       }
     }
 
