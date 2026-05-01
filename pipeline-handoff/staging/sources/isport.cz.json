@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "isport.cz",
-  "ingestedAt": "2026-05-01T20:45:05.372288Z",
+  "ingestedAt": "2026-05-01T21:23:07.106140Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Tomek po semifinále: Na kluky jsem pyšný, byl to pro nás všechny zážitek na celý život",
+      "url": "https://isport.blesk.cz/clanek/hokej-reprezentace-ms-v-hokeji-do-18-let/475046/tomek-po-semifinale-na-kluky-jsem-pysny-byl-to-pro-nas-vsechny-zazitek-na-cely-zivot.html",
+      "dt": "2026-05-01T20:50:00Z",
+      "media_raw": "iSport",
+      "media_norm": "iSport",
+      "tokens": [
+        "celý",
+        "jsem",
+        "kluky",
+        "nás",
+        "pyšný",
+        "semifinále",
+        "tomek",
+        "všechny",
+        "zážitek",
+        "život"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_isport",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "isport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1037,32 +1064,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "isport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vašulín: letní přestup z Plzně? Se Slončíkem paběrkují, kouká (nejen) Hradec",
-      "url": "https://isport.blesk.cz/clanek/fotbal-chance-liga/474970/vasulin-letni-prestup-z-plzne-se-sloncikem-paberkuji-kouka-nejen-hradec.html",
-      "dt": "2026-04-30T12:20:00Z",
-      "media_raw": "iSport",
-      "media_norm": "iSport",
-      "tokens": [
-        "hradec",
-        "kouká",
-        "letní",
-        "nejen",
-        "paběrkují",
-        "plzně",
-        "přestup",
-        "slončíkem",
-        "vašulín"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_isport",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "isport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1073,7 +1074,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://isport.blesk.cz/rss",
-      "bytes": 55613,
+      "bytes": 55680,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1110,7 +1111,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T19:50:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T20:50:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1125,6 +1126,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tomek po semifinále: Na kluky jsem pyšný, byl to pro nás všechny zážitek na celý život",
+            "publishedAt": "2026-05-01T20:50:00Z"
+          },
           {
             "title": "Česko U18 - Švédsko U18 3:4p. Trenčínské slzy po obrovském boji! Sen o medaili zůstává",
             "publishedAt": "2026-05-01T19:50:00Z"
@@ -1152,10 +1157,6 @@
           {
             "title": "McLaren oslavil tisící Grand Prix s předstihem, vyjel i Sennův vůz. Piastri jako Hamilton",
             "publishedAt": "2026-05-01T16:30:00Z"
-          },
-          {
-            "title": "Na skandál se přišlo v podcastu. Nizozemsku hrozí chaos, může se opakovat 133 zápasů!",
-            "publishedAt": "2026-05-01T15:15:00Z"
           }
         ]
       }
