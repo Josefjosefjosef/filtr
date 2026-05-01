@@ -35757,35 +35757,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   var legalPromise = null;
   var invPromise = null;
 
-  function scheduleIdle(cb) {
-    try {
-      if (typeof requestIdleCallback === "function") {
-        requestIdleCallback(
-          function () {
-            try {
-              cb();
-            } catch (_) {}
-          },
-          { timeout: 2500 }
-        );
-      } else {
-        setTimeout(function () {
-          try {
-            cb();
-          } catch (_) {}
-        }, 1);
-      }
-    } catch (_) {
-      try {
-        setTimeout(function () {
-          try {
-            cb();
-          } catch (__) {}
-        }, 1);
-      } catch (___) {}
-    }
-  }
-
   function ensureFin() {
     try {
       if (typeof window.iuFinancialCalcOpenSurface === "function") return Promise.resolve();
@@ -35887,21 +35858,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     },
     true
   );
-
-  function idleBootAll() {
-    void ensureFin();
-    void ensureLegal();
-    void ensureInv();
-  }
-
-  function armIdle() {
-    scheduleIdle(idleBootAll);
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", armIdle, { once: true });
-  } else {
-    armIdle();
-  }
 })();
 
 /**
