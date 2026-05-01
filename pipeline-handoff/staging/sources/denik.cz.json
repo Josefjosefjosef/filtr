@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-01T03:15:15.663107Z",
+  "ingestedAt": "2026-05-01T03:45:52.835823Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kluk s dýmkou spálil chorvatský Varaždín. Před 250 lety vládu převzal Záhřeb",
+      "url": "https://www.denik.cz/historie/pozar-chorvatsko-varazdin-historie-dymka-jakub-vercek.html",
+      "dt": "2026-05-01T03:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "250",
+        "chorvatský",
+        "dýmkou",
+        "kluk",
+        "lety",
+        "převzal",
+        "spálil",
+        "varaždín",
+        "vládu",
+        "záhřeb"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -615,30 +642,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policie odložila prověřování Macinkových zpráv prezidentovu poradci",
-      "url": "https://www.denik.cz/z_domova/policie-odlozeni-proverovani-petr-macinka-zpravy-prezidentovi-petr-pavel.html",
-      "dt": "2026-04-30T10:15:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "macinkových",
-        "odložila",
-        "policie",
-        "poradci",
-        "prezidentovu",
-        "prověřování",
-        "zpráv"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -649,7 +652,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29725,
+      "bytes": 29868,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -686,11 +689,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-01T02:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T03:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "zpravy": 24
+          "zpravy": 24,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -702,6 +705,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kluk s dýmkou spálil chorvatský Varaždín. Před 250 lety vládu převzal Záhřeb",
+            "publishedAt": "2026-05-01T03:00:00Z"
+          },
           {
             "title": "Dojemné setkání: Díky za záchranu života, řekla Dagmar své dárkyni kostní dřeně",
             "publishedAt": "2026-05-01T02:30:00Z"
@@ -729,10 +736,6 @@
           {
             "title": "Rakouská policie dál hledá otrávenou dětskou výživu. Pátrá po jedné skleničce",
             "publishedAt": "2026-04-30T17:28:00Z"
-          },
-          {
-            "title": "Na sedmdesát mrtvých. Přibylo obětí nehod bez zapnutých pásů",
-            "publishedAt": "2026-04-30T16:03:00Z"
           }
         ]
       }
