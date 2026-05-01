@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-01T03:45:52.835823Z",
+  "ingestedAt": "2026-05-01T04:15:08.160146Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
+      "url": "https://profitonline.cz/kde-v-evrope-pojedete-letos-po-dalnici-zdarma-a-kde-vase-penezenka-zaplace-prinasime-prehled-poplatku/",
+      "dt": "2026-05-01T04:00:36Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "dálnici",
+        "evropě",
+        "letos",
+        "peněženka",
+        "pojedete",
+        "poplatků",
+        "přehled",
+        "přinášíme",
+        "vaše",
+        "zapláče",
+        "zdarma"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -272,30 +300,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Standard & Poor’s varuje, že společnosti ČEZ zhorší rating",
-      "url": "https://profitonline.cz/standard-poors-varuje-ze-spolecnosti-cez-zhorsi-rating/",
-      "dt": "2026-04-28T20:10:45Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "poor",
-        "rating",
-        "společnosti",
-        "standard",
-        "varuje",
-        "zhorší",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -306,7 +310,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18649,
+      "bytes": 19066,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,11 +347,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-04-30T20:40:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:00:36Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 11,
-          "zpravy": 1
+          "zpravy": 2,
+          "finance": 10
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -359,6 +363,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
+            "publishedAt": "2026-05-01T04:00:36Z"
+          },
           {
             "title": "Centrální banky sazby drží beze změny, zatím",
             "publishedAt": "2026-04-30T20:40:24Z"
@@ -386,10 +394,6 @@
           {
             "title": "Zlevní odchod Emirátů z kartelu OPEC pohonné hmoty?",
             "publishedAt": "2026-04-29T18:30:03Z"
-          },
-          {
-            "title": "Češi nechtějí platit daně. Zrušíme je stejně jako televizní poplatky?",
-            "publishedAt": "2026-04-29T10:00:24Z"
           }
         ]
       }

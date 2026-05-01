@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T03:45:52.835823Z",
+  "ingestedAt": "2026-05-01T04:15:08.160146Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Sedm výrazných rolí Jiřiny Bohdalové. Jak se měnila herečka, která slaví 95 let?",
+      "url": "https://magazin.aktualne.cz/kultura/film/sedm-vyraznych-roli-jiriny-bohdalove-jak-se-menila-herecka-ktera-slavi-95-let/r~aaa2923f7f2a321f3adb39d7d0bf610b/",
+      "dt": "2026-05-01T04:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "bohdalové",
+        "herečka",
+        "jiřiny",
+        "let",
+        "měnila",
+        "rolí",
+        "sedm",
+        "slaví",
+        "výrazných"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -506,32 +532,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zahalený vlajkou: Banksy propašoval obří sochu přímo do centra Londýna",
-      "url": "https://zpravy.aktualne.cz/zahranici/zahaleny-vlajkou-nejnovejsi-pocin-banksyho-nebo-dokonaly-podvrh-v-srdci-londyna/r~aaa2951937bc077832b93dc08d95aa4d/",
-      "dt": "2026-04-30T14:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "banksy",
-        "centra",
-        "londýna",
-        "obří",
-        "propašoval",
-        "přímo",
-        "sochu",
-        "vlajkou",
-        "zahalený"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +542,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21855,
+      "bytes": 21965,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,11 +579,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T03:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "other": 1,
           "finance": 1,
-          "zpravy": 13,
+          "zpravy": 12,
           "sport": 6
         },
         "drop_counts": {
@@ -596,6 +597,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Sedm výrazných rolí Jiřiny Bohdalové. Jak se měnila herečka, která slaví 95 let?",
+            "publishedAt": "2026-05-01T04:00:00Z"
+          },
           {
             "title": "Vyšel nový seznam spolehlivých aut. Je v něm sedm škodovek, většinou byste je netipli",
             "publishedAt": "2026-05-01T03:40:00Z"
@@ -623,10 +628,6 @@
           {
             "title": "Trump ruší cla na skotskou whisky po návštěvě krále Karla III. v USA",
             "publishedAt": "2026-04-30T20:57:00Z"
-          },
-          {
-            "title": "Letadlová loď USS Gerald R. Ford opustí Blízký východ, vydá se zpět do USA",
-            "publishedAt": "2026-02-28T14:04:00Z"
           }
         ]
       }

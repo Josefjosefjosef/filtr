@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-01T03:45:52.835823Z",
+  "ingestedAt": "2026-05-01T04:15:08.160146Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Dřina za dvacet tisíc měsíčně? Tohle je deset nejhůře placených prací v Česku",
+      "url": "https://www.e15.cz/ekonomika/drina-za-dvacet-tisic-mesicne-tohle-je-deset-nejhure-placenych-praci-v-cesku-1432451",
+      "dt": "2026-05-01T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "deset",
+        "dvacet",
+        "dřina",
+        "měsíčně",
+        "nejhůře",
+        "placených",
+        "prací",
+        "tisíc",
+        "tohle",
+        "česku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1051,33 +1078,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "IKEA Family se mění. Slevu na nákup nově získáte, i když neutratíte ani korunu",
-      "url": "https://www.e15.cz/finexpert/servis/ikea-family-se-meni-slevu-na-nakup-nove-ziskate-i-kdyz-neutratite-ani-korunu-1432468",
-      "dt": "2026-04-29T09:55:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "family",
-        "ikea",
-        "když",
-        "korunu",
-        "mění",
-        "neutratíte",
-        "nově",
-        "nákup",
-        "slevu",
-        "získáte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1088,7 +1088,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52795,
+      "bytes": 52696,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1125,7 +1125,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 37,
@@ -1141,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dřina za dvacet tisíc měsíčně? Tohle je deset nejhůře placených prací v Česku",
+            "publishedAt": "2026-05-01T04:00:00Z"
+          },
           {
             "title": "Oblíbený diskont v Česku zavírá prodejny. První obchod oznámil konec velkým výprodejem",
             "publishedAt": "2026-05-01T03:30:00Z"
@@ -1168,10 +1172,6 @@
           {
             "title": "Největší česká baterie odstartovala nabíjením při záporné ceně elektřiny, řídit ji pomáhá AI",
             "publishedAt": "2026-04-30T13:00:00Z"
-          },
-          {
-            "title": "Creditas zvyšuje sazby na termínovaných vkladech. Jaké úroky nabídne?",
-            "publishedAt": "2026-04-30T12:34:00Z"
           }
         ]
       }
