@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-01T16:44:52.614821Z",
+  "ingestedAt": "2026-05-01T17:19:45.066920Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "VOD tipy: Nečekaný vítěz Českého lva, žhavé Bouřlivé výšiny i akční nářez od Netflixu",
+      "url": "https://www.kinobox.cz/clanky/vod/53227-vod-tipy-necekany-vitez-ceskeho-lva-zhave-bourlive-vysiny-i-akcni-narez-od-netflixu",
+      "dt": "2026-05-01T17:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "akční",
+        "bouřlivé",
+        "lva",
+        "netflixu",
+        "nečekaný",
+        "nářez",
+        "tipy",
+        "vod",
+        "vítěz",
+        "výšiny",
+        "českého",
+        "žhavé"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -533,35 +562,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Django a Zorro spojí síly. Oscarový autor píše film na motivy Tarantinova kultovního komiksu",
-      "url": "https://www.kinobox.cz/clanky/filmy/53163-django-a-zorro-pospolu-oscarovy-autor-pise-film-na-motivy-tarantinova-kultovniho-komiksu",
-      "dt": "2026-04-29T12:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "autor",
-        "django",
-        "film",
-        "komiksu",
-        "kultovního",
-        "motivy",
-        "oscarový",
-        "píše",
-        "spojí",
-        "síly",
-        "tarantinova",
-        "zorro"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -572,7 +572,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 29118,
+      "bytes": 28779,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -609,7 +609,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T17:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -624,6 +624,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "VOD tipy: Nečekaný vítěz Českého lva, žhavé Bouřlivé výšiny i akční nářez od Netflixu",
+            "publishedAt": "2026-05-01T17:00:00Z"
+          },
           {
             "title": "Tahle párty je DEAD slibuje českou zombie komedii s přesahem. Čeká nás nástupce Choking Hazard?",
             "publishedAt": "2026-05-01T14:00:00Z"
@@ -651,10 +655,6 @@
           {
             "title": "Netflix v květnu: Návrat mrazivého Kaštánku, druhý Berlín a mluvící chobotnice",
             "publishedAt": "2026-04-30T17:00:00Z"
-          },
-          {
-            "title": "Resident Evil jako čistý horor. Režisér Hodiny zmizení představuje svět, v němž by Milla Jovovich nepřežila",
-            "publishedAt": "2026-04-30T16:00:00Z"
           }
         ]
       }

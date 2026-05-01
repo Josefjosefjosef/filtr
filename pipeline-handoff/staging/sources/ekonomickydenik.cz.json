@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T16:44:52.614821Z",
+  "ingestedAt": "2026-05-01T17:19:45.066920Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Americký šok: Trump ohlásil zvýšení cel na dovoz aut z EU na 25 procent. Neplníte dohodu, vzkázal",
+      "url": "https://ekonomickydenik.cz/trump-ohlasil-zvyseni-cel-na-dovoz-aut-z-eu-na-25-procent/",
+      "dt": "2026-05-01T17:14:40Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "americký",
+        "aut",
+        "cel",
+        "dohodu",
+        "dovoz",
+        "neplníte",
+        "ohlásil",
+        "procent",
+        "trump",
+        "vzkázal",
+        "zvýšení",
+        "šok"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,32 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Aliance propojí Černé a Kaspické moře. Vítězství pro Brusel, prohra pro Kreml",
-      "url": "https://ekonomickydenik.cz/aliance-propoji-cerne-kaspicke-more/",
-      "dt": "2026-04-29T14:39:35Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "aliance",
-        "brusel",
-        "kaspické",
-        "kreml",
-        "moře",
-        "prohra",
-        "propojí",
-        "vítězství",
-        "černé"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71997,
+      "bytes": 71910,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +839,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T15:55:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T17:14:40Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -853,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Americký šok: Trump ohlásil zvýšení cel na dovoz aut z EU na 25 procent. Neplníte dohodu, vzkázal",
+            "publishedAt": "2026-05-01T17:14:40Z"
+          },
           {
             "title": "Ovládla to tu pravicová dominance, tvrdí Špidla a přichází s Novou sociální demokracií",
             "publishedAt": "2026-05-01T15:55:54Z"
@@ -880,10 +887,6 @@
           {
             "title": "Naděje pro trh s ropou? Emiráty opouštějí OPEC a plánují rozjet těžbu naplno",
             "publishedAt": "2026-05-01T04:15:00Z"
-          },
-          {
-            "title": "Konec nadvlády USA a Číny? Nová pravidla fúzí mají nakopnout konkurenceschopnost EU",
-            "publishedAt": "2026-04-30T18:35:55Z"
           }
         ]
       }

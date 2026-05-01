@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-01T16:44:52.614821Z",
+  "ingestedAt": "2026-05-01T17:19:45.066920Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,38 @@
         "startuje",
         "zítra",
         "éra"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Netflix a další na víkend: seriály Muž v ohni, Kdyby přání zabíjela, nebo Propadání. Ale také ​Bouřlivé výšiny",
+      "url": "https://avmania.zive.cz/netflix-a-dalsi-na-vikend-serialy-muz-vohni-kdyby-prani-zabijela-nebo-propadani-ale-take-bourlive-vysiny",
+      "dt": "2026-05-01T16:13:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "ale",
+        "bouřlivé",
+        "další",
+        "kdyby",
+        "muž",
+        "nebo",
+        "netflix",
+        "ohni",
+        "propadání",
+        "přání",
+        "seriály",
+        "také",
+        "víkend",
+        "výšiny",
+        "zabíjela"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -928,34 +960,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "V Česku už vzniklo pět milionů datových schránek. Letos po 17 letech změní webovou adresu",
-      "url": "https://www.zive.cz/clanky/v-cesku-uz-vzniklo-pet-milionu-datovych-schranek-letos-po-17-letech-zmeni-webovou-adresu/sc-3-a-240894/default.aspx",
-      "dt": "2026-04-27T14:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "adresu",
-        "datových",
-        "letech",
-        "letos",
-        "milionů",
-        "pět",
-        "schránek",
-        "vzniklo",
-        "webovou",
-        "změní",
-        "česku"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -966,7 +970,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22809,
+      "bytes": 22631,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1003,7 +1007,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-01T15:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T16:13:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1021,6 +1025,10 @@
           {
             "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
             "publishedAt": "2026-04-30T16:45:00Z"
+          },
+          {
+            "title": "Netflix a další na víkend: seriály Muž v ohni, Kdyby přání zabíjela, nebo Propadání. Ale také ​Bouřlivé výšiny",
+            "publishedAt": "2026-05-01T16:13:00Z"
           },
           {
             "title": "Z kaňky na kráse udělali ozdobu. Insta360 Mic Pro jsou bezdrátové mikrofony s displejem, který poutá pozornost",
@@ -1045,10 +1053,6 @@
           {
             "title": "Hry zadarmo, nebo se slevou: Výprodeje japonských her a automatizační strategie zdarma",
             "publishedAt": "2026-05-01T05:10:00Z"
-          },
-          {
-            "title": "Královsky zabaví i bez spoluhráčů. Vybíráme nejlepší deskovky pro jednoho hráče",
-            "publishedAt": "2026-04-30T17:45:00Z"
           }
         ]
       }

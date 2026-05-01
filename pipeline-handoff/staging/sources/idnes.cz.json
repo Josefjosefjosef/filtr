@@ -1,29 +1,53 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-01T16:44:52.614821Z",
+  "ingestedAt": "2026-05-01T17:19:45.066920Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Írán poslal další návrh na jednání o konci války, tvrdí média. USA odmítly komentář",
+      "title": "Írán poslal další návrh na jednání o konci války. Trump není spokojen",
       "url": "https://www.idnes.cz/zpravy/zahranicni/iran-usa-valka-jednani-primeri-pakistan.A260501_152236_zahranicni_jhr",
-      "dt": "2026-05-01T15:53:00Z",
+      "dt": "2026-05-01T16:50:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
         "další",
         "jednání",
-        "komentář",
         "konci",
-        "média",
         "návrh",
-        "odmítly",
         "poslal",
-        "tvrdí",
-        "usa",
+        "spokojen",
+        "trump",
         "války",
         "írán"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "EU neplní dohodu, napsal Trump a ohlásil zvýšení cel na dovoz aut na 25 procent",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/trump-eu-cla-urusla-von-der-leyen-auta-obchodni-dohoda.A260501_182639_eko-zahranicni_berr",
+      "dt": "2026-05-01T16:40:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "aut",
+        "cel",
+        "dohodu",
+        "dovoz",
+        "napsal",
+        "neplní",
+        "ohlásil",
+        "procent",
+        "trump",
+        "zvýšení"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -758,33 +782,6 @@
         "pražský",
         "svobodu",
         "testoval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Vica Kerekes je slovanská bohyně. Alespoň tedy ve filmu Máma a Táta jsou Boží",
-      "url": "https://www.idnes.cz/kultura/film-televize/video-mama-a-tata-jsou-bozi.A260430_101806_filmvideo_spm",
-      "dt": "2026-05-01T07:18:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "alespoň",
-        "bohyně",
-        "boží",
-        "filmu",
-        "kerekes",
-        "máma",
-        "slovanská",
-        "tedy",
-        "táta",
-        "vica"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1587,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48728,
+      "bytes": 48848,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1624,12 +1621,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T15:53:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T16:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
-          "other": 4,
-          "finance": 2
+          "finance": 3,
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1642,8 +1639,12 @@
         },
         "sample_titles": [
           {
-            "title": "Írán poslal další návrh na jednání o konci války, tvrdí média. USA odmítly komentář",
-            "publishedAt": "2026-05-01T15:53:00Z"
+            "title": "Írán poslal další návrh na jednání o konci války. Trump není spokojen",
+            "publishedAt": "2026-05-01T16:50:00Z"
+          },
+          {
+            "title": "EU neplní dohodu, napsal Trump a ohlásil zvýšení cel na dovoz aut na 25 procent",
+            "publishedAt": "2026-05-01T16:40:00Z"
           },
           {
             "title": "Fico si na Svátek práce zkusil rozvážku pečiva. Že se to celé nerozkrade, divil se",
@@ -1668,10 +1669,6 @@
           {
             "title": "Lufthansa našla Oscara režiséra snímku Pan Nikdo. V USA s ním nesměl na palubu",
             "publishedAt": "2026-05-01T13:23:00Z"
-          },
-          {
-            "title": "Diskety, hrací automat a paření legend. Nový Jičín láká třeba na Prince of Persia",
-            "publishedAt": "2026-05-01T13:11:00Z"
           }
         ]
       }
