@@ -33563,14 +33563,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var dDyn = new Date(isoDyn + "T12:00:00");
       var dynLabel = weekdayV(dDyn) + " \u25be";
       c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-dnes">dnes</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-zitra">zítra</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dnes">dnes</button>' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-zitra">zítra</button>' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
         isoDyn +
         '">' +
         dynLabel +
         "</button>" +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-date">datum \u25be</button>';
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-date">datum \u25be</button>';
     }
 
     function renderDynamicDayMenu(isoStart) {
