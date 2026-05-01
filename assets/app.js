@@ -33245,6 +33245,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return (window.innerWidth || 0) <= 1024;
       }
     }
+    function iuSilverHeroPremiumExpandSet(on) {
+      var el = document.getElementById("iuSilverHeroPremium");
+      if (!el || !narrow()) return;
+      try {
+        if (on) el.classList.add("iu-silver-expanded");
+        else el.classList.remove("iu-silver-expanded");
+      } catch (_) {}
+    }
     function modeEl() {
       return document.getElementById("iuSilverHomeModeLine");
     }
@@ -33383,6 +33391,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       GC.mode = "idle";
       GC.savePhase = "";
       GC.searchMode = false;
+      iuSilverHeroPremiumExpandSet(false);
     }
 
     window.iuSilverGuidedResetFromNav = function () {
@@ -33467,6 +33476,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="save">uložit do kalendáře</button>' +
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="search">vyhledat v kalendáři</button>';
       c.setAttribute("data-iu-guided-open", "1");
+      iuSilverHeroPremiumExpandSet(true);
     }
 
     function renderSaveDayRow() {
@@ -36299,11 +36309,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
     } catch (_) {}
     try {
-      const hs0 = document.getElementById("iuSilverHomeSend");
-      if (hs0 && window.matchMedia("(max-width: 1024px)").matches) {
-        hs0.classList.remove("iuSilverHomeSend--arrow");
-        hs0.setAttribute("aria-label", "Hlasové zadání");
-      }
+      if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
     } catch (_) {}
     const out = document.querySelector("#silver-slot .silver-output");
     if (out) out.innerHTML = "";
@@ -36579,15 +36585,39 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         try {
           homeSend.setAttribute("aria-label", "Odeslat");
         } catch (_) {}
-      } else {
         try {
-          homeSend.classList.remove("iuSilverHomeSend--arrow");
+          homeSend.classList.remove("is-recording");
+          homeSend.classList.remove("has-text");
         } catch (_) {}
-        try {
-          homeSend.setAttribute("aria-label", "Hlasové zadání");
-        } catch (_) {}
+        return;
       }
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
     }
+
+    try {
+      window.__iuSilverSyncHomeMicSend = function () {
+        if (!homeSend || !silverNarrowComposer()) return;
+        var has = !!(homeIn && String(homeIn.value || "").trim());
+        var rec = !!silverRec;
+        try {
+          homeSend.classList.toggle("is-recording", rec);
+          homeSend.classList.toggle("has-text", has);
+        } catch (_) {}
+        if (has) {
+          try {
+            homeSend.classList.add("iuSilverHomeSend--arrow");
+            homeSend.setAttribute("aria-label", "Odeslat");
+          } catch (_) {}
+        } else {
+          try {
+            homeSend.classList.remove("iuSilverHomeSend--arrow");
+            homeSend.setAttribute("aria-label", "Hlasové zadání");
+          } catch (_) {}
+        }
+      };
+    } catch (_) {}
 
     try {
       window.__iuSilverStopHomeSpeech = stopSilverSpeech;
@@ -36626,15 +36656,26 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           handleHomeSubmit();
           return;
         }
+        if (homeIn) {
+          try {
+            homeIn.focus({ preventScroll: true });
+          } catch (_) {
+            try {
+              homeIn.focus();
+            } catch (_) {}
+          }
+        }
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) return;
+        if (!SR) {
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
+          return;
+        }
         if (silverRec) {
           stopSilverSpeech();
           try {
-            homeSend.classList.add("iuSilverHomeSend--arrow");
-          } catch (_) {}
-          try {
-            homeSend.setAttribute("aria-label", "Odeslat");
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
           } catch (_) {}
           return;
         }
@@ -36663,52 +36704,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           try {
             clampSilverHomeInput(inp);
           } catch (_) {}
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
         };
         r.onerror = function () {
           silverRec = null;
-          if (silverNarrowComposer() && homeSend) {
-            try {
-              homeSend.classList.add("iuSilverHomeSend--arrow");
-            } catch (_) {}
-            try {
-              homeSend.setAttribute("aria-label", "Odeslat");
-            } catch (_) {}
-          }
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
         };
         r.onend = function () {
           silverRec = null;
-          if (silverNarrowComposer() && homeSend) {
-            try {
-              homeSend.classList.add("iuSilverHomeSend--arrow");
-            } catch (_) {}
-            try {
-              homeSend.setAttribute("aria-label", "Odeslat");
-            } catch (_) {}
-          }
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
         };
+        try {
+          if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+        } catch (_) {}
         try {
           r.start();
         } catch (_) {
           silverRec = null;
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
         }
       });
-    }
-
-    const onInputMicToArrow = function () {
-      if (!silverNarrowComposer()) return;
-      stopSilverSpeech();
-      if (homeSend) {
-        try {
-          homeSend.classList.add("iuSilverHomeSend--arrow");
-        } catch (_) {}
-        try {
-          homeSend.setAttribute("aria-label", "Odeslat");
-        } catch (_) {}
-      }
-    };
-    if (homeIn) {
-      homeIn.addEventListener("pointerdown", onInputMicToArrow, true);
-      homeIn.addEventListener("focus", onInputMicToArrow, true);
     }
 
     if (homeIn) {
@@ -36717,10 +36740,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch {}
       homeIn.addEventListener("input", function () {
         clampSilverHomeInput(homeIn);
+        try {
+          if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+        } catch (_) {}
       });
       homeIn.addEventListener("paste", function () {
         setTimeout(function () {
           clampSilverHomeInput(homeIn);
+          try {
+            if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+          } catch (_) {}
         }, 0);
       });
       homeIn.addEventListener("keydown", (e) => {
