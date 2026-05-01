@@ -33678,23 +33678,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch (_) {}
     }
 
-    function tryClickFocusNativeTime(el) {
-      if (!el) return;
-      try {
-        if (typeof el.click === "function") el.click();
-      } catch (_) {}
-      try {
-        if (typeof el.focus === "function") el.focus({ preventScroll: true });
-      } catch (_) {
-        try {
-          el.focus();
-        } catch (_) {}
-      }
-    }
-
     function showSilverGuidedTimeFallback(timeInput) {
       if (!narrow() || !timeInput) return;
-      if (document.getElementById("iuSilverGuidedTimeFallback")) return;
+      closeSilverGuidedTimeFallback();
       var cur = normalizeDraftTimeHm(String(timeInput.value || "")) || "09:00";
       var p = String(cur).split(":");
       var h0 = Number(p[0]);
@@ -33764,13 +33750,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         function () {
           var hh = pad2(Number(selH.value) || 0);
           var mm = pad2(Number(selM.value) || 0);
+          var hhmm = normalizeDraftTimeHm(hh + ":" + mm) || hh + ":" + mm;
           try {
-            timeInput.value = hh + ":" + mm;
-          } catch (_) {}
-          try {
-            timeInput.dispatchEvent(new Event("change", { bubbles: true }));
+            timeInput.value = hhmm;
           } catch (_) {}
           closeSilverGuidedTimeFallback();
+          applyTime(hhmm);
         },
         false
       );
@@ -33856,58 +33841,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       try {
         window.__iuSilverGuidedTimeOpenProof = {
           attemptedAt: Date.now(),
-          showPickerAttempted: true,
-          showPickerResolved: false,
-          showPickerRejected: false,
-          fallbackVisible: false,
-          usedClick: false,
-          usedFocus: false
+          visibleFallbackPrimary: true
         };
       } catch (_) {}
-      var proof = window.__iuSilverGuidedTimeOpenProof;
-      function onNativePickerFailed() {
-        tryClickFocusNativeTime(el);
-        try {
-          if (proof) {
-            proof.usedClick = true;
-            proof.usedFocus = true;
-          }
-        } catch (_) {}
-        showSilverGuidedTimeFallback(el);
-      }
-      try {
-        if (typeof el.showPicker === "function") {
-          var sp = el.showPicker();
-          if (sp && typeof sp.then === "function") {
-            sp.then(function () {
-              try {
-                if (proof) proof.showPickerResolved = true;
-              } catch (_) {}
-            }).catch(function () {
-              try {
-                if (proof) proof.showPickerRejected = true;
-              } catch (_) {}
-              onNativePickerFailed();
-            });
-          } else {
-            if (proof) proof.showPickerResolved = true;
-          }
-        } else {
-          tryClickFocusNativeTime(el);
-          try {
-            if (proof) {
-              proof.usedClick = true;
-              proof.usedFocus = true;
-              proof.openedViaClickOnlyPath = true;
-            }
-          } catch (_) {}
-        }
-      } catch (_) {
-        try {
-          if (proof) proof.showPickerRejected = true;
-        } catch (_) {}
-        onNativePickerFailed();
-      }
+      showSilverGuidedTimeFallback(el);
     }
 
     function renderCustomHourGrid() {
