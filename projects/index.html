@@ -700,6 +700,19 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHomeChips button.iuSilverHomeChip{
           font-size: 16px;
         }
+        /* P0 Silver: quick-date row (dnes / zítra / … / datum) — tertiary outline, slabší než vyhledat (2px), jen ≤1024px. */
+        #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn{
+          background: transparent !important;
+          border: 1px solid rgba(255, 122, 0, 0.55) !important;
+          color: rgba(255, 122, 0, 0.75) !important;
+          font-size: 0.88em !important;
+          font-weight: 500 !important;
+          box-shadow: none !important;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn:active{
+          background: rgba(255, 122, 0, 0.08) !important;
+          color: #ff7a00 !important;
+        }
         /* P0 Silver: dočasná kalendářová tlačítka — grid 2+1, ikony SVG, premium gradient (jen mobile/tablet). */
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow{
           display: grid !important;
