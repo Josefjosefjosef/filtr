@@ -4818,6 +4818,10 @@ try {
     vzdelavani: "section-vzdelavani.jpg",
   });
 
+  /** Measured from assets/images/section-prehled-dne.webp (1200×575). Used only on img.iu-feed-section-header-img to reserve aspect ratio for CLS; CSS remains responsive. */
+  var IU_FEED_SECTION_HEADER_IMG_REF_W = 1200;
+  var IU_FEED_SECTION_HEADER_IMG_REF_H = 575;
+
   function iuFeedSectionHeaderResolveVisualKey() {
     const mtkRaw = state && state.mediaTopicKey;
     const mtk =
@@ -4867,6 +4871,8 @@ try {
     img.decoding = "async";
     img.loading = "eager";
     img.alt = "";
+    img.setAttribute("width", String(IU_FEED_SECTION_HEADER_IMG_REF_W));
+    img.setAttribute("height", String(IU_FEED_SECTION_HEADER_IMG_REF_H));
     img.setAttribute("src", base + file);
     img.addEventListener(
       "error",
