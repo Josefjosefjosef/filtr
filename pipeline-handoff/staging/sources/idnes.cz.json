@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-01T13:59:16.350642Z",
+  "ingestedAt": "2026-05-01T14:29:27.777511Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Putinova dcera ovládne tajné AI centrum. Nepustí nás k superpočítači, zuří vědci",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-umela-inteligence-ai-putin-dcera-tichonovova-centrum-moskva.A260429_145932_zahranicni_dtt",
+      "dt": "2026-05-01T14:22:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "centrum",
+        "dcera",
+        "nepustí",
+        "nás",
+        "ovládne",
+        "putinova",
+        "superpočítači",
+        "tajné",
+        "vědci",
+        "zuří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,33 +779,6 @@
         "sestry",
         "skutečně",
         "vykopal"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Vzácný okamžik. Hrad Bečov se poprvé otevře veřejnosti, ukrývá slavný relikviář",
-      "url": "https://www.idnes.cz/zpravy/domaci/hrad-becov-kaple-zpristupneni-relikviar-svateho-maura.A260430_104552_domaci_row",
-      "dt": "2026-05-01T06:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bečov",
-        "hrad",
-        "okamžik",
-        "otevře",
-        "poprvé",
-        "relikviář",
-        "slavný",
-        "ukrývá",
-        "veřejnosti",
-        "vzácný"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48505,
+      "bytes": 48586,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T13:32:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T14:22:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1635,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Putinova dcera ovládne tajné AI centrum. Nepustí nás k superpočítači, zuří vědci",
+            "publishedAt": "2026-05-01T14:22:00Z"
+          },
           {
             "title": "ONLINE: Levici hrála Internacionála. Pochod antifašistů provázely strkanice",
             "publishedAt": "2026-05-01T13:32:28Z"
@@ -1662,10 +1666,6 @@
           {
             "title": "Nezabrzděný traktor u Slaného zranil dítě, transportoval ho vrtulník",
             "publishedAt": "2026-05-01T12:10:00Z"
-          },
-          {
-            "title": "RECENZE: Ohromní optimisti podlehli AIDS. Teď dostávají prostor v literatuře",
-            "publishedAt": "2026-05-01T12:00:00Z"
           }
         ]
       }

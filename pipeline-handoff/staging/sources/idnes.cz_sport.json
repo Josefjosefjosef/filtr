@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T13:59:16.350642Z",
+  "ingestedAt": "2026-05-01T14:29:27.777511Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Šimon Stránský znovu vítkovický. Vrací se po více než šesti letech",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokejovy-utocnik-simon-stransky-se-po-vice-nez-sesti-letech-vraci-do-vitkovic.A260501_153045_hokej_ten",
+      "dt": "2026-05-01T13:31:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "letech",
+        "než",
+        "stránský",
+        "vrací",
+        "vítkovický",
+        "znovu",
+        "šesti",
+        "šimon"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zlín se zachrání, o Baník i Slovácko se bojím, předvídá Komňacký „svým“ týmům",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/fotbal-chance-liga-frantisek-komnacky-slovacko-zlin-banik-ostrava.A260501_125136_fotbal_epfoj",
+      "dt": "2026-05-01T13:30:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baník",
+        "bojím",
+        "komňacký",
+        "předvídá",
+        "slovácko",
+        "svým",
+        "týmům",
+        "zachrání",
+        "zlín"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -737,58 +788,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třetí slovenský titul pro hokejisty Nitry, raduje se i český útočník Bajtek",
-      "url": "https://www.idnes.cz/hokej/evropske-ligy/treti-slovensky-titul-pro-hokejisty-nitry-raduje-se-i-cesky-utocnik-bajtek.A260430_215226_evropa_tit",
-      "dt": "2026-04-30T19:53:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bajtek",
-        "hokejisty",
-        "nitry",
-        "raduje",
-        "slovenský",
-        "titul",
-        "třetí",
-        "útočník",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Krok od titulu. Volejbalisté Karlovarska zdolali Lvy, v neděli můžou rozhodnout",
-      "url": "https://www.idnes.cz/sport/ostatni/krok-od-titulu-volejbaliste-karlovarska-zdolali-lvy-v-nedeli-muzou-rozhodnout.A260430_214047_sporty_tit",
-      "dt": "2026-04-30T19:45:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "karlovarska",
-        "krok",
-        "lvy",
-        "můžou",
-        "neděli",
-        "rozhodnout",
-        "titulu",
-        "volejbalisté",
-        "zdolali"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -799,7 +798,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45185,
+      "bytes": 45042,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -836,7 +835,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T13:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T13:31:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -851,6 +850,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šimon Stránský znovu vítkovický. Vrací se po více než šesti letech",
+            "publishedAt": "2026-05-01T13:31:00Z"
+          },
+          {
+            "title": "Zlín se zachrání, o Baník i Slovácko se bojím, předvídá Komňacký „svým“ týmům",
+            "publishedAt": "2026-05-01T13:30:00Z"
+          },
           {
             "title": "Netuctový Freibergův příběh: hlídá vězně, pečuje o basketbalistky, hrál hokej",
             "publishedAt": "2026-05-01T13:24:00Z"
@@ -874,14 +881,6 @@
           {
             "title": "Nejradši chodím nahý. Pogačar svou odpovědí odzbrojil moderátora",
             "publishedAt": "2026-05-01T10:33:00Z"
-          },
-          {
-            "title": "Hradec vládne dubnu. Ligovou anketu vyhráli Darida a trenér Horejš",
-            "publishedAt": "2026-05-01T10:29:00Z"
-          },
-          {
-            "title": "Litvínov po barážové sezoně opouští osm hráčů, končí Hlava i Fin Hännikäinen",
-            "publishedAt": "2026-05-01T10:16:00Z"
           }
         ]
       }

@@ -1,27 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-01T13:59:16.350642Z",
+  "ingestedAt": "2026-05-01T14:29:27.777511Z",
   "items": [
     {
       "section": "kultura",
       "contentType": "article",
-      "title": "Režiséra Talankina nepustili s Oscarem  do letadla. Trvalo dlouho, než se soška našla",
+      "title": "\"DiCapriovi by se to nestalo\". Režiséra Talankina nepustili s Oscarem do letadla, soška se našla",
       "url": "https://magazin.aktualne.cz/kultura/film/talankinuv-oscar-se-ztratil-kdyz-s-nim-rezisera-v-usa-nepustili-do-letadla-e1590336-af29-4333-bb16-c2592bb74a7c/r~aaa290aecdbd4b61fdf18083f17401a4/",
       "dt": "2026-05-01T10:22:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "dlouho",
+        "dicapriovi",
         "letadla",
         "našla",
         "nepustili",
-        "než",
+        "nestalo",
         "oscarem",
         "režiséra",
         "soška",
-        "talankina",
-        "trvalo"
+        "talankina"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Konvoj s velrybou Timmy stojí. Ostře sledovanému člunu na cestě k oceánu překáží vlny",
+      "url": "https://zpravy.aktualne.cz/zahranici/konvoj-s-velrybou-timmy-stoji-ostre-sledovanemu-clunu-na-ceste-k-oceanu-prekazi-vlny/r~aaa297b560fcfa4b32b6f71a0fdac198/",
+      "dt": "2026-05-01T13:55:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "cestě",
+        "konvoj",
+        "oceánu",
+        "ostře",
+        "překáží",
+        "sledovanému",
+        "stojí",
+        "timmy",
+        "velrybou",
+        "vlny",
+        "člunu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -502,35 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Děs v přímém přenosu. Útok nožem změnil běh dějin, superstar Němcům nikdy neodpustila",
-      "url": "https://sport.aktualne.cz/tenis/des-v-primem-prenosu-selesova-se-ohledla-a-videla-dlouhy-nuz-nemcum-nikdy-neodpustila/r~aaa296c3b32056ae8c5457528e91c563/",
-      "dt": "2026-04-30T12:29:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "běh",
-        "dějin",
-        "děs",
-        "neodpustila",
-        "nikdy",
-        "nožem",
-        "němcům",
-        "přenosu",
-        "přímém",
-        "superstar",
-        "změnil",
-        "útok"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 22093,
+      "bytes": 22088,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,12 +576,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T13:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T13:55:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 1,
-          "zpravy": 13,
-          "sport": 6
+          "zpravy": 14,
+          "sport": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -596,8 +594,12 @@
         },
         "sample_titles": [
           {
-            "title": "Režiséra Talankina nepustili s Oscarem  do letadla. Trvalo dlouho, než se soška našla",
+            "title": "\"DiCapriovi by se to nestalo\". Režiséra Talankina nepustili s Oscarem do letadla, soška se našla",
             "publishedAt": "2026-05-01T10:22:00Z"
+          },
+          {
+            "title": "Konvoj s velrybou Timmy stojí. Ostře sledovanému člunu na cestě k oceánu překáží vlny",
+            "publishedAt": "2026-05-01T13:55:00Z"
           },
           {
             "title": "Robopsi zneklidňují Berlín. Běhají po muzeu s hlavami miliardářů a tisknou fotky",
@@ -622,10 +624,6 @@
           {
             "title": "Nový začátek Nové sociální demokracie. Špidla na 1. máje prozradil plány s levicí",
             "publishedAt": "2026-05-01T12:09:00Z"
-          },
-          {
-            "title": "Rumunský bizár. Sanitka s brutálně zraněným fotbalistou uvízla na hřišti",
-            "publishedAt": "2026-05-01T12:00:00Z"
           }
         ]
       }

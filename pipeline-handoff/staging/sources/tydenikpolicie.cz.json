@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-01T13:59:16.350642Z",
+  "ingestedAt": "2026-05-01T14:29:27.777511Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Moravskoslezském kraji proběhla dopravní akce zaměřená na motorkáře",
+      "url": "https://tydenikpolicie.cz/v-moravskoslezskem-kraji-probehla-dopravni-akce-zamerena-na-motorkare-2/",
+      "dt": "2026-05-01T14:02:26Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "akce",
+        "dopravní",
+        "kraji",
+        "moravskoslezském",
+        "motorkáře",
+        "proběhla",
+        "zaměřená"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -232,35 +256,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Policistům na Teplicku ujížděl řidič se zákazem řízení. V autě s ním jela celostátně hledaná žena",
-      "url": "https://tydenikpolicie.cz/policistum-na-teplicku-ujizdel-ridic-se-zakazem-rizeni-v-aute-s-nim-jela-celostatne-hledana-zena/",
-      "dt": "2026-04-30T07:12:38Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "autě",
-        "celostátně",
-        "hledaná",
-        "jela",
-        "ním",
-        "policistům",
-        "teplicku",
-        "ujížděl",
-        "zákazem",
-        "řidič",
-        "řízení",
-        "žena"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -271,7 +266,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16094,
+      "bytes": 15805,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -308,7 +303,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T10:02:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T14:02:26Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -323,6 +318,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Moravskoslezském kraji proběhla dopravní akce zaměřená na motorkáře",
+            "publishedAt": "2026-05-01T14:02:26Z"
+          },
           {
             "title": "Policisté v Dolní Lutyni zadrželi dva podezřelé z vloupání",
             "publishedAt": "2026-05-01T10:02:04Z"
@@ -350,10 +349,6 @@
           {
             "title": "Senior v dacii srazil v Karlových Varech dvě chodkyně",
             "publishedAt": "2026-04-30T08:04:02Z"
-          },
-          {
-            "title": "Žena si myslela, že si píše s americkým vojákem. Naletěla a přišla o dva miliony korun",
-            "publishedAt": "2026-04-30T07:44:09Z"
           }
         ]
       }
