@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T10:55:03.250087Z",
+  "ingestedAt": "2026-05-01T11:24:27.462811Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kousal opouští Pardubice. Je to klubová ikona, patří mu respekt, loučí se Sýkora",
+      "url": "https://www.idnes.cz/hokej/extraliga/hokejovy-utocnik-robert-kousal-konci-v-mistrovskych-pardubicich.A260501_123524_hokej_kazdt",
+      "dt": "2026-05-01T10:43:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "ikona",
+        "klubová",
+        "kousal",
+        "loučí",
+        "opouští",
+        "pardubice",
+        "patří",
+        "respekt",
+        "sýkora"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -758,32 +784,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Šéf FIFA potvrdil: Írán na fotbalovém mistrovství světa v USA hrát bude",
-      "url": "https://www.idnes.cz/fotbal/mistrovstvi-sveta-ve-fotbale/iransti-fotbaliste-se-zucastni-ms-v-usa-potvrdil-na-kongresu-sef-fifa-infantino.A260430_203143_ms-fotbal_tit",
-      "dt": "2026-04-30T18:36:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "fifa",
-        "fotbalovém",
-        "hrát",
-        "mistrovství",
-        "potvrdil",
-        "světa",
-        "usa",
-        "írán",
-        "šéf"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -794,7 +794,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 44625,
+      "bytes": 44792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -831,7 +831,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T10:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T10:43:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -846,6 +846,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kousal opouští Pardubice. Je to klubová ikona, patří mu respekt, loučí se Sýkora",
+            "publishedAt": "2026-05-01T10:43:00Z"
+          },
           {
             "title": "Nejradši chodím nahý. Pogačar svou odpovědí odzbrojil moderátora",
             "publishedAt": "2026-05-01T10:33:00Z"
@@ -873,10 +877,6 @@
           {
             "title": "Co bude s Karabcem? Lyon prý nevyužije opci, po sezoně se vrátí do Sparty",
             "publishedAt": "2026-05-01T09:00:00Z"
-          },
-          {
-            "title": "Zábranský opět trenérem, na střídačku míří i Erat. Kometa oznámila i deset posil",
-            "publishedAt": "2026-05-01T08:28:00Z"
           }
         ]
       }

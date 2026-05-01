@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-01T10:55:03.250087Z",
+  "ingestedAt": "2026-05-01T11:24:27.462811Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Varování pro Moskvu. Nová německá doktrína počítá se vším",
+      "url": "https://ekonomickydenik.cz/varovani-pro-moskvu-nova-nemecka-doktrina-pocita-se-vsim/",
+      "dt": "2026-05-01T11:12:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "doktrína",
+        "moskvu",
+        "nová",
+        "německá",
+        "počítá",
+        "varování",
+        "vším"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -763,29 +787,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Napětí v Senátu: Ministři nechodí, senátorky se pohádaly",
-      "url": "https://ekonomickydenik.cz/napeti-senat-ministri-nechodi/",
-      "dt": "2026-04-29T13:13:54Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "ministři",
-        "napětí",
-        "nechodí",
-        "pohádaly",
-        "senátorky",
-        "senátu"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -796,7 +797,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 73564,
+      "bytes": 72492,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -833,7 +834,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T10:48:24Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T11:12:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 25,
@@ -850,6 +851,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Varování pro Moskvu. Nová německá doktrína počítá se vším",
+            "publishedAt": "2026-05-01T11:12:00Z"
+          },
           {
             "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
             "publishedAt": "2026-05-01T10:48:24Z"
@@ -877,10 +882,6 @@
           {
             "title": "Z Prahy do Kodaně za 12 hodin, do Hamburku za šest. České dráhy rozšířily síť",
             "publishedAt": "2026-04-30T17:05:00Z"
-          },
-          {
-            "title": "700 paragrafů místo 200? Zákon má tvrdě zpřísnit dohled nad pohybem cizinců v Česku",
-            "publishedAt": "2026-04-30T14:57:17Z"
           }
         ]
       }
