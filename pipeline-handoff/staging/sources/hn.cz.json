@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-01T06:50:27.862905Z",
+  "ingestedAt": "2026-05-01T07:19:39.458540Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Umění odpočívat: Proč je místo válení na gauči lepší vzít do ruky rýč",
+      "url": "https://byznys.hn.cz/c1-67870640-umeni-odpocivat-proc-je-misto-valeni-na-gauci-lepsi-vzit-do-ruky-ryc",
+      "dt": "2026-05-01T07:11:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "gauči",
+        "lepší",
+        "místo",
+        "odpočívat",
+        "proč",
+        "ruky",
+        "rýč",
+        "umění",
+        "vzít",
+        "válení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1146,34 +1173,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nadávky a politický nátlak nestačily. Jerome Powell uhájil nezávislost Fedu i pro své nástupce",
-      "url": "https://archiv.hn.cz/c1-67872340-nadavky-a-politicky-natlak-nestacily-jerome-powell-uhajil-nezavislost-fedu-i-pro-sve-nastupce",
-      "dt": "2026-04-29T15:19:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "fedu",
-        "jerome",
-        "nadávky",
-        "nestačily",
-        "nezávislost",
-        "nástupce",
-        "nátlak",
-        "politický",
-        "powell",
-        "své",
-        "uhájil"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1184,7 +1183,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184399,
+      "bytes": 184394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1221,7 +1220,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-04-30T16:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:11:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1239,6 +1238,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Umění odpočívat: Proč je místo válení na gauči lepší vzít do ruky rýč",
+            "publishedAt": "2026-05-01T07:11:00Z"
+          },
           {
             "title": "Akcie zbrojařské CSG se obchodují za méně než 20 eur. Může to být dobrá investice, nebo je lepší se jí vyhnout?",
             "publishedAt": "2026-04-30T16:04:00Z"
@@ -1266,10 +1269,6 @@
           {
             "title": "Cože, fakt se mu tak říká?! Co nejvíce zaujme na současné TOP 09 a proč je to právě sněmovní přezdívka jejího předsedy",
             "publishedAt": "2026-04-30T13:15:00Z"
-          },
-          {
-            "title": "Biotech &bdquo;olympiáda&ldquo; míří do Prahy. Sjedou se na ni globální investoři, mezi nimi i fondy ze skupiny Novo Nordisk nebo Novartis",
-            "publishedAt": "2026-04-30T13:00:00Z"
           }
         ]
       }

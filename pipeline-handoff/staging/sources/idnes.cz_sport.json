@@ -1,8 +1,62 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-01T06:50:27.862905Z",
+  "ingestedAt": "2026-05-01T07:19:39.458540Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Rulíka namíchly finské zákroky. Zbytečně intenzivní, stěžuje si kouč reprezentace",
+      "url": "https://www.idnes.cz/hokej/ms-2026/rulika-namichly-finske-zakroky-zbytecne-intenzivni-stezuje-si-kouc-reprezentace.A260501_001719_ms-hokej-2026_tit",
+      "dt": "2026-05-01T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finské",
+        "intenzivní",
+        "kouč",
+        "namíchly",
+        "reprezentace",
+        "rulíka",
+        "stěžuje",
+        "zbytečně",
+        "zákroky"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jokič končí v play off, Denver opět zklamal s Minnesotou. Knicks postupují o padesát",
+      "url": "https://www.idnes.cz/sport/basket/play-off-nba-seste-zapasy-prvni-kolo.A260501_082500_sport-basket_kazdt",
+      "dt": "2026-05-01T06:36:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "denver",
+        "jokič",
+        "knicks",
+        "končí",
+        "minnesotou",
+        "off",
+        "opět",
+        "padesát",
+        "play",
+        "postupují",
+        "zklamal"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -736,58 +790,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další změna v F1. Po Mercedesu předvedou v Miami nové barvy i Racing Bulls",
-      "url": "https://www.idnes.cz/sport/trendy/dalsi-zmena-v-f1-po-mercedesu-predvedou-v-miami-nove-barvy-i-racing-bulls.A260430_115133_trendy_subt",
-      "dt": "2026-04-30T13:41:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "barvy",
-        "bulls",
-        "další",
-        "mercedesu",
-        "miami",
-        "nové",
-        "předvedou",
-        "racing",
-        "změna"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Griezmann se naposledy představil v Lize mistrů doma. Teď ještě to finále, přeje si",
-      "url": "https://www.idnes.cz/fotbal/pohary/antoine-griezmann-atletico-madrid-arsenal-semifinale-ligy-mistru.A260430_104416_fot_pohary_min",
-      "dt": "2026-04-30T13:35:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "doma",
-        "finále",
-        "griezmann",
-        "ještě",
-        "lize",
-        "mistrů",
-        "naposledy",
-        "představil",
-        "přeje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -798,7 +800,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45459,
+      "bytes": 44862,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -835,7 +837,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T05:56:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -850,6 +852,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rulíka namíchly finské zákroky. Zbytečně intenzivní, stěžuje si kouč reprezentace",
+            "publishedAt": "2026-05-01T07:00:00Z"
+          },
+          {
+            "title": "Jokič končí v play off, Denver opět zklamal s Minnesotou. Knicks postupují o padesát",
+            "publishedAt": "2026-05-01T06:36:00Z"
+          },
           {
             "title": "Dostál vychytal Anaheimu postup, McDavid s Draisaitlem v play off končí",
             "publishedAt": "2026-05-01T05:56:04Z"
@@ -873,14 +883,6 @@
           {
             "title": "Nejrychlejší gól v historii. Crystal Palace první semifinále vyhrál, uspělo i Vallecano",
             "publishedAt": "2026-04-30T21:33:00Z"
-          },
-          {
-            "title": "Infantino ještě končit nehodlá. Chystá se usilovat o znovuzvolení do čela FIFA",
-            "publishedAt": "2026-04-30T20:55:00Z"
-          },
-          {
-            "title": "Tvrďák Klapka bořil Finy, mantinel, pak i futra. To se mi ještě nestalo, smál se",
-            "publishedAt": "2026-04-30T20:29:00Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-01T06:50:27.862905Z",
+  "ingestedAt": "2026-05-01T07:19:39.458540Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Blízkovýchodní konflikt zvyšuje inflaci. Nejen v Evropě",
+      "url": "https://profitonline.cz/blizkovychodni-konflikt-zvysuje-inflaci-nejen-v-evrope/",
+      "dt": "2026-05-01T07:00:03Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "blízkovýchodní",
+        "evropě",
+        "inflaci",
+        "konflikt",
+        "nejen",
+        "zvyšuje"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -276,30 +299,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Brusel chce, aby výše mzdy byla už v inzerátech. V Česku to bude jinak",
-      "url": "https://profitonline.cz/brusel-chce-aby-vyse-mzdy-byla-uz-v-inzeratech-v-cesku-to-bude-jinak/",
-      "dt": "2026-04-29T04:00:29Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "brusel",
-        "chce",
-        "inzerátech",
-        "jinak",
-        "mzdy",
-        "výše",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -310,7 +309,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19066,
+      "bytes": 18962,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -347,11 +346,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-01T04:00:36Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T07:00:03Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "zpravy": 2,
-          "finance": 10
+          "finance": 10,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -363,6 +362,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Blízkovýchodní konflikt zvyšuje inflaci. Nejen v Evropě",
+            "publishedAt": "2026-05-01T07:00:03Z"
+          },
           {
             "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
             "publishedAt": "2026-05-01T04:00:36Z"
@@ -390,10 +393,6 @@
           {
             "title": "Polsko chystá mimořádnou daň na Orlen a další firmy",
             "publishedAt": "2026-04-29T21:20:27Z"
-          },
-          {
-            "title": "Zlevní odchod Emirátů z kartelu OPEC pohonné hmoty?",
-            "publishedAt": "2026-04-29T18:30:03Z"
           }
         ]
       }
