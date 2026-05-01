@@ -33531,9 +33531,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.hidden = false;
       c.className = "iuSilverHomeChips iuSilverHomeChips--calActionRow";
       c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="save">uložit do kalendáře</button>' +
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="search">vyhledat v kalendáři</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="cal-back">zpět</button>';
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempSave" data-iu-silver-guided="save">' +
+        '<svg class="iuSilverHomeChip__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+        '<path fill="currentColor" d="M18 4h-1V2h-2v2H9V2H7v2H6c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H6V9h12v11z"/>' +
+        '<path fill="currentColor" d="M15 12h-2v2h-2v2h2v2h2v-2h2v-2h-2v-2z"/>' +
+        "</svg>" +
+        '<span class="iuSilverHomeChip__label">uložit do kalendáře</span></button>' +
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempSearch" data-iu-silver-guided="search">' +
+        '<svg class="iuSilverHomeChip__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+        '<path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>' +
+        "</svg>" +
+        '<span class="iuSilverHomeChip__label">vyhledat v kalendáři</span></button>' +
+        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempCancel" data-iu-silver-guided="cal-back">' +
+        '<span class="iuSilverHomeChip__label">- zrušit</span></button>';
       c.setAttribute("data-iu-guided-open", "1");
       iuSilverHeroPremiumExpandSet(true);
     }
