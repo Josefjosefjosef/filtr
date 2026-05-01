@@ -21371,9 +21371,28 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     align-self: stretch !important;
     box-shadow: none !important;
   }
+  /* P0 Silver hero (projects / ≤1024): taller input row — #iuSilverHeroPremium beats #silver-slot generic 52px */
+  #iuSilverHeroPremium .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput,
+  #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeComposerShell .iuSilverHomeInput.iuSilverHomeInput{
+    min-height: 78px !important;
+    height: auto !important;
+    border-radius: 14px 0 0 14px !important;
+  }
+  #iuSilverHeroPremium .iuSilverHomeComposerShell .iuSilverHomeSend,
+  #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeComposerShell .iuSilverHomeSend{
+    width: 78px !important;
+    min-width: 78px !important;
+    min-height: 78px !important;
+    height: auto !important;
+    border-radius: 0 14px 14px 0 !important;
+  }
   #silver-slot .iu-mobileSilverGateStack.iu-mobileSilverGateStack--floatingSilver{
     position:relative!important;isolation:isolate!important;overflow:visible!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;
     --iu-mobile-cta-h:52px!important;--iu-mobile-silver-float-d:84px!important;--iu-mobile-silver-tab-inner-curve:calc(var(--iu-mobile-silver-float-d)*0.5)!important;--iu-mobile-silver-tab-gap:1px!important;
+  }
+  #silver-slot #iuSilverHeroPremium .iu-mobileSilverGateStack.iu-mobileSilverGateStack--floatingSilver,
+  #iuSilverHeroPremium #iuSilverHeroInputHost .iu-mobileSilverGateStack.iu-mobileSilverGateStack--floatingSilver{
+    --iu-mobile-cta-h:78px!important;
   }
   #silver-slot .iuSilverHomeInputWrap.iu-mobileSilverGateHost{overflow:visible!important}
   #silver-slot .iu-mobileSilverGateStack--floatingSilver .iu-mobileSilverFloatMount{
