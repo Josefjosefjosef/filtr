@@ -4895,6 +4895,9 @@ try {
   async function renderFeed(target, items) {
     iuBootTracePhase("renderFeed_start");
     let rfPassForTrace = 0;
+    var rfProbe = false;
+    var rfMarkS = "";
+    var rfMarkE = "";
     try {
     const feedEl = document.getElementById("feed");
     const feedExists = !!(feedEl && feedEl.id === "feed");
@@ -4919,6 +4922,16 @@ try {
     state.__iuRenderFeedPassSeq = (state.__iuRenderFeedPassSeq || 0) + 1;
     rfPassForTrace = state.__iuRenderFeedPassSeq;
     iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_start");
+    if (iuPerfProbeIsActive() && rfPassForTrace > 0) {
+      try {
+        rfProbe = true;
+        rfMarkS = "iuPerf:renderFeed_s_" + rfPassForTrace;
+        rfMarkE = "iuPerf:renderFeed_e_" + rfPassForTrace;
+        iuPerfProbeMark(rfMarkS);
+      } catch (_) {
+        rfProbe = false;
+      }
+    }
     state.__iuRenderFeedGeneration = (state.__iuRenderFeedGeneration | 0) + 1;
     const iuRenderFeedToken = state.__iuRenderFeedGeneration;
     function iuRenderFeedStaleP() {
@@ -5425,6 +5438,40 @@ try {
     }
     feedEl.setAttribute("data-feed-ready", "true");
     } finally {
+      try {
+        if (rfProbe && rfMarkS && rfMarkE && iuPerfProbeIsActive() && rfPassForTrace > 0) {
+          iuPerfProbeMark(rfMarkE);
+          iuPerfProbeMeasure("iuPerf:renderFeed_pass_" + rfPassForTrace, rfMarkS, rfMarkE);
+          var rfDur = null;
+          try {
+            var rfEnt = performance.getEntriesByName("iuPerf:renderFeed_pass_" + rfPassForTrace, "measure");
+            if (rfEnt && rfEnt.length) rfDur = Math.round(rfEnt[rfEnt.length - 1].duration * 10) / 10;
+          } catch (_) {}
+          try {
+            window.__iuPerfProbeLast = window.__iuPerfProbeLast || {};
+            window.__iuPerfProbeLast.renderFeedMs = rfDur;
+            window.__iuPerfProbeLast.renderFeedPass = rfPassForTrace;
+            var felRf = document.getElementById("feed");
+            window.__iuPerfProbeLast.renderedItemsCount = felRf ? felRf.childElementCount : null;
+          } catch (_) {}
+          if (typeof console !== "undefined" && console.info) {
+            console.info(
+              "[iuPerfProbe] renderFeed_pass_" + rfPassForTrace,
+              JSON.stringify({
+                durationMeasureMs: rfDur,
+                feedChildCount: (function () {
+                  try {
+                    var el = document.getElementById("feed");
+                    return el ? el.childElementCount : null;
+                  } catch (_) {
+                    return null;
+                  }
+                })(),
+              })
+            );
+          }
+        }
+      } catch (_) {}
       try {
         if (rfPassForTrace > 0) {
           iuBootTracePhase("renderFeed_pass_" + rfPassForTrace + "_end");
@@ -13491,6 +13538,31 @@ function buildVideoAsArticleCard(it) {
     return n;
   }
 
+  /** Opt-in only (?iuPerfProbe=1 / window.__iuPerfProbeActive). No effect on default navigation. */
+  function iuPerfProbeIsActive() {
+    try {
+      if (window.__iuPerfProbeActive === true) return true;
+      var q = String(typeof location !== "undefined" && location.search ? location.search : "");
+      return q.indexOf("iuPerfProbe=1") !== -1;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuPerfProbeMark(name) {
+    if (!iuPerfProbeIsActive()) return;
+    try {
+      if (typeof performance !== "undefined" && performance.mark) performance.mark(name);
+    } catch (_) {}
+  }
+
+  function iuPerfProbeMeasure(measureName, startMark, endMark) {
+    if (!iuPerfProbeIsActive()) return;
+    try {
+      if (typeof performance !== "undefined" && performance.measure) performance.measure(measureName, startMark, endMark);
+    } catch (_) {}
+  }
+
   function iuScheduleHomeFullPublicationCluster() {
     const ric =
       typeof requestIdleCallback === "function"
@@ -13512,7 +13584,57 @@ function buildVideoAsArticleCard(it) {
           if (typeof hubFn !== "function" || !hubFn()) return;
           state.__iuFullPublicationClusterPass = true;
           state.__iuHomeFullPubClusterIdleScheduled = false;
-          void applyFilter({ resetPage: false, render: true }).catch(() => {});
+          var idleWallT0 = null;
+          var idleMarkS = "";
+          var idleMarkE = "";
+          var idleSeq = 0;
+          if (iuPerfProbeIsActive()) {
+            try {
+              idleWallT0 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+              idleSeq = (window.__iuPerfMarkSeq = (window.__iuPerfMarkSeq | 0) + 1);
+              idleMarkS = "iuPerf:pubIdle_s_" + idleSeq;
+              idleMarkE = "iuPerf:pubIdle_e_" + idleSeq;
+              iuPerfProbeMark(idleMarkS);
+            } catch (_) {
+              idleWallT0 = null;
+              idleMarkS = "";
+            }
+          }
+          void applyFilter({ resetPage: false, render: true })
+            .catch(function () {})
+            .finally(function () {
+              if (!idleMarkS || !iuPerfProbeIsActive()) return;
+              try {
+                iuPerfProbeMark(idleMarkE);
+                iuPerfProbeMeasure("iuPerf:publication_idle_" + idleSeq, idleMarkS, idleMarkE);
+                var wall =
+                  idleWallT0 != null && typeof performance !== "undefined" && performance.now
+                    ? Math.round((performance.now() - idleWallT0) * 10) / 10
+                    : null;
+                try {
+                  window.__iuPerfProbeLast = window.__iuPerfProbeLast || {};
+                  window.__iuPerfProbeLast.publicationIdleWallMs = wall;
+                  window.__iuPerfProbeLast.publicationIdleMeasure = "iuPerf:publication_idle_" + idleSeq;
+                } catch (_) {}
+                if (typeof console !== "undefined" && console.info) {
+                  console.info(
+                    "[iuPerfProbe] publication_idle",
+                    JSON.stringify({
+                      wallMs: wall,
+                      filteredItemsLen: Array.isArray(state.filteredItems) ? state.filteredItems.length : null,
+                      feedChildCount: (function () {
+                        try {
+                          var el = document.getElementById("feed");
+                          return el ? el.childElementCount : null;
+                        } catch (_) {
+                          return null;
+                        }
+                      })(),
+                    })
+                  );
+                }
+              } catch (_) {}
+            });
         } catch (_) {}
       },
       { timeout: 5000 }
@@ -13551,7 +13673,32 @@ function buildVideoAsArticleCard(it) {
       Number.isFinite(cap) && cap > 0 && urlDedupedArts.length > cap ? urlDedupedArts.slice(0, cap) : urlDedupedArts;
 
     const tCluster0 = audit ? (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) : 0;
+    var cmMarkS = "";
+    var cmMarkE = "";
+    var cmSeq = 0;
+    if (iuPerfProbeIsActive()) {
+      try {
+        cmSeq = (window.__iuPerfMarkSeq = (window.__iuPerfMarkSeq | 0) + 1);
+        cmMarkS = "iuPerf:clusterMap_s_" + cmSeq;
+        cmMarkE = "iuPerf:clusterMap_e_" + cmSeq;
+        iuPerfProbeMark(cmMarkS);
+      } catch (_) {
+        cmMarkS = "";
+      }
+    }
     const clusterMap = buildPublicationClusterUrlMap(clusterInput, {});
+    if (cmMarkS && iuPerfProbeIsActive()) {
+      try {
+        iuPerfProbeMark(cmMarkE);
+        iuPerfProbeMeasure("iuPerf:buildPublicationClusterUrlMap_" + cmSeq, cmMarkS, cmMarkE);
+        try {
+          window.__iuPerfProbeLast = window.__iuPerfProbeLast || {};
+          var cmEntOne = performance.getEntriesByName("iuPerf:buildPublicationClusterUrlMap_" + cmSeq, "measure");
+          if (cmEntOne && cmEntOne.length)
+            window.__iuPerfProbeLast.clusterMapMs = Math.round(cmEntOne[cmEntOne.length - 1].duration * 10) / 10;
+        } catch (_) {}
+      } catch (_) {}
+    }
     if (audit) {
       audit.publication.clusterMapMs =
         (typeof performance !== "undefined" && performance.now ? performance.now() : Date.now()) - tCluster0;
@@ -13628,6 +13775,9 @@ function buildVideoAsArticleCard(it) {
     const doRender = options.render !== false;     // default: render
     let auditRun = null;
     let afPass = 0;
+    let afProbe = false;
+    let afMarkS = "";
+    let afMarkE = "";
     try {
       try {
         if (window.__IU_APPLYFILTER_AUDIT__ === true) {
@@ -13661,6 +13811,16 @@ function buildVideoAsArticleCard(it) {
       state.__iuApplyFilterPassSeq = (state.__iuApplyFilterPassSeq || 0) + 1;
       afPass = state.__iuApplyFilterPassSeq;
       iuBootTracePhase("applyFilter_pass_" + afPass + "_start");
+      if (iuPerfProbeIsActive() && afPass > 0) {
+        try {
+          afProbe = true;
+          afMarkS = "iuPerf:applyFilter_s_" + afPass;
+          afMarkE = "iuPerf:applyFilter_e_" + afPass;
+          iuPerfProbeMark(afMarkS);
+        } catch (_) {
+          afProbe = false;
+        }
+      }
       state.searchQuery = (searchInputEl && searchInputEl.value.trim()) || "";
       // paging reset on any filter/search change (render-only)
       if (resetPage) state.page = 1;
@@ -13902,6 +14062,37 @@ function buildVideoAsArticleCard(it) {
       });
     }
     } finally {
+      try {
+        if (afProbe && afMarkS && afMarkE && iuPerfProbeIsActive() && afPass > 0) {
+          iuPerfProbeMark(afMarkE);
+          iuPerfProbeMeasure("iuPerf:applyFilter_pass_" + afPass, afMarkS, afMarkE);
+          var afDur = null;
+          try {
+            var afEnt = performance.getEntriesByName("iuPerf:applyFilter_pass_" + afPass, "measure");
+            if (afEnt && afEnt.length) afDur = Math.round(afEnt[afEnt.length - 1].duration * 10) / 10;
+          } catch (_) {}
+          try {
+            window.__iuPerfProbeLast = window.__iuPerfProbeLast || {};
+            window.__iuPerfProbeLast.applyFilterMs = afDur;
+            window.__iuPerfProbeLast.applyFilterPass = afPass;
+            window.__iuPerfProbeLast.filteredItemsLen = Array.isArray(state.filteredItems) ? state.filteredItems.length : null;
+            window.__iuPerfProbeLast.currentViewArticleCount = iuCountArticlesInList(Array.isArray(state.filteredItems) ? state.filteredItems : []);
+            var felAf = document.getElementById("feed");
+            window.__iuPerfProbeLast.currentViewItemsCount = Array.isArray(state.filteredItems) ? state.filteredItems.length : null;
+            window.__iuPerfProbeLast.feedDomChildCountAfterApplyFilter = felAf ? felAf.childElementCount : null;
+          } catch (_) {}
+          if (typeof console !== "undefined" && console.info) {
+            console.info(
+              "[iuPerfProbe] applyFilter_pass_" + afPass,
+              JSON.stringify({
+                durationMeasureMs: afDur,
+                filteredItemsLen: Array.isArray(state.filteredItems) ? state.filteredItems.length : null,
+                currentViewArticleCount: iuCountArticlesInList(Array.isArray(state.filteredItems) ? state.filteredItems : []),
+              })
+            );
+          }
+        }
+      } catch (_) {}
       try {
         state.__iuApplyFilterBusy = false;
       } catch (_) {}
