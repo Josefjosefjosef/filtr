@@ -1,7 +1,38 @@
 {
   "date": "2026-05-02",
-  "generatedAt": "2026-05-02T02:26:34.971142Z",
+  "generatedAt": "2026-05-02T02:57:10.194130Z",
   "items": [
+    {
+      "topic": "aktualne",
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "AFP: Trump se snaží obejít Kongres a tvrdí, že nepřátelské akce v Íránu skončily",
+      "publishedAt": "2026-05-02T02:25:59Z",
+      "sources": [
+        {
+          "name": "ČT24 / Domácí",
+          "url": "https://ct24.ceskatelevize.cz/clanek/svet/afp-trump-se-snazi-obejit-kongres-a-tvrdi-ze-nepratelske-akce-v-iranu-skoncily-373021"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "03b027b5fcbbd4cf",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 1.2,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "ČT24 / Domácí",
+      "feedId": "zpr_ct24_domaci",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/afp-trump-se-snazi-obejit-kongres-a-tvrdi-ze-nepratelske-akce-v-iranu-skoncily-373021",
+      "duplicatePenalty": 1.0,
+      "displayScore": 1.06245967996257,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "zpravy",
+        "reason": "general_news_bucket",
+        "confidence": 0.85,
+        "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
     {
       "topic": "aktualne",
       "section": "aktualne",
@@ -23,13 +54,44 @@
       "feedId": "zpr_tydenikpolicie",
       "url": "https://tydenikpolicie.cz/cizinka-asi-tri-hodiny-sledovala-prodavacku-na-benzince-pote-ji-napadla-a-odcizila-zbozi/",
       "duplicatePenalty": 1.0,
-      "displayScore": 0.6784110069550628,
+      "displayScore": 0.6284618763540664,
       "iuFeedClassification": {
         "v": 1,
         "mediaTopicKey": "zpravy",
         "reason": "general_news_bucket",
         "confidence": 0.85,
         "railSectionKey": "aktualne",
+        "guardFlags": []
+      }
+    },
+    {
+      "topic": "finance",
+      "section": "finance",
+      "contentType": "article",
+      "title": "Méně hodin práce a pět týdnů dovolené? Návrh odborů se firmám nelíbí",
+      "publishedAt": "2026-05-02T02:00:00Z",
+      "sources": [
+        {
+          "name": "Deník",
+          "url": "https://www.denik.cz/ekonomika/odbory-pracovni-doba-zamestnavatele-snemovna-dovolena.html"
+        }
+      ],
+      "primaryCategory": "zpravy",
+      "topicHash": "457fb10a90065447",
+      "feedType": "rubric",
+      "sourceDisplayWeight": 0.95,
+      "sectionPrimary": "zpravy",
+      "sourceLabel": "Deník",
+      "feedId": "zpr_denik",
+      "url": "https://www.denik.cz/ekonomika/odbory-pracovni-doba-zamestnavatele-snemovna-dovolena.html",
+      "duplicatePenalty": 1.0,
+      "displayScore": 0.790592414726243,
+      "iuFeedClassification": {
+        "v": 1,
+        "mediaTopicKey": "finance",
+        "reason": "url_strong_vertical",
+        "confidence": 0.94,
+        "railSectionKey": "finance",
         "guardFlags": []
       }
     }
