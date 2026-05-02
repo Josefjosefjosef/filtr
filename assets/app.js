@@ -33286,6 +33286,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return (window.innerWidth || 0) <= 1024;
       }
     }
+    /** Mobile/tablet Silver guided save (proof viewports 390×844 / 768×1024; same breakpoint as narrow). Desktop ≥1025px stays on button row below. */
+    function isSilverGuidedMobileOrTablet() {
+      return narrow();
+    }
     function iuSilverHeroPremiumExpandSet(on) {
       var el = document.getElementById("iuSilverHeroPremium");
       if (!el || !narrow()) return;
@@ -33811,8 +33815,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       var c = chipsEl();
       if (!c) return;
-      c.hidden = false;
       clearChipsScrollStyle();
+      if (isSilverGuidedMobileOrTablet()) {
+        c.hidden = true;
+        c.innerHTML = "";
+        c.className = "iuSilverHomeChips";
+        openTimePickerImmediately();
+        return;
+      }
+      c.hidden = false;
       c.className = "iuSilverHomeChips iuSilverHomeChips--timeChoiceRow";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-time-open">vybrat \u010das</button>';
@@ -34005,6 +34016,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         };
       } catch (_) {}
       showSilverGuidedTimeFallback(el);
+    }
+    function openTimePickerImmediately() {
+      openSilverGuidedNativeTimePicker();
     }
 
     function renderCustomHourGrid() {
@@ -34243,7 +34257,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-time-open") {
         ev.preventDefault();
-        openSilverGuidedNativeTimePicker();
+        openTimePickerImmediately();
         return;
       }
       if (act === "gd-timefix") {
