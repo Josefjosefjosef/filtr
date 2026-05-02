@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T04:39:42.562106Z",
+  "ingestedAt": "2026-05-02T05:14:59.028009Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Velký Javorník omladil, dobrovolníci a studenti tam vysázeli přes dva tisíce stromků",
+      "url": "https://www.idnes.cz/ostrava/zpravy/vysadba-stromu-beskydy-velky-javornik-stromy-pro-javornik-les-dobrovolnici-moravskoslezsky-kraj-bisk.A260429_093734_ostrava-zpravy_dmk",
+      "dt": "2026-05-02T04:37:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "dobrovolníci",
+        "dva",
+        "javorník",
+        "omladil",
+        "stromků",
+        "studenti",
+        "tam",
+        "tisíce",
+        "velký",
+        "vysázeli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -758,30 +785,6 @@
         "transportoval",
         "vrtulník",
         "zranil"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "RECENZE: Ohromní optimisti podlehli AIDS. Teď dostávají prostor v literatuře",
-      "url": "https://www.idnes.cz/kultura/literatura/rebecca-makkaiova-ohromni-optimisti-roman-aids-chicago.A260422_222347_literatura_pitt",
-      "dt": "2026-05-01T12:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "aids",
-        "dostávají",
-        "literatuře",
-        "ohromní",
-        "optimisti",
-        "podlehli",
-        "prostor"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1586,7 +1589,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49664,
+      "bytes": 50017,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1623,12 +1626,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T22:06:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 21,
+          "zpravy": 22,
           "finance": 5,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1640,6 +1643,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Velký Javorník omladil, dobrovolníci a studenti tam vysázeli přes dva tisíce stromků",
+            "publishedAt": "2026-05-02T04:37:00Z"
+          },
           {
             "title": "USA stáhnou z Německa 5000 vojáků, oznámil Hegseth. Řekl i časový rámec",
             "publishedAt": "2026-05-01T22:06:08Z"
@@ -1667,10 +1674,6 @@
           {
             "title": "Nezapomenutelní Bohdalová s Dvořákem. Co vám utkvělo z legendárního Televarieté?",
             "publishedAt": "2026-05-01T22:00:00Z"
-          },
-          {
-            "title": "EU neplní dohodu, napsal Trump a ohlásil zvýšení cel na dovoz aut na 25 procent",
-            "publishedAt": "2026-05-01T19:45:00Z"
           }
         ]
       }

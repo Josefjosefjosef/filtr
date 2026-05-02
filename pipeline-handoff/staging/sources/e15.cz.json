@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-02T04:39:42.562106Z",
+  "ingestedAt": "2026-05-02T05:14:59.028009Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejnižší zaměstnanost od roku 2020. Německá ekonomika doplácí na konflikt na Blízkém východě",
+      "url": "https://www.e15.cz/ekonomika/nejnizsi-zamestnanost-od-roku-2020-nemecka-ekonomika-doplaci-na-konflikt-na-blizkem-vychode-1432503",
+      "dt": "2026-05-02T04:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "2020",
+        "blízkém",
+        "doplácí",
+        "ekonomika",
+        "konflikt",
+        "nejnižší",
+        "německá",
+        "roku",
+        "východě",
+        "zaměstnanost"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -1050,36 +1077,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Sen o práci v Německu? Průměrná mzda překračuje 130 tisíc, stát si ale vezme téměř polovinu",
-      "url": "https://www.e15.cz/finexpert/prace-a-mzda/sen-o-praci-v-nemecku-prumerna-mzda-prekracuje-130-tisic-stat-si-ale-vezme-temer-polovinu-1432410",
-      "dt": "2026-04-30T04:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "130",
-        "ale",
-        "mzda",
-        "německu",
-        "polovinu",
-        "práci",
-        "průměrná",
-        "překračuje",
-        "sen",
-        "stát",
-        "tisíc",
-        "téměř",
-        "vezme"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1090,7 +1087,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53015,
+      "bytes": 53380,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1127,11 +1124,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zdravi": 1,
           "finance": 35,
+          "zdravi": 1,
           "zpravy": 4
         },
         "drop_counts": {
@@ -1144,6 +1141,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nejnižší zaměstnanost od roku 2020. Německá ekonomika doplácí na konflikt na Blízkém východě",
+            "publishedAt": "2026-05-02T04:30:00Z"
+          },
           {
             "title": "Češka, která přinesla světu lék na rakovinu prostaty, má nového soupeře",
             "publishedAt": "2026-05-02T04:00:00Z"
@@ -1171,10 +1172,6 @@
           {
             "title": "Že nám AI vezme práci? Polovina Čechů se obává jiné hrozby, které jde navíc mnoho lidí naproti",
             "publishedAt": "2026-05-01T14:00:00Z"
-          },
-          {
-            "title": "Uber chce konkurovat Bookingu a Airbnb. Nově umožní rezervovat stovky tisíc hotelů",
-            "publishedAt": "2026-05-01T12:30:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T04:39:42.562106Z",
+  "ingestedAt": "2026-05-02T05:14:59.028009Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Je libo batůžek k sestupu? Tottenham představil kolekci s Prasátkem Peppou",
+      "url": "https://www.idnes.cz/sport/trendy/tottenham-prasatko-peppa-kolekce.A260501_114135_trendy_subt",
+      "dt": "2026-05-02T05:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "batůžek",
+        "kolekci",
+        "libo",
+        "peppou",
+        "prasátkem",
+        "představil",
+        "sestupu",
+        "tottenham"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -756,32 +781,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulíka namíchly finské zákroky. Zbytečně intenzivní, stěžuje si kouč reprezentace",
-      "url": "https://www.idnes.cz/hokej/ms-2026/rulika-namichly-finske-zakroky-zbytecne-intenzivni-stezuje-si-kouc-reprezentace.A260501_001719_ms-hokej-2026_tit",
-      "dt": "2026-05-01T07:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "finské",
-        "intenzivní",
-        "kouč",
-        "namíchly",
-        "reprezentace",
-        "rulíka",
-        "stěžuje",
-        "zbytečně",
-        "zákroky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -792,7 +791,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46292,
+      "bytes": 46587,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -829,7 +828,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T05:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -844,6 +843,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je libo batůžek k sestupu? Tottenham představil kolekci s Prasátkem Peppou",
+            "publishedAt": "2026-05-02T05:00:00Z"
+          },
           {
             "title": "Hamzová bojuje o WNBA: Musíte být víc sobec. Soupeřky jsou i spoluhráčky",
             "publishedAt": "2026-05-01T22:00:00Z"
@@ -871,10 +874,6 @@
           {
             "title": "Infantinův trapas. Bafuňáře Izraele a Palestiny vybízel k podání rukou marně",
             "publishedAt": "2026-05-01T18:26:00Z"
-          },
-          {
-            "title": "Pogačar ve žlutém spurtoval o vítězství. Dojezd třetí etapy Romandie ovládl Godon",
-            "publishedAt": "2026-05-01T17:45:00Z"
           }
         ]
       }

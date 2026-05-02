@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-02T04:39:42.562106Z",
+  "ingestedAt": "2026-05-02T05:14:59.028009Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Pentagon stáhne tisíce vojáků z Německa. Odejdou do roka",
+      "url": "https://www.denik.cz/ze_sveta/spojene-staty-vojaci-stahovani-nemecko.html",
+      "dt": "2026-05-02T04:37:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "německa",
+        "odejdou",
+        "pentagon",
+        "roka",
+        "stáhne",
+        "tisíce",
+        "vojáků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -397,18 +421,19 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Záchranu Timmyho komplikovalo rozbouřené moře. Vypuštění na svobodu se blíží",
+      "title": "Záchranu Timmyho komplikovalo rozbouřené moře. Vypuštění velryby se ale blíží",
       "url": "https://www.denik.cz/staty-eu/timmy-velryba-zachrana-severni-more-potize.html",
       "dt": "2026-05-01T11:40:00Z",
       "media_raw": "Deník",
       "media_norm": "Deník",
       "tokens": [
+        "ale",
         "blíží",
         "komplikovalo",
         "moře",
         "rozbouřené",
-        "svobodu",
         "timmyho",
+        "velryby",
         "vypuštění",
         "záchranu"
       ],
@@ -624,31 +649,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Historickou tržnici v Olomouci kupuje místní patriot. Má vizi, která nadchne",
-      "url": "https://www.denik.cz/regiony/trznice-olomouc-prodej-pavel-siroky-ilja-spurny.html",
-      "dt": "2026-05-01T07:49:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "historickou",
-        "kupuje",
-        "místní",
-        "nadchne",
-        "olomouci",
-        "patriot",
-        "tržnici",
-        "vizi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +659,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30277,
+      "bytes": 30400,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +696,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-02T03:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:37:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +712,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pentagon stáhne tisíce vojáků z Německa. Odejdou do roka",
+            "publishedAt": "2026-05-02T04:37:00Z"
+          },
           {
             "title": "Železniční katastrofa v Deštnici: Tragédii s 10 mrtvými vyvolal osobní spor",
             "publishedAt": "2026-05-02T03:00:00Z"
@@ -739,10 +743,6 @@
           {
             "title": "Od Wykrenta po Hendrixe: Na přerovských hradbách společně zahrálo 204 kytaristů",
             "publishedAt": "2026-05-01T15:17:00Z"
-          },
-          {
-            "title": "V Rychnově láká nejlepší gospel, dřevořezby, krajky, zámek v noci i jeho proměny",
-            "publishedAt": "2026-05-01T15:08:00Z"
           }
         ]
       }
