@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T17:25:34.527030Z",
+  "ingestedAt": "2026-05-02T17:59:59.010579Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na horské dráze v Hradci se srazily vozíky, devět lidí se zranilo",
+      "url": "https://www.idnes.cz/hradec-kralove/zpravy/pri-srazce-vozitek-na-horske-draze-v-h-kralove-se-lehce-zranilo-devet-lidi.A260502_190858_hradec-zpravy_ichuc",
+      "dt": "2026-05-02T17:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "devět",
+        "dráze",
+        "horské",
+        "hradci",
+        "lidí",
+        "srazily",
+        "vozíky",
+        "zranilo"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,31 +777,6 @@
         "vyhráno",
         "vypustili",
         "záchranáři"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Nymbursku utekl vězeň, podhrabal se pod plotem. Je nebezpečný, varuje policie",
-      "url": "https://www.idnes.cz/praha/zpravy/policie-patrani-jirice-nymbursko-samuel-stuk.A260502_103621_praha-zpravy_pari",
-      "dt": "2026-05-02T08:56:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "nebezpečný",
-        "nymbursku",
-        "plotem",
-        "podhrabal",
-        "policie",
-        "utekl",
-        "varuje",
-        "vězeň"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1581,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48379,
+      "bytes": 48401,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1618,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T17:07:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T17:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1635,6 +1635,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na horské dráze v Hradci se srazily vozíky, devět lidí se zranilo",
+            "publishedAt": "2026-05-02T17:15:00Z"
+          },
           {
             "title": "VIDEO: Po majálesu zůstaly v Letňanech odpadky. Uklidí se, ujišťuje pořadatel",
             "publishedAt": "2026-05-02T17:07:15Z"
@@ -1662,10 +1666,6 @@
           {
             "title": "Zkoušeli vzduchovku, utrpěl průstřel hlavy. Jonášek má za sebou už čtyři operace",
             "publishedAt": "2026-05-02T14:16:00Z"
-          },
-          {
-            "title": "Revoluce v placení. Na Slovensku musejí obchody nově nabízet platbu online",
-            "publishedAt": "2026-05-02T14:08:00Z"
           }
         ]
       }
