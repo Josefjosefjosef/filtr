@@ -33256,7 +33256,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     var SILVER_CAL_UI_DEFAULT = "DEFAULT";
     var SILVER_CAL_UI_ACTION = "ACTION_STATE";
     var SILVER_CAL_UI_CAL_OPEN = "CALENDAR_OPEN";
-    var SILVER_CAL_UI_GUIDED_SAVE = "GUIDED_SAVE_FLOW";
+    /** Mobile/tablet: po „Uložit do kalendáře“ — vstup + nápověda + „Zobrazit kalendář“ (žádný starý multi-step). */
+    var SILVER_CAL_UI_CALENDAR_COMPOSE = "CALENDAR_COMPOSE";
+    /** Oranžová nápověda jen jako placeholder (ne value). */
+    var SILVER_CALENDAR_COMPOSE_HINT = "Napiš např.: z\u00edtra v 18:00 zuba\u0159";
+    var SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER = "Napi\u0161 Silverovi\u2026";
     var silverCalUiState = SILVER_CAL_UI_DEFAULT;
     var silverCalendarDraft = {
       intent: "uložit do kalendáře",
@@ -33432,7 +33436,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         "click",
         function (ev) {
           if (!narrow()) return;
-          if (GC.mode !== "guided_save") return;
+          if (GC.mode !== "calendar_compose") return;
           var t = ev.target;
           var btn = t && t.closest ? t.closest("[data-iu-silver-mini-cal]") : null;
           if (!btn || !root.contains(btn)) return;
@@ -33443,8 +33447,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             } catch (_) {}
             var iso = String(btn.getAttribute("data-iu-silver-mini-iso") || "");
             if (!iso) return;
-            closeSilverMiniCalendar();
-            applyDaySelection(iso, null);
+            silverCalendarDraft.date = iso;
+            paintSilverMiniCalendar();
             return;
           }
           if (act === "prev") {
@@ -33478,7 +33482,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
               ev.preventDefault();
             } catch (_) {}
             closeSilverMiniCalendar();
-            renderSaveDayRow();
+            try {
+              var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
+              if (smb) smb.setAttribute("aria-expanded", "false");
+            } catch (_) {}
             return;
           }
         },
@@ -33486,88 +33493,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       );
     }
 
-    var SHEET_KIND = "";
-
-    function guidedSheetParts() {
-      return {
-        root: document.getElementById("iuSilverGuidedSheetRoot"),
-        textBlock: document.getElementById("iuSilverGuidedSheetText"),
-        textInp: document.getElementById("iuSilverGuidedTextInput"),
-        textLab: document.getElementById("iuSilverGuidedTextLab")
-      };
-    }
-
     function closeGuidedSheet() {
-      SHEET_KIND = "";
-      var z = guidedSheetParts();
-      if (z.root) z.root.hidden = true;
-      if (z.textBlock) z.textBlock.hidden = true;
+      var root = document.getElementById("iuSilverGuidedSheetRoot");
+      var textBlock = document.getElementById("iuSilverGuidedSheetText");
+      if (root) root.hidden = true;
+      if (textBlock) textBlock.hidden = true;
     }
 
-    function openGuidedTextSheet(kind) {
-      try {
-        if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
-      } catch (_) {}
-      try {
-        if (typeof window.__iuSilverForceHomeSendArrow === "function") window.__iuSilverForceHomeSendArrow();
-      } catch (_) {}
-      SHEET_KIND = kind === "note" ? "note" : kind === "title" ? "title" : "addr";
-      var z = guidedSheetParts();
-      if (!z.root || !z.textBlock || !z.textInp || !z.textLab) return;
-      z.root.hidden = false;
-      z.textBlock.hidden = false;
-      if (SHEET_KIND === "note") {
+    function hideCalendarComposeAux() {
+      var aux = document.getElementById("iuSilverCalendarComposeAux");
+      if (aux) aux.hidden = true;
+      var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
+      if (smb) smb.setAttribute("aria-expanded", "false");
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (inp) {
         try {
-          z.textLab.textContent = "Poznámka";
+          if (inp.placeholder === SILVER_CALENDAR_COMPOSE_HINT) {
+            inp.placeholder = SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER;
+          }
         } catch (_) {}
-        try {
-          z.textInp.value = String(silverCalendarDraft.note || "");
-        } catch (_) {}
-      } else if (SHEET_KIND === "title") {
-        try {
-          z.textLab.textContent = "Název události";
-        } catch (_) {}
-        try {
-          z.textInp.value = String(silverCalendarDraft.title || "");
-        } catch (_) {}
-      } else {
-        try {
-          z.textLab.textContent = "Adresa";
-        } catch (_) {}
-        try {
-          z.textInp.value = String(silverCalendarDraft.address || "");
-        } catch (_) {}
-      }
-      try {
-        z.textInp.focus();
-      } catch (_) {}
-    }
-
-    function onGuidedSheetOk() {
-      var z = guidedSheetParts();
-      if (SHEET_KIND === "addr") {
-        silverCalendarDraft.address = String((z.textInp && z.textInp.value) || "").trim();
-        rebuildSilverCalendarInput();
-        closeGuidedSheet();
-        renderOptionalStepButtons();
-        return;
-      }
-      if (SHEET_KIND === "title") {
-        var titOk = String((z.textInp && z.textInp.value) || "").trim();
-        if (!titOk) return;
-        silverCalendarDraft.title = titOk;
-        GC.savePhase = "optional";
-        rebuildSilverCalendarInput();
-        closeGuidedSheet();
-        renderOptionalStepButtons();
-        return;
-      }
-      if (SHEET_KIND === "note") {
-        silverCalendarDraft.note = String((z.textInp && z.textInp.value) || "").trim();
-        rebuildSilverCalendarInput();
-        closeGuidedSheet();
-        renderOptionalStepButtons();
-        return;
       }
     }
 
@@ -33576,9 +33520,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       try {
         closeSilverMiniCalendar();
       } catch (_) {}
-      try {
-        closeSilverGuidedTimeFallback();
-      } catch (_) {}
+      hideCalendarComposeAux();
       var m = modeEl(),
         c = chipsEl(),
         t = toastEl();
@@ -33647,67 +33589,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function pad2(n) {
       return String(n).padStart(2, "0");
     }
-    /** 24h HH:MM for Silver guided composer + native time input (P0 mobile/tablet). */
-    function normalizeDraftTimeHm(s) {
-      var m = String(s || "")
-        .trim()
-        .match(/^(\d{1,2}):(\d{2})$/);
-      if (!m) return "";
-      var h = Number(m[1]);
-      var mi = Number(m[2]);
-      if (!Number.isFinite(h) || !Number.isFinite(mi) || h < 0 || h > 23 || mi < 0 || mi > 59) return "";
-      return pad2(h) + ":" + pad2(mi);
-    }
-    var IU_SILVER_GUIDED_RE_TIME = /\b([01]?\d|2[0-3]):[0-5]\d\b/;
-    /** Append " v HH:MM" or replace first HH:MM (24h); does not corrupt weekday phrases. */
-    function applyTimeHHMMToSentence(text, hhmm) {
-      var norm = normalizeDraftTimeHm(hhmm);
-      if (!norm) return String(text || "");
-      var s = String(text || "");
-      if (IU_SILVER_GUIDED_RE_TIME.test(s)) {
-        return s.replace(IU_SILVER_GUIDED_RE_TIME, norm);
-      }
-      var t = s.trimEnd();
-      if (!t) return "v " + norm;
-      return (t + " v " + norm).replace(/\s+/g, " ").trim();
-    }
     function toIsoFromDate(d) {
       return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
     }
-    function addDaysIso(iso, n) {
-      var p = String(iso || "").split("-");
-      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
-      d.setDate(d.getDate() + n);
-      return toIsoFromDate(d);
-    }
     function todayIso() {
       return toIsoFromDate(new Date());
-    }
-
-    function weekdayV(d) {
-      var map = { 0: "v neděli", 1: "v pondělí", 2: "v úterý", 3: "ve středu", 4: "ve čtvrtek", 5: "v pátek", 6: "v sobotu" };
-      return map[d.getDay()] || "";
-    }
-    function weekdayNameList(d) {
-      var names = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
-      var out = [];
-      for (var i = 0; i < 7; i++) {
-        var x = new Date(d.getTime());
-        x.setDate(d.getDate() + i);
-        out.push(names[x.getDay()]);
-      }
-      return out;
-    }
-
-    /** Kompaktní datum do input builderu (např. 3.5.). */
-    function fmtDotCs(dateIso) {
-      try {
-        var p = String(dateIso).split("-");
-        var dt = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
-        return dt.getDate() + "." + (dt.getMonth() + 1) + ".";
-      } catch (_) {
-        return String(dateIso || "");
-      }
     }
 
     function setSilverCalUiAttr() {
@@ -33759,403 +33645,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       iuSilverHeroPremiumExpandSet(true);
     }
 
-    function renderSaveDayRow() {
-      var c = chipsEl(),
-        m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      if (!c) return;
-      clearChipsScrollStyle();
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--dayRow";
-      var isoDyn = addDaysIso(todayIso(), 2);
-      var dDyn = new Date(isoDyn + "T12:00:00");
-      var dynLabel = weekdayV(dDyn) + " \u25be";
-      c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dnes">dnes</button>' +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-zitra">zítra</button>' +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
-        isoDyn +
-        '">' +
-        dynLabel +
-        "</button>" +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-date">datum \u25be</button>';
-    }
-
-    function renderDynamicDayMenu(isoStart) {
-      var c = chipsEl();
-      if (!c) return;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--pickGrid";
-      var d0 = new Date(String(isoStart) + "T12:00:00");
-      var names = weekdayNameList(d0);
-      var html = "";
-      for (var i = 0; i < names.length; i++) {
-        var iso = toIsoFromDate(new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i));
-        html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-pickday" data-iu-silver-guided-iso="' +
-          iso +
-          '">' +
-          names[i] +
-          "</button>";
-      }
-      c.innerHTML = html;
-    }
-
-    function applyDaySelection(iso, dayLabel) {
-      silverCalendarDraft.date = iso || null;
-      silverCalendarDraft.day = dayLabel != null && String(dayLabel).trim() ? String(dayLabel).trim() : null;
-      GC.savePhase = "time_btn";
-      rebuildSilverCalendarInput();
-      var m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      var c = chipsEl();
-      if (!c) return;
-      clearChipsScrollStyle();
-      if (isSilverGuidedMobileOrTablet()) {
-        c.hidden = true;
-        c.innerHTML = "";
-        c.className = "iuSilverHomeChips";
-        openTimePickerImmediately();
-        return;
-      }
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--timeChoiceRow";
-      c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-time-open">vybrat \u010das</button>';
-    }
-
-    function closeSilverGuidedTimeFallback() {
-      var x = document.getElementById("iuSilverGuidedTimeFallback");
-      if (x && x.parentNode) {
-        try {
-          x.parentNode.removeChild(x);
-        } catch (_) {}
-      }
-      try {
-        if (window.__iuSilverGuidedTimeOpenProof) window.__iuSilverGuidedTimeOpenProof.fallbackVisible = false;
-      } catch (_) {}
-    }
-
-    function ensureSilverGuidedNativeTimeHost(el) {
-      if (!el) return;
-      try {
-        el.className = "iuSilverGuidedNativeTimeHost";
-        el.removeAttribute("hidden");
-      } catch (_) {}
-    }
-
-    function showSilverGuidedTimeFallback(timeInput) {
-      if (!narrow() || !timeInput) return;
-      closeSilverGuidedTimeFallback();
-      var cur = normalizeDraftTimeHm(String(timeInput.value || "")) || "09:00";
-      var p = String(cur).split(":");
-      var h0 = Number(p[0]);
-      var m0 = Number(p[1]);
-      if (!Number.isFinite(h0) || h0 < 0 || h0 > 23) h0 = 9;
-      if (!Number.isFinite(m0) || m0 < 0 || m0 > 59) m0 = 0;
-
-      var root = document.createElement("div");
-      root.id = "iuSilverGuidedTimeFallback";
-      root.className = "iuSilverGuidedTimeFallback";
-      root.setAttribute("role", "dialog");
-
-      var backdrop = document.createElement("button");
-      backdrop.type = "button";
-      backdrop.className = "iuSilverGuidedTimeFallback__backdrop";
-      backdrop.setAttribute("aria-label", "Zavřít výběr času");
-
-      var panel = document.createElement("div");
-      panel.className = "iuSilverGuidedTimeFallback__panel";
-
-      var row1 = document.createElement("div");
-      row1.className = "iuSilverGuidedTimeFallback__row";
-      var labH = document.createElement("label");
-      labH.className = "iuSilverGuidedTimeFallback__lab";
-      labH.setAttribute("for", "iuSilverGuidedTimeFbH");
-      labH.textContent = "Hodina";
-      var selH = document.createElement("select");
-      selH.id = "iuSilverGuidedTimeFbH";
-      selH.className = "iuSilverGuidedTimeFallback__sel";
-      var hi;
-      for (hi = 0; hi < 24; hi++) {
-        var optH = document.createElement("option");
-        optH.value = pad2(hi);
-        optH.textContent = pad2(hi);
-        if (hi === h0) optH.selected = true;
-        selH.appendChild(optH);
-      }
-      row1.appendChild(labH);
-      row1.appendChild(selH);
-
-      var row2 = document.createElement("div");
-      row2.className = "iuSilverGuidedTimeFallback__row";
-      var labM = document.createElement("label");
-      labM.className = "iuSilverGuidedTimeFallback__lab";
-      labM.setAttribute("for", "iuSilverGuidedTimeFbM");
-      labM.textContent = "Minuta";
-      var selM = document.createElement("select");
-      selM.id = "iuSilverGuidedTimeFbM";
-      selM.className = "iuSilverGuidedTimeFallback__sel";
-      var mi;
-      for (mi = 0; mi < 60; mi++) {
-        var optM = document.createElement("option");
-        optM.value = pad2(mi);
-        optM.textContent = pad2(mi);
-        if (mi === m0) optM.selected = true;
-        selM.appendChild(optM);
-      }
-      row2.appendChild(labM);
-      row2.appendChild(selM);
-
-      var ok = document.createElement("button");
-      ok.type = "button";
-      ok.className = "iuSilverGuidedTimeFallback__ok";
-      ok.textContent = "OK";
-      ok.addEventListener(
-        "click",
-        function () {
-          var hh = pad2(Number(selH.value) || 0);
-          var mm = pad2(Number(selM.value) || 0);
-          var hhmm = normalizeDraftTimeHm(hh + ":" + mm) || hh + ":" + mm;
-          try {
-            timeInput.value = hhmm;
-          } catch (_) {}
-          closeSilverGuidedTimeFallback();
-          applyTime(hhmm);
-        },
-        false
-      );
-
-      backdrop.addEventListener(
-        "click",
-        function () {
-          closeSilverGuidedTimeFallback();
-        },
-        false
-      );
-
-      panel.appendChild(row1);
-      panel.appendChild(row2);
-      panel.appendChild(ok);
-      root.appendChild(backdrop);
-      root.appendChild(panel);
-      try {
-        document.body.appendChild(root);
-      } catch (_) {
-        return;
-      }
-      try {
-        if (window.__iuSilverGuidedTimeOpenProof) window.__iuSilverGuidedTimeOpenProof.fallbackVisible = true;
-      } catch (_) {}
-    }
-
-    var silverGuidedNativeTimeInp = null;
-    function getSilverGuidedNativeTimeInput() {
-      if (silverGuidedNativeTimeInp && silverGuidedNativeTimeInp.parentNode) {
-        ensureSilverGuidedNativeTimeHost(silverGuidedNativeTimeInp);
-        return silverGuidedNativeTimeInp;
-      }
-      var existing = document.getElementById("iuSilverGuidedNativeTime");
-      if (existing) {
-        ensureSilverGuidedNativeTimeHost(existing);
-        silverGuidedNativeTimeInp = existing;
-        return existing;
-      }
-      var el = document.createElement("input");
-      el.type = "time";
-      el.step = 60;
-      el.id = "iuSilverGuidedNativeTime";
-      ensureSilverGuidedNativeTimeHost(el);
-      el.setAttribute("aria-hidden", "true");
-      el.setAttribute("tabindex", "-1");
-      el.setAttribute("autocomplete", "off");
-      try {
-        document.body.appendChild(el);
-      } catch (_) {
-        return el;
-      }
-      silverGuidedNativeTimeInp = el;
-      return el;
-    }
-    function onSilverGuidedNativeTimeChange() {
-      if (!narrow()) return;
-      var el = getSilverGuidedNativeTimeInput();
-      var raw = String(el.value || "").trim();
-      if (!raw) return;
-      var hhmm = normalizeDraftTimeHm(raw);
-      if (!hhmm) return;
-      if (GC.savePhase === "title" && normalizeDraftTimeHm(String(silverCalendarDraft.time || "")) === hhmm) return;
-      applyTime(hhmm);
-    }
-    function wireSilverGuidedNativeTimeInputOnce() {
-      var el = getSilverGuidedNativeTimeInput();
-      if (!el || el.__iuSilverGuidedTimeWired) return;
-      el.__iuSilverGuidedTimeWired = 1;
-      el.addEventListener("change", onSilverGuidedNativeTimeChange, false);
-    }
-    function openSilverGuidedNativeTimePicker() {
-      if (!narrow()) return;
-      wireSilverGuidedNativeTimeInputOnce();
-      var el = getSilverGuidedNativeTimeInput();
-      if (!el || !el.parentNode) return;
-      ensureSilverGuidedNativeTimeHost(el);
-      var seed = normalizeDraftTimeHm(String(silverCalendarDraft.time || ""));
-      if (!seed) seed = "09:00";
-      try {
-        el.value = seed;
-      } catch (_) {}
-      try {
-        window.__iuSilverGuidedTimeOpenProof = {
-          attemptedAt: Date.now(),
-          visibleFallbackPrimary: true
-        };
-      } catch (_) {}
-      showSilverGuidedTimeFallback(el);
-    }
-    function openTimePickerImmediately() {
-      openSilverGuidedNativeTimePicker();
-    }
-
-    function renderCustomHourGrid() {
-      var c = chipsEl();
-      if (!c) return;
-      applyTimeChipsScroll();
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
-      var html = "";
-      for (var h = 6; h <= 22; h++) {
-        var t = pad2(h) + ":00";
-        html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timefix" data-iu-silver-guided-t="' +
-          t +
-          '">' +
-          h +
-          ":00</button>";
-      }
-      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-time-back">zp\u011bt</button>';
-      c.innerHTML = html;
-    }
-
     function clearChipsScrollStyle() {
       var c = chipsEl();
       if (!c) return;
       try {
         c.style.maxHeight = "";
         c.style.overflowY = "";
-      } catch (_) {}
-    }
-
-    function applyTimeChipsScroll() {
-      var c = chipsEl();
-      if (!c) return;
-      try {
-        c.style.maxHeight = "min(52vh, 280px)";
-        c.style.overflowY = "auto";
-      } catch (_) {}
-    }
-
-    function renderTimeMenu() {
-      var c = chipsEl();
-      if (!c) return;
-      applyTimeChipsScroll();
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
-      var times = ["08:00", "09:00", "10:00", "12:00", "15:00", "18:00"];
-      var html = "";
-      for (var i = 0; i < times.length; i++) {
-        html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timefix" data-iu-silver-guided-t="' +
-          times[i] +
-          '">' +
-          times[i] +
-          "</button>";
-      }
-      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-timecustom">vlastní čas</button>';
-      c.innerHTML = html;
-    }
-
-    function applyTime(t) {
-      closeGuidedSheet();
-      silverCalendarDraft.time = t;
-      GC.savePhase = "title";
-      silverCalendarDraft.title = null;
-      rebuildSilverCalendarInput();
-      var m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      var c = chipsEl();
-      if (c) {
-        clearChipsScrollStyle();
-        c.hidden = true;
-        c.innerHTML = "";
-        c.className = "iuSilverHomeChips";
-      }
-      openGuidedTextSheet("title");
-    }
-
-    /** Volitelné kroky až po potvrzení názvu (neřetězit modály). */
-    function renderOptionalStepButtons() {
-      clearChipsScrollStyle();
-      var c = chipsEl();
-      if (!c) return;
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--afterTitle";
-      c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-addr">p\u0159idat adresu</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-note">p\u0159idat pozn\xe1mku</button>' +
-        '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-menu">p\u0159idat upozorn\u011bn\xed</button>' +
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--save" data-iu-silver-guided="gd-final-save">ULO\u017dIT</button>';
-    }
-
-    function renderRemMenu() {
-      clearChipsScrollStyle();
-      var c = chipsEl();
-      if (!c) return;
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--timeGrid";
-      var opts = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
-      var html = "";
-      for (var i = 0; i < opts.length; i++) {
-        html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-rem-pick" data-iu-silver-guided-ridx="' +
-          i +
-          '">' +
-          opts[i] +
-          "</button>";
-      }
-      c.innerHTML = html;
-    }
-
-    function rebuildSilverCalendarInput() {
-      var inp = document.getElementById("iuSilverHomeInput");
-      if (!inp) return;
-      var d = silverCalendarDraft;
-      var parts = [];
-      parts.push((d.intent || "uložit do kalendáře").trim());
-      if (d.day) {
-        parts.push(String(d.day).trim());
-      } else if (d.date) {
-        parts.push(fmtDotCs(d.date));
-      }
-      var head = parts.filter(Boolean).join(" ");
-      if (d.time) {
-        var nt = normalizeDraftTimeHm(d.time);
-        if (nt) head = applyTimeHHMMToSentence(head, nt);
-      }
-      var tail = [];
-      if (d.title) tail.push(String(d.title).trim());
-      if (d.note) tail.push(String(d.note).trim());
-      if (d.reminder) tail.push(String(d.reminder).trim());
-      inp.value = tail.length ? head + " " + tail.filter(Boolean).join(" ") : head;
-      try {
-        window.silverCalendarHasNavigation = !!String(d.address || "").trim();
       } catch (_) {}
     }
 
@@ -34188,19 +33683,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    /** Mobil/tablet: vstup + placeholder nápověda + „Zobrazit kalendář“ — bez starého quick-date / time picker / title sheet. */
     function startSaveFlow() {
       closeGuidedSheet();
       try {
         closeSilverMiniCalendar();
       } catch (_) {}
-      silverCalUiState = SILVER_CAL_UI_GUIDED_SAVE;
+      silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
       setSilverCalUiAttr();
-      GC.mode = "guided_save";
-      GC.savePhase = "day";
+      GC.mode = "calendar_compose";
+      GC.savePhase = "";
       emptySilverCalendarDraft();
       silverCalendarDraft.intent = "uložit do kalendáře";
-      renderSaveDayRow();
-      rebuildSilverCalendarInput();
+      var c = chipsEl();
+      if (c) {
+        clearChipsScrollStyle();
+        c.hidden = true;
+        c.innerHTML = "";
+        c.className = "iuSilverHomeChips";
+        c.removeAttribute("data-iu-guided-open");
+      }
+      var m = modeEl();
+      if (m) {
+        m.hidden = true;
+        m.textContent = "";
+      }
+      var inp = document.getElementById("iuSilverHomeInput");
+      if (inp) {
+        inp.value = "";
+        inp.placeholder = SILVER_CALENDAR_COMPOSE_HINT;
+        try {
+          inp.focus();
+        } catch (_) {}
+      }
+      var aux = document.getElementById("iuSilverCalendarComposeAux");
+      if (aux) aux.hidden = false;
+      var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
+      if (smb) smb.setAttribute("aria-expanded", "false");
       iuSilverHeroPremiumExpandSet(true);
     }
 
@@ -34224,134 +33743,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         startSearchFlow();
         return;
       }
-      if (act.indexOf("gd-") === 0 && GC.mode !== "guided_save") return;
-      if (GC.mode !== "guided_save" && GC.mode !== "cal_choice") return;
-      if (act === "gd-dnes") {
-        ev.preventDefault();
-        applyDaySelection(todayIso(), "dnes");
-        return;
-      }
-      if (act === "gd-zitra") {
-        ev.preventDefault();
-        applyDaySelection(addDaysIso(todayIso(), 1), "zítra");
-        return;
-      }
-      if (act === "gd-dynamic") {
-        ev.preventDefault();
-        var iso0 = String(x.getAttribute("data-iu-silver-guided-dyn") || addDaysIso(todayIso(), 2));
-        renderDynamicDayMenu(iso0);
-        return;
-      }
-      if (act === "gd-date") {
-        ev.preventDefault();
-        showSilverMiniCalendar();
-        return;
-      }
-      if (act === "gd-pickday") {
-        ev.preventDefault();
-        var iso = String(x.getAttribute("data-iu-silver-guided-iso") || "");
-        if (!iso) return;
-        var ph = weekdayV(new Date(iso + "T12:00:00"));
-        applyDaySelection(iso, ph);
-        return;
-      }
-      if (act === "gd-time-open") {
-        ev.preventDefault();
-        openTimePickerImmediately();
-        return;
-      }
-      if (act === "gd-timefix") {
-        ev.preventDefault();
-        var tf = String(x.getAttribute("data-iu-silver-guided-t") || "");
-        applyTime(tf);
-        return;
-      }
-      if (act === "gd-timecustom") {
-        ev.preventDefault();
-        renderCustomHourGrid();
-        return;
-      }
-      if (act === "gd-time-back") {
-        ev.preventDefault();
-        renderTimeMenu();
-        return;
-      }
-      if (act === "gd-rem-pick") {
-        ev.preventDefault();
-        var opts2 = ["10 min před", "30 min před", "1 hod před", "1 den před", "bez připomenutí"];
-        var ri = Number(x.getAttribute("data-iu-silver-guided-ridx") || 0);
-        silverCalendarDraft.reminder = opts2[ri] || "";
-        rebuildSilverCalendarInput();
-        renderOptionalStepButtons();
-        return;
-      }
-      if (act === "gd-addr") {
-        ev.preventDefault();
-        openGuidedTextSheet("addr");
-        return;
-      }
-      if (act === "gd-note") {
-        ev.preventDefault();
-        openGuidedTextSheet("note");
-        return;
-      }
-      if (act === "gd-rem-menu") {
-        ev.preventDefault();
-        renderRemMenu();
-        return;
-      }
-      if (act === "gd-final-save") {
-        ev.preventDefault();
-        void guidedPersistSave();
-        return;
-      }
-    }
-
-    async function guidedPersistSave() {
-      var svc = window.iuCalendarService;
-      if (!svc || typeof svc.calendarCreateEvent !== "function") return;
-      var title = String(silverCalendarDraft.title || "").trim();
-      var dateIso = String(silverCalendarDraft.date || "").trim();
-      var timeHm = String(silverCalendarDraft.time || "").trim();
-      if (!dateIso || !timeHm || !title) return;
-      var noteJoined = silverCalendarDraft.note ? String(silverCalendarDraft.note).trim() : "";
-      if (silverCalendarDraft.reminder) {
-        noteJoined = noteJoined
-          ? noteJoined + "\n\nPřipomenutí: " + silverCalendarDraft.reminder
-          : "Připomenutí: " + silverCalendarDraft.reminder;
-      }
-      try {
-        var res = await svc.calendarCreateEvent({
-          date: dateIso,
-          time: timeHm,
-          title: title.slice(0, 120),
-          note: noteJoined.slice(0, 1000),
-          address: String(silverCalendarDraft.address || "").trim().slice(0, 240),
-          reminder: String(silverCalendarDraft.reminder || "").trim().slice(0, 80),
-          type: "personal",
-          attachments: []
-        });
-        if (res && res.ok) {
-          hideGuidedChrome();
-          resetGcSave();
-          var inp = document.getElementById("iuSilverHomeInput");
-          if (inp) {
-            inp.value = "";
-            inp.placeholder = "Napiš Silverovi…";
-          }
-          var t = toastEl();
-          if (t) {
-            t.hidden = false;
-            t.textContent = "\u2714 Uloženo do kalendáře";
-            setTimeout(function () {
-              try {
-                t.hidden = true;
-                t.textContent = "";
-              } catch (_) {}
-            }, 3200);
-          }
-        }
-      } catch (_) {}
+      if (GC.mode !== "cal_choice") return;
     }
 
     function onMindMenuCapture(ev) {
@@ -34429,7 +33821,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             return;
           }
           try {
-            if (GC.mode === "guided_save" || GC.mode === "cal_choice") {
+            if (GC.mode === "calendar_compose" || GC.mode === "cal_choice") {
               hideGuidedChrome();
             }
           } catch (_) {}
@@ -34446,32 +33838,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         mm.__iuCalGuidedCap = 1;
         mm.addEventListener("click", onMindMenuCapture, true);
       }
-      var guidedSheetUiWired = 0;
-      function wireGuidedSheetUi() {
-        if (guidedSheetUiWired) return;
-        guidedSheetUiWired = 1;
-        var okBtn = document.getElementById("iuSilverGuidedSheetOk");
-        var caBtn = document.getElementById("iuSilverGuidedSheetCancel");
-        if (okBtn && !okBtn.__iuGuidedSheetOk) {
-          okBtn.__iuGuidedSheetOk = 1;
-          okBtn.addEventListener("click", function (e) {
+      function wireSilverCalendarComposeUi() {
+        var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
+        if (!smb || smb.__iuSilverComposeCalBtn) return;
+        smb.__iuSilverComposeCalBtn = 1;
+        smb.addEventListener(
+          "click",
+          function (e) {
             try {
               e.preventDefault();
             } catch (_) {}
-            onGuidedSheetOk();
-          });
-        }
-        if (caBtn && !caBtn.__iuGuidedSheetCancel) {
-          caBtn.__iuGuidedSheetCancel = 1;
-          caBtn.addEventListener("click", function (e) {
-            try {
-              e.preventDefault();
-            } catch (_) {}
-            closeGuidedSheet();
-          });
-        }
+            if (!narrow()) return;
+            if (GC.mode !== "calendar_compose") return;
+            var root = miniCalEl();
+            if (root && !root.hidden) {
+              closeSilverMiniCalendar();
+              smb.setAttribute("aria-expanded", "false");
+            } else {
+              showSilverMiniCalendar();
+              smb.setAttribute("aria-expanded", "true");
+            }
+          },
+          false
+        );
       }
-      wireGuidedSheetUi();
+      wireSilverCalendarComposeUi();
     };
   })();
 
