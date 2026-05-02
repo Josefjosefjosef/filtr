@@ -1,8 +1,54 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-02T09:11:10.602296Z",
+  "ingestedAt": "2026-05-02T09:40:20.951319Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ve věku 59 let zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi",
+      "url": "https://www.sport.cz/clanek/moto-ve-veku-59-let-zemrel-byvaly-pilot-f1-a-uspesny-paralympionik-zanardi-5446818",
+      "dt": "2026-05-02T09:21:10Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "bývalý",
+        "let",
+        "paralympionik",
+        "pilot",
+        "věku",
+        "zanardi",
+        "zemřel",
+        "úspěšný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kladno odtajnilo první posilu",
+      "url": "https://www.sport.cz/clanek/hokej-extraliga-kladno-odtajnilo-prvni-posilu-zlakalo-utocnika-z-jihu-cech-5446812",
+      "dt": "2026-05-02T08:19:58Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "kladno",
+        "odtajnilo",
+        "posilu",
+        "první"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -98,31 +144,6 @@
         "sinnerovi",
         "tenisovými",
         "únavu"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kladno odtajnilo první posilu. Zlákalo útočníka z jihu Čech",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-kladno-odtajnilo-prvni-posilu-zlakalo-utocnika-z-jihu-cech-5446812",
-      "dt": "2026-05-02T08:19:58Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "jihu",
-        "kladno",
-        "odtajnilo",
-        "posilu",
-        "první",
-        "zlákalo",
-        "útočníka",
-        "čech"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -742,28 +763,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Daněk slaví zisk Rakouského poháru",
-      "url": "https://www.sport.cz/clanek/fotbal-evropske-ligy-danek-slavi-zisk-rakouskeho-poharu-5446612",
-      "dt": "2026-05-01T18:02:14Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "daněk",
-        "poháru",
-        "rakouského",
-        "slaví",
-        "zisk"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -774,7 +773,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41613,
+      "bytes": 41455,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -811,11 +810,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:01:15Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T09:21:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 1,
-          "sport": 29
+          "sport": 29,
+          "zdravi": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -827,6 +826,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Ve věku 59 let zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi",
+            "publishedAt": "2026-05-02T09:21:10Z"
+          },
+          {
+            "title": "Kladno odtajnilo první posilu",
+            "publishedAt": "2026-05-02T08:19:58Z"
+          },
           {
             "title": "Vonnová musí na další operaci. Rodina si nepřeje návrat na svah",
             "publishedAt": "2026-05-02T08:01:54Z"
@@ -844,20 +851,12 @@
             "publishedAt": "2026-05-02T08:36:14Z"
           },
           {
-            "title": "Kladno odtajnilo první posilu. Zlákalo útočníka z jihu Čech",
-            "publishedAt": "2026-05-02T08:19:58Z"
-          },
-          {
             "title": "Hokejisté vyrukují na suverénní Švédy. Do akce by měli jít dva debutanti",
             "publishedAt": "2026-05-02T08:04:49Z"
           },
           {
             "title": "Po dvou letech ve Švýcarsku Voženílek opět oblékne dres Třince",
             "publishedAt": "2026-05-02T07:22:17Z"
-          },
-          {
-            "title": "Ochutnávka: Narodila jsem se v magický den, věří česká šampionka",
-            "publishedAt": "2026-05-02T07:40:12Z"
           }
         ]
       }
