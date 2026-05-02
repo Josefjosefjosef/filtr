@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T09:40:20.951319Z",
+  "ingestedAt": "2026-05-02T10:55:13.384277Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Američané stáhnou 5 tisíc vojáků z Německa. Je čas převzít odpovědnost, reagoval Pistorius",
+      "url": "https://ekonomickydenik.cz/americane-stahnou-5-tisic-vojaku-z-nemecka/",
+      "dt": "2026-05-02T10:03:10Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "američané",
+        "německa",
+        "odpovědnost",
+        "pistorius",
+        "převzít",
+        "reagoval",
+        "stáhnou",
+        "tisíc",
+        "vojáků",
+        "čas"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -770,30 +797,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zajíček: Podnikatelé potřebují méně byrokracie, zohledňovat se musí i bezpečnost",
-      "url": "https://ekonomickydenik.cz/zajicek-podnikatele-mene-byrokracie-bezpecnost/",
-      "dt": "2026-04-29T18:05:18Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "bezpečnost",
-        "byrokracie",
-        "musí",
-        "podnikatelé",
-        "potřebují",
-        "zajíček",
-        "zohledňovat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +807,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71086,
+      "bytes": 71518,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,11 +844,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:03:10Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zdravi": 2,
           "finance": 26,
+          "zdravi": 2,
           "zpravy": 2
         },
         "drop_counts": {
@@ -858,6 +861,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Američané stáhnou 5 tisíc vojáků z Německa. Je čas převzít odpovědnost, reagoval Pistorius",
+            "publishedAt": "2026-05-02T10:03:10Z"
+          },
           {
             "title": "Belgická vláda jde ve stopách Babiše a Havlíčka. Chce ovládnout jaderné elektrárny",
             "publishedAt": "2026-05-02T09:00:00Z"
@@ -885,10 +892,6 @@
           {
             "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
             "publishedAt": "2026-05-01T10:48:24Z"
-          },
-          {
-            "title": "Velký personální lov: Hledá se nový Řehka. Kdo bude „tichou silou“?",
-            "publishedAt": "2026-05-01T09:14:27Z"
           }
         ]
       }

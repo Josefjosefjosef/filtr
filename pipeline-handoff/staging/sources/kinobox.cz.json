@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "kinobox.cz",
-  "ingestedAt": "2026-05-02T09:40:20.951319Z",
+  "ingestedAt": "2026-05-02T10:55:13.384277Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Kinobox Daily: Film Prolomit vlny odhaluje jeden ze základních stavebních kamenů Trierovy tvorby",
+      "url": "https://www.kinobox.cz/clanky/daily/53290-kinobox-daily-film-prolomit-vlny-odhaluje-jeden-ze-zakladnich-stavebnich-kamenu-trierovy-tvorby",
+      "dt": "2026-05-02T10:00:00Z",
+      "media_raw": "Kinobox",
+      "media_norm": "Kinobox",
+      "tokens": [
+        "daily",
+        "film",
+        "jeden",
+        "kamenů",
+        "kinobox",
+        "odhaluje",
+        "prolomit",
+        "stavebních",
+        "trierovy",
+        "tvorby",
+        "vlny",
+        "základních"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_kinobox",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "kinobox.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -529,34 +558,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "kinobox.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Ďábel nosí Pradu i podruhé stylově. Aura Meryl Streep zastíní i tvůrčí chyby",
-      "url": "https://www.kinobox.cz/clanky/recenze/53200-dabel-nosi-pradu-i-podruhe-stylove-aura-meryl-streep-zastini-i-tvurci-zavahani",
-      "dt": "2026-04-29T17:00:00Z",
-      "media_raw": "Kinobox",
-      "media_norm": "Kinobox",
-      "tokens": [
-        "aura",
-        "chyby",
-        "meryl",
-        "nosí",
-        "podruhé",
-        "pradu",
-        "streep",
-        "stylově",
-        "tvůrčí",
-        "zastíní",
-        "ďábel"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_kinobox",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "kinobox.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -567,7 +568,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://www.kinobox.cz/api/rss",
-      "bytes": 28749,
+      "bytes": 28590,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -604,7 +605,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "other": 20
@@ -619,6 +620,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kinobox Daily: Film Prolomit vlny odhaluje jeden ze základních stavebních kamenů Trierovy tvorby",
+            "publishedAt": "2026-05-02T10:00:00Z"
+          },
           {
             "title": "Nejslavnější Hercule Poirot slaví 80. David Suchet žil jako legendární detektiv i ve skutečnosti",
             "publishedAt": "2026-05-02T09:00:00Z"
@@ -646,10 +651,6 @@
           {
             "title": "Kinobox Daily: Láska, která voní zradou. Oženil se Brad Pitt s nacistickou špionku?",
             "publishedAt": "2026-05-01T10:00:00Z"
-          },
-          {
-            "title": "Neprovokativnější film roku dorazil na stream. Bouřlivé výšiny otestují hranice vašeho vkusu",
-            "publishedAt": "2026-05-01T09:00:00Z"
           }
         ]
       }

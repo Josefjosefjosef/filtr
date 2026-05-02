@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-02T09:40:20.951319Z",
+  "ingestedAt": "2026-05-02T10:55:13.384277Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Záchranný tým vypustil velrybu Timmyho do Severního moře",
+      "url": "https://zpravy.aktualne.cz/zahranici/zachranny-tym-vypustil-velrybu-timmyho-do-severniho-more/r~aaa29404f29e50b8716ea7362c1757e4/",
+      "dt": "2026-05-02T09:40:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "moře",
+        "severního",
+        "timmyho",
+        "tým",
+        "velrybu",
+        "vypustil",
+        "záchranný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -502,32 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Zelenského sok nastínil vztahy s Rusy. Popsal hlavní nebezpečí po válce",
-      "url": "https://zpravy.aktualne.cz/zahranici/vsechno-se-muze-zopakovat-zelenskeho-rival-varuje-pred-hlavnim-nebezpecim-po-valce/r~aaa2956525263ad5429e2b77a5ee244b/",
-      "dt": "2026-05-02T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "hlavní",
-        "nastínil",
-        "nebezpečí",
-        "popsal",
-        "rusy",
-        "sok",
-        "vztahy",
-        "válce",
-        "zelenského"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -538,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21119,
+      "bytes": 20867,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -575,7 +573,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T08:59:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T09:40:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zpravy": 11,
@@ -593,6 +591,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záchranný tým vypustil velrybu Timmyho do Severního moře",
+            "publishedAt": "2026-05-02T09:40:00Z"
+          },
           {
             "title": "Escobarovi hroši ničí v Kolumbii ekosystém i rybářství, nekontrolovatelně se množí",
             "publishedAt": "2026-05-02T08:59:00Z"
@@ -620,10 +622,6 @@
           {
             "title": "Toskánsko kousek od Kolína. Sestry proměnily omšelou tvrz v italskou vilu, o které samy snily",
             "publishedAt": "2026-05-02T06:35:00Z"
-          },
-          {
-            "title": "Součkovi chtějí v Londýně stavět sochu. Čech okouzlil i nevšedním lidským gestem",
-            "publishedAt": "2026-05-02T06:30:00Z"
           }
         ]
       }

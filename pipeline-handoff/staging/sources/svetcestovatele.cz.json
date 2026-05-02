@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "svetcestovatele.cz",
-  "ingestedAt": "2026-05-02T09:40:20.951319Z",
+  "ingestedAt": "2026-05-02T10:55:13.384277Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Nevěřil jsem vlastním očím. Když parkuje pitomec",
+      "url": "https://www.svetcestovatele.cz/neveril-jsem-vlastnim-ocim-kdyz-parkuje-pitomec/",
+      "dt": "2026-05-02T10:13:35Z",
+      "media_raw": "SvětCestovatele",
+      "media_norm": "SvětCestovatele",
+      "tokens": [
+        "jsem",
+        "když",
+        "nevěřil",
+        "očím",
+        "parkuje",
+        "pitomec",
+        "vlastním"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_svetcestovatele",
+      "sourceDisplayWeight": 0.9,
+      "sourceBatchKey": "svetcestovatele.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -516,34 +540,6 @@
       "sourceDisplayWeight": 0.9,
       "sourceBatchKey": "svetcestovatele.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "Kolega nesnáší svoje děti. Kvůli tomu je pořád v práci a ohrožuje nevinné lidi",
-      "url": "https://www.svetcestovatele.cz/kolega-nesnasi-svoje-deti-kvuli-tomu-je-porad-v-praci-a-ohrozuje-nevinne-lidi/",
-      "dt": "2026-04-20T04:00:37Z",
-      "media_raw": "SvětCestovatele",
-      "media_norm": "SvětCestovatele",
-      "tokens": [
-        "děti",
-        "kolega",
-        "kvůli",
-        "lidi",
-        "nesnáší",
-        "nevinné",
-        "ohrožuje",
-        "pořád",
-        "práci",
-        "svoje",
-        "tomu"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_svetcestovatele",
-      "sourceDisplayWeight": 0.9,
-      "sourceBatchKey": "svetcestovatele.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -554,7 +550,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.svetcestovatele.cz/feed/",
-      "bytes": 117920,
+      "bytes": 116792,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -591,7 +587,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T04:00:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:13:35Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "cestovani": 20
@@ -606,6 +602,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nevěřil jsem vlastním očím. Když parkuje pitomec",
+            "publishedAt": "2026-05-02T10:13:35Z"
+          },
           {
             "title": "Můj muž se jmenuje úplně jinak. Zjistila jsem to až při svatbě – prý mě nechtěl děsit",
             "publishedAt": "2026-05-02T04:00:32Z"
@@ -633,10 +633,6 @@
           {
             "title": "Nudisté v Itálii berou útokem radnice: Svatba v rouše Adamově už není jenom sen, tady se opravdu můžete vzít nazí",
             "publishedAt": "2026-04-29T04:00:00Z"
-          },
-          {
-            "title": "Nejstrmější lanovka světa se rozjela ve Švýcarsku",
-            "publishedAt": "2026-04-28T11:00:46Z"
           }
         ]
       }

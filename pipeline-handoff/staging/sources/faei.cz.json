@@ -1,8 +1,28 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-02T09:40:20.951319Z",
+  "ingestedAt": "2026-05-02T10:55:13.384277Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Češi přestali spořit",
+      "url": "https://profitonline.cz/cesi-prestali-sporit/",
+      "dt": "2026-05-02T10:00:45Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "přestali",
+        "spořit",
+        "češi"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -282,30 +302,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Polsko chystá mimořádnou daň na Orlen a další firmy",
-      "url": "https://profitonline.cz/polsko-chysta-mimoradnou-dan-na-orlen-a-dalsi-firmy/",
-      "dt": "2026-04-29T21:20:27Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "chystá",
-        "další",
-        "daň",
-        "firmy",
-        "mimořádnou",
-        "orlen",
-        "polsko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -316,7 +312,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19244,
+      "bytes": 18975,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -353,7 +349,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:00:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:00:45Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -369,6 +365,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češi přestali spořit",
+            "publishedAt": "2026-05-02T10:00:45Z"
+          },
           {
             "title": "Trump chce zavést 25% clo na auta z EU",
             "publishedAt": "2026-05-02T09:00:30Z"
@@ -396,10 +396,6 @@
           {
             "title": "Duben na akciových trzích: Index S&P500 opět na rekordu",
             "publishedAt": "2026-04-30T18:00:33Z"
-          },
-          {
-            "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
-            "publishedAt": "2026-04-30T14:00:07Z"
           }
         ]
       }
