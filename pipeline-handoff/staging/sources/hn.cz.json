@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-02T12:05:03.475706Z",
+  "ingestedAt": "2026-05-02T13:19:44.853571Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Google, Microsoft, Amazon i Meta skvěle vydělávají. Investory ale víc zajímá, kdo zaplatí další kolo AI závodů",
+      "url": "https://byznys.hn.cz/c1-67872960-google-microsoft-amazon-i-meta-skvele-vydelavaji-investory-ale-vic-zajima-kdo-zaplati-dalsi-kolo-ai-zavodu",
+      "dt": "2026-05-02T12:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "ale",
+        "amazon",
+        "další",
+        "google",
+        "investory",
+        "kolo",
+        "meta",
+        "microsoft",
+        "skvěle",
+        "vydělávají",
+        "víc",
+        "zajímá",
+        "zaplatí",
+        "závodů"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1154,37 +1185,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Rozhodnutí Spojených arabských emirátů o konci v OPEC není zas tak překvapivé. Jaký může mít dopad na trh s ropou?",
-      "url": "https://archiv.hn.cz/c1-67872360-rozhodnuti-spojenych-arabskych-emiratu-o-konci-v-opec-neni-zas-tak-prekvapive-jaky-muze-mit-dopad-na-trh-s-ropou",
-      "dt": "2026-04-29T16:10:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "arabských",
-        "dopad",
-        "emirátů",
-        "jaký",
-        "konci",
-        "mít",
-        "opec",
-        "překvapivé",
-        "ropou",
-        "rozhodnutí",
-        "spojených",
-        "tak",
-        "trh",
-        "zas"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1195,7 +1195,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184162,
+      "bytes": 184260,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1232,7 +1232,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-01T16:18:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T12:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1250,6 +1250,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Google, Microsoft, Amazon i Meta skvěle vydělávají. Investory ale víc zajímá, kdo zaplatí další kolo AI závodů",
+            "publishedAt": "2026-05-02T12:57:00Z"
+          },
           {
             "title": "Trump tvrdě proti Evropě: oznámil uvalení cel na dovoz aut ve výši 25 procent. Velmi citelně by tím zasáhl i Česko",
             "publishedAt": "2026-05-01T16:18:00Z"
@@ -1277,10 +1281,6 @@
           {
             "title": "Část D8 přes České středohoří získala 14 let po otevření kolaudaci. Okolo zbývající trasy už ale zase krouží Děti Země",
             "publishedAt": "2026-04-30T14:27:00Z"
-          },
-          {
-            "title": "Vaše místo je na dně Perského zálivu, vzkázal Američanům Chameneí. Blízký východ podle něj čeká zářná budoucnost",
-            "publishedAt": "2026-04-30T14:10:00Z"
           }
         ]
       }

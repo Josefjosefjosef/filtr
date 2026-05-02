@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T12:05:03.475706Z",
+  "ingestedAt": "2026-05-02T13:19:44.853571Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Semafory na přechodu nutí chodce porušovat předpisy, tvrdí náměstek. Ozvala se kritika",
+      "url": "https://ekonomickydenik.cz/semafory-hrozba-chodce-namestek-beranek/",
+      "dt": "2026-05-02T12:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "chodce",
+        "kritika",
+        "nutí",
+        "náměstek",
+        "ozvala",
+        "porušovat",
+        "přechodu",
+        "předpisy",
+        "semafory",
+        "tvrdí"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -773,31 +800,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi můžou žádat o renovační pasy. Jak fungují a k čemu budou potřeba?",
-      "url": "https://ekonomickydenik.cz/renovacni-pas-k-cemu-potreba/",
-      "dt": "2026-04-30T05:59:56Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "fungují",
-        "můžou",
-        "pasy",
-        "potřeba",
-        "renovační",
-        "čemu",
-        "češi",
-        "žádat"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -808,7 +810,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71103,
+      "bytes": 70950,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -845,7 +847,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T12:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -862,6 +864,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Semafory na přechodu nutí chodce porušovat předpisy, tvrdí náměstek. Ozvala se kritika",
+            "publishedAt": "2026-05-02T12:30:00Z"
+          },
           {
             "title": "Babiš si vybral. Landovský se stane vládním zmocněncem pro závazky vůči NATO",
             "publishedAt": "2026-05-02T11:30:00Z"
@@ -889,10 +895,6 @@
           {
             "title": "Americký šok: Trump ohlásil zvýšení cel na dovoz aut z EU na 25 procent. Neplníte dohodu, vzkázal",
             "publishedAt": "2026-05-01T17:14:40Z"
-          },
-          {
-            "title": "Ovládla to tu pravicová dominance, tvrdí Špidla a přichází s Novou sociální demokracií",
-            "publishedAt": "2026-05-01T15:55:54Z"
           }
         ]
       }

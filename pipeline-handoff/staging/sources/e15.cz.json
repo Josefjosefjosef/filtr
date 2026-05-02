@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-02T12:05:03.475706Z",
+  "ingestedAt": "2026-05-02T13:19:44.853571Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Klimatická krize v peněženkách. Za oběd i pojistku platíme daň z horka",
+      "url": "https://www.e15.cz/byznys/klimaticka-krize-v-penezenkach-za-obed-i-pojistku-platime-dan-z-horka-1432508",
+      "dt": "2026-05-02T12:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "daň",
+        "horka",
+        "klimatická",
+        "krize",
+        "oběd",
+        "peněženkách",
+        "platíme",
+        "pojistku"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1056,31 +1081,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Komerční bance klesl čtvrtletní zisk. Úvěry i vklady dál rostou",
-      "url": "https://www.e15.cz/byznys/finance-a-bankovnictvi/komercni-bance-klesl-ctvrtletni-zisk-uvery-i-vklady-dal-rostou-1432494",
-      "dt": "2026-04-30T06:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "bance",
-        "klesl",
-        "komerční",
-        "rostou",
-        "vklady",
-        "zisk",
-        "úvěry",
-        "čtvrtletní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1091,7 +1091,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 53150,
+      "bytes": 53128,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1128,7 +1128,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:27:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T12:30:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1145,6 +1145,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Klimatická krize v peněženkách. Za oběd i pojistku platíme daň z horka",
+            "publishedAt": "2026-05-02T12:30:00Z"
+          },
           {
             "title": "Nahlédli jsme do legendární továrny JAWA. Takhle dnes vznikají české motorky v čele s Pérákem",
             "publishedAt": "2026-05-02T10:27:00Z"
@@ -1172,10 +1176,6 @@
           {
             "title": "Čeští tvůrci her o řidičích kamionů poprvé utržili přes miliardu, impozantní je i ziskovost",
             "publishedAt": "2026-05-02T03:00:00Z"
-          },
-          {
-            "title": "Trump „s potěšením“ zvýší cla na dovoz automobilů z EU. Brusel podle něj neplní dohodu",
-            "publishedAt": "2026-05-01T20:09:00Z"
           }
         ]
       }
