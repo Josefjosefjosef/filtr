@@ -666,14 +666,15 @@ style-src 'self' 'unsafe-inline' https:;
           -webkit-overflow-scrolling: auto !important;
           scrollbar-width: auto !important;
         }
+        /* Day row = pouze quick-date (dnes/zítra/…/datum); jeden řádek na tlačítko — žádné wrap vs. níže nowrap. */
         #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow .iuSilverHomeChip {
           flex: 1 1 calc(50% - 3px) !important;
           max-width: calc(50% - 3px) !important;
           min-width: 0 !important;
           width: auto !important;
-          white-space: normal !important;
-          overflow-wrap: anywhere !important;
-          word-break: normal !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
           text-align: center !important;
           box-sizing: border-box !important;
         }
@@ -904,17 +905,19 @@ style-src 'self' 'unsafe-inline' https:;
         .iuSilverHomeComposerShell.iuSilverComposerP0 .iuSilverHomeSend{
           display: inline-flex;
         }
-        #iuSilverHomeChips .iuSilverHomeChip,
-        #iuSilverHomeChips button.iuSilverHomeChip{
+        #iuSilverHomeChips .iuSilverHomeChip:not(.iu-silver-quickdate-btn),
+        #iuSilverHomeChips button.iuSilverHomeChip:not(.iu-silver-quickdate-btn){
           font-size: 16px;
         }
-        /* P0 Silver: quick-date row (dnes / zítra / … / datum) — tertiary outline, slabší než vyhledat (2px), jen ≤1024px. */
+        /* P0 Silver: quick-date row — jedna vrstva (oranžový outline + clamp 18–21px), jen ≤1024px. */
         #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn{
           background: transparent !important;
           border: 1px solid rgba(255, 122, 0, 0.55) !important;
           color: rgba(255, 122, 0, 0.75) !important;
-          font-size: 13px !important;
+          font-size: clamp(18px, 0.35rem + 3.55vw, 21px) !important;
           font-weight: 600 !important;
+          line-height: 1.15 !important;
+          white-space: nowrap !important;
           box-shadow: none !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn:active{
