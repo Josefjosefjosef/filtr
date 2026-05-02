@@ -33276,6 +33276,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       savePhase: "",
       searchMode: false
     };
+    var silverMiniCalYear = new Date().getFullYear();
+    var silverMiniCalMonth = new Date().getMonth();
 
     function narrow() {
       try {
@@ -33301,44 +33303,172 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function toastEl() {
       return document.getElementById("iuSilverHomeInlineToast");
     }
-    function datePickEl() {
-      return document.getElementById("iuSilverDatePicker");
+    function miniCalEl() {
+      return document.getElementById("iuSilverMiniCalendar");
     }
 
-    function noteSilverDatePickerProof(patch) {
-      try {
-        var o = window.__iuSilverDatePickerProof || (window.__iuSilverDatePickerProof = {});
-        for (var k in patch) {
-          if (Object.prototype.hasOwnProperty.call(patch, k)) o[k] = patch[k];
-        }
-      } catch (_) {}
-    }
-
-    /** Mobil/tablet (narrow): nativní date picker místo mřížky dnů. */
-    function openSilverGuidedNativeDatePicker() {
-      if (!narrow()) return;
-      var el = datePickEl();
+    function closeSilverMiniCalendar() {
+      var el = miniCalEl();
       if (!el) return;
-      var seed = String(silverCalendarDraft.date || "").trim() || todayIso();
+      el.hidden = true;
       try {
-        el.value = seed;
+        el.innerHTML = "";
       } catch (_) {}
-      noteSilverDatePickerProof({
-        date_picker_opened: true,
-        native_picker_used: true,
-        grid_removed: true
-      });
-      try {
-        if (typeof el.showPicker === "function") {
-          el.showPicker();
-        } else {
-          el.click();
-        }
-      } catch (_) {
-        try {
-          el.click();
-        } catch (_) {}
+    }
+
+    function paintSilverMiniCalendar() {
+      var root = miniCalEl();
+      if (!root || root.hidden) return;
+      var y = silverMiniCalYear;
+      var m = silverMiniCalMonth;
+      var monthNames = [
+        "leden",
+        "\u00fanor",
+        "b\u0159ezen",
+        "duben",
+        "kv\u011bten",
+        "\u010derven",
+        "\u010dervenec",
+        "srpen",
+        "z\u00e1\u0159\u00ed",
+        "\u0159\u00edjen",
+        "listopad",
+        "prosinec"
+      ];
+      var first = new Date(y, m, 1);
+      var startPad = (first.getDay() + 6) % 7;
+      var dim = new Date(y, m + 1, 0).getDate();
+      var tIso = todayIso();
+      var html = "";
+      html +=
+        '<div class="iuSilverMiniCal" role="dialog" aria-label="V\u00fdb\u011br data">' +
+        '<div class="iuSilverMiniCal__toolbar">' +
+        '<button type="button" class="iuSilverMiniCal__nav" data-iu-silver-mini-cal="prev" aria-label="P\u0159edchoz\u00ed m\u011bs\u00edc">\u2039</button>' +
+        '<div class="iuSilverMiniCal__title" data-iu-silver-mini-cal-title>' +
+        monthNames[m] +
+        " " +
+        y +
+        "</div>" +
+        '<button type="button" class="iuSilverMiniCal__nav" data-iu-silver-mini-cal="next" aria-label="Dal\u0161\u00ed m\u011bs\u00edc">\u203a</button>' +
+        "</div>" +
+        '<div class="iuSilverMiniCal__wd" aria-hidden="true">Po \u00dat St \u010ct P\u00e1 So Ne</div>' +
+        '<div class="iuSilverMiniCal__grid">';
+      var idx = 0;
+      var i;
+      for (i = 0; i < startPad; i++) {
+        html += '<span class="iuSilverMiniCal__cell iuSilverMiniCal__cell--pad" aria-hidden="true"></span>';
+        idx++;
       }
+      for (var d = 1; d <= dim; d++) {
+        var iso = toIsoFromDate(new Date(y, m, d));
+        var isToday = iso === tIso;
+        html +=
+          '<button type="button" class="iuSilverMiniCal__cell iuSilverMiniCal__day' +
+          (isToday ? " iuSilverMiniCal__day--today" : "") +
+          '" data-iu-silver-mini-cal="day" data-iu-silver-mini-iso="' +
+          iso +
+          '">' +
+          d +
+          "</button>";
+        idx++;
+      }
+      while (idx % 7 !== 0) {
+        html += '<span class="iuSilverMiniCal__cell iuSilverMiniCal__cell--pad" aria-hidden="true"></span>';
+        idx++;
+      }
+      html +=
+        "</div>" +
+        '<button type="button" class="iuSilverMiniCal__back" data-iu-silver-mini-cal="back">zp\u011bt</button>' +
+        "</div>";
+      root.innerHTML = html;
+    }
+
+    /** Mobil/tablet: vlastní kompaktní měsíční kalendář (Safari/iOS nespolehlivě otevírá type=date). */
+    function showSilverMiniCalendar() {
+      if (!narrow()) return;
+      var root = miniCalEl();
+      if (!root) return;
+      wireSilverMiniCalendarOnce();
+      var d0 = new Date();
+      try {
+        if (silverCalendarDraft.date) {
+          var p = String(silverCalendarDraft.date).split("-");
+          if (p.length >= 3) {
+            var yy = Number(p[0]);
+            var mm = Number(p[1]) - 1;
+            var dd = Number(p[2]);
+            if (Number.isFinite(yy) && Number.isFinite(mm) && Number.isFinite(dd)) {
+              d0 = new Date(yy, mm, dd);
+            }
+          }
+        }
+      } catch (_) {}
+      silverMiniCalYear = d0.getFullYear();
+      silverMiniCalMonth = d0.getMonth();
+      root.hidden = false;
+      paintSilverMiniCalendar();
+    }
+
+    function wireSilverMiniCalendarOnce() {
+      var root = miniCalEl();
+      if (!root || root.__iuSilverMiniCalWired) return;
+      root.__iuSilverMiniCalWired = 1;
+      root.addEventListener(
+        "click",
+        function (ev) {
+          if (!narrow()) return;
+          if (GC.mode !== "guided_save") return;
+          var t = ev.target;
+          var btn = t && t.closest ? t.closest("[data-iu-silver-mini-cal]") : null;
+          if (!btn || !root.contains(btn)) return;
+          var act = String(btn.getAttribute("data-iu-silver-mini-cal") || "");
+          if (act === "day") {
+            try {
+              ev.preventDefault();
+            } catch (_) {}
+            var iso = String(btn.getAttribute("data-iu-silver-mini-iso") || "");
+            if (!iso) return;
+            closeSilverMiniCalendar();
+            applyDaySelection(iso, null);
+            return;
+          }
+          if (act === "prev") {
+            try {
+              ev.preventDefault();
+            } catch (_) {}
+            if (silverMiniCalMonth <= 0) {
+              silverMiniCalMonth = 11;
+              silverMiniCalYear--;
+            } else {
+              silverMiniCalMonth--;
+            }
+            paintSilverMiniCalendar();
+            return;
+          }
+          if (act === "next") {
+            try {
+              ev.preventDefault();
+            } catch (_) {}
+            if (silverMiniCalMonth >= 11) {
+              silverMiniCalMonth = 0;
+              silverMiniCalYear++;
+            } else {
+              silverMiniCalMonth++;
+            }
+            paintSilverMiniCalendar();
+            return;
+          }
+          if (act === "back") {
+            try {
+              ev.preventDefault();
+            } catch (_) {}
+            closeSilverMiniCalendar();
+            renderSaveDayRow();
+            return;
+          }
+        },
+        false
+      );
     }
 
     var SHEET_KIND = "";
@@ -33428,6 +33558,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function hideGuidedChrome() {
       closeGuidedSheet();
+      try {
+        closeSilverMiniCalendar();
+      } catch (_) {}
       try {
         closeSilverGuidedTimeFallback();
       } catch (_) {}
@@ -34033,7 +34166,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function startSaveFlow() {
       closeGuidedSheet();
       try {
-        window.__iuSilverDatePickerProof = {};
+        closeSilverMiniCalendar();
       } catch (_) {}
       silverCalUiState = SILVER_CAL_UI_GUIDED_SAVE;
       setSilverCalUiAttr();
@@ -34086,7 +34219,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-date") {
         ev.preventDefault();
-        openSilverGuidedNativeDatePicker();
+        showSilverMiniCalendar();
         return;
       }
       if (act === "gd-pickday") {
@@ -34196,21 +34329,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch (_) {}
     }
 
-    function onDatePicked() {
-      var dp = datePickEl();
-      if (!dp || !dp.value) return;
-      if (GC.mode !== "guided_save") return;
-      applyDaySelection(dp.value, null);
-      try {
-        var inp = document.getElementById("iuSilverHomeInput");
-        noteSilverDatePickerProof({
-          date_selected: true,
-          input_updated: true,
-          value_example: inp ? String(inp.value || "").trim() : ""
-        });
-      } catch (_) {}
-    }
-
     function onMindMenuCapture(ev) {
       if (!narrow()) return;
       var b = ev.target && ev.target.closest ? ev.target.closest(".iu-mmTopTool--cal") : null;
@@ -34302,11 +34420,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (mm && !mm.__iuCalGuidedCap) {
         mm.__iuCalGuidedCap = 1;
         mm.addEventListener("click", onMindMenuCapture, true);
-      }
-      var dp = datePickEl();
-      if (dp && !dp.__iuCalDateHook) {
-        dp.__iuCalDateHook = 1;
-        dp.addEventListener("change", onDatePicked);
       }
       var guidedSheetUiWired = 0;
       function wireGuidedSheetUi() {
