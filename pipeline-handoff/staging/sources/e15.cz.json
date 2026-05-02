@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-02T04:04:54.905509Z",
+  "ingestedAt": "2026-05-02T04:39:42.562106Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Češka, která přinesla světu lék na rakovinu prostaty, má nového soupeře",
+      "url": "https://www.e15.cz/domaci/ceska-ktera-prinesla-svetu-lek-na-rakovinu-prostaty-ma-noveho-soupere-1431800",
+      "dt": "2026-05-02T04:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "lék",
+        "nového",
+        "prostaty",
+        "přinesla",
+        "rakovinu",
+        "soupeře",
+        "světu",
+        "češka"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -420,6 +445,33 @@
     {
       "section": "finance",
       "contentType": "article",
+      "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
+      "url": "https://www.e15.cz/byznys/operace-cisty-rez-aneb-jak-ovladnout-cez-bez-pravnich-valek-a-s-miliardami-v-kapse-1432512",
+      "dt": "2026-05-01T03:30:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aneb",
+        "kapse",
+        "miliardami",
+        "operace",
+        "ovládnout",
+        "právních",
+        "válek",
+        "čez",
+        "čistý",
+        "řez"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
       "title": "Oblíbený diskont v Česku zavírá prodejny. První obchod oznámil konec velkým výprodejem",
       "url": "https://www.e15.cz/byznys/obchod-a-sluzby/oblibeny-diskont-v-cesku-zavira-prodejny-prvni-obchod-oznamil-konec-velkym-vyprodejem-1432467",
       "dt": "2026-05-01T03:30:00Z",
@@ -437,33 +489,6 @@
         "výprodejem",
         "zavírá",
         "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Operace čistý řez aneb jak ovládnout ČEZ bez právních válek a s miliardami v kapse",
-      "url": "https://www.e15.cz/byznys/operace-cisty-rez-aneb-jak-ovladnout-cez-bez-pravnich-valek-a-s-miliardami-v-kapse-1432512",
-      "dt": "2026-05-01T03:30:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "aneb",
-        "kapse",
-        "miliardami",
-        "operace",
-        "ovládnout",
-        "právních",
-        "válek",
-        "čez",
-        "čistý",
-        "řez"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1055,34 +1080,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "V Japonsku vidím velkou příležitost, líčí se tam i muži, říká spolumajitelka Dermacolu Komárová",
-      "url": "https://www.e15.cz/videoporady/flow/v-japonsku-vidim-velkou-prilezitost-lici-se-tam-i-muzi-rika-spolumajitelka-dermacolu-komarova-1432473",
-      "dt": "2026-04-30T04:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "dermacolu",
-        "japonsku",
-        "komárová",
-        "líčí",
-        "muži",
-        "příležitost",
-        "spolumajitelka",
-        "tam",
-        "velkou",
-        "vidím",
-        "říká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1093,7 +1090,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 52968,
+      "bytes": 53015,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1130,10 +1127,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 36,
+          "zdravi": 1,
+          "finance": 35,
           "zpravy": 4
         },
         "drop_counts": {
@@ -1146,6 +1144,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Češka, která přinesla světu lék na rakovinu prostaty, má nového soupeře",
+            "publishedAt": "2026-05-02T04:00:00Z"
+          },
           {
             "title": "Založení školy bylo peklo, tlaky úředníků byly horší než v devadesátkách, popisuje šéfka Dermacolu Komárová",
             "publishedAt": "2026-05-02T03:30:00Z"
@@ -1173,10 +1175,6 @@
           {
             "title": "Uber chce konkurovat Bookingu a Airbnb. Nově umožní rezervovat stovky tisíc hotelů",
             "publishedAt": "2026-05-01T12:30:00Z"
-          },
-          {
-            "title": "Největším americkým ropným společnostem kvůli válce na Blízkém východě prudce klesl zisk",
-            "publishedAt": "2026-05-01T12:27:00Z"
           }
         ]
       }

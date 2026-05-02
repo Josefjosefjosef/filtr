@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceska-justice.cz",
-  "ingestedAt": "2026-05-02T04:04:54.905509Z",
+  "ingestedAt": "2026-05-02T04:39:42.562106Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Kolovrat jako náhrada hákového kříže? Policie podle soudu mohla vzít muži DNA",
+      "url": "https://www.ceska-justice.cz/2026/05/muzi-s-kolovratem-vzala-policie-dna-v-hruznem-kontextu-treti-rise-je-to-spravne-rika-soud/",
+      "dt": "2026-05-02T04:30:00Z",
+      "media_raw": "Česká justice",
+      "media_norm": "Česká justice",
+      "tokens": [
+        "dna",
+        "hákového",
+        "jako",
+        "kolovrat",
+        "kříže",
+        "muži",
+        "náhrada",
+        "podle",
+        "policie",
+        "soudu",
+        "vzít"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_ceskajustice",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "ceska-justice.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -245,33 +273,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "ceska-justice.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Právní stát i dostupné bydlení. Advokátka Šípová chce obhajovat senátorský post",
-      "url": "https://www.ceska-justice.cz/2026/04/exekuce-bydleni-advokatka-sipova/",
-      "dt": "2026-04-29T16:01:00Z",
-      "media_raw": "Česká justice",
-      "media_norm": "Česká justice",
-      "tokens": [
-        "advokátka",
-        "bydlení",
-        "chce",
-        "dostupné",
-        "obhajovat",
-        "post",
-        "právní",
-        "senátorský",
-        "stát",
-        "šípová"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_ceskajustice",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "ceska-justice.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.ceska-justice.cz/feed/",
-      "bytes": 98451,
+      "bytes": 101956,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T13:07:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kolovrat jako náhrada hákového kříže? Policie podle soudu mohla vzít muži DNA",
+            "publishedAt": "2026-05-02T04:30:00Z"
+          },
           {
             "title": "Bosenskosrbský válečný zločinec Mladić chce z vězení. Blíží se jeho smrt, tvrdí právníci",
             "publishedAt": "2026-05-01T13:07:43Z"
@@ -361,10 +366,6 @@
           {
             "title": "Žena nemohla ani na záchod. Nejvyšší soud uzavřel případ dozorců jako mučení",
             "publishedAt": "2026-04-30T08:18:29Z"
-          },
-          {
-            "title": "Dva posudky k dotacím Agrofertu. Proč právníci došli k odlišným závěrům?",
-            "publishedAt": "2026-04-30T06:41:45Z"
           }
         ]
       }

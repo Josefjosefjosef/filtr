@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-02T04:04:54.905509Z",
+  "ingestedAt": "2026-05-02T04:39:42.562106Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňákovi se Zachou skončila sezona. Dobeš porážku Montrealu neodvrátil",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-pastrnakovi-se-zachou-skoncila-sezona-dobes-porazku-montrealu-neodvratil-5446797",
+      "dt": "2026-05-02T04:10:51Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "dobeš",
+        "montrealu",
+        "neodvrátil",
+        "pastrňákovi",
+        "porážku",
+        "sezona",
+        "skončila",
+        "zachou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -745,32 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Návrat po šesti letech. Ostrava bude opět hostit světový šampionát parahokejistů",
-      "url": "https://www.sport.cz/clanek/hokej-navrat-po-sesti-letech-ostrava-bude-opet-hostit-svetovy-sampionat-parahokejistu-5446518",
-      "dt": "2026-05-01T10:22:59Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "hostit",
-        "letech",
-        "návrat",
-        "opět",
-        "ostrava",
-        "parahokejistů",
-        "světový",
-        "šampionát",
-        "šesti"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -781,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40769,
+      "bytes": 40949,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -818,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T21:50:48Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:10:51Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -833,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňákovi se Zachou skončila sezona. Dobeš porážku Montrealu neodvrátil",
+            "publishedAt": "2026-05-02T04:10:51Z"
+          },
           {
             "title": "Siniaková si v Madridu zahraje o další titul",
             "publishedAt": "2026-05-01T21:50:48Z"
@@ -860,10 +863,6 @@
           {
             "title": "Program MS v hokeji do 18 let 2026: Čeští mladíci U18 na šampionátu v Bratislavě a Trenčíně",
             "publishedAt": "2026-04-27T21:03:00Z"
-          },
-          {
-            "title": "Nymburk vyhrál suverénně i druhý duel s Ostravou",
-            "publishedAt": "2026-05-01T15:45:37Z"
           }
         ]
       }
