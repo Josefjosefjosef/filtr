@@ -33351,7 +33351,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         "</div>" +
         '<button type="button" class="iuSilverMiniCal__nav" data-iu-silver-mini-cal="next" aria-label="Dal\u0161\u00ed m\u011bs\u00edc">\u203a</button>' +
         "</div>" +
-        '<div class="iuSilverMiniCal__wd" aria-hidden="true">Po \u00dat St \u010ct P\u00e1 So Ne</div>' +
+        '<div class="iuSilverMiniCal__weekdays iu-silver-mini-calendar-weekdays" aria-hidden="true">' +
+        '<span class="iuSilverMiniCal__wlab">Po</span>' +
+        '<span class="iuSilverMiniCal__wlab">\u00dat</span>' +
+        '<span class="iuSilverMiniCal__wlab">St</span>' +
+        '<span class="iuSilverMiniCal__wlab">\u010ct</span>' +
+        '<span class="iuSilverMiniCal__wlab">P\u00e1</span>' +
+        '<span class="iuSilverMiniCal__wlab">So</span>' +
+        '<span class="iuSilverMiniCal__wlab">Ne</span>' +
+        "</div>" +
         '<div class="iuSilverMiniCal__grid">';
       var idx = 0;
       var i;
