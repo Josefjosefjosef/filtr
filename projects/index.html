@@ -713,9 +713,6 @@ style-src 'self' 'unsafe-inline' https:;
       .iuSilverHomeChips--timeGrid{
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
-      .iuSilverHomeChips--pickGrid{
-        grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-      }
       .iuSilverHomeChips--afterTitle{
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -916,28 +913,10 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHomeChips button.iuSilverHomeChip:not(.iu-silver-quickdate-btn){
           font-size: 16px;
         }
-        /* P0 Silver: quick-date row — jedna vrstva (oranžový outline + clamp 18–21px); výška řádku = cal tlačítka (46px) kvůli CLS při přepnutu z entry gridu. */
-        #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn{
-          background: transparent !important;
-          border: 1px solid rgba(255, 122, 0, 0.55) !important;
-          color: rgba(255, 122, 0, 0.75) !important;
-          font-size: clamp(18px, 0.35rem + 3.55vw, 21px) !important;
-          font-weight: 600 !important;
-          line-height: 1.2 !important;
-          white-space: nowrap !important;
-          box-shadow: none !important;
-          min-height: 46px !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn:active{
-          background: rgba(255, 122, 0, 0.08) !important;
-          color: #ff7a00 !important;
-        }
-        /* P0 CLS: stejná min. výška slotu pro cal entry (2+1) i quick-date (2×2) — žádný skok výšky při přepnutí mezi nimi. */
+        /* P0 CLS: stejná min. výška slotu pro cal entry (2+1) i quick-date (2×2) i day-picker — žádný skok výšky při přepnutí mezi nimi. Oranžový styl quick-date + dny: assets/app.css (.iu-silver-btn-orange). */
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow,
-        #iuSilverHomeChips.iuSilverHomeChips--dayRow{
+        #iuSilverHomeChips.iuSilverHomeChips--dayRow,
+        #iuSilverHomeChips.iu-silver-daypicker{
           min-height: 120px !important;
           box-sizing: border-box !important;
         }

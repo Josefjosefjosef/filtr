@@ -21643,3 +21643,76 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     box-shadow: none !important;
   }
 }
+
+/* P0 Silver (≤1024px): sdílená oranžová tlačítka quick-date + výběr dne v týdnu; guard .iu-silver-daypicker + .iu-silver-back-btn. Vysoká specificita vs. inline #iuSilverGuidedComposerCssGuard. */
+@media (max-width: 1024px){
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker{
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-content: center !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+    scrollbar-width: auto !important;
+  }
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker .iu-silver-back-btn,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker .iu-silver-back-btn{
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-bottom: 8px !important;
+    box-sizing: border-box !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    min-height: 46px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker button.iu-silver-btn-orange,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker button.iu-silver-btn-orange,
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-btn-orange,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-btn-orange{
+    background: transparent !important;
+    border: 2px solid rgba(255, 140, 0, 0.6) !important;
+    color: #ff8c00 !important;
+    border-radius: 14px !important;
+    font-weight: 600 !important;
+    font-size: clamp(18px, 0.35rem + 3.55vw, 21px) !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    box-shadow: none !important;
+    min-height: 46px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 1 calc(50% - 3px) !important;
+    max-width: calc(50% - 3px) !important;
+    min-width: 0 !important;
+    width: auto !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker button.iu-silver-btn-orange:active,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iu-silver-daypicker button.iu-silver-btn-orange:active,
+  #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-btn-orange:active,
+  #iuMobileSilverSlot #silver-slot #iuSilverHeroPremium #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-btn-orange:active{
+    background: rgba(255, 140, 0, 0.08) !important;
+    color: #ff7a00 !important;
+  }
+}

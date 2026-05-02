@@ -33774,27 +33774,30 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var dDyn = new Date(isoDyn + "T12:00:00");
       var dynLabel = weekdayV(dDyn) + " \u25be";
       c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dnes">dnes</button>' +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-zitra">zítra</button>' +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn iu-silver-btn-orange" data-iu-silver-guided="gd-dnes">dnes</button>' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn iu-silver-btn-orange" data-iu-silver-guided="gd-zitra">zítra</button>' +
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn iu-silver-btn-orange" data-iu-silver-guided="gd-dynamic" data-iu-silver-guided-dyn="' +
         isoDyn +
         '">' +
         dynLabel +
         "</button>" +
-        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn" data-iu-silver-guided="gd-date">datum \u25be</button>';
+        '<button type="button" class="iuSilverHomeChip iu-silver-quickdate-btn iu-silver-btn-orange" data-iu-silver-guided="gd-date">datum \u25be</button>';
     }
 
     function renderDynamicDayMenu(isoStart) {
       var c = chipsEl();
       if (!c) return;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--pickGrid";
+      clearChipsScrollStyle();
+      c.hidden = false;
+      c.className = "iuSilverHomeChips iu-silver-daypicker";
       var d0 = new Date(String(isoStart) + "T12:00:00");
       var names = weekdayNameList(d0);
-      var html = "";
+      var html =
+        '<button type="button" class="iuSilverHomeChip iu-silver-back-btn" data-iu-silver-guided="gd-daypicker-back">Zp\u011bt</button>';
       for (var i = 0; i < names.length; i++) {
         var iso = toIsoFromDate(new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i));
         html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-pickday" data-iu-silver-guided-iso="' +
+          '<button type="button" class="iuSilverHomeChip iu-silver-btn-orange" data-iu-silver-guided="gd-pickday" data-iu-silver-guided-iso="' +
           iso +
           '">' +
           names[i] +
@@ -34240,6 +34243,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         ev.preventDefault();
         var iso0 = String(x.getAttribute("data-iu-silver-guided-dyn") || addDaysIso(todayIso(), 2));
         renderDynamicDayMenu(iso0);
+        return;
+      }
+      if (act === "gd-daypicker-back") {
+        ev.preventDefault();
+        renderSaveDayRow();
         return;
       }
       if (act === "gd-date") {
