@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-02T15:00:33.115881Z",
+  "ingestedAt": "2026-05-02T16:15:27.857820Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mstí se Trump německému kancléři?",
+      "url": "https://profitonline.cz/msti-se-trump-nemeckemu-kancleri/",
+      "dt": "2026-05-02T15:05:20Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "kancléři",
+        "mstí",
+        "německému",
+        "trump"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -270,38 +291,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "PKF APOGEO představuje nové logo a vizuální identitu. Navazuje tak na své mezinárodní členství a slaví 25 let na trhu",
-      "url": "https://profitonline.cz/pkf-apogeo-predstavuje-nove-logo-a-vizualni-identitu-navazuje-tak-na-sve-mezinarodni-clenstvi-a-slavi-25-let-na-trhu/",
-      "dt": "2026-04-29T22:00:47Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "apogeo",
-        "identitu",
-        "let",
-        "logo",
-        "mezinárodní",
-        "navazuje",
-        "nové",
-        "pkf",
-        "představuje",
-        "slaví",
-        "své",
-        "tak",
-        "trhu",
-        "vizuální",
-        "členství"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -312,7 +301,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18975,
+      "bytes": 18478,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -349,7 +338,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:00:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T15:05:20Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -365,6 +354,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mstí se Trump německému kancléři?",
+            "publishedAt": "2026-05-02T15:05:20Z"
+          },
           {
             "title": "Češi přestali spořit",
             "publishedAt": "2026-05-02T10:00:45Z"
@@ -392,10 +385,6 @@
           {
             "title": "Centrální banky sazby drží beze změny, zatím",
             "publishedAt": "2026-04-30T20:40:24Z"
-          },
-          {
-            "title": "Duben na akciových trzích: Index S&P500 opět na rekordu",
-            "publishedAt": "2026-04-30T18:00:33Z"
           }
         ]
       }

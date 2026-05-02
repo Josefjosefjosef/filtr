@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-02T15:00:33.115881Z",
+  "ingestedAt": "2026-05-02T16:15:27.857820Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Varování nepomohla: V národním parku České Švýcarsko hoří les, oheň již zasáhl plochu devět kilometrů čtverečních",
+      "url": "https://domaci.hn.cz/c1-67872980-varovani-nepomohla-v-narodnim-parku-ceske-svycarsko-hori-les-ohen-zasahl-odhadem-deset-hektaru",
+      "dt": "2026-05-02T14:58:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "devět",
+        "hoří",
+        "již",
+        "kilometrů",
+        "les",
+        "nepomohla",
+        "národním",
+        "oheň",
+        "parku",
+        "plochu",
+        "varování",
+        "zasáhl",
+        "české",
+        "čtverečních",
+        "švýcarsko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1154,37 +1186,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Soláry jako mramor, střešní tašky nebo dřevo. Rodinná firma z Kopřivnice umí panely, které obstojí i u památkářů",
-      "url": "https://archiv.hn.cz/c1-67872120-solary-jako-mramor-stresni-tasky-nebo-drevo-rodinna-firma-z-koprivnice-umi-panely-ktere-obstoji-i-u-pamatkaru",
-      "dt": "2026-04-29T16:42:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dřevo",
-        "firma",
-        "jako",
-        "kopřivnice",
-        "mramor",
-        "nebo",
-        "obstojí",
-        "památkářů",
-        "panely",
-        "rodinná",
-        "soláry",
-        "střešní",
-        "tašky",
-        "umí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1195,7 +1196,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184260,
+      "bytes": 184359,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1232,7 +1233,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T12:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T14:58:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 35,
@@ -1250,6 +1251,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Varování nepomohla: V národním parku České Švýcarsko hoří les, oheň již zasáhl plochu devět kilometrů čtverečních",
+            "publishedAt": "2026-05-02T14:58:00Z"
+          },
           {
             "title": "Google, Microsoft, Amazon i Meta skvěle vydělávají. Investory ale víc zajímá, kdo zaplatí další kolo AI závodů",
             "publishedAt": "2026-05-02T12:57:00Z"
@@ -1277,10 +1282,6 @@
           {
             "title": "Londýn se snaží obnovit svou pověst finanční velmoci. Tamní burza soupeří s USA i EU, nové firmy hledá také v Česku",
             "publishedAt": "2026-04-30T15:08:00Z"
-          },
-          {
-            "title": "Část D8 přes České středohoří získala 14 let po otevření kolaudaci. Okolo zbývající trasy už ale zase krouží Děti Země",
-            "publishedAt": "2026-04-30T14:27:00Z"
           }
         ]
       }

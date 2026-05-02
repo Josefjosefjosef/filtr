@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T15:00:33.115881Z",
+  "ingestedAt": "2026-05-02T16:15:27.857820Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Základová deska je na místě! Jak Kanaďané budují první reaktor po 30 letech",
+      "url": "https://ekonomickydenik.cz/kanadane-buduji-prvni-reaktor-po-30-letech/",
+      "dt": "2026-05-02T15:42:22Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "budují",
+        "deska",
+        "kanaďané",
+        "letech",
+        "místě",
+        "první",
+        "reaktor",
+        "základová"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -774,32 +799,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Dva posudky k dotacím Agrofertu. Proč právníci došli k odlišným závěrům?",
-      "url": "https://ekonomickydenik.cz/dva-posudky-dotace-agrofert-odlisne-zavery/",
-      "dt": "2026-04-30T07:10:29Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "agrofertu",
-        "dotacím",
-        "došli",
-        "dva",
-        "odlišným",
-        "posudky",
-        "proč",
-        "právníci",
-        "závěrům"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -810,7 +809,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71081,
+      "bytes": 70991,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -847,7 +846,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T13:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T15:42:22Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -864,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Základová deska je na místě! Jak Kanaďané budují první reaktor po 30 letech",
+            "publishedAt": "2026-05-02T15:42:22Z"
+          },
           {
             "title": "Taková transakční rodinka. Synové Trumpa zbohatli na investici do těžby v Kazachstánu",
             "publishedAt": "2026-05-02T13:30:00Z"
@@ -891,10 +894,6 @@
           {
             "title": "Meta 180 miliard: Český zbrojní průmysl drtí rekordy a mění se v ekonomický motor státu",
             "publishedAt": "2026-05-02T07:45:19Z"
-          },
-          {
-            "title": "Digitální peněženka narazila. Česko nestíhá termín, chybí dodavatel i zákon",
-            "publishedAt": "2026-05-02T04:30:00Z"
           }
         ]
       }
