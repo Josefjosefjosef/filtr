@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-02T05:50:23.498160Z",
+  "ingestedAt": "2026-05-02T06:25:12.485388Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Lízátka z mateřského mléka i šlehaný morek. Metoda české mámy vyvolala vlnu úžasu i diskusí",
+      "url": "https://magazin.aktualne.cz/lizatka-z-materskeho-mleka-a-slehany-morek-metoda-ceske-maminky-vyvolava-uzas-i-kontroverzi/r~aaa29a21bb615d4c6214f684bd5c87d8/",
+      "dt": "2026-03-15T08:34:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "diskusí",
+        "lízátka",
+        "mateřského",
+        "metoda",
+        "mléka",
+        "morek",
+        "mámy",
+        "vlnu",
+        "vyvolala",
+        "úžasu",
+        "české",
+        "šlehaný"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -498,30 +527,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Švédsko 3:4. Švédové rozhodli minutu před koncem prodloužení",
-      "url": "https://sport.aktualne.cz/hokej/cesko-svedsko-medaile-po-12-letech-je-blizko-svedy-porazili-cesi-uz-ve-skupine/r~aaa297fbfb6c093cfa3f1815cc27d00c/",
-      "dt": "2026-05-01T16:25:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "koncem",
-        "minutu",
-        "prodloužení",
-        "rozhodli",
-        "česko",
-        "švédové",
-        "švédsko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -532,7 +537,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20752,
+      "bytes": 20949,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -572,8 +577,8 @@
         "raw_feed_latest_publishedAt": "2026-05-02T05:35:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 10,
-          "sport": 5,
+          "zpravy": 11,
+          "sport": 4,
           "other": 2,
           "finance": 3
         },
@@ -587,6 +592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Lízátka z mateřského mléka i šlehaný morek. Metoda české mámy vyvolala vlnu úžasu i diskusí",
+            "publishedAt": "2026-03-15T08:34:00Z"
+          },
           {
             "title": "USA rozšířily sankce proti Kubě, ta opatření důrazně odmítá",
             "publishedAt": "2026-05-02T05:35:00Z"
@@ -614,10 +623,6 @@
           {
             "title": "Herci a scénáře vytvořené AI nebudou mít šanci ucházet se o Oscary",
             "publishedAt": "2026-05-02T04:53:00Z"
-          },
-          {
-            "title": "Konvoj s velrybou Timmy vplul do Severního moře. Nabral směr Norsko",
-            "publishedAt": "2026-05-01T13:55:00Z"
           }
         ]
       }

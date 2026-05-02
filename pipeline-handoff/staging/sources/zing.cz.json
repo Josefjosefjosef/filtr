@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-02T05:50:23.498160Z",
+  "ingestedAt": "2026-05-02T06:25:12.485388Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "WoW 2? Bývalý šéf Blizzardu by byl rád za radikální restart",
+      "url": "https://zing.cz/article/wow-2-byvaly-sef-blizzardu-by-byl-rad-za-radikalni-restart",
+      "dt": "2026-05-02T06:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "blizzardu",
+        "bývalý",
+        "radikální",
+        "restart",
+        "rád",
+        "wow",
+        "šéf"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -977,29 +1001,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Steam Controller odhalil datum uvedení i cenu",
-      "url": "https://zing.cz/article/steam-controller-odhalil-datum-uvedeni-i-cenu",
-      "dt": "2026-04-27T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "cenu",
-        "controller",
-        "datum",
-        "odhalil",
-        "steam",
-        "uvedení"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1010,7 +1011,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125315,
+      "bytes": 125323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1047,7 +1048,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T06:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 38,
@@ -1063,6 +1064,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "WoW 2? Bývalý šéf Blizzardu by byl rád za radikální restart",
+            "publishedAt": "2026-05-02T06:00:00Z"
+          },
           {
             "title": "Únik Injustice 3: Pokračování DC mlátičky je zřejmě ve vývoji",
             "publishedAt": "2026-05-02T04:00:00Z"
@@ -1090,10 +1095,6 @@
           {
             "title": "Nacon uspořádá navzdory finančním problémům již příští týden herní prezentaci",
             "publishedAt": "2026-05-01T10:00:00Z"
-          },
-          {
-            "title": "Star Wars: Galactic Racer odhalilo oficiální datum vydání i cenu",
-            "publishedAt": "2026-05-01T08:00:00Z"
           }
         ]
       }

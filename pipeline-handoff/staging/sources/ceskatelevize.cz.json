@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T05:50:23.498160Z",
+  "ingestedAt": "2026-05-02T06:25:12.485388Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Tohle je první mapa čichu. Vytvořili ji na Harvardu",
+      "url": "https://ct24.ceskatelevize.cz/clanek/veda/tohle-je-prvni-mapa-cichu-vytvorili-ji-na-harvardu-372940",
+      "dt": "2026-05-02T06:00:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "harvardu",
+        "mapa",
+        "první",
+        "tohle",
+        "vytvořili",
+        "čichu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,33 +752,6 @@
         "rostoucímu",
         "toto",
         "čelí"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Případ údajného obřího podvodu míří k soudu, škoda přesahuje půl miliardy",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/pripad-udajneho-obriho-podvodu-miri-k-soudu-skoda-presahuje-pul-miliardy-372992",
-      "dt": "2026-04-30T19:26:37Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "miliardy",
-        "míří",
-        "obřího",
-        "podvodu",
-        "přesahuje",
-        "případ",
-        "půl",
-        "soudu",
-        "údajného",
-        "škoda"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1499,7 +1495,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43560,
+      "bytes": 43107,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1559,11 +1555,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T05:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T06:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 29,
-          "other": 1
+          "other": 2,
+          "zpravy": 28
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1575,6 +1571,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Tohle je první mapa čichu. Vytvořili ji na Harvardu",
+            "publishedAt": "2026-05-02T06:00:00Z"
+          },
           {
             "title": "Šéfové městských policií se bojí odlivu strážníků do jiných sborů. Kvůli platům",
             "publishedAt": "2026-05-02T05:30:00Z"
@@ -1602,10 +1602,6 @@
           {
             "title": "Těhotných s rakovinou přibývá. Expedice Dva životy nabízí podporu i informace",
             "publishedAt": "2026-05-01T18:20:56Z"
-          },
-          {
-            "title": "Juchelka chce upravit superdávku. Změny mají cílit třeba na samoživitelky",
-            "publishedAt": "2026-05-01T18:06:32Z"
           }
         ]
       }
@@ -1711,7 +1707,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77142,
+      "bytes": 77204,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
