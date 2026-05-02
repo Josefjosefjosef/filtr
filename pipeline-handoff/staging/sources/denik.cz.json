@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-02T17:59:59.010579Z",
+  "ingestedAt": "2026-05-02T19:15:04.390871Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Alkohol, křik a výhrůžky: Letadlo Easyjet muselo kvůli opilcům předčasně přistát",
+      "url": "https://www.denik.cz/staty-mimo-eu/easyjet-gatwick-antalya-opili-na-palube.html",
+      "dt": "2026-05-02T18:05:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "alkohol",
+        "easyjet",
+        "kvůli",
+        "křik",
+        "letadlo",
+        "muselo",
+        "opilcům",
+        "předčasně",
+        "přistát",
+        "výhrůžky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -620,35 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Jaký byl květen 1986: Lidé hltali nový Dietlův seriál, Regec oblékl žlutý trikot",
-      "url": "https://www.denik.cz/historie/jaky-byl-kveten-1986-v-ceskoslovensku-cernobyl-media.html",
-      "dt": "2026-05-02T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "1986",
-        "dietlův",
-        "hltali",
-        "jaký",
-        "květen",
-        "lidé",
-        "nový",
-        "oblékl",
-        "regec",
-        "seriál",
-        "trikot",
-        "žlutý"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27810,
+      "bytes": 27251,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-02T17:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T18:05:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Alkohol, křik a výhrůžky: Letadlo Easyjet muselo kvůli opilcům předčasně přistát",
+            "publishedAt": "2026-05-02T18:05:00Z"
+          },
           {
             "title": "Experti: Dívky jsme učili, jak neotěhotnět. Dnes mají vědět, jak mít dítě včas",
             "publishedAt": "2026-05-02T17:00:00Z"
@@ -738,10 +740,6 @@
           },
           {
             "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
-            "publishedAt": "2026-05-02T14:00:00Z"
-          },
-          {
-            "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
             "publishedAt": "2026-05-02T14:00:00Z"
           }
         ]
