@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-02T11:29:39.260609Z",
+  "ingestedAt": "2026-05-02T12:05:03.475706Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Množitel národa? Babiš dnešní mladé ženy asi nerozrodí",
+      "url": "https://www.epenize.eu/mnozitel-naroda-babis-dnesni-mlade-zeny-asi-nerozrodi/",
+      "dt": "2026-05-02T10:49:39Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "asi",
+        "babiš",
+        "dnešní",
+        "mladé",
+        "množitel",
+        "nerozrodí",
+        "národa",
+        "ženy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -469,31 +494,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Bartoš na síti: Agrofert je ve střetu zájmů a na dotace nemá nárok",
-      "url": "https://www.epenize.eu/bartos-na-siti-agrofert-je-ve-stretu-zajmu-a-na-dotace-nema-narok/",
-      "dt": "2026-04-22T08:30:11Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "agrofert",
-        "bartoš",
-        "dotace",
-        "nemá",
-        "nárok",
-        "střetu",
-        "síti",
-        "zájmů"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 104394,
+      "bytes": 104151,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,7 +541,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T23:00:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:49:39Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -557,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Množitel národa? Babiš dnešní mladé ženy asi nerozrodí",
+            "publishedAt": "2026-05-02T10:49:39Z"
+          },
           {
             "title": "Greeneová věští konec GOP po fiasku se špehováním",
             "publishedAt": "2026-05-01T23:00:35Z"
@@ -584,10 +588,6 @@
           {
             "title": "Když se diplomacie změní v teleshopping na rodokmeny",
             "publishedAt": "2026-04-28T23:00:51Z"
-          },
-          {
-            "title": "ODS prý vymlčela Klause. Kupka udělal ze Zahradila kašpárka",
-            "publishedAt": "2026-04-28T06:26:37Z"
           }
         ]
       }

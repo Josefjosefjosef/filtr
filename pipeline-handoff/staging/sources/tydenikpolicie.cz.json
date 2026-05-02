@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-02T11:29:39.260609Z",
+  "ingestedAt": "2026-05-02T12:05:03.475706Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Dopravu na dálnici D1 komplikovala na čarodějnice nehoda dvou osobních vozů a kamionu",
+      "url": "https://tydenikpolicie.cz/dopravu-na-dalnici-d1-komplikovala-na-carodejnice-nehoda-dvou-osobnich-vozu-a-kamionu/",
+      "dt": "2026-05-02T11:28:45Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "dopravu",
+        "dvou",
+        "dálnici",
+        "kamionu",
+        "komplikovala",
+        "nehoda",
+        "osobních",
+        "vozů",
+        "čarodějnice"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -237,32 +263,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Chtěl výhodně investovat. Naletěl podvodníkovi a přišel o téměř 1,5 milionu korun",
-      "url": "https://tydenikpolicie.cz/chtel-vyhodne-investovat-naletel-podvodnikovi-a-prisel-o-temer-15-milionu-korun/",
-      "dt": "2026-05-01T18:02:40Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chtěl",
-        "investovat",
-        "korun",
-        "milionu",
-        "naletěl",
-        "podvodníkovi",
-        "přišel",
-        "téměř",
-        "výhodně"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -273,7 +273,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16460,
+      "bytes": 16332,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -310,7 +310,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T11:08:23Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T11:28:45Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -325,6 +325,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dopravu na dálnici D1 komplikovala na čarodějnice nehoda dvou osobních vozů a kamionu",
+            "publishedAt": "2026-05-02T11:28:45Z"
+          },
           {
             "title": "Požár lesa v Beskydech likvidovalo patnáct jednotek hasičů, nasazen byl policejní vrtulník",
             "publishedAt": "2026-05-02T11:08:23Z"
@@ -352,10 +356,6 @@
           {
             "title": "Policisté pátrají po vězni, který utekl z věznice v Jiřicích",
             "publishedAt": "2026-05-02T08:07:59Z"
-          },
-          {
-            "title": "Centrem Prahy prošel Prvomájový pochod proti fašismu. Policisté museli zasahovat kvůli střetům s jeho odpůrci",
-            "publishedAt": "2026-05-02T07:55:04Z"
           }
         ]
       }

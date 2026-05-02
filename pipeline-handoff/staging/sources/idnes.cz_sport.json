@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T11:29:39.260609Z",
+  "ingestedAt": "2026-05-02T12:05:03.475706Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi. Bylo mu 59 let",
+      "url": "https://www.idnes.cz/sport/formule/zemrel-byvaly-pilot-f1-a-uspesny-paralympionik-zanardi.A260502_111210_formule_ald",
+      "dt": "2026-05-02T11:34:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bývalý",
+        "let",
+        "paralympionik",
+        "pilot",
+        "zanardi",
+        "zemřel",
+        "úspěšný"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -104,31 +128,6 @@
         "tým",
         "vejmelka",
         "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ve věku 59 let zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi",
-      "url": "https://www.idnes.cz/sport/formule/zemrel-byvaly-pilot-f1-a-uspesny-paralympionik-zanardi.A260502_111210_formule_ald",
-      "dt": "2026-05-02T09:12:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bývalý",
-        "let",
-        "paralympionik",
-        "pilot",
-        "věku",
-        "zanardi",
-        "zemřel",
-        "úspěšný"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -346,20 +345,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Lakers jsou čtvrtfinále. Detroit po skvělém obratu vyrovnal, uspělo i Toronto",
+      "title": "Lakers jsou ve druhém kole. Detroit po skvělém obratu vyrovnal, uspělo i Toronto",
       "url": "https://www.idnes.cz/sport/basket/lakers-postoupili-do-ctvrtfinale-nba-detroit-s-torontem-si-vynutily-sedmy-zapas.A260502_075719_sport-basket_ald",
       "dt": "2026-05-02T06:17:56Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
         "detroit",
+        "druhém",
+        "kole",
         "lakers",
         "obratu",
         "skvělém",
         "toronto",
         "uspělo",
-        "vyrovnal",
-        "čtvrtfinále"
+        "vyrovnal"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -789,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45414,
+      "bytes": 45431,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -826,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T11:34:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +842,10 @@
         },
         "sample_titles": [
           {
+            "title": "Zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi. Bylo mu 59 let",
+            "publishedAt": "2026-05-02T11:34:00Z"
+          },
+          {
             "title": "Klan Kordových se opět rozroste. Sportovní rodinu čeká nový přírůstek",
             "publishedAt": "2026-05-02T10:20:00Z"
           },
@@ -856,10 +860,6 @@
           {
             "title": "Posily z NHL na MS v hokeji: Končí Boston i Vejmelka. Kteří Češi obohatí národní tým?",
             "publishedAt": "2026-05-02T09:37:00Z"
-          },
-          {
-            "title": "Ve věku 59 let zemřel bývalý pilot F1 a úspěšný paralympionik Zanardi",
-            "publishedAt": "2026-05-02T09:12:00Z"
           },
           {
             "title": "Kladno získalo z Budějovic terminátora Přikryla. Za tři roky chyběl jen dvakrát",
