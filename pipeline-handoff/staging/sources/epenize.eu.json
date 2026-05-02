@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-02T22:09:50.463639Z",
+  "ingestedAt": "2026-05-02T23:25:30.794596Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Newsom se snaží porazit Trumpa tím, že ho kopíruje. Průzkumy mu tleskají",
+      "url": "https://www.epenize.eu/newsom-se-snazi-porazit-trumpa-tim-ze-ho-kopiruje-pruzkumy-mu-tleskaji/",
+      "dt": "2026-05-02T23:00:00Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "kopíruje",
+        "newsom",
+        "porazit",
+        "průzkumy",
+        "snaží",
+        "tleskají",
+        "trumpa",
+        "tím"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -469,31 +494,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Virginie řekla Trumpovi NE: Ten opět mluví o ukradených volbách",
-      "url": "https://www.epenize.eu/virginie-rekla-trumpovi-ne-ten-opet-mluvi-o-ukradenych-volbach/",
-      "dt": "2026-04-23T05:41:08Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "mluví",
-        "opět",
-        "ten",
-        "trumpovi",
-        "ukradených",
-        "virginie",
-        "volbách",
-        "řekla"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 104151,
+      "bytes": 102873,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,7 +541,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:49:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T23:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -557,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Newsom se snaží porazit Trumpa tím, že ho kopíruje. Průzkumy mu tleskají",
+            "publishedAt": "2026-05-02T23:00:00Z"
+          },
           {
             "title": "Množitel národa? Babiš dnešní mladé ženy asi nerozrodí",
             "publishedAt": "2026-05-02T10:49:39Z"
@@ -584,10 +588,6 @@
           {
             "title": "Trefný Fiala na síti: Neoficiální klub přátel Kremlu- Rajchl, Zeman, Hamplová",
             "publishedAt": "2026-04-29T14:13:17Z"
-          },
-          {
-            "title": "Když se diplomacie změní v teleshopping na rodokmeny",
-            "publishedAt": "2026-04-28T23:00:51Z"
           }
         ]
       }
