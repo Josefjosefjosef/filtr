@@ -33011,23 +33011,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evs = getEventsInHourSlot(iso, slotH);
+      const hasEvent = evs.length > 0;
       const evHtml = evs.map((ev)=> buildTimelineEventHtml(ev, nearestId)).join("");
       const showInline = state.inline && state.inline.slotHour === slotH;
       const inlineHtml = showInline ? buildInlineEditorHtml() : "";
       const showPad = !showInline;
       const padHtml = showPad ? '<div class="iu-calSlotEmptyPad" data-iu-cal-slot-empty="' + slotH + '" title="Nová událost"></div>' : "";
       const slotSparse = evs.length === 0 && !showInline ? " iu-calHourSlot--sparse" : "";
-      html +=
-        '<div class="iu-calHourSlot' +
+      const slotCls =
+        "iu-calHourSlot" +
         slotSparse +
+        (hasEvent ? " iu-calHourSlot--hasEvents" : "");
+      const hourBtn =
+        hasEvent
+          ? ""
+          : '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
+            slotH +
+            '">' +
+            esc(label) +
+            "</button>";
+      html +=
+        '<div class="' +
+        slotCls +
         '" data-iu-cal-hour-anchor="' +
         slotH +
         '">' +
-        '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
-        slotH +
-        '">' +
-        esc(label) +
-        "</button>" +
+        hourBtn +
         '<div class="iu-calHourSlot__body" data-iu-cal-slot-body="' +
         slotH +
         '">' +
@@ -33052,6 +33061,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function openTimeWheel(initialTime, onApply){
     const tw = document.getElementById("iuCalTimeWheelHost");
     if (!tw) return;
+    const WHEEL_ITEM = 40;
+    const HOUR_COUNT = 24;
+    const MINUTE_STEPS = 12;
     const parts = String(initialTime || "09:00").split(":");
     let h = parseInt(parts[0], 10);
     let m = parseInt(parts[1], 10);
@@ -33061,34 +33073,65 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     m = Math.min(59, Math.max(0, m));
     m = Math.round(m / 5) * 5;
     if (m === 60){ m = 0; h = Math.min(23, h + 1); }
-    let optH = "";
-    for (let x = 0; x <= 23; x++) optH += "<option value=\"" + pad(x) + "\"" + (x === h ? " selected" : "") + ">" + pad(x) + "</option>";
-    let optM = "";
-    for (let x = 0; x < 60; x += 5) optM += "<option value=\"" + pad(x) + "\"" + (x === m ? " selected" : "") + ">" + pad(x) + "</option>";
+    const mi = Math.min(MINUTE_STEPS - 1, Math.max(0, Math.round(m / 5)));
+    let hourInner = '<div class="iu-calTimeWheel__pad" aria-hidden="true"></div>';
+    for (let x = 0; x < HOUR_COUNT; x++) hourInner += '<div class="iu-calTimeWheel__item" role="option">' + pad(x) + "</div>";
+    hourInner += '<div class="iu-calTimeWheel__pad" aria-hidden="true"></div>';
+    let minInner = '<div class="iu-calTimeWheel__pad" aria-hidden="true"></div>';
+    for (let s = 0; s < MINUTE_STEPS; s++) minInner += '<div class="iu-calTimeWheel__item" role="option">' + pad(s * 5) + "</div>";
+    minInner += '<div class="iu-calTimeWheel__pad" aria-hidden="true"></div>';
     tw.innerHTML =
       '<div class="iu-calTimeWheel" role="dialog" aria-label="Čas">' +
-      "<label>Hodiny<select size=\"6\" data-iu-cal-tw-h>" +
-      optH +
-      "</select></label>" +
-      "<label>Minuty<select size=\"6\" data-iu-cal-tw-m>" +
-      optM +
-      "</select></label>" +
+      '<div class="iu-calTimeWheel__picker">' +
+      '<div class="iu-calTimeWheel__highlight" aria-hidden="true"></div>' +
+      '<div class="iu-calTimeWheel__col" data-iu-cal-tw-h tabindex="0" role="listbox" aria-label="Hodiny">' +
+      hourInner +
+      "</div>" +
+      '<div class="iu-calTimeWheel__col" data-iu-cal-tw-m tabindex="0" role="listbox" aria-label="Minuty">' +
+      minInner +
+      "</div>" +
+      "</div>" +
       '<button type="button" class="iu-calTimeWheel__apply" data-iu-cal-tw-apply="1">OK</button>' +
       "</div>";
     tw.hidden = false;
     tw.setAttribute("aria-hidden", "false");
-    try{
-      const ir = document.querySelector("#iuCalendarOverlay [data-iu-cal-inline-root]");
-      if (ir && typeof ir.scrollIntoView === "function") ir.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }catch{}
+    const hCol = tw.querySelector("[data-iu-cal-tw-h]");
+    const mCol = tw.querySelector("[data-iu-cal-tw-m]");
+    const attachWheelSnap = (scrollEl, itemCount)=>{
+      if (!scrollEl) return;
+      let t = 0;
+      const snap = ()=>{
+        const idx = Math.min(itemCount - 1, Math.max(0, Math.round(scrollEl.scrollTop / WHEEL_ITEM)));
+        const top = idx * WHEEL_ITEM;
+        if (Math.abs(scrollEl.scrollTop - top) > 0.5) scrollEl.scrollTo({ top, behavior: "smooth" });
+      };
+      scrollEl.addEventListener(
+        "scroll",
+        ()=>{
+          clearTimeout(t);
+          t = setTimeout(snap, 100);
+        },
+        { passive: true }
+      );
+      scrollEl.addEventListener(
+        "pointerup",
+        ()=>{
+          setTimeout(snap, 48);
+        },
+        { passive: true }
+      );
+    };
+    if (hCol) hCol.scrollTop = h * WHEEL_ITEM;
+    if (mCol) mCol.scrollTop = mi * WHEEL_ITEM;
+    attachWheelSnap(hCol, HOUR_COUNT);
+    attachWheelSnap(mCol, MINUTE_STEPS);
     const ap = tw.querySelector("[data-iu-cal-tw-apply]");
     if (ap){
       ap.addEventListener("click", ()=>{
-        const hs = tw.querySelector("[data-iu-cal-tw-h]");
-        const ms = tw.querySelector("[data-iu-cal-tw-m]");
-        const hh = hs ? String(hs.value || "09") : "09";
-        const mm = ms ? String(ms.value || "00") : "00";
-        const out = hh + ":" + mm;
+        if (!hCol || !mCol) return;
+        const hi = Math.min(HOUR_COUNT - 1, Math.max(0, Math.round(hCol.scrollTop / WHEEL_ITEM)));
+        const mxi = Math.min(MINUTE_STEPS - 1, Math.max(0, Math.round(mCol.scrollTop / WHEEL_ITEM)));
+        const out = pad(hi) + ":" + pad(mxi * 5);
         closeTimeWheel();
         if (typeof onApply === "function") onApply(out);
       });
@@ -33255,8 +33298,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         openTimeWheel(state.inline ? state.inline.time : base, (picked)=>{
           const slotH = eventSlotHour({ time: picked, date: iso });
           if (state.inline){
+            const prev = state.inline.slotHour;
             state.inline.time = picked;
             state.inline.slotHour = slotH;
+            if (prev === slotH){
+              const tb = root.querySelector("[data-iu-cal-inline-time-open]");
+              if (tb) tb.textContent = picked;
+            } else {
+              render();
+            }
           } else {
             state.inline = {
               mode: "new",
@@ -33268,8 +33318,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
               note: ""
             };
             state.currentEditId = "";
+            render();
           }
-          render();
         });
       });
     });
@@ -33290,9 +33340,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         ev.preventDefault();
         if (!state.inline) return;
         openTimeWheel(state.inline.time, (picked)=>{
+          const prev = state.inline.slotHour;
           state.inline.time = picked;
           state.inline.slotHour = eventSlotHour({ time: picked, date: state.inline.date || iso });
-          render();
+          if (state.inline.slotHour === prev){
+            const tb = root.querySelector("[data-iu-cal-inline-time-open]");
+            if (tb) tb.textContent = picked;
+          } else {
+            render();
+          }
         });
       });
       const saveBtn = inlineRoot.querySelector("[data-iu-cal-inline-save]");
