@@ -4761,41 +4761,20 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
             <div id="iuCalendarViewRoot" class="iu-calendarOverlay__viewRoot"></div>
           </section>
-          <aside class="iu-calendarOverlay__side">
-            <div id="iuCalendarMobileFormBar" class="iu-calendarOverlay__mobileFormBar" hidden>
-              <button type="button" class="iu-calendarOverlay__mobileFormBarBack" data-iu-cal-mobile-form-back="1">Zpět k přehledu dne</button>
-            </div>
-            <form id="iuCalendarEventForm" class="iu-calendarOverlay__form">
+          <aside class="iu-calendarOverlay__side" id="iuCalendarBridgeAside" hidden aria-hidden="true">
+            <form id="iuCalendarEventForm" class="iu-calendarOverlay__form iu-calendarOverlay__form--bridge" hidden aria-hidden="true">
               <input type="hidden" name="id" />
-              <label>Datum <input type="date" name="date" required /></label>
-              <label>Čas <input type="time" name="time" required /></label>
-              <label>Název <input type="text" name="title" maxlength="120" required /></label>
-              <label>Poznámka <textarea name="note" rows="3" maxlength="1000"></textarea></label>
-              <label>Adresa <textarea name="address" rows="2" maxlength="240" placeholder="Adresa…"></textarea></label>
-              <div id="iuCalendarEventDetail" class="iu-calendarOverlay__eventDetail" hidden></div>
-              <label>Typ
-                <select name="type">
-                  <option value="personal">Osobní</option>
-                  <option value="work">Práce</option>
-                  <option value="health">Zdraví</option>
-                  <option value="other">Jiné</option>
-                </select>
-              </label>
-              <div class="iu-calendarOverlay__formActions">
-                <button type="submit">Uložit</button>
-                <button type="button" data-iu-cal-delete="1">Smazat</button>
-                <button type="button" data-iu-cal-reset="1">Nová událost</button>
-              </div>
+              <input type="hidden" name="date" />
+              <input type="hidden" name="time" />
+              <input type="hidden" name="title" />
+              <input type="hidden" name="note" />
+              <input type="hidden" name="address" />
+              <input type="hidden" name="type" value="personal" />
               <p id="iuCalendarFormMsg" class="iu-calendarOverlay__msg" aria-live="polite"></p>
             </form>
-            <section class="iu-calendarOverlay__listWrap">
-              <h3>Události dne</h3>
-              <ul id="iuCalendarDayEvents" class="iu-calendarOverlay__eventList"></ul>
-            </section>
           </aside>
           <div id="iuCalendarMobileDayPanel" class="iu-calendarMobileDayPanel" hidden aria-hidden="true">
             <div class="iu-calendarMobileDayPanel__top">
-              <button type="button" class="iu-calendarMobileDayPanel__back" data-iu-cal-mobile-day-back="1">Zpět</button>
               <div class="iu-calendarMobileDayPanel__headText">
                 <h3 class="iu-calendarMobileDayPanel__weekday" id="iuCalendarMobileDayWeekday"></h3>
                 <p class="iu-calendarMobileDayPanel__dateLine" id="iuCalendarMobileDayDateLine"></p>
@@ -4806,6 +4785,7 @@ style-src 'self' 'unsafe-inline' https:;
             </div>
           </div>
         </div>
+        <div id="iuCalTimeWheelHost" class="iu-calTimeWheelHost" hidden aria-hidden="true"></div>
       </section>
     </div>
 
@@ -5132,29 +5112,17 @@ style-src 'self' 'unsafe-inline' https:;
         }
         #iuCalendarOverlay .iu-calendarMobileDayPanel__top {
           display: flex;
-          align-items: flex-start;
-          gap: 10px;
+          align-items: center;
+          justify-content: center;
           padding: 10px 12px 8px;
           border-bottom: 1px solid rgba(21, 128, 61, 0.14);
           background: rgba(255, 255, 255, 0.92);
           flex: 0 0 auto;
         }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__back {
-          flex: 0 0 auto;
-          border-radius: 10px;
-          border: 1px solid rgba(21, 128, 61, 0.35);
-          background: #fff;
-          color: #14532d;
-          font-weight: 700;
-          font-size: 14px;
-          padding: 8px 12px;
-          min-height: 40px;
-          cursor: pointer;
-          touch-action: manipulation;
-        }
         #iuCalendarOverlay .iu-calendarMobileDayPanel__headText {
           flex: 1 1 auto;
           min-width: 0;
+          text-align: center;
         }
         #iuCalendarOverlay .iu-calendarMobileDayPanel__weekday {
           margin: 0;
@@ -5185,37 +5153,6 @@ style-src 'self' 'unsafe-inline' https:;
           margin-bottom: 8px;
           max-width: 100%;
         }
-        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarOverlay__main,
-        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarMobileDayPanel {
-          visibility: hidden !important;
-          pointer-events: none !important;
-        }
-        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarOverlay__side {
-          position: absolute !important;
-          inset: 0 !important;
-          z-index: 8 !important;
-          border: 0 !important;
-          overflow: auto !important;
-          -webkit-overflow-scrolling: touch;
-          background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
-          padding: 10px 12px 20px !important;
-        }
-        #iuCalendarOverlay .iu-calendarOverlay__mobileFormBar {
-          margin-bottom: 10px;
-        }
-        #iuCalendarOverlay .iu-calendarOverlay__mobileFormBarBack {
-          width: 100%;
-          border-radius: 10px;
-          border: 1px solid rgba(21, 128, 61, 0.35);
-          background: #fff;
-          color: #14532d;
-          font-weight: 700;
-          font-size: 14px;
-          padding: 10px 12px;
-          min-height: 44px;
-          cursor: pointer;
-          touch-action: manipulation;
-        }
       }
     </style>
     <style id="iuCalendarOverlaySilverMobileNavP0">
@@ -5232,9 +5169,6 @@ style-src 'self' 'unsafe-inline' https:;
         }
       }
       @media (min-width: 1025px) {
-        #iuCalendarOverlay.iu-calendarOverlay--dayOpenDesktop .iu-calendarOverlay__listWrap {
-          display: none !important;
-        }
         #iuCalendarOverlay.iu-calendarOverlay--dayOpenDesktop .iu-calendarOverlay__viewRoot[data-view="dayTimeline"] {
           flex: 1 1 auto !important;
           min-height: 0 !important;
@@ -5267,6 +5201,256 @@ style-src 'self' 'unsafe-inline' https:;
           flex-direction: column !important;
           box-sizing: border-box !important;
         }
+      }
+    </style>
+    <style id="iu-cal-ux-rebuild2-layer">
+      #iuCalendarOverlay.iu-calendarOverlay--calDayMode.iu-tools-overlay-fullscreen-desktop .iu-calendarOverlay__body {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+      #iuCalendarOverlay.iu-calendarOverlay--calDayMode .iu-calendarOverlay__side {
+        display: none !important;
+      }
+      #iuCalendarOverlay .iu-calWkRow {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
+        padding: 0 8px 4px;
+        box-sizing: border-box;
+      }
+      #iuCalendarOverlay .iu-calWkCell {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: rgba(15, 23, 42, 0.55);
+        padding: 4px 0;
+      }
+      #iuCalendarOverlay .iu-calGrid {
+        border-bottom: 0 !important;
+        box-shadow: none !important;
+      }
+      #iuCalendarOverlay .iu-calDayCell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+      }
+      #iuCalendarOverlay .iu-calDayCell__num {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+        padding-top: 4px;
+      }
+      #iuCalendarOverlay .iu-calDayCell__holBadge {
+        margin-top: 4px;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #b45309;
+        background: rgba(251, 191, 36, 0.2);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        border-radius: 999px;
+        padding: 2px 6px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #iuCalendarOverlay .iu-calDayCell__dots {
+        margin-top: auto;
+        padding: 4px 2px 6px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+      #iuCalendarOverlay .iu-calDayCell__dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: rgba(22, 163, 74, 0.65);
+        flex: 0 0 auto;
+      }
+      #iuCalendarOverlay .iu-calHourSlot {
+        border-bottom-color: transparent !important;
+      }
+      #iuCalendarOverlay .iu-calHourSlot__body {
+        position: relative;
+      }
+      #iuCalendarOverlay .iu-calSlotEmptyPad {
+        min-height: 28px;
+        border-radius: 10px;
+        border: 1px dashed rgba(21, 128, 61, 0.22);
+        background: rgba(236, 253, 245, 0.35);
+        margin-top: 4px;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      #iuCalendarOverlay .iu-calInline {
+        border-radius: 12px;
+        border: 1px solid rgba(21, 128, 61, 0.28);
+        background: #fff;
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+      #iuCalendarOverlay .iu-calInline__inp,
+      #iuCalendarOverlay .iu-calInline__txt {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: 1px solid rgba(21, 128, 61, 0.22);
+        padding: 8px 10px;
+        font-size: 15px;
+      }
+      #iuCalendarOverlay .iu-calInline__txt {
+        min-height: 64px;
+        resize: vertical;
+      }
+      #iuCalendarOverlay .iu-calInline__timeBtn {
+        justify-self: start;
+        border-radius: 10px;
+        border: 1px solid rgba(21, 128, 61, 0.35);
+        background: #ecfdf5;
+        color: #14532d;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 8px 12px;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      #iuCalendarOverlay .iu-calInline__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      #iuCalendarOverlay .iu-calInline__actions button {
+        flex: 1 1 auto;
+        min-height: 44px;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-save] {
+        border: 1px solid #14532d;
+        background: linear-gradient(180deg, #15803d, #166534);
+        color: #fff;
+      }
+      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-delete] {
+        border: 1px solid rgba(185, 28, 28, 0.35);
+        background: #fff;
+        color: #b91c1c;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv {
+        position: relative;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv.is-next-upcoming {
+        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28) inset;
+        background: rgba(236, 253, 245, 0.95);
+      }
+      #iuCalendarOverlay .iu-calTimelineEv__row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv__main {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: left;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv__icons {
+        display: flex;
+        gap: 4px;
+        flex: 0 0 auto;
+      }
+      #iuCalendarOverlay .iu-calEvIcon {
+        border: 1px solid rgba(21, 128, 61, 0.22);
+        background: #fff;
+        border-radius: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+        touch-action: manipulation;
+        padding: 0;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv__noteDrop {
+        display: none;
+        margin-top: 6px;
+        font-size: 13px;
+        color: #334155;
+        overflow-wrap: anywhere;
+      }
+      #iuCalendarOverlay .iu-calTimelineEv__noteDrop.is-open {
+        display: block;
+      }
+      #iuCalendarOverlay .iu-calTimeWheelHost {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10050;
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+        background: rgba(255, 255, 255, 0.98);
+        border-top: 1px solid rgba(21, 128, 61, 0.2);
+        box-shadow: 0 -8px 28px rgba(15, 23, 42, 0.12);
+        box-sizing: border-box;
+      }
+      #iuCalendarOverlay .iu-calTimeWheel {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 10px;
+        align-items: end;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      #iuCalendarOverlay .iu-calTimeWheel label {
+        display: grid;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        color: rgba(15, 23, 42, 0.65);
+      }
+      #iuCalendarOverlay .iu-calTimeWheel select {
+        width: 100%;
+        min-height: 140px;
+        border-radius: 10px;
+        border: 1px solid rgba(21, 128, 61, 0.25);
+        font-size: 16px;
+        font-weight: 700;
+        padding: 6px;
+        box-sizing: border-box;
+      }
+      #iuCalendarOverlay .iu-calTimeWheel__apply {
+        min-height: 44px;
+        padding: 0 14px;
+        border-radius: 10px;
+        border: 1px solid #14532d;
+        background: linear-gradient(180deg, #15803d, #166534);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+        touch-action: manipulation;
       }
     </style>
   </body>
