@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T08:05:41.750490Z",
+  "ingestedAt": "2026-05-02T08:39:54.322259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Záchranáři vypustili do Severního moře velrybu Timmyho",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zachranari-vypustili-do-severniho-more-velrybu-timmyho-373024",
+      "dt": "2026-05-02T08:08:25Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "moře",
+        "severního",
+        "timmyho",
+        "velrybu",
+        "vypustili",
+        "záchranáři"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -730,33 +753,6 @@
         "ukrajině",
         "vyslalo",
         "údery"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Američtí vojáci se už nemusí očkovat proti chřipce. Vojenští lékaři vidí rizika",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/americti-vojaci-se-uz-nemusi-ockovat-proti-chripce-vojensti-lekari-vidi-rizika-372885",
-      "dt": "2026-05-01T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "američtí",
-        "chřipce",
-        "lékaři",
-        "nemusí",
-        "očkovat",
-        "proti",
-        "rizika",
-        "vidí",
-        "vojenští",
-        "vojáci"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1507,7 +1503,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42903,
+      "bytes": 42853,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,11 +1563,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T08:08:25Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "other": 2
+          "zpravy": 29,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1583,6 +1579,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Záchranáři vypustili do Severního moře velrybu Timmyho",
+            "publishedAt": "2026-05-02T08:08:25Z"
+          },
           {
             "title": "Virtuální výcvik vojáků i robotičtí hlídači. Experti z ČVUT představili novinky",
             "publishedAt": "2026-05-02T08:00:00Z"
@@ -1610,10 +1610,6 @@
           {
             "title": "Velartovi museli o Černobylu mlčet, doporučovali alespoň sprchu a sušené mléko",
             "publishedAt": "2026-05-02T05:00:00Z"
-          },
-          {
-            "title": "AFP: Trump se snaží obejít Kongres a tvrdí, že nepřátelské akce v Íránu skončily",
-            "publishedAt": "2026-05-02T02:25:59Z"
           }
         ]
       }

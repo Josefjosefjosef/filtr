@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "tydenikpolicie.cz",
-  "ingestedAt": "2026-05-02T08:05:41.750490Z",
+  "ingestedAt": "2026-05-02T08:39:54.322259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Policisté pátrají po vězni, který utekl z věznice v Jiřicích",
+      "url": "https://tydenikpolicie.cz/policiste-patraji-po-vezni-ktery-utekl-z-veznice-v-jiricich/",
+      "dt": "2026-05-02T08:07:59Z",
+      "media_raw": "Týdeník Policie",
+      "media_norm": "Týdeník Policie",
+      "tokens": [
+        "jiřicích",
+        "policisté",
+        "pátrají",
+        "utekl",
+        "vězni",
+        "věznice"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_tydenikpolicie",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "tydenikpolicie.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -241,29 +264,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "tydenikpolicie.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Muž měl na Plzeňsku zapalovat, kudy chodil",
-      "url": "https://tydenikpolicie.cz/muz-mel-na-plzensku-zapalovat-kudy-chodil/",
-      "dt": "2026-05-01T02:02:25Z",
-      "media_raw": "Týdeník Policie",
-      "media_norm": "Týdeník Policie",
-      "tokens": [
-        "chodil",
-        "kudy",
-        "muž",
-        "měl",
-        "plzeňsku",
-        "zapalovat"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_tydenikpolicie",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "tydenikpolicie.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -274,7 +274,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://tydenikpolicie.cz/feed/",
-      "bytes": 16353,
+      "bytes": 16323,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -311,7 +311,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:55:04Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T08:07:59Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 10
@@ -326,6 +326,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Policisté pátrají po vězni, který utekl z věznice v Jiřicích",
+            "publishedAt": "2026-05-02T08:07:59Z"
+          },
           {
             "title": "Centrem Prahy prošel Prvomájový pochod proti fašismu. Policisté museli zasahovat kvůli střetům s jeho odpůrci",
             "publishedAt": "2026-05-02T07:55:04Z"
@@ -353,10 +357,6 @@
           {
             "title": "Na Českolipsku někdo ukradl chovného koně z elektrického ohradníku",
             "publishedAt": "2026-05-01T05:32:05Z"
-          },
-          {
-            "title": "Řidičce měl na Strakonicku vlétnout do auta igelitový pytel, který ji na vteřinu znemožnil výhled. Nabourala do stromu",
-            "publishedAt": "2026-05-01T05:30:19Z"
           }
         ]
       }

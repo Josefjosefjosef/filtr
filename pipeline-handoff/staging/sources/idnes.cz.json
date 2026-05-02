@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T08:05:41.750490Z",
+  "ingestedAt": "2026-05-02T08:39:54.322259Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Berlín reaguje na plán stažení vojáků USA. Přítomnost je i ve vašem zájmu, varuje",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/berlin-reaguje-na-plan-stazeni-vojaku-usa-pritomnost-je-i-ve-vasem-zajmu-varuje.A260502_094646_zahranicni_bro",
+      "dt": "2026-05-02T07:50:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "berlín",
+        "plán",
+        "přítomnost",
+        "reaguje",
+        "stažení",
+        "usa",
+        "varuje",
+        "vašem",
+        "vojáků",
+        "zájmu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -764,30 +791,6 @@
         "tajné",
         "vědci",
         "zuří"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "ONLINE: Levici hrála Internacionála. Pochod antifašistů provázely strkanice",
-      "url": "https://www.idnes.cz/zpravy/domaci/online-svatek-prace-festivaly-majka-demonstrace-i-anarchisticky-piknik-v-praze.A260430_094458_domaci_vank",
-      "dt": "2026-05-01T13:32:28Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "antifašistů",
-        "hrála",
-        "internacionála",
-        "levici",
-        "pochod",
-        "provázely",
-        "strkanice"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1592,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49432,
+      "bytes": 49200,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1629,12 +1632,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:50:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 22,
           "other": 3,
-          "finance": 5,
-          "zpravy": 22
+          "finance": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1646,6 +1649,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Berlín reaguje na plán stažení vojáků USA. Přítomnost je i ve vašem zájmu, varuje",
+            "publishedAt": "2026-05-02T07:50:00Z"
+          },
           {
             "title": "TELEVIZIONÁŘ: Kdepak komedie. Jiřina Bohdalová zjistí, že dům je jen velké Ucho",
             "publishedAt": "2026-05-02T07:14:00Z"
@@ -1673,10 +1680,6 @@
           {
             "title": "Sisters vystoupily nad zem, odteď porostou tempem zhruba jedno patro za měsíc",
             "publishedAt": "2026-05-02T05:02:00Z"
-          },
-          {
-            "title": "Velký Javorník omladil, dobrovolníci a studenti tam vysázeli přes dva tisíce stromků",
-            "publishedAt": "2026-05-02T04:37:00Z"
           }
         ]
       }
