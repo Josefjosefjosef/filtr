@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T10:55:13.384277Z",
+  "ingestedAt": "2026-05-02T11:29:39.260609Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Moskvani se vracejí k tradicím v jídle i oblékání. Západ nás odřízl, stěžují si",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/rusko-moskva-zapad-tradice-oblekani-jidlo.A260429_092730_zahranicni_dtt",
+      "dt": "2026-05-02T10:58:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "jídle",
+        "moskvani",
+        "nás",
+        "oblékání",
+        "odřízl",
+        "stěžují",
+        "tradicím",
+        "vracejí",
+        "západ"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -23,6 +49,29 @@
         "tak",
         "trump",
         "řekl"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "VIDEO: Po Pražském majálesu zůstaly v Letňanech hromady odpadků",
+      "url": "https://www.idnes.cz/praha/zpravy/majales-praha-letnany-odpadky.A260502_114749_praha-zpravy_pari",
+      "dt": "2026-05-02T10:44:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "hromady",
+        "letňanech",
+        "majálesu",
+        "odpadků",
+        "pražském",
+        "zůstaly"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -731,59 +780,6 @@
         "post",
         "spolupráce",
         "šéfky"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Infantinův trapas. Bafuňáře Izraele a Palestiny vybízel k podání rukou marně",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/palestina-izrael-infantino-suliman-rajoub-fifa-valka.A260501_194532_zahranicni_berr",
-      "dt": "2026-05-01T18:26:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bafuňáře",
-        "infantinův",
-        "izraele",
-        "marně",
-        "palestiny",
-        "podání",
-        "rukou",
-        "trapas",
-        "vybízel"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Větě přijdu dýl v Brně nerozumí. Nářečí mají i Středočeši, říká lingvistka",
-      "url": "https://www.idnes.cz/kultura/literatura/nareci-cesky-jazyk-jazykoveda-morava-slezsko-vyzkum.A260424_899857_literatura_jans",
-      "dt": "2026-05-01T18:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "brně",
-        "dýl",
-        "lingvistka",
-        "mají",
-        "nerozumí",
-        "nářečí",
-        "přijdu",
-        "středočeši",
-        "větě",
-        "říká"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1588,7 +1584,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47725,
+      "bytes": 47765,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,12 +1621,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:44:35Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 20,
+          "zpravy": 21,
           "finance": 6,
-          "other": 4
+          "other": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1643,8 +1639,16 @@
         },
         "sample_titles": [
           {
+            "title": "Moskvani se vracejí k tradicím v jídle i oblékání. Západ nás odřízl, stěžují si",
+            "publishedAt": "2026-05-02T10:58:00Z"
+          },
+          {
             "title": "Pavel řekl, že Trump je odporná bytost, tak proč chce na summit? diví se Babiš",
             "publishedAt": "2026-05-02T10:44:35Z"
+          },
+          {
+            "title": "VIDEO: Po Pražském majálesu zůstaly v Letňanech hromady odpadků",
+            "publishedAt": "2026-05-02T10:44:00Z"
           },
           {
             "title": "Miliardový boom byznysu s kartami Pokémon vyvolává vlnu kriminality",
@@ -1665,14 +1669,6 @@
           {
             "title": "Pobyt u včel má vliv na zdraví těla i psychiku, říká včelař, který chystá apidomek",
             "publishedAt": "2026-05-02T09:21:00Z"
-          },
-          {
-            "title": "Konec ságy? Záchranáři vypustili Timmyho do Severního moře, vyhráno ale nemá",
-            "publishedAt": "2026-05-02T08:59:32Z"
-          },
-          {
-            "title": "Na Nymbursku utekl vězeň, podhrabal se pod plotem. Je nebezpečný, varuje policie",
-            "publishedAt": "2026-05-02T08:56:00Z"
           }
         ]
       }

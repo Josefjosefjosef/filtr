@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-02T10:55:13.384277Z",
+  "ingestedAt": "2026-05-02T11:29:39.260609Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Babiš jmenoval zmocněnce pro NATO. Sáhl po velvyslanci Landovském",
+      "url": "https://www.denik.cz/z_domova/jakub-landovsky-vladni-zmocnenec-nato.html",
+      "dt": "2026-05-02T10:41:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "babiš",
+        "jmenoval",
+        "landovském",
+        "nato",
+        "sáhl",
+        "velvyslanci",
+        "zmocněnce"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -622,33 +646,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Válka s Íránem ohrožuje ekonomiku USA. Američany trápí rostoucí ceny i inflace",
-      "url": "https://www.denik.cz/ze_sveta/valka-iran-usa-ekonomika-zhorseni.html",
-      "dt": "2026-05-01T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "američany",
-        "ceny",
-        "ekonomiku",
-        "inflace",
-        "ohrožuje",
-        "rostoucí",
-        "trápí",
-        "usa",
-        "válka",
-        "íránem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -659,7 +656,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29433,
+      "bytes": 29520,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -696,7 +693,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:20:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:41:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -712,6 +709,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš jmenoval zmocněnce pro NATO. Sáhl po velvyslanci Landovském",
+            "publishedAt": "2026-05-02T10:41:00Z"
+          },
           {
             "title": "Brutální útok na jeptišku v Jeruzalémě: Experti varují před nebezpečným trendem",
             "publishedAt": "2026-05-02T10:20:00Z"
@@ -739,10 +740,6 @@
           {
             "title": "Jak se vodí stoletý kluk? Loutkář Michal Barták o Hurvínkovi i zákulisí divadla",
             "publishedAt": "2026-05-02T06:00:00Z"
-          },
-          {
-            "title": "Italské město zpřísnilo pravidla venčení psů. Hrozí pokutami",
-            "publishedAt": "2026-05-02T05:13:00Z"
           }
         ]
       }

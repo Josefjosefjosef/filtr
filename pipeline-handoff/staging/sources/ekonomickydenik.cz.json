@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T10:55:13.384277Z",
+  "ingestedAt": "2026-05-02T11:29:39.260609Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Podívejte se, jak přežily pád těžkého průmyslu. Vítkovice Hammering vsadily na titan a nikl",
+      "url": "https://ekonomickydenik.cz/vitkovice-jak-prezily-pad-tezkeho-prumyslu/",
+      "dt": "2026-05-02T11:00:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "hammering",
+        "nikl",
+        "podívejte",
+        "průmyslu",
+        "pád",
+        "přežily",
+        "titan",
+        "těžkého",
+        "vsadily",
+        "vítkovice"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -771,32 +798,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Dostupná energie pro všechny? Návrh na snížení cen elektřiny narazil pro nadbytečnost",
-      "url": "https://ekonomickydenik.cz/navrh-snizeni-cen-elektriny-narazil/",
-      "dt": "2026-04-30T04:05:00Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "cen",
-        "dostupná",
-        "elektřiny",
-        "energie",
-        "nadbytečnost",
-        "narazil",
-        "návrh",
-        "snížení",
-        "všechny"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -807,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71518,
+      "bytes": 71371,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -844,11 +845,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:03:10Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T11:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zdravi": 2,
+          "finance": 27,
+          "zdravi": 1,
           "zpravy": 2
         },
         "drop_counts": {
@@ -861,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Podívejte se, jak přežily pád těžkého průmyslu. Vítkovice Hammering vsadily na titan a nikl",
+            "publishedAt": "2026-05-02T11:00:00Z"
+          },
           {
             "title": "Američané stáhnou 5 tisíc vojáků z Německa. Je čas převzít odpovědnost, reagoval Pistorius",
             "publishedAt": "2026-05-02T10:03:10Z"
@@ -888,10 +893,6 @@
           {
             "title": "Varování pro Moskvu. Nová německá doktrína počítá se vším",
             "publishedAt": "2026-05-01T11:12:00Z"
-          },
-          {
-            "title": "Šéfové berou stále víc. Příjmy zaměstnanců jsou ale nižší než před 7 lety",
-            "publishedAt": "2026-05-01T10:48:24Z"
           }
         ]
       }

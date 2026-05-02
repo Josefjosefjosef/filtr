@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-02T10:55:13.384277Z",
+  "ingestedAt": "2026-05-02T11:29:39.260609Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kariéra Alexe Zanardiho obrazem",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/motorismus/kariera-alexandra-zanardiho/r~aaa29694770888ef4b7f726fa99a2eba/",
+      "dt": "2026-05-02T11:04:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "alexe",
+        "kariéra",
+        "obrazem",
+        "zanardiho"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -498,34 +519,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Chtěla jen vyfotit Mléčnou dráhu. Astronautce se do záběru omylem dostali nečekaní vetřelci",
-      "url": "https://magazin.aktualne.cz/chtela-jen-vyfotit-mlecnou-drahu-astronautce-se-do-zaberu-omylem-dostali-necekani-vetrelci/r~aaa29da812513afd673c44bbe4823204/",
-      "dt": "2026-05-02T04:06:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "astronautce",
-        "chtěla",
-        "dostali",
-        "dráhu",
-        "jen",
-        "mléčnou",
-        "nečekaní",
-        "omylem",
-        "vetřelci",
-        "vyfotit",
-        "záběru"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -536,7 +529,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20867,
+      "bytes": 20712,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -573,11 +566,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T11:04:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 11,
-          "sport": 5,
+          "sport": 6,
+          "zpravy": 10,
           "other": 2,
           "finance": 2
         },
@@ -591,6 +584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kariéra Alexe Zanardiho obrazem",
+            "publishedAt": "2026-05-02T11:04:00Z"
+          },
           {
             "title": "Záchranný tým vypustil velrybu Timmyho do Severního moře",
             "publishedAt": "2026-05-02T09:40:00Z"
@@ -618,10 +615,6 @@
           {
             "title": "Pastrňákův gól nestačil, Bruins v play off končí. Montreal bude bojovat v sedmém zápase",
             "publishedAt": "2026-05-02T05:16:00Z"
-          },
-          {
-            "title": "Toskánsko kousek od Kolína. Sestry proměnily omšelou tvrz v italskou vilu, o které samy snily",
-            "publishedAt": "2026-05-02T06:35:00Z"
           }
         ]
       }

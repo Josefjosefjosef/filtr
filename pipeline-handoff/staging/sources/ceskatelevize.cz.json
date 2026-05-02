@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T10:55:13.384277Z",
+  "ingestedAt": "2026-05-02T11:29:39.260609Z",
   "items": [
     {
       "section": "aktualne",
@@ -767,6 +767,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Rezerva Sparty zachránila bod, ale sestup hrozí dál",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/rezerva-sparty-zachranila-bod-ale-sestup-hrozi-dal-156556",
+      "dt": "2026-05-02T10:54:57Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "ale",
+        "bod",
+        "hrozí",
+        "rezerva",
+        "sestup",
+        "sparty",
+        "zachránila"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Ještě jedna operace mě čeká, říká Vonnová a budoucnost nechává otevřenou",
       "url": "https://sport.ceskatelevize.cz/clanek/lyzovani-a-snowboarding/jeste-jedna-operace-me-ceka-rika-vonnova-a-budoucnost-nechava-otevrenou-156555",
       "dt": "2026-05-02T10:28:30Z",
@@ -1474,29 +1498,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Co jsem si mohl přát, se splnilo, říká útočník Chmelař",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/co-jsem-si-mohl-prat-se-splnilo-rika-utocnik-chmelar-156526",
-      "dt": "2026-04-30T14:17:05Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "chmelař",
-        "jsem",
-        "přát",
-        "splnilo",
-        "útočník",
-        "říká"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1508,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42725,
+      "bytes": 42727,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1625,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37320,
+      "bytes": 37279,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1662,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T10:28:30Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T10:54:57Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1677,6 +1678,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rezerva Sparty zachránila bod, ale sestup hrozí dál",
+            "publishedAt": "2026-05-02T10:54:57Z"
+          },
           {
             "title": "Ještě jedna operace mě čeká, říká Vonnová a budoucnost nechává otevřenou",
             "publishedAt": "2026-05-02T10:28:30Z"
@@ -1704,10 +1709,6 @@
           {
             "title": "Nymburk vyhrál suverénně ve čtvrtfinále i druhý duel s Ostravou",
             "publishedAt": "2026-05-01T19:09:45Z"
-          },
-          {
-            "title": "Další zaváhání Artisu. Z Prostějova veze pouze remízu",
-            "publishedAt": "2026-05-01T17:05:20Z"
           }
         ]
       }
@@ -1719,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77148,
+      "bytes": 77222,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
