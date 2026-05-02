@@ -32653,6 +32653,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return sameYMD(dateStr, goodFriday) || sameYMD(dateStr, easterMonday);
   }
 
+  function getHolidayNameForDate(dateStr){
+    const d = new Date(dateStr + "T00:00:00");
+    if (!Number.isFinite(d.getTime())) return "";
+    const mmdd = pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    const fixed = {
+      "01-01": "Nový rok",
+      "05-01": "Svátek práce",
+      "05-08": "Den vítězství",
+      "07-05": "Den slovanských věrozvětců Cyrila a Metoděje",
+      "07-06": "Den upálení mistra Jana Husa",
+      "09-28": "Den české státnosti",
+      "10-28": "Den vzniku samostatného československého státu",
+      "11-17": "Den boje za svobodu a demokracii",
+      "12-24": "Štědrý den",
+      "12-25": "1. svátek vánoční",
+      "12-26": "2. svátek vánoční"
+    };
+    if (fixed[mmdd]) return fixed[mmdd];
+    const year = d.getFullYear();
+    const easter = getEasterDate(year);
+    const goodFriday = addDays(toDateOnly(easter), -2);
+    const easterMonday = addDays(toDateOnly(easter), 1);
+    if (sameYMD(dateStr, goodFriday)) return "Velký pátek";
+    if (sameYMD(dateStr, easterMonday)) return "Velikonoční pondělí";
+    return "";
+  }
+
   function getEasterDate(year){
     const a = year % 19;
     const b = Math.floor(year / 100);
@@ -32865,7 +32892,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     renderViewButtons();
     renderPeriodLabel();
     renderView();
-    renderDayList();
     syncBridgeFormFields();
     syncMobileCalendarChrome();
   }
@@ -32972,9 +32998,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  function renderDayHolidayBannerHTML(iso){
+    const nm = getHolidayNameForDate(iso);
+    if (!nm) return "";
+    return '<div class="iu-calDayHolidayBanner" role="status">' + esc(nm) + "</div>";
+  }
+
   function renderDayHourlyTimelineHTML(iso){
     const nearestId = nearestFutureEventIdOnDate(iso);
-    let html = '<div class="iu-calDayHoursRoot">';
+    const skipBannerInsideHours = isCalMobileLayout() && state.dayOpen;
+    let html = (skipBannerInsideHours ? "" : renderDayHolidayBannerHTML(iso)) + '<div class="iu-calDayHoursRoot">';
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evs = getEventsInHourSlot(iso, slotH);
@@ -32983,8 +33016,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const inlineHtml = showInline ? buildInlineEditorHtml() : "";
       const showPad = !showInline;
       const padHtml = showPad ? '<div class="iu-calSlotEmptyPad" data-iu-cal-slot-empty="' + slotH + '" title="Nová událost"></div>' : "";
+      const slotSparse = evs.length === 0 && !showInline ? " iu-calHourSlot--sparse" : "";
       html +=
-        '<div class="iu-calHourSlot" data-iu-cal-hour-anchor="' +
+        '<div class="iu-calHourSlot' +
+        slotSparse +
+        '" data-iu-cal-hour-anchor="' +
         slotH +
         '">' +
         '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
@@ -33041,6 +33077,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       "</div>";
     tw.hidden = false;
     tw.setAttribute("aria-hidden", "false");
+    try{
+      const ir = document.querySelector("#iuCalendarOverlay [data-iu-cal-inline-root]");
+      if (ir && typeof ir.scrollIntoView === "function") ir.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }catch{}
     const ap = tw.querySelector("[data-iu-cal-tw-apply]");
     if (ap){
       ap.addEventListener("click", ()=>{
@@ -33066,7 +33106,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const now = new Date();
       const ch = Math.min(23, Math.max(1, now.getHours()));
       const el = host.querySelector("[data-iu-cal-hour-anchor=\"" + ch + "\"]");
-      if (el && typeof el.scrollIntoView === "function") try{ el.scrollIntoView({ block: "center", behavior: "auto" }); }catch{}
+      if (!el) return;
+      try{
+        const hr = host.getBoundingClientRect();
+        const er = el.getBoundingClientRect();
+        const target = host.scrollTop + (er.top - hr.top) - Math.max(0, (hr.height - er.height) / 2);
+        host.scrollTo({ top: Math.max(0, target), behavior: "auto" });
+      }catch{
+        try{
+          el.scrollIntoView({ block: "center", behavior: "auto" });
+        }catch{}
+      }
     };
     const mob = isCalMobileLayout();
     if (mob && state.dayOpen) tryScroll(document.getElementById("iuCalendarMobileDayScroll"));
@@ -33145,12 +33195,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         try{ window.open("https://mapy.cz/z?q=" + encodeURIComponent(q), "_blank", "noopener,noreferrer"); }catch{}
       });
     });
-    root.querySelectorAll("[data-iu-cal-slot-empty]").forEach((pad)=>{
-      pad.addEventListener("click", (ev)=>{
+    root.querySelectorAll("[data-iu-cal-slot-empty]").forEach((emptySlotEl)=>{
+      emptySlotEl.addEventListener("click", (ev)=>{
         ev.preventDefault();
         ev.stopPropagation();
-        const sh = parseInt(String(pad.getAttribute("data-iu-cal-slot-empty") || ""), 10);
+        const sh = parseInt(String(emptySlotEl.getAttribute("data-iu-cal-slot-empty") || ""), 10);
         if (!Number.isFinite(sh) || sh < 1 || sh > 23) return;
+        state.inline = {
+          mode: "new",
+          date: iso,
+          slotHour: sh,
+          time: pad(sh) + ":00",
+          title: "",
+          address: "",
+          note: ""
+        };
+        state.currentEditId = "";
+        render();
+        try{
+          const ir = root.querySelector("[data-iu-cal-inline-root]");
+          const ti = ir ? ir.querySelector("[data-iu-cal-inline-field=\"title\"]") : null;
+          if (ti && ti.focus) ti.focus();
+        }catch{}
+      });
+    });
+    root.querySelectorAll("[data-iu-cal-slot-body]").forEach((slotBody)=>{
+      slotBody.addEventListener("click", (ev)=>{
+        if (ev.target !== slotBody) return;
+        const sh = parseInt(String(slotBody.getAttribute("data-iu-cal-slot-body") || ""), 10);
+        if (!Number.isFinite(sh) || sh < 1 || sh > 23) return;
+        if (state.inline && state.inline.slotHour === sh) return;
+        ev.preventDefault();
+        ev.stopPropagation();
         state.inline = {
           mode: "new",
           date: iso,
@@ -33341,8 +33417,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
   function getEventsForMonth(year, month){ return state.data.events.filter((e)=>{ const d = new Date(e.date + "T00:00:00"); return d.getFullYear() === year && d.getMonth() === month; }).length; }
 
-  function renderDayList(){}
-
   function closeDaySheet(){
     state.dayOpen = false;
     state.inline = null;
@@ -33353,12 +33427,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const panel = document.getElementById("iuCalendarMobileDayPanel");
     const wEl = document.getElementById("iuCalendarMobileDayWeekday");
     const dEl = document.getElementById("iuCalendarMobileDayDateLine");
+    const holEl = document.getElementById("iuCalendarMobileDayHoliday");
     const hoursEl = document.getElementById("iuCalendarMobileDayHours");
     if (!panel || !wEl || !dEl || !hoursEl) return;
     const iso = String(state.selectedDate || "").trim() || toDateOnly(new Date());
     const head = formatCalMobileDayHeading(iso);
     wEl.textContent = head.line1;
     dEl.textContent = head.line2;
+    const holNm = getHolidayNameForDate(iso);
+    if (holEl){
+      if (holNm){
+        holEl.textContent = holNm;
+        holEl.hidden = false;
+        holEl.removeAttribute("hidden");
+      } else {
+        holEl.textContent = "";
+        holEl.hidden = true;
+        holEl.setAttribute("hidden", "");
+      }
+    }
     hoursEl.innerHTML = renderDayHourlyTimelineHTML(iso);
     bindDayTimelineUi(hoursEl, iso);
     try{
