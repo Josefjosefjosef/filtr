@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T16:51:19.337959Z",
+  "ingestedAt": "2026-05-02T17:25:34.527030Z",
   "items": [
     {
       "section": "aktualne",
@@ -78,20 +78,20 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Požár lesa v Českém Švýcarsku se rozšířil na 900 hektarů, píše ČTK",
+      "title": "V Českém Švýcarsku hoří les, podle informací ČT přibližně na sto hektarech",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-narodnim-parku-ceske-svycarsko-hori-les-plati-druhy-stupen-poplachu-373029",
       "dt": "2026-05-02T12:59:09Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "900",
-        "hektarů",
-        "lesa",
-        "požár",
-        "píše",
-        "rozšířil",
+        "hektarech",
+        "hoří",
+        "informací",
+        "les",
+        "podle",
+        "přibližně",
+        "sto",
         "českém",
-        "čtk",
         "švýcarsku"
       ],
       "feedCategory": "zpravy",
@@ -758,6 +758,58 @@
       "feedCategory": "zpravy",
       "feedType": "rubric",
       "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Villarreal přejel Levante a drží si odstup od Atlética, které veze výhru z Valencie",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/villarreal-prejel-levante-a-drzi-si-odstup-od-atletica-ktere-veze-vyhru-z-valencie-156566",
+      "dt": "2026-05-02T17:04:45Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "atlética",
+        "drží",
+        "levante",
+        "odstup",
+        "přejel",
+        "valencie",
+        "veze",
+        "villarreal",
+        "výhru"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Baník remizoval s Mladou Boleslaví a srovnal krok s konkurenty v boji o udržení",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/banik-remizoval-s-mladou-boleslavi-a-srovnal-krok-s-konkurenty-v-boji-o-udrzeni-156562",
+      "dt": "2026-05-02T16:49:05Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "baník",
+        "boji",
+        "boleslaví",
+        "konkurenty",
+        "krok",
+        "mladou",
+        "remizoval",
+        "srovnal",
+        "udržení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1461,54 +1513,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Klapka: Rozbitý mantinel? To se mi stalo poprvé",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/klapka-rozbity-mantinel-to-se-mi-stalo-poprve-156538",
-      "dt": "2026-04-30T22:09:37Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "klapka",
-        "mantinel",
-        "poprvé",
-        "rozbitý",
-        "stalo"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Anglický duel v EL zvládl lépe Nottingham, Horníček přispěl k vítězství Bragy",
-      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/anglicky-duel-v-el-zvladl-lepe-nottingham-hornicek-prispel-k-vitezstvi-bragy-156537",
-      "dt": "2026-04-30T21:44:33Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "anglický",
-        "bragy",
-        "duel",
-        "horníček",
-        "lépe",
-        "nottingham",
-        "přispěl",
-        "vítězství",
-        "zvládl"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1519,7 +1523,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42062,
+      "bytes": 42322,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1608,7 +1612,7 @@
             "publishedAt": "2026-05-02T15:00:00Z"
           },
           {
-            "title": "Požár lesa v Českém Švýcarsku se rozšířil na 900 hektarů, píše ČTK",
+            "title": "V Českém Švýcarsku hoří les, podle informací ČT přibližně na sto hektarech",
             "publishedAt": "2026-05-02T12:59:09Z"
           },
           {
@@ -1637,7 +1641,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 39074,
+      "bytes": 39213,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1674,7 +1678,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T16:37:34Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T17:04:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,6 +1693,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Villarreal přejel Levante a drží si odstup od Atlética, které veze výhru z Valencie",
+            "publishedAt": "2026-05-02T17:04:45Z"
+          },
+          {
+            "title": "Baník remizoval s Mladou Boleslaví a srovnal krok s konkurenty v boji o udržení",
+            "publishedAt": "2026-05-02T16:49:05Z"
+          },
           {
             "title": "West Ham narazil na stadionu Brentfordu",
             "publishedAt": "2026-05-02T16:37:34Z"
@@ -1712,14 +1724,6 @@
           {
             "title": "Čtvrtkařská štafeta žen si zajistila účast na MS 2027",
             "publishedAt": "2026-05-02T14:44:53Z"
-          },
-          {
-            "title": "Švédští mladíci rozebrali českou obranu. Národní tým padl se Švédy i potřetí v sezoně",
-            "publishedAt": "2026-05-02T13:45:00Z"
-          },
-          {
-            "title": "Další medaile do sbírky. Češi si odvezou z MS do 18 let bronz",
-            "publishedAt": "2026-05-02T13:01:28Z"
           }
         ]
       }
@@ -1731,7 +1735,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77321,
+      "bytes": 77297,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

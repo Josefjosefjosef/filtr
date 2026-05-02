@@ -1,26 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-02T16:51:19.337959Z",
+  "ingestedAt": "2026-05-02T17:25:34.527030Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Liberec - Slavia 0:1. Pražský favorit udeřil, po asistenci Provoda se trefil Ogbu",
+      "title": "Čeští hokejisté v přípravě na MS poprvé neuspěli, prohráli se Švédy 2:4",
+      "url": "https://sport.aktualne.cz/hokej/hokejova-reprezentace/cesti-hokejiste-v-priprave-na-ms-poprve-neuspeli-prohrali-se-svedy-2-4/r~aaa295f237e10b53b7b3bed15ee69755/",
+      "dt": "2026-05-02T16:48:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "hokejisté",
+        "neuspěli",
+        "poprvé",
+        "prohráli",
+        "přípravě",
+        "čeští",
+        "švédy"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Liberec - Slavia 1:2. Komplikace pro favorita, liberecký Mahmič snižuje",
       "url": "https://sport.aktualne.cz/fotbal/ceska-liga/liberec-slavia-sesivani-si-pod-jestedem-chteji-upevnit-pozici-v-boji-o-titul/r~aaa29280f6e427b1d32c2d81cad3e952/",
       "dt": "2026-05-02T15:38:00Z",
       "media_raw": "Aktuálně",
       "media_norm": "Aktuálně",
       "tokens": [
-        "asistenci",
-        "favorit",
+        "favorita",
+        "komplikace",
         "liberec",
-        "ogbu",
-        "pražský",
-        "provoda",
+        "liberecký",
+        "mahmič",
         "slavia",
-        "trefil",
-        "udeřil"
+        "snižuje"
       ],
       "feedCategory": "zpravy",
       "feedType": "rss",
@@ -504,35 +526,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "USA sníží počet svých vojáků v Německu o pět tisíc. Tusk varuje před rozpadem NATO",
-      "url": "https://zpravy.aktualne.cz/zahranici/usa-snizi-pocet-svych-vojaku-v-nemecku-o-pet-tisic-tusk-varuje-pred-rozpadem-nato/r~aaa29c3955ab51a357f50d28dcf703b2/",
-      "dt": "2026-05-02T12:26:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "nato",
-        "německu",
-        "počet",
-        "pět",
-        "rozpadem",
-        "sníží",
-        "svých",
-        "tisíc",
-        "tusk",
-        "usa",
-        "varuje",
-        "vojáků"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +536,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 20406,
+      "bytes": 20526,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,11 +573,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:57:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T16:48:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 5,
-          "zpravy": 15
+          "sport": 6,
+          "zpravy": 14
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,7 +590,11 @@
         },
         "sample_titles": [
           {
-            "title": "Liberec - Slavia 0:1. Pražský favorit udeřil, po asistenci Provoda se trefil Ogbu",
+            "title": "Čeští hokejisté v přípravě na MS poprvé neuspěli, prohráli se Švédy 2:4",
+            "publishedAt": "2026-05-02T16:48:00Z"
+          },
+          {
+            "title": "Liberec - Slavia 1:2. Komplikace pro favorita, liberecký Mahmič snižuje",
             "publishedAt": "2026-05-02T15:38:00Z"
           },
           {
@@ -623,10 +620,6 @@
           {
             "title": "Ostravská ostuda nekončí, Baník nedal gól. Pardubice zaskočily Karvinou",
             "publishedAt": "2026-05-02T15:07:00Z"
-          },
-          {
-            "title": "Posedlost jménem Chinamaxxing. V USA kvůli Číňanům dokonce mění i dávný zvyk",
-            "publishedAt": "2026-05-02T14:43:00Z"
           }
         ]
       }

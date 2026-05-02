@@ -1,14 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T16:51:19.337959Z",
+  "ingestedAt": "2026-05-02T17:25:34.527030Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Zvláštní stupeň poplachu, bezletová zóna. V Českém Švýcarsku hoří stovky hektarů",
+      "title": "VIDEO: Po majálesu zůstaly v Letňanech odpadky. Uklidí se, ujišťuje pořadatel",
+      "url": "https://www.idnes.cz/praha/zpravy/majales-praha-letnany-odpadky.A260502_114749_praha-zpravy_pari",
+      "dt": "2026-05-02T17:07:15Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "letňanech",
+        "majálesu",
+        "odpadky",
+        "pořadatel",
+        "ujišťuje",
+        "uklidí",
+        "zůstaly"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Zvláštní stupeň poplachu, bezletová zóna. V Českém Švýcarsku hoří sto hektarů",
       "url": "https://www.idnes.cz/usti/zpravy/v-narodnim-parku-ceske-svycarsko-hori-les-plati-druhy-stupen-poplachu.A260502_142911_usti-zpravy_vank",
-      "dt": "2026-05-02T16:33:00Z",
+      "dt": "2026-05-02T17:05:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
@@ -16,7 +40,7 @@
         "hektarů",
         "hoří",
         "poplachu",
-        "stovky",
+        "sto",
         "stupeň",
         "zvláštní",
         "zóna",
@@ -570,29 +594,6 @@
         "tak",
         "trump",
         "řekl"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "VIDEO: Po Pražském majálesu zůstaly v Letňanech hromady odpadků",
-      "url": "https://www.idnes.cz/praha/zpravy/majales-praha-letnany-odpadky.A260502_114749_praha-zpravy_pari",
-      "dt": "2026-05-02T10:44:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "hromady",
-        "letňanech",
-        "majálesu",
-        "odpadků",
-        "pražském",
-        "zůstaly"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1580,7 +1581,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48320,
+      "bytes": 48379,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1617,7 +1618,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T16:33:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T17:07:15Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -1635,8 +1636,12 @@
         },
         "sample_titles": [
           {
-            "title": "Zvláštní stupeň poplachu, bezletová zóna. V Českém Švýcarsku hoří stovky hektarů",
-            "publishedAt": "2026-05-02T16:33:00Z"
+            "title": "VIDEO: Po majálesu zůstaly v Letňanech odpadky. Uklidí se, ujišťuje pořadatel",
+            "publishedAt": "2026-05-02T17:07:15Z"
+          },
+          {
+            "title": "Zvláštní stupeň poplachu, bezletová zóna. V Českém Švýcarsku hoří sto hektarů",
+            "publishedAt": "2026-05-02T17:05:00Z"
           },
           {
             "title": "Rakouská policie zadržela podezřelého z otravy dětských výživ",
@@ -1661,10 +1666,6 @@
           {
             "title": "Revoluce v placení. Na Slovensku musejí obchody nově nabízet platbu online",
             "publishedAt": "2026-05-02T14:08:00Z"
-          },
-          {
-            "title": "Představil se Karel. První humanoidní robot na Vysočině ukázal, jak umí chodit",
-            "publishedAt": "2026-05-02T14:02:00Z"
           }
         ]
       }

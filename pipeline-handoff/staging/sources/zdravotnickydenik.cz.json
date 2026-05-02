@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-02T16:51:19.337959Z",
+  "ingestedAt": "2026-05-02T17:25:34.527030Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Jed na krysy v dětské výživě: Policie zadržela podezřelého. Vyděrač řádil i v Česku",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/jed-na-krysy-v-detske-vyzive-policie-zadrzela-podezreleho/",
+      "dt": "2026-05-02T17:03:25Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "dětské",
+        "jed",
+        "krysy",
+        "podezřelého",
+        "policie",
+        "vyděrač",
+        "výživě",
+        "zadržela",
+        "česku",
+        "řádil"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -247,31 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/soud-vzp-uplatek-dosetreni/",
-      "dt": "2026-04-30T09:01:59Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "aféra",
-        "nezdály",
-        "obviněných",
-        "soud",
-        "vrátil",
-        "vzp",
-        "výpovědi",
-        "úplatkářská"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -282,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 89203,
+      "bytes": 88818,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T08:46:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T17:03:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zpravy": 3,
@@ -335,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jed na krysy v dětské výživě: Policie zadržela podezřelého. Vyděrač řádil i v Česku",
+            "publishedAt": "2026-05-02T17:03:25Z"
+          },
           {
             "title": "Další bitva o potraty v USA: Soud zakázal zasílání oblíbené pilulky poštou",
             "publishedAt": "2026-05-02T08:46:25Z"
@@ -362,10 +368,6 @@
           {
             "title": "Blamáž na Slovensku: Stavbu vojenské nemocnice za miliardy zastavili, hrozí demolice",
             "publishedAt": "2026-04-30T13:18:21Z"
-          },
-          {
-            "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
-            "publishedAt": "2026-04-30T11:14:56Z"
           }
         ]
       }
