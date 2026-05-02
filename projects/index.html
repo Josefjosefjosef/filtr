@@ -671,8 +671,7 @@ style-src 'self' 'unsafe-inline' https:;
         }
         /* P0 CLS: při kalendářové akci držíme výšku vstupu — rebuild věty po „uložit do kalendáře“ nesmí roztáhnout composer. */
         html[data-iu-silver-cal-ui="ACTION_STATE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput,
-        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput,
-        html[data-iu-silver-cal-ui="CALENDAR_DAY_TIMELINE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput{
+        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput{
           height: 78px !important;
           max-height: 78px !important;
           overflow-y: auto !important;
@@ -699,9 +698,7 @@ style-src 'self' 'unsafe-inline' https:;
           z-index: 1;
         }
         html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder,
-        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder,
-        html[data-iu-silver-cal-ui="CALENDAR_DAY_TIMELINE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder,
-        html[data-iu-silver-cal-ui="CALENDAR_DAY_TIMELINE"] #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder{
+        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder{
           color: #f97316 !important;
           opacity: 0.92 !important;
         }
@@ -999,25 +996,25 @@ style-src 'self' 'unsafe-inline' https:;
           max-width: 100% !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn{
-          background: linear-gradient(135deg, #ff8a00, #ff6a00) !important;
+          background: linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(234, 88, 12, 0.92)) !important;
           color: #fff !important;
-          border: none !important;
-          font-weight: 600 !important;
-          box-shadow: 0 6px 18px rgba(255, 122, 0, 0.35) !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
+          font-weight: 700 !important;
+          box-shadow: 0 4px 16px rgba(22, 163, 74, 0.28), 0 2px 8px rgba(234, 88, 12, 0.18) !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn{
-          background: transparent !important;
-          color: #ff7a00 !important;
-          border: 2px solid #ff7a00 !important;
-          font-weight: 500 !important;
-          box-shadow: none !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: #fff !important;
+          border: 1px solid rgba(255, 255, 255, 0.38) !important;
+          font-weight: 650 !important;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) inset !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn{
-          background: transparent !important;
-          border: none !important;
-          color: rgba(255, 255, 255, 0.7) !important;
-          font-weight: 500 !important;
-          box-shadow: none !important;
+          background: rgba(15, 23, 42, 0.35) !important;
+          border: 1px solid rgba(255, 255, 255, 0.22) !important;
+          color: rgba(248, 250, 252, 0.95) !important;
+          font-weight: 650 !important;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
         }
       }
       @media (min-width: 1025px){
@@ -5129,6 +5126,9 @@ style-src 'self' 'unsafe-inline' https:;
             <div id="iuCalendarViewRoot" class="iu-calendarOverlay__viewRoot"></div>
           </section>
           <aside class="iu-calendarOverlay__side">
+            <div id="iuCalendarMobileFormBar" class="iu-calendarOverlay__mobileFormBar" hidden>
+              <button type="button" class="iu-calendarOverlay__mobileFormBarBack" data-iu-cal-mobile-form-back="1">Zpět k přehledu dne</button>
+            </div>
             <form id="iuCalendarEventForm" class="iu-calendarOverlay__form">
               <input type="hidden" name="id" />
               <label>Datum <input type="date" name="date" required /></label>
@@ -5156,6 +5156,21 @@ style-src 'self' 'unsafe-inline' https:;
               <ul id="iuCalendarDayEvents" class="iu-calendarOverlay__eventList"></ul>
             </section>
           </aside>
+          <div id="iuCalendarMobileDayPanel" class="iu-calendarMobileDayPanel" hidden aria-hidden="true">
+            <div class="iu-calendarMobileDayPanel__top">
+              <button type="button" class="iu-calendarMobileDayPanel__back" data-iu-cal-mobile-day-back="1">Zpět</button>
+              <div class="iu-calendarMobileDayPanel__headText">
+                <h3 class="iu-calendarMobileDayPanel__weekday" id="iuCalendarMobileDayWeekday"></h3>
+                <p class="iu-calendarMobileDayPanel__dateLine" id="iuCalendarMobileDayDateLine"></p>
+              </div>
+            </div>
+            <div class="iu-calendarMobileDayPanel__scroll" id="iuCalendarMobileDayScroll">
+              <div id="iuCalendarMobileDayHours" class="iu-calendarMobileDayHours" aria-label="Hodiny"></div>
+              <div class="iu-calendarMobileDayPanel__sectionLabel">Události</div>
+              <ul id="iuCalendarMobileDayEventList" class="iu-calendarMobileDayEventList"></ul>
+              <p id="iuCalendarMobileDayEmpty" class="iu-calendarMobileDayEmpty" hidden>Žádné události tento den.</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -5285,6 +5300,209 @@ style-src 'self' 'unsafe-inline' https:;
         html body #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions,
         html body #iuMobileSilverSlot #silver-slot #iuSilverWelcomeStack #iuSilverHeroPremium .iu-hero-quickActions.iu-hero-actions {
           margin-top: 0 !important;
+        }
+      }
+    </style>
+    <style id="iu-calendar-unified-mobile-p1">
+      @media (max-width: 1024px) {
+        #iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calendarOverlay__dialog {
+          background: linear-gradient(165deg, #ecfdf5 0%, #f8fafc 22%, #ffffff 55%) !important;
+          border: 1px solid rgba(21, 128, 61, 0.14) !important;
+          box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.06), 0 18px 48px rgba(15, 23, 42, 0.12) !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calendarOverlay__header {
+          background: linear-gradient(180deg, rgba(236, 253, 245, 0.95), #ffffff) !important;
+          border-bottom: 1px solid rgba(21, 128, 61, 0.16) !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calendarOverlay__viewBtn.is-active {
+          background: linear-gradient(180deg, #15803d 0%, #166534 100%) !important;
+          color: #fff !important;
+          border-color: #14532d !important;
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 4px 14px rgba(21, 128, 61, 0.25) !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calDayCell.is-selected:not(.is-today) {
+          border-color: #16a34a !important;
+          box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.28) inset !important;
+          background: #fff !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--premiumMob .iu-calDayCell.is-today {
+          border-color: rgba(22, 163, 74, 0.55) !important;
+          box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.35) inset, 0 6px 18px rgba(22, 163, 74, 0.12) !important;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__body {
+          position: relative;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__body {
+          flex: 1 1 auto !important;
+          min-height: 0 !important;
+          overflow: hidden !important;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__main {
+          flex: 1 1 auto !important;
+          min-height: 0 !important;
+          overflow: auto !important;
+          -webkit-overflow-scrolling: touch;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel {
+          position: absolute;
+          inset: 0;
+          z-index: 6;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 28%);
+          border-radius: 0;
+          box-shadow: 0 -1px 0 rgba(21, 128, 61, 0.12);
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel[hidden] {
+          display: none !important;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__top {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 10px 12px 8px;
+          border-bottom: 1px solid rgba(21, 128, 61, 0.14);
+          background: rgba(255, 255, 255, 0.92);
+          flex: 0 0 auto;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__back {
+          flex: 0 0 auto;
+          border-radius: 10px;
+          border: 1px solid rgba(21, 128, 61, 0.35);
+          background: #fff;
+          color: #14532d;
+          font-weight: 700;
+          font-size: 14px;
+          padding: 8px 12px;
+          min-height: 40px;
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__headText {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__weekday {
+          margin: 0;
+          font-size: 17px;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: -0.02em;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__dateLine {
+          margin: 2px 0 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: rgba(15, 23, 42, 0.72);
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__scroll {
+          flex: 1 1 auto;
+          min-height: 0;
+          overflow: auto;
+          -webkit-overflow-scrolling: touch;
+          padding: 10px 12px 16px;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayHours {
+          display: grid;
+          gap: 6px;
+          margin-bottom: 14px;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayHourRow {
+          display: grid;
+          grid-template-columns: 52px 1fr;
+          gap: 8px;
+          align-items: stretch;
+          padding: 8px 10px;
+          border-radius: 12px;
+          border: 1px solid rgba(21, 128, 61, 0.12);
+          background: #fff;
+          box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayHourRow__t {
+          font-size: 13px;
+          font-weight: 700;
+          color: #166534;
+          align-self: center;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayHourRow__c {
+          font-size: 13px;
+          color: #334155;
+          align-self: center;
+          min-width: 0;
+          overflow-wrap: anywhere;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayPanel__sectionLabel {
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: rgba(21, 128, 61, 0.85);
+          margin: 4px 0 8px;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayEventList {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: grid;
+          gap: 8px;
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayEventList .iu-calendarOverlay__eventBtn {
+          border-radius: 12px;
+          border: 1px solid rgba(21, 128, 61, 0.18);
+          background: #fff;
+          box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+        }
+        #iuCalendarOverlay .iu-calendarMobileDayEmpty {
+          margin: 8px 0 0;
+          font-size: 14px;
+          color: rgba(15, 23, 42, 0.55);
+          font-weight: 600;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarOverlay__main,
+        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarMobileDayPanel {
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
+        #iuCalendarOverlay.iu-calendarOverlay--mobileForm .iu-calendarOverlay__side {
+          position: absolute !important;
+          inset: 0 !important;
+          z-index: 8 !important;
+          border: 0 !important;
+          overflow: auto !important;
+          -webkit-overflow-scrolling: touch;
+          background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+          padding: 10px 12px 20px !important;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__mobileFormBar {
+          margin-bottom: 10px;
+        }
+        #iuCalendarOverlay .iu-calendarOverlay__mobileFormBarBack {
+          width: 100%;
+          border-radius: 10px;
+          border: 1px solid rgba(21, 128, 61, 0.35);
+          background: #fff;
+          color: #14532d;
+          font-weight: 700;
+          font-size: 14px;
+          padding: 10px 12px;
+          min-height: 44px;
+          cursor: pointer;
+          touch-action: manipulation;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSave .iuSilverHomeChip__label,
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSearch .iuSilverHomeChip__label,
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel .iuSilverHomeChip__label {
+          white-space: normal !important;
+          overflow-wrap: anywhere;
+          text-align: center;
+          line-height: 1.2;
+          max-width: 100%;
+        }
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip {
+          min-height: 48px !important;
+          padding-left: 10px !important;
+          padding-right: 10px !important;
         }
       }
     </style>

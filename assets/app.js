@@ -32561,7 +32561,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     returnFocusEl: null,
     currentEditId: "",
     trapAttached: false,
-    prevBodyPadRight: ""
+    prevBodyPadRight: "",
+    mobileDayOpen: false,
+    mobileFormOpen: false
   };
 
   function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); }
@@ -32607,6 +32609,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function addDays(dateStr, days){ const d = new Date(dateStr + "T00:00:00"); d.setDate(d.getDate() + days); return toDateOnly(d); }
   function startOfWeek(dateStr){ const d = new Date(dateStr + "T00:00:00"); const day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return toDateOnly(d); }
   function sameYMD(a, b){ return String(a) === String(b); }
+
+  function isCalMobileLayout(){
+    try {
+      return window.matchMedia && window.matchMedia("(max-width: 1024px)").matches;
+    } catch (_) {
+      return (window.innerWidth || 0) <= 1024;
+    }
+  }
+
+  function calMonthGenitiveCs(m0){
+    const names = [
+      "ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"
+    ];
+    return names[m0] || "";
+  }
+  function calWeekdayNameCs(dow){
+    const names = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+    return names[dow] || "";
+  }
+  function formatCalMobileDayHeading(iso){
+    const p = String(iso || "").split("-");
+    if (p.length < 3) return { line1: "", line2: "" };
+    const d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    if (!Number.isFinite(d.getTime())) return { line1: "", line2: "" };
+    const wd = calWeekdayNameCs(d.getDay());
+    const head = wd ? wd.charAt(0).toUpperCase() + wd.slice(1) : "";
+    const monG = calMonthGenitiveCs(d.getMonth());
+    return {
+      line1: head,
+      line2: d.getDate() + ". " + monG + " " + d.getFullYear()
+    };
+  }
 
   function isHoliday(dateStr){
     const d = new Date(dateStr + "T00:00:00");
@@ -32773,6 +32807,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function closeOverlay(){
     const ov = getOverlay();
     if (!ov) return;
+    state.mobileDayOpen = false;
+    state.mobileFormOpen = false;
     try{
       if (typeof window.__iuSilverCalOverlayClosed === "function"){
         window.__iuSilverCalOverlayClosed();
@@ -32823,6 +32859,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     renderView();
     renderDayList();
     hydrateFormFromCurrent();
+    syncMobileCalendarChrome();
   }
 
   function renderViewButtons(){
@@ -32853,7 +32890,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       root.innerHTML = renderTimeline(Array.from({ length: 7 }, (_, i)=>addDays(s, i)));
     } else if (state.view === "month") root.innerHTML = renderMonthGrid(state.cursorDate);
     else root.innerHTML = renderYearGrid(new Date(state.cursorDate + "T00:00:00").getFullYear());
-    root.querySelectorAll("[data-iu-cal-select-date]").forEach((el)=>el.addEventListener("click", ()=>{ state.selectedDate = el.getAttribute("data-iu-cal-select-date") || state.selectedDate; state.cursorDate = state.selectedDate; render(); }));
+    root.querySelectorAll("[data-iu-cal-select-date]").forEach((el)=>el.addEventListener("click", ()=>{
+      const ds = el.getAttribute("data-iu-cal-select-date") || state.selectedDate;
+      state.selectedDate = ds;
+      state.cursorDate = ds;
+      if (isCalMobileLayout() && (state.view === "month" || state.view === "week" || state.view === "year")){
+        state.mobileDayOpen = true;
+        state.mobileFormOpen = false;
+      }
+      render();
+    }));
     root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
   }
 
@@ -32957,6 +33003,108 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     list.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
   }
 
+  function closeMobileDaySheet(){
+    state.mobileDayOpen = false;
+    render();
+  }
+
+  function renderMobileDayPanel(){
+    const panel = document.getElementById("iuCalendarMobileDayPanel");
+    const wEl = document.getElementById("iuCalendarMobileDayWeekday");
+    const dEl = document.getElementById("iuCalendarMobileDayDateLine");
+    const hoursEl = document.getElementById("iuCalendarMobileDayHours");
+    const listEl = document.getElementById("iuCalendarMobileDayEventList");
+    const emptyEl = document.getElementById("iuCalendarMobileDayEmpty");
+    if (!panel || !wEl || !dEl || !hoursEl || !listEl || !emptyEl) return;
+    const iso = String(state.selectedDate || "").trim() || toDateOnly(new Date());
+    const head = formatCalMobileDayHeading(iso);
+    wEl.textContent = head.line1;
+    dEl.textContent = head.line2;
+    const items = getEventsForDate(iso);
+    const byHour = {};
+    for (let i = 0; i < items.length; i++){
+      const ev = items[i];
+      const hh = String(ev.time || "09:00").slice(0, 2);
+      const key = hh + ":00";
+      if (!byHour[key]) byHour[key] = [];
+      byHour[key].push(ev);
+    }
+    let hoursHtml = "";
+    for (let h = 6; h <= 22; h++){
+      const hm = pad(h) + ":00";
+      const slot = byHour[hm] || [];
+      const txt = slot.length ? slot.map((ev)=>esc(ev.title)).join(" · ") : "—";
+      hoursHtml +=
+        '<div class="iu-calendarMobileDayHourRow"><div class="iu-calendarMobileDayHourRow__t">' +
+        esc(hm) +
+        '</div><div class="iu-calendarMobileDayHourRow__c">' +
+        txt +
+        "</div></div>";
+    }
+    hoursEl.innerHTML = hoursHtml;
+    const todayStr = toDateOnly(new Date());
+    const nowMs = Date.now();
+    let nearestId = "";
+    if (iso === todayStr && items.length){
+      for (let i = 0; i < items.length; i++){
+        const ev = items[i];
+        if (parseDateTime(ev.date, ev.time).getTime() >= nowMs){ nearestId = ev.id; break; }
+      }
+    }
+    listEl.innerHTML = items.map((ev)=>{
+      let cls = "iu-calendarOverlay__eventBtn";
+      if (ev.id === nearestId) cls += " is-nearest-upcoming";
+      if (parseDateTime(ev.date, ev.time).getTime() < nowMs) cls += " is-past-event";
+      return `<li><button type="button" class="${cls}" data-iu-cal-open-event="${esc(ev.id)}">${esc(ev.time)} · ${esc(ev.title)}</button></li>`;
+    }).join("");
+    listEl.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
+    const empty = !items.length;
+    emptyEl.hidden = !empty;
+    listEl.style.display = empty ? "none" : "grid";
+  }
+
+  function syncMobileCalendarChrome(){
+    const ov = getOverlay();
+    if (!ov) return;
+    const mob = isCalMobileLayout();
+    ov.classList.toggle("iu-calendarOverlay--premiumMob", mob);
+    ov.classList.toggle("iu-calendarOverlay--mobileDay", mob && state.mobileDayOpen && !state.mobileFormOpen);
+    ov.classList.toggle("iu-calendarOverlay--mobileForm", mob && state.mobileFormOpen);
+    const panel = document.getElementById("iuCalendarMobileDayPanel");
+    const side = ov.querySelector(".iu-calendarOverlay__side");
+    const bar = document.getElementById("iuCalendarMobileFormBar");
+    const showDay = mob && state.mobileDayOpen && !state.mobileFormOpen;
+    const showFormBar = mob && state.mobileFormOpen;
+    if (panel){
+      if (showDay){
+        panel.hidden = false;
+        panel.setAttribute("aria-hidden", "false");
+        renderMobileDayPanel();
+      } else {
+        panel.hidden = true;
+        panel.setAttribute("aria-hidden", "true");
+      }
+    }
+    if (side){
+      let hideSide = false;
+      if (mob){
+        if (state.mobileFormOpen) hideSide = false;
+        else if (state.mobileDayOpen) hideSide = true;
+        else if (state.view === "month") hideSide = true;
+        else hideSide = false;
+      }
+      if (hideSide) side.setAttribute("hidden", "");
+      else side.removeAttribute("hidden");
+    }
+    if (bar){
+      if (showFormBar){
+        bar.hidden = false;
+      } else {
+        bar.hidden = true;
+      }
+    }
+  }
+
   function renderCalendarEventDetailPanel(evt){
     const host = document.getElementById("iuCalendarEventDetail");
     if (!host) return;
@@ -33018,7 +33166,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     el.querySelectorAll("[data-iu-cal-remove-att]").forEach((btn)=>btn.addEventListener("click", ()=>removeAttachment(btn.getAttribute("data-iu-cal-remove-att") || "")));
   }
 
-  function loadEventForEdit(id){ const ev = state.data.events.find((e)=>e.id === id); if (!ev) return; state.currentEditId = id; state.selectedDate = ev.date; state.cursorDate = ev.date; setMessage(""); render(); }
+  function loadEventForEdit(id){
+    const ev = state.data.events.find((e)=>e.id === id);
+    if (!ev) return;
+    state.currentEditId = id;
+    state.selectedDate = ev.date;
+    state.cursorDate = ev.date;
+    setMessage("");
+    if (isCalMobileLayout()){
+      state.mobileFormOpen = true;
+      state.mobileDayOpen = false;
+    }
+    render();
+  }
   async function removeAttachment(attId){
     if (!state.currentEditId) return;
     const ev = state.data.events.find((e)=>e.id === state.currentEditId);
@@ -33058,6 +33218,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.cursorDate = base.date;
     await writeStore();
     setMessage("Uloženo.");
+    if (isCalMobileLayout()){
+      state.mobileFormOpen = false;
+      state.mobileDayOpen = true;
+    }
     render();
   }
 
@@ -33068,6 +33232,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.currentEditId = "";
     await writeStore();
     setMessage("Smazáno.");
+    if (isCalMobileLayout()){
+      state.mobileFormOpen = false;
+      state.mobileDayOpen = true;
+    }
     render();
   }
 
@@ -33127,6 +33295,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function navPeriod(delta){
+    state.mobileDayOpen = false;
+    state.mobileFormOpen = false;
     const d = new Date(state.cursorDate + "T00:00:00");
     if (state.view === "day") d.setDate(d.getDate() + delta);
     else if (state.view === "week") d.setDate(d.getDate() + (7 * delta));
@@ -33158,13 +33328,50 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       const close = t && t.closest ? t.closest("[data-iu-calendar-close]") : null;
       if (close){ e.preventDefault(); closeOverlay(); return; }
+      const mobDayBack = t && t.closest ? t.closest("[data-iu-cal-mobile-day-back]") : null;
+      if (mobDayBack){ e.preventDefault(); closeMobileDaySheet(); return; }
+      const mobFormBack = t && t.closest ? t.closest("[data-iu-cal-mobile-form-back]") : null;
+      if (mobFormBack){
+        e.preventDefault();
+        state.mobileFormOpen = false;
+        state.currentEditId = "";
+        setMessage("");
+        if (isCalMobileLayout()) state.mobileDayOpen = true;
+        render();
+        return;
+      }
       const viewBtn = t && t.closest ? t.closest("[data-iu-cal-view]") : null;
-      if (viewBtn){ const v = String(viewBtn.getAttribute("data-iu-cal-view") || ""); if (ALLOWED_VIEWS.has(v)){ state.view = v; render(); } return; }
+      if (viewBtn){
+        const v = String(viewBtn.getAttribute("data-iu-cal-view") || "");
+        if (ALLOWED_VIEWS.has(v)){
+          state.view = v;
+          state.mobileDayOpen = false;
+          state.mobileFormOpen = false;
+          render();
+        }
+        return;
+      }
       const navBtn = t && t.closest ? t.closest("[data-iu-cal-nav]") : null;
       if (navBtn){ navPeriod(Number(navBtn.getAttribute("data-iu-cal-nav") || 0)); return; }
-      if (t && t.closest && t.closest("[data-iu-cal-today]")){ state.cursorDate = toDateOnly(new Date()); state.selectedDate = state.cursorDate; render(); return; }
+      if (t && t.closest && t.closest("[data-iu-cal-today]")){
+        state.cursorDate = toDateOnly(new Date());
+        state.selectedDate = state.cursorDate;
+        state.mobileDayOpen = false;
+        state.mobileFormOpen = false;
+        render();
+        return;
+      }
       if (t && t.closest && t.closest("[data-iu-cal-delete]")){ deleteCurrentEvent(); return; }
-      if (t && t.closest && t.closest("[data-iu-cal-reset]")){ state.currentEditId = ""; setMessage(""); hydrateFormFromCurrent(); return; }
+      if (t && t.closest && t.closest("[data-iu-cal-reset]")){
+        state.currentEditId = "";
+        setMessage("");
+        if (isCalMobileLayout()){
+          state.mobileFormOpen = false;
+          state.mobileDayOpen = true;
+        }
+        hydrateFormFromCurrent();
+        return;
+      }
     });
     const form = document.getElementById("iuCalendarEventForm");
     if (form){ form.addEventListener("submit", (e)=>{ e.preventDefault(); upsertEventFromForm(); }); }
@@ -33183,10 +33390,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.iuCalendarService = {
       calendarOpenTodayDayView: function(originEl){
         const today = toDateOnly(new Date());
-        state.view = "day";
-        state.cursorDate = today;
-        state.selectedDate = today;
+        if (isCalMobileLayout()){
+          state.view = "month";
+          state.cursorDate = today;
+          state.selectedDate = today;
+          state.mobileDayOpen = true;
+          state.mobileFormOpen = false;
+        } else {
+          state.view = "day";
+          state.cursorDate = today;
+          state.selectedDate = today;
+        }
         render();
+        openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
+      },
+      calendarOpenDayFromSilver: function(iso, originEl){
+        const d = String(iso || "").trim().slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+        state.view = "month";
+        state.cursorDate = d;
+        state.selectedDate = d;
+        state.mobileDayOpen = true;
+        state.mobileFormOpen = false;
+        state.currentEditId = "";
         openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
       },
       calendarCreateEvent: async function(payload){
@@ -33258,8 +33484,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     var SILVER_CAL_UI_CAL_OPEN = "CALENDAR_OPEN";
     /** Mobile/tablet: po „Uložit do kalendáře“ — vstup + nápověda + „Zobrazit kalendář“ (žádný starý multi-step). */
     var SILVER_CAL_UI_CALENDAR_COMPOSE = "CALENDAR_COMPOSE";
-    /** Mini kalendář → klik den → denní timeline hodin (06–22), lokální draft bez backendu. */
-    var SILVER_CAL_UI_CALENDAR_DAY_TIMELINE = "CALENDAR_DAY_TIMELINE";
     /** Oranžová nápověda jen jako placeholder (ne value). */
     var SILVER_CALENDAR_COMPOSE_HINT = "Napiš např.: z\u00edtra v 18:00 zuba\u0159";
     var SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER = "Napi\u0161 Silverovi\u2026";
@@ -33284,8 +33508,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
     var silverMiniCalYear = new Date().getFullYear();
     var silverMiniCalMonth = new Date().getMonth();
-    /** { "YYYY-MM-DD": { "HH:MM": "název" } } — runtime pouze v UI. */
-    var silverTimelineLocalByIso = {};
 
     function narrow() {
       try {
@@ -33326,10 +33548,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       try {
         el.innerHTML = "";
       } catch (_) {}
-      if (silverCalUiState === SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) {
-        silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
-        setSilverCalUiAttr();
-      }
     }
 
     function paintSilverMiniCalendar() {
@@ -33410,124 +33628,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       root.innerHTML = html;
     }
 
-    function silverTimelineMonthGenitiveCs(m0) {
-      var names = [
-        "ledna",
-        "\u00fanora",
-        "b\u0159ezna",
-        "dubna",
-        "kv\u011btna",
-        "\u010dervna",
-        "\u010dervence",
-        "srpna",
-        "z\u00e1\u0159\u00ed",
-        "\u0159\u00edjna",
-        "listopadu",
-        "prosince"
-      ];
-      return names[m0] || "";
-    }
-
-    function silverTimelineWeekdayNameCs(dow) {
-      var names = ["ned\u011ble", "pond\u011bl\u00ed", "\u00fater\u00fd", "st\u0159eda", "\u010dtvrtek", "p\u00e1tek", "sobota"];
-      return names[dow] || "";
-    }
-
-    function formatSilverTimelineDayHeading(iso) {
-      var p = String(iso || "").split("-");
-      if (p.length < 3) return "";
-      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
-      if (!Number.isFinite(d.getTime())) return "";
-      var wd = silverTimelineWeekdayNameCs(d.getDay());
-      var head = wd ? wd.charAt(0).toUpperCase() + wd.slice(1) : "";
-      var monG = silverTimelineMonthGenitiveCs(d.getMonth());
-      return head + " " + d.getDate() + ". " + monG + " " + d.getFullYear();
-    }
-
-    function paintSilverDayTimeline() {
-      var root = miniCalEl();
-      if (!root || root.hidden) return;
-      var iso = String(silverCalendarDraft.date || "").trim() || todayIso();
-      silverCalendarDraft.date = iso;
-      var heading = formatSilverTimelineDayHeading(iso);
-      var store = silverTimelineLocalByIso[iso] || {};
-      var html = "";
-      html +=
-        '<div class="iuSilverMiniCal iuSilverDayTimeline" role="dialog" aria-label="Denn\u00ed pl\u00e1n">' +
-        '<div class="iuSilverDayTimeline__toolbar">' +
-        '<button type="button" class="iuSilverDayTimeline__backMonth" data-iu-silver-mini-cal="timeline-back">Zp\u011bt na m\u011bs\u00edc</button>' +
-        "</div>" +
-        '<h3 class="iuSilverDayTimeline__title" id="iuSilverDayTimelineTitle">' +
-        (heading || "") +
-        "</h3>" +
-        '<div class="iuSilverDayTimeline__hours" data-iu-silver-timeline-hours="1">';
-      var h;
-      for (h = 6; h <= 22; h++) {
-        var hm = pad2(h) + ":00";
-        var tit = String(store[hm] || "").trim();
-        html += '<div class="iuSilverDayTimelineRow" data-iu-silver-timeline-row="1" data-iu-silver-hour="' + h + '">';
-        html += '<span class="iuSilverDayTimelineRow__time">' + hm + "</span>";
-        html += '<div class="iuSilverDayTimelineRow__slot">';
-        if (tit) {
-          var titEsc = String(tit)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/\"/g, "&quot;");
-          html +=
-            '<div class="iuSilverDayTimelineRow__summary" data-iu-silver-hour-summary="1">' +
-            hm +
-            " \u2014 " +
-            titEsc +
-            "</div>";
-        } else {
-          html +=
-            '<input type="text" class="iuSilverDayTimelineRow__input" maxlength="120" placeholder="N\u00e1zev ud\u00e1losti\u2026" data-iu-silver-hour-input="1" autocomplete="off" />';
-        }
-        html += "</div></div>";
-      }
-      html += "</div></div>";
-      root.innerHTML = html;
-    }
-
-    var silverTimelineLastCommitKey = "";
-
-    function commitSilverTimelineHourInput(inp) {
-      if (!inp || GC.mode !== "calendar_compose") return;
-      if (silverCalUiState !== SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) return;
-      var row = inp.closest ? inp.closest("[data-iu-silver-timeline-row]") : null;
-      if (!row) return;
-      var iso = String(silverCalendarDraft.date || "").trim();
-      if (!iso) return;
-      var hAttr = row.getAttribute("data-iu-silver-hour");
-      var hNum = Number(hAttr);
-      if (!Number.isFinite(hNum)) return;
-      var hm = pad2(hNum) + ":00";
-      var tit = String(inp.value || "").trim();
-      var dedupeKey = iso + "|" + hm + "|" + tit;
-      if (silverTimelineLastCommitKey === dedupeKey) return;
-      silverTimelineLastCommitKey = dedupeKey;
-      if (!silverTimelineLocalByIso[iso]) silverTimelineLocalByIso[iso] = {};
-      if (!tit) {
-        try {
-          delete silverTimelineLocalByIso[iso][hm];
-        } catch (_) {}
-      } else {
-        silverTimelineLocalByIso[iso][hm] = tit;
-      }
-      try {
-        window.setTimeout(function () {
-          silverTimelineLastCommitKey = "";
-          if (silverCalUiState !== SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) return;
-          if (GC.mode !== "calendar_compose") return;
-          paintSilverDayTimeline();
-        }, 0);
-      } catch (_) {
-        silverTimelineLastCommitKey = "";
-        paintSilverDayTimeline();
-      }
-    }
-
     /** Mobil/tablet: vlastní kompaktní měsíční kalendář (Safari/iOS nespolehlivě otevírá type=date). */
     function showSilverMiniCalendar() {
       if (!narrow()) return;
@@ -33566,33 +33666,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (!narrow()) return;
           if (GC.mode !== "calendar_compose") return;
           var t = ev.target;
-          var inpFocus = t && t.closest ? t.closest("[data-iu-silver-hour-input]") : null;
-          if (inpFocus && root.contains(inpFocus)) return;
-          var rowHit = t && t.closest ? t.closest("[data-iu-silver-timeline-row]") : null;
-          if (rowHit && root.contains(rowHit) && silverCalUiState === SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) {
-            var inpIn = rowHit.querySelector("[data-iu-silver-hour-input]");
-            if (inpIn) {
-              try {
-                ev.preventDefault();
-              } catch (_) {}
-              try {
-                inpIn.focus();
-              } catch (_) {}
-              return;
-            }
-          }
           var btn = t && t.closest ? t.closest("[data-iu-silver-mini-cal]") : null;
           if (!btn || !root.contains(btn)) return;
           var act = String(btn.getAttribute("data-iu-silver-mini-cal") || "");
-          if (act === "timeline-back") {
-            try {
-              ev.preventDefault();
-            } catch (_) {}
-            silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
-            setSilverCalUiAttr();
-            paintSilverMiniCalendar();
-            return;
-          }
           if (act === "day") {
             try {
               ev.preventDefault();
@@ -33600,9 +33676,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             var iso = String(btn.getAttribute("data-iu-silver-mini-iso") || "");
             if (!iso) return;
             silverCalendarDraft.date = iso;
-            silverCalUiState = SILVER_CAL_UI_CALENDAR_DAY_TIMELINE;
-            setSilverCalUiAttr();
-            paintSilverDayTimeline();
+            try {
+              if (window.iuCalendarService && typeof window.iuCalendarService.calendarOpenDayFromSilver === "function") {
+                window.iuCalendarService.calendarOpenDayFromSilver(iso, btn);
+              }
+            } catch (_) {}
+            closeSilverMiniCalendar();
+            try {
+              var smb0 = document.getElementById("iuSilverShowMiniCalendarBtn");
+              if (smb0) smb0.setAttribute("aria-expanded", "false");
+            } catch (_) {}
             return;
           }
           if (act === "prev") {
@@ -33644,34 +33727,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           }
         },
         false
-      );
-      root.addEventListener(
-        "focusout",
-        function (ev) {
-          if (!narrow()) return;
-          if (GC.mode !== "calendar_compose") return;
-          var tgt = ev.target;
-          if (!tgt || !tgt.getAttribute || tgt.getAttribute("data-iu-silver-hour-input") !== "1") return;
-          if (!root.contains(tgt)) return;
-          commitSilverTimelineHourInput(tgt);
-        },
-        true
-      );
-      root.addEventListener(
-        "keydown",
-        function (ev) {
-          if (!narrow()) return;
-          if (GC.mode !== "calendar_compose") return;
-          if (ev.key !== "Enter") return;
-          var tgt = ev.target;
-          if (!tgt || !tgt.getAttribute || tgt.getAttribute("data-iu-silver-hour-input") !== "1") return;
-          if (!root.contains(tgt)) return;
-          try {
-            ev.preventDefault();
-          } catch (_) {}
-          commitSilverTimelineHourInput(tgt);
-        },
-        true
       );
     }
 
@@ -33875,9 +33930,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       setSilverCalUiAttr();
       GC.mode = "calendar_compose";
       GC.savePhase = "";
-      try {
-        silverTimelineLocalByIso = {};
-      } catch (_) {}
       emptySilverCalendarDraft();
       silverCalendarDraft.intent = "uložit do kalendáře";
       var c = chipsEl();
