@@ -352,6 +352,22 @@ style-src 'self' 'unsafe-inline' https:;
         margin: 0;
         padding: 0;
       }
+      /* P0: native <input type="date"> — na úzkém viewportu nesmí mít pointer-events:none (blokuje showPicker/click z tlačítka „datum“). */
+      @media (max-width: 1024px) {
+        #iuSilverDatePicker.iuSilverHomeDatePick{
+          position: fixed !important;
+          left: 0 !important;
+          top: 0 !important;
+          width: 4px !important;
+          height: 4px !important;
+          min-width: 4px !important;
+          min-height: 4px !important;
+          opacity: 0.02 !important;
+          clip: auto !important;
+          pointer-events: auto !important;
+          z-index: 2147483645 !important;
+        }
+      }
       /* P0: native <input type="time"> host — nesmí mít pointer-events:none / clip (blokuje showPicker na reálném mobilu). */
       #iuSilverGuidedNativeTime.iuSilverGuidedNativeTimeHost{
         position: fixed !important;
@@ -1764,7 +1780,7 @@ style-src 'self' 'unsafe-inline' https:;
                             <div class="silver-inputWrap iuSilverHomeInputWrap iuSilverStackChromaFrame iu-mobileSilverGateHost">
                               <div class="iu-mobileSilverGateStack iu-mobileSilverGateStack--floatingSilver">
                                 <div class="iuSilverHomeInputRow iuSilverHomeComposerShell iuSilverComposerP0">
-                                  <input type="date" id="iuSilverHomeDatePick" class="iuSilverHomeDatePick" aria-hidden="true" tabindex="-1" title="" />
+                                  <input type="date" id="iuSilverDatePicker" class="iuSilverHomeDatePick" aria-hidden="true" tabindex="-1" title="" />
                                   <div class="iuSilverHomeMobileComposerGrid" data-iu-silver-home-composer-grid="1">
                                     <div class="iuSilverHomeMobileComposerMain" data-iu-silver-home-composer-main="1">
                                       <div id="iuSilverHomeModeLine" class="iuSilverHomeModeLine" data-iu-silver-home-mode-line="1" hidden></div>
