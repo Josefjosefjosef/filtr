@@ -56,6 +56,12 @@ function run() {
       title: r.draft.title || "",
       missingFields: sortArr(r.missingFields || [])
     };
+    if (Object.prototype.hasOwnProperty.call(c.expect, "note")) {
+      actual.note = String(r.draft.note || "");
+    }
+    if (Object.prototype.hasOwnProperty.call(c.expect, "location")) {
+      actual.location = String(r.draft.location || r.draft.address || "");
+    }
     const exp = {
       processingState: c.expect.processingState,
       date: c.expect.date || "",
@@ -63,12 +69,20 @@ function run() {
       title: c.expect.title || "",
       missingFields: sortArr(c.expect.missingFields || [])
     };
+    if (Object.prototype.hasOwnProperty.call(c.expect, "note")) {
+      exp.note = String(c.expect.note || "");
+    }
+    if (Object.prototype.hasOwnProperty.call(c.expect, "location")) {
+      exp.location = String(c.expect.location || "");
+    }
     const ok =
       actual.processingState === exp.processingState &&
       actual.date === exp.date &&
       actual.time === exp.time &&
       actual.title === exp.title &&
-      JSON.stringify(actual.missingFields) === JSON.stringify(exp.missingFields);
+      JSON.stringify(actual.missingFields) === JSON.stringify(exp.missingFields) &&
+      (!Object.prototype.hasOwnProperty.call(c.expect, "note") || actual.note === exp.note) &&
+      (!Object.prototype.hasOwnProperty.call(c.expect, "location") || actual.location === exp.location);
     if (ok) pass++;
     else fail++;
     results.push({
