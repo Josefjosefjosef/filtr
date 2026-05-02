@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-02T03:30:20.411375Z",
+  "ingestedAt": "2026-05-02T04:04:54.905509Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
+      "url": "https://profitonline.cz/okamziky-historie-den-kdy-se-uzavrelo-dilo-renesancniho-leonarda-da-vinciho/",
+      "dt": "2026-05-02T04:00:53Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "den",
+        "dílo",
+        "historie",
+        "leonarda",
+        "okamžiky",
+        "renesančního",
+        "uzavřelo",
+        "vinciho"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -280,32 +305,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Češi nechtějí platit daně. Zrušíme je stejně jako televizní poplatky?",
-      "url": "https://profitonline.cz/cesi-nechteji-platit-dane-zrusime-je-stejne-jako-televizni-poplatky/",
-      "dt": "2026-04-29T10:00:24Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "daně",
-        "jako",
-        "nechtějí",
-        "platit",
-        "poplatky",
-        "stejně",
-        "televizní",
-        "zrušíme",
-        "češi"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -316,7 +315,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19121,
+      "bytes": 19098,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -353,7 +352,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-01T10:00:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T04:00:53Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -369,6 +368,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
+            "publishedAt": "2026-05-02T04:00:53Z"
+          },
           {
             "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
             "publishedAt": "2026-05-01T10:00:51Z"
@@ -396,10 +399,6 @@
           {
             "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
             "publishedAt": "2026-04-30T06:40:53Z"
-          },
-          {
-            "title": "Renáta Váchová v čele Alfa Laval pro východní Evropu",
-            "publishedAt": "2026-04-30T06:00:21Z"
           }
         ]
       }
