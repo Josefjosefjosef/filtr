@@ -1247,9 +1247,17 @@ style-src 'self' 'unsafe-inline' https:;
           border: 1.5px solid #F97316 !important;
           box-sizing: border-box;
         }
-        /* P0 Silver (≤1024): oranžový shell jen na vnějším #iuSilverGuidedSheetRoot; vnitřní blok/label/input geometrie jako předem; OK plná oranž; input 16px (iOS no-zoom). */
-        #silver-slot #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot,
-        #iuMobileSilverSlot #silver-slot #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot {
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
+    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
+    <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
+    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=8" />
+    <style id="iuSilverEventTitleOrangeLastWinGuard">
+      /* P0: až za všemi linkovanými CSS v <head> — zabrání přepsání shellu „Název události“ pozdějšími listy (reálný mobil vs. proof v composer guard). */
+      @media (max-width: 1024px) {
+        #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot {
           background: #fff7ed !important;
           border: 1.5px solid #f97316 !important;
           box-sizing: border-box;
@@ -1276,11 +1284,6 @@ style-src 'self' 'unsafe-inline' https:;
         }
       }
     </style>
-    <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
-    <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
-    <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=iu-invoice-pdf-typo-v11" />
-    <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=8" />
     <link rel="manifest" href="/projects/manifest.json" />
     <script>
     (function(){ try { window.__iuBipEvent = null; window.addEventListener("beforeinstallprompt", function(e) { e.preventDefault(); window.__iuBipEvent = e; }, { passive: false }); } catch(err) {} })();
