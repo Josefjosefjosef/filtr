@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-02T08:39:54.322259Z",
+  "ingestedAt": "2026-05-02T09:11:10.602296Z",
   "items": [
+    {
+      "section": "krimi",
+      "contentType": "article",
+      "title": "Další bitva o potraty v USA: Soud zakázal zasílání oblíbené pilulky poštou",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/usa-soud-zakazal-zasilani-potratove-pilulky-mifepriston-postou/",
+      "dt": "2026-05-02T08:46:25Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "bitva",
+        "další",
+        "oblíbené",
+        "pilulky",
+        "potraty",
+        "poštou",
+        "soud",
+        "usa",
+        "zakázal",
+        "zasílání"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,32 +272,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Posun v kauze příbramské nemocnice: Policie stíhá několik lidí a firem",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/pribramska-nemocnice-policie-stihani/",
-      "dt": "2026-04-30T08:19:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "firem",
-        "kauze",
-        "lidí",
-        "nemocnice",
-        "několik",
-        "policie",
-        "posun",
-        "příbramské",
-        "stíhá"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -281,7 +282,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 90420,
+      "bytes": 89203,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -318,11 +319,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T08:46:25Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 8,
-          "zpravy": 2
+          "zpravy": 3,
+          "zdravi": 7
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -334,6 +335,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Další bitva o potraty v USA: Soud zakázal zasílání oblíbené pilulky poštou",
+            "publishedAt": "2026-05-02T08:46:25Z"
+          },
           {
             "title": "Nadbytečné kapacity a rostoucí náklady. Souběhy úvazků lékařů budí obavy pojišťoven",
             "publishedAt": "2026-05-02T07:00:00Z"
@@ -361,10 +366,6 @@
           {
             "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
             "publishedAt": "2026-04-30T11:14:56Z"
-          },
-          {
-            "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o mém osudu, naznačil",
-            "publishedAt": "2026-04-30T10:07:30Z"
           }
         ]
       }

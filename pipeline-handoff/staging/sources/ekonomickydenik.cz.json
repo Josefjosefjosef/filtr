@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T08:39:54.322259Z",
+  "ingestedAt": "2026-05-02T09:11:10.602296Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Belgická vláda jde ve stopách Babiše a Havlíčka. Chce ovládnout jaderné elektrárny",
+      "url": "https://ekonomickydenik.cz/belgicka-vlada-chce-ovladnout-jaderne-elektrarny/",
+      "dt": "2026-05-02T09:00:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiše",
+        "belgická",
+        "chce",
+        "elektrárny",
+        "havlíčka",
+        "jaderné",
+        "jde",
+        "ovládnout",
+        "stopách",
+        "vláda"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -767,34 +794,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Lovci dronů: Policie přiznává stovky nelegálních letů nad Prahou i nasazení těžké techniky",
-      "url": "https://ekonomickydenik.cz/lovci-dronu-policie-stovky-nelegalnich-letu/",
-      "dt": "2026-04-29T15:57:26Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dronů",
-        "letů",
-        "lovci",
-        "nasazení",
-        "nelegálních",
-        "policie",
-        "prahou",
-        "přiznává",
-        "stovky",
-        "techniky",
-        "těžké"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 71210,
+      "bytes": 71086,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,12 +841,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:45:19Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T09:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zdravi": 2,
           "finance": 26,
-          "zpravy": 3,
-          "zdravi": 1
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -859,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Belgická vláda jde ve stopách Babiše a Havlíčka. Chce ovládnout jaderné elektrárny",
+            "publishedAt": "2026-05-02T09:00:00Z"
+          },
           {
             "title": "Meta 180 miliard: Český zbrojní průmysl drtí rekordy a mění se v ekonomický motor státu",
             "publishedAt": "2026-05-02T07:45:19Z"
@@ -886,10 +889,6 @@
           {
             "title": "Velký personální lov: Hledá se nový Řehka. Kdo bude „tichou silou“?",
             "publishedAt": "2026-05-01T09:14:27Z"
-          },
-          {
-            "title": "Jaderná matematika Pchjongjangu: Scénář, ve kterém Kimovy rakety přečíslí americký štít",
-            "publishedAt": "2026-05-01T08:46:58Z"
           }
         ]
       }

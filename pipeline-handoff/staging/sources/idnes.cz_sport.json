@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T08:39:54.322259Z",
+  "ingestedAt": "2026-05-02T09:11:10.602296Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Kladno získalo z Budějovic terminátora Přikryla. Za tři roky chyběl jen dvakrát",
+      "url": "https://www.idnes.cz/hokej/extraliga/filip-prikryl-posilil-hokejisty-kladna.A260502_104401_hokej_ald",
+      "dt": "2026-05-02T08:44:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "budějovic",
+        "chyběl",
+        "dvakrát",
+        "jen",
+        "kladno",
+        "přikryla",
+        "roky",
+        "terminátora",
+        "tři",
+        "získalo"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -751,31 +778,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejradši chodím nahý. Pogačar svou odpovědí odzbrojil moderátora",
-      "url": "https://www.idnes.cz/sport/trendy/tadej-pogacar-vtipna-odpoved.A260501_101133_trendy_subt",
-      "dt": "2026-05-01T10:33:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "chodím",
-        "moderátora",
-        "nahý",
-        "nejradši",
-        "odpovědí",
-        "odzbrojil",
-        "pogačar",
-        "svou"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -786,7 +788,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45678,
+      "bytes": 45327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -823,7 +825,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:47:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T08:44:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -838,6 +840,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kladno získalo z Budějovic terminátora Přikryla. Za tři roky chyběl jen dvakrát",
+            "publishedAt": "2026-05-02T08:44:00Z"
+          },
           {
             "title": "Čechová se uvedla v přípravě WNBA šestnácti body, Hamzová jich dala sedm",
             "publishedAt": "2026-05-02T07:47:00Z"
@@ -865,10 +871,6 @@
           {
             "title": "Lakers jsou čtvrtfinále. Detroit po skvělém obratu vyrovnal, uspělo i Toronto",
             "publishedAt": "2026-05-02T06:17:56Z"
-          },
-          {
-            "title": "Pastrňák se Zachou konec Bostonu neodvrátili, postup slaví Buffalo a Vegas",
-            "publishedAt": "2026-05-02T05:57:32Z"
           }
         ]
       }

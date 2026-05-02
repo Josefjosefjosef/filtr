@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-02T08:39:54.322259Z",
+  "ingestedAt": "2026-05-02T09:11:10.602296Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump chce zavést 25% clo na auta z EU",
+      "url": "https://profitonline.cz/trump-chce-zavest-25-clo-na-auta-z-eu/",
+      "dt": "2026-05-02T09:00:30Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "auta",
+        "chce",
+        "clo",
+        "trump",
+        "zavést"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -284,30 +306,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Zlevní odchod Emirátů z kartelu OPEC pohonné hmoty?",
-      "url": "https://profitonline.cz/zlevni-odchod-emiratu-z-kartelu-opec-pohonne-hmoty/",
-      "dt": "2026-04-29T18:30:03Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "emirátů",
-        "hmoty",
-        "kartelu",
-        "odchod",
-        "opec",
-        "pohonné",
-        "zlevní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -318,7 +316,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 19143,
+      "bytes": 19244,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -355,7 +353,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-02T04:00:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T09:00:30Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -371,6 +369,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump chce zavést 25% clo na auta z EU",
+            "publishedAt": "2026-05-02T09:00:30Z"
+          },
           {
             "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
             "publishedAt": "2026-05-02T04:00:53Z"
@@ -398,10 +400,6 @@
           {
             "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
             "publishedAt": "2026-04-30T14:00:07Z"
-          },
-          {
-            "title": "Nový most v Praze je dvakrát dražší než podobná stavba v Helsinkách",
-            "publishedAt": "2026-04-30T06:40:53Z"
           }
         ]
       }
