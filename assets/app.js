@@ -33302,7 +33302,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return document.getElementById("iuSilverHomeInlineToast");
     }
     function datePickEl() {
-      return document.getElementById("iuSilverHomeDatePick");
+      return document.getElementById("iuSilverDatePicker");
+    }
+
+    function noteSilverDatePickerProof(patch) {
+      try {
+        var o = window.__iuSilverDatePickerProof || (window.__iuSilverDatePickerProof = {});
+        for (var k in patch) {
+          if (Object.prototype.hasOwnProperty.call(patch, k)) o[k] = patch[k];
+        }
+      } catch (_) {}
+    }
+
+    /** Mobil/tablet (narrow): nativní date picker místo mřížky dnů. */
+    function openSilverGuidedNativeDatePicker() {
+      if (!narrow()) return;
+      var el = datePickEl();
+      if (!el) return;
+      var seed = String(silverCalendarDraft.date || "").trim() || todayIso();
+      try {
+        el.value = seed;
+      } catch (_) {}
+      noteSilverDatePickerProof({
+        date_picker_opened: true,
+        native_picker_used: true,
+        grid_removed: true
+      });
+      try {
+        if (typeof el.showPicker === "function") {
+          el.showPicker();
+        } else {
+          el.click();
+        }
+      } catch (_) {
+        try {
+          el.click();
+        } catch (_) {}
+      }
     }
 
     var SHEET_KIND = "";
@@ -33636,26 +33672,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       c.className = "iuSilverHomeChips iuSilverHomeChips--timeChoiceRow";
       c.innerHTML =
         '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--primary" data-iu-silver-guided="gd-time-open">vybrat \u010das</button>';
-    }
-
-    function renderMiniDatePicker() {
-      var c = chipsEl();
-      if (!c) return;
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--pickGrid iuSilverHomeChips--miniDatePick";
-      var base = todayIso();
-      var html = "";
-      for (var i = 0; i < 21; i++) {
-        var iso = addDaysIso(base, i);
-        html +=
-          '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-minical" data-iu-silver-guided-iso="' +
-          iso +
-          '">' +
-          fmtDotCs(iso) +
-          "</button>";
-      }
-      html += '<button type="button" class="iuSilverHomeChip" data-iu-silver-guided="gd-minical-back">zp\u011bt</button>';
-      c.innerHTML = html;
     }
 
     function closeSilverGuidedTimeFallback() {
@@ -34016,6 +34032,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
     function startSaveFlow() {
       closeGuidedSheet();
+      try {
+        window.__iuSilverDatePickerProof = {};
+      } catch (_) {}
       silverCalUiState = SILVER_CAL_UI_GUIDED_SAVE;
       setSilverCalUiAttr();
       GC.mode = "guided_save";
@@ -34067,19 +34086,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       if (act === "gd-date") {
         ev.preventDefault();
-        renderMiniDatePicker();
-        return;
-      }
-      if (act === "gd-minical") {
-        ev.preventDefault();
-        var isoMc = String(x.getAttribute("data-iu-silver-guided-iso") || "");
-        if (!isoMc) return;
-        applyDaySelection(isoMc, null);
-        return;
-      }
-      if (act === "gd-minical-back") {
-        ev.preventDefault();
-        renderSaveDayRow();
+        openSilverGuidedNativeDatePicker();
         return;
       }
       if (act === "gd-pickday") {
@@ -34194,6 +34201,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!dp || !dp.value) return;
       if (GC.mode !== "guided_save") return;
       applyDaySelection(dp.value, null);
+      try {
+        var inp = document.getElementById("iuSilverHomeInput");
+        noteSilverDatePickerProof({
+          date_selected: true,
+          input_updated: true,
+          value_example: inp ? String(inp.value || "").trim() : ""
+        });
+      } catch (_) {}
     }
 
     function onMindMenuCapture(ev) {
