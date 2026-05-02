@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-02T06:55:38.859461Z",
+  "ingestedAt": "2026-05-02T07:30:28.870381Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Nadbytečné kapacity a rostoucí náklady. Souběhy úvazků lékařů budí obavy pojišťoven",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/soubehy-praci-lekaru-ovlivnuji-dostupne-pece-rikaji-zdravotni-pojistovny/",
+      "dt": "2026-05-02T07:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "budí",
+        "kapacity",
+        "lékařů",
+        "nadbytečné",
+        "náklady",
+        "obavy",
+        "pojišťoven",
+        "rostoucí",
+        "souběhy",
+        "úvazků"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -244,32 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Rakovina u mladých na vzestupu. Důvodem může být jeden znepokojivý civilizační trend",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/rakovina-u-mladych-narusta-pricina/",
-      "dt": "2026-04-30T07:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "být",
-        "civilizační",
-        "důvodem",
-        "jeden",
-        "mladých",
-        "rakovina",
-        "trend",
-        "vzestupu",
-        "znepokojivý"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -280,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88646,
+      "bytes": 90420,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -317,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-01T16:32:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -333,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nadbytečné kapacity a rostoucí náklady. Souběhy úvazků lékařů budí obavy pojišťoven",
+            "publishedAt": "2026-05-02T07:00:00Z"
+          },
           {
             "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
             "publishedAt": "2026-05-01T16:32:02Z"
@@ -360,10 +365,6 @@
           {
             "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o mém osudu, naznačil",
             "publishedAt": "2026-04-30T10:07:30Z"
-          },
-          {
-            "title": "Úplatkářská aféra ve VZP: Soud ji vrátil, nezdály se mu výpovědi obviněných",
-            "publishedAt": "2026-04-30T09:01:59Z"
           }
         ]
       }

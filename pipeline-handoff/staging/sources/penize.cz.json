@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-02T06:55:38.859461Z",
+  "ingestedAt": "2026-05-02T07:30:28.870381Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "K hokejovému mistrovství světa můžete mít stylovou platební kartu",
+      "url": "https://www.penize.cz/osobni-ucty/489205-k-hokejovemu-mistrovstvi-sveta-muzete-mit-stylovou-platebni-kartu",
+      "dt": "2026-05-02T09:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "hokejovému",
+        "kartu",
+        "mistrovství",
+        "mít",
+        "můžete",
+        "platební",
+        "stylovou",
+        "světa"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,34 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Temná empatie, přisvojení zásluh, útěk z konfliktu. Psycholog radí, jak poznat špatného šéfa",
-      "url": "https://www.penize.cz/zamestnani/488888-psychotest-ceka-kazdeho-pilota-u-lekaru-povinny-neni-expert-o-naboru-lidi-i-toxicke-praci",
-      "dt": "2026-04-28T05:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "empatie",
-        "konfliktu",
-        "poznat",
-        "psycholog",
-        "přisvojení",
-        "radí",
-        "temná",
-        "zásluh",
-        "útěk",
-        "špatného",
-        "šéfa"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -516,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19272,
+      "bytes": 18912,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -553,13 +550,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T09:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 2,
           "finance": 13,
-          "zpravy": 5,
-          "sport": 1,
-          "zdravi": 1
+          "zpravy": 5
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -571,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "K hokejovému mistrovství světa můžete mít stylovou platební kartu",
+            "publishedAt": "2026-05-02T09:00:00Z"
+          },
           {
             "title": "Walkmany, digitálky, tamagoči. Osvěžte si v kvízu touhy po Made in Japan",
             "publishedAt": "2026-05-02T08:00:00Z"
@@ -598,10 +598,6 @@
           {
             "title": "Čekat na plastovou kartu už nemusíte ani ve Fio bance",
             "publishedAt": "2026-04-30T10:55:00Z"
-          },
-          {
-            "title": "Koruna v hrsti, dolar na střeše. Kdy chránit výnos investic měnovým zajištěním",
-            "publishedAt": "2026-04-30T05:00:00Z"
           }
         ]
       }

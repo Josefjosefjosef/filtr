@@ -1,8 +1,60 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T06:55:38.859461Z",
+  "ingestedAt": "2026-05-02T07:30:28.870381Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Finiš. Pět kol, pět otázek. O čem bude rozhodovat nadstavba fotbalové ligy",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/fotbalova-liga-se-blizi-do-finale-zacina-nadstavbova-cast.A260501_180333_fotbal_ten",
+      "dt": "2026-05-02T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "finiš",
+        "fotbalové",
+        "kol",
+        "ligy",
+        "nadstavba",
+        "otázek",
+        "pět",
+        "rozhodovat",
+        "čem"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Velká cena Miami formule 1 2026: program, výsledky, kde závod sledovat",
+      "url": "https://www.idnes.cz/sport/formule/velka-cena-miami-formule-1-2026.A260430_083946_formule_ald",
+      "dt": "2026-05-02T06:33:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "cena",
+        "formule",
+        "miami",
+        "program",
+        "sledovat",
+        "velká",
+        "výsledky",
+        "závod"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -727,59 +779,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Nejtlustší fotbalista. Nahý naháněl sudího, snědl jedenáct snídaní a rozlomil břevno",
-      "url": "https://www.idnes.cz/fotbal/zahranici/william-foulke-brankar-sheffiledu-united-nejtlustsi-fotbalista-historie.A260429_154314_fot_zahranici_dc",
-      "dt": "2026-05-01T10:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "břevno",
-        "fotbalista",
-        "jedenáct",
-        "naháněl",
-        "nahý",
-        "nejtlustší",
-        "rozlomil",
-        "snídaní",
-        "snědl",
-        "sudího"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Galíčková se chystá na první zahraniční štaci, v Brně si ji vyhlédl španělský Ferrol",
-      "url": "https://www.idnes.cz/sport/basket/katerina-galickova-kp-brno-ferrol.A260501_105036_sport-basket_kazdt",
-      "dt": "2026-05-01T09:01:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "brně",
-        "chystá",
-        "ferrol",
-        "galíčková",
-        "první",
-        "vyhlédl",
-        "zahraniční",
-        "španělský",
-        "štaci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +789,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45939,
+      "bytes": 45582,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +826,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T06:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +841,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Finiš. Pět kol, pět otázek. O čem bude rozhodovat nadstavba fotbalové ligy",
+            "publishedAt": "2026-05-02T07:00:00Z"
+          },
+          {
+            "title": "Velká cena Miami formule 1 2026: program, výsledky, kde závod sledovat",
+            "publishedAt": "2026-05-02T06:33:00Z"
+          },
           {
             "title": "Pražský maraton 2026: trasa, program, mapa, dopravní omezení",
             "publishedAt": "2026-05-02T06:28:00Z"
@@ -865,14 +872,6 @@
           {
             "title": "Hamzová bojuje o WNBA: Musíte být víc sobec. Soupeřky jsou i spoluhráčky",
             "publishedAt": "2026-05-01T22:00:00Z"
-          },
-          {
-            "title": "Sinner může v Madridu překonat legendy, Siniakovou čeká finále čtyřhry",
-            "publishedAt": "2026-05-01T21:49:18Z"
-          },
-          {
-            "title": "Norris ovládl kvalifikaci sprintu v Miami před Antonellim a Piastrim, Russell zaostal",
-            "publishedAt": "2026-05-01T21:45:31Z"
           }
         ]
       }

@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T06:55:38.859461Z",
+  "ingestedAt": "2026-05-02T07:30:28.870381Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "TELEVIZIONÁŘ: Kdepak komedie. Jiřina Bohdalová zjistí, že dům je jen velké Ucho",
+      "url": "https://www.idnes.cz/kultura/film-televize/televizionar-bohdalova-ucho.A260429_191427_filmvideo_spm",
+      "dt": "2026-05-02T07:14:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "bohdalová",
+        "dům",
+        "jen",
+        "jiřina",
+        "kdepak",
+        "komedie",
+        "televizionář",
+        "ucho",
+        "velké",
+        "zjistí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Tři mrtví rybáři. Svědectví odhaluje kruté praktiky na čínské lodi",
+      "url": "https://www.idnes.cz/ekonomika/zahranicni/rybari-pracovni-podminky-asie.A260423_104029_eko-zahranicni_rie",
+      "dt": "2026-05-02T07:00:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "kruté",
+        "lodi",
+        "mrtví",
+        "odhaluje",
+        "praktiky",
+        "rybáři",
+        "svědectví",
+        "tři",
+        "čínské"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -735,62 +788,6 @@
         "pochod",
         "provázely",
         "strkanice"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Lufthansa našla Oscara režiséra snímku Pan Nikdo. V USA s ním nesměl na palubu",
-      "url": "https://www.idnes.cz/kultura/film-televize/talankin-oscar-ztracen-reziser-letadlo-zavazadlo-usa-nemecko.A260501_100837_filmvideo_sahu",
-      "dt": "2026-05-01T13:23:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "lufthansa",
-        "našla",
-        "nesměl",
-        "nikdo",
-        "ním",
-        "oscara",
-        "palubu",
-        "pan",
-        "režiséra",
-        "snímku",
-        "usa"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Diskety, hrací automat a paření legend. Nový Jičín láká třeba na Prince of Persia",
-      "url": "https://www.idnes.cz/ostrava/zpravy/vystava-retrogaming-dobove-pocitacove-hry-paranske-doupe.A260428_928403_ostrava-zpravy_zah",
-      "dt": "2026-05-01T13:11:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "automat",
-        "diskety",
-        "hrací",
-        "jičín",
-        "legend",
-        "láká",
-        "nový",
-        "paření",
-        "persia",
-        "prince",
-        "třeba"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1595,7 +1592,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50181,
+      "bytes": 49432,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1632,12 +1629,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 23,
-          "finance": 4,
-          "other": 3
+          "other": 3,
+          "finance": 5,
+          "zpravy": 22
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1649,6 +1646,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "TELEVIZIONÁŘ: Kdepak komedie. Jiřina Bohdalová zjistí, že dům je jen velké Ucho",
+            "publishedAt": "2026-05-02T07:14:00Z"
+          },
+          {
+            "title": "Tři mrtví rybáři. Svědectví odhaluje kruté praktiky na čínské lodi",
+            "publishedAt": "2026-05-02T07:00:00Z"
+          },
           {
             "title": "„Hrůza! Ale já se zamilovala.“ Ze sídla slavných sklářů udělala dobový penzion",
             "publishedAt": "2026-05-02T06:30:00Z"
@@ -1672,14 +1677,6 @@
           {
             "title": "Velký Javorník omladil, dobrovolníci a studenti tam vysázeli přes dva tisíce stromků",
             "publishedAt": "2026-05-02T04:37:00Z"
-          },
-          {
-            "title": "USA stáhnou z Německa 5000 vojáků, oznámil Hegseth. Řekl i časový rámec",
-            "publishedAt": "2026-05-01T22:06:08Z"
-          },
-          {
-            "title": "Od chemie k PR: vysvětlovat složité věci zůstalo jejím posláním",
-            "publishedAt": "2026-05-01T22:00:00Z"
           }
         ]
       }
