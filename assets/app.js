@@ -33258,6 +33258,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     var SILVER_CAL_UI_CAL_OPEN = "CALENDAR_OPEN";
     /** Mobile/tablet: po „Uložit do kalendáře“ — vstup + nápověda + „Zobrazit kalendář“ (žádný starý multi-step). */
     var SILVER_CAL_UI_CALENDAR_COMPOSE = "CALENDAR_COMPOSE";
+    /** Mini kalendář → klik den → denní timeline hodin (06–22), lokální draft bez backendu. */
+    var SILVER_CAL_UI_CALENDAR_DAY_TIMELINE = "CALENDAR_DAY_TIMELINE";
     /** Oranžová nápověda jen jako placeholder (ne value). */
     var SILVER_CALENDAR_COMPOSE_HINT = "Napiš např.: z\u00edtra v 18:00 zuba\u0159";
     var SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER = "Napi\u0161 Silverovi\u2026";
@@ -33282,6 +33284,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
     var silverMiniCalYear = new Date().getFullYear();
     var silverMiniCalMonth = new Date().getMonth();
+    /** { "YYYY-MM-DD": { "HH:MM": "název" } } — runtime pouze v UI. */
+    var silverTimelineLocalByIso = {};
 
     function narrow() {
       try {
@@ -33322,6 +33326,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       try {
         el.innerHTML = "";
       } catch (_) {}
+      if (silverCalUiState === SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) {
+        silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
+        setSilverCalUiAttr();
+      }
     }
 
     function paintSilverMiniCalendar() {
@@ -33402,12 +33410,132 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       root.innerHTML = html;
     }
 
+    function silverTimelineMonthGenitiveCs(m0) {
+      var names = [
+        "ledna",
+        "\u00fanora",
+        "b\u0159ezna",
+        "dubna",
+        "kv\u011btna",
+        "\u010dervna",
+        "\u010dervence",
+        "srpna",
+        "z\u00e1\u0159\u00ed",
+        "\u0159\u00edjna",
+        "listopadu",
+        "prosince"
+      ];
+      return names[m0] || "";
+    }
+
+    function silverTimelineWeekdayNameCs(dow) {
+      var names = ["ned\u011ble", "pond\u011bl\u00ed", "\u00fater\u00fd", "st\u0159eda", "\u010dtvrtek", "p\u00e1tek", "sobota"];
+      return names[dow] || "";
+    }
+
+    function formatSilverTimelineDayHeading(iso) {
+      var p = String(iso || "").split("-");
+      if (p.length < 3) return "";
+      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      if (!Number.isFinite(d.getTime())) return "";
+      var wd = silverTimelineWeekdayNameCs(d.getDay());
+      var head = wd ? wd.charAt(0).toUpperCase() + wd.slice(1) : "";
+      var monG = silverTimelineMonthGenitiveCs(d.getMonth());
+      return head + " " + d.getDate() + ". " + monG + " " + d.getFullYear();
+    }
+
+    function paintSilverDayTimeline() {
+      var root = miniCalEl();
+      if (!root || root.hidden) return;
+      var iso = String(silverCalendarDraft.date || "").trim() || todayIso();
+      silverCalendarDraft.date = iso;
+      var heading = formatSilverTimelineDayHeading(iso);
+      var store = silverTimelineLocalByIso[iso] || {};
+      var html = "";
+      html +=
+        '<div class="iuSilverMiniCal iuSilverDayTimeline" role="dialog" aria-label="Denn\u00ed pl\u00e1n">' +
+        '<div class="iuSilverDayTimeline__toolbar">' +
+        '<button type="button" class="iuSilverDayTimeline__backMonth" data-iu-silver-mini-cal="timeline-back">Zp\u011bt na m\u011bs\u00edc</button>' +
+        "</div>" +
+        '<h3 class="iuSilverDayTimeline__title" id="iuSilverDayTimelineTitle">' +
+        (heading || "") +
+        "</h3>" +
+        '<div class="iuSilverDayTimeline__hours" data-iu-silver-timeline-hours="1">';
+      var h;
+      for (h = 6; h <= 22; h++) {
+        var hm = pad2(h) + ":00";
+        var tit = String(store[hm] || "").trim();
+        html += '<div class="iuSilverDayTimelineRow" data-iu-silver-timeline-row="1" data-iu-silver-hour="' + h + '">';
+        html += '<span class="iuSilverDayTimelineRow__time">' + hm + "</span>";
+        html += '<div class="iuSilverDayTimelineRow__slot">';
+        if (tit) {
+          var titEsc = String(tit)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;");
+          html +=
+            '<div class="iuSilverDayTimelineRow__summary" data-iu-silver-hour-summary="1">' +
+            hm +
+            " \u2014 " +
+            titEsc +
+            "</div>";
+        } else {
+          html +=
+            '<input type="text" class="iuSilverDayTimelineRow__input" maxlength="120" placeholder="N\u00e1zev ud\u00e1losti\u2026" data-iu-silver-hour-input="1" autocomplete="off" />';
+        }
+        html += "</div></div>";
+      }
+      html += "</div></div>";
+      root.innerHTML = html;
+    }
+
+    var silverTimelineLastCommitKey = "";
+
+    function commitSilverTimelineHourInput(inp) {
+      if (!inp || GC.mode !== "calendar_compose") return;
+      if (silverCalUiState !== SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) return;
+      var row = inp.closest ? inp.closest("[data-iu-silver-timeline-row]") : null;
+      if (!row) return;
+      var iso = String(silverCalendarDraft.date || "").trim();
+      if (!iso) return;
+      var hAttr = row.getAttribute("data-iu-silver-hour");
+      var hNum = Number(hAttr);
+      if (!Number.isFinite(hNum)) return;
+      var hm = pad2(hNum) + ":00";
+      var tit = String(inp.value || "").trim();
+      var dedupeKey = iso + "|" + hm + "|" + tit;
+      if (silverTimelineLastCommitKey === dedupeKey) return;
+      silverTimelineLastCommitKey = dedupeKey;
+      if (!silverTimelineLocalByIso[iso]) silverTimelineLocalByIso[iso] = {};
+      if (!tit) {
+        try {
+          delete silverTimelineLocalByIso[iso][hm];
+        } catch (_) {}
+      } else {
+        silverTimelineLocalByIso[iso][hm] = tit;
+      }
+      try {
+        window.setTimeout(function () {
+          silverTimelineLastCommitKey = "";
+          if (silverCalUiState !== SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) return;
+          if (GC.mode !== "calendar_compose") return;
+          paintSilverDayTimeline();
+        }, 0);
+      } catch (_) {
+        silverTimelineLastCommitKey = "";
+        paintSilverDayTimeline();
+      }
+    }
+
     /** Mobil/tablet: vlastní kompaktní měsíční kalendář (Safari/iOS nespolehlivě otevírá type=date). */
     function showSilverMiniCalendar() {
       if (!narrow()) return;
       var root = miniCalEl();
       if (!root) return;
       wireSilverMiniCalendarOnce();
+      silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
+      setSilverCalUiAttr();
       var d0 = new Date();
       try {
         if (silverCalendarDraft.date) {
@@ -33438,9 +33566,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (!narrow()) return;
           if (GC.mode !== "calendar_compose") return;
           var t = ev.target;
+          var inpFocus = t && t.closest ? t.closest("[data-iu-silver-hour-input]") : null;
+          if (inpFocus && root.contains(inpFocus)) return;
+          var rowHit = t && t.closest ? t.closest("[data-iu-silver-timeline-row]") : null;
+          if (rowHit && root.contains(rowHit) && silverCalUiState === SILVER_CAL_UI_CALENDAR_DAY_TIMELINE) {
+            var inpIn = rowHit.querySelector("[data-iu-silver-hour-input]");
+            if (inpIn) {
+              try {
+                ev.preventDefault();
+              } catch (_) {}
+              try {
+                inpIn.focus();
+              } catch (_) {}
+              return;
+            }
+          }
           var btn = t && t.closest ? t.closest("[data-iu-silver-mini-cal]") : null;
           if (!btn || !root.contains(btn)) return;
           var act = String(btn.getAttribute("data-iu-silver-mini-cal") || "");
+          if (act === "timeline-back") {
+            try {
+              ev.preventDefault();
+            } catch (_) {}
+            silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
+            setSilverCalUiAttr();
+            paintSilverMiniCalendar();
+            return;
+          }
           if (act === "day") {
             try {
               ev.preventDefault();
@@ -33448,7 +33600,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             var iso = String(btn.getAttribute("data-iu-silver-mini-iso") || "");
             if (!iso) return;
             silverCalendarDraft.date = iso;
-            paintSilverMiniCalendar();
+            silverCalUiState = SILVER_CAL_UI_CALENDAR_DAY_TIMELINE;
+            setSilverCalUiAttr();
+            paintSilverDayTimeline();
             return;
           }
           if (act === "prev") {
@@ -33490,6 +33644,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           }
         },
         false
+      );
+      root.addEventListener(
+        "focusout",
+        function (ev) {
+          if (!narrow()) return;
+          if (GC.mode !== "calendar_compose") return;
+          var tgt = ev.target;
+          if (!tgt || !tgt.getAttribute || tgt.getAttribute("data-iu-silver-hour-input") !== "1") return;
+          if (!root.contains(tgt)) return;
+          commitSilverTimelineHourInput(tgt);
+        },
+        true
+      );
+      root.addEventListener(
+        "keydown",
+        function (ev) {
+          if (!narrow()) return;
+          if (GC.mode !== "calendar_compose") return;
+          if (ev.key !== "Enter") return;
+          var tgt = ev.target;
+          if (!tgt || !tgt.getAttribute || tgt.getAttribute("data-iu-silver-hour-input") !== "1") return;
+          if (!root.contains(tgt)) return;
+          try {
+            ev.preventDefault();
+          } catch (_) {}
+          commitSilverTimelineHourInput(tgt);
+        },
+        true
       );
     }
 
@@ -33693,6 +33875,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       setSilverCalUiAttr();
       GC.mode = "calendar_compose";
       GC.savePhase = "";
+      try {
+        silverTimelineLocalByIso = {};
+      } catch (_) {}
       emptySilverCalendarDraft();
       silverCalendarDraft.intent = "uložit do kalendáře";
       var c = chipsEl();
