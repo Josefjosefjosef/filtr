@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T19:15:04.390871Z",
+  "ingestedAt": "2026-05-02T20:29:59.832359Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Vlivní republikáni varují před stažením amerických vojáků z Německa",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/vlivni-republikansti-zakonodarci-maji-obavy-ze-stazeni-vojaku-usa-z-nemecka.A260502_213913_zahranicni_ichuc",
+      "dt": "2026-05-02T19:46:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "amerických",
+        "německa",
+        "republikáni",
+        "stažením",
+        "varují",
+        "vlivní",
+        "vojáků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -752,33 +776,6 @@
         "varují",
         "vznik",
         "českem"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Berlín reaguje na plán stažení vojáků USA. Přítomnost je i ve vašem zájmu, varuje",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/berlin-reaguje-na-plan-stazeni-vojaku-usa-pritomnost-je-i-ve-vasem-zajmu-varuje.A260502_094646_zahranicni_bro",
-      "dt": "2026-05-02T09:36:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "berlín",
-        "plán",
-        "přítomnost",
-        "reaguje",
-        "stažení",
-        "usa",
-        "varuje",
-        "vašem",
-        "vojáků",
-        "zájmu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1583,7 +1580,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48820,
+      "bytes": 48838,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1620,7 +1617,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T18:04:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T19:46:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1637,6 +1634,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vlivní republikáni varují před stažením amerických vojáků z Německa",
+            "publishedAt": "2026-05-02T19:46:00Z"
+          },
           {
             "title": "Naštěstí nefouká. Lidé se děsí opakování roku 2022, říká o požáru lesa starosta",
             "publishedAt": "2026-05-02T18:04:00Z"
@@ -1664,10 +1665,6 @@
           {
             "title": "Rakouská policie zadržela podezřelého z otravy dětských výživ",
             "publishedAt": "2026-05-02T15:57:00Z"
-          },
-          {
-            "title": "Peking oťukává Donbas. Čínské firmy tiše podnikají na okupovaném území Ukrajiny",
-            "publishedAt": "2026-05-02T15:30:00Z"
           }
         ]
       }
