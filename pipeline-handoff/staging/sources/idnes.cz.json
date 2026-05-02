@@ -1,24 +1,48 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T06:25:12.485388Z",
+  "ingestedAt": "2026-05-02T06:55:38.859461Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Odvolací soud v USA dočasně zastavil zasílání potratové pilulky poštou, píše agentura",
+      "title": "„Hrůza! Ale já se zamilovala.“ Ze sídla slavných sklářů udělala dobový penzion",
+      "url": "https://www.idnes.cz/usti/zpravy/chribska-penzion-renesance-sklari-oprava-veverkova.A260429_143025_usti-zpravy_grr",
+      "dt": "2026-05-02T06:30:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "ale",
+        "dobový",
+        "hrůza",
+        "penzion",
+        "sklářů",
+        "slavných",
+        "sídla",
+        "udělala",
+        "zamilovala"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Odvolací soud v USA dočasně zastavil zasílání potratové pilulky poštou",
       "url": "https://www.idnes.cz/zpravy/zahranicni/odvolaci-soud-v-usa-docasne-zastavil-zasilani-potratove-pilulky-postou-pise-ap.A260502_074537_zahranicni_vank",
       "dt": "2026-05-02T05:52:00Z",
       "media_raw": "iDNES / Zprávy",
       "media_norm": "iDNES / Zprávy",
       "tokens": [
-        "agentura",
         "dočasně",
         "odvolací",
         "pilulky",
         "potratové",
         "poštou",
-        "píše",
         "soud",
         "usa",
         "zastavil",
@@ -767,32 +791,6 @@
         "persia",
         "prince",
         "třeba"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Českou aplikaci Rouvy pro cyklistické trenažery pohltil americký obr Zwift",
-      "url": "https://www.idnes.cz/ekonomika/podniky/ceskou-aplikaci-rouvy-pro-cyklisticke-trenazery-pohltil-americky-obr-zwift.A260430_094839_ekoakcie_tbr",
-      "dt": "2026-05-01T13:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "americký",
-        "aplikaci",
-        "cyklistické",
-        "obr",
-        "pohltil",
-        "rouvy",
-        "trenažery",
-        "zwift",
-        "českou"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1597,7 +1595,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 50158,
+      "bytes": 50181,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1634,11 +1632,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T05:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T06:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 22,
-          "finance": 5,
+          "zpravy": 23,
+          "finance": 4,
           "other": 3
         },
         "drop_counts": {
@@ -1652,7 +1650,11 @@
         },
         "sample_titles": [
           {
-            "title": "Odvolací soud v USA dočasně zastavil zasílání potratové pilulky poštou, píše agentura",
+            "title": "„Hrůza! Ale já se zamilovala.“ Ze sídla slavných sklářů udělala dobový penzion",
+            "publishedAt": "2026-05-02T06:30:00Z"
+          },
+          {
+            "title": "Odvolací soud v USA dočasně zastavil zasílání potratové pilulky poštou",
             "publishedAt": "2026-05-02T05:52:00Z"
           },
           {
@@ -1677,10 +1679,6 @@
           },
           {
             "title": "Od chemie k PR: vysvětlovat složité věci zůstalo jejím posláním",
-            "publishedAt": "2026-05-01T22:00:00Z"
-          },
-          {
-            "title": "Horší než Jidáš. Největšího zrádce Ameriky nahlodala ženuška, zbyla po něm jen bota",
             "publishedAt": "2026-05-01T22:00:00Z"
           }
         ]

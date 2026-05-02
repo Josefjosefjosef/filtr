@@ -1,8 +1,58 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T06:25:12.485388Z",
+  "ingestedAt": "2026-05-02T06:55:38.859461Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pražský maraton 2026: trasa, program, mapa, dopravní omezení",
+      "url": "https://www.idnes.cz/sport/atletika/prazsky-maraton-2026.A260429_084317_atletika_ald",
+      "dt": "2026-05-02T06:28:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "dopravní",
+        "mapa",
+        "maraton",
+        "omezení",
+        "pražský",
+        "program",
+        "trasa"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Lakers jsou čtvrtfinále. Detroit po skvělém obratu vyrovnal, uspělo i Toronto",
+      "url": "https://www.idnes.cz/sport/basket/lakers-postoupili-do-ctvrtfinale-nba-detroit-s-torontem-si-vynutily-sedmy-zapas.A260502_075719_sport-basket_ald",
+      "dt": "2026-05-02T06:17:56Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "detroit",
+        "lakers",
+        "obratu",
+        "skvělém",
+        "toronto",
+        "uspělo",
+        "vyrovnal",
+        "čtvrtfinále"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -730,56 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Co bude s Karabcem? Lyon prý nevyužije opci, po sezoně se vrátí do Sparty",
-      "url": "https://www.idnes.cz/fotbal/zahranici/ligue-1-lyon-adam-karabec-hostovani-sparta-navrat.A260501_093925_fot_zahranici_tals",
-      "dt": "2026-05-01T09:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "karabcem",
-        "lyon",
-        "nevyužije",
-        "opci",
-        "prý",
-        "sezoně",
-        "sparty",
-        "vrátí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Rulík povolal do reprezentace třineckého Sikoru, nahradí zraněného Špačka",
-      "url": "https://www.idnes.cz/hokej/ms-2026/ceske-hry-petr-sikora-michael-spacek.A260501_100955_ms-hokej-2026_kazdt",
-      "dt": "2026-05-01T08:17:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "nahradí",
-        "povolal",
-        "reprezentace",
-        "rulík",
-        "sikoru",
-        "třineckého",
-        "zraněného",
-        "špačka"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -790,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46216,
+      "bytes": 45939,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -827,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T05:57:32Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T06:28:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -842,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pražský maraton 2026: trasa, program, mapa, dopravní omezení",
+            "publishedAt": "2026-05-02T06:28:00Z"
+          },
+          {
+            "title": "Lakers jsou čtvrtfinále. Detroit po skvělém obratu vyrovnal, uspělo i Toronto",
+            "publishedAt": "2026-05-02T06:17:56Z"
+          },
           {
             "title": "Pastrňák se Zachou konec Bostonu neodvrátili, postup slaví Buffalo a Vegas",
             "publishedAt": "2026-05-02T05:57:32Z"
@@ -865,14 +873,6 @@
           {
             "title": "Norris ovládl kvalifikaci sprintu v Miami před Antonellim a Piastrim, Russell zaostal",
             "publishedAt": "2026-05-01T21:45:31Z"
-          },
-          {
-            "title": "MS v hokeji do 18 let 2026: program, skupiny, kde a s kým hrají Češi?",
-            "publishedAt": "2026-05-01T20:14:09Z"
-          },
-          {
-            "title": "Česko - Švédsko 3:4P. Osmnáctka přišla o dvougólový náskok, o bronz vyzve Lotyše",
-            "publishedAt": "2026-05-01T20:09:12Z"
           }
         ]
       }
