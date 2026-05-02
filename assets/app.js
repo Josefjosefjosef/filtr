@@ -33880,39 +33880,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 })();
 
 
-/* IU_SILVER_CALENDAR_GUIDED_HOST */
+/* IU_SILVER_CALENDAR_GUIDED_HOST — mobile/tablet: Kalendář otevírá hlavní overlay přímo (žádný mezikrok uložit/vyhledat/zrušit). */
   (function iuSilverCalendarGuidedHost() {
     "use strict";
-    /** Silver mobile/tablet Kalendář entry — explicit UI state (ne sequence counter). */
     var SILVER_CAL_UI_DEFAULT = "DEFAULT";
-    var SILVER_CAL_UI_ACTION = "ACTION_STATE";
     var SILVER_CAL_UI_CAL_OPEN = "CALENDAR_OPEN";
-    /** Mobile/tablet: po „Uložit do kalendáře“ — vstup + nápověda + „Zobrazit kalendář“ (žádný starý multi-step). */
-    var SILVER_CAL_UI_CALENDAR_COMPOSE = "CALENDAR_COMPOSE";
-    /** Oranžová nápověda jen jako placeholder (ne value). */
-    var SILVER_CALENDAR_COMPOSE_HINT = "Napiš např.: z\u00edtra v 18:00 zuba\u0159";
     var SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER = "Napi\u0161 Silverovi\u2026";
     var silverCalUiState = SILVER_CAL_UI_DEFAULT;
-    var silverCalendarDraft = {
-      intent: "uložit do kalendáře",
-      day: null,
-      date: null,
-      time: null,
-      title: null,
-      note: null,
-      reminder: null,
-      address: null
-    };
-    try {
-      window.silverCalendarDraft = silverCalendarDraft;
-    } catch (_) {}
-    var GC = {
-      mode: "idle",
-      savePhase: "",
-      searchMode: false
-    };
-    var silverMiniCalYear = new Date().getFullYear();
-    var silverMiniCalMonth = new Date().getMonth();
 
     function narrow() {
       try {
@@ -33921,10 +33895,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         return (window.innerWidth || 0) <= 1024;
       }
     }
-    /** Mobile/tablet Silver guided save (proof viewports 390×844 / 768×1024; same breakpoint as narrow). Desktop ≥1025px stays on button row below. */
-    function isSilverGuidedMobileOrTablet() {
-      return narrow();
-    }
+
     function iuSilverHeroPremiumExpandSet(on) {
       var el = document.getElementById("iuSilverHeroPremium");
       if (!el || !narrow()) return;
@@ -33933,6 +33904,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         else el.classList.remove("iu-silver-expanded");
       } catch (_) {}
     }
+
     function modeEl() {
       return document.getElementById("iuSilverHomeModeLine");
     }
@@ -33942,198 +33914,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     function toastEl() {
       return document.getElementById("iuSilverHomeInlineToast");
     }
-    function miniCalEl() {
-      return document.getElementById("iuSilverMiniCalendar");
-    }
-
-    function closeSilverMiniCalendar() {
-      var el = miniCalEl();
-      if (!el) return;
-      el.hidden = true;
-      try {
-        el.innerHTML = "";
-      } catch (_) {}
-    }
-
-    function paintSilverMiniCalendar() {
-      var root = miniCalEl();
-      if (!root || root.hidden) return;
-      var y = silverMiniCalYear;
-      var m = silverMiniCalMonth;
-      var monthNames = [
-        "leden",
-        "\u00fanor",
-        "b\u0159ezen",
-        "duben",
-        "kv\u011bten",
-        "\u010derven",
-        "\u010dervenec",
-        "srpen",
-        "z\u00e1\u0159\u00ed",
-        "\u0159\u00edjen",
-        "listopad",
-        "prosinec"
-      ];
-      var first = new Date(y, m, 1);
-      var startPad = (first.getDay() + 6) % 7;
-      var dim = new Date(y, m + 1, 0).getDate();
-      var tIso = todayIso();
-      var selIso = String(silverCalendarDraft.date || "").trim() || tIso;
-      var html = "";
-      html +=
-        '<div class="iuSilverMiniCal" role="dialog" aria-label="V\u00fdb\u011br data">' +
-        '<div class="iuSilverMiniCal__toolbar iuSilverMiniCal__header">' +
-        '<button type="button" class="iuSilverMiniCal__nav iuSilverMiniCal__navBtn" data-iu-silver-mini-cal="prev" aria-label="P\u0159edchoz\u00ed m\u011bs\u00edc">\u2039</button>' +
-        '<div class="iuSilverMiniCal__title" data-iu-silver-mini-cal-title>' +
-        monthNames[m] +
-        " " +
-        y +
-        "</div>" +
-        '<button type="button" class="iuSilverMiniCal__nav iuSilverMiniCal__navBtn" data-iu-silver-mini-cal="next" aria-label="Dal\u0161\u00ed m\u011bs\u00edc">\u203a</button>' +
-        "</div>" +
-        '<div class="iuSilverMiniCal__weekdays iu-silver-mini-calendar-weekdays" aria-hidden="true">' +
-        '<span class="iuSilverMiniCal__wlab">Po</span>' +
-        '<span class="iuSilverMiniCal__wlab">\u00dat</span>' +
-        '<span class="iuSilverMiniCal__wlab">St</span>' +
-        '<span class="iuSilverMiniCal__wlab">\u010ct</span>' +
-        '<span class="iuSilverMiniCal__wlab">P\u00e1</span>' +
-        '<span class="iuSilverMiniCal__wlab">So</span>' +
-        '<span class="iuSilverMiniCal__wlab">Ne</span>' +
-        "</div>" +
-        '<div class="iuSilverMiniCal__grid">';
-      var idx = 0;
-      var i;
-      for (i = 0; i < startPad; i++) {
-        html += '<span class="iuSilverMiniCal__cell iuSilverMiniCal__cell--pad" aria-hidden="true"></span>';
-        idx++;
-      }
-      for (var d = 1; d <= dim; d++) {
-        var iso = toIsoFromDate(new Date(y, m, d));
-        var isToday = iso === tIso;
-        var isSel = iso === selIso;
-        html +=
-          '<button type="button" class="iuSilverMiniCal__cell iuSilverMiniCal__day' +
-          (isToday ? " iuSilverMiniCal__day--today" : "") +
-          (isSel ? " is-selected" : "") +
-          '" data-iu-silver-mini-cal="day" data-iu-silver-mini-iso="' +
-          iso +
-          '">' +
-          d +
-          "</button>";
-        idx++;
-      }
-      while (idx % 7 !== 0) {
-        html += '<span class="iuSilverMiniCal__cell iuSilverMiniCal__cell--pad" aria-hidden="true"></span>';
-        idx++;
-      }
-      html +=
-        "</div>" +
-        '<button type="button" class="iuSilverMiniCal__back" data-iu-silver-mini-cal="back">zp\u011bt</button>' +
-        "</div>";
-      root.innerHTML = html;
-    }
-
-    /** Mobil/tablet: vlastní kompaktní měsíční kalendář (Safari/iOS nespolehlivě otevírá type=date). */
-    function showSilverMiniCalendar() {
-      if (!narrow()) return;
-      var root = miniCalEl();
-      if (!root) return;
-      wireSilverMiniCalendarOnce();
-      silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
-      setSilverCalUiAttr();
-      var d0 = new Date();
-      try {
-        if (silverCalendarDraft.date) {
-          var p = String(silverCalendarDraft.date).split("-");
-          if (p.length >= 3) {
-            var yy = Number(p[0]);
-            var mm = Number(p[1]) - 1;
-            var dd = Number(p[2]);
-            if (Number.isFinite(yy) && Number.isFinite(mm) && Number.isFinite(dd)) {
-              d0 = new Date(yy, mm, dd);
-            }
-          }
-        }
-      } catch (_) {}
-      silverMiniCalYear = d0.getFullYear();
-      silverMiniCalMonth = d0.getMonth();
-      root.hidden = false;
-      paintSilverMiniCalendar();
-    }
-
-    function wireSilverMiniCalendarOnce() {
-      var root = miniCalEl();
-      if (!root || root.__iuSilverMiniCalWired) return;
-      root.__iuSilverMiniCalWired = 1;
-      root.addEventListener(
-        "click",
-        function (ev) {
-          if (!narrow()) return;
-          if (GC.mode !== "calendar_compose") return;
-          var t = ev.target;
-          var btn = t && t.closest ? t.closest("[data-iu-silver-mini-cal]") : null;
-          if (!btn || !root.contains(btn)) return;
-          var act = String(btn.getAttribute("data-iu-silver-mini-cal") || "");
-          if (act === "day") {
-            try {
-              ev.preventDefault();
-            } catch (_) {}
-            var iso = String(btn.getAttribute("data-iu-silver-mini-iso") || "");
-            if (!iso) return;
-            silverCalendarDraft.date = iso;
-            try {
-              if (window.iuCalendarService && typeof window.iuCalendarService.calendarOpenDayFromSilver === "function") {
-                window.iuCalendarService.calendarOpenDayFromSilver(iso, btn);
-              }
-            } catch (_) {}
-            closeSilverMiniCalendar();
-            try {
-              var smb0 = document.getElementById("iuSilverShowMiniCalendarBtn");
-              if (smb0) smb0.setAttribute("aria-expanded", "false");
-            } catch (_) {}
-            return;
-          }
-          if (act === "prev") {
-            try {
-              ev.preventDefault();
-            } catch (_) {}
-            if (silverMiniCalMonth <= 0) {
-              silverMiniCalMonth = 11;
-              silverMiniCalYear--;
-            } else {
-              silverMiniCalMonth--;
-            }
-            paintSilverMiniCalendar();
-            return;
-          }
-          if (act === "next") {
-            try {
-              ev.preventDefault();
-            } catch (_) {}
-            if (silverMiniCalMonth >= 11) {
-              silverMiniCalMonth = 0;
-              silverMiniCalYear++;
-            } else {
-              silverMiniCalMonth++;
-            }
-            paintSilverMiniCalendar();
-            return;
-          }
-          if (act === "back") {
-            try {
-              ev.preventDefault();
-            } catch (_) {}
-            closeSilverMiniCalendar();
-            try {
-              var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
-              if (smb) smb.setAttribute("aria-expanded", "false");
-            } catch (_) {}
-            return;
-          }
-        },
-        false
-      );
-    }
 
     function closeGuidedSheet() {
       var root = document.getElementById("iuSilverGuidedSheetRoot");
@@ -34142,27 +33922,17 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (textBlock) textBlock.hidden = true;
     }
 
-    function hideCalendarComposeAux() {
-      var aux = document.getElementById("iuSilverCalendarComposeAux");
-      if (aux) aux.hidden = true;
-      var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
-      if (smb) smb.setAttribute("aria-expanded", "false");
-      var inp = document.getElementById("iuSilverHomeInput");
-      if (inp) {
-        try {
-          if (inp.placeholder === SILVER_CALENDAR_COMPOSE_HINT) {
-            inp.placeholder = SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER;
-          }
-        } catch (_) {}
-      }
+    function clearChipsScrollStyle() {
+      var c = chipsEl();
+      if (!c) return;
+      try {
+        c.style.maxHeight = "";
+        c.style.overflowY = "";
+      } catch (_) {}
     }
 
     function hideGuidedChrome() {
       closeGuidedSheet();
-      try {
-        closeSilverMiniCalendar();
-      } catch (_) {}
-      hideCalendarComposeAux();
       var m = modeEl(),
         c = chipsEl(),
         t = toastEl();
@@ -34181,9 +33951,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         t.hidden = true;
         t.textContent = "";
       }
-      GC.mode = "idle";
-      GC.savePhase = "";
-      GC.searchMode = false;
       iuSilverHeroPremiumExpandSet(false);
       try {
         silverCalUiState = SILVER_CAL_UI_DEFAULT;
@@ -34191,12 +33958,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       } catch (_) {}
     }
 
+    function openSilverMainCalendarFromMobile(triggerEl) {
+      var svc = window.iuCalendarService;
+      if (!svc || typeof svc.openOverlay !== "function") return;
+      var origin =
+        triggerEl && typeof triggerEl.focus === "function" ? triggerEl : document.activeElement;
+      try {
+        svc.openOverlay(origin);
+      } catch (_) {}
+    }
+
     window.iuSilverGuidedResetFromNav = function () {
       try {
         if (typeof window.__iuSilverStopHomeSpeech === "function") window.__iuSilverStopHomeSpeech();
-      } catch (_) {}
-      try {
-        resetGcSave();
       } catch (_) {}
       try {
         silverCalUiState = SILVER_CAL_UI_DEFAULT;
@@ -34208,185 +33982,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         hideGuidedChrome();
       } catch (_) {}
     };
-
-    function emptySilverCalendarDraft() {
-      silverCalendarDraft.intent = "uložit do kalendáře";
-      silverCalendarDraft.day = null;
-      silverCalendarDraft.date = null;
-      silverCalendarDraft.time = null;
-      silverCalendarDraft.title = null;
-      silverCalendarDraft.note = null;
-      silverCalendarDraft.reminder = null;
-      silverCalendarDraft.address = null;
-      try {
-        window.silverCalendarHasNavigation = false;
-      } catch (_) {}
-    }
-
-    function resetGcSave() {
-      GC.savePhase = "";
-      emptySilverCalendarDraft();
-    }
-
-    function pad2(n) {
-      return String(n).padStart(2, "0");
-    }
-    function toIsoFromDate(d) {
-      return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
-    }
-    function todayIso() {
-      return toIsoFromDate(new Date());
-    }
-
-    function setSilverCalUiAttr() {
-      try {
-        document.documentElement.setAttribute("data-iu-silver-cal-ui", String(silverCalUiState || ""));
-      } catch (_) {}
-    }
-
-    function enterActionState() {
-      silverCalUiState = SILVER_CAL_UI_ACTION;
-      setSilverCalUiAttr();
-      showCalChoice();
-    }
-
-    function exitActionToDefault() {
-      silverCalUiState = SILVER_CAL_UI_DEFAULT;
-      try {
-        document.documentElement.removeAttribute("data-iu-silver-cal-ui");
-      } catch (_) {}
-      hideGuidedChrome();
-    }
-
-    function showCalChoice() {
-      GC.mode = "cal_choice";
-      var c = chipsEl(),
-        m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      if (!c) return;
-      c.hidden = false;
-      c.className = "iuSilverHomeChips iuSilverHomeChips--calActionRow";
-      c.innerHTML =
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempSave iu-silver-save-btn" data-iu-silver-guided="save">' +
-        '<svg class="iuSilverHomeChip__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
-        '<path fill="currentColor" d="M18 4h-1V2h-2v2H9V2H7v2H6c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H6V9h12v11z"/>' +
-        '<path fill="currentColor" d="M15 12h-2v2h-2v2h2v2h2v-2h2v-2h-2v-2z"/>' +
-        "</svg>" +
-        '<span class="iuSilverHomeChip__label">uložit do kalendáře</span></button>' +
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempSearch iu-silver-search-btn" data-iu-silver-guided="search">' +
-        '<svg class="iuSilverHomeChip__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
-        '<path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>' +
-        "</svg>" +
-        '<span class="iuSilverHomeChip__label">vyhledat v kalendáři</span></button>' +
-        '<button type="button" class="iuSilverHomeChip iuSilverHomeChip--calTemp iuSilverHomeChip--calTempCancel iu-silver-cancel-btn" data-iu-silver-guided="cal-back">' +
-        '<span class="iuSilverHomeChip__label">- zrušit</span></button>';
-      c.setAttribute("data-iu-guided-open", "1");
-      iuSilverHeroPremiumExpandSet(true);
-    }
-
-    function clearChipsScrollStyle() {
-      var c = chipsEl();
-      if (!c) return;
-      try {
-        c.style.maxHeight = "";
-        c.style.overflowY = "";
-      } catch (_) {}
-    }
-
-    function startSearchFlow() {
-      hideGuidedChrome();
-      silverCalUiState = SILVER_CAL_UI_DEFAULT;
-      try {
-        document.documentElement.removeAttribute("data-iu-silver-cal-ui");
-      } catch (_) {}
-      GC.mode = "guided_search";
-      GC.searchMode = true;
-      var m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      var c = chipsEl();
-      if (c) {
-        c.hidden = true;
-        c.innerHTML = "";
-        c.className = "iuSilverHomeChips";
-      }
-      var inp = document.getElementById("iuSilverHomeInput");
-      if (inp) {
-        inp.value = "";
-        inp.placeholder = "zadej co hledáš";
-        try {
-          inp.focus();
-        } catch (_) {}
-      }
-    }
-
-    /** Mobil/tablet: vstup + placeholder nápověda + „Zobrazit kalendář“ — bez starého quick-date / time picker / title sheet. */
-    function startSaveFlow() {
-      closeGuidedSheet();
-      try {
-        closeSilverMiniCalendar();
-      } catch (_) {}
-      silverCalUiState = SILVER_CAL_UI_CALENDAR_COMPOSE;
-      setSilverCalUiAttr();
-      GC.mode = "calendar_compose";
-      GC.savePhase = "";
-      emptySilverCalendarDraft();
-      silverCalendarDraft.intent = "uložit do kalendáře";
-      var c = chipsEl();
-      if (c) {
-        clearChipsScrollStyle();
-        c.hidden = true;
-        c.innerHTML = "";
-        c.className = "iuSilverHomeChips";
-        c.removeAttribute("data-iu-guided-open");
-      }
-      var m = modeEl();
-      if (m) {
-        m.hidden = true;
-        m.textContent = "";
-      }
-      var inp = document.getElementById("iuSilverHomeInput");
-      if (inp) {
-        inp.value = "";
-        inp.placeholder = SILVER_CALENDAR_COMPOSE_HINT;
-        try {
-          inp.focus();
-        } catch (_) {}
-      }
-      var aux = document.getElementById("iuSilverCalendarComposeAux");
-      if (aux) aux.hidden = false;
-      var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
-      if (smb) smb.setAttribute("aria-expanded", "false");
-      iuSilverHeroPremiumExpandSet(true);
-    }
-
-    function onGuidedClick(ev) {
-      if (!narrow()) return;
-      var x = ev.target && ev.target.closest ? ev.target.closest("[data-iu-silver-guided]") : null;
-      if (!x) return;
-      var act = String(x.getAttribute("data-iu-silver-guided") || "");
-      if (act === "cal-back") {
-        ev.preventDefault();
-        exitActionToDefault();
-        return;
-      }
-      if (act === "save") {
-        ev.preventDefault();
-        startSaveFlow();
-        return;
-      }
-      if (act === "search") {
-        ev.preventDefault();
-        startSearchFlow();
-        return;
-      }
-      if (GC.mode !== "cal_choice") return;
-    }
 
     function onMindMenuCapture(ev) {
       if (!narrow()) return;
@@ -34402,7 +33997,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         try {
           ev.stopPropagation();
         } catch (_) {}
-        enterActionState();
+        openSilverMainCalendarFromMobile(b);
         return;
       }
     }
@@ -34410,25 +34005,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.iuSilverCalEntryQuick = function () {
       if (!narrow()) return false;
       if (silverCalUiState === SILVER_CAL_UI_DEFAULT) {
-        enterActionState();
+        var trigger = null;
+        try {
+          trigger = document.querySelector(".mindMenu .iu-mmTopTool--cal");
+        } catch (_) {}
+        openSilverMainCalendarFromMobile(trigger || document.activeElement);
         return true;
       }
       return false;
     };
 
-    window.iuSilverGuidedOnHomeSendBefore = function (inp) {
+    window.iuSilverGuidedOnHomeSendBefore = function () {
       try {
-        if (GC.searchMode && inp) {
-          var v = String(inp.value || "").trim();
-          if (v) inp.value = "Vyhledat v kalendáři " + v;
-          GC.searchMode = false;
-        }
+        hideGuidedChrome();
       } catch (_) {}
-      hideGuidedChrome();
       var inp2 = document.getElementById("iuSilverHomeInput");
       if (inp2) {
         try {
-          inp2.placeholder = "Napiš Silverovi…";
+          inp2.placeholder = SILVER_HOME_INPUT_DEFAULT_PLACEHOLDER;
         } catch (_) {}
       }
     };
@@ -34446,12 +34040,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             fromSilver = !!(
               originEl &&
               originEl.closest &&
-              (originEl.closest("#iuHeroQuickCal") || originEl.closest(".iu-mmTopTool--cal"))
+              (originEl.closest("#iuHeroQuickCal") ||
+                originEl.closest("[data-iu-hero-quick=\"cal\"]") ||
+                originEl.closest(".iu-mmTopTool--cal"))
             );
           } catch (_) {}
-          if (silverCalUiState === SILVER_CAL_UI_ACTION && fromSilver) {
+          if (fromSilver) {
             silverCalUiState = SILVER_CAL_UI_CAL_OPEN;
-            setSilverCalUiAttr();
+            try {
+              document.documentElement.setAttribute("data-iu-silver-cal-ui", silverCalUiState);
+            } catch (_) {}
           }
         };
       } catch (_) {}
@@ -34460,51 +34058,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (!narrow()) return;
           if (silverCalUiState === SILVER_CAL_UI_CAL_OPEN) {
             hideGuidedChrome();
-            return;
           }
-          try {
-            if (GC.mode === "calendar_compose" || GC.mode === "cal_choice") {
-              hideGuidedChrome();
-            }
-          } catch (_) {}
         };
-      } catch (_) {}
-      try {
-        if (!window.__iuSilverGuidedDocClick) {
-          window.__iuSilverGuidedDocClick = 1;
-          document.addEventListener("click", onGuidedClick, false);
-        }
       } catch (_) {}
       var mm = document.querySelector(".mindMenu");
       if (mm && !mm.__iuCalGuidedCap) {
         mm.__iuCalGuidedCap = 1;
         mm.addEventListener("click", onMindMenuCapture, true);
       }
-      function wireSilverCalendarComposeUi() {
-        var smb = document.getElementById("iuSilverShowMiniCalendarBtn");
-        if (!smb || smb.__iuSilverComposeCalBtn) return;
-        smb.__iuSilverComposeCalBtn = 1;
-        smb.addEventListener(
-          "click",
-          function (e) {
-            try {
-              e.preventDefault();
-            } catch (_) {}
-            if (!narrow()) return;
-            if (GC.mode !== "calendar_compose") return;
-            var root = miniCalEl();
-            if (root && !root.hidden) {
-              closeSilverMiniCalendar();
-              smb.setAttribute("aria-expanded", "false");
-            } else {
-              showSilverMiniCalendar();
-              smb.setAttribute("aria-expanded", "true");
-            }
-          },
-          false
-        );
-      }
-      wireSilverCalendarComposeUi();
     };
   })();
 
