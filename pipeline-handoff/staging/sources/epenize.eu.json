@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-01T22:54:52.853365Z",
+  "ingestedAt": "2026-05-02T00:10:26.367131Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Greeneová věští konec GOP po fiasku se špehováním",
+      "url": "https://www.epenize.eu/greeneova-vesti-konec-gop-po-fiasku-se-spehovanim/",
+      "dt": "2026-05-01T23:00:35Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "fiasku",
+        "gop",
+        "greeneová",
+        "konec",
+        "věští",
+        "špehováním"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -471,34 +494,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nástupní mzda součástí inzerátů nebude. Tlak na snižování mzdových rozdílů ale sílí",
-      "url": "https://www.epenize.eu/nastupni-mzda-soucasti-inzeratu-nebude-tlak-na-snizovani-mzdovych-rozdilu-ale-sili/",
-      "dt": "2026-04-22T07:09:26Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "ale",
-        "inzerátů",
-        "mzda",
-        "mzdových",
-        "nebude",
-        "nástupní",
-        "rozdílů",
-        "snižování",
-        "součástí",
-        "sílí",
-        "tlak"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -509,7 +504,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 106116,
+      "bytes": 104394,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -546,7 +541,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T07:51:51Z",
+        "raw_feed_latest_publishedAt": "2026-05-01T23:00:35Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -562,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Greeneová věští konec GOP po fiasku se špehováním",
+            "publishedAt": "2026-05-01T23:00:35Z"
+          },
           {
             "title": "Miroslav Kalousek: Uzákonili jsme si rozežranost na úkor budoucnosti",
             "publishedAt": "2026-05-01T07:51:51Z"
@@ -589,10 +588,6 @@
           {
             "title": "ODS prý vymlčela Klause. Kupka udělal ze Zahradila kašpárka",
             "publishedAt": "2026-04-28T06:26:37Z"
-          },
-          {
-            "title": "Trumpova válka s Kimmelem pokračuje: Další volání po vyhazovu",
-            "publishedAt": "2026-04-27T23:00:47Z"
           }
         ]
       }
