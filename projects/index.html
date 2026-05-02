@@ -1213,6 +1213,41 @@ style-src 'self' 'unsafe-inline' https:;
       @media(max-width:900px){
         #iuTvProgramView .iu-tv-seo-block{margin-bottom:12px}
       }
+      /* P0 Silver (≤1024px): oranžové „vybrat čas“ + světle oranžový time overlay — desktop ≥1025px beze změny. */
+      @media (max-width: 1024px) {
+        #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"],
+        #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"],
+        #silver-slot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"] {
+          color: #F97316 !important;
+          border: 1.5px solid #F97316 !important;
+          box-sizing: border-box;
+        }
+        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"],
+        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"] {
+          color: #F97316 !important;
+          border: 1.5px solid #F97316 !important;
+          box-sizing: border-box;
+        }
+        #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:hover,
+        #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:active,
+        #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:focus,
+        #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:focus-visible,
+        #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:hover,
+        #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:active,
+        #silver-slot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:hover,
+        #silver-slot #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:active,
+        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:hover,
+        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:active,
+        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:hover,
+        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverHeroPremium #iuSilverHomeChips .iuSilverHomeChip[data-iu-silver-guided="gd-time-open"]:active {
+          color: #F97316 !important;
+        }
+        #iuSilverGuidedTimeFallback .iuSilverGuidedTimeFallback__panel {
+          background: #FFF7ED !important;
+          border: 1.5px solid #F97316 !important;
+          box-sizing: border-box;
+        }
+      }
     </style>
     <link rel="stylesheet" href="/assets/iu-financial-overlay.css?v=prod1550fincalc-datovka-desktop-layout" />
     <link rel="stylesheet" href="/assets/iu-legal-documents-overlay.css?v=legal-docs-overlay-v1" />
