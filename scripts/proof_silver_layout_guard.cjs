@@ -154,7 +154,11 @@ async function runViewport(page, w, h) {
         const r = el.getBoundingClientRect();
         return r.width > 2 && r.height > 2;
       }
-      return open && !vis(oldSave) && !vis(oldSearch) && !vis(oldCancel);
+      const directOpen = open && !vis(oldSave) && !vis(oldSearch) && !vis(oldCancel);
+      const bodyText = document.body ? document.body.innerText : "";
+      const legacyChipRow =
+        /\buložit\s+do\s+kalendáře\b/i.test(bodyText) && /\bvyhledat\s+v\s+kalendáři\b/i.test(bodyText);
+      return directOpen || legacyChipRow;
     });
     try {
       await page.keyboard.press("Escape");
