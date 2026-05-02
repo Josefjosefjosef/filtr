@@ -147,6 +147,8 @@ async function runViewport(page, w, h) {
       const oldSave = document.querySelector('[data-iu-silver-guided="save"]');
       const oldSearch = document.querySelector('[data-iu-silver-guided="search"]');
       const oldCancel = document.querySelector('[data-iu-silver-guided="cal-back"]');
+      const miniCalGrid = document.querySelector(".iuSilverMiniCal__grid");
+      const composeAux = document.querySelector("[data-iu-silver-calendar-compose-aux]");
       function vis(el) {
         if (!el) return false;
         const st = window.getComputedStyle(el);
@@ -154,11 +156,10 @@ async function runViewport(page, w, h) {
         const r = el.getBoundingClientRect();
         return r.width > 2 && r.height > 2;
       }
-      const directOpen = open && !vis(oldSave) && !vis(oldSearch) && !vis(oldCancel);
-      const bodyText = document.body ? document.body.innerText : "";
-      const legacyChipRow =
-        /\buložit\s+do\s+kalendáře\b/i.test(bodyText) && /\bvyhledat\s+v\s+kalendáři\b/i.test(bodyText);
-      return directOpen || legacyChipRow;
+      if (vis(oldSave) || vis(oldSearch) || vis(oldCancel)) return false;
+      if (miniCalGrid && vis(miniCalGrid)) return false;
+      if (composeAux && vis(composeAux)) return false;
+      return open;
     });
     try {
       await page.keyboard.press("Escape");
