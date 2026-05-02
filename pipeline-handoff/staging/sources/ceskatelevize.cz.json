@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T02:24:28.557557Z",
+  "ingestedAt": "2026-05-02T02:54:50.879246Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "AFP: Trump se snaží obejít Kongres a tvrdí, že nepřátelské akce v Íránu skončily",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/afp-trump-se-snazi-obejit-kongres-a-tvrdi-ze-nepratelske-akce-v-iranu-skoncily-373021",
+      "dt": "2026-05-02T02:25:59Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "afp",
+        "akce",
+        "kongres",
+        "nepřátelské",
+        "obejít",
+        "skončily",
+        "snaží",
+        "trump",
+        "tvrdí",
+        "íránu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -726,33 +753,6 @@
         "trumpa",
         "tvrdí",
         "útočit"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "EK chce změnit pravidla fúzí, aby vznikali silní konkurenti firem z USA a Číny",
-      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/ek-chce-zmenit-pravidla-fuzi-aby-vznikali-silni-konkurenti-firem-z-usa-a-ciny-372988",
-      "dt": "2026-04-30T17:21:55Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "chce",
-        "firem",
-        "fúzí",
-        "konkurenti",
-        "pravidla",
-        "silní",
-        "usa",
-        "vznikali",
-        "změnit",
-        "číny"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1498,7 +1498,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 43195,
+      "bytes": 43310,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1558,12 +1558,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-01T21:40:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T02:25:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 28,
-          "other": 1,
-          "finance": 1
+          "zpravy": 29,
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1575,6 +1574,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "AFP: Trump se snaží obejít Kongres a tvrdí, že nepřátelské akce v Íránu skončily",
+            "publishedAt": "2026-05-02T02:25:59Z"
+          },
           {
             "title": "Spojené státy stáhnou z Německa pět tisíc vojáků",
             "publishedAt": "2026-05-01T21:40:12Z"
@@ -1602,10 +1605,6 @@
           {
             "title": "SOUHRN: Zásadní události pátku 1. května",
             "publishedAt": "2026-05-01T16:29:40Z"
-          },
-          {
-            "title": "Trump oznámil zvýšení cel na auta dovážená z EU",
-            "publishedAt": "2026-05-01T16:26:33Z"
           }
         ]
       }
@@ -1711,7 +1710,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77114,
+      "bytes": 77136,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
