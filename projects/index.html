@@ -1255,31 +1255,34 @@ style-src 'self' 'unsafe-inline' https:;
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1548financial-overlay-split-css" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=8" />
     <style id="iuSilverEventTitleOrangeLastWinGuard">
-      /* P0: až za všemi linkovanými CSS v <head> — zabrání přepsání shellu „Název události“ pozdějšími listy (reálný mobil vs. proof v composer guard). */
+      /* P0: až za všemi linkovanými CSS v <head>. Kotva: otevřený sheet s labelem #iuSilverGuidedTextLab (text „Název události“ / pozn. / adresa) — ne jen holý #id bez stavu. */
       @media (max-width: 1024px) {
-        #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot {
+        #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) {
           background: #fff7ed !important;
           border: 1.5px solid #f97316 !important;
+          border-width: 1.5px !important;
           box-sizing: border-box;
         }
-        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot,
-        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot {
+        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab),
+        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot.iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) {
           background: #fff7ed !important;
           border: 1.5px solid #f97316 !important;
+          border-width: 1.5px !important;
         }
-        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetText .iuSilverGuidedSheetLab,
-        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetText .iuSilverGuidedSheetLab {
+        #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) #iuSilverGuidedTextLab,
+        #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) #iuSilverGuidedTextLab {
           color: rgba(15, 23, 42, 0.85) !important;
         }
-        #iuSilverGuidedTextInput.iuSilverGuidedSheetText {
+        #iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) #iuSilverGuidedTextInput.iuSilverGuidedSheetText {
           font-size: 16px !important;
           background: #ffffff !important;
           color: rgba(15, 35, 55, 0.95) !important;
         }
-        #iuSilverGuidedSheetOk.iuSilverHomeChip.iuSilverHomeChip--primary {
+        #iuSilverGuidedSheetRoot:not([hidden]):has(#iuSilverGuidedTextLab) #iuSilverGuidedSheetOk.iuSilverHomeChip.iuSilverHomeChip--primary {
           background: #f97316 !important;
           color: #ffffff !important;
           border: 1.5px solid #f97316 !important;
+          border-width: 1.5px !important;
           box-sizing: border-box;
         }
       }
