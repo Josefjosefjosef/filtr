@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-02T07:30:28.870381Z",
+  "ingestedAt": "2026-05-02T08:05:41.750490Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Český národní zdravotnický tým CZERT získal certifikaci EMT 1",
+      "url": "https://www.zdravezpravy.cz/2026/05/02/cesky-narodni-zdravotnicky-tym-czert-ziskal-certifikaci-emt/",
+      "dt": "2026-05-02T07:30:54Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "certifikaci",
+        "czert",
+        "emt",
+        "národní",
+        "tým",
+        "zdravotnický",
+        "získal",
+        "český"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -470,30 +495,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Na Florenci je nová poliklinika. Jsou v ní praktici, zubaři i další ambulance",
-      "url": "https://www.zdravezpravy.cz/2026/04/23/na-florenci-je-nova-poliklinika-jsou-v-ni-praktici-zubari-i-dalsi-ambulance/",
-      "dt": "2026-04-23T12:30:46Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "ambulance",
-        "další",
-        "florenci",
-        "nová",
-        "poliklinika",
-        "praktici",
-        "zubaři"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +505,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 192174,
+      "bytes": 187981,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,7 +542,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-01T09:05:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:30:54Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -556,6 +557,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Český národní zdravotnický tým CZERT získal certifikaci EMT 1",
+            "publishedAt": "2026-05-02T07:30:54Z"
+          },
           {
             "title": "V ÚHKT podali pacientovi s revmatoidním onemocněním genovou terapii",
             "publishedAt": "2026-05-01T09:05:47Z"
@@ -583,10 +588,6 @@
           {
             "title": "Aspirin jako prevence proti rakovině a nemocím srdce a cév? Možná ano",
             "publishedAt": "2026-04-29T06:30:16Z"
-          },
-          {
-            "title": "Šanci zestárnout mají v Česku bohatí lidé. Ti chudí už moc ne",
-            "publishedAt": "2026-04-28T15:30:09Z"
           }
         ]
       }

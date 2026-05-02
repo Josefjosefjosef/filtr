@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtm.cz",
-  "ingestedAt": "2026-05-02T07:30:28.870381Z",
+  "ingestedAt": "2026-05-02T08:05:41.750490Z",
   "items": [
     {
       "section": "veda",
@@ -24,6 +24,31 @@
         "startuje",
         "zítra",
         "éra"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rss",
+      "feedId": "ved_vtm",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "vtm.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Prezidentem je Masaryk a počítač je profese. Pokecejte s AI, která zamrzla v roce 1930",
+      "url": "https://www.zive.cz/clanky/prezidentem-je-masaryk-a-pocitac-je-profese-pokecejte-s-ai-ktera-zamrzla-v-roce-1930/sc-3-a-240959/default.aspx",
+      "dt": "2026-05-02T07:45:00Z",
+      "media_raw": "VTM",
+      "media_norm": "VTM",
+      "tokens": [
+        "1930",
+        "masaryk",
+        "pokecejte",
+        "počítač",
+        "prezidentem",
+        "profese",
+        "roce",
+        "zamrzla"
       ],
       "feedCategory": "veda",
       "feedType": "rss",
@@ -930,36 +955,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "vtm.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "veda",
-      "contentType": "article",
-      "title": "Recenze filmu Ovce žerou první: Nepříjemně přesná výpověď o tom, proč věříme jednoduchým řešením",
-      "url": "https://avmania.zive.cz/recenze-filmu-ovce-zerou-prvni-neprijemne-presna-vypoved-o-tom-proc-verime-jednoduchym-resenim",
-      "dt": "2026-04-27T16:45:00Z",
-      "media_raw": "VTM",
-      "media_norm": "VTM",
-      "tokens": [
-        "filmu",
-        "jednoduchým",
-        "nepříjemně",
-        "ovce",
-        "proč",
-        "první",
-        "přesná",
-        "recenze",
-        "tom",
-        "výpověď",
-        "věříme",
-        "řešením",
-        "žerou"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rss",
-      "feedId": "ved_vtm",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "vtm.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -970,7 +965,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://vtm.zive.cz/rss",
-      "bytes": 22631,
+      "bytes": 22633,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1007,7 +1002,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 35,
-        "raw_feed_latest_publishedAt": "2026-05-01T16:13:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T07:45:00Z",
         "valid_publishedAt_count": 35,
         "mapped_to_section_count": {
           "other": 35
@@ -1025,6 +1020,10 @@
           {
             "title": "Na Slovensku zítra startuje éra bez hotovosti. Obchody a služby budou muset brát karty nebo QR kódy",
             "publishedAt": "2026-04-30T16:45:00Z"
+          },
+          {
+            "title": "Prezidentem je Masaryk a počítač je profese. Pokecejte s AI, která zamrzla v roce 1930",
+            "publishedAt": "2026-05-02T07:45:00Z"
           },
           {
             "title": "Netflix a další na víkend: seriály Muž v ohni, Kdyby přání zabíjela, nebo Propadání. Ale také ​Bouřlivé výšiny",
@@ -1049,10 +1048,6 @@
           {
             "title": "Liquid Glass změní význam. Z designového průšvihu se stane jedinečný displej pro jubilejní iPhone",
             "publishedAt": "2026-04-30T14:45:00Z"
-          },
-          {
-            "title": "Hry zadarmo, nebo se slevou: Výprodeje japonských her a automatizační strategie zdarma",
-            "publishedAt": "2026-05-01T05:10:00Z"
           }
         ]
       }

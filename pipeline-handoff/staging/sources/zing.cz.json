@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-02T07:30:28.870381Z",
+  "ingestedAt": "2026-05-02T08:05:41.750490Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Internet Archive zachraňuje historii PC gamingu",
+      "url": "https://zing.cz/article/internet-archive-zachranuje-historii-pc-gamingu",
+      "dt": "2026-05-02T08:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "archive",
+        "gamingu",
+        "historii",
+        "internet",
+        "zachraňuje"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -978,29 +1000,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Pohřbil PlayStation hru s Venomem? Spekulace se rozcházejí",
-      "url": "https://zing.cz/article/pohrbil-playstation-hru-s-venomem-spekulace-se-rozchazeji",
-      "dt": "2026-04-28T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "hru",
-        "playstation",
-        "pohřbil",
-        "rozcházejí",
-        "spekulace",
-        "venomem"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1011,7 +1010,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125323,
+      "bytes": 125296,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1048,7 +1047,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T06:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T08:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 38,
@@ -1064,6 +1063,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Internet Archive zachraňuje historii PC gamingu",
+            "publishedAt": "2026-05-02T08:00:00Z"
+          },
           {
             "title": "WoW 2? Bývalý šéf Blizzardu by byl rád za radikální restart",
             "publishedAt": "2026-05-02T06:00:00Z"
@@ -1091,10 +1094,6 @@
           {
             "title": "Exodus od bývalých tvůrců Mass Effectu láká v nové ukázce na propracované dialogy",
             "publishedAt": "2026-05-01T12:00:00Z"
-          },
-          {
-            "title": "Nacon uspořádá navzdory finančním problémům již příští týden herní prezentaci",
-            "publishedAt": "2026-05-01T10:00:00Z"
           }
         ]
       }
