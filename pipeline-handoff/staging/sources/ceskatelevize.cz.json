@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T20:29:59.832359Z",
+  "ingestedAt": "2026-05-02T21:00:30.436598Z",
   "items": [
     {
       "section": "aktualne",
@@ -765,6 +765,30 @@
     {
       "section": "sport",
       "contentType": "article",
+      "title": "Je to šílenost, rozčiloval se trenér Liberce Kováč po zákroku na Hodouše",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/je-to-silenost-rozciloval-se-trener-liberce-kovac-po-zakroku-na-hodouse-156572",
+      "dt": "2026-05-02T20:41:58Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "hodouše",
+        "kováč",
+        "liberce",
+        "rozčiloval",
+        "trenér",
+        "zákroku",
+        "šílenost"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
       "title": "Brněnští obhájci stříbra čelí vyřazení, Opava šla do vedení",
       "url": "https://sport.ceskatelevize.cz/clanek/basketbal/brnensti-obhajci-stribra-celi-vyrazeni-opava-sla-do-vedeni-156571",
       "dt": "2026-05-02T19:55:39Z",
@@ -1488,30 +1512,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Čtvrtkařky v čele s šampionkou Manuel budou ve štafetě bojovat o MS 2027",
-      "url": "https://sport.ceskatelevize.cz/clanek/atletika/ctvrtkarky-v-cele-s-sampionkou-manuel-budou-ve-stafete-bojovat-o-ms-2027-156542",
-      "dt": "2026-05-01T09:45:24Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "2027",
-        "bojovat",
-        "manuel",
-        "čele",
-        "čtvrtkařky",
-        "šampionkou",
-        "štafetě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1640,7 +1640,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40193,
+      "bytes": 40399,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1677,7 +1677,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T19:55:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T20:41:58Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1692,6 +1692,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Je to šílenost, rozčiloval se trenér Liberce Kováč po zákroku na Hodouše",
+            "publishedAt": "2026-05-02T20:41:58Z"
+          },
           {
             "title": "Brněnští obhájci stříbra čelí vyřazení, Opava šla do vedení",
             "publishedAt": "2026-05-02T19:55:39Z"
@@ -1719,10 +1723,6 @@
           {
             "title": "Slavia veze výhru z Liberce, Baník remizoval s Boleslaví a boj o udržení graduje",
             "publishedAt": "2026-05-02T16:49:05Z"
-          },
-          {
-            "title": "West Ham narazil na stadionu Brentfordu",
-            "publishedAt": "2026-05-02T16:37:34Z"
           }
         ]
       }
@@ -1734,7 +1734,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77321,
+      "bytes": 77325,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
