@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "vtelce.cz",
-  "ingestedAt": "2026-05-02T14:25:40.413931Z",
+  "ingestedAt": "2026-05-02T15:00:33.115881Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Dva muži hlásí příchod: Strach ze Sovětů, zakázaná zvířata a maskovaný vzdor na place",
+      "url": "https://www.vtelce.cz/dva-muzi-hlasi-prichod-strach-ze-sovetu-zakazana-zvirata-a-maskovany-vzdor-na-place/",
+      "dt": "2026-05-02T14:25:09Z",
+      "media_raw": "vTelce",
+      "media_norm": "vTelce",
+      "tokens": [
+        "dva",
+        "hlásí",
+        "maskovaný",
+        "muži",
+        "place",
+        "příchod",
+        "sovětů",
+        "strach",
+        "vzdor",
+        "zakázaná",
+        "zvířata"
+      ],
+      "feedCategory": "kultura",
+      "feedType": "rss",
+      "feedId": "kul_vtelce",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "vtelce.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "kultura",
       "contentType": "article",
@@ -255,34 +283,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "vtelce.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "Nesmrtelná teta: Telefonát s Bohdalovou zachránil scénář, utrpení s falešnými zuby a chyba s pihami",
-      "url": "https://www.vtelce.cz/nesmrtelna-teta-telefonat-s-bohdalovou-zachranil-scenar-utrpeni-s-falesnymi-zuby-a-chyba-s-pihami/",
-      "dt": "2026-05-01T12:10:24Z",
-      "media_raw": "vTelce",
-      "media_norm": "vTelce",
-      "tokens": [
-        "bohdalovou",
-        "chyba",
-        "falešnými",
-        "nesmrtelná",
-        "pihami",
-        "scénář",
-        "telefonát",
-        "teta",
-        "utrpení",
-        "zachránil",
-        "zuby"
-      ],
-      "feedCategory": "kultura",
-      "feedType": "rss",
-      "feedId": "kul_vtelce",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "vtelce.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -293,7 +293,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.vtelce.cz/feed/",
-      "bytes": 89696,
+      "bytes": 83188,
       "reason": "fetch_timeout",
       "bozo": false,
       "bozoException": "",
@@ -330,7 +330,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T13:55:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T14:25:09Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "other": 10
@@ -345,6 +345,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dva muži hlásí příchod: Strach ze Sovětů, zakázaná zvířata a maskovaný vzdor na place",
+            "publishedAt": "2026-05-02T14:25:09Z"
+          },
           {
             "title": "Růžový panter: Stadion plný Čechů, váhající Steve Martin a miliony za přetáčky postelových scén",
             "publishedAt": "2026-05-02T13:55:28Z"
@@ -372,10 +376,6 @@
           {
             "title": "Byl jednou jeden král: Utajené zranění v bažině, skutečný alkohol před kamerou a riskantní vtip",
             "publishedAt": "2026-05-01T14:11:31Z"
-          },
-          {
-            "title": "Metráček: Překvapivé odmítnutí budoucí Popelky, nucené tloustnutí školačky a náhodný objev před kameru",
-            "publishedAt": "2026-05-01T12:40:13Z"
           }
         ]
       }

@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-02T14:25:40.413931Z",
+  "ingestedAt": "2026-05-02T15:00:33.115881Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Česko zažívá první letní den. Teploty na západě a v Polabí vyšplhaly nad 25 stupňů",
+      "url": "https://www.idnes.cz/zpravy/domaci/cesko-zaziva-prvni-letni-den-pres-25-stupnu-je-na-plzensku-nebo-v-polabi.A260502_162052_domaci_ichuc",
+      "dt": "2026-05-02T14:29:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "den",
+        "letní",
+        "polabí",
+        "první",
+        "stupňů",
+        "teploty",
+        "vyšplhaly",
+        "zažívá",
+        "západě",
+        "česko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -748,32 +775,6 @@
         "sídla",
         "udělala",
         "zamilovala"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Odvolací soud v USA dočasně zastavil zasílání potratové pilulky poštou",
-      "url": "https://www.idnes.cz/zpravy/zahranicni/odvolaci-soud-v-usa-docasne-zastavil-zasilani-potratove-pilulky-postou-pise-ap.A260502_074537_zahranicni_vank",
-      "dt": "2026-05-02T05:52:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "dočasně",
-        "odvolací",
-        "pilulky",
-        "potratové",
-        "poštou",
-        "soud",
-        "usa",
-        "zastavil",
-        "zasílání"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1578,7 +1579,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 47507,
+      "bytes": 47497,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1615,7 +1616,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T14:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T14:29:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -1632,6 +1633,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Česko zažívá první letní den. Teploty na západě a v Polabí vyšplhaly nad 25 stupňů",
+            "publishedAt": "2026-05-02T14:29:00Z"
+          },
           {
             "title": "Zkoušeli vzduchovku, utrpěl průstřel hlavy. Jonášek má za sebou už čtyři operace",
             "publishedAt": "2026-05-02T14:16:00Z"
@@ -1659,10 +1664,6 @@
           {
             "title": "Muž, který dal Poirotovi tvář a knír. David Suchet slaví 80",
             "publishedAt": "2026-05-02T13:19:00Z"
-          },
-          {
-            "title": "Tokijské letiště má nové pomocníky. Se zavazadly pomáhají humanoidní roboti",
-            "publishedAt": "2026-05-02T13:00:00Z"
           }
         ]
       }
