@@ -627,6 +627,13 @@ style-src 'self' 'unsafe-inline' https:;
           padding-top: 10px !important;
           padding-bottom: 10px !important;
         }
+        /* P0 CLS: při kalendářové akci držíme výšku vstupu — rebuild věty po „uložit do kalendáře“ nesmí roztáhnout composer. */
+        html[data-iu-silver-cal-ui="ACTION_STATE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput,
+        html[data-iu-silver-cal-ui="GUIDED_SAVE_FLOW"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput{
+          height: 78px !important;
+          max-height: 78px !important;
+          overflow-y: auto !important;
+        }
         #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeSend {
           height: 100% !important;
           min-height: 78px !important;
@@ -653,7 +660,7 @@ style-src 'self' 'unsafe-inline' https:;
           display: flex !important;
           flex-direction: row !important;
           flex-wrap: wrap !important;
-          align-content: flex-start !important;
+          align-content: center !important;
           align-items: stretch !important;
           justify-content: center !important;
           gap: 6px !important;
@@ -909,20 +916,30 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHomeChips button.iuSilverHomeChip:not(.iu-silver-quickdate-btn){
           font-size: 16px;
         }
-        /* P0 Silver: quick-date row — jedna vrstva (oranžový outline + clamp 18–21px), jen ≤1024px. */
+        /* P0 Silver: quick-date row — jedna vrstva (oranžový outline + clamp 18–21px); výška řádku = cal tlačítka (46px) kvůli CLS při přepnutu z entry gridu. */
         #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn{
           background: transparent !important;
           border: 1px solid rgba(255, 122, 0, 0.55) !important;
           color: rgba(255, 122, 0, 0.75) !important;
           font-size: clamp(18px, 0.35rem + 3.55vw, 21px) !important;
           font-weight: 600 !important;
-          line-height: 1.15 !important;
+          line-height: 1.2 !important;
           white-space: nowrap !important;
           box-shadow: none !important;
+          min-height: 46px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--dayRow button.iu-silver-quickdate-btn:active{
           background: rgba(255, 122, 0, 0.08) !important;
           color: #ff7a00 !important;
+        }
+        /* P0 CLS: stejná min. výška slotu pro cal entry (2+1) i quick-date (2×2) — žádný skok výšky při přepnutí mezi nimi. */
+        #iuSilverHomeChips.iuSilverHomeChips--calActionRow,
+        #iuSilverHomeChips.iuSilverHomeChips--dayRow{
+          min-height: 120px !important;
+          box-sizing: border-box !important;
         }
         /* P0 Silver: dočasná kalendářová tlačítka — grid 2+1, ikony SVG, premium gradient (jen mobile/tablet). */
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow{
@@ -935,6 +952,7 @@ style-src 'self' 'unsafe-inline' https:;
           box-sizing: border-box !important;
           overflow-x: hidden !important;
           align-items: stretch !important;
+          align-content: start !important;
           margin-top: 8px !important;
         }
         #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel{
