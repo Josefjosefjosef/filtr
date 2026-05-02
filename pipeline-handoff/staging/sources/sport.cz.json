@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-02T05:14:59.028009Z",
+  "ingestedAt": "2026-05-02T05:50:23.498160Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "V Liberci brousí diamant jménem Diakité. Teď se chystá na Slavii",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-v-liberci-brousi-diamant-jmenem-diakite-ted-se-chysta-na-slavii-5446208",
+      "dt": "2026-05-02T05:43:47Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brousí",
+        "chystá",
+        "diakité",
+        "diamant",
+        "jménem",
+        "liberci",
+        "slavii"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -743,35 +767,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třesk v Kometě. Představila deset posil, na střídačku se vrací Zábranský. „Byl to můj dlouhodobý plán,“ uvedl",
-      "url": "https://www.sport.cz/clanek/hokej-extraliga-tresk-v-komete-predstavila-deset-posil-spoustu-navratu-i-prichod-reprezentanta-5446501",
-      "dt": "2026-05-01T06:45:42Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "deset",
-        "dlouhodobý",
-        "kometě",
-        "můj",
-        "plán",
-        "posil",
-        "představila",
-        "střídačku",
-        "třesk",
-        "uvedl",
-        "vrací",
-        "zábranský"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +777,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 41729,
+      "bytes": 41327,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +814,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T04:37:43Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T05:43:47Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -834,6 +829,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Liberci brousí diamant jménem Diakité. Teď se chystá na Slavii",
+            "publishedAt": "2026-05-02T05:43:47Z"
+          },
           {
             "title": "Pastrňákovi se Zachou skončila sezona, v play off dobojoval i Vejmelka",
             "publishedAt": "2026-05-02T04:10:51Z"
@@ -861,10 +860,6 @@
           {
             "title": "Sinner jako třetí hráč historie postoupil do finále na pěti turnajích Masters v řadě",
             "publishedAt": "2026-05-01T15:48:02Z"
-          },
-          {
-            "title": "SESTŘIH: Obrovská smůla. Čeští mladíci ztratili boj o finále až v prodloužení se Švédy, kteří budou hrát o zlato se Slováky",
-            "publishedAt": "2026-05-01T09:19:49Z"
           }
         ]
       }

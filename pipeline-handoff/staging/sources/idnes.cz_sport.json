@@ -1,8 +1,59 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-02T05:14:59.028009Z",
+  "ingestedAt": "2026-05-02T05:50:23.498160Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Pastrňák se Zachou konec Bostonu neodvrátili, postup slaví Buffalo a Vegas",
+      "url": "https://www.idnes.cz/hokej/nhl/vysledky-nhl-pastrnak-zacha-vejmelka-hertl.A260502_070927_nhl_mkr",
+      "dt": "2026-05-02T05:41:54Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bostonu",
+        "buffalo",
+        "konec",
+        "neodvrátili",
+        "pastrňák",
+        "postup",
+        "slaví",
+        "vegas",
+        "zachou"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "České hokejové hry 2026: Program, výsledky, Češi, kde sledovat",
+      "url": "https://www.idnes.cz/hokej/reprezentace/ceske-hokejove-hry-2026.A260425_105231_ms-hokej-2026_ald",
+      "dt": "2026-05-02T05:15:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "2026",
+        "hokejové",
+        "hry",
+        "program",
+        "sledovat",
+        "výsledky",
+        "české",
+        "češi"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -729,58 +780,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Pilot F1 Bottas o poruše příjmu potravy: Budil jsem se ve čtyři a bušilo mi srdce",
-      "url": "https://www.idnes.cz/sport/formule/f1-valtteri-bottas-porucha-prijmu-potravy.A260501_080930_formule_kazdt",
-      "dt": "2026-05-01T08:00:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bottas",
-        "budil",
-        "bušilo",
-        "jsem",
-        "pilot",
-        "poruše",
-        "potravy",
-        "příjmu",
-        "srdce",
-        "čtyři"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další megapřesun pro Dioufa? O levého beka má zájem Manchester United",
-      "url": "https://www.idnes.cz/fotbal/zahranici/malick-diouf-west-ham-manchester-united-spekulace.A260501_085308_fot_zahranici_duff",
-      "dt": "2026-05-01T07:38:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "beka",
-        "další",
-        "dioufa",
-        "levého",
-        "manchester",
-        "megapřesun",
-        "united",
-        "zájem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -791,7 +790,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 46587,
+      "bytes": 46215,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -828,7 +827,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T05:41:54Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -843,6 +842,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pastrňák se Zachou konec Bostonu neodvrátili, postup slaví Buffalo a Vegas",
+            "publishedAt": "2026-05-02T05:41:54Z"
+          },
+          {
+            "title": "České hokejové hry 2026: Program, výsledky, Češi, kde sledovat",
+            "publishedAt": "2026-05-02T05:15:00Z"
+          },
           {
             "title": "Je libo batůžek k sestupu? Tottenham představil kolekci s Prasátkem Peppou",
             "publishedAt": "2026-05-02T05:00:00Z"
@@ -866,14 +873,6 @@
           {
             "title": "Česko - Švédsko 3:4P. Osmnáctka přišla o dvougólový náskok, o bronz vyzve Lotyše",
             "publishedAt": "2026-05-01T20:09:12Z"
-          },
-          {
-            "title": "Nymburk pokořil stovku i ve druhém čtvrtfinále, Děčín nad Brnem znovu vede",
-            "publishedAt": "2026-05-01T20:03:25Z"
-          },
-          {
-            "title": "Infantinův trapas. Bafuňáře Izraele a Palestiny vybízel k podání rukou marně",
-            "publishedAt": "2026-05-01T18:26:00Z"
           }
         ]
       }
