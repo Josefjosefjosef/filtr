@@ -1,31 +1,27 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-02T13:19:44.853571Z",
+  "ingestedAt": "2026-05-02T13:50:11.986219Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Baník hraje o přežití. Pardubice se rychle trefily. Slavia může v Liberci udělat další krok k titulu",
+      "title": "FOTBAL ONLINE: Baník zachránilo břevno! Bohemka musí dotahovat, Pardubice inkasovaly",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-startuje-nadstavba-slavia-muze-v-liberci-udelat-dalsi-krok-k-titulu-banik-bojuje-o-preziti-5446528",
       "dt": "2026-05-02T04:37:43Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "baník",
-        "další",
+        "bohemka",
+        "břevno",
+        "dotahovat",
         "fotbal",
-        "hraje",
-        "krok",
-        "liberci",
+        "inkasovaly",
+        "musí",
         "online",
         "pardubice",
-        "přežití",
-        "rychle",
-        "slavia",
-        "titulu",
-        "trefily",
-        "udělat"
+        "zachránilo"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -37,19 +33,18 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Hokejisté vyrukují na suverénní Švédy. Do akce půjdou dva debutanti",
+      "title": "HOKEJ ONLINE: Češi jdou na Švédy s debutantem v brance",
       "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-2026-ceske-hokejove-hry-cesko-svedsko-online-5446811",
       "dt": "2026-05-02T08:04:49Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "akce",
-        "debutanti",
-        "dva",
-        "hokejisté",
-        "půjdou",
-        "suverénní",
-        "vyrukují",
+        "brance",
+        "debutantem",
+        "hokej",
+        "jdou",
+        "online",
+        "češi",
         "švédy"
       ],
       "feedCategory": "sport",
@@ -62,24 +57,46 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Ve hře je bronz. Česká osmnáctka udělala změnu v brance a bojuje o medaili s Lotyšskem",
+      "title": "HOKEJ ONLINE: Čeští mladíci během čtyřiceti vteřin otočili skóre duelu o bronz",
       "url": "https://www.sport.cz/clanek/hokej-ms-u18-2026-cesko-lotyssko-utkani-o-bronz-online-5446800",
       "dt": "2026-05-02T06:01:45Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bojuje",
-        "brance",
         "bronz",
+        "během",
+        "duelu",
         "hokej",
-        "hře",
-        "lotyšskem",
-        "medaili",
+        "mladíci",
         "online",
-        "osmnáctka",
-        "udělala",
-        "změnu",
-        "česká"
+        "otočili",
+        "skóre",
+        "vteřin",
+        "čeští",
+        "čtyřiceti"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Fotbalisté Ipswiche se po roce vrací do Premier League",
+      "url": "https://www.sport.cz/clanek/fotbal-premier-league-fotbaliste-ipswiche-se-po-roce-vraci-do-premier-league-5447039",
+      "dt": "2026-05-02T13:43:45Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "fotbalisté",
+        "ipswiche",
+        "league",
+        "premier",
+        "roce",
+        "vrací"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -729,28 +746,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Siniaková si v Madridu zahraje o další titul",
-      "url": "https://www.sport.cz/clanek/tenis-siniakova-si-v-madridu-zahraje-o-dalsi-titul-5446795",
-      "dt": "2026-05-01T21:50:48Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "další",
-        "madridu",
-        "siniaková",
-        "titul",
-        "zahraje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -761,7 +756,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 40213,
+      "bytes": 40297,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -798,7 +793,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T12:54:21Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T13:43:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 28,
@@ -816,16 +811,20 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Baník hraje o přežití. Pardubice se rychle trefily. Slavia může v Liberci udělat další krok k titulu",
+            "title": "FOTBAL ONLINE: Baník zachránilo břevno! Bohemka musí dotahovat, Pardubice inkasovaly",
             "publishedAt": "2026-05-02T04:37:43Z"
           },
           {
-            "title": "Hokejisté vyrukují na suverénní Švédy. Do akce půjdou dva debutanti",
+            "title": "HOKEJ ONLINE: Češi jdou na Švédy s debutantem v brance",
             "publishedAt": "2026-05-02T08:04:49Z"
           },
           {
-            "title": "HOKEJ ONLINE: Ve hře je bronz. Česká osmnáctka udělala změnu v brance a bojuje o medaili s Lotyšskem",
+            "title": "HOKEJ ONLINE: Čeští mladíci během čtyřiceti vteřin otočili skóre duelu o bronz",
             "publishedAt": "2026-05-02T06:01:45Z"
+          },
+          {
+            "title": "Fotbalisté Ipswiche se po roce vrací do Premier League",
+            "publishedAt": "2026-05-02T13:43:45Z"
           },
           {
             "title": "Finsko nemělo se Švýcary žádný problém",
@@ -842,10 +841,6 @@
           {
             "title": "Piloti McLarenu se ve sprintu v Miami pokusí přerušit vítěznou šňůru Mercedesu",
             "publishedAt": "2026-05-02T12:22:54Z"
-          },
-          {
-            "title": "Zvučná posila pro Oceláře, do Třince se vrací mistr světa",
-            "publishedAt": "2026-05-02T07:22:17Z"
           }
         ]
       }

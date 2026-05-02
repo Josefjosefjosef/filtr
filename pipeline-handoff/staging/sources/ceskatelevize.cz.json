@@ -1,27 +1,25 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-02T13:19:44.853571Z",
+  "ingestedAt": "2026-05-02T13:50:11.986219Z",
   "items": [
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "V národním parku České Švýcarsko hoří les, platí druhý stupeň poplachu",
+      "title": "V Českém Švýcarsku hoří les, zasaženo je odhadem deset hektarů",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/v-narodnim-parku-ceske-svycarsko-hori-les-plati-druhy-stupen-poplachu-373029",
       "dt": "2026-05-02T12:59:09Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "druhý",
+        "deset",
+        "hektarů",
         "hoří",
         "les",
-        "národním",
-        "parku",
-        "platí",
-        "poplachu",
-        "stupeň",
-        "české",
-        "švýcarsko"
+        "odhadem",
+        "zasaženo",
+        "českém",
+        "švýcarsku"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -772,7 +770,29 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Utkání o bronz na MS do 18 let Česko – Lotyšsko 0:0",
+      "title": "Euro Hockey Tour Česko – Švédsko",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-cesko-svedsko-156559",
+      "dt": "2026-05-02T13:45:00Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
+      "tokens": [
+        "euro",
+        "hockey",
+        "tour",
+        "česko",
+        "švédsko"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Utkání o bronz na MS do 18 let Česko – Lotyšsko 2:1",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/utkani-o-bronz-na-ms-do-18-let-cesko-lotyssko-156558",
       "dt": "2026-05-02T13:01:28Z",
       "media_raw": "ČT sport",
@@ -1483,29 +1503,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Ikonický Hokejista se vrátil před pražskou Sportovní halu",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/ikonicky-hokejista-se-vratil-pred-prazskou-sportovni-halu-156529",
-      "dt": "2026-04-30T17:31:10Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "halu",
-        "hokejista",
-        "ikonický",
-        "pražskou",
-        "sportovní",
-        "vrátil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1516,7 +1513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42308,
+      "bytes": 42362,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1593,7 +1590,7 @@
         },
         "sample_titles": [
           {
-            "title": "V národním parku České Švýcarsko hoří les, platí druhý stupeň poplachu",
+            "title": "V Českém Švýcarsku hoří les, zasaženo je odhadem deset hektarů",
             "publishedAt": "2026-05-02T12:59:09Z"
           },
           {
@@ -1634,7 +1631,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 37314,
+      "bytes": 37908,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1671,7 +1668,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T13:01:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T13:45:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1687,7 +1684,11 @@
         },
         "sample_titles": [
           {
-            "title": "Utkání o bronz na MS do 18 let Česko – Lotyšsko 0:0",
+            "title": "Euro Hockey Tour Česko – Švédsko",
+            "publishedAt": "2026-05-02T13:45:00Z"
+          },
+          {
+            "title": "Utkání o bronz na MS do 18 let Česko – Lotyšsko 2:1",
             "publishedAt": "2026-05-02T13:01:28Z"
           },
           {
@@ -1713,10 +1714,6 @@
           {
             "title": "Reprezentační útočník Voženílek se po dvou letech vrací do Třince",
             "publishedAt": "2026-05-02T07:55:01Z"
-          },
-          {
-            "title": "Lakers už Houstonu další šanci nedali, Detroit po velkém obratu vybojoval sedmý zápas",
-            "publishedAt": "2026-05-02T07:35:56Z"
           }
         ]
       }
@@ -1728,7 +1725,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77126,
+      "bytes": 77273,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
