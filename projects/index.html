@@ -352,7 +352,7 @@ style-src 'self' 'unsafe-inline' https:;
         margin: 0;
         padding: 0;
       }
-      /* P0 Silver: inline mini kalendář (mobil/tablet) — viditelný DOM, bez nativního pickeru. */
+      /* P0 Silver: mini kalendář — prémiový světle oranžový motiv (mobil/tablet, pouze vizuál). */
       #iuSilverMiniCalendar[data-iu-silver-mini-calendar="true"]{
         display: block;
         box-sizing: border-box;
@@ -360,20 +360,23 @@ style-src 'self' 'unsafe-inline' https:;
         max-width: 100%;
         margin: 8px 0 0;
         padding: 10px 10px 8px;
-        border-radius: 14px;
-        border: 1px solid rgba(148, 163, 184, 0.28);
-        background: rgba(15, 23, 42, 0.94);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        border-radius: 16px;
+        border: 1px solid #fdba74;
+        background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+        box-shadow: 0 8px 24px rgba(251, 146, 60, 0.25);
       }
       #iuSilverMiniCalendar[hidden]{
         display: none !important;
       }
-      .iuSilverMiniCal__toolbar{
+      .iuSilverMiniCal__toolbar,
+      .iuSilverMiniCal__header{
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
         margin-bottom: 8px;
+        color: #9a3412;
+        font-weight: 600;
       }
       .iuSilverMiniCal__title{
         flex: 1 1 auto;
@@ -381,19 +384,20 @@ style-src 'self' 'unsafe-inline' https:;
         text-align: center;
         font-size: 14px;
         font-weight: 700;
-        color: rgba(248, 250, 252, 0.96);
+        color: #9a3412;
         text-transform: capitalize;
       }
-      .iuSilverMiniCal__nav{
+      .iuSilverMiniCal__nav,
+      .iuSilverMiniCal__navBtn{
         flex: 0 0 auto;
         width: 40px;
         height: 40px;
         margin: 0;
         padding: 0;
-        border: 1px solid rgba(148, 163, 184, 0.35);
+        border: 1px solid #fdba74;
         border-radius: 10px;
-        background: rgba(30, 41, 59, 0.9);
-        color: rgba(248, 250, 252, 0.95);
+        background: #fed7aa;
+        color: #9a3412;
         font-size: 20px;
         line-height: 1;
         cursor: pointer;
@@ -410,13 +414,14 @@ style-src 'self' 'unsafe-inline' https:;
         gap: 4px;
         margin-bottom: 4px;
       }
+      .iu-silver-mini-calendar-weekdays span,
       .iuSilverMiniCal__wlab{
         display: block;
         min-width: 0;
         font-size: 10px;
-        font-weight: 600;
+        font-weight: 500;
         line-height: 1.2;
-        color: rgba(148, 163, 184, 0.9);
+        color: #c2410c;
         text-align: center;
       }
       .iuSilverMiniCal__grid{
@@ -434,27 +439,38 @@ style-src 'self' 'unsafe-inline' https:;
         min-height: 40px;
         margin: 0;
         padding: 0;
-        border: 1px solid rgba(71, 85, 105, 0.55);
+        border: 1px solid #fdba74;
         border-radius: 10px;
-        background: rgba(30, 41, 59, 0.75);
-        color: rgba(248, 250, 252, 0.95);
+        background: #ffedd5;
+        color: #7c2d12;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease,
+          transform 0.15s ease;
       }
-      .iuSilverMiniCal__day--today{
-        border-color: rgba(56, 189, 248, 0.65);
-        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25);
+      .iuSilverMiniCal__day:active{
+        transform: scale(0.96);
+      }
+      .iuSilverMiniCal__day--today:not(.is-selected){
+        border-color: #fb923c;
+        box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.35);
+      }
+      .iuSilverMiniCal__day.is-selected{
+        background: #f97316;
+        border-color: #ea580c;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
       }
       .iuSilverMiniCal__back{
         width: 100%;
         margin: 0;
         padding: 10px 12px;
         border-radius: 10px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        background: rgba(51, 65, 85, 0.85);
-        color: rgba(248, 250, 252, 0.95);
+        border: 1px solid #fdba74;
+        background: #fed7aa;
+        color: #9a3412;
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;

@@ -33339,17 +33339,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var startPad = (first.getDay() + 6) % 7;
       var dim = new Date(y, m + 1, 0).getDate();
       var tIso = todayIso();
+      var selIso = String(silverCalendarDraft.date || "").trim() || tIso;
       var html = "";
       html +=
         '<div class="iuSilverMiniCal" role="dialog" aria-label="V\u00fdb\u011br data">' +
-        '<div class="iuSilverMiniCal__toolbar">' +
-        '<button type="button" class="iuSilverMiniCal__nav" data-iu-silver-mini-cal="prev" aria-label="P\u0159edchoz\u00ed m\u011bs\u00edc">\u2039</button>' +
+        '<div class="iuSilverMiniCal__toolbar iuSilverMiniCal__header">' +
+        '<button type="button" class="iuSilverMiniCal__nav iuSilverMiniCal__navBtn" data-iu-silver-mini-cal="prev" aria-label="P\u0159edchoz\u00ed m\u011bs\u00edc">\u2039</button>' +
         '<div class="iuSilverMiniCal__title" data-iu-silver-mini-cal-title>' +
         monthNames[m] +
         " " +
         y +
         "</div>" +
-        '<button type="button" class="iuSilverMiniCal__nav" data-iu-silver-mini-cal="next" aria-label="Dal\u0161\u00ed m\u011bs\u00edc">\u203a</button>' +
+        '<button type="button" class="iuSilverMiniCal__nav iuSilverMiniCal__navBtn" data-iu-silver-mini-cal="next" aria-label="Dal\u0161\u00ed m\u011bs\u00edc">\u203a</button>' +
         "</div>" +
         '<div class="iuSilverMiniCal__weekdays iu-silver-mini-calendar-weekdays" aria-hidden="true">' +
         '<span class="iuSilverMiniCal__wlab">Po</span>' +
@@ -33370,9 +33371,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       for (var d = 1; d <= dim; d++) {
         var iso = toIsoFromDate(new Date(y, m, d));
         var isToday = iso === tIso;
+        var isSel = iso === selIso;
         html +=
           '<button type="button" class="iuSilverMiniCal__cell iuSilverMiniCal__day' +
           (isToday ? " iuSilverMiniCal__day--today" : "") +
+          (isSel ? " is-selected" : "") +
           '" data-iu-silver-mini-cal="day" data-iu-silver-mini-iso="' +
           iso +
           '">' +
