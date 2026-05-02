@@ -140,11 +140,30 @@ async function runViewport(page, w, h) {
   try {
     await page.locator("#iuHeroQuickCal").scrollIntoViewIfNeeded();
     await page.click("#iuHeroQuickCal", { timeout: 15000, force: true });
-    await page.waitForTimeout(500);
-    const bodyText = await page.evaluate(() => (document.body ? document.body.innerText : ""));
-    const saveOk = /\buložit\s+do\s+kalendáře\b/i.test(bodyText);
-    const searchOk = /\bvyhledat\s+v\s+kalendáři\b/i.test(bodyText);
-    calendarFlowOk = saveOk && searchOk;
+    await page.waitForTimeout(600);
+    calendarFlowOk = await page.evaluate(() => {
+      const overlay = document.getElementById("iuCalendarOverlay");
+      const open = !!(overlay && !overlay.hasAttribute("hidden") && overlay.getAttribute("aria-hidden") !== "true");
+      const oldSave = document.querySelector('[data-iu-silver-guided="save"]');
+      const oldSearch = document.querySelector('[data-iu-silver-guided="search"]');
+      const oldCancel = document.querySelector('[data-iu-silver-guided="cal-back"]');
+      function vis(el) {
+        if (!el) return false;
+        const st = window.getComputedStyle(el);
+        if (st.display === "none" || st.visibility === "hidden") return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 2 && r.height > 2;
+      }
+      const directOpen = open && !vis(oldSave) && !vis(oldSearch) && !vis(oldCancel);
+      const bodyText = document.body ? document.body.innerText : "";
+      const legacyChipRow =
+        /\buložit\s+do\s+kalendáře\b/i.test(bodyText) && /\bvyhledat\s+v\s+kalendáři\b/i.test(bodyText);
+      return directOpen || legacyChipRow;
+    });
+    try {
+      await page.keyboard.press("Escape");
+    } catch (_) {}
+    await page.waitForTimeout(200);
   } catch (_) {
     calendarFlowOk = false;
   }

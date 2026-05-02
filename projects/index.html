@@ -352,130 +352,6 @@ style-src 'self' 'unsafe-inline' https:;
         margin: 0;
         padding: 0;
       }
-      /* P0 Silver: mini kalendář — prémiový světle oranžový motiv (mobil/tablet, pouze vizuál). */
-      #iuSilverMiniCalendar[data-iu-silver-mini-calendar="true"]{
-        display: block;
-        box-sizing: border-box;
-        width: 100%;
-        max-width: 100%;
-        margin: 8px 0 0;
-        padding: 10px 10px 8px;
-        border-radius: 16px;
-        border: 1px solid #fdba74;
-        background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
-        box-shadow: 0 8px 24px rgba(251, 146, 60, 0.25);
-      }
-      #iuSilverMiniCalendar[hidden]{
-        display: none !important;
-      }
-      .iuSilverMiniCal__toolbar,
-      .iuSilverMiniCal__header{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        margin-bottom: 8px;
-        color: #9a3412;
-        font-weight: 600;
-      }
-      .iuSilverMiniCal__title{
-        flex: 1 1 auto;
-        min-width: 0;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 700;
-        color: #9a3412;
-        text-transform: capitalize;
-      }
-      .iuSilverMiniCal__nav,
-      .iuSilverMiniCal__navBtn{
-        flex: 0 0 auto;
-        width: 40px;
-        height: 40px;
-        margin: 0;
-        padding: 0;
-        border: 1px solid #fdba74;
-        border-radius: 10px;
-        background: #fed7aa;
-        color: #9a3412;
-        font-size: 20px;
-        line-height: 1;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .iuSilverMiniCal__weekdays,
-      .iu-silver-mini-calendar-weekdays{
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        align-items: center;
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
-        gap: 4px;
-        margin-bottom: 4px;
-      }
-      .iu-silver-mini-calendar-weekdays span,
-      .iuSilverMiniCal__wlab{
-        display: block;
-        min-width: 0;
-        font-size: 10px;
-        font-weight: 500;
-        line-height: 1.2;
-        color: #c2410c;
-        text-align: center;
-      }
-      .iuSilverMiniCal__grid{
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 4px;
-        margin-bottom: 8px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      .iuSilverMiniCal__cell--pad{
-        min-height: 40px;
-      }
-      .iuSilverMiniCal__day{
-        min-height: 40px;
-        margin: 0;
-        padding: 0;
-        border: 1px solid #fdba74;
-        border-radius: 10px;
-        background: #ffedd5;
-        color: #7c2d12;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease,
-          transform 0.15s ease;
-      }
-      .iuSilverMiniCal__day:active{
-        transform: scale(0.96);
-      }
-      .iuSilverMiniCal__day--today:not(.is-selected){
-        border-color: #fb923c;
-        box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.35);
-      }
-      .iuSilverMiniCal__day.is-selected{
-        background: #f97316;
-        border-color: #ea580c;
-        color: #fff;
-        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
-      }
-      .iuSilverMiniCal__back{
-        width: 100%;
-        margin: 0;
-        padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid #fdba74;
-        background: #fed7aa;
-        color: #9a3412;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-      }
       .iuSilverHomeComposerShell.iuSilverComposerP0{
         position: relative;
         flex-wrap: wrap;
@@ -511,40 +387,6 @@ style-src 'self' 'unsafe-inline' https:;
         margin: 0;
         padding: 0;
       }
-      .iuSilverCalendarComposeAux{
-        margin: 6px 0 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-      }
-      .iuSilverCalendarComposeAux[hidden]{
-        display: none !important;
-      }
-      .iuSilverShowMiniCalendarBtn{
-        appearance: none;
-        -webkit-appearance: none;
-        margin: 0;
-        padding: 4px 0;
-        border: 0;
-        background: transparent;
-        color: rgba(15, 35, 55, 0.55);
-        font: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.35;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        text-align: left;
-        width: auto;
-        max-width: 100%;
-      }
-      #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverShowMiniCalendarBtn,
-      #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] .iuSilverShowMiniCalendarBtn{
-        color: rgba(248, 250, 252, 0.62);
-      }
       @media (max-width: 1024px) {
         #iuSilverHeroPremium .iu-mobileSilverGateStack--floatingSilver {
           --iu-mobile-cta-h: 78px !important;
@@ -577,9 +419,7 @@ style-src 'self' 'unsafe-inline' https:;
           padding-top: 10px !important;
           padding-bottom: 10px !important;
         }
-        /* P0 CLS: při kalendářové akci držíme výšku vstupu — rebuild věty po „uložit do kalendáře“ nesmí roztáhnout composer. */
-        html[data-iu-silver-cal-ui="ACTION_STATE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput,
-        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput{
+        html[data-iu-silver-cal-ui="CALENDAR_OPEN"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput{
           height: 78px !important;
           max-height: 78px !important;
           overflow-y: auto !important;
@@ -604,11 +444,6 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHeroPremium #iuSilverHeroInputHost #iuSilverHomeChips:not([hidden]) {
           position: relative;
           z-index: 1;
-        }
-        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder,
-        html[data-iu-silver-cal-ui="CALENDAR_COMPOSE"] #iuMobileSilverSlot #iuSilverHeroPremium #iuSilverHeroInputHost .iuSilverHomeInput.iuSilverHomeInput::placeholder{
-          color: #f97316 !important;
-          opacity: 0.92 !important;
         }
       }
       .iuSilverHomeChips{
@@ -825,110 +660,10 @@ style-src 'self' 'unsafe-inline' https:;
         #iuSilverHomeChips button.iuSilverHomeChip:not(.iu-silver-quickdate-btn){
           font-size: 16px;
         }
-        /* P0 CLS: stejná min. výška slotu pro cal entry (2+1) i quick-date (2×2) i day-picker — žádný skok výšky při přepnutí mezi nimi. Oranžový styl quick-date + dny: assets/app.css (.iu-silver-btn-orange). */
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow{
-          min-height: 120px !important;
-          box-sizing: border-box !important;
-        }
-        /* P0 Silver: dočasná kalendářová tlačítka — grid 2+1, ikony SVG, premium gradient (jen mobile/tablet). */
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow{
-          display: grid !important;
-          grid-template-columns: 1fr 1fr !important;
-          gap: 11px !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          min-width: 0 !important;
-          box-sizing: border-box !important;
-          overflow-x: hidden !important;
-          align-items: stretch !important;
-          align-content: start !important;
-          margin-top: 8px !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel{
-          grid-column: 1 / -1 !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip,
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iuSilverHomeChip{
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 8px !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          min-width: 0 !important;
-          min-height: 46px !important;
-          box-sizing: border-box !important;
-          font-size: 13px !important;
-          font-weight: 600 !important;
-          line-height: 1.2 !important;
-          border-radius: 15px !important;
-          color: rgba(255, 255, 255, 0.98) !important;
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(15, 23, 42, 0.12) !important;
-          -webkit-tap-highlight-color: transparent !important;
-          text-align: center !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn:hover,
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn:hover{
-          filter: brightness(1.05) !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn:hover{
-          filter: none !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn:active{
-          transform: scale(0.97) !important;
-          filter: none !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn:active{
-          background: rgba(255, 122, 0, 0.08) !important;
-          filter: none !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn:active{
-          color: #ffffff !important;
-          filter: none !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip__svg{
-          flex: 0 0 auto !important;
-          width: 16px !important;
-          height: 16px !important;
-          display: block !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip__label{
-          min-width: 0 !important;
-          flex: 1 1 auto !important;
-          white-space: nowrap !important;
-          overflow: hidden !important;
-          text-overflow: ellipsis !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel .iuSilverHomeChip__label{
-          flex: 0 1 auto !important;
-          max-width: 100% !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-save-btn{
-          background: linear-gradient(135deg, rgba(22, 163, 74, 0.95), rgba(234, 88, 12, 0.92)) !important;
-          color: #fff !important;
-          border: 1px solid rgba(255, 255, 255, 0.22) !important;
-          font-weight: 700 !important;
-          box-shadow: 0 4px 16px rgba(22, 163, 74, 0.28), 0 2px 8px rgba(234, 88, 12, 0.18) !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-search-btn{
-          background: rgba(255, 255, 255, 0.1) !important;
-          color: #fff !important;
-          border: 1px solid rgba(255, 255, 255, 0.38) !important;
-          font-weight: 650 !important;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) inset !important;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow button.iu-silver-cancel-btn{
-          background: rgba(15, 23, 42, 0.35) !important;
-          border: 1px solid rgba(255, 255, 255, 0.22) !important;
-          color: rgba(248, 250, 252, 0.95) !important;
-          font-weight: 650 !important;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
-        }
       }
       @media (min-width: 1025px){
         .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverHomeChips,
         .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverGuidedSheetRoot,
-        .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverCalendarComposeAux,
         .iuSilverHomeComposerShell.iuSilverComposerP0 #iuSilverHomeInlineToast{
           display: none !important;
         }
@@ -1775,11 +1510,7 @@ style-src 'self' 'unsafe-inline' https:;
                                           <svg class="iuSilverHomeSendIcon iuSilverHomeSendIcon--send" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" focusable="false"><path fill="currentColor" d="M12 4 18 12h-4v8h-4v-8H6l6-8z"/></svg>
                                         </button>
                                       </div>
-                                      <div id="iuSilverCalendarComposeAux" class="iuSilverCalendarComposeAux" data-iu-silver-calendar-compose-aux="1" hidden>
-                                        <button type="button" class="iuSilverShowMiniCalendarBtn" id="iuSilverShowMiniCalendarBtn" aria-expanded="false">Zobrazit kalendář</button>
-                                      </div>
                                       <div id="iuSilverHomeChips" class="iuSilverHomeChips" data-iu-silver-home-chips="1" hidden></div>
-                                      <div id="iuSilverMiniCalendar" data-iu-silver-mini-calendar="true" hidden></div>
                                       <div id="iuSilverGuidedSheetRoot" class="iuSilverGuidedSheetRoot" hidden>
                                         <div id="iuSilverGuidedSheetText" class="iuSilverGuidedSheetBlock" hidden>
                                           <label class="iuSilverGuidedSheetLab" for="iuSilverGuidedTextInput" id="iuSilverGuidedTextLab">Text</label>
@@ -5655,20 +5386,6 @@ style-src 'self' 'unsafe-inline' https:;
           min-height: 44px;
           cursor: pointer;
           touch-action: manipulation;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSave .iuSilverHomeChip__label,
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempSearch .iuSilverHomeChip__label,
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip--calTempCancel .iuSilverHomeChip__label {
-          white-space: normal !important;
-          overflow-wrap: anywhere;
-          text-align: center;
-          line-height: 1.2;
-          max-width: 100%;
-        }
-        #iuSilverHomeChips.iuSilverHomeChips--calActionRow .iuSilverHomeChip {
-          min-height: 48px !important;
-          padding-left: 10px !important;
-          padding-right: 10px !important;
         }
       }
     </style>
