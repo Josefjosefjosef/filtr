@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-02T16:15:27.857820Z",
+  "ingestedAt": "2026-05-02T16:51:19.337959Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Už je to tu zase! Lesy v národním parku České Švýcarsko pohlcují plameny",
+      "url": "https://ekonomickydenik.cz/lesy-v-narodnim-parku-ceske-svycarsko-hori/",
+      "dt": "2026-05-02T16:31:52Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "lesy",
+        "národním",
+        "parku",
+        "plameny",
+        "pohlcují",
+        "zase",
+        "české",
+        "švýcarsko"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -773,32 +798,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Špičkový raketový systém EuroPULS má zelenou. Spojí německé a izraelské zbrojaře",
-      "url": "https://ekonomickydenik.cz/raketovy-system-europuls-nemecke-izraelske-zbrojare/",
-      "dt": "2026-04-30T08:53:23Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "europuls",
-        "izraelské",
-        "německé",
-        "raketový",
-        "spojí",
-        "systém",
-        "zbrojaře",
-        "zelenou",
-        "špičkový"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -809,7 +808,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 70991,
+      "bytes": 71155,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -846,7 +845,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:42:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T16:31:52Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 27,
@@ -863,6 +862,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Už je to tu zase! Lesy v národním parku České Švýcarsko pohlcují plameny",
+            "publishedAt": "2026-05-02T16:31:52Z"
+          },
           {
             "title": "Základová deska je na místě! Jak Kanaďané budují první reaktor po 30 letech",
             "publishedAt": "2026-05-02T15:42:22Z"
@@ -890,10 +893,6 @@
           {
             "title": "Belgická vláda jde ve stopách Babiše a Havlíčka. Chce ovládnout jaderné elektrárny",
             "publishedAt": "2026-05-02T09:00:00Z"
-          },
-          {
-            "title": "Meta 180 miliard: Český zbrojní průmysl drtí rekordy a mění se v ekonomický motor státu",
-            "publishedAt": "2026-05-02T07:45:19Z"
           }
         ]
       }

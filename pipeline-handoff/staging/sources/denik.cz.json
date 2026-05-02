@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-02T16:15:27.857820Z",
+  "ingestedAt": "2026-05-02T16:51:19.337959Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Rakouská policie dopadla podezřelého z otrávení dětských výživ",
+      "url": "https://www.denik.cz/staty-eu/rakousko-detska-vyziva-jed-na-krysy-spar-hipp-podezrely.html",
+      "dt": "2026-05-02T15:58:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dopadla",
+        "dětských",
+        "otrávení",
+        "podezřelého",
+        "policie",
+        "rakouská",
+        "výživ"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -110,6 +134,31 @@
       "_dt_serialized": true
     },
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
+      "url": "https://www.denik.cz/ekonomika/cesko-ekonomika-nejsou-pracovnici-chybi-ukrajinci-ceske-firmy-lovi-na-filipinach.html",
+      "dt": "2026-05-02T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "filipínách",
+        "firmy",
+        "lidi",
+        "loví",
+        "nejsou",
+        "nestačí",
+        "ukrajinci",
+        "české"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
@@ -127,31 +176,6 @@
         "obrazem",
         "retro",
         "spanilá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
-      "url": "https://www.denik.cz/ekonomika/cesko-ekonomika-nejsou-pracovnici-chybi-ukrajinci-ceske-firmy-lovi-na-filipinach.html",
-      "dt": "2026-05-02T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "filipínách",
-        "firmy",
-        "lidi",
-        "loví",
-        "nejsou",
-        "nestačí",
-        "ukrajinci",
-        "české"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -623,30 +647,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Pentagon stáhne tisíce vojáků z Německa. Odejdou do roka",
-      "url": "https://www.denik.cz/ze_sveta/spojene-staty-vojaci-stahovani-nemecko.html",
-      "dt": "2026-05-02T04:37:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "německa",
-        "odejdou",
-        "pentagon",
-        "roka",
-        "stáhne",
-        "tisíce",
-        "vojáků"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +657,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27755,
+      "bytes": 27757,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,7 +694,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:23:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-02T15:58:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 24,
@@ -710,6 +710,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Rakouská policie dopadla podezřelého z otrávení dětských výživ",
+            "publishedAt": "2026-05-02T15:58:00Z"
+          },
           {
             "title": "Princezna Charlotte slaví 11. narozeniny. Lidi okouzlila na nové fotografii",
             "publishedAt": "2026-05-02T15:23:00Z"
@@ -727,20 +731,16 @@
             "publishedAt": "2026-05-02T14:13:00Z"
           },
           {
-            "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
+            "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
             "publishedAt": "2026-05-02T14:00:00Z"
           },
           {
-            "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
+            "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
             "publishedAt": "2026-05-02T14:00:00Z"
           },
           {
             "title": "Zapnutím mikrofonu práce zdaleka nezačíná, říká moderátor Přívětivý",
             "publishedAt": "2026-05-02T13:00:00Z"
-          },
-          {
-            "title": "Hasiči bojují s požárem v Národním parku České Švýcarsko, platí zvláštní stupeň",
-            "publishedAt": "2026-05-02T12:26:00Z"
           }
         ]
       }
