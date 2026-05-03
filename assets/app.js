@@ -36477,7 +36477,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         devet: 9,
         deset: 10,
         jedenact: 11,
-        dvanact: 12
+        dvanact: 12,
+        druhe: 2,
+        treti: 3,
+        ctvrte: 4,
+        pate: 5,
+        seste: 6,
+        sedme: 7,
+        osme: 8,
+        devate: 9,
+        desate: 10,
+        jedenacte: 11,
+        dvanacte: 12
       };
       const foldTok = function (tok) {
         return foldCs(String(tok || ""))
@@ -36518,8 +36529,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         }
       }
       if (!time) {
-        const mPol = w.match(/\b(?:v\s+)?půl\s+([a-záéíóúůěščřžýÁÉÍÓÚŮĚŠČŘŽÝ]+)\b/iu);
-        const mPol2 = mPol || w.match(/\bpul\s+([a-z]+)\b/iu);
+        const mPol = w.match(/(?:^|[\s,.!?;:])(?:v\s+)?půl\s+(\p{L}+)(?=$|[\s,.!?;:])/iu);
+        const mPol2 = mPol || w.match(/(?:^|[\s,.!?;:])pul\s+(\p{L}+)(?=$|[\s,.!?;:])/iu);
         if (mPol2) {
           const kw = foldTok(mPol2[1]);
           const H = WH[kw];
