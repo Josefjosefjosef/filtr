@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-03T10:09:51.366676Z",
+  "ingestedAt": "2026-05-03T10:45:15.025693Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Levné létání dostává tvrdý zásah. Aerolinky zdražují a ruší spoje, první úplně ukončily provoz",
+      "url": "https://www.e15.cz/byznys/doprava-a-logistika/levne-letani-dostava-tvrdy-zasah-aerolinky-zdrazuji-a-rusi-spoje-prvni-uplne-ukoncily-provoz-1432540",
+      "dt": "2026-05-03T10:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "aerolinky",
+        "dostává",
+        "levné",
+        "létání",
+        "provoz",
+        "první",
+        "ruší",
+        "spoje",
+        "tvrdý",
+        "ukončily",
+        "zdražují",
+        "zásah",
+        "úplně"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1064,33 +1094,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Skupina Renomia ovladla dvě litevské makléřské společnosti, posiluje v celém Pobaltí",
-      "url": "https://www.e15.cz/byznys/skupina-renomia-ovladla-dve-litevske-maklerske-spolecnosti-posiluje-v-celem-pobalti-1432501",
-      "dt": "2026-04-30T07:50:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "celém",
-        "dvě",
-        "litevské",
-        "makléřské",
-        "ovladla",
-        "pobaltí",
-        "posiluje",
-        "renomia",
-        "skupina",
-        "společnosti"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1101,7 +1104,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 55686,
+      "bytes": 55824,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1138,11 +1141,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T04:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 34,
-          "zpravy": 4,
+          "zpravy": 5,
+          "finance": 33,
           "zdravi": 2
         },
         "drop_counts": {
@@ -1155,6 +1158,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Levné létání dostává tvrdý zásah. Aerolinky zdražují a ruší spoje, první úplně ukončily provoz",
+            "publishedAt": "2026-05-03T10:00:00Z"
+          },
           {
             "title": "Učili vás nemíchat? V Minus One na to zapomeňte. Host přichází na celé menu šesti drinků párovaných s finedinigem",
             "publishedAt": "2026-05-03T04:30:00Z"
@@ -1182,10 +1189,6 @@
           {
             "title": "Nízkonákladová aerolinka skončila. Nepřežila drahé palivo",
             "publishedAt": "2026-05-02T13:58:00Z"
-          },
-          {
-            "title": "Klimatická krize v peněženkách. Za oběd i pojistku platíme daň z horka",
-            "publishedAt": "2026-05-02T12:30:00Z"
           }
         ]
       }

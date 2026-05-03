@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-03T10:09:51.366676Z",
+  "ingestedAt": "2026-05-03T10:45:15.025693Z",
   "items": [
     {
       "section": "cestovani",
@@ -72,6 +72,28 @@
         "spací",
         "zavádí",
         "zealand"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Nejvertikálnější město na světě: Hongkong za 12 490 Kč",
+      "url": "https://pelipecky.cz/nejvertikalnejsi-mesto-na-svete-hongkong-za-12-490-kc/",
+      "dt": "2026-04-27T08:00:00Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "490",
+        "hongkong",
+        "město",
+        "nejvertikálnější",
+        "světě"
       ],
       "feedCategory": "cestovani",
       "feedType": "rss",
@@ -220,30 +242,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "NABÍDKA DNE: 4* dovolená v Albánii s All Inclusive za 9 490 Kč.",
-      "url": "https://pelipecky.cz/albanie-dovolena-durres-bay/",
-      "dt": "2026-04-20T10:01:46Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "490",
-        "albánii",
-        "all",
-        "dne",
-        "dovolená",
-        "inclusive",
-        "nabídka"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -254,7 +252,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 117084,
+      "bytes": 118672,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -319,6 +317,10 @@
             "publishedAt": "2026-04-27T09:27:46Z"
           },
           {
+            "title": "Nejvertikálnější město na světě: Hongkong za 12 490 Kč",
+            "publishedAt": "2026-04-27T08:00:00Z"
+          },
+          {
             "title": "7 nejkrásnějších míst v okolí Říma",
             "publishedAt": "2026-04-25T17:19:05Z"
           },
@@ -333,10 +335,6 @@
           {
             "title": "Letenky už levnější nebudou: rezervuj si TOP destinace od… od 690 Kč",
             "publishedAt": "2026-04-22T10:59:32Z"
-          },
-          {
-            "title": "Letenky do Bangkoku za 14 390 Kč",
-            "publishedAt": "2026-04-22T08:00:00Z"
           }
         ]
       }

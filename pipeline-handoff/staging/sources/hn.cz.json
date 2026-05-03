@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-03T10:09:51.366676Z",
+  "ingestedAt": "2026-05-03T10:45:15.025693Z",
   "items": [
     {
       "section": "aktualne",
@@ -59,6 +59,36 @@
         "zhoršuje",
         "časy",
         "špatné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "pocasi",
+      "contentType": "article",
+      "title": "&bdquo;Úplně v pohodě!&ldquo; Případ sociálně bydlící ministryně Mrázové je perfektní studijní materiál. A nejen o ní",
+      "url": "https://nazory.hn.cz/c1-67873010-bdquo-uplne-v-pohode-ldquo-pripad-socialne-bydlici-ministryne-mrazove-je-perfektni-studijni-material-a-nejen-o-ni",
+      "dt": "2026-05-03T07:20:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "bdquo",
+        "bydlící",
+        "ldquo",
+        "materiál",
+        "ministryně",
+        "mrázové",
+        "nejen",
+        "perfektní",
+        "pohodě",
+        "případ",
+        "sociálně",
+        "studijní",
+        "úplně"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1162,35 +1192,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Šachy odhalují rozmanitější a zábavnější středověk. Nová studie ukazuje, kde bouraly hranice a na čem záleželo",
-      "url": "https://vikend.hn.cz/c1-67862740-sachy-odhaluji-rozmanitejsi-a-zabavnejsi-stredovek-nova-studie-ukazuje-kde-bouraly-hranice-a-na-cem-zalezelo",
-      "dt": "2026-04-29T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "bouraly",
-        "hranice",
-        "nová",
-        "odhalují",
-        "rozmanitější",
-        "studie",
-        "středověk",
-        "ukazuje",
-        "zábavnější",
-        "záleželo",
-        "čem",
-        "šachy"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1201,7 +1202,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184279,
+      "bytes": 184404,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1241,9 +1242,9 @@
         "raw_feed_latest_publishedAt": "2026-05-03T08:33:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "zpravy": 2,
+          "zpravy": 3,
           "sport": 3,
-          "finance": 34,
+          "finance": 33,
           "zdravi": 1
         },
         "drop_counts": {
@@ -1265,6 +1266,10 @@
             "publishedAt": "2026-05-03T07:57:00Z"
           },
           {
+            "title": "&bdquo;Úplně v pohodě!&ldquo; Případ sociálně bydlící ministryně Mrázové je perfektní studijní materiál. A nejen o ní",
+            "publishedAt": "2026-05-03T07:20:00Z"
+          },
+          {
             "title": "České Švýcarsko dál hoří, hasiči nasadí pět set mužů a sedm vrtulníků. Oheň již zasáhl kilometr čtvereční plochy",
             "publishedAt": "2026-05-02T14:58:00Z"
           },
@@ -1283,10 +1288,6 @@
           {
             "title": "Malé hospody nezmizí, rozhodně ne kvůli EET, pomáhá jim. České gastro přesto čeká nástup franšíz",
             "publishedAt": "2026-05-01T07:15:00Z"
-          },
-          {
-            "title": "Umění odpočívat: Proč je místo válení na gauči lepší vzít do ruky rýč",
-            "publishedAt": "2026-05-01T07:11:00Z"
           }
         ]
       }

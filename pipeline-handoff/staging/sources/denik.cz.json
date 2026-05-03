@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T10:09:51.366676Z",
+  "ingestedAt": "2026-05-03T10:45:15.025693Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Řecko zažívá mimořádně studený květen. V horách u Athén sněží",
+      "url": "https://www.denik.cz/staty-eu/recko-studeny-kveten-snih-hory-atheny.html",
+      "dt": "2026-05-03T10:19:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "athén",
+        "horách",
+        "květen",
+        "mimořádně",
+        "sněží",
+        "studený",
+        "zažívá",
+        "řecko"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -632,32 +657,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Polský premiér popsal největší hrozbu NATO. Varoval před vnitřním rozkladem",
-      "url": "https://www.denik.cz/staty-eu/donald-tusk-nato-varovani-rozklad.html",
-      "dt": "2026-05-02T12:17:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "hrozbu",
-        "nato",
-        "největší",
-        "polský",
-        "popsal",
-        "premiér",
-        "rozkladem",
-        "varoval",
-        "vnitřním"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -668,7 +667,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28597,
+      "bytes": 28571,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -705,7 +704,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:19:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -722,6 +721,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Řecko zažívá mimořádně studený květen. V horách u Athén sněží",
+            "publishedAt": "2026-05-03T10:19:00Z"
+          },
           {
             "title": "V boji proti ruským zpravodajským službám jsme úspěšní, říká šéf BIS Koudelka",
             "publishedAt": "2026-05-03T08:30:00Z"
@@ -749,10 +752,6 @@
           {
             "title": "Trump zopakoval, že stáhne vojska z Německa. Chce větší omezení než Pentagon",
             "publishedAt": "2026-05-03T04:38:00Z"
-          },
-          {
-            "title": "Shrnutí prvního dne: Požár v Národním parku České Švýcarsko se rychle rozšířil",
-            "publishedAt": "2026-05-03T03:44:00Z"
           }
         ]
       }

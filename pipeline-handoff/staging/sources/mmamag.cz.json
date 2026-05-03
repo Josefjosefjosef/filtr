@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "mmamag.cz",
-  "ingestedAt": "2026-05-03T10:09:51.366676Z",
+  "ingestedAt": "2026-05-03T10:45:15.025693Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jake Paul se vysmál velikosti Mayweatherova tryskáče. Pěkně se ztrapnil",
+      "url": "https://www.mmamag.cz/jake-paul-se-vysmal-velikosti-mayweatherova-tryskace/",
+      "dt": "2026-05-03T10:11:10Z",
+      "media_raw": "MMAMAG",
+      "media_norm": "MMAMAG",
+      "tokens": [
+        "jake",
+        "mayweatherova",
+        "paul",
+        "pěkně",
+        "tryskáče",
+        "velikosti",
+        "vysmál",
+        "ztrapnil"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_mmamag",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "mmamag.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -1077,37 +1102,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "mmamag.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "video",
-      "title": "Pereira nemá šanci. Ngannou před zápasem s Ganem tvrdě zhodnotil šance šampiona UFC a varuje před fatálním rozdílem",
-      "url": "https://www.mmamag.cz/ngannou-neveri-pereirovi-v-zapase-s-ganem/",
-      "dt": "2026-05-01T09:54:20Z",
-      "media_raw": "MMAMAG",
-      "media_norm": "MMAMAG",
-      "tokens": [
-        "fatálním",
-        "ganem",
-        "nemá",
-        "ngannou",
-        "pereira",
-        "rozdílem",
-        "tvrdě",
-        "ufc",
-        "varuje",
-        "zhodnotil",
-        "zápasem",
-        "šampiona",
-        "šance",
-        "šanci"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_mmamag",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "mmamag.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1118,7 +1112,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.mmamag.cz/feed/",
-      "bytes": 77870,
+      "bytes": 77839,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1155,7 +1149,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T09:51:28Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:11:10Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "sport": 40
@@ -1170,6 +1164,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jake Paul se vysmál velikosti Mayweatherova tryskáče. Pěkně se ztrapnil",
+            "publishedAt": "2026-05-03T10:11:10Z"
+          },
           {
             "title": "Leo Brichta chce dokázat to, co se nepovedlo Kinclovi ani Véghovi. Titul KSW nikdy nepatřil Čechovi ani Slovákovi",
             "publishedAt": "2026-05-03T09:51:28Z"
@@ -1197,10 +1195,6 @@
           {
             "title": "UFC v Bílém domě se blíží. Trump slíbil 100 tisíc diváků a vstup zdarma pro všechny",
             "publishedAt": "2026-05-03T08:21:41Z"
-          },
-          {
-            "title": "Pereira míří pro třetí titul, ale Ngannou mu dává minimální šance. Gane má podle něj zbraně, na které nestačí",
-            "publishedAt": "2026-05-03T08:08:48Z"
           }
         ]
       }
