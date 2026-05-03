@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "prozeny.cz",
-  "ingestedAt": "2026-05-03T11:54:57.714473Z",
+  "ingestedAt": "2026-05-03T12:31:21.524579Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Varovné signály, že o vás partner ztrácí zájem a už vás nemiluje",
+      "url": "https://www.prozeny.cz/clanek/signaly-ze-o-vas-partner-ztraci-zajem-71282",
+      "dt": "2026-05-03T12:03:00Z",
+      "media_raw": "ProŽeny / Zdraví",
+      "media_norm": "ProŽeny / Zdraví",
+      "tokens": [
+        "nemiluje",
+        "partner",
+        "signály",
+        "varovné",
+        "vás",
+        "ztrácí",
+        "zájem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rubric",
+      "feedId": "zdr_prozeny_zdravi",
+      "sourceDisplayWeight": 0.7,
+      "sourceBatchKey": "prozeny.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -794,36 +818,6 @@
       "sourceDisplayWeight": 0.7,
       "sourceBatchKey": "prozeny.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Artroskopie? Zákrok přes pár dírek v těle, velká úleva a brzy domů. S ortopedem o trendu, který mění životy",
-      "url": "https://www.prozeny.cz/clanek/zdravi-mudrovani-s-danielou-artroskopie-zakrok-pres-par-direk-v-tele-velka-uleva-a-brzy-domu-s-ortopedem-o-trendu-ktery-meni-zivoty-98577",
-      "dt": "2026-04-30T12:32:15Z",
-      "media_raw": "ProŽeny / Zdraví",
-      "media_norm": "ProŽeny / Zdraví",
-      "tokens": [
-        "artroskopie",
-        "brzy",
-        "domů",
-        "dírek",
-        "mění",
-        "ortopedem",
-        "pár",
-        "trendu",
-        "těle",
-        "velká",
-        "zákrok",
-        "úleva",
-        "životy"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rubric",
-      "feedId": "zdr_prozeny_zdravi",
-      "sourceDisplayWeight": 0.7,
-      "sourceBatchKey": "prozeny.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -834,7 +828,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.prozeny.cz/rss/zdravi",
-      "bytes": 39376,
+      "bytes": 39012,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -871,7 +865,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T09:16:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T12:03:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zdravi": 30
@@ -886,6 +880,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Varovné signály, že o vás partner ztrácí zájem a už vás nemiluje",
+            "publishedAt": "2026-05-03T12:03:00Z"
+          },
           {
             "title": "Kopřivový čaj pobláznil internet. Stačí prý měsíční kúra a výsledky jsou skvělé. Ale nesmí se to přehánět!",
             "publishedAt": "2026-05-03T09:16:00Z"
@@ -912,10 +910,6 @@
           },
           {
             "title": "Co je to sepse? Když se z nenápadné infekce stane drama! První příznaky otravy krve bývají nenápadné",
-            "publishedAt": "2026-05-03T03:00:00Z"
-          },
-          {
-            "title": "Po jídle se běžte projít: To je to nejlepší, co můžete udělat pro své zdraví",
             "publishedAt": "2026-05-03T03:00:00Z"
           }
         ]

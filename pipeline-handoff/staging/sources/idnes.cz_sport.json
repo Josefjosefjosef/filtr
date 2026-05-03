@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T11:54:57.714473Z",
+  "ingestedAt": "2026-05-03T12:31:21.524579Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "SP v cross country začal trumfem švýcarských bikerů, Češi v bahně neuspěli",
+      "url": "https://www.idnes.cz/sport/cyklistika/sp-v-cross-country-zacal-trumfem-svycarskych-bikeru-cesi-v-bahne-neuspeli.A260503_134937_cyklistika_ald",
+      "dt": "2026-05-03T11:57:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bahně",
+        "bikerů",
+        "country",
+        "cross",
+        "neuspěli",
+        "trumfem",
+        "začal",
+        "češi",
+        "švýcarských"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -775,32 +801,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Schick v Německu dál řádí, Lipsko skolil svým prvním hattrickem v sezoně",
-      "url": "https://www.idnes.cz/fotbal/zahranici/schick-leverkusen-lipsko-hattrick-bundesliga-liga-mistru.A260502_203517_fot_zahranici_kazdt",
-      "dt": "2026-05-02T19:06:21Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "hattrickem",
-        "lipsko",
-        "německu",
-        "prvním",
-        "schick",
-        "sezoně",
-        "skolil",
-        "svým",
-        "řádí"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -811,7 +811,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45534,
+      "bytes": 45777,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -848,7 +848,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T11:21:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:57:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -863,6 +863,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "SP v cross country začal trumfem švýcarských bikerů, Češi v bahně neuspěli",
+            "publishedAt": "2026-05-03T11:57:00Z"
+          },
           {
             "title": "Házenkáři Plzně odvrátili i druhý mečbol Karviné a vynutili si páté finále",
             "publishedAt": "2026-05-03T11:21:00Z"
@@ -890,10 +894,6 @@
           {
             "title": "Pražský maraton vyhráli Tsegu a Jelimová, český titul obhájil Havlena",
             "publishedAt": "2026-05-03T09:24:00Z"
-          },
-          {
-            "title": "Poznar trefil záchranu a svůj 50. ligový gól. Splněný sen, říká zlínský kapitán",
-            "publishedAt": "2026-05-03T09:05:00Z"
           }
         ]
       }

@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T11:54:57.714473Z",
+  "ingestedAt": "2026-05-03T12:31:21.524579Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "V Horních Rakousích explodoval táborák, pět dětí utrpělo zranění",
+      "url": "https://www.denik.cz/staty-eu/rakousko-taborak-vybusniny-munice-exploze.html",
+      "dt": "2026-05-03T12:10:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "dětí",
+        "explodoval",
+        "horních",
+        "pět",
+        "rakousích",
+        "táborák",
+        "utrpělo",
+        "zranění"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "pocasi",
       "contentType": "article",
@@ -631,31 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
-      "url": "https://www.denik.cz/ekonomika/cesko-ekonomika-nejsou-pracovnici-chybi-ukrajinci-ceske-firmy-lovi-na-filipinach.html",
-      "dt": "2026-05-02T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "filipínách",
-        "firmy",
-        "lidi",
-        "loví",
-        "nejsou",
-        "nestačí",
-        "ukrajinci",
-        "české"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -666,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28674,
+      "bytes": 28475,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -703,12 +703,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T11:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T12:10:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 22,
+          "zpravy": 23,
           "zdravi": 1,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -720,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "V Horních Rakousích explodoval táborák, pět dětí utrpělo zranění",
+            "publishedAt": "2026-05-03T12:10:00Z"
+          },
           {
             "title": "VÝSTRAHA: Je sucho, platí varování před požáry. Meteorologové řekli, kdy zaprší",
             "publishedAt": "2026-05-03T11:30:00Z"
@@ -747,10 +751,6 @@
           {
             "title": "Středočeští hasiči vyjeli na pomoc s bojem proti požáru v Českém Švýcarsku",
             "publishedAt": "2026-05-03T05:40:00Z"
-          },
-          {
-            "title": "KVÍZ: Jiřina Bohdalová slaví 95. Dokážete doplnit její hlášky do rolí a filmů?",
-            "publishedAt": "2026-05-03T05:30:00Z"
           }
         ]
       }
