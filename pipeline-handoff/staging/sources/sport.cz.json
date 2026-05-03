@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-03T03:51:18.506429Z",
+  "ingestedAt": "2026-05-03T04:25:27.069421Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Vladař s Flyers v Carolině narazili",
+      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-s-flyers-v-caroline-narazili-5447793",
+      "dt": "2026-05-03T04:03:39Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "carolině",
+        "flyers",
+        "narazili",
+        "vladař"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -749,29 +770,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Kosťuková získala v Madridu nejcennější titul kariéry",
-      "url": "https://www.sport.cz/clanek/tenis-kostukova-ziskala-v-madridu-nejcennejsi-titul-kariery-5447619",
-      "dt": "2026-05-02T17:12:03Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "kariéry",
-        "kosťuková",
-        "madridu",
-        "nejcennější",
-        "titul",
-        "získala"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -782,7 +780,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 43490,
+      "bytes": 43508,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -819,7 +817,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T22:22:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T04:03:39Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -834,6 +832,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vladař s Flyers v Carolině narazili",
+            "publishedAt": "2026-05-03T04:03:39Z"
+          },
           {
             "title": "České hokejové hry 2026: Program českých hokejistů na Fortuna Hockey Games v Českých Budějovicích",
             "publishedAt": "2026-04-30T05:08:00Z"
@@ -861,10 +863,6 @@
           {
             "title": "Paris St. Germain doma jen remizoval s Lorientem, ztratil i jeho největší pronásledovatel",
             "publishedAt": "2026-05-02T17:36:51Z"
-          },
-          {
-            "title": "Barcelona se přiblížila titulu, Atlético uspělo v kombinované sestavě",
-            "publishedAt": "2026-05-02T14:18:17Z"
           }
         ]
       }

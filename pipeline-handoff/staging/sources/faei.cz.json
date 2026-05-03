@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-03T03:51:18.506429Z",
+  "ingestedAt": "2026-05-03T04:25:27.069421Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
+      "url": "https://profitonline.cz/vozy-na-benzin-a-naftu-prohravaji-s-elektroauty-o-120-korun-na-100-km/",
+      "dt": "2026-05-03T04:00:21Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "100",
+        "120",
+        "benzin",
+        "elektroauty",
+        "korun",
+        "naftu",
+        "prohrávají",
+        "vozy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -264,33 +289,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Renáta Váchová jmenována regionální prezidentkou pro východní Evropu ve společnosti Alfa Laval",
-      "url": "https://profitonline.cz/renata-vachova-v-cele-alfa-laval-pro-stredni-a-vychodni-evropu/",
-      "dt": "2026-04-30T06:00:21Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "alfa",
-        "evropu",
-        "jmenována",
-        "laval",
-        "prezidentkou",
-        "regionální",
-        "renáta",
-        "společnosti",
-        "váchová",
-        "východní"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -301,7 +299,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18478,
+      "bytes": 18417,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -338,10 +336,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:05:20Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T04:00:21Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
-          "finance": 10,
+          "zdravi": 1,
+          "finance": 9,
           "zpravy": 2
         },
         "drop_counts": {
@@ -354,6 +353,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vozy na benzin a naftu prohrávají s elektroauty o 120 korun na 100 km",
+            "publishedAt": "2026-05-03T04:00:21Z"
+          },
           {
             "title": "Mstí se Trump německému kancléři?",
             "publishedAt": "2026-05-02T15:05:20Z"
@@ -381,10 +384,6 @@
           {
             "title": "Kde v Evropě pojedete letos po dálnici zdarma a kde vaše peněženka zapláče? Přinášíme přehled poplatků",
             "publishedAt": "2026-05-01T04:00:36Z"
-          },
-          {
-            "title": "Centrální banky sazby drží beze změny, zatím",
-            "publishedAt": "2026-04-30T20:40:24Z"
           }
         ]
       }
