@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-03T18:30:19.748455Z",
+  "ingestedAt": "2026-05-03T19:06:15.948182Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Opozice bude blokovat změny rozpočtových pravidel. Vládě by umožnily vyšší schodky",
+      "url": "https://ct24.ceskatelevize.cz/clanek/ekonomika/opozice-bude-blokovat-zmeny-rozpoctovych-pravidel-vlade-by-umoznily-vyssi-schodky-373051",
+      "dt": "2026-05-03T18:31:45Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "blokovat",
+        "opozice",
+        "pravidel",
+        "rozpočtových",
+        "schodky",
+        "umožnily",
+        "vládě",
+        "vyšší",
+        "změny"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -450,7 +476,7 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "Plochu požáru v Českém Švýcarsku se daří zmenšovat, řekl Vlček",
+      "title": "Plochu požáru v Českém Švýcarsku se daří zmenšovat, uvedl Vlček",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hasici-od-soboty-zasahuji-u-pozaru-lesa-v-ceskem-svycarsku-373039",
       "dt": "2026-05-03T04:38:53Z",
       "media_raw": "ČT24 / Domácí",
@@ -459,10 +485,10 @@
         "daří",
         "plochu",
         "požáru",
+        "uvedl",
         "vlček",
         "zmenšovat",
         "českém",
-        "řekl",
         "švýcarsku"
       ],
       "feedCategory": "zpravy",
@@ -724,29 +750,26 @@
       "_dt_serialized": true
     },
     {
-      "section": "pocasi",
+      "section": "sport",
       "contentType": "article",
-      "title": "Sucho zvyšuje riziko požárů v části Česka, výstraha ČHMÚ platí celý víkend",
-      "url": "https://ct24.ceskatelevize.cz/clanek/pocasi/sucho-zvysuje-riziko-pozaru-v-casti-ceska-vystraha-chmu-plati-cely-vikend-373025",
-      "dt": "2026-05-02T10:27:32Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Kořenář se přibližuje nominaci na MS. Cením si jeho výkonu, chválil Rulík",
+      "url": "https://sport.ceskatelevize.cz/clanek/hokej/korenar-se-priblizuje-nominaci-na-ms-cenim-si-jeho-vykonu-chvalil-rulik-156587",
+      "dt": "2026-05-03T18:28:29Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "celý",
-        "platí",
-        "požárů",
-        "riziko",
-        "sucho",
-        "víkend",
-        "výstraha",
-        "zvyšuje",
-        "česka",
-        "čhmú",
-        "části"
+        "cením",
+        "chválil",
+        "jeho",
+        "kořenář",
+        "nominaci",
+        "přibližuje",
+        "rulík",
+        "výkonu"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -1483,30 +1506,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Další medaile do sbírky. Češi si odvezou z MS do 18 let bronz",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/utkani-o-bronz-na-ms-do-18-let-cesko-lotyssko-156558",
-      "dt": "2026-05-02T13:01:28Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "bronz",
-        "další",
-        "let",
-        "medaile",
-        "odvezou",
-        "sbírky",
-        "češi"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1517,7 +1516,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42655,
+      "bytes": 42844,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1577,11 +1576,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T17:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T18:31:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 27,
-          "finance": 1,
+          "finance": 2,
+          "zpravy": 26,
           "other": 2
         },
         "drop_counts": {
@@ -1594,6 +1593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Opozice bude blokovat změny rozpočtových pravidel. Vládě by umožnily vyšší schodky",
+            "publishedAt": "2026-05-03T18:31:45Z"
+          },
           {
             "title": "Záchranáři při maratonu v Praze ošetřili 163 lidí, desítky skončily v nemocnici",
             "publishedAt": "2026-05-03T17:14:00Z"
@@ -1621,10 +1624,6 @@
           {
             "title": "Juchelka se nebrání růstu minimální mzdy, dle Středuly s tou současnou nelze vyžít",
             "publishedAt": "2026-05-03T13:29:26Z"
-          },
-          {
-            "title": "Hosté Událostí, komentářů z ekonomiky debatovali o zaměstnávání absolventů",
-            "publishedAt": "2026-05-03T12:14:28Z"
           }
         ]
       }
@@ -1636,7 +1635,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40971,
+      "bytes": 41111,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1673,7 +1672,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T18:10:02Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T18:28:29Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1688,6 +1687,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Kořenář se přibližuje nominaci na MS. Cením si jeho výkonu, chválil Rulík",
+            "publishedAt": "2026-05-03T18:28:29Z"
+          },
           {
             "title": "Další obměna kádru pro Švédské hry. K týmu se připojí nová sedmička hráčů",
             "publishedAt": "2026-05-03T18:10:02Z"
@@ -1715,10 +1718,6 @@
           {
             "title": "Defenzivní souboj rozhodli v nájezdech Švýcaři, Češi skončili na domácím turnaji EHT druzí",
             "publishedAt": "2026-05-03T13:30:22Z"
-          },
-          {
-            "title": "Plzeň ve druhé půli školila Hradec, Slovácko veze z Teplic bod",
-            "publishedAt": "2026-05-03T13:19:46Z"
           }
         ]
       }
@@ -1730,7 +1729,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77279,
+      "bytes": 77228,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
