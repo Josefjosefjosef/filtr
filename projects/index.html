@@ -4394,7 +4394,7 @@ style-src 'self' 'unsafe-inline' https:;
         } catch (_) {}
       })();
     </script>
-    <script type="module" src="/assets/app.js?v=p0-bootstrap-default-rollout-20260430"></script>
+    <script type="module" src="/assets/app.js?v=p0-daily-cal-add-edit-ux-20260503"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=6"></script>
     <script>
     (function(){
@@ -5024,8 +5024,8 @@ style-src 'self' 'unsafe-inline' https:;
       #iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event.is-next-upcoming .iu-cal-event {
         box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28) inset;
       }
-      #iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-open,
-      #iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-open {
+      #iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-cardhit,
+      #iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-cardhit {
         margin: 0;
         padding: 0;
         border: 0;
@@ -5035,6 +5035,14 @@ style-src 'self' 'unsafe-inline' https:;
         touch-action: manipulation;
         align-self: stretch;
         min-width: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        font: inherit;
+        color: inherit;
+        box-sizing: border-box;
       }
       #iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-title,
       #iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-title {
@@ -5370,24 +5378,50 @@ style-src 'self' 'unsafe-inline' https:;
         background: #fff;
         color: #b91c1c;
       }
-      #iuCalendarOverlay .iu-calEvIcon, #iuCalendarDayOverlay .iu-calEvIcon {
-        border: 1px solid rgba(21, 128, 61, 0.22);
-        background: #fff;
+      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-cancel], #iuCalendarDayOverlay .iu-calInline__actions button[data-iu-cal-inline-cancel] {
+        border: 1px solid rgba(100, 116, 139, 0.45);
+        background: #f8fafc;
+        color: #334155;
+      }
+      #iuCalendarOverlay .iu-calNavBtn,
+      #iuCalendarDayOverlay .iu-calNavBtn {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        width: 100%;
+        min-height: 36px;
+        padding: 6px 10px;
+        margin: 0;
+        border: 1px solid rgba(21, 128, 61, 0.35);
         border-radius: 10px;
-        width: 36px;
-        height: 36px;
-        font-size: 16px;
-        line-height: 1;
+        background: #fff;
+        color: #14532d;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.2;
         cursor: pointer;
         touch-action: manipulation;
-        padding: 0;
+        box-sizing: border-box;
+      }
+      #iuCalendarOverlay .iu-calNavBtn__icon,
+      #iuCalendarDayOverlay .iu-calNavBtn__icon {
+        flex: 0 0 auto;
+        font-size: 16px;
+        line-height: 1;
+      }
+      #iuCalendarOverlay .iu-calNavBtn__label,
+      #iuCalendarDayOverlay .iu-calNavBtn__label {
+        flex: 1 1 auto;
+        text-align: left;
       }
       #iuCalTimeWheelHost.iu-calTimeWheelHost {
         position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 10150;
+        z-index: 12100;
         padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
         background: rgba(255, 255, 255, 0.98);
         border-top: 1px solid rgba(21, 128, 61, 0.2);
@@ -5464,14 +5498,39 @@ style-src 'self' 'unsafe-inline' https:;
         flex-shrink: 0;
         user-select: none;
       }
-      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__apply {
-        align-self: stretch;
+      #iuCalendarOverlay .iu-calTimeWheel__actions, #iuCalTimeWheelHost .iu-calTimeWheel__actions {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+      #iuCalendarOverlay .iu-calTimeWheel__actions .iu-calTimeWheel__apply, #iuCalTimeWheelHost .iu-calTimeWheel__actions .iu-calTimeWheel__apply {
+        flex: 1 1 120px;
         min-height: 44px;
         padding: 0 14px;
         border-radius: 10px;
         border: 1px solid #14532d;
         background: linear-gradient(180deg, #15803d, #166534);
         color: #fff;
+        font-weight: 800;
+        font-size: 16px;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      #iuCalendarOverlay .iu-calTimeWheel__actions .iu-calTimeWheel__cancel, #iuCalTimeWheelHost .iu-calTimeWheel__actions .iu-calTimeWheel__cancel {
+        flex: 1 1 120px;
+        min-height: 44px;
+        padding: 0 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(100, 116, 139, 0.45);
+        background: #f8fafc;
+        color: #334155;
         font-weight: 800;
         font-size: 16px;
         cursor: pointer;
