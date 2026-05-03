@@ -35808,7 +35808,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
-    const prM = raw.match(/\bPraha\s+([^\s,;.!?]+)/i);
+    let prM = raw.match(/\bPraha\s+([^\s,;.!?]+)/i);
+    if (!prM) {
+      const prV = raw.match(/\bv\s+praz(?:e|i)\s+([^\s,;.!?]+)/i);
+      if (prV) prM = ["v Praze " + String(prV[1] || "").trim(), String(prV[1] || "").trim()];
+    }
     if (prM) {
       const tail = String(prM[1] || "").trim();
       location = String(prM[0] || "").trim();
@@ -36735,15 +36739,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
-  /** Silver Brain v1.2 — jediný lokální konverzační kontext (paměť stránky, bez sítě). */
+  /** Silver Brain v1.2 + v1.4 — jediný lokální konverzační kontext (in-memory session, bez sítě / bez localStorage). */
   var IU_SILVER_CONVERSATION_V12 = {
     lastUserText: null,
     lastAssistantIntent: null,
     lastDraftType: null,
     lastDraft: null,
     awaitingField: null,
-    updatedAt: null
+    updatedAt: null,
+    sessionEntities: {
+      lastDateISO: null,
+      lastTimeHHMM: null,
+      lastLocation: null,
+      lastTitle: null
+    },
+    lastActionType: null
   };
+
+  function iuSilverSessionEntitiesClear() {
+    IU_SILVER_CONVERSATION_V12.sessionEntities = {
+      lastDateISO: null,
+      lastTimeHHMM: null,
+      lastLocation: null,
+      lastTitle: null
+    };
+  }
 
   function iuSilverConversationReset() {
     IU_SILVER_CONVERSATION_V12.lastUserText = null;
@@ -36752,17 +36772,65 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     IU_SILVER_CONVERSATION_V12.lastDraft = null;
     IU_SILVER_CONVERSATION_V12.awaitingField = null;
     IU_SILVER_CONVERSATION_V12.updatedAt = null;
+    IU_SILVER_CONVERSATION_V12.lastActionType = null;
+    iuSilverSessionEntitiesClear();
   }
 
   function iuSilverConversationPeek() {
+    const se = IU_SILVER_CONVERSATION_V12.sessionEntities || {};
     return {
       lastUserText: IU_SILVER_CONVERSATION_V12.lastUserText,
       lastAssistantIntent: IU_SILVER_CONVERSATION_V12.lastAssistantIntent,
       lastDraftType: IU_SILVER_CONVERSATION_V12.lastDraftType,
       lastDraft: IU_SILVER_CONVERSATION_V12.lastDraft ? cloneDraft(IU_SILVER_CONVERSATION_V12.lastDraft) : null,
       awaitingField: IU_SILVER_CONVERSATION_V12.awaitingField,
-      updatedAt: IU_SILVER_CONVERSATION_V12.updatedAt
+      updatedAt: IU_SILVER_CONVERSATION_V12.updatedAt,
+      sessionEntities: {
+        lastDateISO: se.lastDateISO,
+        lastTimeHHMM: se.lastTimeHHMM,
+        lastLocation: se.lastLocation,
+        lastTitle: se.lastTitle
+      },
+      lastActionType: IU_SILVER_CONVERSATION_V12.lastActionType
     };
+  }
+
+  /** v1.4: doplní jen chybějící pole z relační paměti (nepřepíše explicitní hodnoty v draftu). */
+  function iuSilverApplySessionContext(draft, sess) {
+    const d = draft && typeof draft === "object" ? cloneDraft(draft) : createEmptyDraft();
+    if (!sess || typeof sess !== "object") return d;
+    if ((!d.date || d.meta.date !== "certain") && sess.lastDateISO) {
+      d.date = String(sess.lastDateISO).slice(0, 10);
+      d.meta.date = "certain";
+    }
+    if ((!d.time || d.meta.time !== "certain") && sess.lastTimeHHMM) {
+      d.time = String(sess.lastTimeHHMM).slice(0, 5);
+      d.meta.time = "certain";
+    }
+    if ((d.meta.location !== "certain" || !String(d.location || "").trim()) && sess.lastLocation) {
+      const loc = String(sess.lastLocation).trim();
+      if (loc) {
+        d.location = loc;
+        d.address = loc;
+        d.meta.location = "certain";
+      }
+    }
+    if ((d.meta.title !== "certain" || !String(d.title || "").trim()) && sess.lastTitle) {
+      d.title = String(sess.lastTitle).trim().slice(0, 200);
+      d.meta.title = "certain";
+    }
+    return d;
+  }
+
+  function iuSilverSessionEntitiesSyncFromDraft(ld) {
+    const se = IU_SILVER_CONVERSATION_V12.sessionEntities;
+    if (!se || !ld || typeof ld !== "object") return;
+    if (ld.meta && ld.meta.date === "certain" && String(ld.date || "").trim()) se.lastDateISO = String(ld.date).slice(0, 10);
+    if (ld.meta && ld.meta.time === "certain" && String(ld.time || "").trim()) se.lastTimeHHMM = String(ld.time).slice(0, 5);
+    if (ld.meta && ld.meta.location === "certain" && String(ld.location || ld.address || "").trim()) {
+      se.lastLocation = String(ld.location || ld.address || "").trim().slice(0, 200);
+    }
+    if (ld.meta && ld.meta.title === "certain" && String(ld.title || "").trim()) se.lastTitle = String(ld.title || "").trim().slice(0, 200);
   }
 
   function iuSilverConversationSyncFromTurn(turn, rawText) {
@@ -36816,6 +36884,57 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (ni === "create.storage_disambiguation" || t.storageDisambiguation) {
       IU_SILVER_CONVERSATION_V12.awaitingField = "target";
     }
+
+    const clr = t.clarificationReason;
+    const psSt = t.processingState;
+    const clearMem =
+      ni === "create.storage_disambiguation" ||
+      t.storageDisambiguation ||
+      psSt === "STORAGE_DISAMBIGUATION" ||
+      (psSt === "CLARIFICATION" &&
+        clr &&
+        clr !== "notes_empty_body" &&
+        (clr === "ambiguous_request" ||
+          clr === "missing_explicit_target" ||
+          clr === "negated_write_request" ||
+          clr === "future_target_not_supported_yet" ||
+          clr === "unsupported_request"));
+
+    if (clearMem) {
+      IU_SILVER_CONVERSATION_V12.lastDraft = null;
+      IU_SILVER_CONVERSATION_V12.lastDraftType = null;
+      IU_SILVER_CONVERSATION_V12.lastActionType = null;
+      iuSilverSessionEntitiesClear();
+    } else if (IU_SILVER_CONVERSATION_V12.lastDraft && IU_SILVER_CONVERSATION_V12.lastDraftType) {
+      const ld0 = IU_SILVER_CONVERSATION_V12.lastDraft;
+      const tgt0 = IU_SILVER_CONVERSATION_V12.lastDraftType;
+      const ps0 = t.processingState;
+      let syncSess = false;
+      if (tgt0 === "task" && ps0 === "READY_TO_SAVE") syncSess = true;
+      else if (tgt0 === "note" && ps0 === "READY_TO_SAVE") syncSess = true;
+      else if (tgt0 === "calendar" && ld0.activeCalendarSession && (ps0 === "READY_TO_SAVE" || ps0 === "NEEDS_CLARIFICATION")) syncSess = true;
+      if (syncSess) {
+        iuSilverSessionEntitiesSyncFromDraft(ld0);
+        if (t.silverConversationAction === "update") IU_SILVER_CONVERSATION_V12.lastActionType = "update";
+        else IU_SILVER_CONVERSATION_V12.lastActionType = "create";
+      }
+    }
+  }
+
+  function iuSilverTaskContinuationRaw(prevTitle, rest) {
+    const r = String(rest || "").trim();
+    if (!r) return "";
+    const title = String(prevTitle || "").trim();
+    const parts = title.split(/\s+/).filter(Boolean);
+    const first = parts[0] || "";
+    if (
+      first &&
+      /^(koupit|ud[eě]lat|zavolat|nap[ií]s[aá]t|ob[eě]hat|sehnat|don[eé]st|objednat|zkontrolovat)$/i.test(first)
+    ) {
+      const cap = first.charAt(0).toLocaleUpperCase("cs-CZ") + first.slice(1).toLowerCase();
+      return cap + " " + (r.charAt(0).toLocaleLowerCase("cs-CZ") + r.slice(1));
+    }
+    return "Koupit " + (r.charAt(0).toLocaleLowerCase("cs-CZ") + r.slice(1));
   }
 
   function iuSilverConversationTryFollowup(raw, now, prev) {
@@ -36829,6 +36948,27 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const hitN = iuSilverTryParseExplicitNoteCreate(raw);
       if (hitN && hitN.kind === "body") return iuSilverBuildNoteCreateTurn(hitN.body, now);
       return iuSilverBuildNoteCreateTurn(String(raw || "").trim(), now);
+    }
+
+    const noteAppendHit = iuSilverTryParseExplicitNoteCreate(raw);
+    if (
+      c.lastDraftType === "note" &&
+      p.targetContainer === "notes" &&
+      String(p.silverNoteText || "").trim() &&
+      /^\s*a\s+/i.test(String(raw || "")) &&
+      !(noteAppendHit && noteAppendHit.kind === "body")
+    ) {
+      const add = String(raw || "")
+        .trim()
+        .replace(/^\s*a\s+/i, "")
+        .trim();
+      if (add) {
+        const merged = (String(p.silverNoteText || "").trim() + " " + add).replace(/\s+/g, " ").trim();
+        const capped = merged.slice(0, IU_SILVER_NOTE_BODY_MAX);
+        const nt = iuSilverBuildNoteCreateTurn(capped, now);
+        nt.silverConversationAction = "update";
+        return nt;
+      }
     }
 
     if (c.awaitingField === "time" && p.targetContainer === "calendar" && p.activeCalendarSession) {
@@ -36854,7 +36994,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         userFacingSummary: "",
         assistantLead: ap.assistantLead,
         clarificationText: ap.clarification,
-        draft: d
+        draft: d,
+        silverConversationAction: "update"
       };
     }
 
@@ -36881,8 +37022,65 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         userFacingSummary: "",
         assistantLead: ap.assistantLead,
         clarificationText: ap.clarification,
-        draft: d
+        draft: d,
+        silverConversationAction: "update"
       };
+    }
+
+    const locCont = /\bv\s+praz(?:e|i)\b|\btam\b|\bk\s+tomu\b/.test(f);
+    if (
+      c.lastDraftType === "calendar" &&
+      p.targetContainer === "calendar" &&
+      p.activeCalendarSession &&
+      (p.meta.location !== "certain" || !String(p.location || p.address || "").trim()) &&
+      locCont
+    ) {
+      const ent = iuSilverExtractEntities(raw, now);
+      if (ent && ent.locationNormalized) {
+        const d = cloneDraft(p);
+        iuSilverApplyExtractedEntitiesToCalendarDraft(d, { locationNormalized: ent.locationNormalized });
+        iuSilverSanitizeDraftTitle(d);
+        const ps = processingStateFromDraft(d);
+        const ap = buildAssistantParts(d, ps);
+        const out = {
+          normalizedIntent: "calendar.create",
+          targetContainer: "calendar",
+          processingState: ps,
+          clarificationReason: null,
+          futureIntentCandidate: null,
+          readQuery: null,
+          readAnswer: null,
+          extractedFields: {},
+          missingFields: computeMissing(d),
+          ambiguousFields: [],
+          userFacingSummary: "",
+          assistantLead: ap.assistantLead,
+          clarificationText: ap.clarification,
+          draft: d,
+          silverConversationAction: "update"
+        };
+        return out;
+      }
+    }
+
+    const taskCont = String(raw || "").trim().match(/^\s*a\s+(.+)$/i);
+    if (taskCont && c.lastDraftType === "task") {
+      const exBody = iuSilverTryParseExplicitNoteCreate(raw);
+      if (!(exBody && exBody.kind === "body")) {
+        const rest = String(taskCont[1] || "").trim();
+        if (rest && !/^že\b/i.test(rest)) {
+          const looksTaskReady =
+            p.targetContainer === "tasks" && p.meta && p.meta.title === "certain" && String(p.title || "").trim().length > 1;
+          if (looksTaskReady) {
+            const synthetic = iuSilverTaskContinuationRaw(p.title, rest);
+            const tTurn = iuSilverBuildTaskCreateTurn(synthetic, now, { fromExplicitTarget: true });
+            if (tTurn) {
+              tTurn.silverConversationAction = "create";
+              return tTurn;
+            }
+          }
+        }
+      }
     }
 
     const pronounToTomorrow = /\b(dej|dejte)\s+to\s+na\s+zitra\b/.test(f);
@@ -36915,7 +37113,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         userFacingSummary: "",
         assistantLead: ap2.assistantLead,
         clarificationText: ap2.clarification,
-        draft: d2
+        draft: d2,
+        silverConversationAction: "update"
       };
     }
 
@@ -37007,6 +37206,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const convFollow = iuSilverConversationTryFollowup(raw, now, prev);
     if (convFollow) return convFollow;
 
+    /* v1.4 session safety: v aktivní kalendářové relaci je holé „Praha jedna“ nejasné (bez tam / v Praze …). */
+    {
+      const foldG = folded;
+      const rawG = String(raw || "").trim();
+      if (prev.activeCalendarSession && prev.targetContainer === "calendar") {
+        const cueG = /\bv\s+praz(?:e|i)\b|\btam\b|\bk\s+tomu\b/.test(foldG);
+        if (!cueG) {
+          const entG = iuSilverExtractEntities(rawG, now);
+          const words = rawG.split(/\s+/).filter(Boolean);
+          const looksBarePraha =
+            entG &&
+            entG.locationNormalized &&
+            words.length <= 4 &&
+            !iuSilverLooksLikeSchedulingFragment(foldG, rawG) &&
+            !iuSilverHasWriteVerb(foldG) &&
+            !iuSilverHasExplicitCalendarTarget(foldG) &&
+            !iuSilverHasExplicitTasksTarget(foldG) &&
+            !iuSilverHasExplicitNotesTarget(foldG);
+          if (looksBarePraha) {
+            return baseClarification("ambiguous_request", "clarification");
+          }
+        }
+      }
+    }
+
     const route = iuSilverBrainRoute(raw, now, prev);
 
     if (route.kind === "NOTE_EMPTY") {
@@ -37097,6 +37321,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     iuSilverConversationReset: iuSilverConversationReset,
     iuSilverConversationPeek: iuSilverConversationPeek,
     iuSilverConversationSyncFromTurn: iuSilverConversationSyncFromTurn,
+    iuSilverApplySessionContext: iuSilverApplySessionContext,
     iuSilverDetectTaskIntent: iuSilverDetectTaskIntent,
     iuSilverBuildTaskDraft: function (text, nowOpt) {
       const n = nowOpt || new Date();
@@ -37666,6 +37891,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuSilverGuidedResetFromNav === "function") window.iuSilverGuidedResetFromNav();
     } catch (_) {}
     clearPendingStorageDisambiguation();
+    try {
+      if (window.iuSilverCalendarEngine && typeof window.iuSilverCalendarEngine.iuSilverConversationReset === "function") {
+        window.iuSilverCalendarEngine.iuSilverConversationReset();
+      }
+    } catch (_) {}
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     document.body.classList.remove("iuSilverChatOpen");
