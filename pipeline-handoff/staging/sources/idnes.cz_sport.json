@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T06:40:32.575142Z",
+  "ingestedAt": "2026-05-03T07:15:02.813145Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Jedlička: V Baníku je mi dobře, chci tady zůstat. Chápu, že na nás fanoušci bučeli",
+      "url": "https://www.idnes.cz/fotbal/prvni-liga/martin-jedlicka-banik-ostrava-golman.A260502_212634_fotbal_jsl",
+      "dt": "2026-05-03T07:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "baníku",
+        "bučeli",
+        "chci",
+        "chápu",
+        "dobře",
+        "fanoušci",
+        "jedlička",
+        "nás",
+        "tady",
+        "zůstat"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -769,31 +796,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Lotyšsko 4:1. Osmnáctka je bronzová! Medaili slaví po dvanácti letech",
-      "url": "https://www.idnes.cz/hokej/reprezentace/cesko-lotyssko-ms-do-18-let-online-zpravodajstvi.A260502_114000_reprezentace_hrj",
-      "dt": "2026-05-02T15:59:22Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bronzová",
-        "dvanácti",
-        "letech",
-        "lotyšsko",
-        "medaili",
-        "osmnáctka",
-        "slaví",
-        "česko"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45123,
+      "bytes": 45131,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T06:14:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T07:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +858,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jedlička: V Baníku je mi dobře, chci tady zůstat. Chápu, že na nás fanoušci bučeli",
+            "publishedAt": "2026-05-03T07:00:00Z"
+          },
           {
             "title": "Velká cena Miami formule 1 začne kvůli hrozbě bouřky o tři hodiny dřív",
             "publishedAt": "2026-05-03T06:14:00Z"
@@ -883,10 +889,6 @@
           {
             "title": "Trpišovský si výhru v Liberci pochvaloval. Titul proti Spartě? Bonus, vážíme si toho",
             "publishedAt": "2026-05-03T05:00:00Z"
-          },
-          {
-            "title": "Philadelphia s Vladařem v brance nestačila na Carolinu. Dva góly dal Stankoven",
-            "publishedAt": "2026-05-03T04:53:00Z"
           }
         ]
       }
