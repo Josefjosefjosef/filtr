@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-03T13:50:09.730979Z",
+  "ingestedAt": "2026-05-03T14:25:08.818045Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/cernochova-hrozi-babisovi-zalobou-kvuli-uvn/",
+      "dt": "2026-05-03T14:19:46Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babišovi",
+        "hrozí",
+        "lži",
+        "nehodlám",
+        "soutěži",
+        "tolerovat",
+        "zmanipulované",
+        "černochová",
+        "žalobou"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,33 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Nos odhalí Alzheimera dříve než mozek. Překvapivý objev může změnit léčbu",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/nos-odhali-alzheimera-driv-nez-mozek/",
-      "dt": "2026-04-30T14:54:25Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "alzheimera",
-        "dříve",
-        "léčbu",
-        "mozek",
-        "než",
-        "nos",
-        "objev",
-        "odhalí",
-        "překvapivý",
-        "změnit"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98982,
+      "bytes": 98051,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,7 +320,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:31:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T14:19:46Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -337,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
+            "publishedAt": "2026-05-03T14:19:46Z"
+          },
           {
             "title": "Babiš plánuje akci v přestrojení: V hledáčku má nelegální drogové obchody v centru Prahy",
             "publishedAt": "2026-05-03T13:31:00Z"
@@ -364,10 +367,6 @@
           {
             "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
             "publishedAt": "2026-05-01T16:32:02Z"
-          },
-          {
-            "title": "Zatýkání v Příbrami i škrty lůžek na Vysočině: Velký souhrn novinek z českého zdravotnictví",
-            "publishedAt": "2026-05-01T12:45:29Z"
           }
         ]
       }

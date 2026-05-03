@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-03T13:50:09.730979Z",
+  "ingestedAt": "2026-05-03T14:25:08.818045Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Bez peněz se obrana zajistit nedá, upozornili Nečas s Rusnokem",
+      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/bez-penez-se-obrana-zajistit-neda-upozornili-necas-s-rusnokem-373044",
+      "dt": "2026-05-03T13:55:27Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "nedá",
+        "nečas",
+        "obrana",
+        "peněz",
+        "rusnokem",
+        "upozornili",
+        "zajistit"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -301,18 +325,17 @@
     {
       "section": "aktualne",
       "contentType": "article",
-      "title": "U požáru v Českém Švýcarsku dál zasahují stovky hasičů, pomáhají i vrtulníky",
+      "title": "Dva úseky požáru v Českém Švýcarsku jsou nadále problematické",
       "url": "https://ct24.ceskatelevize.cz/clanek/domaci/hasici-od-soboty-zasahuji-u-pozaru-lesa-v-ceskem-svycarsku-373039",
       "dt": "2026-05-03T04:38:53Z",
       "media_raw": "ČT24 / Domácí",
       "media_norm": "ČT24 / Domácí",
       "tokens": [
-        "hasičů",
-        "pomáhají",
+        "dva",
+        "nadále",
         "požáru",
-        "stovky",
-        "vrtulníky",
-        "zasahují",
+        "problematické",
+        "úseky",
         "českém",
         "švýcarsku"
       ],
@@ -730,24 +753,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "veda",
+      "section": "sport",
       "contentType": "article",
-      "title": "Tohle je první mapa čichu. Vytvořili ji na Harvardu",
-      "url": "https://ct24.ceskatelevize.cz/clanek/veda/tohle-je-prvni-mapa-cichu-vytvorili-ji-na-harvardu-372940",
-      "dt": "2026-05-02T06:00:00Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Siniaková završila návrat do čela dalším titulem s Townsendovou",
+      "url": "https://sport.ceskatelevize.cz/clanek/tenis/siniakova-zavrsila-navrat-do-cela-dalsim-titulem-s-townsendovou-156581",
+      "dt": "2026-05-03T14:02:09Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "harvardu",
-        "mapa",
-        "první",
-        "tohle",
-        "vytvořili",
-        "čichu"
+        "dalším",
+        "návrat",
+        "siniaková",
+        "titulem",
+        "townsendovou",
+        "završila",
+        "čela"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -755,7 +779,7 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "Euro Hockey Tour Česko – Švýcarsko",
+      "title": "Euro Hockey Tour Česko – Švýcarsko 0:0",
       "url": "https://sport.ceskatelevize.cz/clanek/hokej/euro-hockey-tour-cesko-svycarsko-156580",
       "dt": "2026-05-03T13:30:22Z",
       "media_raw": "ČT sport",
@@ -1473,30 +1497,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Reprezentační útočník Voženílek se po dvou letech vrací do Třince",
-      "url": "https://sport.ceskatelevize.cz/clanek/hokej/reprezentacni-utocnik-vozenilek-se-po-dvou-letech-vraci-do-trince-156552",
-      "dt": "2026-05-02T07:55:01Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "dvou",
-        "letech",
-        "reprezentační",
-        "třince",
-        "voženílek",
-        "vrací",
-        "útočník"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1507,7 +1507,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42172,
+      "bytes": 42819,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1567,12 +1567,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:29:26Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T13:55:27Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 26,
+          "zpravy": 27,
           "finance": 1,
-          "other": 3
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1584,6 +1584,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Bez peněz se obrana zajistit nedá, upozornili Nečas s Rusnokem",
+            "publishedAt": "2026-05-03T13:55:27Z"
+          },
           {
             "title": "Juchelka se nebrání růstu minimální mzdy, dle Středuly s tou současnou nelze vyžít",
             "publishedAt": "2026-05-03T13:29:26Z"
@@ -1611,10 +1615,6 @@
           {
             "title": "„Izraelcům nevěříme.“ Štáb ČT natáčel s vysídlenými Libanonci",
             "publishedAt": "2026-05-03T07:00:00Z"
-          },
-          {
-            "title": "Oběti po ruských útocích hlásí Oděsa či Cherson",
-            "publishedAt": "2026-05-03T06:45:55Z"
           }
         ]
       }
@@ -1626,7 +1626,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 40406,
+      "bytes": 40611,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1663,7 +1663,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:30:22Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T14:02:09Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1679,7 +1679,11 @@
         },
         "sample_titles": [
           {
-            "title": "Euro Hockey Tour Česko – Švýcarsko",
+            "title": "Siniaková završila návrat do čela dalším titulem s Townsendovou",
+            "publishedAt": "2026-05-03T14:02:09Z"
+          },
+          {
+            "title": "Euro Hockey Tour Česko – Švýcarsko 0:0",
             "publishedAt": "2026-05-03T13:30:22Z"
           },
           {
@@ -1705,10 +1709,6 @@
           {
             "title": "Philadelphia s Vladařem podlehla Carolině, která je v play-off zatím neporažená",
             "publishedAt": "2026-05-03T06:56:07Z"
-          },
-          {
-            "title": "Philadelphii se podařilo otočit sérii a po porážce Bostonu je ve čtvrtfinále play-off",
-            "publishedAt": "2026-05-03T06:38:31Z"
           }
         ]
       }
@@ -1720,7 +1720,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77210,
+      "bytes": 77203,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

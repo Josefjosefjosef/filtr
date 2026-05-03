@@ -1,27 +1,57 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-03T13:50:09.730979Z",
+  "ingestedAt": "2026-05-03T14:25:08.818045Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Plzeň bleskově odpověděla, za deset minut padly už dvě branky",
+      "title": "FOTBAL ONLINE: Plzeň a Hradec se předhánějí ve vytváření šancí, oba týmy ale skórovaly pouze jednou",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-sparta-se-utka-s-jabloncem-plzen-hosti-hradec-5447785",
       "dt": "2026-05-03T04:34:26Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "bleskově",
-        "branky",
-        "deset",
-        "dvě",
+        "ale",
         "fotbal",
-        "minut",
-        "odpověděla",
+        "hradec",
+        "jednou",
+        "oba",
         "online",
-        "padly",
-        "plzeň"
+        "plzeň",
+        "pouze",
+        "předhánějí",
+        "skórovaly",
+        "týmy",
+        "vytváření",
+        "šancí"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "HOKEJ ONLINE: Češi hrají nezvykle v modrém, Kořenář vychytal brejk Švýcarů",
+      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-hokejiste-zakonci-domaci-turnaj-proti-svycarum-5447802",
+      "dt": "2026-05-03T08:07:34Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "brejk",
+        "hokej",
+        "hrají",
+        "kořenář",
+        "modrém",
+        "nezvykle",
+        "online",
+        "vychytal",
+        "češi",
+        "švýcarů"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -55,23 +85,23 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "HOKEJ ONLINE: Češi zakončí domácí turnaj proti Švýcarům, v brance nastoupí Kořenář",
-      "url": "https://www.sport.cz/clanek/hokej-euro-hockey-tour-hokejiste-zakonci-domaci-turnaj-proti-svycarum-5447802",
-      "dt": "2026-05-03T08:07:34Z",
+      "title": "Promiň, kamaráde. Slávista Moses se omluvil za zlomenou čelist, Hodouš poslal milou odpověď",
+      "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-promin-kamarade-slavista-moses-se-omluvil-za-zlomenou-celist-hodous-poslal-milou-odpoved-5447920",
+      "dt": "2026-05-03T13:53:59Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
-        "brance",
-        "domácí",
-        "hokej",
-        "kořenář",
-        "nastoupí",
-        "online",
-        "proti",
-        "turnaj",
-        "zakončí",
-        "češi",
-        "švýcarům"
+        "hodouš",
+        "kamaráde",
+        "milou",
+        "moses",
+        "odpověď",
+        "omluvil",
+        "poslal",
+        "promiň",
+        "slávista",
+        "zlomenou",
+        "čelist"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -744,27 +774,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Vladař s Flyers v Carolině narazili",
-      "url": "https://www.sport.cz/clanek/hokej-nhl-vladar-s-flyers-v-caroline-narazili-5447793",
-      "dt": "2026-05-03T04:03:39Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "carolině",
-        "flyers",
-        "narazili",
-        "vladař"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -775,7 +784,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 42985,
+      "bytes": 42721,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -812,7 +821,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:39:41Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T13:53:59Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -829,16 +838,20 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Plzeň bleskově odpověděla, za deset minut padly už dvě branky",
+            "title": "FOTBAL ONLINE: Plzeň a Hradec se předhánějí ve vytváření šancí, oba týmy ale skórovaly pouze jednou",
             "publishedAt": "2026-05-03T04:34:26Z"
+          },
+          {
+            "title": "HOKEJ ONLINE: Češi hrají nezvykle v modrém, Kořenář vychytal brejk Švýcarů",
+            "publishedAt": "2026-05-03T08:07:34Z"
           },
           {
             "title": "Siniaková slaví 36. deblový titul kariéry",
             "publishedAt": "2026-05-03T13:39:41Z"
           },
           {
-            "title": "HOKEJ ONLINE: Češi zakončí domácí turnaj proti Švýcarům, v brance nastoupí Kořenář",
-            "publishedAt": "2026-05-03T08:07:34Z"
+            "title": "Promiň, kamaráde. Slávista Moses se omluvil za zlomenou čelist, Hodouš poslal milou odpověď",
+            "publishedAt": "2026-05-03T13:53:59Z"
           },
           {
             "title": "Švédové obhájili prvenství na českém turnaji",
@@ -855,10 +868,6 @@
           {
             "title": "Lindberg se dočkal první trofeje na evropském okruhu",
             "publishedAt": "2026-05-03T12:21:05Z"
-          },
-          {
-            "title": "Melecká po vydařeném finále pronikla na Mauriciu do první desítky",
-            "publishedAt": "2026-05-03T13:07:09Z"
           }
         ]
       }

@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-03T13:50:09.730979Z",
+  "ingestedAt": "2026-05-03T14:25:08.818045Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jak si zkomplikovat cestu k hypotéce? Pozor na vtípky i hazard",
+      "url": "https://www.penize.cz/hypoteky/489209-jak-si-zkomplikovat-cestu-k-hypotece-pozor-na-vtipky-i-hazard",
+      "dt": "2026-05-03T16:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "cestu",
+        "hazard",
+        "hypotéce",
+        "pozor",
+        "vtípky",
+        "zkomplikovat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -477,32 +500,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "IKEA zavádí věrnostní body. Za nákupy i aktivitu nabídne lidem odměny",
-      "url": "https://www.penize.cz/nakupy/488993-ikea-zavadi-vernostni-body-za-nakupy-i-aktivitu-nabidne-lidem-odmeny",
-      "dt": "2026-04-28T10:06:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "aktivitu",
-        "body",
-        "ikea",
-        "lidem",
-        "nabídne",
-        "nákupy",
-        "odměny",
-        "věrnostní",
-        "zavádí"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +510,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 19120,
+      "bytes": 19179,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,7 +547,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T16:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 13,
@@ -567,6 +564,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jak si zkomplikovat cestu k hypotéce? Pozor na vtípky i hazard",
+            "publishedAt": "2026-05-03T16:00:00Z"
+          },
           {
             "title": "Jarní úklid v předplatném. Jak si udělat pořádek a ušetřit až tisíce měsíčně",
             "publishedAt": "2026-05-03T08:00:00Z"
@@ -594,10 +595,6 @@
           {
             "title": "Kdo všechno si strhává peníze z vaší karty? Další banka ukáže přehled",
             "publishedAt": "2026-04-30T14:30:00Z"
-          },
-          {
-            "title": "Vyjíždíte na prodloužený víkend? Maximální ceny benzinu a nafty pro začátek května",
-            "publishedAt": "2026-04-30T14:04:00Z"
           }
         ]
       }
