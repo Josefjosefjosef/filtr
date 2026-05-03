@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-03T16:49:42.388888Z",
+  "ingestedAt": "2026-05-03T17:26:16.869533Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Babiš se setkal se Zelenským. Doporučil mu země, které mohou zprostředkovat mír",
+      "url": "https://ekonomickydenik.cz/babis-se-setkal-se-zelenskym-v-jerevanu/",
+      "dt": "2026-05-03T17:09:56Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "babiš",
+        "doporučil",
+        "mír",
+        "setkal",
+        "zelenským",
+        "země",
+        "zprostředkovat"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -769,33 +793,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "pocasi",
-      "contentType": "article",
-      "title": "„Má černou stavbu a mění zákon,“ zaútočil Hřib na Mrázovou. Poslanci ji vyzvali k rezignaci",
-      "url": "https://ekonomickydenik.cz/ma-cernou-stavbu-a-meni-zakon/",
-      "dt": "2026-04-30T13:40:47Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hřib",
-        "mrázovou",
-        "mění",
-        "poslanci",
-        "rezignaci",
-        "stavbu",
-        "vyzvali",
-        "zaútočil",
-        "zákon",
-        "černou"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -806,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69479,
+      "bytes": 70003,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -843,11 +840,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T14:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T17:09:56Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 26,
-          "zpravy": 2,
+          "finance": 27,
+          "zpravy": 1,
           "zdravi": 2
         },
         "drop_counts": {
@@ -860,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš se setkal se Zelenským. Doporučil mu země, které mohou zprostředkovat mír",
+            "publishedAt": "2026-05-03T17:09:56Z"
+          },
           {
             "title": "Šéf lotyšské armády varuje: Rusko může v blízké době zaútočit na Pobaltí",
             "publishedAt": "2026-05-03T14:30:00Z"
@@ -887,10 +888,6 @@
           {
             "title": "Daň z cigaret má zachránit evropský rozpočet. Unie přitom vyhlásila válku kuřákům",
             "publishedAt": "2026-05-03T07:00:00Z"
-          },
-          {
-            "title": "Plyn z Kaspického moře pro Česko? Má to jeden háček: složitou a drahou přepravu",
-            "publishedAt": "2026-05-03T04:05:00Z"
           }
         ]
       }
