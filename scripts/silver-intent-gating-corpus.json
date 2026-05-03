@@ -1,5 +1,5 @@
 {
-  "contractVersion": "4",
+  "contractVersion": "5",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     { "id": "read-01", "input": "co mám dnes", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
@@ -32,6 +32,9 @@
         "processingState": "STORAGE_DISAMBIGUATION",
         "clarificationReason": "missing_explicit_target"
       }
-    }
+    },
+    { "id": "v15-tasks-read", "input": "Najdi úkol nájem", "expected": "tasks.read" },
+    { "id": "v15-notes-read", "input": "Vyhledej pin karty", "expected": "notes.read" },
+    { "id": "v15-global-search", "input": "Najdi Petra", "expected": "global.search" }
   ]
 }
