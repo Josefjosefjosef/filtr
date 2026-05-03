@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T22:05:06.733536Z",
+  "ingestedAt": "2026-05-03T22:39:48.176029Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Výměna trvala dvě hodiny. Jak sovětský špion rozjel nejrozšířenější sport světa",
+      "url": "https://www.idnes.cz/sport/ostatni/vymena-trvala-dve-hodiny-jak-sovetsky-spion-rozjel-nejrozsirenejsi-sport-sveta.A260426_191634_sporty_ikuc",
+      "dt": "2026-05-03T22:00:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dvě",
+        "hodiny",
+        "nejrozšířenější",
+        "rozjel",
+        "sovětský",
+        "sport",
+        "světa",
+        "trvala",
+        "výměna",
+        "špion"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,32 +795,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Teplice - Slovácko 1:1, oba týmy nadále čekají na výhru, srovnával Koscelník",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-skupina-o-zachranu-teplice-slovacko-online.A260501_130916_fotbal_tals",
-      "dt": "2026-05-03T13:14:15Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "koscelník",
-        "nadále",
-        "oba",
-        "slovácko",
-        "srovnával",
-        "teplice",
-        "týmy",
-        "výhru",
-        "čekají"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +805,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45395,
+      "bytes": 45642,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +842,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T21:12:49Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Výměna trvala dvě hodiny. Jak sovětský špion rozjel nejrozšířenější sport světa",
+            "publishedAt": "2026-05-03T22:00:00Z"
+          },
           {
             "title": "Inter slaví 21. titul v italské lize. Po výhře nad Parmou má nedostižný náskok",
             "publishedAt": "2026-05-03T21:12:49Z"
@@ -883,10 +888,6 @@
           {
             "title": "České hokejové hry 2026: Program, soupisky, výsledky, Češi",
             "publishedAt": "2026-05-03T19:42:00Z"
-          },
-          {
-            "title": "Velká cena Miami formule 1 2026: program, výsledky, zajímavosti",
-            "publishedAt": "2026-05-03T19:33:00Z"
           }
         ]
       }

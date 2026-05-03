@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "technet.cz",
-  "ingestedAt": "2026-05-03T22:05:06.733536Z",
+  "ingestedAt": "2026-05-03T22:39:48.176029Z",
   "items": [
+    {
+      "section": "veda",
+      "contentType": "article",
+      "title": "Z kdysi monumentálního Anhaltského nádraží v Berlíně zbylo jen torzo",
+      "url": "https://www.idnes.cz/technet/technika/berlin-anhaltske-nadrazi.A260423_124938_tec_technika_erp/foto",
+      "dt": "2026-05-03T22:00:00Z",
+      "media_raw": "iDNES / Technet",
+      "media_norm": "iDNES / Technet",
+      "tokens": [
+        "anhaltského",
+        "berlíně",
+        "jen",
+        "kdysi",
+        "monumentálního",
+        "nádraží",
+        "torzo",
+        "zbylo"
+      ],
+      "feedCategory": "veda",
+      "feedType": "rubric",
+      "feedId": "ved_technet",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "technet.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "veda",
       "contentType": "article",
@@ -740,28 +765,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "technet.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Možná vás překvapí, na co se soustředí přicházející Wi-Fi 8",
-      "url": "https://www.idnes.cz/technet/pc-mac/wi-fi-8-ieee-802-11bn-bezdratova-komunikace-internet-router-pripojeni-rychlost.A260318_131332_hardware_vse",
-      "dt": "2026-04-22T22:00:00Z",
-      "media_raw": "iDNES / Technet",
-      "media_norm": "iDNES / Technet",
-      "tokens": [
-        "možná",
-        "překvapí",
-        "přicházející",
-        "soustředí",
-        "vás"
-      ],
-      "feedCategory": "veda",
-      "feedType": "rubric",
-      "feedId": "ved_technet",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "technet.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -772,7 +775,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=technet",
-      "bytes": 46860,
+      "bytes": 47288,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -809,11 +812,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-02T22:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T22:00:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "other": 16,
-          "zpravy": 14
+          "other": 17,
+          "zpravy": 13
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -825,6 +828,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Z kdysi monumentálního Anhaltského nádraží v Berlíně zbylo jen torzo",
+            "publishedAt": "2026-05-03T22:00:00Z"
+          },
           {
             "title": "U kolébky civilizace rostly houby. A sloužily i k jiným věcem než k jídlu",
             "publishedAt": "2026-05-02T22:00:00Z"
@@ -852,10 +859,6 @@
           {
             "title": "Neumíme to udělat lépe, možná později. Apple nechá jedno zařízení, jak je",
             "publishedAt": "2026-04-29T22:00:00Z"
-          },
-          {
-            "title": "Viva la bačkorová revolución! Hnidopišská poznámka vysloužilého petičníka",
-            "publishedAt": "2026-04-29T08:32:00Z"
           }
         ]
       }
