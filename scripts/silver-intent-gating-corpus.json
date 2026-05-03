@@ -1,11 +1,11 @@
 {
-  "contractVersion": "1",
+  "contractVersion": "2",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     { "id": "read-01", "input": "co mám dnes", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
     { "id": "read-02", "input": "v kolik mám první schůzku", "expect": { "normalizedIntent": "calendar.read", "processingState": "READ_OK", "clarificationReason": null } },
     { "id": "create-01", "input": "ulož do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
-    { "id": "miss-01", "input": "zítra zubař v 8", "expect": { "normalizedIntent": "create.storage_disambiguation", "processingState": "STORAGE_DISAMBIGUATION", "clarificationReason": "missing_explicit_target" } },
+    { "id": "miss-01", "input": "zítra zubař v 8", "expect": { "normalizedIntent": "calendar.create", "processingState": "READY_TO_SAVE", "clarificationReason": null } },
     { "id": "notes-01", "input": "zapiš do poznámek auto je v servisu", "expect": { "normalizedIntent": "notes.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
     { "id": "tasks-01", "input": "přidej do úkolů zavolat účetní", "expect": { "normalizedIntent": "tasks.future_candidate", "processingState": "CLARIFICATION", "clarificationReason": "future_target_not_supported_yet" } },
     { "id": "neg-01", "input": "neukládej do kalendáře zítra zubaře v 8", "expect": { "normalizedIntent": "clarification", "processingState": "CLARIFICATION", "clarificationReason": "negated_write_request" } },

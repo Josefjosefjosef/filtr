@@ -1,5 +1,5 @@
 {
-  "contractVersion": "2",
+  "contractVersion": "3",
   "fixedNow": "2026-03-27T12:00:00",
   "cases": [
     {
@@ -34,7 +34,7 @@
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
         "time": "11:00",
-        "title": "Schuzka",
+        "title": "Schůzka",
         "missingFields": []
       }
     },
@@ -82,7 +82,7 @@
         "processingState": "READY_TO_SAVE",
         "date": "2026-03-27",
         "time": "15:00",
-        "title": "Schuzka",
+        "title": "Schůzka",
         "missingFields": []
       }
     },
@@ -395,6 +395,118 @@
         "date": "2026-03-27",
         "time": "11:00",
         "title": "Zubar",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-1",
+      "group": "P0-user-baseline",
+      "input": "ulož do kalendáře zítra v 15 hod. právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-2",
+      "group": "P0-user-baseline",
+      "input": "zítra v 18 hod. právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-3",
+      "group": "P0-user-baseline",
+      "input": "zítra v 18 právník",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-4",
+      "group": "P0-user-baseline",
+      "input": "zittra v 18 pravnik",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "18:00",
+        "title": "Právník",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-5",
+      "group": "P0-user-baseline",
+      "input": "v pondělí 9 doktor",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-30",
+        "time": "09:00",
+        "title": "Doktor",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-6",
+      "group": "P0-user-baseline",
+      "input": "pondeli 9 doktor",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-30",
+        "time": "09:00",
+        "title": "Doktor",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-7",
+      "group": "P0-user-baseline",
+      "input": "zítra v 15 schůzka Tomáš",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-8",
+      "group": "P0-user-complex",
+      "input": "Ulož do kalendáře zítra v 15 hod. schůzka Tomáš do poznámky ulož vzít sebou sešit a adresa je Praha 3",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "note": "Vzít sebou sešit",
+        "location": "Praha 3",
+        "missingFields": []
+      }
+    },
+    {
+      "id": "P0-9",
+      "group": "P0-user-complex",
+      "input": "zítra v 15 schuzka Tomas Praha 3 vzit sesit",
+      "expect": {
+        "processingState": "READY_TO_SAVE",
+        "date": "2026-03-28",
+        "time": "15:00",
+        "title": "Schůzka s Tomášem",
+        "note": "Vzít sešit",
+        "location": "Praha 3",
         "missingFields": []
       }
     }
