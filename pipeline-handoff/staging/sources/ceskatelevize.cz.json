@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-03T19:40:11.178296Z",
+  "ingestedAt": "2026-05-03T20:15:38.235331Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Spor s Trumpem za stažením vojáků USA z Německa nestojí, věří Merz",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/spor-s-trumpem-za-stazenim-vojaku-usa-z-nemecka-nestoji-veri-merz-373056",
+      "dt": "2026-05-03T19:43:45Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "merz",
+        "nestojí",
+        "německa",
+        "spor",
+        "stažením",
+        "trumpem",
+        "usa",
+        "vojáků",
+        "věří"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -715,32 +741,6 @@
         "ten",
         "ukrajinské",
         "zelenskyj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Landovský bude vládním zmocněncem pro plnění závazků vůči NATO, oznámil Babiš",
-      "url": "https://ct24.ceskatelevize.cz/clanek/domaci/landovsky-bude-vladnim-zmocnencem-pro-plneni-zavazku-vuci-nato-oznamil-babis-373026",
-      "dt": "2026-05-02T10:35:24Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "babiš",
-        "landovský",
-        "nato",
-        "oznámil",
-        "plnění",
-        "vládním",
-        "vůči",
-        "zmocněncem",
-        "závazků"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1515,7 +1515,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42844,
+      "bytes": 42744,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1575,11 +1575,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T18:31:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T19:43:45Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 2,
           "zpravy": 26,
+          "finance": 2,
           "other": 2
         },
         "drop_counts": {
@@ -1592,6 +1592,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Spor s Trumpem za stažením vojáků USA z Německa nestojí, věří Merz",
+            "publishedAt": "2026-05-03T19:43:45Z"
+          },
           {
             "title": "Opozice bude blokovat změny rozpočtových pravidel. Vládě by umožnily vyšší schodky",
             "publishedAt": "2026-05-03T18:31:45Z"
@@ -1619,10 +1623,6 @@
           {
             "title": "Bez peněz se obrana zajistit nedá, upozornili Nečas s Rusnokem",
             "publishedAt": "2026-05-03T13:55:27Z"
-          },
-          {
-            "title": "Juchelka se nebrání růstu minimální mzdy, dle Středuly s tou současnou nelze vyžít",
-            "publishedAt": "2026-05-03T13:29:26Z"
           }
         ]
       }
@@ -1634,7 +1634,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 41118,
+      "bytes": 41077,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1728,7 +1728,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77216,
+      "bytes": 77192,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",
