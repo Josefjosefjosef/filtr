@@ -17367,6 +17367,21 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 .iuSilverDraftGrid--task .iuSilverDraftK{
   min-width: 0;
 }
+.iuSilverDraftCard--note .iuSilverDraftV,
+.iuSilverDraftGrid--note .iuSilverDraftV{
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.iuSilverDraftCard--note .iuSilverDraftK,
+.iuSilverDraftGrid--note .iuSilverDraftK{
+  min-width: 0;
+}
+.iuSilverDraftGrid--note .iuSilverDraftInput--note{
+  min-height: 88px;
+  resize: vertical;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .iuSilverDraftV--muted{
   color: #7a8fb0;
   font-style: italic;

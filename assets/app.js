@@ -31391,6 +31391,23 @@ function buildVideoAsArticleCard(it) {
       closeOverlay: function(){ closeOverlay(); },
       notesGetSnapshot: function(){ return (state.data && Array.isArray(state.data.notes)) ? state.data.notes.slice() : []; },
       notesSearch: function(q){ return searchNotes(q); },
+      notesSaveSilverDraft: function(opts){
+        try{
+          loadNotes();
+          const o = opts && typeof opts === "object" ? opts : {};
+          const text = String(o.text || "").trim();
+          if (!text) return { ok: false, reason: "empty" };
+          const n = createEmptyNote();
+          n.title = text.slice(0, MAX_TITLE);
+          n.content = text.slice(0, MAX_CONTENT);
+          state.data.notes.unshift(sanitizeNote(n));
+          sortNotesInPlace(state.data.notes);
+          saveNotes(state.data);
+          return { ok: true, note: n };
+        }catch(err){
+          return { ok: false, reason: String(err && err.message ? err.message : err) };
+        }
+      },
       notesCreateFromSilver: function(payload){
         try{
           loadNotes();
@@ -34516,6 +34533,81 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     };
   }
 
+  /** Max body length for Silver → Poznámky (explicit phrase flow). */
+  const IU_SILVER_NOTE_BODY_MAX = 5000;
+
+  /**
+   * P0: explicit Czech note phrases only (no NLP). Returns { kind:"body", body } or { kind:"empty" } or null.
+   */
+  function iuSilverTryParseExplicitNoteCreate(rawIn) {
+    const s0 = String(rawIn || "").trim();
+    if (!s0) return null;
+    const s = s0.replace(/^\s*pros[ií]m,?\s+/i, "").trim();
+    const patterns = [
+      /^ul[oó][zž](?:te)?\s+pozn[aá]mku\b/i,
+      /^ul[oó][zž]it\s+pozn[aá]mku\b/i,
+      /^pozn[aá]mka\s*:/i,
+      /^poznamenej\s+si\b/i,
+      /^[zn]api[sš]\s+do\s+pozn[aá]mek\b/i,
+      /^ul[oó][zž](?:te)?\s+do\s+pozn[aá]mek\b/i,
+      /^dej\s+do\s+pozn[aá]mek\b/i,
+      /^zapi[sš]\s+pozn[aá]mku\b/i
+    ];
+    for (let pi = 0; pi < patterns.length; pi++) {
+      const re = patterns[pi];
+      const m = s.match(re);
+      if (!m) continue;
+      let rest = s.slice(m[0].length).trim();
+      rest = rest.replace(/^(že|ze)\b/i, "").trim();
+      rest = iuSilverNormalizeWs(rest);
+      if (!rest) return { kind: "empty" };
+      return { kind: "body", body: rest.slice(0, IU_SILVER_NOTE_BODY_MAX) };
+    }
+    return null;
+  }
+
+  function iuSilverDetectNoteIntent(text) {
+    const hit = iuSilverTryParseExplicitNoteCreate(String(text || ""));
+    return !!(hit && hit.kind === "body");
+  }
+
+  function iuSilverBuildNoteDraft(text, nowOpt) {
+    const hit = iuSilverTryParseExplicitNoteCreate(String(text || ""));
+    if (!hit || hit.kind !== "body") return null;
+    const d = createEmptyDraft();
+    d.targetContainer = "notes";
+    d.silverNoteText = hit.body;
+    d.silverNoteCreatedTs = (nowOpt || new Date()).getTime();
+    return d;
+  }
+
+  function iuSilverBuildNoteCreateTurn(body, now) {
+    const draft = createEmptyDraft();
+    draft.targetContainer = "notes";
+    draft.silverNoteText = String(body || "")
+      .trim()
+      .slice(0, IU_SILVER_NOTE_BODY_MAX);
+    draft.silverNoteCreatedTs = now.getTime();
+    const processingState = "READY_TO_SAVE";
+    const ap = buildAssistantParts(draft, processingState);
+    return {
+      normalizedIntent: "notes.create",
+      targetContainer: "notes",
+      processingState: processingState,
+      clarificationReason: null,
+      futureIntentCandidate: null,
+      readQuery: null,
+      readAnswer: null,
+      extractedFields: {},
+      missingFields: [],
+      ambiguousFields: [],
+      userFacingSummary: "",
+      assistantLead: ap.assistantLead,
+      clarificationText: ap.clarification,
+      draft: draft
+    };
+  }
+
   function iuSilverDetectTaskIntent(text, nowOpt) {
     const now = nowOpt || new Date();
     const raw = String(text || "").trim();
@@ -35004,7 +35096,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       activeCalendarSession: !!d.activeCalendarSession,
       targetContainer: d.targetContainer == null ? null : d.targetContainer,
       taskDueAt: d.taskDueAt != null ? String(d.taskDueAt).slice(0, 10) : "",
-      taskNote: d.taskNote != null ? String(d.taskNote) : ""
+      taskNote: d.taskNote != null ? String(d.taskNote) : "",
+      silverNoteText: d.silverNoteText != null ? String(d.silverNoteText) : "",
+      silverNoteCreatedTs: d.silverNoteCreatedTs != null ? Number(d.silverNoteCreatedTs) || 0 : 0
     };
   }
 
@@ -35029,7 +35123,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       activeCalendarSession: false,
       targetContainer: null,
       taskDueAt: "",
-      taskNote: ""
+      taskNote: "",
+      silverNoteText: "",
+      silverNoteCreatedTs: 0
     };
   }
 
@@ -35930,6 +36026,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function buildAssistantParts(draft, processingState) {
+    if (draft && draft.targetContainer === "notes") {
+      if (processingState === "READY_TO_SAVE" && String(draft.silverNoteText || "").trim()) {
+        return { assistantLead: "Připravil jsem návrh poznámky.", clarification: "" };
+      }
+      return {
+        assistantLead: "Potřebuji ještě upřesnit text poznámky.",
+        clarification: "Bez textu poznámku teď bezpečně neuložím."
+      };
+    }
     if (draft && draft.targetContainer === "tasks") {
       if (processingState === "READY_TO_SAVE") {
         return { assistantLead: "Připravil jsem návrh úkolu.", clarification: "" };
@@ -36235,6 +36340,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return baseClarification("negated_write_request", "clarification");
     }
 
+    const noteHit = iuSilverTryParseExplicitNoteCreate(raw);
+    if (noteHit) {
+      if (noteHit.kind === "empty") {
+        return {
+          normalizedIntent: "notes.empty_prompt",
+          targetContainer: "none",
+          processingState: "CLARIFICATION",
+          clarificationReason: "notes_empty_body",
+          futureIntentCandidate: null,
+          readQuery: null,
+          readAnswer: null,
+          extractedFields: {},
+          missingFields: [],
+          ambiguousFields: [],
+          userFacingSummary: "",
+          assistantLead: "Co si mám poznamenat?",
+          clarificationText: "",
+          draft: createEmptyDraft()
+        };
+      }
+      return iuSilverBuildNoteCreateTurn(noteHit.body, now);
+    }
+
     if (iuSilverNotesFutureCandidate(folded)) {
       return baseClarification("future_target_not_supported_yet", "notes.future_candidate");
     }
@@ -36399,6 +36527,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         dueAt: due || null,
         note: String(d.taskNote || "").trim().slice(0, 5000)
       };
+    },
+    iuSilverDetectNoteIntent: iuSilverDetectNoteIntent,
+    iuSilverBuildNoteDraft: iuSilverBuildNoteDraft,
+    iuSilverNoteDraftToExistingNoteModel: function (draft) {
+      const d = draft && typeof draft === "object" ? draft : {};
+      const ts = d.silverNoteCreatedTs ? Number(d.silverNoteCreatedTs) : Date.now();
+      let iso = "";
+      try {
+        iso = new Date(ts).toISOString();
+      } catch (_) {
+        iso = new Date().toISOString();
+      }
+      return {
+        id: "",
+        text: String(d.silverNoteText || "").trim(),
+        createdAt: iso,
+        source: "silver",
+        status: "active"
+      };
     }
   };
 
@@ -36426,8 +36573,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return d && d.targetContainer === "tasks" && d.meta.title === "certain" && String(d.title || "").trim().length > 0;
   }
 
+  function isNoteDraftSaveable(d) {
+    return d && d.targetContainer === "notes" && String(d.silverNoteText || "").trim().length > 0;
+  }
+
   function isSilverDraftSaveable(d) {
     if (d && d.targetContainer === "tasks") return isTaskDraftSaveable(d);
+    if (d && d.targetContainer === "notes") return isNoteDraftSaveable(d);
     return isDraftSaveable(d);
   }
 
@@ -36438,6 +36590,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function silverProcessingStateFromDraft(d) {
     if (d && d.targetContainer === "tasks") {
       return isTaskDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
+    }
+    if (d && d.targetContainer === "notes") {
+      return isNoteDraftSaveable(d) ? "READY_TO_SAVE" : "NEEDS_CLARIFICATION";
     }
     return processingStateFromDraft(d);
   }
@@ -36472,6 +36627,29 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     ${formatDraftRow("Adresa", locDisp)}
     ${formatDraftRow("Poznámka", noteDisp)}
   </div>`;
+  }
+
+  function iuSilverFormatNoteCreatedCs(ts) {
+    try {
+      const x = new Date(Number(ts) || 0);
+      if (!x || !Number.isFinite(x.getTime())) return "";
+      const pad2 = function (n) {
+        return String(n).padStart(2, "0");
+      };
+      return (
+        x.getDate() +
+        ". " +
+        (x.getMonth() + 1) +
+        ". " +
+        x.getFullYear() +
+        " " +
+        pad2(x.getHours()) +
+        ":" +
+        pad2(x.getMinutes())
+      );
+    } catch (_) {
+      return "";
+    }
   }
 
   function renderDraftCardEditGrid(d) {
@@ -36519,6 +36697,41 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       <button type="button" class="iuSilverDisambiguationBtn" data-iu-silver-action="storage-tasks"><span class="iuSilverDisambiguationBtn__icon" aria-hidden="true">✔️</span><span class="iuSilverDisambiguationBtn__text">Úkoly</span></button>
     </div>
   </div>
+  </div>`;
+    }
+    if (turn.normalizedIntent === "notes.create" || (turn.draft && turn.draft.targetContainer === "notes")) {
+      const d = turn.draft || createEmptyDraft();
+      const editMode = !!opts.editMode;
+      const st = silverProcessingStateFromDraft(d);
+      const showSave = isNoteDraftSaveable(d);
+      const textDisp = String(d.silverNoteText || "").trim();
+      const createdDisp = d.silverNoteCreatedTs ? iuSilverFormatNoteCreatedCs(d.silverNoteCreatedTs) : "";
+      let actions = "";
+      actions += `<button type="button" class="iuSilverDraftBtn iuSilverDraftBtn--primary" data-iu-silver-action="save" ${showSave ? "" : "disabled"}>Uložit</button>`;
+      actions += `<button type="button" class="iuSilverDraftBtn" data-iu-silver-action="edit" aria-pressed="${editMode ? "true" : "false"}">Upravit</button>`;
+      const grid = editMode
+        ? `<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--note">
+    <div class="iuSilverDraftK">Text</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" rows="4" maxlength="5000" data-iu-silver-note-field="text">${esc(textDisp)}</textarea>
+    <div class="iuSilverDraftK">Vytvořeno</div><div class="iuSilverDraftV">${esc(createdDisp || "—")}</div>
+  </div>`
+        : `<div class="iuSilverDraftGrid iuSilverDraftGrid--note">
+    ${formatDraftRow("Text", textDisp, !textDisp, {})}
+    ${formatDraftRow("Vytvořeno", createdDisp, false, {})}
+  </div>`;
+      let clar = "";
+      if (st === "NEEDS_CLARIFICATION" && turn.clarificationText) {
+        clar = `<p class="iuSilverMsgClarification iuSilverMsgClarification--warning" data-iu-silver-clarification="1">${esc(turn.clarificationText)}</p>`;
+      }
+      const leadClass = st === "NEEDS_CLARIFICATION" ? "iuSilverMsgLead iuSilverMsgLead--warning" : "iuSilverMsgLead";
+      const card = `<div class="iuSilverDraftCard iuSilverDraftCard--note" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="note" data-iu-silver-edit-mode="${editMode ? "1" : "0"}">
+  <div class="iuSilverDraftCardTitle">Návrh poznámky</div>
+  ${grid}
+  <div class="iuSilverDraftActions" data-iu-silver-actions="1">${actions}</div>
+</div>`;
+      return `<div class="iuSilverMsg iuSilverMsg--assistant" data-iu-silver-msg="assistant">
+  <p class="${leadClass}">${esc(iuSilverDecorateAssistantLead(turn.assistantLead))}</p>
+  ${clar}
+  ${card}
 </div>`;
     }
     if (turn.normalizedIntent === "tasks.create" || (turn.draft && turn.draft.targetContainer === "tasks")) {
@@ -36567,6 +36780,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (
       turn.processingState === "CLARIFICATION" ||
       turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "notes.empty_prompt" ||
       turn.normalizedIntent === "notes.future_candidate" ||
       turn.normalizedIntent === "tasks.future_candidate"
     ) {
@@ -36663,6 +36877,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function syncDraftFromCardInputs(cardEl) {
     if (!cardEl) return;
     const d = cloneDraft(chatState.draft);
+    if (d.targetContainer === "notes") {
+      const ta = cardEl.querySelector('[data-iu-silver-note-field="text"]');
+      if (ta) {
+        d.silverNoteText = String(ta.value || "")
+          .trim()
+          .slice(0, IU_SILVER_NOTE_BODY_MAX);
+      }
+      chatState.draft = d;
+      const ps = silverProcessingStateFromDraft(d);
+      const ap = buildAssistantParts(d, ps);
+      if (chatState.lastDraftTurn) {
+        chatState.lastDraftTurn = {
+          ...chatState.lastDraftTurn,
+          draft: cloneDraft(d),
+          assistantLead: ap.assistantLead,
+          clarificationText: ap.clarification,
+          processingState: ps
+        };
+      }
+      patchDraftCardMessageCopy(cardEl);
+      return;
+    }
     if (d.targetContainer === "tasks") {
       const titleIn = cardEl.querySelector('[data-iu-silver-task-field="title"]');
       if (titleIn) {
@@ -36762,7 +36998,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function refreshLastDraftCard() {
     const cardEl = getLastDraftCardEl();
     if (!cardEl) return;
-    if (cardEl.querySelector("[data-iu-silver-field]") || cardEl.querySelector("[data-iu-silver-task-field]")) {
+    if (
+      cardEl.querySelector("[data-iu-silver-field]") ||
+      cardEl.querySelector("[data-iu-silver-task-field]") ||
+      cardEl.querySelector("[data-iu-silver-note-field]")
+    ) {
       syncDraftFromCardInputs(cardEl);
     }
     const msg = cardEl.closest(".iuSilverMsg--assistant");
@@ -36790,7 +37030,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function onOverlayDraftInput(e) {
     const t = e.target;
     if (!t || !t.getAttribute) return;
-    const f = t.getAttribute("data-iu-silver-field") || t.getAttribute("data-iu-silver-task-field");
+    const f =
+      t.getAttribute("data-iu-silver-field") ||
+      t.getAttribute("data-iu-silver-task-field") ||
+      t.getAttribute("data-iu-silver-note-field");
     if (!f) return;
     const card = t.closest("[data-iu-silver-draft-card]");
     if (!card) return;
@@ -36930,6 +37173,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } else if (
       turn.processingState === "CLARIFICATION" ||
       turn.normalizedIntent === "clarification" ||
+      turn.normalizedIntent === "notes.empty_prompt" ||
       turn.normalizedIntent === "notes.future_candidate" ||
       turn.normalizedIntent === "tasks.future_candidate"
     ) {
@@ -36937,6 +37181,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       chatState.cardEditMode = false;
       chatState.draft = createEmptyDraft();
       clearPendingStorageDisambiguation();
+    } else if (turn.normalizedIntent === "notes.create" || (turn.draft && turn.draft.targetContainer === "notes")) {
+      chatState.cardEditMode = false;
+      clearPendingStorageDisambiguation();
+      chatState.lastDraftTurn = { ...turn, draft: cloneDraft(turn.draft) };
     } else if (turn.normalizedIntent === "tasks.create" || (turn.draft && turn.draft.targetContainer === "tasks")) {
       chatState.cardEditMode = false;
       clearPendingStorageDisambiguation();
@@ -37122,6 +37370,58 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
   }
 
+  async function handleNoteSaveClick() {
+    if (chatState.saveBusy) return;
+    const cardEl = getLastDraftCardEl();
+    if (cardEl && cardEl.querySelector("[data-iu-silver-note-field]")) {
+      syncDraftFromCardInputs(cardEl);
+    }
+    const d = chatState.draft;
+    if (!isNoteDraftSaveable(d)) return;
+    const svc = window.iuNotesService;
+    if (!svc || typeof svc.notesSaveSilverDraft !== "function") {
+      appendAssistantTurn({
+        processingState: "CLARIFICATION",
+        normalizedIntent: "clarification",
+        assistantLead: "Poznámky teď nejdou uložit. Zkuste obnovit stránku.",
+        clarificationText: "",
+        draft: createEmptyDraft(),
+        clarificationReason: "unsupported_request"
+      });
+      return;
+    }
+    chatState.saveBusy = true;
+    try {
+      const res = svc.notesSaveSilverDraft({
+        text: String(d.silverNoteText || "").trim(),
+        createdTs: d.silverNoteCreatedTs || Date.now()
+      });
+      if (res && res.ok && res.note) {
+        appendAssistantTurn({
+          confirmOnly: true,
+          processingState: "READ_OK",
+          assistantLead: "Poznámku jsem uložil v tomto prohlížeči.",
+          clarificationText: "",
+          draft: createEmptyDraft()
+        });
+        chatState.draft = createEmptyDraft();
+        requestAnimationFrame(function () {
+          closeChatOverlay();
+        });
+      } else {
+        appendAssistantTurn({
+          processingState: "CLARIFICATION",
+          normalizedIntent: "clarification",
+          assistantLead: "Nepodařilo se uložit poznámku. Zkuste to znovu.",
+          clarificationText: "",
+          draft: chatState.draft
+        });
+      }
+    } finally {
+      chatState.saveBusy = false;
+    }
+  }
+
   async function handleTaskSaveClick() {
     if (chatState.saveBusy) return;
     const cardEl = getLastDraftCardEl();
@@ -37202,6 +37502,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   async function handleSaveClick() {
     if (chatState.saveBusy) return;
     const cardEl = getLastDraftCardEl();
+    if (chatState.draft && chatState.draft.targetContainer === "notes") {
+      await handleNoteSaveClick();
+      return;
+    }
     if (chatState.draft && chatState.draft.targetContainer === "tasks") {
       await handleTaskSaveClick();
       return;
