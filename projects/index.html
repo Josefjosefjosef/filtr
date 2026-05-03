@@ -4760,6 +4760,7 @@ style-src 'self' 'unsafe-inline' https:;
               <button type="button" data-iu-cal-today="1">Dnes</button>
             </div>
             <div id="iuCalendarViewRoot" class="iu-calendarOverlay__viewRoot"></div>
+            <button type="button" id="iuCalMonthQuickAddBtn" class="iu-calMonthFab" data-iu-cal-month-fab="1" hidden aria-label="Přidat událost"><span class="iu-calMonthFab__icon" aria-hidden="true">+</span><span class="iu-calMonthFab__text"> Přidat událost</span></button>
           </section>
           <aside class="iu-calendarOverlay__side" id="iuCalendarBridgeAside" hidden aria-hidden="true">
             <form id="iuCalendarEventForm" class="iu-calendarOverlay__form iu-calendarOverlay__form--bridge" hidden aria-hidden="true">
@@ -5315,6 +5316,10 @@ style-src 'self' 'unsafe-inline' https:;
         margin-bottom: 8px;
         box-sizing: border-box;
         max-width: 100%;
+      }
+      #iuCalendarDayOverlay .iu-calInline.iu-event-editor {
+        will-change: transform;
+        contain: layout;
       }
       #iuCalendarOverlay .iu-calInline__inp,
       #iuCalendarDayOverlay .iu-calInline__inp,
