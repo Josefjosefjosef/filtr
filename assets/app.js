@@ -31461,76 +31461,7 @@ function buildVideoAsArticleCard(it) {
   const TASKS_STORE_KEY = "iu.tasks.mvp.v1";
   const LEGACY_SILVER_KEY = "iu.infoUzel.silverTasks.v1";
   const SCHEMA_VERSION = 1;
-  const TASKS_STYLE_ID = "iu-tasks-overlay-styles";
   const MAX_TASKS = 500;
-
-  const TASKS_STYLE_TEXT =
-    "#iuTasksOverlay{--iu-t-pri-low:#94a3b8;--iu-t-pri-med:#d97706;--iu-t-pri-high:#dc2626;--iu-t-today:#0284c7;--iu-t-overdue:#b91c1c;--iu-t-future:#64748b}" +
-    ".iu-tasksOverlay{position:fixed;inset:0;z-index:10024;display:none;align-items:center;justify-content:center;overflow:hidden}" +
-    ".iu-tasksOverlay:not([hidden]){display:flex}" +
-    ".iu-tasksOverlay__backdrop{position:absolute;inset:0;background:rgba(8,14,22,.72)}" +
-    ".iu-tasksOverlay__dialog{position:relative;z-index:1;width:min(1040px,calc(100% - 28px));height:min(86vh,840px);overflow:hidden;border-radius:12px;background:#f7f9fc;box-shadow:0 20px 52px rgba(7,12,19,.35);display:grid;grid-template-rows:auto auto 1fr;min-height:0}" +
-    ".iu-tasksOverlay__header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #d7dfeb;background:#fff}" +
-    ".iu-tasksOverlay__titleWrap{min-width:0;display:grid;gap:2px}" +
-    ".iu-tasksOverlay__title{margin:0;font-size:15px;line-height:1.2;color:#0b1f33}" +
-    ".iu-tasksOverlay__sub{margin:0;font-size:12px;line-height:1.35;color:#405a78}" +
-    ".iu-tasksOverlay__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}" +
-    ".iu-tasksOverlay__btn,.iu-tasksOverlay__close{border:1px solid #c6d2e5;border-radius:10px;background:#eef3fb;color:#203a59;padding:8px 12px;font-size:13px;touch-action:manipulation}" +
-    ".iu-tasksOverlay__btn--primary{background:#1e3a5c;color:#fff;border-color:#1e3a5c;font-weight:600}" +
-    ".iu-tasksOverlay__close{width:38px;height:38px;border:0;font-size:24px;line-height:1;background:#e8eef7;padding:0}" +
-    ".iu-tasksOverlay__filters{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:1px solid #eef2f8;background:#fff}" +
-    ".iu-tasksOverlay__filter{border:1px solid #c6d2e5;border-radius:999px;background:#f8fafc;color:#1e293b;padding:6px 12px;font-size:12px;touch-action:manipulation}" +
-    ".iu-tasksOverlay__filter.is-active{background:#1e3a5c;color:#fff;border-color:#1e3a5c}" +
-    ".iu-tasksOverlay__scroll{overflow:auto;-webkit-overflow-scrolling:touch;min-height:0;padding:10px 12px 14px;background:#f7f9fc}" +
-    ".iu-tasksOverlay__list{list-style:none;margin:0;padding:0;display:grid;gap:8px}" +
-    ".iu-taskRow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:0;align-items:stretch;border:1px solid #d6dfec;border-radius:12px;background:#fff;overflow:hidden;min-height:48px}" +
-    ".iu-taskRow--done{opacity:.62}" +
-    ".iu-taskRow__check{width:44px;border:0;background:#f4f7fc;border-right:1px solid #e5edf7;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}" +
-    ".iu-taskRow__check:focus-visible{outline:2px solid #1e3a5c;outline-offset:-2px;z-index:1}" +
-    ".iu-taskRow__body{text-align:left;border:0;background:transparent;padding:10px 12px;display:grid;gap:4px;cursor:pointer;width:100%;min-height:48px;touch-action:manipulation}" +
-    ".iu-taskRow__body:focus-visible{outline:2px solid #1e3a5c;outline-offset:-2px}" +
-    ".iu-taskRow__title{font-size:14px;font-weight:700;color:#0b1f33;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
-    ".iu-taskRow--done .iu-taskRow__title{text-decoration:line-through;color:#64748b;font-weight:600}" +
-    ".iu-taskRow__meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:#48637f}" +
-    ".iu-taskChip{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:11px;line-height:1.3;border:1px solid transparent;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
-    ".iu-taskChip--none{background:#f1f5f9;color:#475569;border-color:#e2e8f0}" +
-    ".iu-taskChip--future{background:#f8fafc;color:#475569;border-color:#e2e8f0}" +
-    ".iu-taskChip--today{background:rgba(2,132,199,.1);color:#0369a1;border-color:rgba(2,132,199,.28)}" +
-    ".iu-taskChip--overdue{background:rgba(185,28,28,.1);color:#991b1b;border-color:rgba(185,28,28,.35);font-weight:600}" +
-    ".iu-taskRow--pri-low{border-left:3px solid var(--iu-t-pri-low)}" +
-    ".iu-taskRow--pri-medium{border-left:3px solid var(--iu-t-pri-med)}" +
-    ".iu-taskRow--pri-high{border-left:3px solid var(--iu-t-pri-high)}" +
-    ".iu-tasksOverlay__empty{border:1px dashed #cbd7ea;border-radius:14px;background:#fff;padding:22px;color:#2a4568;text-align:center;display:grid;gap:10px;justify-items:center}" +
-    ".iu-tasksOverlay__emptyTitle{margin:0;font-size:15px;font-weight:800}" +
-    ".iu-tasksOverlay__emptySub{margin:0;font-size:13px;color:#405a78}" +
-    ".iu-tasksOverlay__hint{margin:0;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#334155;font-size:13px;text-align:center}" +
-    ".iu-tasksOverlay__listToolbar{padding:0 0 10px;min-height:44px;box-sizing:border-box}" +
-    ".iu-tasksOverlay__search{width:100%;max-width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:9px 12px;font-size:14px;box-sizing:border-box;background:#fff;color:#0f172a}" +
-    ".iu-tasksOverlay__search::placeholder{color:#64748b}" +
-    ".iu-tasksOverlay__search:focus{outline:2px solid #1e3a5c;outline-offset:0;border-color:#94a3b8}" +
-    ".iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%}" +
-    ".iu-tasksOverlay__input--date{padding-right:44px!important;min-height:44px}" +
-    ".iu-tasksOverlay__dateIcon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:#475569;opacity:.88}" +
-    ".iu-tasksOverlay__btn--delete{border-color:#e2e8f0;background:#fff;color:#991b1b;font-weight:600}" +
-    ".iu-tasksOverlay__btn--delete:hover{background:#fef2f2;border-color:#fecaca}" +
-    ".iu-tasksOverlay__form{display:grid;gap:10px;padding:4px 2px 8px}" +
-    ".iu-tasksOverlay__label{display:grid;gap:5px;font-size:12px;color:#264264}" +
-    ".iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select{width:100%;border:1px solid #c9d7ea;border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box}" +
-    ".iu-tasksOverlay__textarea{min-height:120px;resize:vertical;line-height:1.4;white-space:pre-wrap}" +
-    ".iu-tasksOverlay__formActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;align-items:stretch}" +
-    ".iu-tasksOverlay__formActions button{flex:1 1 auto;min-height:44px;touch-action:manipulation}" +
-    ".iu-tasksOverlay__formRow2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start}" +
-    "body.iu-tasksOverlay-open{overflow:hidden!important}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__dialog{background:#0b1220;border:1px solid #1e293b}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__header,.dark #iuTasksOverlay .iu-tasksOverlay__filters{background:#0f172a;border-color:#1e293b}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__title{color:#f1f5f9}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__sub,.dark #iuTasksOverlay .iu-tasksOverlay__empty{color:#cbd5e1}" +
-    ".dark #iuTasksOverlay .iu-taskRow{background:#0f172a;border-color:#334155}" +
-    ".dark #iuTasksOverlay .iu-taskRow__check{background:#111827;border-right-color:#334155}" +
-    ".dark #iuTasksOverlay .iu-taskRow__title{color:#f1f5f9}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__search{background:#111827;border-color:#334155;color:#f1f5f9}" +
-    ".dark #iuTasksOverlay .iu-tasksOverlay__dateIcon{color:#94a3b8}" +
-    "@media (max-width:900px){.iu-tasksOverlay{align-items:stretch;justify-content:stretch;background:#f7f9fc}.iu-tasksOverlay__dialog{width:100%;min-height:100dvh;height:100dvh;max-height:100dvh;border-radius:0;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;box-shadow:none}.iu-tasksOverlay__input,.iu-tasksOverlay__textarea,.iu-tasksOverlay__select,.iu-tasksOverlay__search{font-size:16px!important;line-height:1.35!important}}";
 
   const state = {
     inited: false,
@@ -31736,17 +31667,6 @@ function buildVideoAsArticleCard(it) {
     return filterTasks(base);
   }
 
-  function ensureStyles(){
-    try{
-      if (!document.getElementById(TASKS_STYLE_ID)){
-        const st = document.createElement("style");
-        st.id = TASKS_STYLE_ID;
-        st.textContent = TASKS_STYLE_TEXT;
-        document.head.appendChild(st);
-      }
-    }catch{}
-  }
-
   function getOverlay(){ return document.getElementById("iuTasksOverlay"); }
 
   function mountOverlay(){
@@ -31754,7 +31674,7 @@ function buildVideoAsArticleCard(it) {
     state.overlayMounted = true;
     const ov = document.createElement("div");
     ov.id = "iuTasksOverlay";
-    ov.className = "iu-tasksOverlay iu-tools-overlay-fullscreen-desktop";
+    ov.className = "iu-tasksOverlay iu-tools-overlay-fullscreen-desktop iu-tasksPremiumScope";
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
     ov.innerHTML =
@@ -32239,7 +32159,6 @@ function buildVideoAsArticleCard(it) {
   function init(){
     if (state.inited) return;
     state.inited = true;
-    ensureStyles();
     mountOverlay();
     /* Hydrate in-memory store from localStorage before exposing tasksGetSnapshot (summary box, etc.). */
     loadTasks();
