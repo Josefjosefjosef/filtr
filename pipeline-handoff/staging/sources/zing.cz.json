@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-03T18:00:10.912587Z",
+  "ingestedAt": "2026-05-03T18:30:19.748455Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Hry, kde si zahrajete za zvířata (a není to Stray)",
+      "url": "https://zing.cz/article/hry-kde-hrajete-za-zvirata-a-neni-to-stray",
+      "dt": "2026-05-03T18:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "hry",
+        "stray",
+        "zahrajete",
+        "zvířata"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -973,31 +994,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "Studio Spiders bylo uzavřeno, autoři her GreedFall a Steelrising končí",
-      "url": "https://zing.cz/article/studio-spiders-bylo-uzavreno-autori-her-greedfall-a-steelrising-konci",
-      "dt": "2026-04-29T04:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "autoři",
-        "greedfall",
-        "her",
-        "končí",
-        "spiders",
-        "steelrising",
-        "studio",
-        "uzavřeno"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1008,7 +1004,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125605,
+      "bytes": 125495,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1045,7 +1041,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T16:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T18:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1061,6 +1057,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hry, kde si zahrajete za zvířata (a není to Stray)",
+            "publishedAt": "2026-05-03T18:00:00Z"
+          },
           {
             "title": "Nový zákon chce ověřování věku ve všech online hrách obsahující chat",
             "publishedAt": "2026-05-03T16:00:00Z"
@@ -1088,10 +1088,6 @@
           {
             "title": "Portal 2 Community Edition: cesta k neomezenému modování",
             "publishedAt": "2026-05-02T12:00:00Z"
-          },
-          {
-            "title": "Cozy novinky s Terry #52",
-            "publishedAt": "2026-05-02T10:00:00Z"
           }
         ]
       }
