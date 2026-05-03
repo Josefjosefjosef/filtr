@@ -34293,6 +34293,191 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return cand;
   }
 
+  /**
+   * P0: calendar read query priority — weekday / „co mám v pátek“ / „kdy je porada v pondělí“ / …
+   * must classify as calendar.read before WRITE_SCHED_PROBE → storage disambiguation.
+   */
+  function iuSilverTryParseCalendarReadQueryPriority(rawIn, now, r, f) {
+    if (!r || !f) return null;
+    const todayStr = toDateOnly(now);
+    const tomorrowStr = addDays(todayStr, 1);
+
+    function wkName() {
+      const m = iuSilverReWeekdayOnce().exec(String(r || ""));
+      return m ? String(m[1] || "").trim() : "";
+    }
+
+    function isoForWk(tok) {
+      const dow = weekdayToDow(tok);
+      if (dow < 0) return null;
+      return nextWeekdayDate(dow, now, false, null);
+    }
+
+    function dayPartFromFx() {
+      if (/\bvecer\b|\bvecern\b/.test(f)) return "evening";
+      if (/\bdopoledne\b|\brano\b|\bsnid/i.test(f)) return "morning";
+      if (/\bodpoledne\b/.test(f)) return "afternoon";
+      return null;
+    }
+
+    const wkTok = wkName();
+
+    if (/\bm[aá]m\s+n[eě]co\b/i.test(f)) {
+      if (/\bnaplanovan/i.test(f) && /\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (wkTok) {
+        const dateIso = isoForWk(wkTok);
+        if (dateIso) {
+          return { intent: "agenda_for_iso", dateIso: dateIso, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+      if (/\bv\s+kalend/i.test(f) && wkTok) {
+        const di = isoForWk(wkTok);
+        if (di) {
+          return { intent: "agenda_for_iso", dateIso: di, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    if (/^\s*kdy\s+je\s+/i.test(r) || /^\s*kdy\s+je\s+/i.test(f)) {
+      const wk = wkTok || wkName();
+      if (wk) {
+        const dateIso = isoForWk(wk);
+        if (dateIso) {
+          const tail = String(r || "").replace(/^\s*kdy\s+je\s+/i, "").trim();
+          const wkEsc = foldCs(wk).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const titlePart = tail
+            .replace(new RegExp("\\s*(?:v|ve|na)\\s*" + wkEsc + ".*$", "i"), "")
+            .replace(/\s*[?.!]+\s*$/g, "")
+            .trim();
+          if (titlePart) {
+            const qFold = foldCs(titlePart);
+            return {
+              intent: "find_by_title",
+              query: titlePart,
+              normalizedQuery: titlePart,
+              diacriticInsensitive: true,
+              queryFolded: qFold,
+              dateIso: dateIso
+            };
+          }
+        }
+      }
+    }
+
+    if (/^\s*co\s+je\s+(?:v|ve|na)\s+/i.test(f)) {
+      const wk = wkTok || wkName();
+      if (wk) {
+        const dateIso = isoForWk(wk);
+        if (dateIso) {
+          return { intent: "agenda_for_iso", dateIso: dateIso, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    if (/\bjake\s+m[aá]m\s+udalost/i.test(f) || /\bjake\s+mam\s+udalost/i.test(f)) {
+      const wk = wkTok || wkName();
+      if (wk) {
+        const dateIso = isoForWk(wk);
+        if (dateIso) {
+          return { intent: "agenda_for_iso", dateIso: dateIso, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    if (/\bukaz\s+kalendar/i.test(f) || /\buka[zž]\s+kalend/i.test(String(rawIn || ""))) {
+      if (/\bna\s+z[ií]tra\b/i.test(f) || /\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (/\bdnes\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
+      const wkU = wkTok || wkName();
+      if (wkU) {
+        const diU = isoForWk(wkU);
+        if (diU) {
+          return { intent: "agenda_for_iso", dateIso: diU, dayPart: null, timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    if (/\bukaz\s+plan\b/i.test(f) || /\buka[zž]\s+pl[aá]n/i.test(String(rawIn || ""))) {
+      if (/\bna\s+z[ií]tra\b/i.test(f) || /\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (/\bdnes\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
+      const wkP = wkTok || wkName();
+      if (wkP) {
+        const diP = isoForWk(wkP);
+        if (diP) {
+          return { intent: "agenda_for_iso", dateIso: diP, dayPart: null, timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    if (/\bm[aá]m\s+v\s+kalend/i.test(f) && /\bn[eě]co\b/i.test(f) && /\bz[ií]tra\b/i.test(f)) {
+      const th = findTime(rawIn, now, rawIn);
+      if (th && th.time) {
+        return { intent: "agenda_for_iso", dateIso: tomorrowStr, dayPart: null, timeHHMM: th.time, filter: null };
+      }
+      return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+    }
+
+    if (/\bco\s+m[aá]m\b/.test(f)) {
+      const wkC = wkTok || wkName();
+      if (wkC) {
+        const dateIsoC = isoForWk(wkC);
+        if (dateIsoC) {
+          return { intent: "agenda_for_iso", dateIso: dateIsoC, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    const sigWeak =
+      (/\bprogram\b|\bharmonogram\b|\brozvrh\b/.test(f) &&
+        (iuSilverLooksLikeSchedulingFragment(f, rawIn) || /\bkalend|\budalost/i.test(f) || !!wkTok));
+
+    const sigStrong =
+      /\bco\s+m[aá]m\b/.test(f) ||
+      /\bjake\s+m[aá]m\s+udalost/i.test(f) ||
+      /\bjake\s+mam\s+udalost/i.test(f) ||
+      /\bukaz\s+kalendar/i.test(f) ||
+      /\bukaz\s+plan\b/.test(f) ||
+      /\bkdy\s+m[aá]m\b/.test(f) ||
+      /\bco\s+me\s+ceka\b/.test(f) ||
+      /\bm[aá]m\s+dnes\b/i.test(f) ||
+      /\bm[aá]m\s+z[ií]tra\b/i.test(f) ||
+      /\bco\s+je\s+v\s+kalend/i.test(f) ||
+      /\bnaplanovan/i.test(f);
+
+    const schedCtx =
+      iuSilverLooksLikeSchedulingFragment(f, rawIn) ||
+      /\bkalend|\budalost|\bschuz|\bporad|\bprogram\b|\bharmonogram\b|\brozvrh\b|\bplan\b/i.test(f) ||
+      !!wkTok;
+
+    const querySig = sigStrong || sigWeak;
+
+    if (querySig && schedCtx) {
+      if (/\bz[ií]tra\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "tomorrow", filter: null };
+      }
+      if (/\bdnes\b/i.test(f)) {
+        return { intent: "agenda_for_day", dateRange: "today", filter: null };
+      }
+      const wkG = wkTok || wkName();
+      if (wkG) {
+        const diG = isoForWk(wkG);
+        if (diG) {
+          return { intent: "agenda_for_iso", dateIso: diG, dayPart: dayPartFromFx(), timeHHMM: null, filter: null };
+        }
+      }
+    }
+
+    return null;
+  }
 
   /**
    * Normalize user text for calendar.read pattern matching only (create path still uses raw).
@@ -35087,7 +35272,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     const coMam = /\bco\s+m[aá]m\b/.test(f);
-    const kdyMam = /^\s*kdy\s+m[aá]m\s+/i.test(r) || /^\s*kdy\s+m[aá]m\s+/i.test(f);
+    const kdyMam =
+      /^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i.test(r) ||
+      /^\s*kdy\s+(?:presne)\s+mam\s+/i.test(f) ||
+      /^\s*kdy\s+m[aá]m\s+/i.test(r) ||
+      /^\s*kdy\s+mam\s+/i.test(f);
     const kolik = /\bkolik\s+m[aá]m\b/.test(f);
 
     if (/\bjak[aá]\s+je\s+moje\s+dal[sš][ií]\s+ud[aá]lost/i.test(f)) {
@@ -35097,6 +35286,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return { intent: "next_event", filter: null };
     }
     if (/\bm[aá]m\s+dnes\s+n[eě]co/i.test(f)) {
+      return { intent: "agenda_for_day", dateRange: "today", filter: null };
+    }
+    if (/\bm[aá]m\s+dnes\s+n[eě]jak/i.test(f)) {
       return { intent: "agenda_for_day", dateRange: "today", filter: null };
     }
     if (/\bm[aá]m\s+z[ií]tra\s+n[eě]co/i.test(f)) {
@@ -35155,7 +35347,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }
 
     if (kdyMam) {
-      const rest = r.replace(/^\s*kdy\s+m[aá]m\s+/i, "").replace(/\s*[?.!]+\s*$/g, "").trim();
+      const rest = r
+        .replace(/^\s*kdy\s+(?:přesně|presne)\s+m[aá]m\s+/i, "")
+        .replace(/^\s*kdy\s+m[aá]m\s+/i, "")
+        .replace(/\s*[?.!]+\s*$/g, "")
+        .trim();
       if (rest && !/^\s*dal[sš][ií]\b/i.test(rest)) {
         const qFold = foldCs(rest);
         return {
@@ -35204,6 +35400,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    const qp = iuSilverTryParseCalendarReadQueryPriority(rawIn, now, r, f);
+    if (qp) return qp;
     return null;
   }
 
@@ -35225,6 +35423,31 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const dr = spec.dateRange === "tomorrow" ? addDays(todayStr, 1) : todayStr;
       return sorted.filter(function (e) {
         return String(e.date).slice(0, 10) === dr;
+      });
+    }
+
+    if (spec.intent === "agenda_for_iso") {
+      const dr = String(spec.dateIso || "").slice(0, 10);
+      if (!dr) return [];
+      return sorted.filter(function (e) {
+        if (String(e.date).slice(0, 10) !== dr) return false;
+        if (spec.timeHHMM) {
+          const tm = String(spec.timeHHMM).slice(0, 5);
+          if (String(e.time || "00:00").slice(0, 5) !== tm) return false;
+        }
+        if (spec.dayPart === "evening") {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh >= 17;
+        }
+        if (spec.dayPart === "morning") {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh < 12;
+        }
+        if (spec.dayPart === "afternoon") {
+          const hh = Number(String(e.time || "00:00").slice(0, 2));
+          return hh >= 12 && hh < 17;
+        }
+        return true;
       });
     }
 
@@ -35267,6 +35490,18 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       let hits = sorted.filter(function (e) {
         return iuSilverTitleMatchesReadQuery(e.title, qf);
       });
+      if (spec.dateIso) {
+        const di = String(spec.dateIso).slice(0, 10);
+        hits = hits.filter(function (e) {
+          return String(e.date).slice(0, 10) === di;
+        });
+      }
+      if (spec.timeHHMM) {
+        const tm = String(spec.timeHHMM).slice(0, 5);
+        hits = hits.filter(function (e) {
+          return String(e.time || "00:00").slice(0, 5) === tm;
+        });
+      }
       if (spec.preferFuture && hits.length > 1) {
         const t0 = now.getTime();
         const fut = hits.filter(function (e) {
@@ -35417,6 +35652,40 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         " událostí. Například:\n" +
         lines.join("\n") +
         (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
+      return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
+    }
+
+    if (type === "agenda_for_iso") {
+      const dr0 = String(spec.dateIso || "").slice(0, 10);
+      const isToday = dr0 === todayStr;
+      const isTom = dr0 === tomorrowStr;
+      let slotHint = "";
+      if (spec.dayPart === "evening") slotHint = " večer";
+      else if (spec.dayPart === "morning") slotHint = " dopoledne";
+      else if (spec.dayPart === "afternoon") slotHint = " odpoledne";
+      else if (spec.timeHHMM) slotHint = " v " + String(spec.timeHHMM).slice(0, 5);
+      if (count === 0) {
+        if (isToday) message = "Dnes" + slotHint + " nemáš žádné události.";
+        else if (isTom) message = "Zítra" + slotHint + " nemáš žádné události.";
+        else message = (iuSilverFormatDateCs(dr0) || dr0) + slotHint + " nemáš žádné události.";
+        return { success: true, type: type, count: 0, events: [], message: message, ambiguity: false };
+      }
+      if (count === 1) {
+        const ev = evs[0];
+        const tit = String(ev.title || "");
+        if (isToday) message = "Dnes" + slotHint + " máš " + tit + " v " + String(ev.time || "") + ".";
+        else if (isTom) message = "Zítra" + slotHint + " máš " + tit + " v " + String(ev.time || "") + ".";
+        else message = (iuSilverFormatDateCs(dr0) || dr0) + slotHint + " máš " + tit + " v " + String(ev.time || "") + ".";
+        return { success: true, type: type, count: 1, events: evs, message: message, ambiguity: false };
+      }
+      ambiguity = count > 1;
+      const preview = evs.slice(0, 3);
+      const lines = preview.map(function (e) {
+        return String(e.time || "") + " — " + String(e.title || "");
+      });
+      const head =
+        (isToday ? "Dnes" : isTom ? "Zítra" : String(iuSilverFormatDateCs(dr0) || dr0)) + slotHint;
+      message = head + " máš " + count + " událostí. Například:\n" + lines.join("\n") + (count > 3 ? "\n… a další (" + (count - 3) + ")." : "");
       return { success: true, type: type, count: count, events: evs, message: message, ambiguity: ambiguity };
     }
 
