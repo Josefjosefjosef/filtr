@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-03T14:25:08.818045Z",
+  "ingestedAt": "2026-05-03T14:59:44.193724Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Šéf lotyšské armády varuje: Rusko může v blízké době zaútočit na Pobaltí",
+      "url": "https://ekonomickydenik.cz/varovani-rusko-muze-zautocit-na-pobalti/",
+      "dt": "2026-05-03T14:30:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armády",
+        "blízké",
+        "době",
+        "lotyšské",
+        "pobaltí",
+        "rusko",
+        "varuje",
+        "zaútočit",
+        "šéf"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -770,31 +796,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "\"Taková hanba\". Česko odmítlo přelet letadla tchajwanského prezidenta",
-      "url": "https://ekonomickydenik.cz/takova-hanba-cesko-odmitlo-tchajwanskeho-prezidenta/",
-      "dt": "2026-04-30T12:56:31Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "hanba",
-        "letadla",
-        "odmítlo",
-        "prezidenta",
-        "přelet",
-        "taková",
-        "tchajwanského",
-        "česko"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -805,7 +806,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69301,
+      "bytes": 69479,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -842,7 +843,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:23:31Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T14:30:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "finance": 26,
@@ -859,6 +860,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Šéf lotyšské armády varuje: Rusko může v blízké době zaútočit na Pobaltí",
+            "publishedAt": "2026-05-03T14:30:00Z"
+          },
           {
             "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
             "publishedAt": "2026-05-03T13:23:31Z"
@@ -886,10 +891,6 @@
           {
             "title": "Plyn z Kaspického moře pro Česko? Má to jeden háček: složitou a drahou přepravu",
             "publishedAt": "2026-05-03T04:05:00Z"
-          },
-          {
-            "title": "Už je to tu zase! Lesy v národním parku České Švýcarsko pohlcují plameny",
-            "publishedAt": "2026-05-02T16:31:52Z"
           }
         ]
       }

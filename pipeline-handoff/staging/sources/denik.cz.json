@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T14:25:08.818045Z",
+  "ingestedAt": "2026-05-03T14:59:44.193724Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na galavečeři s Trumpem střílel po ochrance útočník, potvrdila prokuratura",
+      "url": "https://www.denik.cz/ze_sveta/donald-trump-galavecere-washington-vysetrovani-utocnik.html",
+      "dt": "2026-05-03T14:38:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "galavečeři",
+        "ochrance",
+        "potvrdila",
+        "prokuratura",
+        "střílel",
+        "trumpem",
+        "útočník"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "doprava",
       "contentType": "article",
@@ -626,30 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Rakouská policie dopadla podezřelého z otrávení dětských výživ",
-      "url": "https://www.denik.cz/staty-eu/rakousko-detska-vyziva-jed-na-krysy-spar-hipp-podezrely.html",
-      "dt": "2026-05-02T15:58:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "dopadla",
-        "dětských",
-        "otrávení",
-        "podezřelého",
-        "policie",
-        "rakouská",
-        "výživ"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -660,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 29099,
+      "bytes": 29236,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -697,7 +697,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T13:45:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T14:38:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 23,
@@ -714,6 +714,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na galavečeři s Trumpem střílel po ochrance útočník, potvrdila prokuratura",
+            "publishedAt": "2026-05-03T14:38:00Z"
+          },
           {
             "title": "Traktoriádu u Prahy poznamenala tragédie. Pod koly stroje zemřelo dítě",
             "publishedAt": "2026-05-03T13:45:00Z"
@@ -741,10 +745,6 @@
           {
             "title": "VÝSTRAHA: Je sucho, platí varování před požáry. Meteorologové řekli, kdy zaprší",
             "publishedAt": "2026-05-03T11:30:00Z"
-          },
-          {
-            "title": "Nadšení vystřídaly spory. Na záchranu velryby Timmyho navazuje hněv a nejistota",
-            "publishedAt": "2026-05-03T10:36:00Z"
           }
         ]
       }
