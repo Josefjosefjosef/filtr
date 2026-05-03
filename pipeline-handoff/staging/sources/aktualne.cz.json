@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-03T09:35:11.892389Z",
+  "ingestedAt": "2026-05-03T10:09:51.366676Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Saúdský penězovod vysychá. Hvězdy golfu čelí nejisté budoucnosti",
+      "url": "https://sport.aktualne.cz/ostatni-sporty/saudsky-penezovod-vysycha-hvezdy-golfu-celi-nejiste-budoucnosti/r~aaa29d576f3475cbfe48902d1b0154df/",
+      "dt": "2026-05-03T10:00:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "budoucnosti",
+        "golfu",
+        "hvězdy",
+        "nejisté",
+        "penězovod",
+        "saúdský",
+        "vysychá",
+        "čelí"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -506,32 +531,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejistá sezona. Svět čeká na to, kdy se ropná krize promítne do cen letenek",
-      "url": "https://zpravy.aktualne.cz/ekonomika/nejista-sezona-svet-ceka-na-to-kdy-se-ropna-krize-promitne-do-cen-letenek/r~aaa298c27e9146dec8529149026fb517/",
-      "dt": "2026-05-03T03:30:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "cen",
-        "krize",
-        "letenek",
-        "nejistá",
-        "promítne",
-        "ropná",
-        "sezona",
-        "svět",
-        "čeká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -542,7 +541,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21425,
+      "bytes": 21306,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -579,13 +578,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:52:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "sport": 4,
           "zpravy": 14,
-          "sport": 3,
           "other": 1,
-          "finance": 2
+          "finance": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,6 +596,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Saúdský penězovod vysychá. Hvězdy golfu čelí nejisté budoucnosti",
+            "publishedAt": "2026-05-03T10:00:00Z"
+          },
           {
             "title": "Oscarový režisér Talankin dorazí na festival v Českém Těšíně s nalezenou soškou",
             "publishedAt": "2026-05-03T08:52:00Z"
@@ -624,10 +627,6 @@
           {
             "title": "Philadelphia narazila. Vladař třikrát inkasoval a Carolina a ledě vládla",
             "publishedAt": "2026-05-03T05:23:00Z"
-          },
-          {
-            "title": "Volební chaos v Peru. Výsledky nejsou ani po měsíci jasné, hlasy přezkoumá audit",
-            "publishedAt": "2026-05-03T07:58:00Z"
           }
         ]
       }

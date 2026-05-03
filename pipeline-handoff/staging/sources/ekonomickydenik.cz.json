@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-03T09:35:11.892389Z",
+  "ingestedAt": "2026-05-03T10:09:51.366676Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
+      "url": "https://ekonomickydenik.cz/elektrinu-vyrabime-levne-a-s-malymi-emisemi/",
+      "dt": "2026-05-03T09:58:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "bolehlav",
+        "dopady",
+        "elektřinu",
+        "emisí",
+        "levně",
+        "nebo",
+        "slunečného",
+        "vyrábíme",
+        "víkendu",
+        "výhra"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -766,32 +793,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Hádka europoslanců: Španělé platí Putinovi za plyn a my dáváme peníze Ukrajině",
-      "url": "https://ekonomickydenik.cz/hadka-poslancu-spanele-plati-putinovi-my-davame-penize-ukrajine/",
-      "dt": "2026-04-30T11:17:57Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dáváme",
-        "europoslanců",
-        "hádka",
-        "peníze",
-        "platí",
-        "plyn",
-        "putinovi",
-        "ukrajině",
-        "španělé"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -802,7 +803,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69996,
+      "bytes": 69966,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -839,11 +840,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T09:58:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "finance": 28,
-          "zdravi": 1,
+          "zdravi": 2,
+          "finance": 27,
           "zpravy": 1
         },
         "drop_counts": {
@@ -856,6 +857,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
+            "publishedAt": "2026-05-03T09:58:00Z"
+          },
           {
             "title": "Alkohol na lodi? Kde ještě projde a kde platí nula",
             "publishedAt": "2026-05-03T09:00:00Z"
@@ -883,10 +888,6 @@
           {
             "title": "Semafory na přechodu nutí chodce porušovat předpisy, tvrdí náměstek. Ozvala se kritika",
             "publishedAt": "2026-05-02T12:30:00Z"
-          },
-          {
-            "title": "Babiš si vybral. Landovský se stane vládním zmocněncem pro závazky vůči NATO",
-            "publishedAt": "2026-05-02T11:30:00Z"
           }
         ]
       }

@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T09:35:11.892389Z",
+  "ingestedAt": "2026-05-03T10:09:51.366676Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Trenérská změna v Liberci: volejbalisty Dukly povede Dittrich",
+      "url": "https://www.idnes.cz/sport/ostatni/volejbalisty-liberce-povede-dittrich.A260503_113716_sporty_ald",
+      "dt": "2026-05-03T09:37:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "dittrich",
+        "dukly",
+        "liberci",
+        "povede",
+        "trenérská",
+        "volejbalisty",
+        "změna"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -780,31 +804,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třešnička na dortu. Hůlka se loučil s Ďolíčkem, na penaltu ho dotlačili fanoušci",
-      "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-bohemians-praha-sigma-olomouc-ohlas-lukas-hulka.A260502_191318_fotbal_duff",
-      "dt": "2026-05-02T17:49:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "dortu",
-        "dotlačili",
-        "fanoušci",
-        "hůlka",
-        "loučil",
-        "penaltu",
-        "třešnička",
-        "ďolíčkem"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -815,7 +814,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45037,
+      "bytes": 45104,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -852,7 +851,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T09:24:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T09:37:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -867,6 +866,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trenérská změna v Liberci: volejbalisty Dukly povede Dittrich",
+            "publishedAt": "2026-05-03T09:37:00Z"
+          },
           {
             "title": "Pražský maraton vyhráli Tsegu a Jelimová, český titul obhájil Havlena",
             "publishedAt": "2026-05-03T09:24:00Z"
@@ -894,10 +897,6 @@
           {
             "title": "Velký obrat v sérii dokonán. Philadelphia vyřadila Boston z play off NBA",
             "publishedAt": "2026-05-03T06:10:00Z"
-          },
-          {
-            "title": "První gól za Česko, ale i nedorazy v obraně. Chmelař: Musíme být u sebe a dávat pozor",
-            "publishedAt": "2026-05-03T06:00:00Z"
           }
         ]
       }
