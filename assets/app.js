@@ -34335,7 +34335,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverHasExplicitNotesTarget(f) {
-    if (/\bdo\s+poznamek\b/.test(f)) return true;
+    if (/\bdo\s+poznam(?:ek|ky|ce|kach)\b/.test(f)) return true;
     if (/\bv\s+poznamkach\b/.test(f)) return true;
     if (/\bdo\s+notes?\b/.test(f) || /\bdo\s+note\b/.test(f)) return true;
     if (/\bdo\s+mema\b/.test(f) || /\bdo\s+memo\b/.test(f)) return true;
@@ -34356,7 +34356,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverHasWriteVerb(f) {
-    return /\buloz|zapis|vloz|pridej|naplanuj|vytvor|zaloz|napis|zaznamenej|eviduj|dopln|zanes|pripis|\bhod\b|dej\s+mi|napis\s+mi|pridej\s+mi|poznamenej|zapamatuj/.test(f);
+    return /\buloz(?:it|te|i)?\b|\bzapis(?:it|te|i)?\b|\bvloz(?:it|te|i)?\b|\bpridej\b|\bnaplanuj\b|\bvytvor\b|\bzaloz\b|\bnapis\b|\bzaznamenej\b|\beviduj\b|\bdopln\b|\bzanes\b|\bpripis\b|\bhod\b|\bdej\s+mi\b|\bnapis\s+mi\b|\bpridej\s+mi\b|\bpoznamenej\b|\bzapamatuj\b/.test(f);
   }
 
   /**
@@ -34370,10 +34370,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     return false;
   }
 
+  /**
+   * Dříve: „do poznámek“ + zápisové sloveso → FUTURE_NOTES (placeholder „zatím není aktivní“).
+   * Poznámky jsou aktivní — vždy false; tělo parsuje iuSilverTryParseExplicitNoteCreate / širší větev níže.
+   */
   function iuSilverNotesFutureCandidate(f) {
-    if (!iuSilverHasExplicitNotesTarget(f)) return false;
-    if (iuSilverHasWriteVerb(f)) return true;
-    if (/\badd\s+note\b/.test(f)) return true;
+    void f;
     return false;
   }
 
@@ -34386,7 +34388,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (/\b\d{1,2}\s*\.\s*\d{1,2}\s*\./.test(f)) return true;
     if (/\b\d{1,2}\s*[.\/\-]\s*\d{1,2}\b/.test(f)) return true;
     if (/\bv\s*\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f) || /\bve\s+\d{1,2}\s*[:.]\s*\d{1,2}\b/.test(f)) return true;
-    if (/\bschuz|schůz|porad|zubar|zub|kontrola|servis|ud[aá]lost/i.test(f)) return true;
+    if (/\bschuz|schůz|porad|zubar|zub|kontrola|ud[aá]lost/i.test(f)) return true;
+    if (/\bservis\b/i.test(f) && (/\bzitra\b|\bdnes\b|\bpristi\b|\b\d{1,2}\s*[:.]\s*\d{1,2}\b|\bschuz|porad|ud[aá]lost/i.test(f))) return true;
     return false;
   }
 
@@ -34653,9 +34656,21 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function iuSilverHasTaskActionVerb(folded) {
     const f = String(folded || "");
-    return /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit)\b/.test(
-      f
-    );
+    if (
+      /\b(koupit|ud[eě]lat|udelat|zavolat|vy[rř][ií]dit|vyridit|zaplatit|poslat|objednat|p[rř]ipomenout|pripomenout|zkontrolovat|za[rř][ií]dit|zaridit)\b/.test(
+        f
+      )
+    ) {
+      return true;
+    }
+    if (/\bje\s+potreba\s+(koupit|zaplatit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
+    if (/\b(mam|musim)\s+(zaplatit|koupit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
+    if (/\b(musim|mam|mel\s+bych|potrebuji|potrebuju)\s+(\w+\s+){0,4}(koupit|zaplatit|zavolat|poslat|objednat|vyridit|vyrizit|udelat)\b/.test(f)) return true;
+    if (/\bnesmim\s+zapomenout\b.*\b(koupit|zaplatit|zavolat|poslat|objednat|vyridit|udelat)\b/.test(f)) return true;
+    if (/\b(a|at)\s+nezapomenu\b.*\b(koupit|zaplatit|zavolat|poslat|objednat)\b/.test(f)) return true;
+    if (/\bpripomen(?:te)?\s+mi\b.*\b(koupit|zaplatit|zavolat|poslat|objednat)\b/.test(f)) return true;
+    if (/\b(zitra|dnes)\s+musim\b.*\b(koupit|zavolat|zaplatit)\b/.test(f)) return true;
+    return false;
   }
 
   const IU_SILVER_TASK_VERB_CANON = {
@@ -34777,6 +34792,55 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   /** Max body length for Silver → Poznámky (explicit phrase flow). */
   const IU_SILVER_NOTE_BODY_MAX = 5000;
 
+  function iuSilverNoteCreateFinalizeBody(rest) {
+    const r = iuSilverNormalizeWs(String(rest || "").replace(/^(že|ze)\s+/i, "").trim());
+    if (!r || r.length < 2) return null;
+    const b = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(r));
+    return b.slice(0, IU_SILVER_NOTE_BODY_MAX);
+  }
+
+  /**
+   * Širší parsování vět s cílem „do poznámek / do poznámky“ (reálný chat; bez NLP backendu).
+   */
+  function iuSilverTryParseLooseNoteToBody(s0) {
+    const s = String(s0 || "")
+      .trim()
+      .replace(/^\s*pros[ií]m,?\s+/i, "")
+      .trim();
+    if (!s) return null;
+    const f = foldCs(s);
+    if (!iuSilverHasExplicitNotesTarget(f)) return null;
+
+    let m = s.match(/^([\s\S]{2,4800}?)\s+(?:ulož|uloz|vlož|vloz|dej)(?:te)?(?:\s+mi)?(?:\s+to)?\s+do\s+pozn[aá]m(?:ek|ky|ce)\b[.!?,…\s]*$/i);
+    if (m && m[1]) {
+      const b = iuSilverNoteCreateFinalizeBody(m[1]);
+      if (b) return { kind: "body", body: b };
+    }
+    m = s.match(
+      /^(?:(?:silver|dej\s+mi)\s+)?(?:ul[oó]ž|uloz)(?:te)?(?:\s+mi)?\s+do\s+pozn[aá]m(?:ek|ky|ce)\b\s*(?:informace\s+které\s+potřebuji\s+)?(?:že\s+)?([\s\S]+)$/i
+    );
+    if (m && m[1]) {
+      const b = iuSilverNoteCreateFinalizeBody(m[1]);
+      if (b) return { kind: "body", body: b };
+    }
+    m = s.match(/^potřebuji\s+si\s+uložit\s+(?:že\s+)?([\s\S]+?)\s+dej\s+to\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i);
+    if (m && m[1]) {
+      const b = iuSilverNoteCreateFinalizeBody(m[1]);
+      if (b) return { kind: "body", body: b };
+    }
+    m = s.match(/^do\s+pozn[aá]m(?:ek|ky|ce)\b(?:\s+mi)?\s+(?:ulož|uloz|že\s+)?\s*([\s\S]+)$/i);
+    if (m && m[1]) {
+      const b = iuSilverNoteCreateFinalizeBody(m[1]);
+      if (b) return { kind: "body", body: b };
+    }
+    m = s.match(/^(?:ul[oó]ž|uloz)(?:te)?\s+([\s\S]+?)\s+do\s+pozn[aá]m(?:ek|ky|ce)\b[.!?,…\s]*$/i);
+    if (m && m[1]) {
+      const b = iuSilverNoteCreateFinalizeBody(m[1]);
+      if (b) return { kind: "body", body: b };
+    }
+    return null;
+  }
+
   /**
    * P0: explicit Czech note phrases only (no NLP). Returns { kind:"body", body } or { kind:"empty" } or null.
    */
@@ -34784,14 +34848,38 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const s0 = String(rawIn || "").trim();
     if (!s0) return null;
     const s = s0.replace(/^\s*pros[ií]m,?\s+/i, "").trim();
+    const fEarly = foldCs(s);
+    if (/^add\s+note\s+/i.test(s)) {
+      const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^add\s+note\s+/i, "").trim());
+      if (b0) return { kind: "body", body: b0 };
+    }
+    if (/^zapi[sš]\s+(?!do\s+)/i.test(s) && !iuSilverHasExplicitCalendarTarget(fEarly) && !iuSilverHasTaskActionVerb(fEarly)) {
+      const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^zapi[sš]\s+/i, "").trim());
+      if (b0) return { kind: "body", body: b0 };
+    }
+    if (
+      /^pozn[aá]mk[ay]\s+(?!m[aá]m\s+)/i.test(s) &&
+      !/^pozn[aá]mka\s*:/i.test(s) &&
+      !iuSilverHasExplicitCalendarTarget(fEarly) &&
+      !iuSilverHasTaskActionVerb(fEarly)
+    ) {
+      const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^pozn[aá]mk[ay]\s+/i, "").trim());
+      if (b0) return { kind: "body", body: b0 };
+    }
+    if (/^ul[oó]ž(?:te)?\s+číslo\s+objednávky\b/i.test(s) && !iuSilverHasExplicitCalendarTarget(fEarly)) {
+      const b0 = iuSilverNoteCreateFinalizeBody(s.replace(/^ul[oó]ž(?:te)?\s+číslo\s+objednávky\s*/i, "").trim());
+      if (b0) return { kind: "body", body: b0 };
+    }
     const patterns = [
       /^ul[oó][zž](?:te)?\s+pozn[aá]mku\b/i,
       /^ul[oó][zž]it\s+pozn[aá]mku\b/i,
+      /^ul[oó][zž](?:te)?\s+mi\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^pozn[aá]mka\s*:/i,
       /^poznamenej\s+si\b/i,
       /^[zn]api[sš]\s+do\s+pozn[aá]mek\b/i,
       /^ul[oó][zž](?:te)?\s+do\s+pozn[aá]mek\b/i,
       /^dej\s+do\s+pozn[aá]mek\b/i,
+      /^vlož(?:te)?\s+mi\s+to\s+do\s+pozn[aá]m(?:ek|ky|ce)\b/i,
       /^zapi[sš]\s+pozn[aá]mku\b/i
     ];
     for (let pi = 0; pi < patterns.length; pi++) {
@@ -34805,6 +34893,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const bodyNorm = iuSilverNormalizeCzechNumberWords(iuSilverNormalizeCzechPlaceWords(rest));
       return { kind: "body", body: bodyNorm.slice(0, IU_SILVER_NOTE_BODY_MAX) };
     }
+    const loose = iuSilverTryParseLooseNoteToBody(s);
+    if (loose) return loose;
     return null;
   }
 
@@ -35397,7 +35487,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     calendar: ["kalendar", "udalost", "program", "schuzka", "meeting", "porada", "zubar", "doktor", "navsteva"],
     tasks: ["ukol", "ukoly", "udelat", "vyridit", "zaridit", "koupit", "zavolat", "zaplatit", "poslat", "objednat"],
     notes: ["poznamka", "poznamky", "poznamenane", "zapsane", "ulozene", "informace"],
-    order: ["objednavka", "objednavky", "cislo objednavky", "objednaci cislo"],
+    order: ["objednavka", "objednavky", "objednavku", "objednavce", "cislo objednavky", "objednaci cislo", "alza"],
     pin: ["pin", "kod", "heslo", "bezpecnostni kod"],
     color: ["barva", "barvu", "barevny"],
     warranty: ["zaruka", "garance", "reklamace"],
@@ -35432,28 +35522,32 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       [/\bnavstevu\b|\bnavsteve\b|\bnavsteva\b/g, "navsteva"],
       [/\budalosti\b|\budalost\b|\budalosti\b|\budalost\b/g, "udalost"],
       [/\bprogramu\b|\bprogram\b/g, "program"],
-      [/\bukolu\b|\bukoly\b|\bukol\b/g, "ukol"],
+      [/\bukolem\b|\bukolu\b|\bukoly\b|\bukol\b/g, "ukol"],
       [/\budelat\b|\budelej\b|\budelat\b/g, "udelat"],
       [/\bvyrizit\b|\bvyriz\b|\bvyridit\b|\bvyrizen\b/g, "vyridit"],
       [/\bzaplatit\b|\bzaplat\b|\bzaplaceni\b/g, "zaplatit"],
       [/\bkoupim\b|\bnakoupit\b|\bnakup\b|\bkoupit\b/g, "koupit"],
       [/\bzavolej\b|\bvolat\b|\bzavolat\b/g, "zavolat"],
       [/\bposli\b|\bodeslat\b|\bposlat\b/g, "poslat"],
-      [/\bobjednej\b|\bobjednavka\b|\bobjednavky\b|\bobjednat\b/g, "objednat"],
-      [/\breklamaci\b|\breklamací\b|\breklamace\b/g, "reklamace"],
+      [/\bobjednej\b|\bobjednat\b/g, "objednat"],
+      [/\breklamaci\b|\breklamací\b|\breklamacemi\b|\breklamace\b/g, "reklamace"],
       [/\bnajem\b|\bnájmu\b|\bnajmu\b|\bnajem\b/g, "najem"],
       [/\belektrinu\b|\belektrina\b|\belektriny\b/g, "elektrina"],
-      [/\bpoznamky\b|\bpoznamku\b|\bpoznamka\b/g, "poznamka"],
-      [/\bpoznamenane\b|\bzapsane\b|\bulozene\b/g, "poznamka"],
-      [/\bobjednavky\b|\bobjednavku\b|\bobjednavka\b/g, "objednavka"],
-      [/\bcislo\s+objednavky\b/g, "cislo objednavky"],
+      [/\bpoznamky\b|\bpoznamku\b|\bpoznamce\b|\bpoznamkou\b|\bpoznamka\b/g, "poznamka"],
+      [/\bpoznamenane\b|\bzapsane\b|\bulozene\b|\bulozeneho\b|\bulozenem\b/g, "poznamka"],
+      [/\bobjednavky\b|\bobjednavku\b|\bobjednavce\b|\bobjednavkou\b|\bobjednavka\b/g, "objednavka"],
+      [/\bcislo\s+objednavky\b|\bcislo\s+objednavce\b|\bcislo\s+objednavku\b|\bcislo\s+objednavka\b/g, "cislo objednavka"],
+      [/\bcislem\b|\bcisla\b|\bcislo\b/g, "cislo"],
       [/\bpin\b/g, "pin"],
       [/\bkod\b/g, "kod"],
       [/\bhesla\b|\bheslo\b/g, "heslo"],
-      [/\bbarvu\b|\bbarve\b|\bbarvy\b|\bbarva\b/g, "barva"],
-      [/\bauta\b|\baute\b|\bautu\b|\bauto\b/g, "auto"],
-      [/\bzaruky\b|\bzaruku\b|\bzaruka\b/g, "zaruka"],
-      [/\bkontaktu\b|\bkontakt\b/g, "kontakt"],
+      [/\bbarvu\b|\bbarve\b|\bbarvy\b|\bbarvou\b|\bbarva\b/g, "barva"],
+      [/\bauta\b|\baute\b|\bautu\b|\bautem\b|\bauto\b/g, "auto"],
+      [/\bzarukou\b|\bzaruce\b|\bzaruky\b|\bzaruku\b|\bzaruka\b/g, "zaruka"],
+      [/\bkontaktem\b|\bkontaktu\b|\bkontakt\b/g, "kontakt"],
+      [/\btelefonem\b|\btelefonu\b|\btelefon\b|\btel\b/g, "telefon"],
+      [/\bmleku\b|\bmleka\b|\bmleko\b/g, "mleko"],
+      [/\brohlikem\b|\brohliku\b|\brohliky\b|\brohlik\b/g, "rohlik"],
       [/\balzy\b|\balze\b|\balza\b/g, "alza"],
       [/\btelevizi\b|\btelevize\b/g, "televize"],
       [/\bkarte\b|\bkarty\b|\bkarta\b/g, "karta"]
@@ -35548,13 +35642,34 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const h = iuSilverNormalizeForSearch(hay);
       if (!h) return 0;
       let sc = 0;
-      if (fullNorm.length >= 3 && h.indexOf(fullNorm) >= 0) sc += 120;
+      const fq = String(fullNorm || "").trim();
+      if (fq.length >= 3 && h.indexOf(fq) >= 0) sc += 120;
+      const hWords = h.split(/\s+/).filter(function (x) {
+        return x.length >= 2;
+      });
       for (let ti = 0; ti < toks.length; ti++) {
         const t = toks[ti];
         if (!t || t.length < 2) continue;
         if (h.indexOf(t) >= 0) {
           sc += t.length >= 4 ? 35 : 22;
+          continue;
         }
+        let wHit = false;
+        for (let wi = 0; wi < hWords.length; wi++) {
+          const w = hWords[wi];
+          if (!w) continue;
+          if (w === t) {
+            sc += t.length >= 4 ? 35 : 22;
+            wHit = true;
+            break;
+          }
+          if (t.length >= 4 && w.length >= 4 && (w.indexOf(t) >= 0 || t.indexOf(w) >= 0)) {
+            sc += 26;
+            wHit = true;
+            break;
+          }
+        }
+        if (wHit) continue;
       }
       return sc;
     }
@@ -35590,7 +35705,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       for (let ei = 0; ei < evs.length; ei++) {
         const ev = evs[ei];
         const title = String(ev.title || "");
-        const sc0 = scoreHaystack(title, expToks, normalizedQuery);
+        const locPart = String(ev.location || ev.address || "").trim();
+        const blobCal = [title, locPart, String(ev.time || "").trim(), String(ev.date || "").slice(0, 10)].join(" ").trim();
+        const sc0 = scoreHaystack(blobCal, expToks, normalizedQuery);
         let sc = sc0;
         const dt = parseDateTimeIso(ev.date, ev.time).getTime();
         if (preferFuture && dt >= now.getTime()) sc += 28;
@@ -35767,6 +35884,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       /\bco\s+mam\s+k\s+\S+/.test(x) ||
       /\b(co\s+mam|co\s+mas|co\s+me\s+ceka)\b/.test(x) ||
       /\bkdy\s+se\b/.test(x) ||
+      /\bkde\s+m[aá]m\s+kontakt\b/i.test(x) ||
       /\b(kde|s\s+kym)\s+mam\s+(zitra|dnes)/.test(x) ||
       /\b(jaky|jake)\s+mam\s+program/.test(x) ||
       /\b(co\s+vis|co\s+vies)\b/.test(x) ||
@@ -35779,6 +35897,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function iuSilverReadSearchGateCalendarCreate(raw, folded, now) {
+    const f = String(folded || "");
+    if (/\bkde\s+m[aá]m\s+kontakt\b/i.test(f) && /\bservis\b/i.test(f)) return false;
+    if (/\bco\s+m[aá]m\s+ulozene\s+o\b/i.test(f)) return false;
     const prev0 = createEmptyDraft();
     if (iuSilverBrainCalendarWantedInternal(raw, now, prev0, folded) && iuSilverLooksLikeSchedulingFragment(folded, raw)) return true;
     return false;
@@ -35798,12 +35919,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const f = String(folded || "");
     if (/\b(najdi|vyhledej|ukaz|ukaž)\s+v\s+(kalend|kalendari)\b/.test(f)) return "calendar";
     if (/\b(ukol|ukoly|udelat|vyridit|zaplatit|koupit|zavolat|objednat|poslat)\b/.test(f) && !/\b(kalendar|schuz|zubar|kdy\s+mam)\b/.test(f)) {
-      if (/\b(poznam|pin|kod|heslo|objednav|barva|auto|zaruka|alz|televiz)\b/.test(f)) return "notes";
+      if (/\b(poznam|pin|kod|heslo|objednav\w*|barva|auto|zaruka|alz|televiz)\b/.test(f)) return "notes";
       if (/\b(jake|jaky)\s+mam\s+ukol|aktivni\s+ukol|hotove\s+ukol|co\s+mam\s+udelat\b/.test(f)) return "tasks";
       if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
     }
     if (/\bnajdi\s+ukol|vyhledej\s+ukol\b/.test(f)) return "tasks";
-    if (/\b(poznam|pin|kod|heslo|objednav|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
+    if (/\b(poznam|pin|kod|heslo|objednav\w*|barva|auto|zaruka|reklam|kontakt|servis|alz|televiz|kart)\b/.test(f)) return "notes";
     if (/\b(kdy|v\s+kolik|program|kalendar|schuz|meeting|porad|zubar|doktor|navstev|uvidim|potkam|sejdu|zitra|dnes|udalost)\b/.test(f)) return "calendar";
     if (/\b(najdi|vyhledej|ukaz|ukaž|hledej)\b/.test(f)) return "all";
     if (/\bco\s+mam\s+k\s+\S+/.test(f)) return "all";
@@ -38145,6 +38266,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     proofWeekdayRuleSnippet,
     calendarReadProbe,
     iuSilverNormalizeForSearch: iuSilverNormalizeForSearch,
+    iuSilverNormalizeForSearchMatch: iuSilverNormalizeForSearch,
     iuSilverSearchLocalData: iuSilverSearchLocalData,
     iuSilverBuildAnswerFromSearch: iuSilverBuildAnswerFromSearch,
     hasSilverStorageDisambiguationPayload,
