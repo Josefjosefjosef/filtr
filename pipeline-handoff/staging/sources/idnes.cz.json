@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-03T06:05:18.341308Z",
+  "ingestedAt": "2026-05-03T06:40:32.575142Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "ANALÝZA: Jak a proč vznikal malér kolem krajského kulturního centra",
+      "url": "https://www.idnes.cz/plzen/zpravy/mestske-lazne-prestavba-plzen-kcpk-galerie-audit-pochybeni.A260427_928718_plzen-zpravy_vb",
+      "dt": "2026-05-03T06:18:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "centra",
+        "kolem",
+        "krajského",
+        "kulturního",
+        "malér",
+        "proč",
+        "vznikal"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -755,31 +779,6 @@
         "slaví",
         "suchet",
         "tvář"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Tokijské letiště má nové pomocníky. Se zavazadly pomáhají humanoidní roboti",
-      "url": "https://www.idnes.cz/ekonomika/doprava/japonske-letiste-testuje-roboty.A260428_111908_eko-zahranicni_aya",
-      "dt": "2026-05-02T13:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "humanoidní",
-        "letiště",
-        "nové",
-        "pomocníky",
-        "pomáhají",
-        "roboti",
-        "tokijské",
-        "zavazadly"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1584,7 +1583,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 49057,
+      "bytes": 49162,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1621,7 +1620,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T05:58:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T06:18:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 25,
@@ -1638,6 +1637,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "ANALÝZA: Jak a proč vznikal malér kolem krajského kulturního centra",
+            "publishedAt": "2026-05-03T06:18:00Z"
+          },
           {
             "title": "Hasiči zabránili dalšímu šíření požáru v Českém Švýcarsku. Na místo míří vrtulníky",
             "publishedAt": "2026-05-03T05:58:52Z"
@@ -1664,10 +1667,6 @@
           },
           {
             "title": "Vztah jako lék na nervy: Funguje skvěle, pokud mu tedy zrovna nevypršela záruka",
-            "publishedAt": "2026-05-02T22:00:00Z"
-          },
-          {
-            "title": "Pořád věřím, že malá skupina přemýšlivých lidí může změnit svět, říká profesor Frouz",
             "publishedAt": "2026-05-02T22:00:00Z"
           }
         ]

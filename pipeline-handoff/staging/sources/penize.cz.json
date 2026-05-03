@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-03T06:05:18.341308Z",
+  "ingestedAt": "2026-05-03T06:40:32.575142Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Jarní úklid v předplatném. Jak si udělat pořádek a ušetřit až tisíce měsíčně",
+      "url": "https://www.penize.cz/nakupy/489190-jarni-uklid-v-predplatnem-jak-si-udelat-poradek-a-usetrit-az-tisice-mesicne",
+      "dt": "2026-05-03T08:00:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "jarní",
+        "měsíčně",
+        "pořádek",
+        "předplatném",
+        "tisíce",
+        "udělat",
+        "ušetřit",
+        "úklid"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -478,30 +503,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nemovitost ve Španělsku: Co vám realitka neřekne, dokud nepodepíšete",
-      "url": "https://www.penize.cz/nakup-a-prodej-nemovitosti/488949-nemovitost-ve-spanelsku-co-vam-realitka-nerekne-dokud-nepodepisete",
-      "dt": "2026-04-28T08:00:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "dokud",
-        "nemovitost",
-        "nepodepíšete",
-        "neřekne",
-        "realitka",
-        "vám",
-        "španělsku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -512,7 +513,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18856,
+      "bytes": 19120,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -549,7 +550,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T06:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:00:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 13,
@@ -566,6 +567,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jarní úklid v předplatném. Jak si udělat pořádek a ušetřit až tisíce měsíčně",
+            "publishedAt": "2026-05-03T08:00:00Z"
+          },
           {
             "title": "Banka Creditas má soutěž o iPhone a vstupenky na MotoGP",
             "publishedAt": "2026-05-03T06:30:00Z"
@@ -593,10 +598,6 @@
           {
             "title": "Vyjíždíte na prodloužený víkend? Maximální ceny benzinu a nafty pro začátek května",
             "publishedAt": "2026-04-30T14:04:00Z"
-          },
-          {
-            "title": "Za pracovní cestu dostanete víc. Cena nafty ve vyhlášce se změní",
-            "publishedAt": "2026-04-30T10:58:00Z"
           }
         ]
       }
