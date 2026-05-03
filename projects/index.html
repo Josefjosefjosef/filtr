@@ -4773,21 +4773,19 @@ style-src 'self' 'unsafe-inline' https:;
               <p id="iuCalendarFormMsg" class="iu-calendarOverlay__msg" aria-live="polite"></p>
             </form>
           </aside>
-          <div id="iuCalendarMobileDayPanel" class="iu-calendarMobileDayPanel" hidden aria-hidden="true">
-            <div class="iu-calendarMobileDayPanel__top">
-              <div class="iu-calendarMobileDayPanel__headText">
-                <h3 class="iu-calendarMobileDayPanel__weekday" id="iuCalendarMobileDayWeekday"></h3>
-                <p class="iu-calendarMobileDayPanel__dateLine" id="iuCalendarMobileDayDateLine"></p>
-                <p class="iu-calendarMobileDayPanel__holiday" id="iuCalendarMobileDayHoliday" hidden></p>
-              </div>
-            </div>
-            <div class="iu-calendarMobileDayPanel__scroll" id="iuCalendarMobileDayScroll">
-              <div id="iuCalendarMobileDayHours" class="iu-calendarMobileDayHours" aria-label="Hodiny"></div>
-            </div>
-          </div>
         </div>
-        <div id="iuCalTimeWheelHost" class="iu-calTimeWheelHost" hidden aria-hidden="true"></div>
       </section>
+    </div>
+    <div id="iuCalTimeWheelHost" class="iu-calTimeWheelHost" hidden aria-hidden="true"></div>
+    <div id="iuCalendarDayOverlay" class="iu-calendar-day-overlay" hidden aria-hidden="true">
+      <div class="iu-calendar-day-header">
+        <div class="iu-calendar-day-title">
+          <div class="iu-day-name"></div>
+          <div class="iu-day-date"></div>
+        </div>
+        <button type="button" class="iu-day-close" aria-label="Zavřít">×</button>
+      </div>
+      <div class="iu-calendar-day-content"></div>
     </div>
 
     <div id="iuSilverChatOverlay" class="iuSilverChatOverlay" hidden aria-hidden="true">
@@ -4948,7 +4946,7 @@ style-src 'self' 'unsafe-inline' https:;
         display: flex;
         gap: 6px;
       }
-      #iuCalendarOverlay .iu-calHourSlot {
+      #iuCalendarOverlay .iu-calHourSlot, #iuCalendarDayOverlay .iu-calHourSlot {
         display: grid;
         grid-template-columns: 58px minmax(0, 1fr);
         gap: 8px;
@@ -4960,7 +4958,7 @@ style-src 'self' 'unsafe-inline' https:;
         max-width: 100%;
         box-sizing: border-box;
       }
-      #iuCalendarOverlay .iu-calHourSlot__btn {
+      #iuCalendarOverlay .iu-calHourSlot__btn, #iuCalendarDayOverlay .iu-calHourSlot__btn {
         margin: 0;
         padding: 8px 6px;
         border-radius: 10px;
@@ -4975,13 +4973,13 @@ style-src 'self' 'unsafe-inline' https:;
         width: 100%;
         box-sizing: border-box;
       }
-      #iuCalendarOverlay .iu-calHourSlot__body {
+      #iuCalendarOverlay .iu-calHourSlot__body, #iuCalendarDayOverlay .iu-calHourSlot__body {
         min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 6px;
       }
-      #iuCalendarOverlay .iu-calTimelineEv {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv {
         border-radius: 10px;
         border: 1px solid rgba(21, 128, 61, 0.14);
         background: #f8fafc;
@@ -4990,26 +4988,26 @@ style-src 'self' 'unsafe-inline' https:;
         flex-direction: column;
         gap: 6px;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__title {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__title {
         font-size: 15px;
         font-weight: 800;
         color: #0f172a;
         overflow-wrap: anywhere;
         word-break: break-word;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__meta {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__meta {
         font-size: 12px;
         font-weight: 700;
         color: rgba(15, 23, 42, 0.55);
       }
-      #iuCalendarOverlay .iu-calTimelineEv__actions {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__actions {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
         align-items: center;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__actions a,
-      #iuCalendarOverlay .iu-calTimelineEv__actions button {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__actions a,
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__actions button {
         margin: 0;
         padding: 6px 10px;
         border-radius: 10px;
@@ -5023,19 +5021,19 @@ style-src 'self' 'unsafe-inline' https:;
         text-decoration: none;
         box-sizing: border-box;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__actions a.iu-calTimelineEv__nav--disabled,
-      #iuCalendarOverlay .iu-calTimelineEv__actions button.iu-calTimelineEv__nav--disabled {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__actions a.iu-calTimelineEv__nav--disabled,
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__actions button.iu-calTimelineEv__nav--disabled {
         pointer-events: none;
         opacity: 0.45;
         cursor: not-allowed;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__note {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__note {
         font-size: 13px;
         color: #334155;
         overflow-wrap: anywhere;
         display: none;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__note.is-open {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__note.is-open {
         display: block;
       }
       @media (min-width: 1025px) {
@@ -5049,14 +5047,14 @@ style-src 'self' 'unsafe-inline' https:;
         #iuCalendarOverlay .iu-calendarOverlay__main {
           min-height: 0;
         }
-        #iuCalendarOverlay:not(.iu-calendarOverlay--mobileDay) .iu-calendarOverlay__viewRoot[data-view="month"] {
+        #iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view="month"] {
           flex: 1 1 auto;
           min-height: 0;
           overflow: auto;
           display: flex;
           flex-direction: column;
         }
-        #iuCalendarOverlay:not(.iu-calendarOverlay--mobileDay) .iu-calendarOverlay__viewRoot[data-view="month"] .iu-calGrid {
+        #iuCalendarOverlay .iu-calendarOverlay__viewRoot[data-view="month"] .iu-calGrid {
           flex: 1 1 auto;
           min-height: 0;
           align-content: start;
@@ -5102,84 +5100,6 @@ style-src 'self' 'unsafe-inline' https:;
           min-height: 0 !important;
           overflow: auto !important;
           -webkit-overflow-scrolling: touch;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel {
-          position: absolute;
-          inset: 0;
-          z-index: 6;
-          display: flex;
-          flex-direction: column;
-          min-height: 0;
-          background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 28%);
-          border-radius: 0;
-          box-shadow: none;
-          border-top: 0;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel[hidden] {
-          display: none !important;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__top {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 12px 8px;
-          border-bottom: 1px solid rgba(21, 128, 61, 0.14);
-          background: rgba(255, 255, 255, 0.92);
-          flex: 0 0 auto;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__headText {
-          flex: 1 1 auto;
-          min-width: 0;
-          text-align: center;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__weekday {
-          margin: 0;
-          font-size: 17px;
-          font-weight: 800;
-          color: #0f172a;
-          letter-spacing: -0.02em;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__dateLine {
-          margin: 2px 0 0;
-          font-size: 14px;
-          font-weight: 600;
-          color: rgba(15, 23, 42, 0.72);
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__holiday {
-          margin: 6px 0 0;
-          font-size: 12px;
-          font-weight: 800;
-          letter-spacing: 0.02em;
-          color: #92400e;
-          background: rgba(254, 243, 199, 0.85);
-          border: 1px solid rgba(245, 158, 11, 0.35);
-          border-radius: 999px;
-          padding: 4px 10px;
-          display: inline-block;
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          box-sizing: border-box;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__holiday[hidden] {
-          display: none !important;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayPanel__scroll {
-          flex: 1 1 auto;
-          min-height: 0;
-          overflow-x: hidden;
-          overflow-y: auto;
-          max-width: 100%;
-          -webkit-overflow-scrolling: touch;
-          padding: 10px 12px 16px;
-          touch-action: manipulation;
-        }
-        #iuCalendarOverlay .iu-calendarMobileDayHours {
-          display: grid;
-          gap: 8px;
-          margin-bottom: 8px;
-          max-width: 100%;
         }
       }
     </style>
@@ -5319,27 +5239,27 @@ style-src 'self' 'unsafe-inline' https:;
         background: rgba(22, 163, 74, 0.65);
         flex: 0 0 auto;
       }
-      #iuCalendarOverlay .iu-calHourSlot {
+      #iuCalendarOverlay .iu-calHourSlot, #iuCalendarDayOverlay .iu-calHourSlot {
         border-bottom-color: transparent !important;
       }
-      #iuCalendarOverlay .iu-calHourSlot--hasEvents {
+      #iuCalendarOverlay .iu-calHourSlot--hasEvents, #iuCalendarDayOverlay .iu-calHourSlot--hasEvents {
         grid-template-columns: minmax(0, 1fr) !important;
       }
-      #iuCalendarOverlay .iu-calHourSlot--hasEvents .iu-calHourSlot__body {
+      #iuCalendarOverlay .iu-calHourSlot--hasEvents .iu-calHourSlot__body, #iuCalendarDayOverlay .iu-calHourSlot--hasEvents .iu-calHourSlot__body {
         width: 100%;
         min-width: 0;
       }
-      #iuCalendarOverlay .iu-calHourSlot--hasEvents .iu-calTimelineEv {
+      #iuCalendarOverlay .iu-calHourSlot--hasEvents .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calHourSlot--hasEvents .iu-calTimelineEv {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
       }
-      #iuCalendarOverlay .iu-calHourSlot__body {
+      #iuCalendarOverlay .iu-calHourSlot__body, #iuCalendarDayOverlay .iu-calHourSlot__body {
         position: relative;
         flex: 1 1 auto;
         min-height: 0;
       }
-      #iuCalendarOverlay .iu-calSlotEmptyPad {
+      #iuCalendarOverlay .iu-calSlotEmptyPad, #iuCalendarDayOverlay .iu-calSlotEmptyPad {
         flex: 1 1 auto;
         min-height: 44px;
         border-radius: 10px;
@@ -5350,10 +5270,10 @@ style-src 'self' 'unsafe-inline' https:;
         touch-action: manipulation;
         align-self: stretch;
       }
-      #iuCalendarOverlay .iu-calHourSlot--sparse .iu-calSlotEmptyPad {
+      #iuCalendarOverlay .iu-calHourSlot--sparse .iu-calSlotEmptyPad, #iuCalendarDayOverlay .iu-calHourSlot--sparse .iu-calSlotEmptyPad {
         min-height: 52px;
       }
-      #iuCalendarOverlay .iu-calDayHolidayBanner {
+      #iuCalendarOverlay .iu-calDayHolidayBanner, #iuCalendarDayOverlay .iu-calDayHolidayBanner {
         flex: 0 0 auto;
         margin: 0 10px 10px;
         padding: 8px 12px;
@@ -5367,7 +5287,7 @@ style-src 'self' 'unsafe-inline' https:;
         box-sizing: border-box;
         max-width: calc(100% - 20px);
       }
-      #iuCalendarOverlay .iu-calInline {
+      #iuCalendarOverlay .iu-calInline, #iuCalendarDayOverlay .iu-calInline {
         border-radius: 12px;
         border: 1px solid rgba(21, 128, 61, 0.28);
         background: #fff;
@@ -5379,7 +5299,9 @@ style-src 'self' 'unsafe-inline' https:;
         max-width: 100%;
       }
       #iuCalendarOverlay .iu-calInline__inp,
-      #iuCalendarOverlay .iu-calInline__txt {
+      #iuCalendarDayOverlay .iu-calInline__inp,
+      #iuCalendarOverlay .iu-calInline__txt,
+      #iuCalendarDayOverlay .iu-calInline__txt {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
@@ -5388,11 +5310,11 @@ style-src 'self' 'unsafe-inline' https:;
         padding: 8px 10px;
         font-size: 15px;
       }
-      #iuCalendarOverlay .iu-calInline__txt {
+      #iuCalendarOverlay .iu-calInline__txt, #iuCalendarDayOverlay .iu-calInline__txt {
         min-height: 64px;
         resize: vertical;
       }
-      #iuCalendarOverlay .iu-calInline__timeBtn {
+      #iuCalendarOverlay .iu-calInline__timeBtn, #iuCalendarDayOverlay .iu-calInline__timeBtn {
         justify-self: start;
         border-radius: 10px;
         border: 1px solid rgba(21, 128, 61, 0.35);
@@ -5406,19 +5328,21 @@ style-src 'self' 'unsafe-inline' https:;
       }
       @media (max-width: 1024px) {
         #iuCalendarOverlay .iu-calInline__inp,
-        #iuCalendarOverlay .iu-calInline__txt {
+        #iuCalendarDayOverlay .iu-calInline__inp,
+        #iuCalendarOverlay .iu-calInline__txt,
+        #iuCalendarDayOverlay .iu-calInline__txt {
           font-size: 16px;
         }
-        #iuCalendarOverlay .iu-calInline__timeBtn {
+        #iuCalendarOverlay .iu-calInline__timeBtn, #iuCalendarDayOverlay .iu-calInline__timeBtn {
           font-size: 16px;
         }
       }
-      #iuCalendarOverlay .iu-calInline__actions {
+      #iuCalendarOverlay .iu-calInline__actions, #iuCalendarDayOverlay .iu-calInline__actions {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
       }
-      #iuCalendarOverlay .iu-calInline__actions button {
+      #iuCalendarOverlay .iu-calInline__actions button, #iuCalendarDayOverlay .iu-calInline__actions button {
         flex: 1 1 auto;
         min-height: 44px;
         border-radius: 10px;
@@ -5426,30 +5350,30 @@ style-src 'self' 'unsafe-inline' https:;
         cursor: pointer;
         touch-action: manipulation;
       }
-      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-save] {
+      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-save], #iuCalendarDayOverlay .iu-calInline__actions button[data-iu-cal-inline-save] {
         border: 1px solid #14532d;
         background: linear-gradient(180deg, #15803d, #166534);
         color: #fff;
       }
-      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-delete] {
+      #iuCalendarOverlay .iu-calInline__actions button[data-iu-cal-inline-delete], #iuCalendarDayOverlay .iu-calInline__actions button[data-iu-cal-inline-delete] {
         border: 1px solid rgba(185, 28, 28, 0.35);
         background: #fff;
         color: #b91c1c;
       }
-      #iuCalendarOverlay .iu-calTimelineEv {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv {
         position: relative;
       }
-      #iuCalendarOverlay .iu-calTimelineEv.is-next-upcoming {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv.is-next-upcoming {
         box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28) inset;
         background: rgba(236, 253, 245, 0.95);
       }
-      #iuCalendarOverlay .iu-calTimelineEv__row {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__row {
         display: flex;
         align-items: flex-start;
         gap: 8px;
         flex-wrap: wrap;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__main {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__main {
         flex: 1 1 auto;
         min-width: 0;
         text-align: left;
@@ -5459,12 +5383,12 @@ style-src 'self' 'unsafe-inline' https:;
         cursor: pointer;
         touch-action: manipulation;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__icons {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__icons {
         display: flex;
         gap: 4px;
         flex: 0 0 auto;
       }
-      #iuCalendarOverlay .iu-calEvIcon {
+      #iuCalendarOverlay .iu-calEvIcon, #iuCalendarDayOverlay .iu-calEvIcon {
         border: 1px solid rgba(21, 128, 61, 0.22);
         background: #fff;
         border-radius: 10px;
@@ -5476,22 +5400,22 @@ style-src 'self' 'unsafe-inline' https:;
         touch-action: manipulation;
         padding: 0;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__noteDrop {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__noteDrop {
         display: none;
         margin-top: 6px;
         font-size: 13px;
         color: #334155;
         overflow-wrap: anywhere;
       }
-      #iuCalendarOverlay .iu-calTimelineEv__noteDrop.is-open {
+      #iuCalendarOverlay .iu-calTimelineEv, #iuCalendarDayOverlay .iu-calTimelineEv__noteDrop.is-open {
         display: block;
       }
-      #iuCalendarOverlay .iu-calTimeWheelHost {
-        position: absolute;
+      #iuCalTimeWheelHost.iu-calTimeWheelHost {
+        position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 10050;
+        z-index: 10150;
         padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
         background: rgba(255, 255, 255, 0.98);
         border-top: 1px solid rgba(21, 128, 61, 0.2);
@@ -5499,7 +5423,7 @@ style-src 'self' 'unsafe-inline' https:;
         box-sizing: border-box;
       }
       @media (min-width: 1025px) {
-        #iuCalendarOverlay .iu-calTimeWheelHost {
+        #iuCalTimeWheelHost.iu-calTimeWheelHost {
           left: 50%;
           right: auto;
           width: min(100% - 32px, 400px);
@@ -5510,14 +5434,14 @@ style-src 'self' 'unsafe-inline' https:;
           box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
         }
       }
-      #iuCalendarOverlay .iu-calTimeWheel {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel {
         display: flex;
         flex-direction: column;
         gap: 12px;
         max-width: 520px;
         margin: 0 auto;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__picker {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__picker {
         position: relative;
         display: flex;
         flex-direction: row;
@@ -5526,7 +5450,7 @@ style-src 'self' 'unsafe-inline' https:;
         gap: 0;
         min-height: 200px;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__highlight {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__highlight {
         position: absolute;
         left: 8%;
         right: 8%;
@@ -5540,7 +5464,7 @@ style-src 'self' 'unsafe-inline' https:;
         pointer-events: none;
         z-index: 2;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__col {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__col {
         flex: 1 1 50%;
         max-width: 160px;
         height: 200px;
@@ -5552,12 +5476,12 @@ style-src 'self' 'unsafe-inline' https:;
         z-index: 1;
         scrollbar-width: thin;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__pad {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__pad {
         height: 80px;
         flex-shrink: 0;
         pointer-events: none;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__item {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__item {
         height: 40px;
         display: flex;
         align-items: center;
@@ -5568,7 +5492,7 @@ style-src 'self' 'unsafe-inline' https:;
         flex-shrink: 0;
         user-select: none;
       }
-      #iuCalendarOverlay .iu-calTimeWheel__apply {
+      #iuCalendarOverlay .iu-calTimeWheel, #iuCalTimeWheelHost .iu-calTimeWheel__apply {
         align-self: stretch;
         min-height: 44px;
         padding: 0 14px;
