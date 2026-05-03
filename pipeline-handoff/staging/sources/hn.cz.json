@@ -1,8 +1,39 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-03T07:50:29.941461Z",
+  "ingestedAt": "2026-05-03T08:25:05.382231Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Novináře nechávají zabít politici, mafiáni, oligarchové. Situace se stále zhoršuje, špatné časy dorazily i do střední Evropy",
+      "url": "https://nazory.hn.cz/c1-67873000-novinare-nechavaji-zabit-politici-mafiani-oligarchove-je-stale-hur",
+      "dt": "2026-05-03T07:57:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "dorazily",
+        "evropy",
+        "mafiáni",
+        "nechávají",
+        "novináře",
+        "oligarchové",
+        "politici",
+        "situace",
+        "stále",
+        "střední",
+        "zabít",
+        "zhoršuje",
+        "časy",
+        "špatné"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1159,34 +1190,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Tresty pro dceru Metrostavu jsou v pořádku, řekl Ústavní soud a smetl stížnosti stavebního giganta",
-      "url": "https://archiv.hn.cz/c1-67872310-tresty-pro-dceru-metrostavu-jsou-v-poradku-rekl-ustavni-soud-a-smetl-stiznosti-stavebniho-giganta",
-      "dt": "2026-04-29T17:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "dceru",
-        "giganta",
-        "metrostavu",
-        "pořádku",
-        "smetl",
-        "soud",
-        "stavebního",
-        "stížnosti",
-        "tresty",
-        "ústavní",
-        "řekl"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1197,11 +1200,11 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 183084,
+      "bytes": 184271,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 149,
+      "itemsParsed": 150,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1234,13 +1237,13 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T14:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T07:57:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
+          "sport": 3,
           "finance": 35,
-          "sport": 2,
           "zdravi": 1,
-          "zpravy": 2
+          "zpravy": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1252,6 +1255,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Novináře nechávají zabít politici, mafiáni, oligarchové. Situace se stále zhoršuje, špatné časy dorazily i do střední Evropy",
+            "publishedAt": "2026-05-03T07:57:00Z"
+          },
           {
             "title": "České Švýcarsko dál hoří, hasiči nasadí pět set mužů a sedm vrtulníků. Oheň již zasáhl kilometr čtvereční plochy",
             "publishedAt": "2026-05-02T14:58:00Z"
@@ -1279,10 +1286,6 @@
           {
             "title": "Akcie zbrojařské CSG se obchodují za méně než 20 eur. Může to být dobrá investice, nebo je lepší se jí vyhnout?",
             "publishedAt": "2026-04-30T16:04:00Z"
-          },
-          {
-            "title": "Londýn se snaží obnovit svou pověst finanční velmoci. Tamní burza soupeří s USA i EU, nové firmy hledá také v Česku",
-            "publishedAt": "2026-04-30T15:08:00Z"
           }
         ]
       }

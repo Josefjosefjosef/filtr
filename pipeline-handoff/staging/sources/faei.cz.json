@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-03T07:50:29.941461Z",
+  "ingestedAt": "2026-05-03T08:25:05.382231Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trhy zůstávají nervózní, zákazníky ochrání fixace",
+      "url": "https://profitonline.cz/trhy-zustavaji-nervozni-zakazniky-ochrani-fixace/",
+      "dt": "2026-05-03T08:00:39Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "fixace",
+        "nervózní",
+        "ochrání",
+        "trhy",
+        "zákazníky",
+        "zůstávají"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -259,31 +282,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Strašák jménem dvouciferná inflace. Máme se jí kvůli Hormuzu bát?",
-      "url": "https://profitonline.cz/strasak-jmenem-dvouciferna-inflace-mame-se-ji-kvuli-hormuzu-bat/",
-      "dt": "2026-04-30T14:00:07Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "bát",
-        "dvouciferná",
-        "hormuzu",
-        "inflace",
-        "jménem",
-        "kvůli",
-        "máme",
-        "strašák"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -294,7 +292,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18153,
+      "bytes": 18173,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -331,7 +329,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-03T06:00:52Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T08:00:39Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -348,6 +346,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trhy zůstávají nervózní, zákazníky ochrání fixace",
+            "publishedAt": "2026-05-03T08:00:39Z"
+          },
           {
             "title": "Co přinese odchod Emirátů z OPEC?",
             "publishedAt": "2026-05-03T06:00:52Z"
@@ -375,10 +377,6 @@
           {
             "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
             "publishedAt": "2026-05-01T10:00:51Z"
-          },
-          {
-            "title": "Blízkovýchodní konflikt zvyšuje inflaci. Nejen v Evropě",
-            "publishedAt": "2026-05-01T07:00:03Z"
           }
         ]
       }
