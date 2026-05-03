@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-03T02:46:23.209037Z",
+  "ingestedAt": "2026-05-03T03:20:13.321885Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Horší zimy si vybírají investiční daň, provozovatelé skiareálů si připravili rekordní balík",
+      "url": "https://www.e15.cz/byznys/horsi-zimy-si-vybiraji-investicni-dan-provozovatele-skiarealu-si-pripravili-rekordni-balik-1432526",
+      "dt": "2026-05-03T03:00:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "balík",
+        "daň",
+        "horší",
+        "investiční",
+        "provozovatelé",
+        "připravili",
+        "rekordní",
+        "skiareálů",
+        "vybírají",
+        "zimy"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1052,31 +1079,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Daň z nemovitosti 2026: Možná zaplatíte víc, než čekáte",
-      "url": "https://www.e15.cz/finexpert/danove-priznani/dan-z-nemovitosti-2026-mozna-zaplatite-vic-nez-cekate-1429593",
-      "dt": "2026-04-30T07:00:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "2026",
-        "daň",
-        "možná",
-        "nemovitosti",
-        "než",
-        "víc",
-        "zaplatíte",
-        "čekáte"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1087,11 +1089,11 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 54357,
+      "bytes": 55557,
       "reason": "",
       "bozo": false,
       "bozoException": "",
-      "itemsParsed": 49,
+      "itemsParsed": 50,
       "itemsKept": 40,
       "accepted": 40,
       "status": "OK",
@@ -1124,7 +1126,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:28:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T03:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 34,
@@ -1141,6 +1143,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Horší zimy si vybírají investiční daň, provozovatelé skiareálů si připravili rekordní balík",
+            "publishedAt": "2026-05-03T03:00:00Z"
+          },
           {
             "title": "Berkshire Hathaway ve formě. Gigant Warrena Buffetta zdvojnásobil zisk",
             "publishedAt": "2026-05-02T15:28:00Z"
@@ -1168,10 +1174,6 @@
           {
             "title": "Mzdy na Slovensku 2026: Bratislava překonává většinu českých krajů, reálný výdělek ale srážejí nové daně",
             "publishedAt": "2026-05-02T08:00:00Z"
-          },
-          {
-            "title": "Nejnižší zaměstnanost od roku 2020. Německá ekonomika doplácí na konflikt na Blízkém východě",
-            "publishedAt": "2026-05-02T04:30:00Z"
           }
         ]
       }
