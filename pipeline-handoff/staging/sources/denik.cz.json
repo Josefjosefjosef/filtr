@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T20:50:01.036354Z",
+  "ingestedAt": "2026-05-03T22:05:06.733536Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na výletní lodi v Atlantiku zemřeli tři lidé, u jednoho našli hantavirus",
+      "url": "https://www.denik.cz/ze_sveta/vyletni-lod-hantavirus.html",
+      "dt": "2026-05-03T21:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "atlantiku",
+        "hantavirus",
+        "jednoho",
+        "lidé",
+        "lodi",
+        "našli",
+        "tři",
+        "výletní",
+        "zemřeli"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -614,33 +640,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Trump zopakoval, že stáhne vojska z Německa. Chce větší omezení než Pentagon",
-      "url": "https://www.denik.cz/staty-eu/donald-trump-nemecko-stazeni-vojsk-cla.html",
-      "dt": "2026-05-03T04:38:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "chce",
-        "než",
-        "německa",
-        "omezení",
-        "pentagon",
-        "stáhne",
-        "trump",
-        "vojska",
-        "větší",
-        "zopakoval"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -651,7 +650,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 30032,
+      "bytes": 30059,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -688,7 +687,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T18:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T21:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 25
@@ -703,6 +702,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na výletní lodi v Atlantiku zemřeli tři lidé, u jednoho našli hantavirus",
+            "publishedAt": "2026-05-03T21:00:00Z"
+          },
           {
             "title": "Požár v Českém Švýcarsku: Část plochy uhašena, pomůžou vrtulníky ze Slovenska",
             "publishedAt": "2026-05-03T18:00:00Z"
@@ -730,10 +733,6 @@
           {
             "title": "Babiš se setkal se Zelenským, poprvé od opětovného nástupu do čela vlády",
             "publishedAt": "2026-05-03T15:40:00Z"
-          },
-          {
-            "title": "Premiéra Leo Expressu s vozy Talgo skončila sérií závad a obřím zpožděním",
-            "publishedAt": "2026-05-03T15:05:00Z"
           }
         ]
       }

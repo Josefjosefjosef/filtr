@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-03T20:50:01.036354Z",
+  "ingestedAt": "2026-05-03T22:05:06.733536Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Smrt na výletní lodi: V Atlantiku zabíjel virus s až 50% úmrtností, na který neexistuje lék",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/lod-atlantik-hantavirus-who/",
+      "dt": "2026-05-03T20:50:40Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "atlantiku",
+        "lodi",
+        "lék",
+        "neexistuje",
+        "smrt",
+        "virus",
+        "výletní",
+        "zabíjel",
+        "úmrtností"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -245,34 +271,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Chcete moderní lék na rakovinu? Musíte do USA, v Evropě se ho prodávat nevyplatí, upozorňuje firma",
-      "url": "https://www.zdravotnickydenik.cz/2026/05/moderni-lek-rakovina-usa-evropa-firma/",
-      "dt": "2026-05-01T05:00:00Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "chcete",
-        "evropě",
-        "firma",
-        "lék",
-        "moderní",
-        "musíte",
-        "nevyplatí",
-        "prodávat",
-        "rakovinu",
-        "upozorňuje",
-        "usa"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +281,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 98263,
+      "bytes": 96346,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +318,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T14:19:46Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T20:50:40Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -336,6 +334,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Smrt na výletní lodi: V Atlantiku zabíjel virus s až 50% úmrtností, na který neexistuje lék",
+            "publishedAt": "2026-05-03T20:50:40Z"
+          },
           {
             "title": "Černochová hrozí Babišovi žalobou: Lži o zmanipulované soutěži nehodlám tolerovat",
             "publishedAt": "2026-05-03T14:19:46Z"
@@ -363,10 +365,6 @@
           {
             "title": "Nadbytečné kapacity a rostoucí náklady. Souběhy úvazků lékařů budí obavy pojišťoven",
             "publishedAt": "2026-05-02T07:00:00Z"
-          },
-          {
-            "title": "Babiš chce sestry z Uzbekistánu. Připravují se na práci v Německu, tak proč ne i u nás, ptá se",
-            "publishedAt": "2026-05-01T16:32:02Z"
           }
         ]
       }

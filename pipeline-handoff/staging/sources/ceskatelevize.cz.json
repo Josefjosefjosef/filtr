@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-03T20:50:01.036354Z",
+  "ingestedAt": "2026-05-03T22:05:06.733536Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "USA začnou v pondělí doprovázet lodě uvízlé v Perském zálivu, oznámil Trump",
+      "url": "https://ct24.ceskatelevize.cz/clanek/svet/usa-zacnou-v-pondeli-doprovazet-lode-uvizle-v-perskem-zalivu-oznamil-trump-373057",
+      "dt": "2026-05-03T21:31:35Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "doprovázet",
+        "lodě",
+        "oznámil",
+        "perském",
+        "pondělí",
+        "trump",
+        "usa",
+        "uvízlé",
+        "začnou",
+        "zálivu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -724,27 +751,25 @@
       "_dt_serialized": true
     },
     {
-      "section": "aktualne",
+      "section": "sport",
       "contentType": "article",
-      "title": "Zelenskyj pozval Fica do Kyjeva, ten slíbil podporu ukrajinské cestě do EU",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/zelenskyj-pozval-fica-do-kyjeva-ten-slibil-podporu-ukrajinske-ceste-do-eu-373027",
-      "dt": "2026-05-02T12:31:05Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
+      "title": "Real uspěl nad Espaňolem a oddálil barcelonské titulové oslavy",
+      "url": "https://sport.ceskatelevize.cz/clanek/fotbal/real-uspel-nad-espanolem-a-oddalil-barcelonske-titulove-oslavy-156591",
+      "dt": "2026-05-03T21:26:26Z",
+      "media_raw": "ČT sport",
+      "media_norm": "ČT sport",
       "tokens": [
-        "cestě",
-        "fica",
-        "kyjeva",
-        "podporu",
-        "pozval",
-        "slíbil",
-        "ten",
-        "ukrajinské",
-        "zelenskyj"
+        "barcelonské",
+        "espaňolem",
+        "oddálil",
+        "oslavy",
+        "real",
+        "titulové",
+        "uspěl"
       ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_ctsport",
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
@@ -932,17 +957,21 @@
     {
       "section": "sport",
       "contentType": "article",
-      "title": "AC Milán v deseti nestačil na Sassuolo, Juventus se trápil s Veronou",
+      "title": "Inter slaví 21. titul v Serii A. AC Milán v deseti nestačil na Sassuolo, Juventus se trápil s Veronou",
       "url": "https://sport.ceskatelevize.cz/clanek/fotbal/ac-milan-v-deseti-nestacil-a-padl-na-hristi-sassuola-156583",
       "dt": "2026-05-03T15:24:36Z",
       "media_raw": "ČT sport",
       "media_norm": "ČT sport",
       "tokens": [
         "deseti",
+        "inter",
         "juventus",
         "milán",
         "nestačil",
         "sassuolo",
+        "serii",
+        "slaví",
+        "titul",
         "trápil",
         "veronou"
       ],
@@ -1485,29 +1514,6 @@
       "sourceDisplayWeight": 1.2,
       "sourceBatchKey": "ceskatelevize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Havlena bude na Pražském maratonu obhajovat český titul",
-      "url": "https://sport.ceskatelevize.cz/clanek/atletika/havlena-bude-na-prazskem-maratonu-obhajovat-cesky-titul-156548",
-      "dt": "2026-05-02T16:00:00Z",
-      "media_raw": "ČT sport",
-      "media_norm": "ČT sport",
-      "tokens": [
-        "havlena",
-        "maratonu",
-        "obhajovat",
-        "pražském",
-        "titul",
-        "český"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_ctsport",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1518,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 42847,
+      "bytes": 42974,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1578,7 +1584,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T19:43:45Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T21:31:35Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "zpravy": 26,
@@ -1595,6 +1601,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "USA začnou v pondělí doprovázet lodě uvízlé v Perském zálivu, oznámil Trump",
+            "publishedAt": "2026-05-03T21:31:35Z"
+          },
           {
             "title": "Spor s Trumpem za stažením vojáků USA z Německa nestojí, věří Merz",
             "publishedAt": "2026-05-03T19:43:45Z"
@@ -1622,10 +1632,6 @@
           {
             "title": "Exploze táboráku zranila v Rakousku pět dětí. Pod ohništěm byly výbušniny",
             "publishedAt": "2026-05-03T14:31:53Z"
-          },
-          {
-            "title": "Bez peněz se obrana zajistit nedá, upozornili Nečas s Rusnokem",
-            "publishedAt": "2026-05-03T13:55:27Z"
           }
         ]
       }
@@ -1637,7 +1643,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://sport.ceskatelevize.cz/rss",
-      "bytes": 41103,
+      "bytes": 41205,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1674,7 +1680,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T19:27:47Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T21:26:26Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -1689,6 +1695,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Real uspěl nad Espaňolem a oddálil barcelonské titulové oslavy",
+            "publishedAt": "2026-05-03T21:26:26Z"
+          },
           {
             "title": "Lvi srovnali sérii, o šampionech tak rozhodne až pátý duel",
             "publishedAt": "2026-05-03T19:27:47Z"
@@ -1716,10 +1726,6 @@
           {
             "title": "Mohuč uloupila důležité body v St. Pauli, zachránil se i Mönchengladbach",
             "publishedAt": "2026-05-03T16:04:16Z"
-          },
-          {
-            "title": "AC Milán v deseti nestačil na Sassuolo, Juventus se trápil s Veronou",
-            "publishedAt": "2026-05-03T15:24:36Z"
           }
         ]
       }
@@ -1731,7 +1737,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77194,
+      "bytes": 77237,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

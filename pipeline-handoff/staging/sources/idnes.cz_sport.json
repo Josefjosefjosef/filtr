@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T20:50:01.036354Z",
+  "ingestedAt": "2026-05-03T22:05:06.733536Z",
   "items": [
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Inter slaví 21. titul v italské lize. Po výhře nad Parmou má nedostižný náskok",
+      "url": "https://www.idnes.cz/fotbal/zahranici/inter-milan-titul-italska-liga-parma-chivu-thuram-mchitarjan.A260503_225137_fot_zahranici_kazdt",
+      "dt": "2026-05-03T21:12:49Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "inter",
+        "italské",
+        "lize",
+        "nedostižný",
+        "náskok",
+        "parmou",
+        "slaví",
+        "titul",
+        "výhře"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -768,32 +794,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "„Hra, co měla koule“. Bronzová osmnáctka jen potvrzuje hokejový posun. A jak dál?",
-      "url": "https://www.idnes.cz/hokej/reprezentace/cesko-ms-do-18-let-bronz-pribeh-tomajko-tomek-ohlas.A260503_124547_reprezentace_huda",
-      "dt": "2026-05-03T12:48:00Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "bronzová",
-        "hokejový",
-        "hra",
-        "jen",
-        "koule",
-        "měla",
-        "osmnáctka",
-        "posun",
-        "potvrzuje"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -804,7 +804,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45632,
+      "bytes": 45395,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -841,7 +841,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T20:36:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T21:12:49Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -856,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Inter slaví 21. titul v italské lize. Po výhře nad Parmou má nedostižný náskok",
+            "publishedAt": "2026-05-03T21:12:49Z"
+          },
           {
             "title": "Snad se bude hrát víc než 36 minut. Kouč Priske si rýpl do způsobu hry Slavie",
             "publishedAt": "2026-05-03T20:36:00Z"
@@ -883,10 +887,6 @@
           {
             "title": "Velká cena Miami formule 1 2026: program, výsledky, zajímavosti",
             "publishedAt": "2026-05-03T19:33:00Z"
-          },
-          {
-            "title": "Rulík staví tým pro MS. Šance pro mladíky a nová jména, omluvenek z NHL přibývá",
-            "publishedAt": "2026-05-03T19:30:00Z"
           }
         ]
       }
