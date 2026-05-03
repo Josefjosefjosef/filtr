@@ -35638,11 +35638,133 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     }
 
+    function queryHayPassHardGates(queryNorm, hayNorm) {
+      const qn = String(queryNorm || "").trim();
+      const hn = String(hayNorm || "").trim();
+      if (!qn) return true;
+      const numRe = /\d{2,}/g;
+      let numHit;
+      const seenNums = {};
+      while ((numHit = numRe.exec(qn)) !== null) {
+        const d = numHit[0];
+        if (seenNums[d]) continue;
+        seenNums[d] = 1;
+        if (hn.indexOf(d) < 0) return false;
+      }
+      const weakNav = {
+        najdi: 1,
+        vyhledej: 1,
+        hledej: 1,
+        ukaz: 1,
+        ukazu: 1,
+        zobraz: 1,
+        zobrazit: 1,
+        co: 1,
+        mam: 1,
+        mate: 1,
+        kde: 1,
+        jake: 1,
+        jakou: 1,
+        jaky: 1,
+        jaka: 1,
+        kdy: 1,
+        kdo: 1,
+        muzu: 1,
+        muzes: 1,
+        cim: 1,
+        tim: 1,
+        pro: 1,
+        na: 1,
+        ve: 1,
+        v: 1,
+        zda: 1,
+        to: 1,
+        ze: 1,
+        si: 1,
+        mi: 1,
+        ma: 1,
+        mas: 1,
+        me: 1,
+        te: 1,
+        ta: 1,
+        jak: 1,
+        neco: 1,
+        nejak: 1,
+        nejaka: 1,
+        nejaky: 1,
+        neexistuje: 1,
+        nebo: 1,
+        nic: 1,
+        jen: 1,
+        jsem: 1,
+        pak: 1,
+        tomu: 1,
+        tom: 1,
+        tebe: 1,
+        ty: 1,
+        tady: 1,
+        stale: 1,
+        melo: 1,
+        mely: 1,
+        mela: 1,
+        mit: 1
+      };
+      const commonStorage = {
+        objednavka: 1,
+        objednavky: 1,
+        objednavku: 1,
+        objednavce: 1,
+        objednavkou: 1,
+        objednat: 1,
+        poznamka: 1,
+        poznamky: 1,
+        poznamku: 1,
+        poznamce: 1,
+        poznamkou: 1,
+        ukol: 1,
+        ukoly: 1,
+        ukolu: 1,
+        ukolem: 1,
+        pin: 1,
+        kod: 1,
+        heslo: 1,
+        cislo: 1,
+        cisla: 1,
+        cislem: 1,
+        telefon: 1,
+        tel: 1,
+        kartu: 1,
+        karty: 1,
+        karta: 1,
+        karte: 1,
+        barva: 1,
+        barvu: 1,
+        barvy: 1,
+        barve: 1,
+        barvou: 1,
+        auto: 1,
+        auta: 1,
+        autu: 1,
+        autem: 1
+      };
+      const parts = qn.split(/\s+/);
+      for (let pi = 0; pi < parts.length; pi++) {
+        let w = parts[pi];
+        if (!w) continue;
+        if (w.length < 4) continue;
+        if (/^\d+$/.test(w)) continue;
+        if (weakNav[w] || commonStorage[w]) continue;
+        if (hn.indexOf(w) < 0) return false;
+      }
+      return true;
+    }
+
     function scoreHaystack(hay, toks, fullNorm) {
       const h = iuSilverNormalizeForSearch(hay);
       if (!h) return 0;
       let sc = 0;
       const fq = String(fullNorm || "").trim();
+      if (fq && !queryHayPassHardGates(fq, h)) return 0;
       if (fq.length >= 3 && h.indexOf(fq) >= 0) sc += 120;
       const hWords = h.split(/\s+/).filter(function (x) {
         return x.length >= 2;
