@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-03T04:25:27.069421Z",
+  "ingestedAt": "2026-05-03T05:00:29.197154Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Extrémní auta neznámé značky koupíte v Česku. MHero si za terénní hrátky nechá zaplatit",
+      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/extremni-auta-nezname-znacky-koupite-v-cesku-mhero-si-za-terenni-hratky-necha-zaplatit/r~aaa299442b7927592667d4a84390ba99/",
+      "dt": "2026-05-03T04:32:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "auta",
+        "extrémní",
+        "hrátky",
+        "koupíte",
+        "mhero",
+        "nechá",
+        "neznámé",
+        "terénní",
+        "zaplatit",
+        "značky",
+        "česku"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -506,33 +534,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Česko - Lotyšsko 4:1. Medaile po 12 letech je realitou, Češi dali dva góly do prázdné",
-      "url": "https://sport.aktualne.cz/hokej/cesko-lotyssko-velky-uspech-porad-na-dosah-cesi-chteji-prvni-medaili-po-12-letech/r~aaa290cec675afd230124cb89852f7d7/",
-      "dt": "2026-05-02T12:16:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "dali",
-        "dva",
-        "góly",
-        "letech",
-        "lotyšsko",
-        "medaile",
-        "prázdné",
-        "realitou",
-        "česko",
-        "češi"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -543,7 +544,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21656,
+      "bytes": 21950,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -580,12 +581,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T03:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T04:32:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "finance": 2,
+          "finance": 3,
           "zpravy": 6,
-          "sport": 12
+          "sport": 11
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -597,6 +598,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Extrémní auta neznámé značky koupíte v Česku. MHero si za terénní hrátky nechá zaplatit",
+            "publishedAt": "2026-05-03T04:32:00Z"
+          },
           {
             "title": "Nejistá sezona. Svět čeká na to, kdy se ropná krize promítne do cen letenek",
             "publishedAt": "2026-05-03T03:30:00Z"
@@ -624,10 +629,6 @@
           {
             "title": "Slavia sahá po titulu, na Chorého v Liberci přiletěla lahev. Ostravská ostuda nekončí",
             "publishedAt": "2026-05-02T15:07:00Z"
-          },
-          {
-            "title": "Schickův galakoncert. Čech hattrickem složil svůj bývalý tým a sahá po Lize mistrů",
-            "publishedAt": "2026-05-02T18:23:00Z"
           }
         ]
       }
