@@ -35721,6 +35721,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         poznamku: 1,
         poznamce: 1,
         poznamkou: 1,
+        poznamkach: 1,
+        poznamkam: 1,
         ukol: 1,
         ukoly: 1,
         ukolu: 1,
@@ -35819,6 +35821,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         confidence: results.length ? 0.9 : 0,
         answerType: results.length ? "list" : "none",
         source: "local_browser_only"
+      };
+    }
+
+    if (listMode === "notes_all" && (target === "notes" || target === "all")) {
+      const arrN = Array.isArray(notes) ? notes : [];
+      const actN = [];
+      for (let ni = 0; ni < arrN.length; ni++) {
+        const nn = arrN[ni];
+        if (!nn || nn.deleted) continue;
+        actN.push(nn);
+      }
+      actN.sort(function (a, b) {
+        return (Number(b.updatedAt || 0) || 0) - (Number(a.updatedAt || 0) || 0);
+      });
+      for (let nj = 0; nj < actN.length; nj++) {
+        pushRes("note", 50 - nj * 0.1, { note: actN[nj] });
+      }
+      return {
+        query: rawQ,
+        normalizedQuery: normalizedQuery,
+        target: target,
+        results: results,
+        bestResult: results.length ? results[0] : null,
+        confidence: results.length ? 0.9 : 0,
+        answerType: results.length ? "note" : "none",
+        source: "local_browser_only",
+        evalNow: now
       };
     }
 
@@ -36124,6 +36153,43 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         clarificationText: "",
         draft: empty,
         silverSearchResult: sr
+      };
+    }
+    const listNotes =
+      /\bco\s+m[aá]m\s+v\s+pozn[aá]mk/.test(f) ||
+      /\bjak[eéy]\s+m[aá]m\s+pozn[aá]mk/.test(f) ||
+      /\bco\s+je\s+v\s+pozn[aá]mk/.test(f) ||
+      /^\s*ukaž\s+pozn[aá]mk/i.test(String(raw || "").trim()) ||
+      /^\s*ukaz\s+pozn[aá]mk/i.test(String(raw || "").trim()) ||
+      /^\s*vypiš\s+pozn[aá]mk/i.test(String(raw || "").trim()) ||
+      /^\s*vypis\s+pozn[aá]mk/i.test(String(raw || "").trim());
+    if (listNotes) {
+      const srN = iuSilverSearchLocalData("", {
+        target: "notes",
+        now: now,
+        listMode: "notes_all",
+        getEventsSnapshot: ctx && ctx.getEventsSnapshot,
+        getTasksSnapshot: ctx && ctx.getTasksSnapshot,
+        getNotesSnapshot: ctx && ctx.getNotesSnapshot,
+        rawFoldedHint: f
+      });
+      const ansN = iuSilverBuildAnswerFromSearch(srN);
+      return {
+        normalizedIntent: "notes.read",
+        targetContainer: "none",
+        processingState: "READ_OK",
+        clarificationReason: null,
+        futureIntentCandidate: null,
+        readQuery: { silverReadSearch: true, target: "notes", listMode: "notes_all" },
+        readAnswer: { message: ansN.message, silverSearch: srN },
+        extractedFields: {},
+        missingFields: [],
+        ambiguousFields: [],
+        userFacingSummary: ansN.message,
+        assistantLead: ansN.message,
+        clarificationText: "",
+        draft: empty,
+        silverSearchResult: srN
       };
     }
     const q = iuSilverReadSearchExtractQuery(raw, folded, target);
