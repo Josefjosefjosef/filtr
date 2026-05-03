@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "e15.cz",
-  "ingestedAt": "2026-05-03T19:06:15.948182Z",
+  "ingestedAt": "2026-05-03T19:40:11.178296Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Mír na Ukrajině? Babiš po schůzce v Jerevanu mluví o roli Turecka a Střední Asie",
+      "url": "https://www.e15.cz/valka-na-ukrajine/mir-na-ukrajine-babis-po-schuzce-v-jerevanu-mluvi-o-roli-turecka-a-stredni-asie-1432542",
+      "dt": "2026-05-03T19:11:00Z",
+      "media_raw": "E15",
+      "media_norm": "E15",
+      "tokens": [
+        "asie",
+        "babiš",
+        "jerevanu",
+        "mluví",
+        "mír",
+        "roli",
+        "schůzce",
+        "střední",
+        "turecka",
+        "ukrajině"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_e15",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "e15.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1071,33 +1098,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "e15.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "ČEZ posiluje jadernou divizi. Koupil firmu, který se má podílet na nových blocích v Dukovanech",
-      "url": "https://www.e15.cz/byznys/cez-posiluje-jadernou-divizi-koupil-firmu-ktery-se-ma-podilet-na-novych-blocich-v-dukovanech-1432509",
-      "dt": "2026-04-30T10:20:00Z",
-      "media_raw": "E15",
-      "media_norm": "E15",
-      "tokens": [
-        "blocích",
-        "divizi",
-        "dukovanech",
-        "firmu",
-        "jadernou",
-        "koupil",
-        "nových",
-        "podílet",
-        "posiluje",
-        "čez"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_e15",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "e15.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1108,7 +1108,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.e15.cz/rss",
-      "bytes": 56158,
+      "bytes": 56299,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1145,7 +1145,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T15:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T19:11:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "finance": 33,
@@ -1162,6 +1162,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Mír na Ukrajině? Babiš po schůzce v Jerevanu mluví o roli Turecka a Střední Asie",
+            "publishedAt": "2026-05-03T19:11:00Z"
+          },
           {
             "title": "Česko dostane účet za Írán, oblíbený diskont zavírá prodejny a větší hrozba pro práci než AI",
             "publishedAt": "2026-05-03T15:40:00Z"
@@ -1189,10 +1193,6 @@
           {
             "title": "Horší zimy si vybírají investiční daň, provozovatelé skiareálů si připravili rekordní balík",
             "publishedAt": "2026-05-03T03:00:00Z"
-          },
-          {
-            "title": "Berkshire Hathaway ve formě. Gigant Warrena Buffetta zdvojnásobil zisk",
-            "publishedAt": "2026-05-02T15:28:00Z"
           }
         ]
       }
