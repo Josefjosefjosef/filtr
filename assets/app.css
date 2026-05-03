@@ -21711,3 +21711,87 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   touch-action: manipulation;
   flex-shrink: 0;
 }
+
+/* P0 denní kalendář: uložená událost = stejný grid jako slot (čas vlevo, obsah vpravo) — pouze guard .iu-event-row + .iu-has-event */
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 8px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-time,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-time {
+  min-width: 64px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #e6f4ea;
+  color: #166534;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.1;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event {
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #f8faf9;
+  border: 1px solid #e2e8f0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event.is-next-upcoming .iu-cal-event,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event.is-next-upcoming .iu-cal-event {
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28) inset;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-open,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-open {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  align-self: stretch;
+  min-width: 0;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-title,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-actions,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+#iuCalendarOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-note,
+#iuCalendarDayOverlay .iu-cal-row.iu-event-row.iu-has-event .iu-cal-event-note {
+  font-size: 13px;
+  color: #334155;
+  overflow-wrap: anywhere;
+}
