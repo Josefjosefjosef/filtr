@@ -1,8 +1,36 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-03T12:31:21.524579Z",
+  "ingestedAt": "2026-05-03T13:50:09.730979Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "Hledáš LAST MINUTE letenky + pobyty? Tady jsou nejlepší nabídky na nadcházející dny a týdny",
+      "url": "https://pelipecky.cz/last-minute-pelikan-letenky-dovolene/",
+      "dt": "2026-05-03T12:30:00Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "dny",
+        "hledáš",
+        "last",
+        "letenky",
+        "minute",
+        "nabídky",
+        "nadcházející",
+        "nejlepší",
+        "pobyty",
+        "tady",
+        "týdny"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -215,33 +243,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "NABÍDKA DNE: Poznávací zájezd na Srí Lanku s programem, ubytováním i dopravou od 54 790 Kč",
-      "url": "https://pelipecky.cz/poznavaci-zajezd-na-sri-lanku-s-programem/",
-      "dt": "2026-04-21T18:22:37Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "790",
-        "dne",
-        "dopravou",
-        "lanku",
-        "nabídka",
-        "poznávací",
-        "programem",
-        "srí",
-        "ubytováním",
-        "zájezd"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -252,7 +253,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 118672,
+      "bytes": 135079,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -289,7 +290,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T07:22:44Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T12:30:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -304,6 +305,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Hledáš LAST MINUTE letenky + pobyty? Tady jsou nejlepší nabídky na nadcházející dny a týdny",
+            "publishedAt": "2026-05-03T12:30:00Z"
+          },
           {
             "title": "POBYT DNE: Mallorca z Prahy ve 4* hotelu s polopenzí od 13 690 Kč",
             "publishedAt": "2026-05-03T07:22:44Z"
@@ -331,10 +336,6 @@
           {
             "title": "Thajsko od 10 990 Kč: Bangkok, Chiang Mai a Phuket včetně zavazadla",
             "publishedAt": "2026-04-22T11:41:49Z"
-          },
-          {
-            "title": "Letenky už levnější nebudou: rezervuj si TOP destinace od… od 690 Kč",
-            "publishedAt": "2026-04-22T10:59:32Z"
           }
         ]
       }

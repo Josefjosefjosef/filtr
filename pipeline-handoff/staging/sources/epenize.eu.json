@@ -1,8 +1,30 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "epenize.eu",
-  "ingestedAt": "2026-05-03T12:31:21.524579Z",
+  "ingestedAt": "2026-05-03T13:50:09.730979Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Czexit. Mudrování Vondráčka o vystoupení z EU je trapné",
+      "url": "https://www.epenize.eu/czexit-mudrovani-vondracka-o-vystoupeni-z-eu-je-trapne/",
+      "dt": "2026-05-03T12:46:11Z",
+      "media_raw": "ePeníze",
+      "media_norm": "ePeníze",
+      "tokens": [
+        "czexit",
+        "mudrování",
+        "trapné",
+        "vondráčka",
+        "vystoupení"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_epenize",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "epenize.eu",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -470,30 +492,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "epenize.eu",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Best in nafta. Fialovo zbytečné plivání na sociální síti",
-      "url": "https://www.epenize.eu/best-in-nafta-fialovo-zbytecne-plivani-na-socialni-siti/",
-      "dt": "2026-04-23T10:56:35Z",
-      "media_raw": "ePeníze",
-      "media_norm": "ePeníze",
-      "tokens": [
-        "best",
-        "fialovo",
-        "nafta",
-        "plivání",
-        "sociální",
-        "síti",
-        "zbytečné"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_epenize",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "epenize.eu",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -504,7 +502,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.epenize.eu/feed/",
-      "bytes": 102872,
+      "bytes": 102935,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -541,7 +539,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T23:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T12:46:11Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "finance": 18,
@@ -557,6 +555,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Czexit. Mudrování Vondráčka o vystoupení z EU je trapné",
+            "publishedAt": "2026-05-03T12:46:11Z"
+          },
           {
             "title": "Newsom se snaží porazit Trumpa tím, že ho kopíruje. Průzkumy mu tleskají",
             "publishedAt": "2026-05-02T23:00:00Z"
@@ -584,10 +586,6 @@
           {
             "title": "Bývalý ředitel FBI dal na Instagram mušle: MAGA v tom vidí rozkaz k vraždě",
             "publishedAt": "2026-04-29T23:00:38Z"
-          },
-          {
-            "title": "Trefný Fiala na síti: Neoficiální klub přátel Kremlu- Rajchl, Zeman, Hamplová",
-            "publishedAt": "2026-04-29T14:13:17Z"
           }
         ]
       }

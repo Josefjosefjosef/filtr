@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-03T12:31:21.524579Z",
+  "ingestedAt": "2026-05-03T13:50:09.730979Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Babiš plánuje akci v přestrojení: V hledáčku má nelegální drogové obchody v centru Prahy",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/babis-v-prestrojeni-drogove-obchody-s-thc-v-praze-musi-zavrit/",
+      "dt": "2026-05-03T13:31:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "akci",
+        "babiš",
+        "centru",
+        "drogové",
+        "hledáčku",
+        "nelegální",
+        "obchody",
+        "plánuje",
+        "prahy",
+        "přestrojení"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -247,32 +274,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Blamáž na Slovensku: Stavbu vojenské nemocnice za miliardy zastavili, hrozí demolice",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/stavba-nemocnice-presov-prerusena/",
-      "dt": "2026-04-30T13:18:21Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "blamáž",
-        "demolice",
-        "hrozí",
-        "miliardy",
-        "nemocnice",
-        "slovensku",
-        "stavbu",
-        "vojenské",
-        "zastavili"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +284,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 96564,
+      "bytes": 98982,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -320,7 +321,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:49:12Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T13:31:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 8,
@@ -336,6 +337,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš plánuje akci v přestrojení: V hledáčku má nelegální drogové obchody v centru Prahy",
+            "publishedAt": "2026-05-03T13:31:00Z"
+          },
           {
             "title": "Pevnost v Letňanech? Babiše fascinuje nemocnice, která se do 72 hodin schová pod zem",
             "publishedAt": "2026-05-03T10:49:12Z"
@@ -363,10 +368,6 @@
           {
             "title": "Zatýkání v Příbrami i škrty lůžek na Vysočině: Velký souhrn novinek z českého zdravotnictví",
             "publishedAt": "2026-05-01T12:45:29Z"
-          },
-          {
-            "title": "Chcete moderní lék na rakovinu? Musíte do USA, v Evropě se ho prodávat nevyplatí, upozorňuje firma",
-            "publishedAt": "2026-05-01T05:00:00Z"
           }
         ]
       }

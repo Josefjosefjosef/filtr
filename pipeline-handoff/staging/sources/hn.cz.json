@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-03T12:31:21.524579Z",
+  "ingestedAt": "2026-05-03T13:50:09.730979Z",
   "items": [
     {
       "section": "finance",
@@ -26,6 +26,39 @@
         "povolání",
         "tím",
         "volbě"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Šéf NASA rozjel další kolo tahanice o Pluto. Mezi planety chce vrátit prcka, ke kterému mají Američané citový vztah",
+      "url": "https://nazory.hn.cz/c1-67873020-sef-nasa-rozjel-dalsi-kolo-tahanice-o-pluto-mezi-planety-chce-vratit-prcka-ke-kteremu-maji-americane-citovy-vztah",
+      "dt": "2026-05-03T10:56:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "američané",
+        "chce",
+        "citový",
+        "další",
+        "kolo",
+        "kterému",
+        "mají",
+        "nasa",
+        "planety",
+        "pluto",
+        "prcka",
+        "rozjel",
+        "tahanice",
+        "vrátit",
+        "vztah",
+        "šéf"
       ],
       "feedCategory": "finance",
       "feedType": "rss",
@@ -1170,39 +1203,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přísnější než Putin: v Česku se chystá tvrdší zákon, než měli léta v Rusku. Má z nepohodlných udělat &bdquo;zahraniční agenty&ldquo;",
-      "url": "https://vikend.hn.cz/c1-67871740-prisnejsi-nez-putin-v-cesku-se-chysta-tvrdsi-zakon-nez-meli-leta-v-rusku-ma-z-nepohodlnych-udelat-bdquo-zahranicni-agenty-ldquo",
-      "dt": "2026-04-29T22:00:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "agenty",
-        "bdquo",
-        "chystá",
-        "ldquo",
-        "léta",
-        "měli",
-        "nepohodlných",
-        "než",
-        "putin",
-        "přísnější",
-        "rusku",
-        "tvrdší",
-        "udělat",
-        "zahraniční",
-        "zákon",
-        "česku"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1213,7 +1213,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184549,
+      "bytes": 184606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1273,6 +1273,10 @@
             "publishedAt": "2026-05-03T11:22:00Z"
           },
           {
+            "title": "Šéf NASA rozjel další kolo tahanice o Pluto. Mezi planety chce vrátit prcka, ke kterému mají Američané citový vztah",
+            "publishedAt": "2026-05-03T10:56:00Z"
+          },
+          {
             "title": "Korejští vývojáři udělali z &bdquo;nesmyslu&ldquo; splněný sen. Hit Crimson Desert za měsíc prodal pět milionů kopií",
             "publishedAt": "2026-05-03T08:33:00Z"
           },
@@ -1295,10 +1299,6 @@
           {
             "title": "Trump tvrdě proti Evropě: oznámil uvalení cel na dovoz aut ve výši 25 procent. Velmi citelně by tím zasáhl i Česko",
             "publishedAt": "2026-05-01T16:18:00Z"
-          },
-          {
-            "title": "Tykačův Sev.en jde po hutích v Anglii. Pokud uspěje, bude z něj největší výrobce oceli v celé Británii",
-            "publishedAt": "2026-05-01T15:41:00Z"
           }
         ]
       }
