@@ -33043,23 +33043,23 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     for (let slotH = 1; slotH <= 23; slotH++){
       const label = pad(slotH) + ":00";
       const evs = getEventsInHourSlot(iso, slotH);
-      const hasEvent = evs.length > 0;
+      const eventCount = evs.length;
+      const showHourLabel = eventCount === 0;
       const evHtml = evs.map((ev)=> buildTimelineEventHtml(ev, nearestId)).join("");
       const showInline = state.inline && state.inline.slotHour === slotH;
       const inlineHtml = showInline ? buildInlineEditorHtml() : "";
       const showPad = !showInline;
       const padHtml = showPad ? '<div class="iu-calSlotEmptyPad" data-iu-cal-slot-empty="' + slotH + '" title="Nová událost"></div>' : "";
-      const slotSparse = evs.length === 0 && !showInline ? " iu-calHourSlot--sparse" : "";
-      const slotCls =
-        "iu-calHourSlot" +
-        slotSparse +
-        (hasEvent ? " iu-calHourSlot--hasEvents" : "");
-      const hourBtn =
-        '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
-        slotH +
-        '">' +
-        esc(label) +
-        "</button>";
+      const slotSparse = eventCount === 0 && !showInline ? " iu-calHourSlot--sparse" : "";
+      const eventsOnlyCls = eventCount > 0 ? " iu-calHourSlot--eventsOnly" : "";
+      const slotCls = "iu-calHourSlot" + slotSparse + eventsOnlyCls;
+      const hourBtn = showHourLabel
+        ? '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
+          slotH +
+          '">' +
+          esc(label) +
+          "</button>"
+        : "";
       html +=
         '<div class="' +
         slotCls +
