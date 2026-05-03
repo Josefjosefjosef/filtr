@@ -32563,6 +32563,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     trapAttached: false,
     prevBodyPadRight: "",
     dayOpen: false,
+    mobileDayOverlayOpen: false,
     inline: null
   };
 
@@ -32835,6 +32836,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     const ov = getOverlay();
     if (!ov) return;
     state.dayOpen = false;
+    state.mobileDayOverlayOpen = false;
     state.inline = null;
     closeTimeWheel();
     try{
@@ -32844,6 +32846,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }catch{}
     ov.hidden = true;
     ov.setAttribute("aria-hidden", "true");
+    try{
+      const dayOv = document.getElementById("iuCalendarDayOverlay");
+      if (dayOv){
+        dayOv.hidden = true;
+        dayOv.setAttribute("aria-hidden", "true");
+      }
+    }catch{}
+    try{ document.body.style.overflow = ""; }catch{}
     document.body.classList.remove("iu-calendarOverlay-open");
     try{ document.body.style.paddingRight = state.prevBodyPadRight || ""; }catch{}
     detachFocusTrap();
@@ -32869,9 +32879,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function onGlobalKeyDown(e){
+    const dayOv = document.getElementById("iuCalendarDayOverlay");
+    const daySurfaceOpen = !!(dayOv && !dayOv.hidden && isCalMobileLayout());
     const ov = getOverlay();
-    if (!ov || ov.hidden) return;
     if (e.key === "Escape"){
+      if (daySurfaceOpen){
+        e.preventDefault();
+        const tw = document.getElementById("iuCalTimeWheelHost");
+        if (tw && !tw.hidden){ closeTimeWheel(); return; }
+        if (state.inline){ state.inline = null; render(); return; }
+        closeDayOverlay();
+        return;
+      }
+      if (!ov || ov.hidden) return;
       e.preventDefault();
       const tw = document.getElementById("iuCalTimeWheelHost");
       if (tw && !tw.hidden){ closeTimeWheel(); return; }
@@ -32880,12 +32900,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     if (e.key !== "Tab") return;
-    const list = Array.from(ov.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
-    if (!list.length) return;
-    const first = list[0];
-    const last = list[list.length - 1];
-    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    if (daySurfaceOpen && dayOv){
+      const list = Array.from(dayOv.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
+      if (!list.length) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      return;
+    }
+    if (!ov || ov.hidden) return;
+    const list2 = Array.from(ov.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el)=>!el.disabled && el.offsetParent !== null);
+    if (!list2.length) return;
+    const first2 = list2[0];
+    const last2 = list2[list2.length - 1];
+    if (e.shiftKey && document.activeElement === first2){ e.preventDefault(); last2.focus(); }
+    else if (!e.shiftKey && document.activeElement === last2){ e.preventDefault(); first2.focus(); }
   }
 
   function render(){
@@ -32894,6 +32924,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     renderView();
     syncBridgeFormFields();
     syncMobileCalendarChrome();
+    syncMobileDayOverlayDom();
   }
 
   function renderViewButtons(){
@@ -33162,8 +33193,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     };
     const mob = isCalMobileLayout();
-    if (mob && state.dayOpen) tryScroll(document.getElementById("iuCalendarMobileDayScroll"));
-    else tryScroll(document.getElementById("iuCalendarViewRoot"));
+    if (mob && state.mobileDayOverlayOpen){
+      const host = document.querySelector("#iuCalendarDayOverlay .iu-calendar-day-content");
+      tryScroll(host);
+    } else tryScroll(document.getElementById("iuCalendarViewRoot"));
   }
 
   async function saveInlineEditor(){
@@ -33380,8 +33413,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       const ds = el.getAttribute("data-iu-cal-select-date") || state.selectedDate;
       state.selectedDate = ds;
       state.cursorDate = ds;
-      state.dayOpen = true;
       state.inline = null;
+      if (isCalMobileLayout()){
+        state.dayOpen = false;
+        state.mobileDayOverlayOpen = true;
+      } else {
+        state.dayOpen = true;
+        state.mobileDayOverlayOpen = false;
+      }
       render();
     }));
     root.querySelectorAll("[data-iu-cal-year-month]").forEach((el)=>el.addEventListener("click", ()=>{
@@ -33391,6 +33430,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       state.cursorDate = ds;
       state.selectedDate = ds;
       state.dayOpen = false;
+      state.mobileDayOverlayOpen = false;
       state.inline = null;
       render();
     }));
@@ -33473,37 +33513,25 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
   function getEventsForMonth(year, month){ return state.data.events.filter((e)=>{ const d = new Date(e.date + "T00:00:00"); return d.getFullYear() === year && d.getMonth() === month; }).length; }
 
-  function closeDaySheet(){
-    state.dayOpen = false;
-    state.inline = null;
-    render();
+  function fillDayHeader(dateObj){
+    const overlay = document.getElementById("iuCalendarDayOverlay");
+    if (!overlay || !dateObj) return;
+    const iso = toDateOnly(dateObj);
+    const head = formatCalMobileDayHeading(iso);
+    const nameEl = overlay.querySelector(".iu-day-name");
+    const dateEl = overlay.querySelector(".iu-day-date");
+    if (nameEl) nameEl.textContent = head.line1;
+    if (dateEl) dateEl.textContent = head.line2;
   }
 
-  function renderMobileDayPanel(){
-    const panel = document.getElementById("iuCalendarMobileDayPanel");
-    const wEl = document.getElementById("iuCalendarMobileDayWeekday");
-    const dEl = document.getElementById("iuCalendarMobileDayDateLine");
-    const holEl = document.getElementById("iuCalendarMobileDayHoliday");
-    const hoursEl = document.getElementById("iuCalendarMobileDayHours");
-    if (!panel || !wEl || !dEl || !hoursEl) return;
-    const iso = String(state.selectedDate || "").trim() || toDateOnly(new Date());
-    const head = formatCalMobileDayHeading(iso);
-    wEl.textContent = head.line1;
-    dEl.textContent = head.line2;
-    const holNm = getHolidayNameForDate(iso);
-    if (holEl){
-      if (holNm){
-        holEl.textContent = holNm;
-        holEl.hidden = false;
-        holEl.removeAttribute("hidden");
-      } else {
-        holEl.textContent = "";
-        holEl.hidden = true;
-        holEl.setAttribute("hidden", "");
-      }
-    }
-    hoursEl.innerHTML = renderDayHourlyTimelineHTML(iso);
-    bindDayTimelineUi(hoursEl, iso);
+  function renderDayContent(dateObj){
+    const overlay = document.getElementById("iuCalendarDayOverlay");
+    if (!overlay || !dateObj) return;
+    const iso = toDateOnly(dateObj);
+    const area = overlay.querySelector(".iu-calendar-day-content");
+    if (!area) return;
+    area.innerHTML = renderDayHourlyTimelineHTML(iso);
+    bindDayTimelineUi(area, iso);
     try{
       requestAnimationFrame(()=>{
         requestAnimationFrame(()=>{ scrollCalendarDayToNow(); });
@@ -33511,27 +33539,52 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     }catch{}
   }
 
+  function closeDayOverlay(){
+    if (!state.mobileDayOverlayOpen) return;
+    closeTimeWheel();
+    state.mobileDayOverlayOpen = false;
+    state.inline = null;
+    const overlay = document.getElementById("iuCalendarDayOverlay");
+    if (overlay){
+      overlay.hidden = true;
+      overlay.setAttribute("aria-hidden", "true");
+    }
+    try{ document.body.style.overflow = ""; }catch{}
+    render();
+  }
+
+  function syncMobileDayOverlayDom(){
+    const overlay = document.getElementById("iuCalendarDayOverlay");
+    if (!overlay) return;
+    if (!isCalMobileLayout() && state.mobileDayOverlayOpen){
+      state.mobileDayOverlayOpen = false;
+    }
+    if (!isCalMobileLayout() || !state.mobileDayOverlayOpen){
+      overlay.hidden = true;
+      overlay.setAttribute("aria-hidden", "true");
+      try{
+        if (!state.mobileDayOverlayOpen) document.body.style.overflow = "";
+      }catch{}
+      return;
+    }
+    const iso = String(state.selectedDate || "").trim() || toDateOnly(new Date());
+    const d = new Date(iso + "T12:00:00");
+    fillDayHeader(d);
+    renderDayContent(d);
+    overlay.hidden = false;
+    overlay.setAttribute("aria-hidden", "false");
+    try{ document.body.style.overflow = "hidden"; }catch{}
+  }
+
   function syncMobileCalendarChrome(){
     const ov = getOverlay();
     if (!ov) return;
     const mob = isCalMobileLayout();
     ov.classList.toggle("iu-calendarOverlay--premiumMob", mob);
-    ov.classList.toggle("iu-calendarOverlay--mobileDay", mob && state.dayOpen);
+    ov.classList.toggle("iu-calendarOverlay--mobileDay", false);
     ov.classList.toggle("iu-calendarOverlay--dayOpenDesktop", !mob && state.dayOpen);
     ov.classList.toggle("iu-calendarOverlay--calDayMode", state.dayOpen);
-    const panel = document.getElementById("iuCalendarMobileDayPanel");
     const side = document.getElementById("iuCalendarBridgeAside");
-    const showDay = mob && state.dayOpen;
-    if (panel){
-      if (showDay){
-        panel.hidden = false;
-        panel.setAttribute("aria-hidden", "false");
-        renderMobileDayPanel();
-      } else {
-        panel.hidden = true;
-        panel.setAttribute("aria-hidden", "true");
-      }
-    }
     if (side){
       side.setAttribute("hidden", "");
       side.setAttribute("aria-hidden", "true");
@@ -33559,7 +33612,13 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     state.currentEditId = id;
     state.selectedDate = ev.date;
     state.cursorDate = ev.date;
-    state.dayOpen = true;
+    if (isCalMobileLayout()){
+      state.dayOpen = false;
+      state.mobileDayOverlayOpen = true;
+    } else {
+      state.dayOpen = true;
+      state.mobileDayOverlayOpen = false;
+    }
     state.inline = {
       mode: "edit",
       id: ev.id,
@@ -33682,7 +33741,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   function navPeriod(delta){
     state.inline = null;
-    if (state.dayOpen){
+    if (state.dayOpen || state.mobileDayOverlayOpen){
       const d = new Date(state.selectedDate + "T12:00:00");
       d.setDate(d.getDate() + delta);
       const nd = toDateOnly(d);
@@ -33692,6 +33751,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     state.dayOpen = false;
+    state.mobileDayOverlayOpen = false;
     const d = new Date(state.cursorDate + "T00:00:00");
     if (state.view === "month") d.setMonth(d.getMonth() + delta, 1);
     else d.setFullYear(d.getFullYear() + delta, 0, 1);
@@ -33727,6 +33787,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (ALLOWED_VIEWS.has(v)){
           state.view = v;
           state.dayOpen = false;
+          state.mobileDayOverlayOpen = false;
           state.inline = null;
           render();
         }
@@ -33737,8 +33798,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (t && t.closest && t.closest("[data-iu-cal-today]")){
         state.cursorDate = toDateOnly(new Date());
         state.selectedDate = state.cursorDate;
-        state.dayOpen = true;
         state.inline = null;
+        if (isCalMobileLayout()){
+          state.dayOpen = false;
+          state.mobileDayOverlayOpen = true;
+        } else {
+          state.dayOpen = true;
+          state.mobileDayOverlayOpen = false;
+        }
         render();
         return;
       }
@@ -33747,6 +33814,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (form){ form.addEventListener("submit", (e)=>{ e.preventDefault(); upsertEventFromForm(); }); }
     const photoInput = document.getElementById("iuCalendarPhotoInput");
     if (photoInput){ photoInput.addEventListener("change", ()=>handlePhotoAdd(photoInput.files)); }
+    const dayCloseBtn = document.querySelector("#iuCalendarDayOverlay .iu-day-close");
+    if (dayCloseBtn){
+      dayCloseBtn.addEventListener("click", (ev)=>{
+        ev.preventDefault();
+        ev.stopPropagation();
+        closeDayOverlay();
+      });
+    }
   }
 
   async function init(){
@@ -33763,9 +33838,15 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         state.view = "month";
         state.cursorDate = today;
         state.selectedDate = today;
-        state.dayOpen = true;
         state.inline = null;
         state.currentEditId = "";
+        if (isCalMobileLayout()){
+          state.dayOpen = false;
+          state.mobileDayOverlayOpen = true;
+        } else {
+          state.dayOpen = true;
+          state.mobileDayOverlayOpen = false;
+        }
         render();
         openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
       },
@@ -33775,9 +33856,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         state.view = "month";
         state.cursorDate = d;
         state.selectedDate = d;
-        state.dayOpen = true;
         state.inline = null;
         state.currentEditId = "";
+        if (isCalMobileLayout()){
+          state.dayOpen = false;
+          state.mobileDayOverlayOpen = true;
+        } else {
+          state.dayOpen = true;
+          state.mobileDayOverlayOpen = false;
+        }
+        render();
         openOverlay(originEl && typeof originEl.focus === "function" ? originEl : document.activeElement);
       },
       calendarCreateEvent: async function(payload){

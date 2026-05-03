@@ -21643,3 +21643,71 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
     box-shadow: none !important;
   }
 }
+
+/* P0: Kalendář — samostatný denní overlay (mobil/tablet), nad hlavním kalendářovým overlay */
+.iu-calendar-day-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10100;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.iu-calendar-day-overlay[hidden] {
+  display: none !important;
+}
+
+.iu-calendar-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+.iu-calendar-day-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.iu-calendar-day-title .iu-day-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.iu-calendar-day-title .iu-day-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.72);
+}
+
+.iu-calendar-day-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 12px 16px;
+  box-sizing: border-box;
+}
+
+.iu-day-close {
+  width: 38px;
+  height: 38px;
+  background: #eef2f7;
+  color: #0f172a;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  border-radius: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
