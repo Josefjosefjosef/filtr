@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-03T07:15:02.813145Z",
+  "ingestedAt": "2026-05-03T07:50:29.941461Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Na plnění závazků NATO bude dohlížet zmocněnec, Macinka si neodpustil rýpnutí",
+      "url": "https://zpravy.aktualne.cz/domaci/vlada-jmenuje-zmocnence-pro-plneni-zavazku-nato-oznamil-babis/r~aaa29adcd62ee29cead6fcb3b7faa3ab/",
+      "dt": "2026-05-02T13:01:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "dohlížet",
+        "macinka",
+        "nato",
+        "neodpustil",
+        "plnění",
+        "rýpnutí",
+        "zmocněnec",
+        "závazků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -504,33 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Práci vám nevezme AI, ale kolega, který se ji naučí lépe využívat, říká expert",
-      "url": "https://zpravy.aktualne.cz/ekonomika/praci-vam-nevezme-ai-ale-kolega-ktery-se-ji-nauci-lepe-vyuzivat-rika-expert/r~aaa2942f6a6bfe9ff3bea9c0f28b1c8c/",
-      "dt": "2026-05-02T18:01:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "ale",
-        "expert",
-        "kolega",
-        "lépe",
-        "naučí",
-        "nevezme",
-        "práci",
-        "využívat",
-        "vám",
-        "říká"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21948,
+      "bytes": 21975,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -581,10 +579,10 @@
         "raw_feed_latest_publishedAt": "2026-05-03T07:05:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "zpravy": 8,
+          "zpravy": 9,
           "sport": 8,
           "other": 1,
-          "finance": 3
+          "finance": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -596,6 +594,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Na plnění závazků NATO bude dohlížet zmocněnec, Macinka si neodpustil rýpnutí",
+            "publishedAt": "2026-05-02T13:01:00Z"
+          },
           {
             "title": "Trump dál vydírá Evropu. Násobně sníží počet vojáků v Německu, pohrozil i dalším zemím",
             "publishedAt": "2026-05-03T07:05:00Z"
@@ -623,10 +625,6 @@
           {
             "title": "Prodělala několik infarktů. Nobelův výbor vyzval Teherán k propuštění Mohammadíové",
             "publishedAt": "2026-05-03T05:50:00Z"
-          },
-          {
-            "title": "Strach o Alcaraze. Je to nejhorší možné zranění, varuje slavná trenérka",
-            "publishedAt": "2026-05-03T05:02:00Z"
           }
         ]
       }

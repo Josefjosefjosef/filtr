@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravezpravy.cz",
-  "ingestedAt": "2026-05-03T07:15:02.813145Z",
+  "ingestedAt": "2026-05-03T07:50:29.941461Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Vítězové národního kola H2 Grand Prix 2026 míří do Švýcarska",
+      "url": "https://www.zdravezpravy.cz/2026/05/03/vitezove-narodniho-kola-h2gp-miri-do-svycarska/",
+      "dt": "2026-05-03T06:28:12Z",
+      "media_raw": "ZdravéZprávy",
+      "media_norm": "ZdravéZprávy",
+      "tokens": [
+        "2026",
+        "grand",
+        "kola",
+        "míří",
+        "národního",
+        "prix",
+        "vítězové",
+        "švýcarska"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravezpravy",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravezpravy.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -472,29 +497,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravezpravy.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Veterinární správa zakázala prodej 44 výživ pro kojence",
-      "url": "https://www.zdravezpravy.cz/2026/04/23/svs-zasahuje-v-nekolika-sklenickach-vyzivy-pro-kojence-byl-jed-na-krysy/",
-      "dt": "2026-04-23T16:20:41Z",
-      "media_raw": "ZdravéZprávy",
-      "media_norm": "ZdravéZprávy",
-      "tokens": [
-        "kojence",
-        "prodej",
-        "správa",
-        "veterinární",
-        "výživ",
-        "zakázala"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravezpravy",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravezpravy.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -505,7 +507,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravezpravy.cz/feed/",
-      "bytes": 187981,
+      "bytes": 187285,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -542,7 +544,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T07:30:54Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T06:28:12Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
           "zdravi": 20
@@ -557,6 +559,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Vítězové národního kola H2 Grand Prix 2026 míří do Švýcarska",
+            "publishedAt": "2026-05-03T06:28:12Z"
+          },
           {
             "title": "Český národní zdravotnický tým CZERT získal certifikaci EMT 1",
             "publishedAt": "2026-05-02T07:30:54Z"
@@ -584,10 +590,6 @@
           {
             "title": "Kvůli západonilské horečce platí omezení darování krve po návratu z některých zemí",
             "publishedAt": "2026-04-29T09:11:31Z"
-          },
-          {
-            "title": "Aspirin jako prevence proti rakovině a nemocím srdce a cév? Možná ano",
-            "publishedAt": "2026-04-29T06:30:16Z"
           }
         ]
       }

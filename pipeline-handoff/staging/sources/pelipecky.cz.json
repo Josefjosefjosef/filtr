@@ -1,8 +1,32 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "pelipecky.cz",
-  "ingestedAt": "2026-05-03T07:15:02.813145Z",
+  "ingestedAt": "2026-05-03T07:50:29.941461Z",
   "items": [
+    {
+      "section": "cestovani",
+      "contentType": "article",
+      "title": "POBYT DNE: Mallorca z Prahy ve 4* hotelu s polopenzí od 13 690 Kč",
+      "url": "https://pelipecky.cz/pobyt-dne-mallorca-dovolena/",
+      "dt": "2026-05-03T07:22:44Z",
+      "media_raw": "Pelipecky",
+      "media_norm": "Pelipecky",
+      "tokens": [
+        "690",
+        "dne",
+        "hotelu",
+        "mallorca",
+        "pobyt",
+        "polopenzí",
+        "prahy"
+      ],
+      "feedCategory": "cestovani",
+      "feedType": "rss",
+      "feedId": "ces_pelipecky",
+      "sourceDisplayWeight": 0.75,
+      "sourceBatchKey": "pelipecky.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "cestovani",
       "contentType": "article",
@@ -224,30 +248,6 @@
       "sourceDisplayWeight": 0.75,
       "sourceBatchKey": "pelipecky.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "cestovani",
-      "contentType": "article",
-      "title": "NABÍDKA DNE: 4* dovolená v Albánii s All Inclusive za 9 490 Kč.",
-      "url": "https://pelipecky.cz/albanie-dovolena-durres-bay/",
-      "dt": "2026-04-20T10:01:46Z",
-      "media_raw": "Pelipecky",
-      "media_norm": "Pelipecky",
-      "tokens": [
-        "490",
-        "albánii",
-        "all",
-        "dne",
-        "dovolená",
-        "inclusive",
-        "nabídka"
-      ],
-      "feedCategory": "cestovani",
-      "feedType": "rss",
-      "feedId": "ces_pelipecky",
-      "sourceDisplayWeight": 0.75,
-      "sourceBatchKey": "pelipecky.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -258,7 +258,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://pelipecky.cz/feed/",
-      "bytes": 127782,
+      "bytes": 128903,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -295,7 +295,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-04-30T13:45:11Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T07:22:44Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "cestovani": 10
@@ -310,6 +310,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "POBYT DNE: Mallorca z Prahy ve 4* hotelu s polopenzí od 13 690 Kč",
+            "publishedAt": "2026-05-03T07:22:44Z"
+          },
           {
             "title": "Hledáš LAST MINUTE letenky + pobyty? Tady jsou nejlepší nabídky na nadcházející dva měsíce",
             "publishedAt": "2026-04-30T13:45:11Z"
@@ -337,10 +341,6 @@
           {
             "title": "Letenky už levnější nebudou: rezervuj si TOP destinace od… od 690 Kč",
             "publishedAt": "2026-04-22T10:59:32Z"
-          },
-          {
-            "title": "Letenky do Bangkoku za 14 390 Kč",
-            "publishedAt": "2026-04-22T08:00:00Z"
           }
         ]
       }
