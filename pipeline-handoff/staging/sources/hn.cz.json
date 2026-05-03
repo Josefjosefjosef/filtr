@@ -1,8 +1,38 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "hn.cz",
-  "ingestedAt": "2026-05-03T20:15:38.235331Z",
+  "ingestedAt": "2026-05-03T20:50:01.036354Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Trump řeší jinou krizi, mír na Ukrajině potřebuje nového prostředníka, řekl Babiš po setkání se Zelenským",
+      "url": "https://domaci.hn.cz/c1-67873050-trump-resi-jinou-krizi-mir-na-ukrajine-potrebuje-noveho-prostrednika-rekl-babis-po-setkani-se-zelenskym",
+      "dt": "2026-05-03T19:54:00Z",
+      "media_raw": "HN / Ekonomika",
+      "media_norm": "HN / Ekonomika",
+      "tokens": [
+        "babiš",
+        "jinou",
+        "krizi",
+        "mír",
+        "nového",
+        "potřebuje",
+        "prostředníka",
+        "setkání",
+        "trump",
+        "ukrajině",
+        "zelenským",
+        "řekl",
+        "řeší"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_hn",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "hn.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -1175,38 +1205,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "hn.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "doprava",
-      "contentType": "article",
-      "title": "Most bez osobních aut = rudý hadr kulturní války. Ale funguje a zopakujeme to i na severu města, plánuje pražský magistrát",
-      "url": "https://podcasty.hn.cz/c1-67872380-most-bez-osobnich-aut-rudy-hadr-kulturni-valky-ale-funguje-a-zopakujeme-to-i-na-severu-mesta-planuje-prazsky-magistrat",
-      "dt": "2026-04-30T04:43:00Z",
-      "media_raw": "HN / Ekonomika",
-      "media_norm": "HN / Ekonomika",
-      "tokens": [
-        "ale",
-        "aut",
-        "funguje",
-        "hadr",
-        "kulturní",
-        "magistrát",
-        "most",
-        "města",
-        "osobních",
-        "plánuje",
-        "pražský",
-        "rudý",
-        "severu",
-        "války",
-        "zopakujeme"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_hn",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "hn.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1217,7 +1215,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://hn.cz/?m=rss",
-      "bytes": 184906,
+      "bytes": 184915,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1254,11 +1252,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T16:40:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T19:54:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
-          "finance": 32,
-          "zpravy": 4,
+          "finance": 33,
+          "zpravy": 3,
           "sport": 3,
           "zdravi": 1
         },
@@ -1272,6 +1270,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump řeší jinou krizi, mír na Ukrajině potřebuje nového prostředníka, řekl Babiš po setkání se Zelenským",
+            "publishedAt": "2026-05-03T19:54:00Z"
+          },
           {
             "title": "Tohle už nejsou jen porodní bolesti. Expanze LeoExpressu přechází do ostudy, stížnosti bude cestujícím vysvětlovat přímo ředitel",
             "publishedAt": "2026-05-03T16:40:00Z"
@@ -1299,10 +1301,6 @@
           {
             "title": "České Švýcarsko dál hoří, část ale hasiči dokázali dostat pod kontrolu. Slovensko vyšle na pomoc dva vrtulníky Black Hawk",
             "publishedAt": "2026-05-02T14:58:00Z"
-          },
-          {
-            "title": "Google, Microsoft, Amazon i Meta skvěle vydělávají. Investory ale víc zajímá, kdo zaplatí další kolo AI závodů",
-            "publishedAt": "2026-05-02T12:57:00Z"
           }
         ]
       }

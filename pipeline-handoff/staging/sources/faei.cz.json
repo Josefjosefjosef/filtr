@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "faei.cz",
-  "ingestedAt": "2026-05-03T20:15:38.235331Z",
+  "ingestedAt": "2026-05-03T20:50:01.036354Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Saúdská Arábie na vývozu ropy vydělává více než před válkou v Perském zálivu",
+      "url": "https://profitonline.cz/saudska-arabie-na-vyvozu-ropy-vydelava-vice-nez-pred-valkou-v-perskem-zalivu/",
+      "dt": "2026-05-03T20:30:06Z",
+      "media_raw": "FAEI",
+      "media_norm": "FAEI",
+      "tokens": [
+        "arábie",
+        "než",
+        "perském",
+        "ropy",
+        "saúdská",
+        "vydělává",
+        "válkou",
+        "vývozu",
+        "zálivu"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_faei",
+      "sourceDisplayWeight": 0.8,
+      "sourceBatchKey": "faei.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "finance",
       "contentType": "article",
@@ -258,30 +284,6 @@
       "sourceDisplayWeight": 0.8,
       "sourceBatchKey": "faei.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Duben na akciových trzích: Index S&P500 opět na rekordu",
-      "url": "https://profitonline.cz/duben-na-akciovych-trzich-index-sp500-opet-na-rekordu/",
-      "dt": "2026-04-30T18:00:33Z",
-      "media_raw": "FAEI",
-      "media_norm": "FAEI",
-      "tokens": [
-        "akciových",
-        "duben",
-        "index",
-        "opět",
-        "p500",
-        "rekordu",
-        "trzích"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_faei",
-      "sourceDisplayWeight": 0.8,
-      "sourceBatchKey": "faei.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -292,7 +294,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://profitonline.cz/feed/",
-      "bytes": 18174,
+      "bytes": 18405,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -329,7 +331,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 12,
-        "raw_feed_latest_publishedAt": "2026-05-03T08:00:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T20:30:06Z",
         "valid_publishedAt_count": 12,
         "mapped_to_section_count": {
           "finance": 10,
@@ -346,6 +348,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Saúdská Arábie na vývozu ropy vydělává více než před válkou v Perském zálivu",
+            "publishedAt": "2026-05-03T20:30:06Z"
+          },
           {
             "title": "Trhy zůstávají nervózní, zákazníky ochrání fixace",
             "publishedAt": "2026-05-03T08:00:39Z"
@@ -373,10 +379,6 @@
           {
             "title": "Okamžiky historie: Den, kdy se uzavřelo dílo renesančního Leonarda da Vinciho",
             "publishedAt": "2026-05-02T04:00:53Z"
-          },
-          {
-            "title": "Paradox: Za umrzání českých ovocných stromů může globální oteplování",
-            "publishedAt": "2026-05-01T10:00:51Z"
           }
         ]
       }
