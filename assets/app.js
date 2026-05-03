@@ -32887,7 +32887,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         e.preventDefault();
         const tw = document.getElementById("iuCalTimeWheelHost");
         if (tw && !tw.hidden){ closeTimeWheel(); return; }
-        if (state.inline){ state.inline = null; render(); return; }
+        if (state.inline){ cancelInlineEditor(); return; }
         closeDayOverlay();
         return;
       }
@@ -32895,7 +32895,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       e.preventDefault();
       const tw = document.getElementById("iuCalTimeWheelHost");
       if (tw && !tw.hidden){ closeTimeWheel(); return; }
-      if (state.inline){ state.inline = null; render(); return; }
+      if (state.inline){ cancelInlineEditor(); return; }
       closeOverlay();
       return;
     }
@@ -32925,6 +32925,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     syncBridgeFormFields();
     syncMobileCalendarChrome();
     syncMobileDayOverlayDom();
+    syncMonthQuickAddFab();
   }
 
   function renderViewButtons(){
@@ -33009,11 +33010,64 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     );
   }
 
+  function defaultDateForMonthQuickAdd(){
+    const today = toDateOnly(new Date());
+    const cur = new Date(state.cursorDate + "T12:00:00");
+    if (!Number.isFinite(cur.getTime())) return today;
+    const cy = cur.getFullYear();
+    const cm = cur.getMonth();
+    const sel = String(state.selectedDate || "").trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(sel)){
+      const sd = new Date(sel + "T12:00:00");
+      if (Number.isFinite(sd.getTime()) && sd.getFullYear() === cy && sd.getMonth() === cm) return sel;
+    }
+    return today;
+  }
+
+  function openCalendarEventForm(options){
+    const opt = options || {};
+    const source = opt.source === "month" ? "month" : "day";
+    const dateStr = String(opt.date != null ? opt.date : state.selectedDate || toDateOnly(new Date())).slice(0, 10);
+    let timeStr = String(opt.time != null ? opt.time : "09:00").trim();
+    const tm = /^(\d{1,2}):(\d{2})$/.exec(timeStr);
+    if (!tm) timeStr = "09:00";
+    else timeStr = pad(Math.min(23, Math.max(0, parseInt(tm[1], 10)))) + ":" + pad(Math.min(59, Math.max(0, parseInt(tm[2], 10))));
+    const showDatePicker = !!opt.showDatePicker;
+    state.currentEditId = "";
+    state.inline = {
+      mode: "new",
+      date: dateStr,
+      slotHour: eventSlotHour({ time: timeStr, date: dateStr }),
+      time: timeStr,
+      title: "",
+      address: "",
+      note: "",
+      showDatePicker,
+      formSource: source
+    };
+    if (source === "month"){
+      state.dayOpen = false;
+      state.mobileDayOverlayOpen = false;
+    }
+    render();
+  }
+
   function buildInlineEditorHtml(){
     const inl = state.inline;
     if (!inl) return "";
     const delBtn = inl.mode === "edit" ? '<button type="button" data-iu-cal-inline-delete="1">Odstranit</button>' : "";
+    const dateRow =
+      inl.showDatePicker && inl.mode === "new"
+        ? '<div class="iu-calInline__dateRow">' +
+          '<input type="date" class="iu-calInline__inp iu-calInline__dateInput" data-iu-cal-inline-field="date" value="' +
+          esc(String(inl.date || "").slice(0, 10)) +
+          '" />' +
+          '<span class="iu-calInline__weekday" data-iu-cal-inline-weekday="1">' +
+          esc(formatCalMobileDayHeading(String(inl.date || "").slice(0, 10)).line1) +
+          "</span></div>"
+        : "";
     return (
+      dateRow +
       '<div class="iu-calInline" data-iu-cal-inline-root="1" tabindex="-1">' +
       '<input class="iu-calInline__inp" data-iu-cal-inline-field="title" placeholder="Název události" maxlength="120" value="' +
       esc(inl.title) +
@@ -33282,6 +33336,88 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     render();
   }
 
+  function focusNewInlineTitleAfterRender(){
+    try{
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          const vr = document.getElementById("iuCalendarViewRoot");
+          const ir = vr ? vr.querySelector("[data-iu-cal-inline-root]") : null;
+          const ti = ir ? ir.querySelector("[data-iu-cal-inline-field=\"title\"]") : null;
+          if (ti && ti.focus) ti.focus({ preventScroll: true });
+        });
+      });
+    }catch{}
+  }
+
+  function bindCalendarInlineEditorRoot(root, iso){
+    if (!root) return;
+    const isoFallback = String(iso || state.selectedDate || "").slice(0, 10);
+    const syncDateFromInput = (inp)=>{
+      if (!state.inline) return;
+      const v = String(inp.value || "").slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+      state.inline.date = v;
+      state.inline.slotHour = eventSlotHour({ time: state.inline.time, date: v });
+      const wk = root.querySelector("[data-iu-cal-inline-weekday=\"1\"]");
+      if (wk) wk.textContent = formatCalMobileDayHeading(v).line1;
+    };
+    root.querySelectorAll("[data-iu-cal-inline-field=\"date\"]").forEach((inp)=>{
+      inp.addEventListener("input", ()=>{ syncDateFromInput(inp); });
+      inp.addEventListener("change", ()=>{ syncDateFromInput(inp); });
+    });
+    const inlineRoot = root.querySelector("[data-iu-cal-inline-root]");
+    if (!inlineRoot) return;
+    inlineRoot.querySelectorAll("[data-iu-cal-inline-field]").forEach((inp)=>{
+      inp.addEventListener("input", ()=>{
+        if (!state.inline) return;
+        const f = inp.getAttribute("data-iu-cal-inline-field");
+        const v = inp.value || "";
+        if (f === "title") state.inline.title = v;
+        else if (f === "address") state.inline.address = v;
+        else if (f === "note") state.inline.note = v;
+      });
+    });
+    const tbtn = inlineRoot.querySelector("[data-iu-cal-inline-time-open]");
+    if (tbtn) tbtn.addEventListener("click", (ev)=>{
+      ev.preventDefault();
+      if (!state.inline) return;
+      openTimeWheel(state.inline.time, (picked)=>{
+        const prev = state.inline.slotHour;
+        state.inline.time = picked;
+        state.inline.slotHour = eventSlotHour({ time: picked, date: state.inline.date || isoFallback });
+        if (state.inline.slotHour === prev){
+          const tb = root.querySelector("[data-iu-cal-inline-time-open]");
+          if (tb) tb.textContent = picked;
+        } else {
+          render();
+        }
+      });
+    });
+    const saveBtn = inlineRoot.querySelector("[data-iu-cal-inline-save]");
+    if (saveBtn) saveBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); void saveInlineEditor(); });
+    const cancelBtn = inlineRoot.querySelector("[data-iu-cal-inline-cancel]");
+    if (cancelBtn) cancelBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); cancelInlineEditor(); });
+    const delBtn = inlineRoot.querySelector("[data-iu-cal-inline-delete]");
+    if (delBtn) delBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); void deleteInlineEditor(); });
+    const ti0 = inlineRoot.querySelector("[data-iu-cal-inline-field=\"title\"]");
+    if (ti0){
+      ti0.addEventListener("focus", ()=>{
+        try{
+          requestAnimationFrame(()=>{
+            requestAnimationFrame(()=>{ scrollActiveInlineFormIntoView(root); });
+          });
+        }catch{}
+      });
+    }
+    try{
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          scrollActiveInlineFormIntoView(root);
+        });
+      });
+    }catch{}
+  }
+
   function bindDayTimelineUi(root, iso){
     if (!root) return;
     root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>{
@@ -33315,22 +33451,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         ev.stopPropagation();
         const sh = parseInt(String(emptySlotEl.getAttribute("data-iu-cal-slot-empty") || ""), 10);
         if (!Number.isFinite(sh) || sh < 1 || sh > 23) return;
-        state.inline = {
-          mode: "new",
-          date: iso,
-          slotHour: sh,
-          time: pad(sh) + ":00",
-          title: "",
-          address: "",
-          note: ""
-        };
-        state.currentEditId = "";
-        render();
-        try{
-          const ir = root.querySelector("[data-iu-cal-inline-root]");
-          const ti = ir ? ir.querySelector("[data-iu-cal-inline-field=\"title\"]") : null;
-          if (ti && ti.focus) ti.focus();
-        }catch{}
+        openCalendarEventForm({ source: "day", date: iso, time: pad(sh) + ":00", showDatePicker: false });
+        focusNewInlineTitleAfterRender();
       });
     });
     root.querySelectorAll("[data-iu-cal-slot-body]").forEach((slotBody)=>{
@@ -33341,22 +33463,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         if (state.inline && state.inline.slotHour === sh) return;
         ev.preventDefault();
         ev.stopPropagation();
-        state.inline = {
-          mode: "new",
-          date: iso,
-          slotHour: sh,
-          time: pad(sh) + ":00",
-          title: "",
-          address: "",
-          note: ""
-        };
-        state.currentEditId = "";
-        render();
-        try{
-          const ir = root.querySelector("[data-iu-cal-inline-root]");
-          const ti = ir ? ir.querySelector("[data-iu-cal-inline-field=\"title\"]") : null;
-          if (ti && ti.focus) ti.focus();
-        }catch{}
+        openCalendarEventForm({ source: "day", date: iso, time: pad(sh) + ":00", showDatePicker: false });
+        focusNewInlineTitleAfterRender();
       });
     });
     root.querySelectorAll("[data-iu-cal-hour-label]").forEach((btn)=>{
@@ -33379,73 +33487,12 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
               render();
             }
           } else {
-            state.inline = {
-              mode: "new",
-              date: iso,
-              slotHour: slotH,
-              time: picked,
-              title: "",
-              address: "",
-              note: ""
-            };
-            state.currentEditId = "";
-            render();
+            openCalendarEventForm({ source: "day", date: iso, time: picked, showDatePicker: false });
+            focusNewInlineTitleAfterRender();
           }
         });
       });
     });
-    const inlineRoot = root.querySelector("[data-iu-cal-inline-root]");
-    if (inlineRoot){
-      inlineRoot.querySelectorAll("[data-iu-cal-inline-field]").forEach((inp)=>{
-        inp.addEventListener("input", ()=>{
-          if (!state.inline) return;
-          const f = inp.getAttribute("data-iu-cal-inline-field");
-          const v = inp.value || "";
-          if (f === "title") state.inline.title = v;
-          else if (f === "address") state.inline.address = v;
-          else if (f === "note") state.inline.note = v;
-        });
-      });
-      const tbtn = inlineRoot.querySelector("[data-iu-cal-inline-time-open]");
-      if (tbtn) tbtn.addEventListener("click", (ev)=>{
-        ev.preventDefault();
-        if (!state.inline) return;
-        openTimeWheel(state.inline.time, (picked)=>{
-          const prev = state.inline.slotHour;
-          state.inline.time = picked;
-          state.inline.slotHour = eventSlotHour({ time: picked, date: state.inline.date || iso });
-          if (state.inline.slotHour === prev){
-            const tb = root.querySelector("[data-iu-cal-inline-time-open]");
-            if (tb) tb.textContent = picked;
-          } else {
-            render();
-          }
-        });
-      });
-      const saveBtn = inlineRoot.querySelector("[data-iu-cal-inline-save]");
-      if (saveBtn) saveBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); void saveInlineEditor(); });
-      const cancelBtn = inlineRoot.querySelector("[data-iu-cal-inline-cancel]");
-      if (cancelBtn) cancelBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); cancelInlineEditor(); });
-      const delBtn = inlineRoot.querySelector("[data-iu-cal-inline-delete]");
-      if (delBtn) delBtn.addEventListener("click", (ev)=>{ ev.preventDefault(); void deleteInlineEditor(); });
-      const ti0 = inlineRoot.querySelector("[data-iu-cal-inline-field=\"title\"]");
-      if (ti0){
-        ti0.addEventListener("focus", ()=>{
-          try{
-            requestAnimationFrame(()=>{
-              requestAnimationFrame(()=>{ scrollActiveInlineFormIntoView(root); });
-            });
-          }catch{}
-        });
-      }
-      try{
-        requestAnimationFrame(()=>{
-          requestAnimationFrame(()=>{
-            scrollActiveInlineFormIntoView(root);
-          });
-        });
-      }catch{}
-    }
   }
 
   function renderView(){
@@ -33456,6 +33503,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       try { root.setAttribute("data-view", "dayTimeline"); } catch {}
       root.innerHTML = renderDayHourlyTimelineHTML(state.selectedDate);
       bindDayTimelineUi(root, state.selectedDate);
+      bindCalendarInlineEditorRoot(root, state.selectedDate);
       try{
         requestAnimationFrame(()=>{
           requestAnimationFrame(()=>{ scrollCalendarDayToNow(); });
@@ -33464,8 +33512,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       return;
     }
     try { root.setAttribute("data-view", state.view); } catch {}
-    if (state.view === "month") root.innerHTML = renderMonthGrid(state.cursorDate);
-    else root.innerHTML = renderYearGrid(new Date(state.cursorDate + "T00:00:00").getFullYear());
+    if (state.view === "month"){
+      let inner = renderMonthGrid(state.cursorDate);
+      const inlMo = state.inline;
+      if (inlMo && inlMo.showDatePicker && inlMo.mode === "new"){
+        inner = '<div class="iu-calMonthStack">' + inner + '<div class="iu-calMonthInline">' + buildInlineEditorHtml() + "</div></div>";
+      }
+      root.innerHTML = inner;
+    } else root.innerHTML = renderYearGrid(new Date(state.cursorDate + "T00:00:00").getFullYear());
     root.querySelectorAll("[data-iu-cal-select-date]").forEach((el)=>el.addEventListener("click", ()=>{
       const ds = el.getAttribute("data-iu-cal-select-date") || state.selectedDate;
       state.selectedDate = ds;
@@ -33492,6 +33546,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       render();
     }));
     root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>el.addEventListener("click", ()=>loadEventForEdit(el.getAttribute("data-iu-cal-open-event") || "")));
+    if (state.view === "month" && state.inline && state.inline.showDatePicker && state.inline.mode === "new"){
+      bindCalendarInlineEditorRoot(root, state.inline.date);
+      focusNewInlineTitleAfterRender();
+    }
   }
 
   function renderMonthGrid(dateStr){
@@ -33589,6 +33647,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     if (!area) return;
     area.innerHTML = renderDayHourlyTimelineHTML(iso);
     bindDayTimelineUi(area, iso);
+    bindCalendarInlineEditorRoot(area, iso);
     try{
       requestAnimationFrame(()=>{
         requestAnimationFrame(()=>{ scrollCalendarDayToNow(); });
@@ -33647,6 +33706,22 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       side.setAttribute("hidden", "");
       side.setAttribute("aria-hidden", "true");
     }
+  }
+
+  function syncMonthQuickAddFab(){
+    const btn = document.getElementById("iuCalMonthQuickAddBtn");
+    const ov = getOverlay();
+    if (!btn) return;
+    if (!ov || ov.hidden){
+      btn.hidden = true;
+      return;
+    }
+    const month = state.view === "month";
+    const editingMonth = !!(state.inline && state.inline.showDatePicker);
+    const show = month && !state.dayOpen && !state.mobileDayOverlayOpen && !editingMonth;
+    btn.hidden = !show;
+    const vr = document.getElementById("iuCalendarViewRoot");
+    if (vr) vr.classList.toggle("iu-calendarOverlay__viewRoot--monthFabPad", show);
   }
 
   function syncBridgeFormFields(){
@@ -33839,6 +33914,16 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
       const close = t && t.closest ? t.closest("[data-iu-calendar-close]") : null;
       if (close){ e.preventDefault(); closeOverlay(); return; }
+      const monthFab = t && t.closest ? t.closest("[data-iu-cal-month-fab]") : null;
+      if (monthFab){
+        e.preventDefault();
+        const ov0 = getOverlay();
+        if (!ov0 || ov0.hidden) return;
+        if (state.view !== "month" || state.dayOpen || state.mobileDayOverlayOpen) return;
+        const def = defaultDateForMonthQuickAdd();
+        openCalendarEventForm({ source: "month", date: def, time: "09:00", showDatePicker: true });
+        return;
+      }
       const viewBtn = t && t.closest ? t.closest("[data-iu-cal-view]") : null;
       if (viewBtn){
         const v = String(viewBtn.getAttribute("data-iu-cal-view") || "");
