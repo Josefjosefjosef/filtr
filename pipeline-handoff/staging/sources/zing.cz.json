@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zing.cz",
-  "ingestedAt": "2026-05-03T14:59:44.193724Z",
+  "ingestedAt": "2026-05-03T16:15:24.599248Z",
   "items": [
+    {
+      "section": "hry",
+      "contentType": "article",
+      "title": "Nový zákon chce ověřování věku ve všech online hrách obsahující chat",
+      "url": "https://zing.cz/article/novy-zakon-chce-overovani-veku-ve-vsech-online-hrach-obsahujici-chat",
+      "dt": "2026-05-03T16:00:00Z",
+      "media_raw": "Zing",
+      "media_norm": "Zing",
+      "tokens": [
+        "chat",
+        "chce",
+        "hrách",
+        "nový",
+        "obsahující",
+        "online",
+        "ověřování",
+        "věku",
+        "všech",
+        "zákon"
+      ],
+      "feedCategory": "hry",
+      "feedType": "rss",
+      "feedId": "hry_zing",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "zing.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "hry",
       "contentType": "article",
@@ -971,31 +998,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "zing.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "hry",
-      "contentType": "article",
-      "title": "The Blood of Dawnwalker od veteránů z CD Projektu odhalilo datum vydání",
-      "url": "https://zing.cz/article/the-blood-of-dawnwalker-od-veteranu-z-cd-projektu-odhalilo-datum-vydani",
-      "dt": "2026-04-28T18:00:00Z",
-      "media_raw": "Zing",
-      "media_norm": "Zing",
-      "tokens": [
-        "blood",
-        "datum",
-        "dawnwalker",
-        "odhalilo",
-        "projektu",
-        "the",
-        "veteránů",
-        "vydání"
-      ],
-      "feedCategory": "hry",
-      "feedType": "rss",
-      "feedId": "hry_zing",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "zing.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -1006,7 +1008,7 @@
       "httpStatus": 200,
       "contentType": "text/xml;charset=utf-8",
       "finalUrl": "https://zing.cz/rss/all",
-      "bytes": 125156,
+      "bytes": 125275,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1043,7 +1045,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 40,
-        "raw_feed_latest_publishedAt": "2026-05-03T14:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T16:00:00Z",
         "valid_publishedAt_count": 40,
         "mapped_to_section_count": {
           "other": 39,
@@ -1059,6 +1061,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nový zákon chce ověřování věku ve všech online hrách obsahující chat",
+            "publishedAt": "2026-05-03T16:00:00Z"
+          },
           {
             "title": "Hra Heroes of Might and Magic: Olden Era se zaplatila za jeden den",
             "publishedAt": "2026-05-03T14:00:00Z"
@@ -1086,10 +1092,6 @@
           {
             "title": "Cozy novinky s Terry #52",
             "publishedAt": "2026-05-02T10:00:00Z"
-          },
-          {
-            "title": "Internet Archive zachraňuje historii PC gamingu",
-            "publishedAt": "2026-05-02T08:00:00Z"
           }
         ]
       }

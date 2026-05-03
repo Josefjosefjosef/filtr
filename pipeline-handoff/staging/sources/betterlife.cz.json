@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "betterlife.cz",
-  "ingestedAt": "2026-05-03T14:59:44.193724Z",
+  "ingestedAt": "2026-05-03T16:15:24.599248Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Příští týden v seriálu Ulice: Konflikty, pobyt za mřížemi, návrat a hrdinský čin",
+      "url": "https://www.betterlife.cz/pristi-tyden-v-serialu-ulice-konflikty-pobyt-za-mrizemi-navrat-a-hrdinsky-cin/",
+      "dt": "2026-05-03T15:59:57Z",
+      "media_raw": "BetterLife",
+      "media_norm": "BetterLife",
+      "tokens": [
+        "hrdinský",
+        "konflikty",
+        "mřížemi",
+        "návrat",
+        "pobyt",
+        "příští",
+        "seriálu",
+        "týden",
+        "ulice",
+        "čin"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_betterlife",
+      "sourceDisplayWeight": 0.65,
+      "sourceBatchKey": "betterlife.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -246,33 +273,6 @@
       "sourceDisplayWeight": 0.65,
       "sourceBatchKey": "betterlife.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "„Chudák, už má tohle…“ Jiřina Bohdalová přiznala, že raději zapomíná své hodinky pro seniory",
-      "url": "https://www.betterlife.cz/chudak-uz-ma-tohle-jirina-bohdalova-priznala-ze-radeji-zapomina-sve-hodinky-pro-seniory/",
-      "dt": "2026-04-29T07:58:30Z",
-      "media_raw": "BetterLife",
-      "media_norm": "BetterLife",
-      "tokens": [
-        "bohdalová",
-        "chudák",
-        "hodinky",
-        "jiřina",
-        "přiznala",
-        "raději",
-        "seniory",
-        "své",
-        "tohle",
-        "zapomíná"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_betterlife",
-      "sourceDisplayWeight": 0.65,
-      "sourceBatchKey": "betterlife.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -283,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.betterlife.cz/feed/",
-      "bytes": 65860,
+      "bytes": 71029,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -343,7 +343,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T15:56:08Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T15:59:57Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
           "zdravi": 10
@@ -358,6 +358,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Příští týden v seriálu Ulice: Konflikty, pobyt za mřížemi, návrat a hrdinský čin",
+            "publishedAt": "2026-05-03T15:59:57Z"
+          },
           {
             "title": "Pavol Habera oslavil 64. narozeniny. Fanouškům přiznal jaký bere důchod, televize ho vypípala",
             "publishedAt": "2026-05-02T15:56:08Z"
@@ -385,10 +389,6 @@
           {
             "title": "Ulice: Noční návštěva u Adriany doma přinese rozuzlení celého případu",
             "publishedAt": "2026-04-30T15:58:34Z"
-          },
-          {
-            "title": "Tajemství dokonalého trávníku spočívá ve správné technologii. Levné stroje stébla fatálně poškozují",
-            "publishedAt": "2026-04-30T05:58:32Z"
           }
         ]
       }
