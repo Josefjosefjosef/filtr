@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "aktualne.cz",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "„Přestaň jíst lidi!“ Odposlechy odkrývají případy kanibalismu mezi ruskými vojáky",
+      "url": "https://zpravy.aktualne.cz/zahranici/prestan-jist-lidi-odposlechy-odkryvaji-pripady-kanibalismu-mezi-ruskymi-vojaky/r~aaa29536afd14a28fcc5ae086c043b44/",
+      "dt": "2026-05-03T11:07:00Z",
+      "media_raw": "Aktuálně",
+      "media_norm": "Aktuálně",
+      "tokens": [
+        "jíst",
+        "kanibalismu",
+        "lidi",
+        "odkrývají",
+        "odposlechy",
+        "přestaň",
+        "případy",
+        "ruskými",
+        "vojáky"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rss",
+      "feedId": "zpr_aktualne",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "aktualne.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -503,34 +529,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "aktualne.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Extrémní auta neznámé značky koupíte v Česku. MHero si za terénní hrátky nechá zaplatit",
-      "url": "https://zpravy.aktualne.cz/ekonomika/auto/nove-automobily/extremni-auta-nezname-znacky-koupite-v-cesku-mhero-si-za-terenni-hratky-necha-zaplatit/r~aaa299442b7927592667d4a84390ba99/",
-      "dt": "2026-05-03T04:32:00Z",
-      "media_raw": "Aktuálně",
-      "media_norm": "Aktuálně",
-      "tokens": [
-        "auta",
-        "extrémní",
-        "hrátky",
-        "koupíte",
-        "mhero",
-        "nechá",
-        "neznámé",
-        "terénní",
-        "zaplatit",
-        "značky",
-        "česku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rss",
-      "feedId": "zpr_aktualne",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "aktualne.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -541,7 +539,7 @@
       "httpStatus": 200,
       "contentType": "application/xml; charset=utf-8",
       "finalUrl": "https://www.aktualne.cz/rss/",
-      "bytes": 21389,
+      "bytes": 21331,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -578,13 +576,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:07:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
+          "zpravy": 14,
           "sport": 4,
-          "zpravy": 13,
-          "other": 2,
-          "finance": 1
+          "other": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -596,6 +593,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "„Přestaň jíst lidi!“ Odposlechy odkrývají případy kanibalismu mezi ruskými vojáky",
+            "publishedAt": "2026-05-03T11:07:00Z"
+          },
           {
             "title": "Saúdský penězovod vysychá. Hvězdy golfu čelí nejisté budoucnosti",
             "publishedAt": "2026-05-03T10:00:00Z"
@@ -623,10 +624,6 @@
           {
             "title": "Nejdřív zmrazit, poté opéct. Malá změna v ukládání pečiva může ovlivnit hlad i večerní přejídání",
             "publishedAt": "2026-04-03T03:59:00Z"
-          },
-          {
-            "title": "Philadelphia narazila. Vladař třikrát inkasoval a Carolina a ledě vládla",
-            "publishedAt": "2026-05-03T05:23:00Z"
           }
         ]
       }

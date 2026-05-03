@@ -1,24 +1,51 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz/sport",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "ONLINE: Teplice - Slovácko, hosté potřebují body, domácí se mohou uklidnit",
+      "title": "ONLINE: Teplice - Slovácko 1:0, domácí tým posílá do vedení Mareček",
       "url": "https://www.idnes.cz/fotbal/prvni-liga/chance-liga-skupina-o-zachranu-teplice-slovacko-online.A260501_130916_fotbal_tals",
-      "dt": "2026-05-03T10:30:00Z",
+      "dt": "2026-05-03T11:14:00Z",
       "media_raw": "iDNES / Sport",
       "media_norm": "iDNES / Sport",
       "tokens": [
-        "body",
         "domácí",
-        "hosté",
-        "potřebují",
+        "mareček",
+        "posílá",
         "slovácko",
         "teplice",
-        "uklidnit"
+        "tým",
+        "vedení"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rubric",
+      "feedId": "spt_idnes",
+      "sourceDisplayWeight": 1.0,
+      "sourceBatchKey": "idnes.cz/sport",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Ivánek by se bavil. Žižkov doma zdolal Táborsko, kopal tři penalty za poločas",
+      "url": "https://www.idnes.cz/fotbal/domaci-souteze/fotbaliste-taborska-prohrali-na-zizkove-a-nevyuzili-zavahani-konkurentu.A260503_125550_fot_dsouteze_ald",
+      "dt": "2026-05-03T11:06:00Z",
+      "media_raw": "iDNES / Sport",
+      "media_norm": "iDNES / Sport",
+      "tokens": [
+        "bavil",
+        "doma",
+        "ivánek",
+        "kopal",
+        "penalty",
+        "poločas",
+        "táborsko",
+        "tři",
+        "zdolal",
+        "žižkov"
       ],
       "feedCategory": "sport",
       "feedType": "rubric",
@@ -775,33 +802,6 @@
       "sourceDisplayWeight": 1.0,
       "sourceBatchKey": "idnes.cz/sport",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Povinná výhra pro Arsenal, zářil Gyökeres. West Hamu se komplikuje cesta k záchraně",
-      "url": "https://www.idnes.cz/fotbal/zahranici/premier-league-35-kolo-online-zpravodajstvi-vysledky.A260501_123209_fot_zahranici_duff",
-      "dt": "2026-05-02T18:42:21Z",
-      "media_raw": "iDNES / Sport",
-      "media_norm": "iDNES / Sport",
-      "tokens": [
-        "arsenal",
-        "cesta",
-        "gyökeres",
-        "hamu",
-        "komplikuje",
-        "povinná",
-        "výhra",
-        "west",
-        "záchraně",
-        "zářil"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rubric",
-      "feedId": "spt_idnes",
-      "sourceDisplayWeight": 1.0,
-      "sourceBatchKey": "idnes.cz/sport",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -812,7 +812,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=sport",
-      "bytes": 45992,
+      "bytes": 45535,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -849,7 +849,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:30:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:14:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 30
@@ -865,8 +865,12 @@
         },
         "sample_titles": [
           {
-            "title": "ONLINE: Teplice - Slovácko, hosté potřebují body, domácí se mohou uklidnit",
-            "publishedAt": "2026-05-03T10:30:00Z"
+            "title": "ONLINE: Teplice - Slovácko 1:0, domácí tým posílá do vedení Mareček",
+            "publishedAt": "2026-05-03T11:14:00Z"
+          },
+          {
+            "title": "Ivánek by se bavil. Žižkov doma zdolal Táborsko, kopal tři penalty za poločas",
+            "publishedAt": "2026-05-03T11:06:00Z"
           },
           {
             "title": "S pálivou omáčkou od Sheerana na dresu. Jak Ipswich opět vybojoval Premier League",
@@ -891,10 +895,6 @@
           {
             "title": "Hořké jubileum. Messi ve stém utkání za Miami skóroval, jeho tým ztratil náskok 3:0",
             "publishedAt": "2026-05-03T08:51:00Z"
-          },
-          {
-            "title": "Z posledního místa k závratnému triumfu. Kentucky Derby ovládl hřebec Golden Tempo",
-            "publishedAt": "2026-05-03T08:21:00Z"
           }
         ]
       }

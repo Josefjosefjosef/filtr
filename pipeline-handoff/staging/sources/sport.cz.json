@@ -1,25 +1,76 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "sport.cz",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
     {
       "section": "sport",
       "contentType": "article",
-      "title": "FOTBAL ONLINE: Sparta se utká s Jabloncem, Plzeň hostí Hradec",
+      "title": "FOTBAL ONLINE: Slovácko se snaží uniknout hrozbě sestupu, Sparta se utká s Jabloncem",
       "url": "https://www.sport.cz/clanek/fotbal-ceska-1-liga-sparta-se-utka-s-jabloncem-plzen-hosti-hradec-5447785",
       "dt": "2026-05-03T04:34:26Z",
       "media_raw": "Sport.cz",
       "media_norm": "Sport.cz",
       "tokens": [
         "fotbal",
-        "hostí",
-        "hradec",
+        "hrozbě",
         "jabloncem",
         "online",
-        "plzeň",
+        "sestupu",
+        "slovácko",
+        "snaží",
         "sparta",
+        "uniknout",
         "utká"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Divočina na Žižkově. Táborsko srazily tři penalty",
+      "url": "https://www.sport.cz/clanek/fotbal-divocina-na-zizkove-taborsko-srazily-tri-penalty-5447817",
+      "dt": "2026-05-03T10:48:44Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "divočina",
+        "penalty",
+        "srazily",
+        "táborsko",
+        "tři",
+        "žižkově"
+      ],
+      "feedCategory": "sport",
+      "feedType": "rss",
+      "feedId": "spt_sportcz",
+      "sourceDisplayWeight": 1.15,
+      "sourceBatchKey": "sport.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "sport",
+      "contentType": "article",
+      "title": "Obrovské emoce renesančního člověka. Českým běžcům vládl atlet i zpěvák",
+      "url": "https://www.sport.cz/clanek/atletika-obrovske-emoce-renesancniho-cloveka-ceskym-bezcum-vladl-atlet-i-zpevak-5447811",
+      "dt": "2026-05-03T10:06:02Z",
+      "media_raw": "Sport.cz",
+      "media_norm": "Sport.cz",
+      "tokens": [
+        "atlet",
+        "běžcům",
+        "emoce",
+        "obrovské",
+        "renesančního",
+        "vládl",
+        "zpěvák",
+        "českým",
+        "člověka"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -73,32 +124,6 @@
         "pardubice",
         "talent",
         "technicky"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Obrovské emoce renesančního člověka. Českým běžcům vládl atlet i zpěvák",
-      "url": "https://www.sport.cz/clanek/atletika-obrovske-emoce-renesancniho-cloveka-ceskym-bezcum-vladl-atlet-i-zpevak-5447811",
-      "dt": "2026-05-03T10:06:02Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "atlet",
-        "běžcům",
-        "emoce",
-        "obrovské",
-        "renesančního",
-        "vládl",
-        "zpěvák",
-        "českým",
-        "člověka"
       ],
       "feedCategory": "sport",
       "feedType": "rss",
@@ -757,32 +782,6 @@
       "sourceDisplayWeight": 1.15,
       "sourceBatchKey": "sport.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "sport",
-      "contentType": "article",
-      "title": "Třetí pole position za sebou pro Antonelliho, v první řadě ho doplní Verstappen",
-      "url": "https://www.sport.cz/clanek/moto-formule-1-treti-pole-position-v-rade-pro-antonelliho-v-prvni-rade-ho-doplni-verstappen-5447777",
-      "dt": "2026-05-02T21:13:15Z",
-      "media_raw": "Sport.cz",
-      "media_norm": "Sport.cz",
-      "tokens": [
-        "antonelliho",
-        "doplní",
-        "pole",
-        "position",
-        "první",
-        "sebou",
-        "třetí",
-        "verstappen",
-        "řadě"
-      ],
-      "feedCategory": "sport",
-      "feedType": "rss",
-      "feedId": "spt_sportcz",
-      "sourceDisplayWeight": 1.15,
-      "sourceBatchKey": "sport.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -793,7 +792,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.sport.cz/rss",
-      "bytes": 44821,
+      "bytes": 44763,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -830,7 +829,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:38:39Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:48:44Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
           "sport": 29,
@@ -847,8 +846,16 @@
         },
         "sample_titles": [
           {
-            "title": "FOTBAL ONLINE: Sparta se utká s Jabloncem, Plzeň hostí Hradec",
+            "title": "FOTBAL ONLINE: Slovácko se snaží uniknout hrozbě sestupu, Sparta se utká s Jabloncem",
             "publishedAt": "2026-05-03T04:34:26Z"
+          },
+          {
+            "title": "Divočina na Žižkově. Táborsko srazily tři penalty",
+            "publishedAt": "2026-05-03T10:48:44Z"
+          },
+          {
+            "title": "Obrovské emoce renesančního člověka. Českým běžcům vládl atlet i zpěvák",
+            "publishedAt": "2026-05-03T10:06:02Z"
           },
           {
             "title": "KOMENTÁŘ: Nikdo jim nevěřil, ale mladí čeští hokejisté pochopili, že tým je nejvíc",
@@ -857,10 +864,6 @@
           {
             "title": "Jako motorka, technicky odskočený. Nigerijský talent nadchl Pardubice",
             "publishedAt": "2026-05-03T10:22:45Z"
-          },
-          {
-            "title": "Obrovské emoce renesančního člověka. Českým běžcům vládl atlet i zpěvák",
-            "publishedAt": "2026-05-03T10:06:02Z"
           },
           {
             "title": "Na fantastického Schicka se v Německu snáší chvála ze všech stran",
@@ -873,10 +876,6 @@
           {
             "title": "Pražský maraton vyhráli Tsegu a Jelimová, český titul obhájil Havlena",
             "publishedAt": "2026-05-03T08:35:37Z"
-          },
-          {
-            "title": "Nečekaný hrdina! Slavii spasil sváteční střelec. Trpišovský: Strop má ještě výš",
-            "publishedAt": "2026-05-03T09:26:59Z"
           }
         ]
       }

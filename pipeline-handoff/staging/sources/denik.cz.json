@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Nadšení vystřídaly spory. Na záchranu velryby Timmyho navazuje hněv a nejistota",
+      "url": "https://www.denik.cz/staty-eu/timmy-velryba-zachrana-severni-more-spory-nejasnosti.html",
+      "dt": "2026-05-03T10:36:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "hněv",
+        "nadšení",
+        "navazuje",
+        "nejistota",
+        "spory",
+        "timmyho",
+        "velryby",
+        "vystřídaly",
+        "záchranu"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -630,33 +656,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Hasiči bojují s požárem v Národním parku České Švýcarsko. Platí zvláštní stupeň",
-      "url": "https://www.denik.cz/pozary/pozar-v-narodnim-parku-ceske-svycarsko-rynartice-jetrichovice-2026.html",
-      "dt": "2026-05-02T12:26:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "bojují",
-        "hasiči",
-        "národním",
-        "parku",
-        "platí",
-        "požárem",
-        "stupeň",
-        "zvláštní",
-        "české",
-        "švýcarsko"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -667,7 +666,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 28571,
+      "bytes": 28606,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -704,7 +703,7 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-03T10:19:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:36:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
           "zpravy": 22,
@@ -721,6 +720,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Nadšení vystřídaly spory. Na záchranu velryby Timmyho navazuje hněv a nejistota",
+            "publishedAt": "2026-05-03T10:36:00Z"
+          },
           {
             "title": "Řecko zažívá mimořádně studený květen. V horách u Athén sněží",
             "publishedAt": "2026-05-03T10:19:00Z"
@@ -748,10 +751,6 @@
           {
             "title": "Rakouské letiště Schwechat je pořád daleko před Prahou",
             "publishedAt": "2026-05-03T05:10:00Z"
-          },
-          {
-            "title": "Trump zopakoval, že stáhne vojska z Německa. Chce větší omezení než Pentagon",
-            "publishedAt": "2026-05-03T04:38:00Z"
           }
         ]
       }

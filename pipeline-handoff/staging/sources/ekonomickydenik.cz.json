@@ -1,8 +1,34 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ekonomickydenik.cz",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
+    {
+      "section": "doprava",
+      "contentType": "article",
+      "title": "Babiš: Letiště Karlovy Vary přejde pod armádu. Hejtman kraje není proti",
+      "url": "https://ekonomickydenik.cz/babis-letiste-karlovy-vary-prejde-pod-armadu/",
+      "dt": "2026-05-03T11:15:00Z",
+      "media_raw": "Ekonomický deník",
+      "media_norm": "Ekonomický deník",
+      "tokens": [
+        "armádu",
+        "babiš",
+        "hejtman",
+        "karlovy",
+        "kraje",
+        "letiště",
+        "proti",
+        "přejde",
+        "vary"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_ekonomickydenik",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "ekonomickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -766,33 +792,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "ekonomickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "„Zklamání“. Česká ekonomika roste jen pomalu. Dopady války teprve přijdou",
-      "url": "https://ekonomickydenik.cz/zklamani-ekonomiky-roste-pomalu/",
-      "dt": "2026-04-30T11:28:53Z",
-      "media_raw": "Ekonomický deník",
-      "media_norm": "Ekonomický deník",
-      "tokens": [
-        "dopady",
-        "ekonomika",
-        "jen",
-        "pomalu",
-        "přijdou",
-        "roste",
-        "teprve",
-        "války",
-        "zklamání",
-        "česká"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_ekonomickydenik",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "ekonomickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -803,7 +802,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://ekonomickydenik.cz/feed/",
-      "bytes": 69966,
+      "bytes": 70009,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -840,12 +839,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T09:58:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T11:15:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
+          "zpravy": 2,
           "zdravi": 2,
-          "finance": 27,
-          "zpravy": 1
+          "finance": 26
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -857,6 +856,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Babiš: Letiště Karlovy Vary přejde pod armádu. Hejtman kraje není proti",
+            "publishedAt": "2026-05-03T11:15:00Z"
+          },
           {
             "title": "Dopady slunečného víkendu: Elektřinu vyrábíme levně a bez emisí. Je to výhra nebo bolehlav?",
             "publishedAt": "2026-05-03T09:58:00Z"
@@ -884,10 +887,6 @@
           {
             "title": "Taková transakční rodinka. Synové Trumpa zbohatli na investici do těžby v Kazachstánu",
             "publishedAt": "2026-05-02T13:30:00Z"
-          },
-          {
-            "title": "Semafory na přechodu nutí chodce porušovat předpisy, tvrdí náměstek. Ozvala se kritika",
-            "publishedAt": "2026-05-02T12:30:00Z"
           }
         ]
       }

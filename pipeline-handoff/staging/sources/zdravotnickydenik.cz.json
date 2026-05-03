@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-03T10:45:15.025693Z",
+  "ingestedAt": "2026-05-03T11:19:51.145502Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Pevnost v Letňanech? Babiše fascinuje nemocnice, která se do 72 hodin schová pod zem",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/babis-prosazuje-vojenskou-podzemni-nemocnici-v-praze/",
+      "dt": "2026-05-03T10:49:12Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "babiše",
+        "fascinuje",
+        "hodin",
+        "letňanech",
+        "nemocnice",
+        "pevnost",
+        "schová",
+        "zem"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "zdravi",
       "contentType": "article",
@@ -248,33 +273,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "krimi",
-      "contentType": "article",
-      "title": "Záchranář z Vysočiny dorazil z výjezdu o hodinu později. Proti výpovědi uspěl u soudu",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/zzs-kraj-vysocina-vypoved-soud/",
-      "dt": "2026-04-30T11:14:56Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "dorazil",
-        "hodinu",
-        "později",
-        "proti",
-        "soudu",
-        "uspěl",
-        "vysočiny",
-        "výjezdu",
-        "výpovědi",
-        "záchranář"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -285,7 +283,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 94554,
+      "bytes": 96564,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -322,11 +320,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-03T05:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T10:49:12Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zdravi": 7,
-          "zpravy": 3
+          "zdravi": 8,
+          "zpravy": 2
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -338,6 +336,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Pevnost v Letňanech? Babiše fascinuje nemocnice, která se do 72 hodin schová pod zem",
+            "publishedAt": "2026-05-03T10:49:12Z"
+          },
           {
             "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
             "publishedAt": "2026-05-03T05:00:00Z"
@@ -365,10 +367,6 @@
           {
             "title": "Chcete moderní lék na rakovinu? Musíte do USA, v Evropě se ho prodávat nevyplatí, upozorňuje firma",
             "publishedAt": "2026-05-01T05:00:00Z"
-          },
-          {
-            "title": "Nos odhalí Alzheimera dříve než mozek. Překvapivý objev může změnit léčbu",
-            "publishedAt": "2026-04-30T14:54:25Z"
           }
         ]
       }
