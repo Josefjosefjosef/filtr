@@ -1,8 +1,35 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "denik.cz",
-  "ingestedAt": "2026-05-03T01:39:57.764475Z",
+  "ingestedAt": "2026-05-03T02:14:42.236003Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Obchodníci nabízejí jarní slevy na uhlí. Může se hodit i jako další zdroj tepla",
+      "url": "https://www.denik.cz/ekonomika/topna-sezona-palivo-uhli-drevo-plyn-slevy-emise-povolenky-ets-2.html",
+      "dt": "2026-05-03T02:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "další",
+        "hodit",
+        "jako",
+        "jarní",
+        "nabízejí",
+        "obchodníci",
+        "slevy",
+        "tepla",
+        "uhlí",
+        "zdroj"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -188,6 +215,31 @@
       "_dt_serialized": true
     },
     {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
+      "url": "https://www.denik.cz/ekonomika/cesko-ekonomika-nejsou-pracovnici-chybi-ukrajinci-ceske-firmy-lovi-na-filipinach.html",
+      "dt": "2026-05-02T14:00:00Z",
+      "media_raw": "Deník",
+      "media_norm": "Deník",
+      "tokens": [
+        "filipínách",
+        "firmy",
+        "lidi",
+        "loví",
+        "nejsou",
+        "nestačí",
+        "ukrajinci",
+        "české"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_denik",
+      "sourceDisplayWeight": 0.95,
+      "sourceBatchKey": "denik.cz",
+      "_dt_serialized": true
+    },
+    {
       "section": "aktualne",
       "contentType": "article",
       "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
@@ -205,31 +257,6 @@
         "obrazem",
         "retro",
         "spanilá"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Nejsou lidi. Ukrajinci už nestačí, české firmy loví na Filipínách",
-      "url": "https://www.denik.cz/ekonomika/cesko-ekonomika-nejsou-pracovnici-chybi-ukrajinci-ceske-firmy-lovi-na-filipinach.html",
-      "dt": "2026-05-02T14:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "filipínách",
-        "firmy",
-        "lidi",
-        "loví",
-        "nejsou",
-        "nestačí",
-        "ukrajinci",
-        "české"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -623,30 +650,6 @@
       "sourceDisplayWeight": 0.95,
       "sourceBatchKey": "denik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Čarodějnické prohlídky ve Šternberku na fotkách: Nechybělo napětí ani špekáčky",
-      "url": "https://www.denik.cz/ctenar-reporter/hrad-sternberk-carodejnice-2026.html",
-      "dt": "2026-05-02T05:00:00Z",
-      "media_raw": "Deník",
-      "media_norm": "Deník",
-      "tokens": [
-        "fotkách",
-        "napětí",
-        "nechybělo",
-        "prohlídky",
-        "čarodějnické",
-        "špekáčky",
-        "šternberku"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_denik",
-      "sourceDisplayWeight": 0.95,
-      "sourceBatchKey": "denik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -657,7 +660,7 @@
       "httpStatus": 200,
       "contentType": "application/xml",
       "finalUrl": "https://www.denik.cz/rss/zpravy.html",
-      "bytes": 27211,
+      "bytes": 27522,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -694,11 +697,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 25,
-        "raw_feed_latest_publishedAt": "2026-05-02T18:05:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T02:00:00Z",
         "valid_publishedAt_count": 25,
         "mapped_to_section_count": {
-          "zpravy": 24,
-          "finance": 1
+          "finance": 2,
+          "zpravy": 23
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -710,6 +713,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Obchodníci nabízejí jarní slevy na uhlí. Může se hodit i jako další zdroj tepla",
+            "publishedAt": "2026-05-03T02:00:00Z"
+          },
           {
             "title": "Alkohol, křik a výhrůžky: Letadlo Easyjet muselo kvůli opilcům předčasně přistát",
             "publishedAt": "2026-05-02T18:05:00Z"
@@ -737,10 +744,6 @@
           {
             "title": "U Chrastavy hoří les. S plameny bojuje 15 jednotek, na místě jsou i drony",
             "publishedAt": "2026-05-02T14:13:00Z"
-          },
-          {
-            "title": "OBRAZEM: Spanilá jízda retro kočárků v Lidicích nadchla milovníky historie",
-            "publishedAt": "2026-05-02T14:00:00Z"
           }
         ]
       }
