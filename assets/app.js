@@ -32975,32 +32975,33 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function buildTimelineEventHtml(ev, nearestId){
     const addr = String(ev.address || "").trim();
     const note = String(ev.note || "").trim();
+    const timeStr = String(ev.time || "").trim() || "—";
     const pin = addr
       ? '<button type="button" class="iu-calEvIcon iu-calEvIcon--pin" data-iu-cal-pin="' + esc(addr) + '" aria-label="Navigovat">📍</button>'
       : "";
-    const nbtn = note
-      ? '<button type="button" class="iu-calEvIcon iu-calEvIcon--note" data-iu-cal-note-icon="1" aria-label="Poznámka">📝</button>'
-      : "";
-    const icons = pin || nbtn ? '<div class="iu-calTimelineEv__icons">' + pin + nbtn + "</div>" : "";
-    const noteDrop = note ? '<div class="iu-calTimelineEv__noteDrop" data-iu-cal-note-body="1">' + esc(note) + "</div>" : "";
+    const actionsHtml = pin ? '<div class="iu-cal-event-actions">' + pin + "</div>" : "";
+    const noteHtml = note ? '<div class="iu-cal-event-note" data-iu-cal-note-body="1">' + esc(note) + "</div>" : "";
     const nextCls = ev.id === nearestId ? " is-next-upcoming" : "";
     return (
-      '<div class="iu-calTimelineEv' + nextCls + '" data-iu-cal-ev-wrap="1">' +
-      '<div class="iu-calTimelineEv__row">' +
-      '<button type="button" class="iu-calTimelineEv__main" data-iu-cal-open-event="' +
+      '<div class="iu-cal-row iu-event-row iu-has-event' +
+      nextCls +
+      '" data-iu-cal-ev-wrap="1">' +
+      '<div class="iu-cal-time">' +
+      esc(timeStr) +
+      "</div>" +
+      '<div class="iu-cal-event">' +
+      '<button type="button" class="iu-cal-event-open" data-iu-cal-open-event="' +
       esc(ev.id) +
+      '" aria-label="' +
+      esc(timeStr + " · " + String(ev.title || "")) +
       '">' +
-      '<div class="iu-calTimelineEv__title">' +
+      '<span class="iu-cal-event-title">' +
       esc(ev.title) +
-      "</div>" +
-      '<div class="iu-calTimelineEv__meta">' +
-      esc(ev.time) +
-      "</div>" +
+      "</span>" +
       "</button>" +
-      icons +
-      "</div>" +
-      noteDrop +
-      "</div>"
+      actionsHtml +
+      noteHtml +
+      "</div></div>"
     );
   }
 
@@ -33054,13 +33055,11 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         slotSparse +
         (hasEvent ? " iu-calHourSlot--hasEvents" : "");
       const hourBtn =
-        hasEvent
-          ? ""
-          : '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
-            slotH +
-            '">' +
-            esc(label) +
-            "</button>";
+        '<button type="button" class="iu-calHourSlot__btn" data-iu-cal-hour-label="' +
+        slotH +
+        '">' +
+        esc(label) +
+        "</button>";
       html +=
         '<div class="' +
         slotCls +
