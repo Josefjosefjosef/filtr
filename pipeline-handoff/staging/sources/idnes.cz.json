@@ -1,8 +1,61 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "idnes.cz",
-  "ingestedAt": "2026-05-03T05:00:29.197154Z",
+  "ingestedAt": "2026-05-03T05:35:10.663867Z",
   "items": [
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Trump varoval, že je připraven ještě více snížit počet amerických vojáků v Německu",
+      "url": "https://www.idnes.cz/zpravy/zahranicni/trump-je-pripraven-jeste-vice-snizit-pocet-americkych-vojaku-v-nemecku.A260503_071337_zahranicni_vank",
+      "dt": "2026-05-03T05:19:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "amerických",
+        "ještě",
+        "německu",
+        "počet",
+        "připraven",
+        "snížit",
+        "trump",
+        "varoval",
+        "vojáků"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
+    {
+      "section": "aktualne",
+      "contentType": "article",
+      "title": "Básník musí být napůl šílený, říká kardiochirurg s cenou Magnesia Litera",
+      "url": "https://www.idnes.cz/ostrava/zpravy/radovan-jursa-kardiochirurg-magnesia-litera-basnik-ostrava.A260429_929735_ostrava-zpravy_pjen",
+      "dt": "2026-05-03T05:15:00Z",
+      "media_raw": "iDNES / Zprávy",
+      "media_norm": "iDNES / Zprávy",
+      "tokens": [
+        "básník",
+        "být",
+        "cenou",
+        "kardiochirurg",
+        "litera",
+        "magnesia",
+        "musí",
+        "napůl",
+        "říká",
+        "šílený"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_idnes_zpravy",
+      "sourceDisplayWeight": 1.1,
+      "sourceBatchKey": "idnes.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -731,56 +784,6 @@
         "pozval",
         "ten",
         "zelenskyj"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Na Strakonicku nouzově přistál kluzák. Skončil v zahrádkářské kolonii",
-      "url": "https://www.idnes.cz/ceske-budejovice/zpravy/nouzove-pristani-kluzak-strakonicko.A260502_134732_budejovice-zpravy_pari",
-      "dt": "2026-05-02T12:05:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "kluzák",
-        "kolonii",
-        "nouzově",
-        "přistál",
-        "skončil",
-        "strakonicku",
-        "zahrádkářské"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_idnes_zpravy",
-      "sourceDisplayWeight": 1.1,
-      "sourceBatchKey": "idnes.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "kultura",
-      "contentType": "article",
-      "title": "RECENZE: A národní poklad jede furt dál. Filmu o Bohdalové sluší vztah s vnukem",
-      "url": "https://www.idnes.cz/kultura/film-televize/jirina-bohdalova-a-jede-se-furt-dal-tv-nova.A260429_194715_filmvideo_spm",
-      "dt": "2026-05-02T12:00:00Z",
-      "media_raw": "iDNES / Zprávy",
-      "media_norm": "iDNES / Zprávy",
-      "tokens": [
-        "bohdalové",
-        "filmu",
-        "furt",
-        "jede",
-        "národní",
-        "poklad",
-        "sluší",
-        "vnukem",
-        "vztah"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1585,7 +1588,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
-      "bytes": 48814,
+      "bytes": 48783,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1622,12 +1625,12 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T04:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T05:19:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 24,
+          "zpravy": 25,
           "finance": 4,
-          "other": 2
+          "other": 1
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1639,6 +1642,14 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Trump varoval, že je připraven ještě více snížit počet amerických vojáků v Německu",
+            "publishedAt": "2026-05-03T05:19:00Z"
+          },
+          {
+            "title": "Básník musí být napůl šílený, říká kardiochirurg s cenou Magnesia Litera",
+            "publishedAt": "2026-05-03T05:15:00Z"
+          },
           {
             "title": "K zápisu do školky už s ročním dítětem? Jinak právo na místo pro tříletého neplatí",
             "publishedAt": "2026-05-03T04:00:00Z"
@@ -1662,14 +1673,6 @@
           {
             "title": "Vztah jako lék na nervy: Funguje skvěle, pokud mu tedy zrovna nevypršela záruka",
             "publishedAt": "2026-05-02T22:00:00Z"
-          },
-          {
-            "title": "Ruská elita pocítila vichr války. Ale může jen žadonit před carem, píše ruský historik",
-            "publishedAt": "2026-05-02T22:00:00Z"
-          },
-          {
-            "title": "Vlivní republikáni varují před stažením amerických vojáků z Německa",
-            "publishedAt": "2026-05-02T19:46:00Z"
           }
         ]
       }

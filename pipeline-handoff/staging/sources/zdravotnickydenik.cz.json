@@ -1,8 +1,37 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "zdravotnickydenik.cz",
-  "ingestedAt": "2026-05-03T05:00:29.197154Z",
+  "ingestedAt": "2026-05-03T05:35:10.663867Z",
   "items": [
+    {
+      "section": "zdravi",
+      "contentType": "article",
+      "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
+      "url": "https://www.zdravotnickydenik.cz/2026/05/leky-regulace-bayer/",
+      "dt": "2026-05-03T05:00:00Z",
+      "media_raw": "Zdravotnický deník",
+      "media_norm": "Zdravotnický deník",
+      "tokens": [
+        "600",
+        "bayeru",
+        "dní",
+        "dusí",
+        "evropa",
+        "inflace",
+        "léky",
+        "nové",
+        "regulační",
+        "zástupce",
+        "čeká",
+        "říká"
+      ],
+      "feedCategory": "zdravi",
+      "feedType": "rss",
+      "feedId": "zdr_zdravotnickydenik",
+      "sourceDisplayWeight": 1.05,
+      "sourceBatchKey": "zdravotnickydenik.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "krimi",
       "contentType": "article",
@@ -246,34 +275,6 @@
       "sourceDisplayWeight": 1.05,
       "sourceBatchKey": "zdravotnickydenik.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "zdravi",
-      "contentType": "article",
-      "title": "Obviněný ředitel příbramské nemocnice: Cítím se nevinen. Kraj už rozhodl o mém osudu, naznačil",
-      "url": "https://www.zdravotnickydenik.cz/2026/04/holobrada-pribram-obvineni-kraj/",
-      "dt": "2026-04-30T10:07:30Z",
-      "media_raw": "Zdravotnický deník",
-      "media_norm": "Zdravotnický deník",
-      "tokens": [
-        "cítím",
-        "kraj",
-        "mém",
-        "naznačil",
-        "nemocnice",
-        "nevinen",
-        "obviněný",
-        "osudu",
-        "příbramské",
-        "rozhodl",
-        "ředitel"
-      ],
-      "feedCategory": "zdravi",
-      "feedType": "rss",
-      "feedId": "zdr_zdravotnickydenik",
-      "sourceDisplayWeight": 1.05,
-      "sourceBatchKey": "zdravotnickydenik.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -284,7 +285,7 @@
       "httpStatus": 200,
       "contentType": "application/rss+xml; charset=utf-8",
       "finalUrl": "https://www.zdravotnickydenik.cz/feed/",
-      "bytes": 88818,
+      "bytes": 94554,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -321,11 +322,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 10,
-        "raw_feed_latest_publishedAt": "2026-05-02T17:03:25Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T05:00:00Z",
         "valid_publishedAt_count": 10,
         "mapped_to_section_count": {
-          "zpravy": 3,
-          "zdravi": 7
+          "zdravi": 7,
+          "zpravy": 3
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -337,6 +338,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Evropa čeká na nové léky až 600 dní. Dusí ji „regulační inflace“, říká zástupce Bayeru",
+            "publishedAt": "2026-05-03T05:00:00Z"
+          },
           {
             "title": "Jed na krysy v dětské výživě: Policie zadržela podezřelého. Vyděrač řádil i v Česku",
             "publishedAt": "2026-05-02T17:03:25Z"
@@ -364,10 +369,6 @@
           {
             "title": "Nos odhalí Alzheimera dříve než mozek. Překvapivý objev může změnit léčbu",
             "publishedAt": "2026-04-30T14:54:25Z"
-          },
-          {
-            "title": "Blamáž na Slovensku: Stavbu vojenské nemocnice za miliardy zastavili, hrozí demolice",
-            "publishedAt": "2026-04-30T13:18:21Z"
           }
         ]
       }

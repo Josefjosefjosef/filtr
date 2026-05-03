@@ -1,8 +1,33 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "ceskatelevize.cz",
-  "ingestedAt": "2026-05-03T05:00:29.197154Z",
+  "ingestedAt": "2026-05-03T05:35:10.663867Z",
   "items": [
+    {
+      "section": "kultura",
+      "contentType": "article",
+      "title": "Jiřině Bohdalové je 95 let, hraje téměř stejně tak dlouho",
+      "url": "https://ct24.ceskatelevize.cz/clanek/kultura/jirine-bohdalove-je-95-let-hraje-temer-stejne-tak-dlouho-372892",
+      "dt": "2026-05-03T05:01:00Z",
+      "media_raw": "ČT24 / Domácí",
+      "media_norm": "ČT24 / Domácí",
+      "tokens": [
+        "bohdalové",
+        "dlouho",
+        "hraje",
+        "jiřině",
+        "let",
+        "stejně",
+        "tak",
+        "téměř"
+      ],
+      "feedCategory": "zpravy",
+      "feedType": "rubric",
+      "feedId": "zpr_ct24_domaci",
+      "sourceDisplayWeight": 1.2,
+      "sourceBatchKey": "ceskatelevize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "aktualne",
       "contentType": "article",
@@ -729,31 +754,6 @@
         "oznámil",
         "trump",
         "zvýšení"
-      ],
-      "feedCategory": "zpravy",
-      "feedType": "rubric",
-      "feedId": "zpr_ct24_domaci",
-      "sourceDisplayWeight": 1.2,
-      "sourceBatchKey": "ceskatelevize.cz",
-      "_dt_serialized": true
-    },
-    {
-      "section": "aktualne",
-      "contentType": "article",
-      "title": "Ropa zlevňuje po zprávách o novém návrhu Íránu na jednání s USA",
-      "url": "https://ct24.ceskatelevize.cz/clanek/svet/ropa-zlevnuje-po-zpravach-o-novem-navrhu-iranu-na-jednani-s-usa-373009",
-      "dt": "2026-05-01T14:59:08Z",
-      "media_raw": "ČT24 / Domácí",
-      "media_norm": "ČT24 / Domácí",
-      "tokens": [
-        "jednání",
-        "novém",
-        "návrhu",
-        "ropa",
-        "usa",
-        "zlevňuje",
-        "zprávách",
-        "íránu"
       ],
       "feedCategory": "zpravy",
       "feedType": "rubric",
@@ -1524,7 +1524,7 @@
       "httpStatus": 200,
       "contentType": "text/xml",
       "finalUrl": "https://ct24.ceskatelevize.cz/rss",
-      "bytes": 41792,
+      "bytes": 41534,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -1584,11 +1584,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 30,
-        "raw_feed_latest_publishedAt": "2026-05-03T04:38:53Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T05:01:00Z",
         "valid_publishedAt_count": 30,
         "mapped_to_section_count": {
-          "zpravy": 29,
-          "other": 1
+          "other": 2,
+          "zpravy": 28
         },
         "drop_counts": {
           "missing_publishedAt": 0,
@@ -1600,6 +1600,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Jiřině Bohdalové je 95 let, hraje téměř stejně tak dlouho",
+            "publishedAt": "2026-05-03T05:01:00Z"
+          },
           {
             "title": "Hasiči od soboty zasahují u požáru lesa v Českém Švýcarsku",
             "publishedAt": "2026-05-03T04:38:53Z"
@@ -1627,10 +1631,6 @@
           {
             "title": "Rakouská policie zadržela muže podezřelého z otrávení dětské výživy",
             "publishedAt": "2026-05-02T15:47:32Z"
-          },
-          {
-            "title": "Policisté nasadili první mobilní hlukoměr, odhaluje „řvoucí“ výfuky",
-            "publishedAt": "2026-05-02T15:00:00Z"
           }
         ]
       }
@@ -1736,7 +1736,7 @@
       "httpStatus": 200,
       "contentType": "text/html;charset=utf-8",
       "finalUrl": "https://art.ceskatelevize.cz",
-      "bytes": 77200,
+      "bytes": 77250,
       "reason": "not_xml_or_html",
       "bozo": false,
       "bozoException": "",

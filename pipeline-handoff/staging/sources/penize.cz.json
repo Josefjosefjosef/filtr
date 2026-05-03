@@ -1,8 +1,31 @@
 {
   "schemaVersion": 1,
   "sourceBatchKey": "penize.cz",
-  "ingestedAt": "2026-05-03T05:00:29.197154Z",
+  "ingestedAt": "2026-05-03T05:35:10.663867Z",
   "items": [
+    {
+      "section": "finance",
+      "contentType": "article",
+      "title": "Banka Creditas má soutěž o iPhone a vstupenky na MotoGP",
+      "url": "https://www.penize.cz/osobni-ucty/485369-banka-creditas-ma-soutez-o-iphone-a-vstupenky-na-motogp",
+      "dt": "2026-05-03T06:30:00Z",
+      "media_raw": "Peníze.cz",
+      "media_norm": "Peníze.cz",
+      "tokens": [
+        "banka",
+        "creditas",
+        "iphone",
+        "motogp",
+        "soutěž",
+        "vstupenky"
+      ],
+      "feedCategory": "finance",
+      "feedType": "rss",
+      "feedId": "fin_penize",
+      "sourceDisplayWeight": 0.85,
+      "sourceBatchKey": "penize.cz",
+      "_dt_serialized": true
+    },
     {
       "section": "sport",
       "contentType": "article",
@@ -479,30 +502,6 @@
       "sourceDisplayWeight": 0.85,
       "sourceBatchKey": "penize.cz",
       "_dt_serialized": true
-    },
-    {
-      "section": "finance",
-      "contentType": "article",
-      "title": "Přehledy pro zdravotní pojišťovny a ČSSZ přehledně krok za krokem",
-      "url": "https://www.penize.cz/socialni-pojisteni/488897-prehledy-pro-zdravotni-pojistovny-a-cssz-prehledne-krok-za-krokem",
-      "dt": "2026-04-28T05:05:00Z",
-      "media_raw": "Peníze.cz",
-      "media_norm": "Peníze.cz",
-      "tokens": [
-        "krok",
-        "krokem",
-        "pojišťovny",
-        "přehledně",
-        "přehledy",
-        "zdravotní",
-        "čssz"
-      ],
-      "feedCategory": "finance",
-      "feedType": "rss",
-      "feedId": "fin_penize",
-      "sourceDisplayWeight": 0.85,
-      "sourceBatchKey": "penize.cz",
-      "_dt_serialized": true
     }
   ],
   "feedReports": [
@@ -513,7 +512,7 @@
       "httpStatus": 200,
       "contentType": "text/xml; charset=utf-8",
       "finalUrl": "https://www.penize.cz/rss",
-      "bytes": 18912,
+      "bytes": 18856,
       "reason": "",
       "bozo": false,
       "bozoException": "",
@@ -550,11 +549,11 @@
       ],
       "iuTelemetry": {
         "raw_feed_new_item_count": 20,
-        "raw_feed_latest_publishedAt": "2026-05-02T09:00:00Z",
+        "raw_feed_latest_publishedAt": "2026-05-03T06:30:00Z",
         "valid_publishedAt_count": 20,
         "mapped_to_section_count": {
-          "sport": 2,
           "finance": 13,
+          "sport": 2,
           "zpravy": 5
         },
         "drop_counts": {
@@ -567,6 +566,10 @@
           "other": 0
         },
         "sample_titles": [
+          {
+            "title": "Banka Creditas má soutěž o iPhone a vstupenky na MotoGP",
+            "publishedAt": "2026-05-03T06:30:00Z"
+          },
           {
             "title": "K hokejovému mistrovství světa můžete mít stylovou platební kartu",
             "publishedAt": "2026-05-02T09:00:00Z"
@@ -594,10 +597,6 @@
           {
             "title": "Za pracovní cestu dostanete víc. Cena nafty ve vyhlášce se změní",
             "publishedAt": "2026-04-30T10:58:00Z"
-          },
-          {
-            "title": "Čekat na plastovou kartu už nemusíte ani ve Fio bance",
-            "publishedAt": "2026-04-30T10:55:00Z"
           }
         ]
       }
